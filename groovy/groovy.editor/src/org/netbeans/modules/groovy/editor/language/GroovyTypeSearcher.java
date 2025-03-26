@@ -145,7 +145,7 @@ public class GroovyTypeSearcher implements IndexSearcher {
     private String cachedString = "/";
 
     private QuerySupport.Kind adjustKind(QuerySupport.Kind kind, String text) {
-        if (text.equals(cachedString)) {
+        if (cachedKind != null && text.equals(cachedString)) {
             return cachedKind;
         }
         if (kind == QuerySupport.Kind.CASE_INSENSITIVE_PREFIX) {

@@ -130,7 +130,7 @@ public class BaseCaretTest extends NbTestCase {
             }
         }
         XMLFileSystem system = new XMLFileSystem();
-        system.setXmlUrls(allUrls.toArray(new URL[allUrls.size()]));
+        system.setXmlUrls(allUrls.toArray(new URL[0]));
         
         Repository repository = new Repository(system);
         Object[] lookupContent = new Object[additionalLookupContent.length + 1];

@@ -20,7 +20,6 @@ package org.netbeans.modules.java.hints.jdk;
 
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.hints.test.api.HintTest;
-import javax.lang.model.SourceVersion;
 
 /**
  *
@@ -44,8 +43,7 @@ public class ConvertToPatternInstanceOfTest extends NbTestCase {
                        "        return -1;\n" +
                        "    }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel("17")
                 .run(ConvertToPatternInstanceOf.class)
                 .findWarning("3:8-3:10:verifier:" + Bundle.ERR_ConvertToPatternInstanceOf())
                 .applyFix()
@@ -74,8 +72,7 @@ public class ConvertToPatternInstanceOfTest extends NbTestCase {
                        "        }\n" +
                        "    }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel("17")
                 .run(ConvertToPatternInstanceOf.class)
                 .findWarning("3:8-3:10:verifier:" + Bundle.ERR_ConvertToPatternInstanceOf())
                 .applyFix()
@@ -103,8 +100,7 @@ public class ConvertToPatternInstanceOfTest extends NbTestCase {
                        "        return -1;\n" +
                        "    }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel("17")
                 .run(ConvertToPatternInstanceOf.class)
                 .findWarning("3:8-3:10:verifier:" + Bundle.ERR_ConvertToPatternInstanceOf())
                 .applyFix()
@@ -131,8 +127,7 @@ public class ConvertToPatternInstanceOfTest extends NbTestCase {
                        "        return -1;\n" +
                        "    }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel("17")
                 .run(ConvertToPatternInstanceOf.class)
                 .findWarning("3:8-3:10:verifier:" + Bundle.ERR_ConvertToPatternInstanceOf())
                 .applyFix()

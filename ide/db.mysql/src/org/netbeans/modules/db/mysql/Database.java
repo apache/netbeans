@@ -58,8 +58,8 @@ public class Database implements Node.Cookie {
     
     @Override
     public boolean equals(Object other) {
-        return other != null && other instanceof Database &&
-                ((Database)other).getDbName().equals(getDbName());
+        return other instanceof Database &&
+               ((Database) other).getDbName().equals(getDbName());
     }
     
     @Override

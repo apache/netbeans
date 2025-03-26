@@ -136,7 +136,7 @@ public class NewModuleWizardIterator implements WizardDescriptor.AsynchronousIns
         panel = new ModuleTargetChooserPanel(project, groups);
         // Make sure list of steps is accurate.
         Object prop = wiz.getProperty(WizardDescriptor.PROP_CONTENT_DATA);
-        String[] beforeSteps = prop != null && prop instanceof String[] ? (String[])prop : new String[0];
+        String[] beforeSteps = prop instanceof String[] ? (String[])prop : new String[0];
         int diff = 0;
         if (beforeSteps.length > 0) {
             diff = ("...".equals (beforeSteps[beforeSteps.length - 1])) ? 1 : 0; // NOI18N
@@ -212,7 +212,7 @@ public class NewModuleWizardIterator implements WizardDescriptor.AsynchronousIns
     protected final void fireChangeEvent() {
         ChangeListener[] ls;
         synchronized (listeners) {
-            ls = listeners.toArray(new ChangeListener[listeners.size()]);
+            ls = listeners.toArray(new ChangeListener[0]);
         }
         ChangeEvent ev = new ChangeEvent(this);
         for (ChangeListener l : ls) {

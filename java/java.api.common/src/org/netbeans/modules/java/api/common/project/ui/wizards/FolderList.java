@@ -320,11 +320,11 @@ public final class FolderList extends javax.swing.JPanel {
                     }
                 }
             }
-            final File[] toAddArr = toAdd == null ? files : toAdd.toArray(new File[toAdd.size()]);
+            final File[] toAddArr = toAdd == null ? files : toAdd.toArray(new File[0]);
             Set<File> invalidRoots = new HashSet<File>();
             addFiles(toAddArr, invalidRoots);
             if (!related.isEmpty()) {
-                relatedFolderList.addFiles(related.toArray(new File[related.size()]), invalidRoots);
+                relatedFolderList.addFiles(related.toArray(new File[0]), invalidRoots);
             }
             File cd = chooser.getCurrentDirectory();
             if (cd != null) {
@@ -409,7 +409,6 @@ public final class FolderList extends javax.swing.JPanel {
      * Returns a {@link FileFilter} accepting all files for which any
      * of its path elements starting from selectedFolder (exclusive) to the end is maching
      * ".*test.* case insensitive regular expression
-     * @param selectedFolder
      * @return the {@link FileFilter}
      */
     public static FileFilter testRootsFilter () {

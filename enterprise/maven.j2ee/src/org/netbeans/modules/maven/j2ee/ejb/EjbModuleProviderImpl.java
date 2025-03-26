@@ -132,6 +132,6 @@ public class EjbModuleProviderImpl extends BaseEEModuleProvider implements EjbJa
             }
             files.add(FileUtil.toFile(fo));
         }
-        return files.toArray(new File[files.size()]);
+        return files.toArray(new File[0]);
     }
 }

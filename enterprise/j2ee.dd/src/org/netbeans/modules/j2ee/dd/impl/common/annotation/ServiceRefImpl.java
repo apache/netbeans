@@ -67,7 +67,11 @@ public class ServiceRefImpl implements ServiceRef {
         parser.expectString("wsdlLocation",null);
         parser.expectClass("value",null);
         parser.expectClass("type",null);
-        ParseResult parseResult = parser.parse(annByType.get("javax.xml.ws.WebServiceRef")); //NOI18N
+        AnnotationMirror annotationMirror = annByType.get("jakarta.xml.ws.WebServiceRef"); //NOI18N
+        if (annotationMirror == null) {
+            annotationMirror = annByType.get("javax.xml.ws.WebServiceRef"); //NOI18N
+        }
+        ParseResult parseResult = parser.parse(annotationMirror);
         serviceRefName = parseResult.get("name", String.class); // NOI18N
         wsdlFile = parseResult.get("wsdlLocation", String.class); // NOI18N
         value = parseResult.get("value", String.class); // NOI18N
@@ -152,7 +156,7 @@ public class ServiceRefImpl implements ServiceRef {
                 }
             }
             if (sei != null) portComponents.add(new PortComponentRefImpl(sei));
-            portComponentRefs = portComponents.toArray(new PortComponentRef[portComponents.size()]);
+            portComponentRefs = portComponents.toArray(new PortComponentRef[0]);
         }
     }
 

@@ -42,53 +42,53 @@ public enum PayaraVersion implements PayaraPlatformVersionAPI {
     // Enum values                                                            //
     ////////////////////////////////////////////////////////////////////////////
     /** Payara 4.1.144 */
-    PF_4_1_144 ((short) 4, (short) 1, (short) 0, (short) 0, (short) 14, (short) 4, (short) 0, PayaraVersion.PF_4_1_144_STR),
+    PF_4_1_144 ((short) 4, (short) 1, (short) 0, "", (short) 14, (short) 4, (short) 0, PayaraVersion.PF_4_1_144_STR),
     /** Payara 4.1.151 */
-    PF_4_1_151 ((short) 4, (short) 1, (short) 0, (short) 0, (short) 15, (short) 1, (short) 0, PayaraVersion.PF_4_1_151_STR),
+    PF_4_1_151 ((short) 4, (short) 1, (short) 0, "", (short) 15, (short) 1, (short) 0, PayaraVersion.PF_4_1_151_STR),
     /** Payara 4.1.152 */
-    PF_4_1_152 ((short) 4, (short) 1, (short) 0, (short) 0, (short) 15, (short) 2, (short) 0, PayaraVersion.PF_4_1_152_STR),
+    PF_4_1_152 ((short) 4, (short) 1, (short) 0, "", (short) 15, (short) 2, (short) 0, PayaraVersion.PF_4_1_152_STR),
     /** Payara 4.1.153 */
-    PF_4_1_153 ((short) 4, (short) 1, (short) 0, (short) 0, (short) 15, (short) 3, (short) 0, PayaraVersion.PF_4_1_153_STR),
+    PF_4_1_153 ((short) 4, (short) 1, (short) 0, "", (short) 15, (short) 3, (short) 0, PayaraVersion.PF_4_1_153_STR),
     /** Payara 4.1.1.154 */
-    PF_4_1_1_154 ((short) 4, (short) 1, (short) 1, (short) 0, (short) 15, (short) 4, (short) 0, PayaraVersion.PF_4_1_1_154_STR),
+    PF_4_1_1_154 ((short) 4, (short) 1, (short) 1, "", (short) 15, (short) 4, (short) 0, PayaraVersion.PF_4_1_1_154_STR),
     /** Payara 4.1.1.161 */
-    PF_4_1_1_161 ((short) 4, (short) 1, (short) 1, (short) 0, (short) 16, (short) 1, (short) 0, PayaraVersion.PF_4_1_1_161_STR),
+    PF_4_1_1_161 ((short) 4, (short) 1, (short) 1, "", (short) 16, (short) 1, (short) 0, PayaraVersion.PF_4_1_1_161_STR),
     /** Payara 4.1.1.162 */
-    PF_4_1_1_162 ((short) 4, (short) 1, (short) 1, (short) 0, (short) 16, (short) 2, (short) 0, PayaraVersion.PF_4_1_1_162_STR),
+    PF_4_1_1_162 ((short) 4, (short) 1, (short) 1, "", (short) 16, (short) 2, (short) 0, PayaraVersion.PF_4_1_1_162_STR),
     /** Payara 4.1.1.163 */
-    PF_4_1_1_163 ((short) 4, (short) 1, (short) 1, (short) 0, (short) 16, (short) 3, (short) 0, PayaraVersion.PF_4_1_1_163_STR),
+    PF_4_1_1_163 ((short) 4, (short) 1, (short) 1, "", (short) 16, (short) 3, (short) 0, PayaraVersion.PF_4_1_1_163_STR),
     /** Payara 4.1.1.164 */
-    PF_4_1_1_164 ((short) 4, (short) 1, (short) 1, (short) 0, (short) 16, (short) 4, (short) 0, PayaraVersion.PF_4_1_1_164_STR),
+    PF_4_1_1_164 ((short) 4, (short) 1, (short) 1, "", (short) 16, (short) 4, (short) 0, PayaraVersion.PF_4_1_1_164_STR),
     /** Payara 4.1.1.171 */
-    PF_4_1_1_171 ((short) 4, (short) 1, (short) 1, (short) 0, (short) 17, (short) 1, (short) 0, PayaraVersion.PF_4_1_1_171_STR),
+    PF_4_1_1_171 ((short) 4, (short) 1, (short) 1, "", (short) 17, (short) 1, (short) 0, PayaraVersion.PF_4_1_1_171_STR),
     /** Payara 4.1.2.172 */
-    PF_4_1_2_172 ((short) 4, (short) 1, (short) 2, (short) 0, (short) 17, (short) 2, (short) 0, PayaraVersion.PF_4_1_2_172_STR),
+    PF_4_1_2_172 ((short) 4, (short) 1, (short) 2, "", (short) 17, (short) 2, (short) 0, PayaraVersion.PF_4_1_2_172_STR),
     /** Payara 4.1.2.173 */
-    PF_4_1_2_173 ((short) 4, (short) 1, (short) 2, (short) 0, (short) 17, (short) 3, (short) 0, PayaraVersion.PF_4_1_2_173_STR),
+    PF_4_1_2_173 ((short) 4, (short) 1, (short) 2, "", (short) 17, (short) 3, (short) 0, PayaraVersion.PF_4_1_2_173_STR),
     /** Payara 4.1.2.174 */
-    PF_4_1_2_174 ((short) 4, (short) 1, (short) 2, (short) 0, (short) 17, (short) 4, (short) 0, PayaraVersion.PF_4_1_2_174_STR),
+    PF_4_1_2_174 ((short) 4, (short) 1, (short) 2, "", (short) 17, (short) 4, (short) 0, PayaraVersion.PF_4_1_2_174_STR),
     /** Payara 4.1.2.181 */
-    PF_4_1_2_181 ((short) 4, (short) 1, (short) 2, (short) 0, (short) 18, (short) 1, (short) 0, PayaraVersion.PF_4_1_2_181_STR),
+    PF_4_1_2_181 ((short) 4, (short) 1, (short) 2, "", (short) 18, (short) 1, (short) 0, PayaraVersion.PF_4_1_2_181_STR),
     /** Payara 5.181 */
-    PF_5_181 ((short) 5, (short) 0, (short) 0, (short) 0, (short) 18, (short) 1, (short) 0, PayaraVersion.PF_5_181_STR),
+    PF_5_181 ((short) 5, (short) 0, (short) 0, "", (short) 18, (short) 1, (short) 0, PayaraVersion.PF_5_181_STR),
     /** Payara 5.182 */
-    PF_5_182 ((short) 5, (short) 0, (short) 0, (short) 0, (short) 18, (short) 2, (short) 0, PayaraVersion.PF_5_182_STR),
+    PF_5_182 ((short) 5, (short) 0, (short) 0, "", (short) 18, (short) 2, (short) 0, PayaraVersion.PF_5_182_STR),
     /** Payara 5.183 */
-    PF_5_183 ((short) 5, (short) 0, (short) 0, (short) 0, (short) 18, (short) 3, (short) 0, PayaraVersion.PF_5_183_STR),
+    PF_5_183 ((short) 5, (short) 0, (short) 0, "", (short) 18, (short) 3, (short) 0, PayaraVersion.PF_5_183_STR),
     /** Payara 5.184 */
-    PF_5_184 ((short) 5, (short) 0, (short) 0, (short) 0, (short) 18, (short) 4, (short) 0, PayaraVersion.PF_5_184_STR),
+    PF_5_184 ((short) 5, (short) 0, (short) 0, "", (short) 18, (short) 4, (short) 0, PayaraVersion.PF_5_184_STR),
     /** Payara 5.191 */
-    PF_5_191 ((short) 5, (short) 0, (short) 0, (short) 0, (short) 19, (short) 1, (short) 0, PayaraVersion.PF_5_191_STR),
+    PF_5_191 ((short) 5, (short) 0, (short) 0, "", (short) 19, (short) 1, (short) 0, PayaraVersion.PF_5_191_STR),
     /** Payara 5.192 */
-    PF_5_192 ((short) 5, (short) 0, (short) 0, (short) 0, (short) 19, (short) 2, (short) 0, PayaraVersion.PF_5_192_STR),
+    PF_5_192 ((short) 5, (short) 0, (short) 0, "", (short) 19, (short) 2, (short) 0, PayaraVersion.PF_5_192_STR),
     /** Payara 5.193 */
-    PF_5_193 ((short) 5, (short) 0, (short) 0, (short) 0, (short) 19, (short) 3, (short) 0, PayaraVersion.PF_5_193_STR),
+    PF_5_193 ((short) 5, (short) 0, (short) 0, "", (short) 19, (short) 3, (short) 0, PayaraVersion.PF_5_193_STR),
     /** Payara 5.194 */
-    PF_5_194 ((short) 5, (short) 0, (short) 0, (short) 0, (short) 19, (short) 4, (short) 0, PayaraVersion.PF_5_194_STR),
+    PF_5_194 ((short) 5, (short) 0, (short) 0, "", (short) 19, (short) 4, (short) 0, PayaraVersion.PF_5_194_STR),
     /** Payara 5.201 */
-    PF_5_201 ((short) 5, (short) 0, (short) 0, (short) 0, (short) 20, (short) 1, (short) 0, PayaraVersion.PF_5_201_STR),
+    PF_5_201 ((short) 5, (short) 0, (short) 0, "", (short) 20, (short) 1, (short) 0, PayaraVersion.PF_5_201_STR),
     /** Payara 5.202 */
-    PF_5_202 ((short) 5, (short) 0, (short) 0, (short) 0, (short) 20, (short) 2, (short) 0, PayaraVersion.PF_5_202_STR);
+    PF_5_202 ((short) 5, (short) 0, (short) 0, "", (short) 20, (short) 2, (short) 0, PayaraVersion.PF_5_202_STR);
 
     //add new version
     /**  A <code>String</code> representation of PF_4_1_144 value. */
@@ -338,7 +338,7 @@ public enum PayaraVersion implements PayaraPlatformVersionAPI {
     private final short update;
 
     /** Build version number. */
-    private final short build;
+    private final String build;
 
     private final String value;
 
@@ -355,7 +355,7 @@ public enum PayaraVersion implements PayaraPlatformVersionAPI {
      * @param build  Build version number.
      */
     private PayaraVersion(final short major, final short minor,
-            final short update, final short build, 
+            final short update, final String build, 
             final short year, final short quarter, 
             final short month, final String value) {
         this.major = major;
@@ -401,7 +401,7 @@ public enum PayaraVersion implements PayaraPlatformVersionAPI {
      * <p/>
      * @return Build version number.
      */
-    public short getBuild() {
+    public String getBuild() {
         return build;
     }
 
@@ -498,7 +498,7 @@ public enum PayaraVersion implements PayaraPlatformVersionAPI {
         sb.append(SEPARATOR);
         sb.append(Integer.toString(update));
         sb.append(SEPARATOR);
-        sb.append(Integer.toString(build));
+        sb.append(build);
         return sb.toString();
     }
 
@@ -534,6 +534,16 @@ public enum PayaraVersion implements PayaraPlatformVersionAPI {
 
     @Override
     public boolean isEE8Supported() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public boolean isEE9Supported() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public boolean isEE10Supported() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

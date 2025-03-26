@@ -284,7 +284,7 @@ public class VersioningManager implements PropertyChangeListener, ChangeListener
 
     VersioningSystem[] getVersioningSystems() {
         synchronized(versioningSystems) {
-            return versioningSystems.toArray(new VersioningSystem[versioningSystems.size()]);
+            return versioningSystems.toArray(new VersioningSystem[0]);
         }
     }
 
@@ -303,7 +303,7 @@ public class VersioningManager implements PropertyChangeListener, ChangeListener
                 owners.add(vs);
             }
         }
-        return (VersioningSystem[]) owners.toArray(new VersioningSystem[owners.size()]);
+        return (VersioningSystem[]) owners.toArray(new VersioningSystem[0]);
     }
 
     /**

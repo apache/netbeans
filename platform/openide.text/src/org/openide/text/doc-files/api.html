@@ -121,7 +121,7 @@ is planned to make creation of new editor kits easier.</p></li>
 
 </div>
 
-<h2><a name="overview">Overview</a></h2>
+<h2 id="overview">Overview</h2>
 
 <p>The Editor API may be used at a first cut for two purposes: accessing
 editor-related functionality from within NetBeans for use by other
@@ -131,7 +131,7 @@ the NetBeans-supplied one.</p>
 
 <div class="nonnormative">
 
-<h3><a name="typical-use">Typical use scenario</a></h3>
+<h3 id="typical-use">Typical use scenario</h3>
 
 Here is an example sequence of events describing how an editor is used
 with Java source code and cooperates with the Form Editor.
@@ -172,19 +172,19 @@ the class (with children corresponding to methods, variables, etc.).
 window or pane, then this window/pane is reused and just given
 focus (i.e. a new
 
-<a href="@JDK@/javax/swing/JEditorPane.html"><code>JEditorPane</code></a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JEditorPane.html"><code>JEditorPane</code></a>
 
 is created, but using the same
 
-<a href="@JDK@/javax/swing/text/EditorKit.html"><code>EditorKit</code></a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/EditorKit.html"><code>EditorKit</code></a>
 
 and
 
-<a href="@JDK@/javax/swing/text/StyledDocument.html"><code>StyledDocument</code></a>).
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/StyledDocument.html"><code>StyledDocument</code></a>).
 
 <p>If not, a new <code>JEditorPane</code> is
 
-<a href="@JDK@/javax/swing/JEditorPane.html#getEditorKitForContentType-java.lang.String-">asked</a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JEditorPane.html#getEditorKitForContentType-java.lang.String-">asked</a>
 
 to create an editor for the Java source content type (typically
 <code>text/x-java</code>). Now, the Form Editor's data loader is an
@@ -221,7 +221,7 @@ loaded into the Form Editor.
 
 <p>Note that the Form Editor directly or indirectly calls
 
-<a href="@JDK@/javax/swing/text/Document.html#insertString-int-java.lang.String-javax.swing.text.AttributeSet-"><code>Document.insertString(...)</code></a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/Document.html#insertString-int-java.lang.String-javax.swing.text.AttributeSet-"><code>Document.insertString(...)</code></a>
 
 (or
 
@@ -229,7 +229,7 @@ loaded into the Form Editor.
 
 and
 
-<a href="@JDK@/javax/swing/text/Document.html#remove-int-int-"><code>Document.remove(...)</code></a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/Document.html#remove-int-int-"><code>Document.remove(...)</code></a>
 
 to do this work, so it is itself unaffected by guard blocks.
 
@@ -262,13 +262,13 @@ before the text is written to file.
 
 
 
-<h2><a name="accessing">Accessing an Open Document</a></h2>
+<h2 id="accessing">Accessing an Open Document</h2>
 
 Starting from other APIs, it is not difficult to make use of the
 Editor API to get access to an editor window displaying a particular
 file.
 
-<h3><a name="get-doc-obj">Getting the document object for a data object</a></h3>
+<h3 id="get-doc-obj">Getting the document object for a data object</h3>
 
 Here is an example of how to find a file by name stored in some
 filesystem in the Repository; get its data object (assuming you do not
@@ -287,7 +287,7 @@ ec.<a href="../../cookies/EditorCookie.html#open--">open</a>();
 <span class="type">StyledDocument</span> <span class="variable-name">doc</span> = ec.<a href="../../cookies/EditorCookie.html#openDocument--">openDocument</a>();
 </pre>
 
-<h3><a name="modification">Common operations on resulting document</a></h3>
+<h3 id="modification">Common operations on resulting document</h3>
 
 You can check such things as whether or not the file is modified in the Editor:
 
@@ -333,13 +333,13 @@ All done! Prompt to save the file, and close the editor window:
 ec.<a href="../../cookies/EditorCookie.html#close--">close</a>();
 </pre>
 
-<h2><a name="automation">Advanced Editor Automation</a></h2>
+<h2 id="automation">Advanced Editor Automation</h2>
 
 For advanced modules on a level with the Form Editor or the
 Compiler and Debugger, it is necessary to take more complete control
 over the actions and content of an editor.
 
-<h3><a name="auto-guard">Using guard blocks</a></h3>
+<h3 id="auto-guard">Using guard blocks</h3>
 
 Manipulating guarded blocks should not be very difficult, if your
 application requires it. They are used by the FormEditor, but any
@@ -366,7 +366,7 @@ such a position using
 
 and retrieve its current offset when needed using
 
-<a href="@JDK@/javax/swing/text/Position.html#getOffset--"><code>Position.getOffset()</code></a>.
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/Position.html#getOffset--"><code>Position.getOffset()</code></a>.
 
 <li>To insert a new guarded block of text, you may use
 
@@ -377,11 +377,11 @@ the presence of guard blocks (this assumes you know what you are doing
 and what the guard blocks are being used for), you may use the
 standard Swing
 
-<a href="@JDK@/javax/swing/text/Document.html#insertString-int-java.lang.String-javax.swing.text.AttributeSet-"><code>Document.insertString(...)</code></a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/Document.html#insertString-int-java.lang.String-javax.swing.text.AttributeSet-"><code>Document.insertString(...)</code></a>
 
 and
 
-<a href="@JDK@/javax/swing/text/Document.html#remove-int-int-"><code>Document.remove(...)</code></a>.
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/Document.html#remove-int-int-"><code>Document.remove(...)</code></a>.
 
 You probably want to use
 
@@ -400,7 +400,7 @@ instead.
 
 </ul>
 
-<h3><a name="auto-ann">Using annotations</a></h3>
+<h3 id="auto-ann">Using annotations</h3>
 
 <p>In order to provide richer interactions between the editor and
 other modules, the APIs provide for a system of <em>annotations</em>
@@ -438,17 +438,17 @@ XML file
 distinctive to prevent collisions between modules):
 
 <pre>
-&lt;?<font class="keyword">xml</font> <font class="variable-name">version</font>=<font class="string">"1.0"</font> <font class="variable-name">encoding</font>=<font class="string">"UTF-8"</font>?&gt;
-&lt;!<font class="keyword">DOCTYPE</font> <font class="type">type</font> <font class="keyword">PUBLIC</font>
-          <font class="string">"-//NetBeans//DTD annotation type 1.0//EN"</font>
-          <font class="string">"http://www.netbeans.org/dtds/annotation-type-1_0.dtd"</font>&gt;
-&lt;<font class="function-name">type</font> <font class="variable-name">name</font>=<font class="string">"org-nb-modules-foo-some-annotation"</font>
-      <font class="variable-name">description_key</font>=<font class="string">"LBL_some-annotation"</font>
-      <font class="variable-name">localizing_bundle</font>=<font class="string">"org.nb.modules.foo.Bundle"</font>
-      <font class="variable-name">visible</font>=<font class="string">"true"</font> 
-      <font class="variable-name">glyph</font>=<font class="string">"nbresloc:/org/nb/modules/foo/some-annotation-glyph.gif"</font>
-      <font class="variable-name">highlight</font>=<font class="string">"#FFFF00"</font>
-      <font class="variable-name">type</font>=<font class="string">"line"</font>/&gt;
+&lt;?<span class="keyword">xml</span> <span class="variable-name">version</span>=<span class="string">"1.0"</span> <span class="variable-name">encoding</span>=<span class="string">"UTF-8"</span>?&gt;
+&lt;!<span class="keyword">DOCTYPE</span> <span class="type">type</span> <span class="keyword">PUBLIC</span>
+          <span class="string">"-//NetBeans//DTD annotation type 1.0//EN"</span>
+          <span class="string">"http://www.netbeans.org/dtds/annotation-type-1_0.dtd"</span>&gt;
+&lt;<span class="function-name">type</span> <span class="variable-name">name</span>=<span class="string">"org-nb-modules-foo-some-annotation"</span>
+      <span class="variable-name">description_key</span>=<span class="string">"LBL_some-annotation"</span>
+      <span class="variable-name">localizing_bundle</span>=<span class="string">"org.nb.modules.foo.Bundle"</span>
+      <span class="variable-name">visible</span>=<span class="string">"true"</span> 
+      <span class="variable-name">glyph</span>=<span class="string">"nbresloc:/org/nb/modules/foo/some-annotation-glyph.gif"</span>
+      <span class="variable-name">highlight</span>=<span class="string">"#FFFF00"</span>
+      <span class="variable-name">type</span>=<span class="string">"line"</span>/&gt;
 </pre>
 
 <p>As you can see the definition of the annotation type consists of the highlight
@@ -468,17 +468,17 @@ description - and a short description, which can form tool-tip text for
 the annotation. For example:
 
 <pre>
-<font class="keyword">public</font> <font class="keyword">final</font> <font class="keyword">class</font> <font class="type">SomeAnnotation</font> <font class="keyword">extends</font> <font class="type">Annotation</font> {
-    <font class="keyword">private</font> <font class="keyword">final</font> <font class="type">String</font> <font class="variable-name">error</font>;
-    <font class="keyword">public</font> <font class="type">SomeAnnotation</font>(<font class="type">String</font> <font class="variable-name">error</font>) {
-        <font class="keyword">this</font>.error = error;
+<span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="type">SomeAnnotation</span> <span class="keyword">extends</span> <span class="type">Annotation</span> {
+    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable-name">error</span>;
+    <span class="keyword">public</span> <span class="type">SomeAnnotation</span>(<span class="type">String</span> <span class="variable-name">error</span>) {
+        <span class="keyword">this</span>.error = error;
     }
-    <font class="keyword">public</font> <font class="type">String</font> <a href="../Annotation.html#getAnnotationType--"><font class="function-name">getAnnotationType</font></a>() {
-        <font class="keyword">return</font> <font class="string">"org-nb-modules-foo-some-annotation"</font>;
+    <span class="keyword">public</span> <span class="type">String</span> <a href="../Annotation.html#getAnnotationType--"><span class="function-name">getAnnotationType</span></a>() {
+        <span class="keyword">return</span> <span class="string">"org-nb-modules-foo-some-annotation"</span>;
     }
-    <font class="keyword">public</font> <font class="type">String</font> <a href="../Annotation.html#getShortDescription--"><font class="function-name">getShortDescription</font></a>() {
-        <font class="comment">// Localize this with NbBundle:</font>
-        <font class="keyword">return</font> <font class="string">"The error was: "</font> + error;
+    <span class="keyword">public</span> <span class="type">String</span> <a href="../Annotation.html#getShortDescription--"><span class="function-name">getShortDescription</span></a>() {
+        <span class="comment">// Localize this with NbBundle:</span>
+        <span class="keyword">return</span> <span class="string">"The error was: "</span> + error;
     }
 }
 </pre>
@@ -488,7 +488,7 @@ or dynamically: you may return <code>null</code> for no tooltip, and
 you may later return a new or changed tooltip - just use:
 
 <pre>
-firePropertyChange(PROP_SHORT_DESCRIPTION, <font class="constant">null</font>, <font class="constant">null</font>);
+firePropertyChange(PROP_SHORT_DESCRIPTION, <span class="constant">null</span>, <span class="constant">null</span>);
 </pre>
 
 to inform the editor of the change. The tooltip should be refreshed
@@ -509,13 +509,13 @@ representing a whole line of text, or a
 representing a section of a line. For example:
 
 <pre>
-<font class="comment">// Given error output like: "pkg/Name.java:123: You made a mistake"
-</font><font class="type">FileObject</font> <font class="variable-name">fileWithError</font> = fs.findResource(<font class="string">"pkg/Name.java"</font>);
-<font class="type">DataObject</font> <font class="variable-name">objWithError</font> = DataObject.find(fileWithError);
-<a href="../../cookies/LineCookie.html"><font class="type">LineCookie</font></a> <font class="variable-name">cookie</font> = (<font class="type">LineCookie</font>)objWithError.getCookie(LineCookie.<font class="keyword">class</font>);
-<a href="../Line.Set.html"><font class="type">Line.Set</font></a> <font class="variable-name">lineSet</font> = cookie.getLineSet();
-<font class="keyword">final</font> <a href="../Line.html"><font class="type">Line</font></a> <font class="variable-name">line</font> = lineSet.<a href="../Line.Set.html#getOriginal-int-">getOriginal</a>(123);
-<font class="keyword">final</font> <font class="type">Annotation</font> <font class="variable-name">ann</font> = <font class="keyword">new</font> <font class="type">SomeAnnotation</font>(<font class="string">"You made a mistake"</font>);
+<span class="comment">// Given error output like: "pkg/Name.java:123: You made a mistake"
+</span><span class="type">FileObject</span> <span class="variable-name">fileWithError</span> = fs.findResource(<span class="string">"pkg/Name.java"</span>);
+<span class="type">DataObject</span> <span class="variable-name">objWithError</span> = DataObject.find(fileWithError);
+<a href="../../cookies/LineCookie.html"><span class="type">LineCookie</span></a> <span class="variable-name">cookie</span> = (<span class="type">LineCookie</span>)objWithError.getCookie(LineCookie.<span class="keyword">class</span>);
+<a href="../Line.Set.html"><span class="type">Line.Set</span></a> <span class="variable-name">lineSet</span> = cookie.getLineSet();
+<span class="keyword">final</span> <a href="../Line.html"><span class="type">Line</span></a> <span class="variable-name">line</span> = lineSet.<a href="../Line.Set.html#getOriginal-int-">getOriginal</a>(123);
+<span class="keyword">final</span> <span class="type">Annotation</span> <span class="variable-name">ann</span> = <span class="keyword">new</span> <span class="type">SomeAnnotation</span>(<span class="string">"You made a mistake"</span>);
 ann.<a href="../Annotation.html#attach-org.openide.text.Annotatable-">attach</a>(line);
 </pre>
 
@@ -532,13 +532,13 @@ this; of course you need to know when it is appropriate, so for
 example:</p>
 
 <pre>
-line.addPropertyChangeListener(<font class="keyword">new</font> <font class="type">PropertyChangeListener</font>() {
-    <font class="keyword">public</font> <font class="type">void</font> <font class="function-name">propertyChange</font>(<font class="type">PropertyChangeEvent</font> <font class="variable-name">ev</font>) {
-        <font class="type">String</font> <font class="variable-name">type</font> = ev.getPropertyName();
-        <font class="keyword">if</font> (type == <font class="constant">null</font> || type == Annotatable.PROP_TEXT) {
-            <font class="comment">// User edited the line, assume error should be cleared.
-</font>            ann.detach();
-            line.removePropertyChangeListener(<font class="keyword">this</font>);
+line.addPropertyChangeListener(<span class="keyword">new</span> <span class="type">PropertyChangeListener</span>() {
+    <span class="keyword">public</span> <span class="type">void</span> <span class="function-name">propertyChange</span>(<span class="type">PropertyChangeEvent</span> <span class="variable-name">ev</span>) {
+        <span class="type">String</span> <span class="variable-name">type</span> = ev.getPropertyName();
+        <span class="keyword">if</span> (type == <span class="constant">null</span> || type == Annotatable.PROP_TEXT) {
+            <span class="comment">// User edited the line, assume error should be cleared.
+</span>            ann.detach();
+            line.removePropertyChangeListener(<span class="keyword">this</span>);
         }
     }
 });
@@ -567,7 +567,7 @@ and background color. Remember however that some editor implementations
 may find it difficult or impossible to accurately display all of these
 settings (for example display of arbitrary glyphs may be infeasible).</p>
 
-<h4><a name="auto-ann-detail">Detailed description of annotation XML files</a></h4>
+<h4 id="auto-ann-detail">Detailed description of annotation XML files</h4>
 
 Attributes of the <code>&lt;type&gt;</code> element are:
 
@@ -626,9 +626,9 @@ example. The actions may be defined by
 <a href="@org-openide-actions@/org/openide/actions/doc-files/api.html#adv-install">listing instances</a>:
 
 <pre>
-&lt;<font class="function-name">folder</font> <font class="variable-name">name</font>=<font class="string">"YourAnnotationTypeActions"</font>&gt;
-  &lt;<font class="function-name">file</font> <font class="variable-name">name</font>=<font class="string">"org-foo-BarAction.instance"</font>/&gt;
-&lt;/<font class="function-name">folder</font>&gt;
+&lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"YourAnnotationTypeActions"</span>&gt;
+  &lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="string">"org-foo-BarAction.instance"</span>/&gt;
+&lt;/<span class="function-name">folder</span>&gt;
 </pre>
 </dd>
 
@@ -677,10 +677,10 @@ this type. For example the combination of program counter with
 breakpoint could be defined as follows:</p>
 
 <pre>
-&lt;<font class="function-name">combinations</font> <font class="variable-name">tiptext_key</font>=<font class="string">"PC_BREAKPOINT_COMBINATION_TOOLTIP_TEXT"</font>&gt;
-  &lt;<font class="function-name">combine</font> <font class="variable-name">annotationtype</font>=<font class="string">"NameOfTheBreakpointAnnotationType"</font>/&gt;
-  &lt;<font class="function-name">combine</font> <font class="variable-name">annotationtype</font>=<font class="string">"NameOfTheCurrentPCAnnotationType"</font>/&gt;
-&lt;/<font class="function-name">combinations</font>&gt;
+&lt;<span class="function-name">combinations</span> <span class="variable-name">tiptext_key</span>=<span class="string">"PC_BREAKPOINT_COMBINATION_TOOLTIP_TEXT"</span>&gt;
+  &lt;<span class="function-name">combine</span> <span class="variable-name">annotationtype</span>=<span class="string">"NameOfTheBreakpointAnnotationType"</span>/&gt;
+  &lt;<span class="function-name">combine</span> <span class="variable-name">annotationtype</span>=<span class="string">"NameOfTheCurrentPCAnnotationType"</span>/&gt;
+&lt;/<span class="function-name">combinations</span>&gt;
 </pre>
 
 <p>It is the responsibility of the editor to display combinations
@@ -722,11 +722,11 @@ breakpoint and disabled breakpoint and wish to combine either of them
 with the current program counter. You can define it as follows:
 
 <pre>
-&lt;<font class="function-name">combinations</font> <font class="variable-name">tiptext_key</font>=<font class="string">"COMBINATION_TOOLTIP_TEXT"</font> <font class="variable-name">min_optionals</font>=<font class="string">"1"</font>&gt;
-  &lt;<font class="function-name">combine</font> <font class="variable-name">annotationtype</font>=<font class="string">"debugger-disabledbreakpoint"</font> <font class="variable-name">optional</font>=<font class="string">"true"</font>/&gt;
-  &lt;<font class="function-name">combine</font> <font class="variable-name">annotationtype</font>=<font class="string">"debugger-conditionalbreakpoint"</font> <font class="variable-name">optional</font>=<font class="string">"true"</font>/&gt;
-  &lt;<font class="function-name">combine</font> <font class="variable-name">annotationtype</font>=<font class="string">"debugger-currentpc"</font>/&gt;
-&lt;/<font class="function-name">combinations</font>&gt;
+&lt;<span class="function-name">combinations</span> <span class="variable-name">tiptext_key</span>=<span class="string">"COMBINATION_TOOLTIP_TEXT"</span> <span class="variable-name">min_optionals</span>=<span class="string">"1"</span>&gt;
+  &lt;<span class="function-name">combine</span> <span class="variable-name">annotationtype</span>=<span class="string">"debugger-disabledbreakpoint"</span> <span class="variable-name">optional</span>=<span class="string">"true"</span>/&gt;
+  &lt;<span class="function-name">combine</span> <span class="variable-name">annotationtype</span>=<span class="string">"debugger-conditionalbreakpoint"</span> <span class="variable-name">optional</span>=<span class="string">"true"</span>/&gt;
+  &lt;<span class="function-name">combine</span> <span class="variable-name">annotationtype</span>=<span class="string">"debugger-currentpc"</span>/&gt;
+&lt;/<span class="function-name">combinations</span>&gt;
 </pre>
 
 This way you specify that both breakpoints are optional, but that at
@@ -765,7 +765,7 @@ breakpoints.</dd>
 
 </dl>
 
-<h2><a name="loader">Loader Interactions with Guard Blocks</a></h2>
+<h2 id="loader">Loader Interactions with Guard Blocks</h2>
 
 The NetBeans-supplied
 
@@ -801,14 +801,14 @@ Now just provide appropriate implementations of
 
 
 
-<h2><a name="new-editor">Implementing a Custom Editor</a></h2>
+<h2 id="new-editor">Implementing a Custom Editor</h2>
 
 It is possible to integrate a custom editor (presumably for textual
 content types) into NetBeans, in place of the default
 editor. The basic requirement is that it conform to the Swing
 EditorKit conventions. The Swing Text system is rather complex, so if
 you are not familiar with it you should look at <a
-href="http://java.sun.com/products/jfc/tsc/text/text/text.html">Using
+href="https://docs.oracle.com/javase/tutorial/uiswing/components/text.html">Using
 the Swing Text Package</a>.
 
 <p>Beyond being a generic EditorKit, there are two significant pieces of
@@ -827,22 +827,22 @@ request.
 
 </ul>
 
-<h3><a name="create-ed-kit">Creating editor kit</a></h3>
+<h3 id="create-ed-kit">Creating editor kit</h3>
 
 You should not need to do anything special to create the editor kit
 beyond what is normally required by Swing.
 
-<h3><a name="create-stydoc">Creating styled document</a></h3>
+<h3 id="create-stydoc">Creating styled document</h3>
 
 You will need to create an implementation of
 
-<a href="@JDK@/javax/swing/text/StyledDocument.html"><code>javax.swing.text.StyledDocument</code></a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/StyledDocument.html"><code>javax.swing.text.StyledDocument</code></a>
 
 to hold the content of the buffer being edited.
 
 <p>Actually, you could get away with a plain
 
-<a href="@JDK@/javax/swing/text/Document.html"><code>Document</code></a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/Document.html"><code>Document</code></a>
 
 if you really wanted, but you would be unable to support guard blocks
 and would have a harder time supporting annotations and line numbering; while this would probably
@@ -852,7 +852,7 @@ be used instead<!--you only need to implement a few aspects of styling
 pertaining to these two issues, so full support for changing font and
 so on is completely optional-->.
 
-<h3><a name="handle-guard">Handling guards</a></h3>
+<h3 id="handle-guard">Handling guards</h3>
 
 This is really the central problem in creating a compliant editor. If
 you want to completely skip this step, it is possible to return a
@@ -879,7 +879,7 @@ and
 
 methods, which just call
 
-<a href="@JDK@/javax/swing/text/StyledDocument.html#setCharacterAttributes-int-int-javax.swing.text.AttributeSet-boolean-"><code>StyledDocument.setCharacterAttributes(...)</code></a>.
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/StyledDocument.html#setCharacterAttributes-int-int-javax.swing.text.AttributeSet-boolean-"><code>StyledDocument.setCharacterAttributes(...)</code></a>.
 
 Very likely you will want to override this method, calling its
 superclass method but first checking to see if the attribute setting
@@ -891,7 +891,7 @@ general and would rather just query this attribute when it is
 needed. If overriding <code>setCharacterAttributes</code> for this
 purpose, also remember to check the attributes on
 
-<a href="@JDK@/javax/swing/text/Document.html#insertString-int-java.lang.String-javax.swing.text.AttributeSet-"><code>insertString</code></a>,
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/Document.html#insertString-int-java.lang.String-javax.swing.text.AttributeSet-"><code>insertString</code></a>,
 
 etc.
 
@@ -924,7 +924,7 @@ guarded areas, say with a special background color. It is your
 responsibility to choose a color or another appearance for this
 purpose, however. Possibly NetBeans will specify a
 
-<a href="@JDK@/javax/swing/text/StyleConstants.ColorConstants.html#Background"><code>StyleConstants.ColorConstants.Background</code></a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/StyleConstants.ColorConstants.html#Background"><code>StyleConstants.ColorConstants.Background</code></a>
 
 attribute describing which color will actually be used, and make this
 color settable in a control panel, but assume that you need to
@@ -937,7 +937,7 @@ colorize based on this attribute yourself.</p>
 It is highly recommended that all of the Swing actions (such as those
 returned by
 
-<a href="@JDK@/javax/swing/text/EditorKit.html#getActions--"><code>EditorKit.getActions()</code></a>)
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/EditorKit.html#getActions--"><code>EditorKit.getActions()</code></a>)
 
 applicable to your editor kit be reviewed for the possibility that
 they might attempt to change the content of the document (so, not only
@@ -962,20 +962,20 @@ that it is even possible to do satisfactorily. This applies only to
 people who are trying to adapt an existing
 <code>StyledDocument</code>, such as Swing's
 
-<a href="@JDK@/javax/swing/text/DefaultStyledDocument.html"><code>DefaultStyledDocument</code></a>,
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/DefaultStyledDocument.html"><code>DefaultStyledDocument</code></a>,
 
 which already has a full implementation of important things but no
 recognition of guard blocks.
 
 <p>The idea is to first get a list of all
 
-<a href="@JDK@/javax/swing/Action.html">actions</a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/Action.html">actions</a>
 
 which might involve buffer modification - or, to be conservative, just
 all actions. For each of these, create a new action which calls the
 original
 
-<a href="@JDK@/java/awt/event/ActionListener.html#actionPerformed-java.awt.event.ActionEvent-"><code>actionPerformed</code></a>,
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/awt/event/ActionListener.html#actionPerformed-java.awt.event.ActionEvent-"><code>actionPerformed</code></a>,
 
 but "dynamically binds" some special flag stored with the document to
 true - dynamic binding here means that it should be restored (turned
@@ -998,7 +998,7 @@ violation, you might do one or more of the following:
 
 <li> Throw a
 
-<a href="@JDK@/javax/swing/text/BadLocationException.html"><code>javax.swing.text.BadLocationException</code></a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/BadLocationException.html"><code>javax.swing.text.BadLocationException</code></a>
 
 and see what happens. Since the original action cannot ignore this
 exception (since <code>actionPerformed</code> does not have any
@@ -1007,11 +1007,11 @@ simply beep.
 
 <li>Try to run a beep action to alert the user (using
 
-<a href="@JDK@/java/awt/Toolkit.html#beep--"><code>Toolkit.beep()</code></a>).
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/awt/Toolkit.html#beep--"><code>Toolkit.beep()</code></a>).
 
 This would probably need to be done with
 
-<a href="@JDK@/javax/swing/SwingUtilities.html#invokeLater-java.lang.Runnable-"><code>SwingUtilities.invokeLater(...)</code></a>.
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/SwingUtilities.html#invokeLater-java.lang.Runnable-"><code>SwingUtilities.invokeLater(...)</code></a>.
 
 </ul>
 
@@ -1039,7 +1039,7 @@ doc.setCharacterAttributes(0, 100, sas, false);
 
 </div>
 
-<h3><a name="handle-lines">Lines and elements</a></h3>
+<h3 id="handle-lines">Lines and elements</h3>
 
 <p>You should make sure that lines in the editor are separated by
 exactly one text character - a newline. The APIs may rely on this to
@@ -1048,12 +1048,12 @@ may be efficient.</p>
 
 <p>Furthermore you should ensure that the
 
-<a href="@JDK@/javax/swing/text/Document.html#getDefaultRootElement--">default root element</a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/Document.html#getDefaultRootElement--">default root element</a>
 
 of the document has child elements corresponding to all text lines;
 and if using <code>StyledDocument</code>, that
 
-<a href="@JDK@/javax/swing/text/StyledDocument.html#getParagraphElement-int-">"paragraph" elements</a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/StyledDocument.html#getParagraphElement-int-">"paragraph" elements</a>
 
 again correspond to text lines. Proper use of elements corresponding
 to lines will enable the APIs to accurately translate between buffer
@@ -1061,7 +1061,7 @@ offsets and line numbers. It is fine to have additional element
 structures not corresponding to lines so long as the two conditions
 above are met.</p>
 
-<h3><a name="handle-ann">Handling annotations</a></h3>
+<h3 id="handle-ann">Handling annotations</h3>
 
 An editor must do two things to support annotations:
 
@@ -1082,7 +1082,7 @@ This
 has two methods. One adds an annotation to the document:
 
 <pre>
-<font class="keyword">public</font> <font class="type">void</font> <font class="function-name">addAnnotation</font>(<font class="type">Position</font> <font class="variable-name">startPos</font>, <font class="type">int</font> <font class="variable-name">length</font>, <font class="type">Annotation</font> <font class="variable-name">annotation</font>);
+<span class="keyword">public</span> <span class="type">void</span> <span class="function-name">addAnnotation</span>(<span class="type">Position</span> <span class="variable-name">startPos</span>, <span class="type">int</span> <span class="variable-name">length</span>, <span class="type">Annotation</span> <span class="variable-name">annotation</span>);
 </pre>
 
 The method is called with a <code>Position</code> in the document; the
@@ -1098,7 +1098,7 @@ editor displays it in the left gutter.
 <p>The second method removed an annotation previously added:
 
 <pre>
-<font class="keyword">public</font> <font class="type">void</font> <font class="function-name">removeAnnotation</font>(<font class="type">Annotation</font> <font class="variable-name">annotation</font>);
+<span class="keyword">public</span> <span class="type">void</span> <span class="function-name">removeAnnotation</span>(<span class="type">Annotation</span> <span class="variable-name">annotation</span>);
 </pre>
 
 This method will be called when the annotation is programmatically
@@ -1114,7 +1114,7 @@ the XML files in the <samp>Editors/AnnotationTypes/</samp> directory.
 The NetBeans standard editor can serve as a source of examples for how to do this.
 In the future there may be shared parsing support.
 
-<h3><a name="printing">Printing</a></h3>
+<h3 id="printing">Printing</h3>
 
 <p>If you want your editor to support printing of its contents,
 you might just provide no special support. In this case,
@@ -1138,19 +1138,19 @@ method
 
 should return a list of
 
-<a href="@JDK@/java/text/AttributedCharacterIterator.html"><code>java.text.AttributedCharacterIterator</code></a>s,
+<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/text/AttributedCharacterIterator.html"><code>java.text.AttributedCharacterIterator</code></a>s,
 
 providing attributes taken from
 
-<a href="@JDK@/java/awt/font/TextAttribute.html"><code>java.awt.font.TextAttribute</code></a>.
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/awt/font/TextAttribute.html"><code>java.awt.font.TextAttribute</code></a>.
 
 <p>Also, if your document supports either
 
-<a href="@JDK@/java/awt/print/Printable.html"><code>java.awt.print.Printable</code></a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/awt/print/Printable.html"><code>java.awt.print.Printable</code></a>
 
 or
 
-<a href="@JDK@/java/awt/print/Pageable.html"><code>java.awt.print.Pageable</code></a>,
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/awt/print/Pageable.html"><code>java.awt.print.Pageable</code></a>,
 
 then these interfaces will be used to perform the printing
 directly. You should only need to do this if attributed characters do
@@ -1158,7 +1158,7 @@ not satisfactorily capture everything that you are interested in
 printing - for example, if your editor is working on HTML and it is
 desired to print embedded images.
 
-<h3><a name="locking">Locking</a></h3>
+<h3 id="locking">Locking</h3>
 
 It is desirable for your <code>StyledDocument</code> implementation to
 be able to lock the document against write access, as this will make
@@ -1178,16 +1178,16 @@ i.e. blocked.
 
 <p>If you are extending
 
-<a href="@JDK@/javax/swing/text/AbstractDocument.html"><code>javax.swing.text.AbstractDocument</code></a>,
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/AbstractDocument.html"><code>javax.swing.text.AbstractDocument</code></a>,
 
 please note that just enclosing the <code>Runnable</code> block in
 calls to
 
-<a href="@JDK@/javax/swing/text/AbstractDocument.html#writeLock--"><code>writeLock()</code></a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/AbstractDocument.html#writeLock--"><code>writeLock()</code></a>
 
 and
 
-<a href="@JDK@/javax/swing/text/AbstractDocument.html#writeUnlock--"><code>writeUnlock()</code></a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/AbstractDocument.html#writeUnlock--"><code>writeUnlock()</code></a>
 
 will not do the trick - these calls do take out exclusive locks,
 however they specifically do not nest. This means that you cannot
@@ -1231,7 +1231,7 @@ closely tied to how guard blocks are implemented in that particular
 editor - e.g. in Emacs there will be a quite idiosyncratic
 implementation.
 
-<h3><a name="biases">Biases</a></h3>
+<h3 id="biases">Biases</h3>
 
 Please consider implementing
 
@@ -1248,23 +1248,23 @@ position.
 
 <p>If this is not done, NetBeans creates its own replacement.
 
-<h3><a name="scrolling">Scrolling to display</a></h3>
+<h3 id="scrolling">Scrolling to display</h3>
 
 <p>NetBeans sometimes asks the editor to scroll the display so that a
 given line will be displayed. You should not need to do anything
 special to support this;
 
-<a href="@JDK@/javax/swing/text/Caret.html#setDot-int-"><code>Caret.setDot()</code></a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/Caret.html#setDot-int-"><code>Caret.setDot()</code></a>
 
 will be called and ought to perform the scrolling appropriately.
 
-<h3><a name="actions">Presentable actions</a></h3>
+<h3 id="actions">Presentable actions</h3>
 
 It is desirable for the editor to present actions to the user that may
 be invoked on the document and may be accessed in various ways. For
 example, if your editor provides an
 
-<a href="@JDK@/javax/swing/Action.html">action</a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/Action.html">action</a>
 
 for reindenting a section of text, it is best if this action can be
 integrated into the rest of NetBeans consistently: a "Reindent" item
@@ -1297,7 +1297,7 @@ inappropriate to install into the main control window.
 
 <p>You do not need to do much to support this editor toolbar: in the
 
-<a href="@JDK@/javax/swing/text/EditorKit.html#getActions--"><code>getActions()</code></a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/EditorKit.html#getActions--"><code>getActions()</code></a>
 
 method of your editor kit, if there are any actions which are also
 
@@ -1309,7 +1309,7 @@ implementing
 
 then this interface will be used to get a
 
-<a href="@JDK@/java/awt/Component.html"><code>java.awt.Component</code></a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/awt/Component.html"><code>java.awt.Component</code></a>
 
 which will be displayed in the editor toolbar. You are free to make
 this component be whatever you like, e.g. a button to run some
@@ -1326,11 +1326,12 @@ names. Default instances of these are also available in the
 <code>DefaultEditorKit</code> class, but your actions will be
 recognized based on a call to
 
-<code><a href="@JDK@/javax/swing/Action.html#getValue-java.lang.String-">getValue</a>(<a href="@JDK@/javax/swing/Action.html#NAME">Action.NAME</a>)</code>:</p>
+<code><a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/Action.html#getValue-java.lang.String-">getValue</a>(<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/Action.html#NAME">Action.NAME</a>)</code>:</p>
 
-<table border=1 summary="action name to DefaultEditorKit field mappings">
+<table border=1>
+<caption>name to DefaultEditorKit field mappings</caption>
 <tr><th>Name</th><th>Static field in
-<a href="@JDK@/javax/swing/text/DefaultEditorKit.html"><code>DefaultEditorKit</code></a></th></tr>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/DefaultEditorKit.html"><code>DefaultEditorKit</code></a></th></tr>
 <tr><td><code>copy-to-clipboard</code></td><td><code>copyAction</code></td></tr>
 <tr><td><code>cut-to-clipboard</code></td><td><code>cutAction</code></td></tr>
 <tr><td><code>paste-from-clipboard</code></td><td><code>pasteAction</code></td></tr>
@@ -1345,7 +1346,8 @@ possible want to say: undo/redo supported by your undo impl in the document
 all others are CallbackSystemAction's -> you must specifically enable them
 -->
 
-<table border=1 summary="action names and their meanings">
+<table border=1>
+<caption>action names and their meanings</caption>
 <tr><th>Name</th><th>Description</th></tr>
 <tr><td><code>find</code></td><td>Pop up dialog to find a string in the text.</td></tr>
 <tr><td><code>replace</code></td><td>Pop up dialog to find &amp;
@@ -1355,7 +1357,7 @@ the text, e.g. a specific line number.</td></tr>
 <tr><td><code>delete</code></td><td>Delete the selection, without
 affecting clipboard.</td></tr>
 <tr><td><code>undo</code></td><td>Undo action. See package
-<a href="@JDK@/javax/swing/undo/package-summary.html"><code>javax.swing.undo</code></a> for help. Currently not specially
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/undo/package-summary.html"><code>javax.swing.undo</code></a> for help. Currently not specially
 supported, except to call your action.</td></tr>
 <tr><td><code>redo</code></td><td>Redo action. Ditto.</td></tr>
 </table>
@@ -1365,38 +1367,38 @@ standard invocations such as from the system toolbar, will
 automatically invoke these actions on your document, if you supply
 them. You should use
 
-<a href="@JDK@/javax/swing/Action.html#isEnabled--"><code>Action.isEnabled()</code></a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/Action.html#isEnabled--"><code>Action.isEnabled()</code></a>
 
 to indicate whether your action is ready, and thus whether or not the
 corresponding UI elements should be grayed out.
 
-<h3><a name="undo">Undo/redo support</a></h3>
+<h3 id="undo">Undo/redo support</h3>
 
 It is desirable for your document's user-level edit actions to implement
 
-<a href="@JDK@/javax/swing/undo/UndoableEdit.html"><code>UndoableEdit</code></a>,
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/undo/UndoableEdit.html"><code>UndoableEdit</code></a>,
 
 so that NetBeans can smoothly provide Undo/Redo support for the editor
 from the standard places (e.g. in the Edit menu). Note that
 
-<a href="@JDK@/javax/swing/text/AbstractDocument.html"><code>AbstractDocument</code></a>,
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/AbstractDocument.html"><code>AbstractDocument</code></a>,
 
 for example, already provides this support.
 
-<h3><a name="cust">Customization</a></h3>
+<h3 id="cust">Customization</h3>
 
 This API does not provide any special mechanism for allowing the user
 to customize aspects of the editor's operation from the GUI; if you
 want to do this, please use <code>NbPreferences</code> or similar.
 
-<h3><a name="install">Installing</a></h3>
+<h3 id="install">Installing</h3>
 
 It should be straightforward to install the new editor -
 you will make a JAR file containing a manifest with attributes
 recognized by NetBeans as constituting a <a
 href="@org-openide-modules@/org/openide/modules/doc-files/api.html">module</a>, and just call
 
-<a href="@JDK@/javax/swing/JEditorPane.html#registerEditorKitForContentType-java.lang.String-java.lang.String-"><code>javax.swing.JEditorPane.registerEditorKitForContentType(...)</code></a>,
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JEditorPane.html#registerEditorKitForContentType-java.lang.String-java.lang.String-"><code>javax.swing.JEditorPane.registerEditorKitForContentType(...)</code></a>,
 
 and NetBeans should subsequently use it.
 
@@ -1432,7 +1434,7 @@ for instructions on creating a module to contain your editor.</p>
 If your editor has support for an unusual MIME type that is not
 currently recognized, you may wish to use the
 
-<a href="@org-openide-filesystems@/org/openide/filesystems/doc-files/api.html#mime">MIME resolution</a>
+<a href="@org-openide-filesystems@/org/openide/filesystems/doc-files/api.html#mimerp">MIME resolution</a>
 
 infrastructure in the Filesystems API to help your files be
 recognized. Additionally,

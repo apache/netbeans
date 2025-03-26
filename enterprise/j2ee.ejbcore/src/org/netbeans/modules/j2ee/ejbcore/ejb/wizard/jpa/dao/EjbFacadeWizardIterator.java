@@ -117,8 +117,11 @@ import org.openide.util.NbBundle;
     private static final String FACADE_REMOTE_SUFFIX = FACADE_SUFFIX + "Remote"; //NOI18N
     private static final String FACADE_LOCAL_SUFFIX = FACADE_SUFFIX + "Local"; //NOI18N
     private static final String EJB_LOCAL = "javax.ejb.Local"; //NOI18N
+    private static final String EJB_LOCAL_JAKARTA = "jakarta.ejb.Local"; //NOI18N
     private static final String EJB_REMOTE = "javax.ejb.Remote"; //NOI18N
+    private static final String EJB_REMOTE_JAKARTA = "jakarta.ejb.Remote"; //NOI18N
     protected static final String EJB_STATELESS = "javax.ejb.Stateless"; //NOI18N
+    protected static final String EJB_STATELESS_JAKARTA = "jakarta.ejb.Stateless"; //NOI18N
 
     private int index;
     private WizardDescriptor wizard;
@@ -232,6 +235,16 @@ import org.openide.util.NbBundle;
         final String entitySimpleName = JavaIdentifiers.unqualify(entityFQN);
         final String variableName = entitySimpleName.toLowerCase().charAt(0) + entitySimpleName.substring(1);
 
+        final boolean jakartaVariant;
+        final ClassPath targetClassPath = ClassPath.getClassPath(targetFolder, ClassPath.COMPILE);
+        if (targetClassPath != null) {
+            final FileObject javaxStatelessFo = targetClassPath.findResource(EJB_STATELESS.replace(".", "/") + ".class");
+            final FileObject jakartaStatelessFo = targetClassPath.findResource(EJB_STATELESS_JAKARTA.replace(".", "/") + ".class");
+            jakartaVariant = javaxStatelessFo == null || jakartaStatelessFo != null;
+        } else {
+            jakartaVariant = true;
+        }
+
         //create the abstract facade class
         Task<CompilationController> waiter = null;
         final String afName = pkg.isEmpty() ? FACADE_ABSTRACT : pkg + "." + FACADE_ABSTRACT; //NOI18N
@@ -253,7 +266,7 @@ import org.openide.util.NbBundle;
                     TypeElement classElement = (TypeElement)workingCopy.getTrees().getElement(classTreePath);
 
                     String genericsTypeName = "T";      //NOI18N
-                    List<GenerationOptions> methodOptions = getAbstractFacadeMethodOptions(genericsTypeName, "entity"); //NOI18N
+                    List<GenerationOptions> methodOptions = getAbstractFacadeMethodOptions(genericsTypeName, "entity", jakartaVariant); //NOI18N
                     List<Tree> members = new ArrayList<Tree>();
                     String entityClassVar = "entityClass";                                              //NOI18N
                     Tree classObjectTree = genUtils.createType("java.lang.Class<" + genericsTypeName + ">", classElement);     //NOI18N
@@ -333,7 +346,7 @@ import org.openide.util.NbBundle;
 
         // generate methods for the facade
         EntityManagerGenerator generator = new EntityManagerGenerator(facade, entityFQN);
-        List<GenerationOptions> methodOptions = getMethodOptions(entityFQN, variableName);
+        List<GenerationOptions> methodOptions = getMethodOptions(entityFQN, variableName, jakartaVariant);
         for (GenerationOptions each : methodOptions){
             generator.generate(each, strategyClass);
         }
@@ -342,12 +355,12 @@ import org.openide.util.NbBundle;
         final String localInterfaceFQN = pkg + "." + getUniqueClassName(entitySimpleName + FACADE_LOCAL_SUFFIX, targetFolder);
         final String remoteInterfaceFQN = pkg + "." + getUniqueClassName(entitySimpleName + FACADE_REMOTE_SUFFIX, targetFolder);
 
-        List<GenerationOptions> intfOptions = getAbstractFacadeMethodOptions(entityFQN, variableName);
+        List<GenerationOptions> intfOptions = getAbstractFacadeMethodOptions(entityFQN, variableName, jakartaVariant);
         if (hasLocal) {
             final SourceGroup[] groups = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
             String simpleName = JavaIdentifiers.unqualify(localInterfaceFQN);
             if (!interfaceExists(groups, pkg, simpleName)) {
-                FileObject local = createInterface(simpleName, EJB_LOCAL, targetFolder);
+                FileObject local = createInterface(simpleName, jakartaVariant ? EJB_LOCAL_JAKARTA : EJB_LOCAL, targetFolder);
                 addMethodToInterface(intfOptions, local);
                 createdFiles.add(local);
             }
@@ -357,7 +370,7 @@ import org.openide.util.NbBundle;
             String simpleName = JavaIdentifiers.unqualify(remoteInterfaceFQN);
             if (!interfaceExists(groups, pkg, simpleName)) {
                 FileObject remotePackage = SessionGenerator.createRemoteInterfacePackage(remoteProject, pkg, targetFolder);
-                FileObject remote = createInterface(simpleName, EJB_REMOTE, remotePackage);
+                FileObject remote = createInterface(simpleName, jakartaVariant ? EJB_REMOTE_JAKARTA : EJB_REMOTE, remotePackage);
                 addMethodToInterface(intfOptions, remote);
                 createdFiles.add(remote);
                 if (entityProject != null && !entityProject.getProjectDirectory().equals(remoteProject.getProjectDirectory())) {
@@ -434,7 +447,7 @@ import org.openide.util.NbBundle;
                 DeclaredType declaredType = wc.getTypes().getDeclaredType(abstactFacadeElement, entityElement.asType());
                 Tree extendsClause = maker.Type(declaredType);
                 ClassTree newClassTree = maker.Class(
-                        maker.addModifiersAnnotation(classTree.getModifiers(), genUtils.createAnnotation(EJB_STATELESS)),
+                        maker.addModifiersAnnotation(classTree.getModifiers(), genUtils.createAnnotation(jakartaVariant ? EJB_STATELESS_JAKARTA : EJB_STATELESS)),
                         classTree.getSimpleName(),
                         classTree.getTypeParameters(),
                         extendsClause,
@@ -476,24 +489,24 @@ import org.openide.util.NbBundle;
      * @return the options representing the methods for a facade, i.e. create/edit/
      * find/remove/findAll.
      */
-    private List<GenerationOptions> getMethodOptions(String entityFQN, String variableName){
+    private List<GenerationOptions> getMethodOptions(String entityFQN, String variableName, boolean jakartaVariant){
 
         GenerationOptions getEMOptions = new GenerationOptions();
         getEMOptions.setAnnotation("java.lang.Override"); //NOI18N
         getEMOptions.setMethodName("getEntityManager"); //NOI18N
         getEMOptions.setOperation(GenerationOptions.Operation.GET_EM);
-        getEMOptions.setReturnType("javax.persistence.EntityManager");//NOI18N
+        getEMOptions.setReturnType(jakartaVariant ? "jakarta.persistence.EntityManager" : "javax.persistence.EntityManager");//NOI18N
         getEMOptions.setModifiers(EnumSet.of(Modifier.PROTECTED));
 
         return Arrays.<GenerationOptions>asList(getEMOptions);
     }
 
-    private List<GenerationOptions> getAbstractFacadeMethodOptions(String entityFQN, String variableName){
+    private List<GenerationOptions> getAbstractFacadeMethodOptions(String entityFQN, String variableName, boolean jakartaVariant){
         //abstract methods
 
         GenerationOptions getEMOptions = new GenerationOptions();
         getEMOptions.setMethodName("getEntityManager"); //NOI18N
-        getEMOptions.setReturnType("javax.persistence.EntityManager");//NOI18N
+        getEMOptions.setReturnType(jakartaVariant ? "jakarta.persistence.EntityManager" : "javax.persistence.EntityManager");//NOI18N
         getEMOptions.setModifiers(EnumSet.of(Modifier.PROTECTED, Modifier.ABSTRACT));
 
         //implemented methods

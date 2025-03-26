@@ -39,8 +39,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -51,6 +53,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
@@ -65,10 +68,7 @@ import javax.lang.model.type.TypeVariable;
 import javax.lang.model.type.WildcardType;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import org.netbeans.api.editor.document.LineDocument;
-import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CodeStyle;
@@ -87,6 +87,7 @@ import org.netbeans.api.java.source.support.ReferencesCount;
 import org.netbeans.api.java.source.ui.ElementHeaders;
 import org.netbeans.api.java.source.ui.ElementJavadoc;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.api.lsp.Command;
 import org.netbeans.api.lsp.Completion;
 import org.netbeans.api.lsp.TextEdit;
 import org.netbeans.modules.java.completion.JavaCompletionTask;
@@ -152,7 +153,7 @@ public class JavaCompletionCollector implements CompletionCollector {
         return ret.get();
     }
 
-    public static final Set<String> SUPPORTED_ELEMENT_KINDS = new HashSet<>(Arrays.asList("PACKAGE", "CLASS", "INTERFACE", "ENUM", "ANNOTATION_TYPE", "METHOD", "CONSTRUCTOR", "INSTANCE_INIT", "STATIC_INIT", "FIELD", "ENUM_CONSTANT", "TYPE_PARAMETER", "MODULE"));
+    public static final Set<String> SUPPORTED_ELEMENT_KINDS = new HashSet<>(Arrays.asList("PACKAGE", "CLASS", "INTERFACE", "ENUM", "ANNOTATION_TYPE", "RECORD", "METHOD", "CONSTRUCTOR", "INSTANCE_INIT", "STATIC_INIT", "FIELD", "ENUM_CONSTANT", "TYPE_PARAMETER", "MODULE"));
 
     public static Supplier<String> getDocumentation(Document doc, int offset, ElementHandle handle) {
         return () -> {
@@ -160,7 +161,10 @@ public class JavaCompletionCollector implements CompletionCollector {
                 JavaDocumentationTask<Future<String>> task = JavaDocumentationTask.create(offset, handle, new JavaDocumentationTask.DocumentationFactory<Future<String>>() {
                     @Override
                     public Future<String> create(CompilationInfo compilationInfo, Element element, Callable<Boolean> cancel) {
-                        return ElementJavadoc.create(compilationInfo, element, cancel).getTextAsync();
+                        ElementJavadoc doc = ElementJavadoc.create(compilationInfo, element, cancel);
+                        return ((CompletableFuture<String>) doc.getTextAsync()).thenApplyAsync(content -> {
+                            return Utilities.resolveLinks(content, doc);
+                        });
                     }
                 }, () -> false);
                 ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
@@ -184,6 +188,8 @@ public class JavaCompletionCollector implements CompletionCollector {
                 return Completion.Kind.Enum;
             case CLASS:
                 return Completion.Kind.Class;
+            case RECORD:
+                return Completion.Kind.Struct;
             case ANNOTATION_TYPE:
                 return Completion.Kind.Interface;
             case INTERFACE:
@@ -216,29 +222,34 @@ public class JavaCompletionCollector implements CompletionCollector {
         }
     }
 
-    public static Supplier<List<TextEdit>> addImport(Document doc, int offset, ElementHandle<?> handle) {
+    public static Supplier<List<TextEdit>> addImportAndInjectPackageIfNeeded(Document doc, int offset, ElementHandle<?> handle) {
         return () -> {
-            try {
-                AtomicReference<String> pkg = new AtomicReference<>();
-                TextEdit textEdit = modify2TextEdit(JavaSource.forDocument(doc), copy -> {
-                    copy.toPhase(JavaSource.Phase.RESOLVED);
-                    String fqn = SourceUtils.resolveImport(copy, copy.getTreeUtilities().pathFor(offset), handle.getQualifiedName());
-                    if (fqn != null) {
-                        int idx = fqn.lastIndexOf('.');
-                        if (idx >= 0) {
-                            pkg.set(fqn.substring(0, idx + 1));
-                        }
-                    }
-                });
-                if (textEdit == null && pkg.get() != null) {
-                    textEdit = new TextEdit(offset, offset, pkg.get());
-                }
-                return textEdit != null ? Collections.singletonList(textEdit) : null;
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
+            ResolvedImport resolved = addImport(doc, offset, handle);
+            List<TextEdit> edits;
+            String insertName = resolved.insertName();
+            int dotIdx = insertName.lastIndexOf('.');
+            if (dotIdx >= 0) {
+                edits = new ArrayList<>(resolved.importEdits().size() + 1);
+                edits.addAll(resolved.importEdits());
+                edits.add(new TextEdit(offset, offset, insertName.substring(0, dotIdx + 1)));
+            } else {
+                edits = resolved.importEdits();
             }
+            return edits;
         };
     }
+
+    public static ResolvedImport addImport(Document doc, int offset, ElementHandle<?> handle) {
+        AtomicReference<String> insertName = new AtomicReference<>();
+        List<TextEdit> textEdits = modify2TextEdits(JavaSource.forDocument(doc), copy -> {
+            copy.toPhase(JavaSource.Phase.RESOLVED);
+            insertName.set(SourceUtils.resolveImport(copy, copy.getTreeUtilities().pathFor(offset), handle.getQualifiedName()));
+        });
+
+        return new ResolvedImport(textEdits, insertName.get());
+    }
+
+    public record ResolvedImport(List<TextEdit> importEdits, String insertName) {}
 
     public static boolean isOfKind(Element e, EnumSet<ElementKind> kinds) {
         if (kinds.contains(e.getKind())) {
@@ -259,37 +270,29 @@ public class JavaCompletionCollector implements CompletionCollector {
         return e != null && e.getSimpleName().length() == 0;
     }
 
-    private static TextEdit modify2TextEdit(JavaSource js, Task<WorkingCopy> task) throws IOException {
-        FileObject[] file = new FileObject[1];
-        ModificationResult changes = js.runModificationTask(wc -> {
-            task.run(wc);
-            file[0] = wc.getFileObject();
-        });
-        List<? extends ModificationResult.Difference> diffs = changes.getDifferences(file[0]);
-        if (diffs == null) {
-            return null;
-        }
-        int startOffset = -1;
-        int endOffset = -1;
-        StringBuilder sb = new StringBuilder();
-        for (ModificationResult.Difference diff : diffs) {
-            int start = diff.getStartPosition().getOffset();
-            int end = diff.getEndPosition().getOffset();
-            String newText = diff.getNewText();
-            if (startOffset < 0 && endOffset < 0) {
-                startOffset = start;
-                endOffset = end;
-                sb.append(newText);
-            } else if (start == endOffset) {
-                endOffset = end;
-                sb.append(newText);
+    private static List<TextEdit> modify2TextEdits(JavaSource js, Task<WorkingCopy> task) {
+        List<TextEdit> edits = new ArrayList<>();
+        try {
+            FileObject[] file = new FileObject[1];
+            ModificationResult changes = js.runModificationTask(wc -> {
+                task.run(wc);
+                file[0] = wc.getFileObject();
+            });
+            List<? extends ModificationResult.Difference> diffs = changes.getDifferences(file[0]);
+            if (diffs != null) {
+                for (ModificationResult.Difference diff : diffs) {
+                    edits.add(new TextEdit(diff.getStartPosition().getOffset(), diff.getEndPosition().getOffset(), diff.getNewText()));
+                }
             }
+        } catch (IOException ioe) {
+            Exceptions.printStackTrace(ioe);
         }
-        return startOffset >= 0 && endOffset >= startOffset ? new TextEdit(startOffset, endOffset, sb.toString()) : null;
+        return edits;
     }
 
     private static class ItemFactoryImpl implements JavaCompletionTask.TypeCastableItemFactory<Completion>,
-            JavaCompletionTask.LambdaItemFactory<Completion>, JavaCompletionTask.ModuleItemFactory<Completion> {
+            JavaCompletionTask.LambdaItemFactory<Completion>, JavaCompletionTask.ModuleItemFactory<Completion>,
+            JavaCompletionTask.RecordPatternItemFactory<Completion> {
 
         private static final String EMPTY = "";
         private static final String ERROR = "<error>";
@@ -423,34 +426,32 @@ public class JavaCompletionCollector implements CompletionCollector {
             int priority = elem.getKind() == ElementKind.ENUM_CONSTANT || elem.getKind() == ElementKind.FIELD ? smartType ? 300 : 1300 : smartType ? 200 : 1200;
             StringBuilder label = new StringBuilder();
             label.append(elem.getSimpleName());
-            if (type != null) {
-                label.append(" : ").append(Utilities.getTypeName(info, type, false));
-            }
             CompletionCollector.Builder builder = CompletionCollector.newBuilder(label.toString())
                     .kind(elementKind2CompletionItemKind(elem.getKind()))
                     .sortText(String.format("%04d%s", priority, elem.getSimpleName().toString()))
                     .insertTextFormat(Completion.TextFormat.PlainText);
+            if (type != null) {
+                builder.labelDescription(Utilities.getTypeName(info, type, false).toString());
+            }
             TextEdit textEdit = null;
             String filter = null;
             if (castType != null) {
-                try {
-                    int castStartOffset = assignToVarOffset;
-                    TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
-                    if (castStartOffset < 0) {
-                        if (tp != null && tp.getLeaf().getKind() == Tree.Kind.MEMBER_SELECT) {
-                            castStartOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
-                        }
+                int castStartOffset = assignToVarOffset;
+                TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
+                if (castStartOffset < 0) {
+                    if (tp != null && tp.getLeaf().getKind() == Tree.Kind.MEMBER_SELECT) {
+                        castStartOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
                     }
-                    StringBuilder castText = new StringBuilder();
-                    castText.append("((").append(AutoImport.resolveImport(info, tp, castType)).append(CodeStyle.getDefault(info.getDocument()).spaceAfterTypeCast() ? ") " : ")");
-                    int castEndOffset = findCastEndPosition(info.getTokenHierarchy().tokenSequence(JavaTokenId.language()), castStartOffset, substitutionOffset);
-                    if (castEndOffset >= 0) {
-                        castText.append(info.getText().subSequence(castStartOffset, castEndOffset)).append(")");
-                        castText.append(info.getText().subSequence(castEndOffset, substitutionOffset)).append(elem.getSimpleName());
-                        textEdit = new TextEdit(castStartOffset, offset, castText.toString());
-                        filter = info.getText().substring(castStartOffset, substitutionOffset) + elem.getSimpleName().toString();
-                    }
-                } catch (IOException ex) {}
+                }
+                StringBuilder castText = new StringBuilder();
+                castText.append("((").append(AutoImport.resolveImport(info, tp, castType)).append(CodeStyle.getDefault(doc).spaceAfterTypeCast() ? ") " : ")");
+                int castEndOffset = findCastEndPosition(info.getTokenHierarchy().tokenSequence(JavaTokenId.language()), castStartOffset, substitutionOffset);
+                if (castEndOffset >= 0) {
+                    castText.append(info.getText().subSequence(castStartOffset, castEndOffset)).append(")");
+                    castText.append(info.getText().subSequence(castEndOffset, substitutionOffset)).append(elem.getSimpleName());
+                    textEdit = new TextEdit(castStartOffset, offset, castText.toString());
+                    filter = info.getText().substring(castStartOffset, substitutionOffset) + elem.getSimpleName().toString();
+                }
             }
             if (textEdit != null && filter != null) {
                 builder.textEdit(textEdit)
@@ -482,52 +483,46 @@ public class JavaCompletionCollector implements CompletionCollector {
 
         @Override
         public Completion createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef) {
-            return createExecutableItem(info, elem, type, null, null, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, smartType, assignToVarOffset, memberRef);
+            return createExecutableItem(info, elem, type, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, false, smartType, assignToVarOffset, memberRef);
+        }
+
+        @Override
+        public Completion createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean afterConstructorTypeParams, boolean smartType, int assignToVarOffset, boolean memberRef) {
+            return createExecutableItem(info, elem, type, null, null, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, afterConstructorTypeParams, smartType, assignToVarOffset, memberRef);
         }
 
         @Override
         public Completion createTypeCastableExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef) {
-            return createExecutableItem(info, elem, type, null, castType, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, smartType, assignToVarOffset, memberRef);
+            return createExecutableItem(info, elem, type, null, castType, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, false, smartType, assignToVarOffset, memberRef);
         }
 
         @Override
         public Completion createThisOrSuperConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, String name) {
-            return createExecutableItem(info, elem, type, name, null, substitutionOffset, null, false, isDeprecated, false, false, false, -1, false);
+            return createExecutableItem(info, elem, type, name, null, substitutionOffset, null, false, isDeprecated, false, false, false, false, -1, false);
         }
 
         @Override
         public Completion createOverrideMethodItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean implement) {
             Completion item = createExecutableItem(info, elem, type, substitutionOffset, null, false, false, false, false, false, -1, false);
-            CompletionCollector.Builder builder = CompletionCollector.newBuilder(String.format("%s - %s", item.getLabel(), implement ? "implement" : "override"))
+            CompletionCollector.Builder builder = CompletionCollector.newBuilder(item.getLabel())
                     .kind(elementKind2CompletionItemKind(elem.getKind()))
+                    .labelDetail(String.format("%s - %s", item.getLabelDetail(), implement ? "implement" : "override"))
+                    .labelDescription(item.getLabelDescription())
                     .sortText(item.getSortText())
-                    .insertTextFormat(Completion.TextFormat.PlainText);
+                    .insertTextFormat(Completion.TextFormat.PlainText)
+                    .textEdit(new TextEdit(substitutionOffset, substitutionOffset, EMPTY))
+                    .additionalTextEdits(() -> modify2TextEdits(JavaSource.forFileObject(info.getFileObject()), wc -> {
+                            wc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                            TreePath tp = wc.getTreeUtilities().pathFor(substitutionOffset);
+                            if (implement) {
+                                GeneratorUtils.generateAbstractMethodImplementation(wc, tp, elem, substitutionOffset);
+                            } else {
+                                GeneratorUtils.generateMethodOverride(wc, tp, elem, substitutionOffset);
+                            }
+                        }));
             ElementHandle<ExecutableElement> handle = SUPPORTED_ELEMENT_KINDS.contains(elem.getKind().name()) ? ElementHandle.create(elem) : null;
             if (handle != null) {
                 builder.documentation(getDocumentation(doc, offset, handle));
-            }
-            try {
-                TextEdit textEdit = modify2TextEdit(JavaSource.forFileObject(info.getFileObject()), wc -> {
-                    wc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                    TreePath tp = wc.getTreeUtilities().pathFor(substitutionOffset);
-                    if (implement) {
-                        GeneratorUtils.generateAbstractMethodImplementation(wc, tp, elem, substitutionOffset);
-                    } else {
-                        GeneratorUtils.generateMethodOverride(wc, tp, elem, substitutionOffset);
-                    }
-                });
-                if (textEdit != null && doc instanceof LineDocument) {
-                    try {
-                        int idx = LineDocumentUtils.getLineIndex((LineDocument) doc, substitutionOffset);
-                        if (idx == LineDocumentUtils.getLineIndex((LineDocument) doc, textEdit.getStartOffset()) && idx == LineDocumentUtils.getLineIndex((LineDocument) doc, textEdit.getEndOffset())) {
-                            builder.textEdit(textEdit);
-                        } else {
-                            builder.textEdit(new TextEdit(substitutionOffset, substitutionOffset, EMPTY))
-                                    .additionalTextEdits(Collections.singletonList(textEdit));
-                        }
-                    } catch (BadLocationException badLocationException) {}
-                }
-            } catch (IOException ex) {
             }
             return builder.build();
         }
@@ -535,19 +530,12 @@ public class JavaCompletionCollector implements CompletionCollector {
         @Override
         public Completion createGetterSetterMethodItem(CompilationInfo info, VariableElement elem, TypeMirror type, int substitutionOffset, String name, boolean setter) {
             String typeName = Utilities.getTypeName(info, type, false).toString();
-            StringBuilder label = new StringBuilder();
+            StringBuilder labelDetail = new StringBuilder();
             StringBuilder sortParams = new StringBuilder();
-            label.append(name).append('(');
+            labelDetail.append('(');
             sortParams.append('(');
             if (setter) {
-                CodeStyle cs = null;
-                try {
-                    cs = CodeStyle.getDefault(info.getDocument());
-                } catch (IOException ex) {
-                }
-                if (cs == null) {
-                    cs = CodeStyle.getDefault(info.getFileObject());
-                }
+                CodeStyle cs = CodeStyle.getDefault(doc);
                 boolean isStatic = elem.getModifiers().contains(Modifier.STATIC);
                 String simpleName = CodeStyleUtils.removePrefixSuffix(elem.getSimpleName(),
                     isStatic ? cs.getStaticFieldNamePrefix() : cs.getFieldNamePrefix(),
@@ -556,57 +544,49 @@ public class JavaCompletionCollector implements CompletionCollector {
                         simpleName,
                         cs.getParameterNamePrefix(),
                         cs.getParameterNameSuffix());
-                label.append(typeName).append(' ').append(paramName);
+                labelDetail.append(typeName).append(' ').append(paramName);
                 sortParams.append(typeName);
             }
-            label.append(')');
-            if (!setter) {
-                label.append(": ").append(typeName);
-            }
-            label.append(" - generate");
-            CompletionCollector.Builder builder = CompletionCollector.newBuilder(label.toString())
+            labelDetail.append(") - generate");
+            Builder builder = CompletionCollector.newBuilder(name)
                     .kind(Completion.Kind.Method)
+                    .labelDetail(labelDetail.toString())
                     .insertTextFormat(Completion.TextFormat.PlainText)
-                    .sortText(String.format("%04d%s#%02d%s", 1500, name, setter ? 1 : 0, sortParams.toString()));
-            try {
-                TextEdit textEdit = modify2TextEdit(JavaSource.forFileObject(info.getFileObject()), wc -> {
-                    wc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                    TreePath tp = wc.getTreeUtilities().pathFor(substitutionOffset);
-                    if (TreeUtilities.CLASS_TREE_KINDS.contains(tp.getLeaf().getKind())) {
-                        if (Utilities.inAnonymousOrLocalClass(tp)) {
-                            wc.toPhase(JavaSource.Phase.RESOLVED);
+                    .sortText(String.format("%04d%s#%02d%s", 1500, name, setter ? 1 : 0, sortParams.toString()))
+                    .textEdit(new TextEdit(substitutionOffset, substitutionOffset, EMPTY))
+                    .additionalTextEdits(() -> modify2TextEdits(JavaSource.forFileObject(info.getFileObject()), wc -> {
+                        wc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                        TreePath tp = wc.getTreeUtilities().pathFor(substitutionOffset);
+                        if (TreeUtilities.CLASS_TREE_KINDS.contains(tp.getLeaf().getKind())) {
+                            if (Utilities.inAnonymousOrLocalClass(tp)) {
+                                wc.toPhase(JavaSource.Phase.RESOLVED);
+                            }
+                            TypeElement te = (TypeElement)wc.getTrees().getElement(tp);
+                            if (te != null) {
+                                GeneratorUtilities gu = GeneratorUtilities.get(wc);
+                                MethodTree method = setter ? gu.createSetter(te, elem) : gu.createGetter(te, elem);
+                                ClassTree decl = GeneratorUtils.insertClassMember(wc, (ClassTree)tp.getLeaf(), method, substitutionOffset);
+                                wc.rewrite(tp.getLeaf(), decl);
+                            }
                         }
-                        TypeElement te = (TypeElement)wc.getTrees().getElement(tp);
-                        if (te != null) {
-                            GeneratorUtilities gu = GeneratorUtilities.get(wc);
-                            MethodTree method = setter ? gu.createSetter(te, elem) : gu.createGetter(te, elem);
-                            ClassTree decl = GeneratorUtils.insertClassMember(wc, (ClassTree)tp.getLeaf(), method, substitutionOffset);
-                            wc.rewrite(tp.getLeaf(), decl);
-                        }
-                    }
-                });
-                if (textEdit != null && doc instanceof LineDocument) {
-                    try {
-                        int idx = LineDocumentUtils.getLineIndex((LineDocument) doc, substitutionOffset);
-                        if (idx == LineDocumentUtils.getLineIndex((LineDocument) doc, textEdit.getStartOffset()) && idx == LineDocumentUtils.getLineIndex((LineDocument) doc, textEdit.getEndOffset())) {
-                            builder.textEdit(textEdit);
-                        } else {
-                            builder.textEdit(new TextEdit(substitutionOffset, substitutionOffset, EMPTY))
-                                    .additionalTextEdits(Collections.singletonList(textEdit));
-                        }
-                    } catch (BadLocationException badLocationException) {}
-                }
-            } catch (IOException ex) {
+                    }));
+            if (!setter) {
+                builder.labelDescription(typeName);
             }
             return builder.build();
         }
 
         @Override
         public Completion createDefaultConstructorItem(TypeElement elem, int substitutionOffset, boolean smartType) {
+            Builder builder = CompletionCollector.newBuilder(elem.getSimpleName().toString())
+                    .kind(Completion.Kind.Constructor)
+                    .labelDetail("()")
+                    .sortText(String.format("%04d%s#0", smartType ? 650 : 1650, elem.getSimpleName().toString()));
             StringBuilder insertText = new StringBuilder();
-            insertText.append(elem.getSimpleName());
+            if (substitutionOffset < offset) {
+                insertText.append((elem.getSimpleName()));
+            }
             insertText.append(CodeStyle.getDefault(doc).spaceBeforeMethodCallParen() ? " ()" : "()");
-            boolean asTemplate = false;
             if (elem.getModifiers().contains(Modifier.ABSTRACT)) {
                 try {
                     if (CodeStyle.getDefault(info.getDocument()).getClassDeclBracePlacement() == CodeStyle.BracePlacement.SAME_LINE) {
@@ -614,16 +594,14 @@ public class JavaCompletionCollector implements CompletionCollector {
                     } else {
                         insertText.append("\n{\n$0}");
                     }
-                    asTemplate = true;
+                    builder.command(new Command("Complete Abstract Methods", "java.complete.abstract.methods"));
                 } catch (IOException ioe) {
                 }
+                builder.insertTextFormat(Completion.TextFormat.Snippet);
+            } else {
+                builder.insertTextFormat(Completion.TextFormat.PlainText);
             }
-            return CompletionCollector.newBuilder(elem.getSimpleName().toString() + "()")
-                    .kind(Completion.Kind.Constructor)
-                    .insertText(insertText.toString())
-                    .insertTextFormat(asTemplate ? Completion.TextFormat.Snippet : Completion.TextFormat.PlainText)
-                    .sortText(String.format("%04d%s#0", smartType ? 650 : 1650, elem.getSimpleName().toString()))
-                    .build();
+            return builder.insertText(insertText.toString()).build();
         }
 
         @Override
@@ -667,7 +645,8 @@ public class JavaCompletionCollector implements CompletionCollector {
                 if (ts.moveNext() && ts.offset() <= offset) {
                     switch (ts.token().id()) {
                         case STRING_LITERAL:
-                            textEdit = new TextEdit(ts.offset(), offset, value);
+                            int end = ts.offset() + ts.token().length() == offset + 1 ? offset + 1 : offset;
+                            textEdit = new TextEdit(ts.offset(), end, value);
                             break;
                         case MULTILINE_STRING_LITERAL:
                             String[] tokenLines = ts.token().text().toString().split("\n");
@@ -688,7 +667,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                 }
             }
             Builder builder = CompletionCollector.newBuilder(label)
-                    .kind(Completion.Kind.Text)
+                    .kind(Completion.Kind.Value)
                     .sortText(value)
                     .insertTextFormat(Completion.TextFormat.PlainText)
                     .documentation(documentation);
@@ -701,53 +680,82 @@ public class JavaCompletionCollector implements CompletionCollector {
         private static final Object KEY_IMPORT_TEXT_EDITS = new Object();
 
         @Override
-        public Completion createStaticMemberItem(CompilationInfo info, DeclaredType type, Element memberElem, TypeMirror memberType, boolean multipleVersions, int substitutionOffset, boolean isDeprecated, boolean addSemicolon) {
-            //TODO: prefer static imports (but would be much slower?)
-            //TODO: should be resolveImport instead of addImports:
-            Map<Element, TextEdit> imports = (Map<Element, TextEdit>) info.getCachedValue(KEY_IMPORT_TEXT_EDITS);
+        public Completion createStaticMemberItem(CompilationInfo info, DeclaredType type, Element memberElem, TypeMirror memberType, boolean multipleVersions, int substitutionOffset, boolean isDeprecated, boolean addSemicolon, boolean smartType) {
+            Map<Element, ResolvedImport> imports = (Map<Element, ResolvedImport>) info.getCachedValue(KEY_IMPORT_TEXT_EDITS);
             if (imports == null) {
                 info.putCachedValue(KEY_IMPORT_TEXT_EDITS, imports = new HashMap<>(), CompilationInfo.CacheClearPolicy.ON_TASK_END);
             }
-            TextEdit currentClassImport = imports.computeIfAbsent(type.asElement(), toImport -> {
-                try {
-                    return modify2TextEdit(JavaSource.forFileObject(info.getFileObject()), wc -> {
-                        wc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                        wc.rewrite(info.getCompilationUnit(), GeneratorUtilities.get(wc).addImports(wc.getCompilationUnit(), new HashSet<>(Arrays.asList(toImport))));
-                    });
-                } catch (IOException ex) {
-                    return null;
-                }
+            ResolvedImport currentClassImport = imports.computeIfAbsent(type.asElement(), toImport -> {
+                return addImport(doc, offset, ElementHandle.create(toImport));
             });
             String label = type.asElement().getSimpleName() + "." + memberElem.getSimpleName();
             String sortText = memberElem.getSimpleName().toString();
+            String memberTypeName;
+            StringBuilder labelDetail = new StringBuilder();
+            StringBuilder insertText = new StringBuilder();
+            insertText.append(currentClassImport.insertName()).append(".").append(memberElem.getSimpleName());
+            boolean asTemplate = false;
             if (memberElem.getKind().isField()) {
+                memberTypeName = Utilities.getTypeName(info, memberType, false).toString();
                 sortText += String.format("#%s", Utilities.getTypeName(info, type, false)); //NOI18N
-            } else {
+            } else if (memberElem.getKind() == ElementKind.METHOD) {
+                CodeStyle cs = CodeStyle.getDefault(doc);
+                memberTypeName = Utilities.getTypeName(info, ((ExecutableType) memberType).getReturnType(), false).toString();
                 StringBuilder sortParams = new StringBuilder();
+                labelDetail.append('(');
                 sortParams.append('(');
+                insertText.append(cs.spaceBeforeMethodCallParen() ? " (" : "(");
                 int cnt = 0;
-                Iterator<? extends TypeMirror> tIt = ((ExecutableType)memberType).getParameterTypes().iterator();
-                while(tIt.hasNext()) {
+                Iterator<? extends VariableElement> it = ((ExecutableElement) memberElem).getParameters().iterator();
+                Iterator<? extends TypeMirror> tIt = ((ExecutableType) memberType).getParameterTypes().iterator();
+                while (it.hasNext() && tIt.hasNext()) {
                     TypeMirror tm = tIt.next();
                     if (tm == null) {
                         break;
                     }
-                    sortParams.append(Utilities.getTypeName(info, tm, false, ((ExecutableElement)memberElem).isVarArgs() && !tIt.hasNext()).toString());
+                    String paramTypeName = Utilities.getTypeName(info, tm, false, ((ExecutableElement) memberElem).isVarArgs() && !tIt.hasNext()).toString();
+                    String paramName = it.next().getSimpleName().toString();
+                    labelDetail.append(paramTypeName).append(' ').append(paramName);
+                    sortParams.append(paramTypeName);
+                    VariableElement inst = instanceOf(tm, paramName);
+                    if (cnt == 0 && cs.spaceWithinMethodCallParens()) {
+                        insertText.append(' ');
+                    }
+                    insertText.append("${").append(cnt).append(":").append(inst != null ? inst.getSimpleName() : paramName).append("}");
+                    asTemplate = true;
                     if (tIt.hasNext()) {
+                        labelDetail.append(", ");
                         sortParams.append(',');
+                        if (cs.spaceBeforeComma()) {
+                            insertText.append(' ');
+                        }
+                        insertText.append(',');
+                        if (cs.spaceAfterComma()) {
+                            insertText.append(' ');
+                        }
+                    } else if (cs.spaceWithinMethodCallParens()) {
+                        insertText.append(' ');
                     }
                     cnt++;
                 }
+                labelDetail.append(')');
                 sortParams.append(')');
+                insertText.append(')');
                 sortText += String.format("#%02d#%s#s", cnt, sortParams.toString(), Utilities.getTypeName(info, type, false)); //NOI18N
+            } else {
+                return null;
             }
             CompletionCollector.Builder builder = CompletionCollector.newBuilder(label)
                     .kind(elementKind2CompletionItemKind(memberElem.getKind()))
-                    .insertText(label)
-                    .insertTextFormat(Completion.TextFormat.PlainText)
-                    .sortText(String.format("%04d%s", memberElem.getKind().isField() ? 720 : 750, sortText));
-            if (currentClassImport != null) {
-                builder.additionalTextEdits(Collections.singletonList(currentClassImport));
+                    .labelDescription(memberTypeName)
+                    .insertText(insertText.toString())
+                    .insertTextFormat(asTemplate ? Completion.TextFormat.Snippet : Completion.TextFormat.PlainText)
+                    .sortText(String.format("%04d%s", (memberElem.getKind().isField() ? 720 : 750) + (smartType ? 0: 1000), sortText));
+            if (labelDetail.length() > 0) {
+                builder.labelDetail(labelDetail.toString());
+            }
+            if (!currentClassImport.importEdits().isEmpty()) {
+                builder.additionalTextEdits(currentClassImport.importEdits());
             }
             ElementHandle<Element> handle = SUPPORTED_ELEMENT_KINDS.contains(memberElem.getKind().name()) ? ElementHandle.create(memberElem) : null;
             if (handle != null) {
@@ -760,7 +768,7 @@ public class JavaCompletionCollector implements CompletionCollector {
         }
 
         @Override
-        public Completion createStaticMemberItem(ElementHandle<TypeElement> handle, String name, int substitutionOffset, boolean addSemicolon, ReferencesCount referencesCount, Source source) {
+        public Completion createStaticMemberItem(ElementHandle<TypeElement> handle, String name, int substitutionOffset, boolean addSemicolon, ReferencesCount referencesCount, Source source, boolean smartType) {
             return null; //TODO: fill
         }
 
@@ -772,23 +780,16 @@ public class JavaCompletionCollector implements CompletionCollector {
         @Override
         public Completion createInitializeAllConstructorItem(CompilationInfo info, boolean isDefault, Iterable<? extends VariableElement> fields, ExecutableElement superConstructor, TypeElement parent, int substitutionOffset) {
             String simpleName = parent.getSimpleName().toString();
-            StringBuilder label = new StringBuilder();
+            StringBuilder labelDetail = new StringBuilder();
             StringBuilder sortParams = new StringBuilder();
-            label.append(simpleName).append('(');
+            labelDetail.append('(');
             sortParams.append('(');
-            CodeStyle cs = null;
-            try {
-                cs = CodeStyle.getDefault(info.getDocument());
-            } catch (IOException ex) {
-            }
-            if (cs == null) {
-                cs = CodeStyle.getDefault(info.getFileObject());
-            }
             int cnt = 0;
             if (!isDefault) {
+                CodeStyle cs = CodeStyle.getDefault(doc);
                 for (VariableElement ve : fields) {
                     if (cnt > 0) {
-                        label.append(", ");
+                        labelDetail.append(", ");
                         sortParams.append(",");
                     }
                     boolean isStatic = ve.getModifiers().contains(Modifier.STATIC);
@@ -800,14 +801,14 @@ public class JavaCompletionCollector implements CompletionCollector {
                             cs.getParameterNamePrefix(),
                             cs.getParameterNameSuffix());
                     String paramTypeName = Utilities.getTypeName(info, ve.asType(), false).toString();
-                    label.append(paramTypeName).append(' ').append(sName);
+                    labelDetail.append(paramTypeName).append(' ').append(sName);
                     sortParams.append(paramTypeName);
                     cnt++;
                 }
                 if (superConstructor != null) {
                     for (VariableElement ve : superConstructor.getParameters()) {
                         if (cnt > 0) {
-                            label.append(", ");
+                            labelDetail.append(", ");
                             sortParams.append(",");
                         }
                         String sName = CodeStyleUtils.removePrefixSuffix(ve.getSimpleName(), cs.getParameterNamePrefix(), cs.getParameterNameSuffix());
@@ -816,53 +817,45 @@ public class JavaCompletionCollector implements CompletionCollector {
                                 cs.getParameterNamePrefix(),
                                 cs.getParameterNameSuffix());
                         String paramTypeName = Utilities.getTypeName(info, ve.asType(), false).toString();
-                        label.append(paramTypeName).append(' ').append(sName);
+                        labelDetail.append(paramTypeName).append(' ').append(sName);
                         sortParams.append(paramTypeName);
                         cnt++;
                     }
                 }
             }
-            label.append(") - generate");
+            labelDetail.append(") - generate");
             sortParams.append(')');
-            CompletionCollector.Builder builder = CompletionCollector.newBuilder(label.toString())
+            ElementHandle<?> parentPath = ElementHandle.create(parent);
+            return CompletionCollector.newBuilder(simpleName)
                     .kind(Completion.Kind.Constructor)
+                    .labelDetail(labelDetail.toString())
                     .insertTextFormat(Completion.TextFormat.PlainText)
-                    .sortText(String.format("%04d%s#%02d%s", 1400, simpleName, cnt, sortParams.toString()));
-            try {
-                TextEdit textEdit = modify2TextEdit(JavaSource.forFileObject(info.getFileObject()), wc -> {
-                    wc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                    TreePath tp = wc.getTreeUtilities().pathFor(substitutionOffset);
-                    if (TreeUtilities.CLASS_TREE_KINDS.contains(tp.getLeaf().getKind())) {
-                        if (parent == wc.getTrees().getElement(tp)) {
-                            ArrayList<VariableElement> fieldElements = new ArrayList<VariableElement>();
-                            for (VariableElement fieldElement : fields) {
-                                if (fieldElement != null && fieldElement.getKind().isField()) {
-                                    fieldElements.add((VariableElement)fieldElement);
+                    .sortText(String.format("%04d%s#%02d%s", 1400, simpleName, cnt, sortParams.toString()))
+                    .textEdit(new TextEdit(substitutionOffset, substitutionOffset, EMPTY))
+                    .additionalTextEdits(() -> modify2TextEdits(JavaSource.forFileObject(info.getFileObject()), wc -> {
+                        wc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                        TreePath tp = wc.getTreeUtilities().pathFor(substitutionOffset);
+                        if (TreeUtilities.CLASS_TREE_KINDS.contains(tp.getLeaf().getKind())) {
+                            Element currentType = wc.getTrees().getElement(tp);
+                            ElementHandle<?> currentTypePath =
+                                    currentType != null ? ElementHandle.create(currentType)
+                                                        : null;
+                            if (Objects.equals(parentPath, currentTypePath)) {
+                                ArrayList<VariableElement> fieldElements = new ArrayList<>();
+                                for (VariableElement fieldElement : fields) {
+                                    if (fieldElement != null && fieldElement.getKind().isField()) {
+                                        fieldElements.add((VariableElement)fieldElement);
+                                    }
                                 }
+                                ClassTree clazz = (ClassTree) tp.getLeaf();
+                                GeneratorUtilities gu = GeneratorUtilities.get(wc);
+                                MethodTree ctor = isDefault ? gu.createDefaultConstructor(parent, fieldElements, superConstructor)
+                                        : gu.createConstructor(parent, fieldElements, superConstructor);
+                                ClassTree decl = GeneratorUtils.insertClassMember(wc, clazz, ctor, substitutionOffset);
+                                wc.rewrite(clazz, decl);
                             }
-                            ClassTree clazz = (ClassTree) tp.getLeaf();
-                            GeneratorUtilities gu = GeneratorUtilities.get(wc);
-                            MethodTree ctor = isDefault ? gu.createDefaultConstructor(parent, fieldElements, superConstructor)
-                                    : gu.createConstructor(parent, fieldElements, superConstructor);
-                            ClassTree decl = GeneratorUtils.insertClassMember(wc, clazz, ctor, substitutionOffset);
-                            wc.rewrite(clazz, decl);
                         }
-                    }
-                });
-                if (textEdit != null && doc instanceof LineDocument) {
-                    try {
-                        int idx = LineDocumentUtils.getLineIndex((LineDocument) doc, substitutionOffset);
-                        if (idx == LineDocumentUtils.getLineIndex((LineDocument) doc, textEdit.getStartOffset()) && idx == LineDocumentUtils.getLineIndex((LineDocument) doc, textEdit.getEndOffset())) {
-                            builder.textEdit(textEdit);
-                        } else {
-                            builder.textEdit(new TextEdit(substitutionOffset, substitutionOffset, EMPTY))
-                                    .additionalTextEdits(Collections.singletonList(textEdit));
-                        }
-                    } catch (BadLocationException badLocationException) {}
-                }
-            } catch (IOException ex) {
-            }
-            return builder.build();
+                    })).build();
         }
 
         @Override
@@ -870,6 +863,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             StringBuilder label = new StringBuilder();
             StringBuilder insertText = new StringBuilder();
             StringBuilder sortText = new StringBuilder();
+            CodeStyle cs = CodeStyle.getDefault(doc);
             label.append('(');
             insertText.append('(');
             sortText.append('(');
@@ -883,28 +877,33 @@ public class JavaCompletionCollector implements CompletionCollector {
                 if (tm == null) {
                     break;
                 }
-                if (cnt > 0) {
-                    label.append(", ");
-                    insertText.append(", ");
-                    sortText.append(',');
+                if (cnt == 0 && cs.spaceWithinLambdaParens()) {
+                    insertText.append(' ');
                 }
                 cnt++;
                 String paramTypeName = Utilities.getTypeName(info, tm, false, desc.isVarArgs() && !tIt.hasNext()).toString();
-                String paramName = it.next().getSimpleName().toString();
-                label.append(paramTypeName).append(' ').append(paramName);
+                VariableElement var = it.next();
+                List<String> varNames = Utilities.varNamesSuggestions(tm, var.getKind(), Collections.emptySet(), null, null, info.getTypes(), info.getElements(), Collections.emptyList(), CodeStyle.getDefault(info.getFileObject()));
+                String paramName = varNames.isEmpty() ? var.getSimpleName().toString() : varNames.get(0);
+                label.append(paramName);
                 insertText.append("${").append(cnt).append(":").append(paramName).append("}");
                 sortText.append(paramTypeName);
+                if (it.hasNext()) {
+                    label.append(", ");
+                    sortText.append(',');
+                    if (cs.spaceBeforeComma()) {
+                        insertText.append(' ');
+                    }
+                    insertText.append(',');
+                    if (cs.spaceAfterComma()) {
+                        insertText.append(' ');
+                    }
+                } else if (cs.spaceWithinLambdaParens()) {
+                    insertText.append(' ');
+                }
             }
             TypeMirror retType = descType.getReturnType();
             label.append(") -> ").append(Utilities.getTypeName(info, retType, false));
-            CodeStyle cs = null;
-            try {
-                cs = CodeStyle.getDefault(info.getDocument());
-            } catch (IOException ex) {
-            }
-            if (cs == null) {
-                cs = CodeStyle.getDefault(info.getFileObject());
-            }
             insertText.append(cs.spaceAroundLambdaArrow() ? ") ->" : ")->"); //NOI18N
             if (cs.getOtherBracePlacement() == CodeStyle.BracePlacement.SAME_LINE) {
                 insertText.append(cs.spaceAroundLambdaArrow() ? " {\n$0}" : "{\n$0}");
@@ -922,6 +921,42 @@ public class JavaCompletionCollector implements CompletionCollector {
                     .build();
         }
 
+
+        @Override
+        public Completion createRecordPatternItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addTypeVars) {
+            String simpleName = elem.getSimpleName().toString();
+            Iterator<? extends RecordComponentElement> it = elem.getRecordComponents().iterator();
+            StringBuilder labelDetail = new StringBuilder();
+            StringBuilder insertText = new StringBuilder(simpleName);
+            RecordComponentElement recordComponent;
+            int cnt = 1;
+            labelDetail.append("(");
+            insertText.append("(");
+            while (it.hasNext()) {
+                recordComponent = it.next();
+                CharSequence typeName = Utilities.getTypeName(info, recordComponent.getAccessor().getReturnType(), false);
+                labelDetail.append(typeName);
+                insertText.append("${").append(cnt++).append(":").append(typeName).append("}");
+                labelDetail.append(" ");
+                insertText.append(" ");
+                labelDetail.append(recordComponent.getSimpleName());
+                insertText.append("${").append(cnt++).append(":").append(recordComponent.getSimpleName()).append("}");
+                if (it.hasNext()) {
+                    labelDetail.append(", ");
+                    insertText.append(", ");
+                }
+            }
+            labelDetail.append(")");
+            insertText.append(")");
+            return CompletionCollector.newBuilder(simpleName)
+                    .kind(Completion.Kind.Struct)
+                    .labelDetail(labelDetail.toString())
+                    .insertText(insertText.toString())
+                    .insertTextFormat(Completion.TextFormat.Snippet)
+                    .sortText(String.format("%04d%s#", 650, simpleName))
+                    .build();
+        }
+
         private Completion createTypeItem(CompilationInfo info, String prefix, ElementHandle<TypeElement> handle, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addTypeVars, boolean addSimpleName, boolean smartType) {
             int off = info.getSnapshot().getEmbeddedOffset(substitutionOffset);
             String name = elem.getQualifiedName().toString();
@@ -934,9 +969,6 @@ public class JavaCompletionCollector implements CompletionCollector {
                 insertText.append(prefix);
             }
             label.append(elem.getSimpleName());
-            if (pkgName.length() > 0) {
-                label.append(" (").append(pkgName).append(')');
-            }
             boolean asTemplate = false;
             boolean inImport = false;
             int cnt = 1;
@@ -1010,15 +1042,21 @@ public class JavaCompletionCollector implements CompletionCollector {
                     .sortText(String.format("%04d%s#%02d#%s", smartType ? 800 : 1800, elem.getSimpleName().toString(), Utilities.getImportanceLevel(name), pkgName))
                     .insertText(insertText.toString());
             if (asTemplate) {
-                    builder.insertTextFormat(Completion.TextFormat.Snippet);
+                builder.insertTextFormat(Completion.TextFormat.Snippet);
             } else {
-                    builder.insertTextFormat(Completion.TextFormat.Snippet)
-                            .addCommitCharacter('.');
+                builder.insertTextFormat(Completion.TextFormat.Snippet)
+                        .addCommitCharacter('.');
+            }
+            if (pkgName.length() > 0) {
+                builder.labelDescription(pkgName);
+            }
+            if (insideNew) {
+                builder.command(new Command("Invoke Completion", "editor.action.triggerSuggest"));
             }
             if (handle != null) {
                 builder.documentation(getDocumentation(doc, off, handle));
                 if (!addSimpleName && !inImport) {
-                    builder.additionalTextEdits(addImport(doc, off, handle));
+                    builder.additionalTextEdits(addImportAndInjectPackageIfNeeded(doc, off, handle));
                 }
             }
             if (isDeprecated) {
@@ -1027,30 +1065,37 @@ public class JavaCompletionCollector implements CompletionCollector {
             return builder.build();
         }
 
-        private Completion createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, String name, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef) {
+        private Completion createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, String name, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean afterConstructorTypeParams, boolean smartType, int assignToVarOffset, boolean memberRef) {
             String simpleName = name != null ? name : (elem.getKind() == ElementKind.METHOD ? elem : elem.getEnclosingElement()).getSimpleName().toString();
             Iterator<? extends VariableElement> it = elem.getParameters().iterator();
             Iterator<? extends TypeMirror> tIt = type.getParameterTypes().iterator();
-            StringBuilder label = new StringBuilder();
+            StringBuilder labelDetail = new StringBuilder();
             StringBuilder insertText = new StringBuilder();
             StringBuilder sortParams = new StringBuilder();
-            label.append(simpleName).append("(");
-            insertText.append(simpleName);
+            if (!afterConstructorTypeParams) {
+                insertText.append(simpleName);
+            }
+            labelDetail.append("(");
+            CodeStyle cs = CodeStyle.getDefault(doc);
             if (!inImport && !memberRef) {
-                insertText.append(CodeStyle.getDefault(doc).spaceBeforeMethodCallParen() ? " (" : "(");
+                insertText.append(cs.spaceBeforeMethodCallParen() ? " (" : "(");
             }
             sortParams.append('(');
             int cnt = 0;
             boolean asTemplate = false;
+            Command command = null;
             while(it.hasNext() && tIt.hasNext()) {
                 TypeMirror tm = tIt.next();
                 if (tm == null) {
                     break;
                 }
+                if (!inImport && !memberRef && cnt == 0 && cs.spaceWithinMethodCallParens()) {
+                    insertText.append(' ');
+                }
                 cnt++;
                 String paramTypeName = Utilities.getTypeName(info, tm, false, elem.isVarArgs() && !tIt.hasNext()).toString();
                 String paramName = it.next().getSimpleName().toString();
-                label.append(paramTypeName).append(' ').append(paramName);
+                labelDetail.append(paramTypeName).append(' ').append(paramName);
                 sortParams.append(paramTypeName);
                 if (!inImport && !memberRef) {
                     VariableElement inst = instanceOf(tm, paramName);
@@ -1058,19 +1103,24 @@ public class JavaCompletionCollector implements CompletionCollector {
                     asTemplate = true;
                 }
                 if (tIt.hasNext()) {
-                    label.append(", ");
+                    labelDetail.append(", ");
                     sortParams.append(',');
                     if (!inImport && !memberRef) {
-                        insertText.append(", ");
+                        if (cs.spaceBeforeComma()) {
+                            insertText.append(' ');
+                        }
+                        insertText.append(',');
+                        if (cs.spaceAfterComma()) {
+                            insertText.append(' ');
+                        }
                     }
+                } else if (!inImport && !memberRef && cs.spaceWithinMethodCallParens()) {
+                    insertText.append(' ');
                 }
             }
             sortParams.append(')');
-            label.append(')');
+            labelDetail.append(')');
             TypeMirror retType = type.getReturnType();
-            if (elem.getKind() == ElementKind.METHOD) {
-                label.append(" : ").append(Utilities.getTypeName(info, retType, false).toString());
-            }
             if (inImport) {
                 insertText.append(';');
             } else if (!memberRef) {
@@ -1082,45 +1132,45 @@ public class JavaCompletionCollector implements CompletionCollector {
                 if (name == null && elem.getKind() == ElementKind.CONSTRUCTOR
                         && (elem.getEnclosingElement().getModifiers().contains(Modifier.ABSTRACT)
                         || elem.getModifiers().contains(Modifier.PROTECTED) && !info.getTrees().isAccessible(scope, elem, (DeclaredType)elem.getEnclosingElement().asType()))) {
-                    try {
-                        if (CodeStyle.getDefault(info.getDocument()).getClassDeclBracePlacement() == CodeStyle.BracePlacement.SAME_LINE) {
-                            insertText.append(" {\n$0}");
-                        } else {
-                            insertText.append("\n{\n$0}");
-                        }
-                        asTemplate = true;
-                    } catch (IOException ioe) {
+                    if (cs.getClassDeclBracePlacement() == CodeStyle.BracePlacement.SAME_LINE) {
+                        insertText.append(" {\n$0}");
+                    } else {
+                        insertText.append("\n{\n$0}");
                     }
+                    command = new Command("Complete Abstract Methods", "java.complete.abstract.methods");
+                    asTemplate = true;
                 } else if (asTemplate) {
                     insertText.append("$0");
                 }
             }
             int priority = elem.getKind() == ElementKind.METHOD ? smartType ? 500 : 1500 : smartType ? 650 : name != null ? 1550 : 1650;
-            CompletionCollector.Builder builder = CompletionCollector.newBuilder(label.toString())
+            CompletionCollector.Builder builder = CompletionCollector.newBuilder(simpleName)
                     .kind(elementKind2CompletionItemKind(elem.getKind()))
+                    .labelDetail(labelDetail.toString())
                     .insertTextFormat(asTemplate ? Completion.TextFormat.Snippet : Completion.TextFormat.PlainText)
                     .sortText(String.format("%04d%s#%02d%s", priority, simpleName, cnt, sortParams.toString()));
+            if (elem.getKind() == ElementKind.METHOD) {
+                builder.labelDescription(Utilities.getTypeName(info, retType, false).toString());
+            }
             TextEdit textEdit = null;
             String filter = null;
             if (castType != null) {
-                try {
-                    TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
-                    int castStartOffset = assignToVarOffset;
-                    if (castStartOffset < 0) {
-                        if (tp != null && tp.getLeaf().getKind() == Tree.Kind.MEMBER_SELECT) {
-                            castStartOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
-                        }
+                TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
+                int castStartOffset = assignToVarOffset;
+                if (castStartOffset < 0) {
+                    if (tp != null && tp.getLeaf().getKind() == Tree.Kind.MEMBER_SELECT) {
+                        castStartOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
                     }
-                    StringBuilder castText = new StringBuilder();
-                    castText.append("((").append(AutoImport.resolveImport(info, tp, castType)).append(CodeStyle.getDefault(info.getDocument()).spaceAfterTypeCast() ? ") " : ")");
-                    int castEndOffset = findCastEndPosition(info.getTokenHierarchy().tokenSequence(JavaTokenId.language()), castStartOffset, substitutionOffset);
-                    if (castEndOffset >= 0) {
-                        castText.append(info.getText().subSequence(castStartOffset, castEndOffset)).append(")");
-                        castText.append(info.getText().subSequence(castEndOffset, substitutionOffset)).append(insertText);
-                        textEdit = new TextEdit(castStartOffset, offset, castText.toString());
-                        filter = info.getText().substring(castStartOffset, substitutionOffset) + simpleName;
-                    }
-                } catch (IOException ex) {}
+                }
+                StringBuilder castText = new StringBuilder();
+                castText.append("((").append(AutoImport.resolveImport(info, tp, castType)).append(cs.spaceAfterTypeCast() ? ") " : ")");
+                int castEndOffset = findCastEndPosition(info.getTokenHierarchy().tokenSequence(JavaTokenId.language()), castStartOffset, substitutionOffset);
+                if (castEndOffset >= 0) {
+                    castText.append(info.getText().subSequence(castStartOffset, castEndOffset)).append(")");
+                    castText.append(info.getText().subSequence(castEndOffset, substitutionOffset)).append(insertText);
+                    textEdit = new TextEdit(castStartOffset, offset, castText.toString());
+                    filter = info.getText().substring(castStartOffset, substitutionOffset) + simpleName;
+                }
             }
             if (textEdit != null && filter != null) {
                 builder.textEdit(textEdit)
@@ -1129,7 +1179,6 @@ public class JavaCompletionCollector implements CompletionCollector {
             } else {
                 builder.insertText(insertText.toString());
             }
-
             ElementHandle<ExecutableElement> handle = SUPPORTED_ELEMENT_KINDS.contains(elem.getKind().name()) ? ElementHandle.create(elem) : null;
             if (handle != null) {
                 builder.documentation(getDocumentation(doc, offset, handle));
@@ -1287,6 +1336,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                     case LINE_COMMENT:
                     case BLOCK_COMMENT:
                     case JAVADOC_COMMENT:
+                    case JAVADOC_COMMENT_LINE_RUN:
                         break;
                     default:
                         return ts;

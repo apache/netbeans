@@ -83,7 +83,7 @@ public class ServerFileDistributor extends ServerProgress {
     private static Map<J2eeModule.Type, List<String>> j2eeTypeMap = null;
     static synchronized List getDescriptorPath(J2eeModule module) {
         if (j2eeTypeMap == null) {
-            j2eeTypeMap = new HashMap();
+            j2eeTypeMap = new HashMap<>();
             j2eeTypeMap.put(J2eeModule.Type.EJB,
                     Arrays.asList(new String[]{J2eeModule.EJBJAR_XML, J2eeModule.EJBSERVICES_XML}));
             j2eeTypeMap.put(J2eeModule.Type.WAR,
@@ -594,6 +594,7 @@ public class ServerFileDistributor extends ServerProgress {
          * @param relativePath
          * @deprecated use {@link #record(java.io.File, java.lang.String)}
          */
+        @Deprecated
         private void record(String relativePath) {
             record(null, relativePath);
         }
@@ -697,12 +698,12 @@ public class ServerFileDistributor extends ServerProgress {
 
         @Override
         public File[] getChangedFiles() {
-            return (File[]) changedFiles.toArray(new File[changedFiles.size()]);
+            return (File[]) changedFiles.toArray(new File[0]);
         }
 
         @Override
         public File[] getRemovedFiles() {
-            return (File[]) removedFiles.toArray(new File[removedFiles.size()]);
+            return (File[]) removedFiles.toArray(new File[0]);
         }
 
         @Override

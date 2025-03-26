@@ -193,7 +193,7 @@ public final class ProjectArtifactsQuery {
                 if (listeners.isEmpty()) {
                     return copy;
                 }
-                ll = listeners.toArray(new ChangeListener[listeners.size()]);
+                ll = listeners.toArray(new ChangeListener[0]);
             }
             ChangeEvent e = new ChangeEvent(this);
             

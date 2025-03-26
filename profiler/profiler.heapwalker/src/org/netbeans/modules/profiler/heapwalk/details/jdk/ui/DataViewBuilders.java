@@ -113,7 +113,7 @@ final class DataViewBuilders {
         DefaultListModelBuilder(Instance instance, Heap heap) {
             super(instance, heap);
             
-            model = new ArrayList();
+            model = new ArrayList<>();
             
             Object _delegate = instance.getValueOfField("delegate");
             if (_delegate instanceof Instance) {
@@ -236,7 +236,7 @@ final class DataViewBuilders {
         TableColumnModelBuilder(Instance instance, Heap heap) {
             super(instance, heap);
             
-            tableColumns = new ArrayList();
+            tableColumns = new ArrayList<>();
             columnMargin = DetailsUtils.getIntFieldValue(instance, "columnMargin", 1);
             
             Object _columns = instance.getValueOfField("tableColumns");

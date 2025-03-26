@@ -25,7 +25,6 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.Action;
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
@@ -58,6 +57,7 @@ import org.openide.nodes.Node;
 import org.openide.text.CloneableEditor;
 import org.openide.text.CloneableEditorSupport;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
@@ -77,6 +77,10 @@ public class ConsoleEditor extends CloneableEditor {
     private ShellSession session;
     private CL cl;
     private Lookup lookup;
+
+    public ConsoleEditor() {
+        this.lookup = Lookup.EMPTY;
+    }
 
     public ConsoleEditor(CloneableEditorSupport support, Lookup lookup) {
         super(support);
@@ -568,11 +572,7 @@ public class ConsoleEditor extends CloneableEditor {
         JLabel l = initializingPanel;
         if (initializingPanel == null) {
             l = new JLabel(Bundle.MSG_Initializing(), JLabel.LEADING);
-            l.setIcon(new ImageIcon(
-                getClass().getClassLoader().getResource(
-                    "org/netbeans/modules/jshell/resources/wait16.gif"
-                )
-            ));
+            l.setIcon(ImageUtilities.loadIcon("org/netbeans/modules/jshell/resources/wait16.gif"));
             initializingPanel = l;
         }
         return initializingPanel;

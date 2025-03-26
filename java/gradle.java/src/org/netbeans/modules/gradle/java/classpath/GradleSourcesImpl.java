@@ -168,8 +168,8 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
                 }
             }
         }
-        Collections.sort(ret, Comparator.comparing(SourceGroup::getName));
-        return ret.toArray(new SourceGroup[ret.size()]);
+        ret.sort(Comparator.comparing(SourceGroup::getName));
+        return ret.toArray(new SourceGroup[0]);
     }
 
     SourceGroup createSourceGroup(boolean unique, String group, File dir,

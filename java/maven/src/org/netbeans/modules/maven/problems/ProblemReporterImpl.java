@@ -42,6 +42,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
+import org.apache.maven.artifact.resolver.ArtifactResolutionException;
+import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.plugin.PluginArtifactsCache;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.problem.ProblemReport;
@@ -89,7 +93,7 @@ public final class ProblemReporterImpl implements ProblemReporter, Comparator<Pr
     private final RequestProcessor.Task reloadTask = RP.create(new Runnable() {
         @Override public void run() {
             LOG.log(Level.FINE, "actually reloading {0}", projectPOMFile);
-            nbproject.fireProjectReload();
+            nbproject.fireProjectReload(true);
         }
     });
     private final FileChangeListener fcl = new FileChangeAdapter() {
@@ -189,18 +193,46 @@ public final class ProblemReporterImpl implements ProblemReporter, Comparator<Pr
      * and some problems encapsulate several missing artifacts.
      * @param a an artifact (scope permitted but ignored)
      */
-    void addMissingArtifact(Artifact a) {
+    void addMissingArtifact(Artifact a, boolean checkMissing) {
         synchronized (reports) {
             a = EmbedderFactory.getProjectEmbedder().getLocalRepository().find(a);
             //a.getFile should be already normalized but the find() method can pull tricks on us.
             //#225008
             File f = FileUtil.normalizeFile(a.getFile());
+            if (f.exists() && f.canRead() && checkMissing) {
+                try {
+                    MavenExecutionRequest rq = EmbedderFactory.getProjectEmbedder().createMavenExecutionRequest();
+                    List<ArtifactRepository> repos = nbproject.getOriginalMavenProject().getRemoteArtifactRepositories();
+                    if (repos.isEmpty()) {
+                        repos = rq.getRemoteRepositories();
+                    }
+                    EmbedderFactory.getProjectEmbedder().resolve(a, repos, EmbedderFactory.getProjectEmbedder().getLocalRepository());
+                } catch (ArtifactResolutionException | ArtifactNotFoundException ex) {
+                    return;
+                }
+                throw new ArtifactFoundException(a, f);
+            }
             if (missingArtifacts.add(f)) {                
                 LOG.log(Level.FINE, "listening to {0} from {1}", new Object[] {f, projectPOMFile});                
                 FileUtil.addFileChangeListener(fcl, f);
             }
         }
     }
+    
+    /**
+     * Indicates that the cached data that report a missing artifact is obsolete. 
+     */
+    public static class ArtifactFoundException extends IllegalStateException {
+        private final Artifact artifact;
+        private final File artifactFile;
+
+        public ArtifactFoundException(Artifact artifact, File artifactFile) {
+            this.artifact = artifact;
+            this.artifactFile = artifactFile;
+        }
+    }
+    
+    
 
     public Set<File> getMissingArtifactFiles() {
         synchronized (reports) {

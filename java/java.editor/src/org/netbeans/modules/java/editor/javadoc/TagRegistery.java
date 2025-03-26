@@ -31,11 +31,11 @@ import javax.lang.model.element.ElementKind;
  */
 final class TagRegistery {
     
-    private static final Set<ElementKind> ALL_KINDS = EnumSet.<ElementKind>of(
+    private static final Set<ElementKind> ALL_KINDS = EnumSet.of(
             ElementKind.ANNOTATION_TYPE, ElementKind.CLASS,
             ElementKind.CONSTRUCTOR, ElementKind.ENUM,
             ElementKind.ENUM_CONSTANT, ElementKind.FIELD,
-            ElementKind.INTERFACE, ElementKind.METHOD,
+            ElementKind.INTERFACE, ElementKind.RECORD, ElementKind.METHOD,
             // OTHER stands for Overview here
             ElementKind.OTHER, ElementKind.MODULE,
             ElementKind.PACKAGE);
@@ -62,27 +62,27 @@ final class TagRegistery {
         this.tags = new ArrayList<TagEntry>(20);
         addTag("@author", false, EnumSet.of(
                 ElementKind.ANNOTATION_TYPE, ElementKind.CLASS,
-                ElementKind.ENUM, ElementKind.INTERFACE,
+                ElementKind.ENUM, ElementKind.INTERFACE, ElementKind.RECORD,
                 ElementKind.OTHER, ElementKind.MODULE,
                 ElementKind.PACKAGE));
         addTag("@exception", false, EnumSet.of(ElementKind.METHOD, ElementKind.CONSTRUCTOR));
         // deprecated: not in PACKAGE and OVERVIEW!
-        addTag("@deprecated", false, EnumSet.<ElementKind>of(
+        addTag("@deprecated", false, EnumSet.of(
                 ElementKind.ANNOTATION_TYPE, ElementKind.CLASS,
                 ElementKind.CONSTRUCTOR, ElementKind.ENUM,
                 ElementKind.ENUM_CONSTANT, ElementKind.FIELD,
-                ElementKind.INTERFACE, ElementKind.METHOD));
+                ElementKind.INTERFACE, ElementKind.METHOD, ElementKind.RECORD));
 
         addTag("@param", false, EnumSet.of(
                 ElementKind.METHOD, ElementKind.CONSTRUCTOR, ElementKind.CLASS,
-                ElementKind.INTERFACE));
+                ElementKind.INTERFACE, ElementKind.RECORD));
         addTag("@return", false, EnumSet.of(ElementKind.METHOD));
         addTag("@see", false, ALL_KINDS);
-        addTag("@serial", false, EnumSet.<ElementKind>of(
+        addTag("@serial", false, EnumSet.of(
                 ElementKind.ANNOTATION_TYPE, ElementKind.CLASS,
                 ElementKind.ENUM,
                 ElementKind.ENUM_CONSTANT, ElementKind.FIELD,
-                ElementKind.INTERFACE,
+                ElementKind.INTERFACE, ElementKind.RECORD,
                 ElementKind.PACKAGE));
 
         // serialData can be used just for writeObject, readObject, writeExternal, readExternal, writeReplace, and readResolve methods
@@ -90,10 +90,10 @@ final class TagRegistery {
         addTag("@serialField", false, EnumSet.of(ElementKind.FIELD));
         addTag("@since", false, ALL_KINDS);
         addTag("@throws", false, EnumSet.of(ElementKind.METHOD, ElementKind.CONSTRUCTOR));
-        addTag("@version", false, EnumSet.<ElementKind>of(
+        addTag("@version", false, EnumSet.of(
                 ElementKind.ANNOTATION_TYPE, ElementKind.CLASS,
                 ElementKind.ENUM,
-                ElementKind.INTERFACE,
+                ElementKind.INTERFACE, ElementKind.RECORD,
                 ElementKind.OTHER, ElementKind.PACKAGE));
         addTag("@hidden", false, ALL_KINDS);
         addTag("@provides", false, EnumSet.of(ElementKind.MODULE));
@@ -102,11 +102,11 @@ final class TagRegistery {
         addTag("@code", true, ALL_KINDS);
         addTag("@snippet", true, ALL_KINDS);
         addTag("@summary", true, ALL_KINDS);
-        addTag("@systemProperty", true, EnumSet.<ElementKind>of(
+        addTag("@systemProperty", true, EnumSet.of(
             ElementKind.ANNOTATION_TYPE, ElementKind.CLASS,
             ElementKind.CONSTRUCTOR, ElementKind.ENUM,
             ElementKind.ENUM_CONSTANT, ElementKind.FIELD,
-            ElementKind.INTERFACE, ElementKind.METHOD,
+            ElementKind.INTERFACE, ElementKind.METHOD, ElementKind.RECORD,
             ElementKind.MODULE, ElementKind.PACKAGE));
         addTag("@docRoot", true, ALL_KINDS);
         addTag("@index", true, ALL_KINDS);

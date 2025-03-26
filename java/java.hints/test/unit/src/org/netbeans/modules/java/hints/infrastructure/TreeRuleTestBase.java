@@ -242,7 +242,7 @@ public abstract class TreeRuleTestBase extends NbTestCase {
         String realCode = toCheckDocument.getText(0, toCheckDocument.getLength());
         
         //ignore whitespaces:
-        realCode = realCode.replaceAll("[ \t\n]+", " ");
+        realCode = realCode.replaceAll("\\s+", " ");
 
         if (golden != null) {
             assertEquals("The output code does not match the expected code.", golden, realCode);

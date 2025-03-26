@@ -517,7 +517,7 @@ retry:  while (true) {
                     pendingTasks1.addAll (newTasks);
                 }
             }
-            Collections.sort(tasks1, PRIORITY_ORDER);
+            tasks1.sort(PRIORITY_ORDER);
         }
         synchronized (TaskProcessor.INTERNAL_LOCK) {
             if ((tasks == null) && (tasks1 != null)) {

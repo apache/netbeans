@@ -144,8 +144,6 @@ public final class LogUtils {
                 || repositoryUrl.contains("code.google.com") //NOI18N
                 || repositoryUrl.contains("googlesource.com")) { //NOI18N
             return "GOOGLECODE"; //NOI18N
-        } else if (repositoryUrl.contains("kenai.com")) { //NOI18N
-            return "KENAI"; //NOI18N
         } else if (repositoryUrl.contains("java.net")) { //NOI18N
             return "JAVANET"; //NOI18N
         } else if (repositoryUrl.contains("netbeans.org")) { //NOI18N

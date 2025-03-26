@@ -1217,7 +1217,7 @@ public abstract class BaseBean implements Cloneable, Bean {
         try {
             // FIXME this seriosly breaks the clone contract :(
             // Create a new instance of ourself
-            bean = (BaseBean)this.getClass().newInstance();
+            bean = (BaseBean)this.getClass().getDeclaredConstructor().newInstance();
         } catch(Exception e) {
             TraceLogger.error(e);
             throw new Schema2BeansRuntimeException(Common.
@@ -1469,15 +1469,13 @@ public abstract class BaseBean implements Cloneable, Bean {
                     String curValue = this.getAttributeValue(attrName);
                     String otherValue = bean.getAttributeValue(attrName);
 
-                    if (curValue != otherValue) {
+                    if (!Objects.equals(curValue, otherValue)) {
                         // Might have one of the two null, not both
-                        if (curValue == null || otherValue == null || !curValue.equals(otherValue)) {
-                            if ((mode & MERGE_COMPARE) == MERGE_COMPARE) {
-                                return false;
-                            }
-                            if ((mode & MERGE_UNION) == MERGE_UNION) {
-                                this.setAttributeValue(attrName, otherValue);
-                            }
+                        if ((mode & MERGE_COMPARE) == MERGE_COMPARE) {
+                            return false;
+                        }
+                        if ((mode & MERGE_UNION) == MERGE_UNION) {
+                            this.setAttributeValue(attrName, otherValue);
                         }
                     }
                 }

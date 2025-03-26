@@ -64,7 +64,7 @@ public abstract class URLMapper {
      * Not guaranteed to work from other machines (though it may).
      * <div class="nonnormative">
      * Typical protocols used: <code>file</code> for disk files (see {@link File#toURI});
-     * <code>jar</code> to wrap other URLs (e.g. <samp>jar:file:/some/thing.jar!/some/entry</samp>).
+     * <code>jar</code> to wrap other URLs (e.g. <code>jar:file:/some/thing.jar!/some/entry</code>).
      * </div>
      */
     public static final int EXTERNAL = 1;
@@ -163,7 +163,7 @@ public abstract class URLMapper {
             }
         }
 
-        return retSet.toArray(new FileObject[retSet.size()]);
+        return retSet.toArray(new FileObject[0]);
     }
 
     /** Find an appropriate instance of FileObject that addresses this URL
@@ -315,7 +315,7 @@ public abstract class URLMapper {
                 if (root == null) {
                     Object rootPath = fsRoot.getAttribute("FileSystem.rootPath"); //NOI18N
 
-                    if ((rootPath != null) && (rootPath instanceof String)) {
+                    if (rootPath instanceof String) {
                         rootName = (String) rootPath;
                     } else {
                         continue;
@@ -540,7 +540,7 @@ public abstract class URLMapper {
                     if (++separator != spec.length()) {
                         try {
                             // XXX new URI("substring").getPath() might be better?
-                            entryName = URLDecoder.decode(spec.substring(separator, spec.length()),"UTF-8");
+                            entryName = URLDecoder.decode(spec.substring(separator),"UTF-8");
                         } catch (UnsupportedEncodingException ex) {
                             return;
                         }

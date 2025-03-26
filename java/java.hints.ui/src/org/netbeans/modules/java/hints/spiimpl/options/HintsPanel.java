@@ -35,7 +35,6 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
@@ -474,6 +473,7 @@ public final class HintsPanel extends javax.swing.JPanel   {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         descriptionPanel.add(descriptionLabel, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(saveButton, org.openide.util.NbBundle.getMessage(HintsPanel.class, "HintsPanel.saveButton.text")); // NOI18N
@@ -1208,7 +1208,7 @@ public final class HintsPanel extends javax.swing.JPanel   {
             TreePath currentPath = category2Node.get(cat);
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) currentPath.getLastPathComponent();
             
-            Collections.sort(cat.subCategories, new Comparator<HintCategory>() {
+            cat.subCategories.sort(new Comparator<HintCategory>() {
                 @Override public int compare(HintCategory o1, HintCategory o2) {
                     return HintsPanel.compare(o1.displayName, o2.displayName);
                 }
@@ -1223,7 +1223,7 @@ public final class HintsPanel extends javax.swing.JPanel   {
             
             hints.addAll(cat.subCategories);
             
-            Collections.sort(cat.hints, new Comparator<HintMetadata>() {
+            cat.hints.sort(new Comparator<HintMetadata>() {
                 @Override public int compare(HintMetadata o1, HintMetadata o2) {
                     return o1.displayName.compareTo(o2.displayName);
                 }

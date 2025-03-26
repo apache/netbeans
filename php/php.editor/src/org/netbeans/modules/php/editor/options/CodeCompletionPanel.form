@@ -29,6 +29,12 @@
     </Component>
     <Component class="javax.swing.ButtonGroup" name="autoCompletionButtonGroup">
     </Component>
+    <Component class="javax.swing.ButtonGroup" name="autoImportGlobalNSTypebuttonGroup">
+    </Component>
+    <Component class="javax.swing.ButtonGroup" name="autoImportGlobalNSFunctionbuttonGroup">
+    </Component>
+    <Component class="javax.swing.ButtonGroup" name="autoImportGlobalNSConstbuttonGroup">
+    </Component>
   </NonVisualComponents>
   <AccessibilityProperties>
     <Property name="AccessibleContext.accessibleName" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
@@ -53,67 +59,75 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                      <EmptySpace min="21" pref="21" max="-2" attributes="0"/>
+                      <Component id="autoImportInfoLabel" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="autoImportCheckBox" min="-2" max="-2" attributes="0"/>
+                  <Component id="autoImportForScopeLabel" min="-2" max="-2" attributes="0"/>
+                  <Component id="autoImportGlobalNamespaceLabel" min="-2" max="-2" attributes="0"/>
+                  <Component id="autoCompletionCustomizeRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="autoCompletionFullRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="methodCodeCompletionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="codeCompletionNonStaticMethodsCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="codeCompletionStaticMethodsCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="enableAutocompletionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="currentFileVariablesRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="allVariablesRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="codeCompletionVariablesScopeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="codeCompletionSmartParametersPreFillingCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="autoCompletionSmartQuotesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="autoCompletionSmartQuotesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="autoStringConcatenationCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="codeCompletionFirstClassCallableCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="codeCompletionTypeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="smartRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="fullyQualifiedRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="unqualifiedRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="useLowercaseLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="trueFalseNullCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="autoCompletionCommentAsteriskLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="autoCompletionCommentAsteriskCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="21" pref="21" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="autoCompletionCustomizeRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="autoCompletionFullRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="methodCodeCompletionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="codeCompletionNonStaticMethodsCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="codeCompletionStaticMethodsCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="enableAutocompletionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="currentFileVariablesRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="allVariablesRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="codeCompletionVariablesScopeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="codeCompletionSmartParametersPreFillingCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Group type="102" attributes="0">
-                              <EmptySpace min="21" pref="21" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="autoCompletionTypesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="autoCompletionVariablesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="autoCompletionNamespacesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Component id="autoCompletionSmartQuotesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="autoCompletionSmartQuotesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="autoStringConcatenationCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="codeCompletionFirstClassCallableCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="autoCompletionTypesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="autoCompletionVariablesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="autoCompletionNamespacesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="smartInfoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="fullyQualifiedInfoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="unqualifiedInfoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="codeCompletionTypeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="smartRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="fullyQualifiedRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="unqualifiedRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="21" pref="21" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="smartInfoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="fullyQualifiedInfoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="unqualifiedInfoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
+                          <Component id="autoImportGlobalNamespaceTypeLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="autoImportGlobalNamespaceFunctionLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="autoImportGlobalNamespaceConstLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="autoImportGlobalNamespaceFunctionImportRadioButton" min="-2" max="-2" attributes="0"/>
+                          <Component id="autoImportGlobalNamespaceTypeImportRadioButton" min="-2" max="-2" attributes="0"/>
+                          <Component id="autoImportGlobalNamespaceConstImportRadioButton" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="autoImportGlobalNamespaceConstDoNotImportRadioButton" min="-2" max="-2" attributes="0"/>
+                          <Component id="autoImportGlobalNamespaceFunctionDoNotImportRadioButton" min="-2" max="-2" attributes="0"/>
+                          <Component id="autoImportGlobalNamespaceTypeDoNotImportRadioButton" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="useLowercaseLabel" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="trueFalseNullCheckBox" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="autoCompletionCommentAsteriskLabel" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="autoCompletionCommentAsteriskCheckBox" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="autoImportNamesapceScopeCheckBox" min="-2" max="-2" attributes="0"/>
+                          <Component id="autoImportFileScopeCheckBox" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
@@ -153,9 +167,9 @@
               <Component id="currentFileVariablesRadioButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="codeCompletionTypeLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="smartRadioButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="smartInfoLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="fullyQualifiedRadioButton" min="-2" max="-2" attributes="0"/>
@@ -165,7 +179,37 @@
               <Component id="unqualifiedRadioButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="unqualifiedInfoLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+              <Component id="autoImportCheckBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="autoImportInfoLabel" min="-2" pref="30" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+              <Component id="autoImportForScopeLabel" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Component id="autoImportFileScopeCheckBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="autoImportNamesapceScopeCheckBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+              <Component id="autoImportGlobalNamespaceLabel" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="autoImportGlobalNamespaceTypeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="autoImportGlobalNamespaceTypeImportRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="autoImportGlobalNamespaceTypeDoNotImportRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="autoImportGlobalNamespaceFunctionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="autoImportGlobalNamespaceFunctionImportRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="autoImportGlobalNamespaceFunctionDoNotImportRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="autoImportGlobalNamespaceConstDoNotImportRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="autoImportGlobalNamespaceConstImportRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="autoImportGlobalNamespaceConstLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
               <Component id="autoCompletionSmartQuotesLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="autoCompletionSmartQuotesCheckBox" min="-2" max="-2" attributes="0"/>
@@ -179,7 +223,7 @@
               <Component id="autoCompletionCommentAsteriskLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="autoCompletionCommentAsteriskCheckBox" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="44" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -507,6 +551,13 @@
         </Property>
       </AccessibilityProperties>
     </Component>
+    <Component class="javax.swing.JLabel" name="autoImportInfoLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/php/editor/options/Bundle.properties" key="CodeCompletionPanel.autoImportInfoLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
     <Component class="javax.swing.JCheckBox" name="codeCompletionSmartParametersPreFillingCheckBox">
       <Properties>
         <Property name="selected" type="boolean" value="true"/>
@@ -574,6 +625,134 @@
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="org/netbeans/modules/php/editor/options/Bundle.properties" key="CodeCompletionPanel.autoCompletionCommentAsteriskCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="autoImportGlobalNamespaceLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/php/editor/options/Bundle.properties" key="CodeCompletionPanel.autoImportGlobalNamespaceLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="autoImportGlobalNamespaceTypeLabel">
+      <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="autoImportGlobalNamespaceTypeImportRadioButton"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/php/editor/options/Bundle.properties" key="CodeCompletionPanel.autoImportGlobalNamespaceTypeLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="autoImportGlobalNamespaceTypeImportRadioButton">
+      <Properties>
+        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+          <ComponentRef name="autoImportGlobalNSTypebuttonGroup"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/php/editor/options/Bundle.properties" key="CodeCompletionPanel.autoImportGlobalNamespaceTypeImportRadioButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="autoImportGlobalNamespaceTypeDoNotImportRadioButton">
+      <Properties>
+        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+          <ComponentRef name="autoImportGlobalNSTypebuttonGroup"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/php/editor/options/Bundle.properties" key="CodeCompletionPanel.autoImportGlobalNamespaceTypeDoNotImportRadioButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="autoImportGlobalNamespaceFunctionLabel">
+      <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="autoImportGlobalNamespaceFunctionImportRadioButton"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/php/editor/options/Bundle.properties" key="CodeCompletionPanel.autoImportGlobalNamespaceFunctionLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="autoImportGlobalNamespaceFunctionImportRadioButton">
+      <Properties>
+        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+          <ComponentRef name="autoImportGlobalNSFunctionbuttonGroup"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/php/editor/options/Bundle.properties" key="CodeCompletionPanel.autoImportGlobalNamespaceFunctionImportRadioButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="autoImportGlobalNamespaceFunctionDoNotImportRadioButton">
+      <Properties>
+        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+          <ComponentRef name="autoImportGlobalNSFunctionbuttonGroup"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/php/editor/options/Bundle.properties" key="CodeCompletionPanel.autoImportGlobalNamespaceFunctionDoNotImportRadioButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="autoImportGlobalNamespaceConstLabel">
+      <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="autoImportGlobalNamespaceConstImportRadioButton"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/php/editor/options/Bundle.properties" key="CodeCompletionPanel.autoImportGlobalNamespaceConstLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="autoImportGlobalNamespaceConstImportRadioButton">
+      <Properties>
+        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+          <ComponentRef name="autoImportGlobalNSConstbuttonGroup"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/php/editor/options/Bundle.properties" key="CodeCompletionPanel.autoImportGlobalNamespaceConstImportRadioButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="autoImportGlobalNamespaceConstDoNotImportRadioButton">
+      <Properties>
+        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+          <ComponentRef name="autoImportGlobalNSConstbuttonGroup"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/php/editor/options/Bundle.properties" key="CodeCompletionPanel.autoImportGlobalNamespaceConstDoNotImportRadioButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="autoImportForScopeLabel">
+      <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="autoImportFileScopeCheckBox"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/php/editor/options/Bundle.properties" key="CodeCompletionPanel.autoImportForScopeLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="autoImportFileScopeCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/php/editor/options/Bundle.properties" key="CodeCompletionPanel.autoImportFileScopeCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="autoImportNamesapceScopeCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/php/editor/options/Bundle.properties" key="CodeCompletionPanel.autoImportNamesapceScopeCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="autoImportCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/php/editor/options/Bundle.properties" key="CodeCompletionPanel.autoImportCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>

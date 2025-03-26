@@ -30,7 +30,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.11</specification-version>
+                        <specification-version>1.25</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -38,7 +38,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.11</specification-version>
+                        <specification-version>1.25</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>
@@ -64,27 +64,36 @@
                         <compile-dependency/>
                         <test/>
                     </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.libs.graalsdk.system</code-name-base>
+                        <recursive/>
+                    </test-dependency>
                 </test-type>
             </test-dependencies>
             <public-packages>
                 <package>com.oracle.js.parser</package>
                 <package>com.oracle.js.parser.ir</package>
+                <package>com.oracle.truffle.js.lang</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/js-20.3.0.jar</runtime-relative-path>
-                <binary-origin>external/js-20.3.0.jar</binary-origin>
+                <runtime-relative-path>ext/js-language-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/js-language-24.0.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/js-launcher-20.3.0.jar</runtime-relative-path>
-                <binary-origin>external/js-launcher-20.3.0.jar</binary-origin>
+                <runtime-relative-path>ext/js-launcher-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/js-launcher-24.0.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/regex-20.3.0.jar</runtime-relative-path>
-                <binary-origin>external/regex-20.3.0.jar</binary-origin>
+                <runtime-relative-path>ext/js-scriptengine-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/js-scriptengine-24.0.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/icu4j-67.1.jar</runtime-relative-path>
-                <binary-origin>external/icu4j-67.1.jar</binary-origin>
+                <runtime-relative-path>ext/regex-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/regex-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/icu4j-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/icu4j-24.0.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

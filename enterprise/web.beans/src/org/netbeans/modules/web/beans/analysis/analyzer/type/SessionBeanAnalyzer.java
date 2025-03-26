@@ -30,13 +30,18 @@ import org.netbeans.modules.web.beans.api.model.CdiException;
 import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 import org.openide.util.NbBundle;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.SINGLETON;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.SINGLETON_JAKARTA;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.STATELESS;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.STATELESS_JAKARTA;
+
 
 /**
  * @author ads
  *
  */
 public class SessionBeanAnalyzer implements ClassAnalyzer {
-    
+
     /* (non-Javadoc)
      * @see org.netbeans.modules.web.beans.analysis.analyzer.ClassModelAnalyzer.ClassAnalyzer#analyze(javax.lang.model.element.TypeElement, javax.lang.model.element.TypeElement, org.netbeans.modules.web.beans.api.model.WebBeansModel, java.util.List, org.netbeans.api.java.source.CompilationInfo, java.util.concurrent.atomic.AtomicBoolean)
      */
@@ -45,31 +50,32 @@ public class SessionBeanAnalyzer implements ClassAnalyzer {
             WebBeansModel model, AtomicBoolean cancel ,
             Result result )
     {
-        boolean isSingleton = AnnotationUtil.hasAnnotation(element, 
-                AnnotationUtil.SINGLETON, model.getCompilationController());
-        boolean isStateless = AnnotationUtil.hasAnnotation(element, 
-                AnnotationUtil.STATELESS, model.getCompilationController());
+        boolean isSingleton = AnnotationUtil.hasAnnotation(element, model, SINGLETON_JAKARTA, SINGLETON);
+        boolean isStateless = AnnotationUtil.hasAnnotation(element, model, STATELESS_JAKARTA, STATELESS);
         if ( cancel.get() ){
             return;
         }
         try {
             String scope = model.getScope( element );
             if ( isSingleton ) {
-                if ( AnnotationUtil.APPLICATION_SCOPED.equals( scope ) || 
-                        AnnotationUtil.DEPENDENT.equals( scope ) )
+                if ( AnnotationUtil.APPLICATION_SCOPED.equals( scope )
+                        || AnnotationUtil.DEPENDENT.equals( scope )
+                        || AnnotationUtil.APPLICATION_SCOPED_JAKARTA.equals( scope )
+                        || AnnotationUtil.DEPENDENT_JAKARTA.equals( scope ) )
                 {
                     return;
                 }
                 result.requireCdiEnabled(element, model);
-                result.addError( element, model,  
-                    NbBundle.getMessage(SessionBeanAnalyzer.class, 
+                result.addError( element, model,
+                    NbBundle.getMessage(SessionBeanAnalyzer.class,
                             "ERR_InvalidSingletonBeanScope"));              // NOI18N
             }
             else if ( isStateless ) {
-                if ( !AnnotationUtil.DEPENDENT.equals( scope ) )
+                if (!AnnotationUtil.DEPENDENT.equals(scope)
+                        && !AnnotationUtil.DEPENDENT_JAKARTA.equals(scope))
                 {
-                    result.addError( element, model,   
-                        NbBundle.getMessage(SessionBeanAnalyzer.class, 
+                    result.addError( element, model,
+                        NbBundle.getMessage(SessionBeanAnalyzer.class,
                                 "ERR_InvalidStatelessBeanScope"));              // NOI18N
                 }
             }
@@ -79,8 +85,8 @@ public class SessionBeanAnalyzer implements ClassAnalyzer {
             informCdiException(e, element, model, result );
         }
     }
-    
-    private void informCdiException(CdiException exception , Element element, 
+
+    private void informCdiException(CdiException exception , Element element,
             WebBeansModel model, Result result )
     {
         result.addError(element, model, exception.getMessage());

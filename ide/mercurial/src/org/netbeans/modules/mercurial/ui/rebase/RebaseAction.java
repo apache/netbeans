@@ -379,7 +379,7 @@ public class RebaseAction extends ContextAction {
 
     private static HgHookContext.LogEntry[] findOriginalEntries (File repository, File bundleFile) throws HgException {
         List<HgLogMessage> originalMessages = HgCommand.getBundleChangesets(repository, bundleFile, null);
-        return convertToEntries(originalMessages.toArray(new HgLogMessage[originalMessages.size()]));
+        return convertToEntries(originalMessages.toArray(new HgLogMessage[0]));
     }
 
     private static HgHookContext.LogEntry[] findNewEntries (File repository, String destRevision) {
@@ -399,7 +399,7 @@ public class RebaseAction extends ContextAction {
                     msg.getCSetShortID(),
                     msg.getDate()));
         }
-        return entries.toArray(new HgHookContext.LogEntry[entries.size()]);
+        return entries.toArray(new HgHookContext.LogEntry[0]);
     }
     
     private static Map<String, String> findChangesetMapping (HgHookContext.LogEntry[] originalEntries, HgHookContext.LogEntry[] newEntries) {

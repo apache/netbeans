@@ -45,8 +45,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.google.gson.InstanceCreator;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import java.util.prefs.Preferences;
 import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.concurrent.CompletionException;
+import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 import org.eclipse.lsp4j.CallHierarchyRegistrationOptions;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionOptions;
@@ -63,26 +70,36 @@ import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.RenameOptions;
+import org.eclipse.lsp4j.SaveOptions;
 import org.eclipse.lsp4j.SemanticTokensCapabilities;
 import org.eclipse.lsp4j.SemanticTokensParams;
 import org.eclipse.lsp4j.ServerCapabilities;
+import org.eclipse.lsp4j.SetTraceParams;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
+import org.eclipse.lsp4j.SignatureHelpOptions;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentSyncKind;
 import org.eclipse.lsp4j.TextDocumentSyncOptions;
 import org.eclipse.lsp4j.WorkDoneProgressCancelParams;
 import org.eclipse.lsp4j.WorkDoneProgressParams;
 import org.eclipse.lsp4j.WorkspaceFolder;
+import org.eclipse.lsp4j.WorkspaceFoldersOptions;
+import org.eclipse.lsp4j.WorkspaceServerCapabilities;
+import org.eclipse.lsp4j.WorkspaceSymbolOptions;
 import org.eclipse.lsp4j.jsonrpc.Endpoint;
 import org.eclipse.lsp4j.jsonrpc.JsonRpcException;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
 import org.eclipse.lsp4j.jsonrpc.MessageIssueException;
 import org.eclipse.lsp4j.jsonrpc.RemoteEndpoint;
+import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
+import org.eclipse.lsp4j.jsonrpc.json.MessageJsonHandler;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.jsonrpc.messages.Message;
 import org.eclipse.lsp4j.jsonrpc.messages.NotificationMessage;
 import org.eclipse.lsp4j.jsonrpc.messages.RequestMessage;
+import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
+import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.eclipse.lsp4j.jsonrpc.services.JsonDelegate;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageClient;
@@ -91,9 +108,11 @@ import org.eclipse.lsp4j.services.LanguageServer;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
@@ -101,6 +120,7 @@ import org.netbeans.api.project.ProjectUtils;
 import static org.netbeans.api.project.ProjectUtils.parentOf;
 import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.java.lsp.server.LspGsonSetup;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.LspSession;
 import org.netbeans.modules.java.lsp.server.Utils;
@@ -115,12 +135,15 @@ import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
 import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.progress.OperationContext;
+import org.netbeans.modules.parsing.spi.indexing.Context;
+import org.netbeans.modules.parsing.spi.indexing.CustomIndexer;
+import org.netbeans.modules.parsing.spi.indexing.CustomIndexerFactory;
+import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.netbeans.modules.progress.spi.InternalHandle;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
@@ -137,7 +160,13 @@ import org.openide.util.lookup.ProxyLookup;
  */
 public final class Server {
     private static final Logger LOG = Logger.getLogger(Server.class.getName());
-
+    /**
+     * Special logger that logs LSP in/out messages.
+     */
+    private static final Logger LSP_LOG = Logger.getLogger("org.netbeans.modules.java.lsp.server.lsptrace"); // NOI18N
+    private static final LspServerTelemetryManager LSP_SERVER_TELEMETRY = new LspServerTelemetryManager();
+    private static final ErrorsNotifier ERR_NOTIFIER = new ErrorsNotifier();
+    
     private Server() {
     }
 
@@ -152,25 +181,38 @@ public final class Server {
     }
 
     public static NbLspServer launchServer(Pair<InputStream, OutputStream> io, LspSession session) {
-        LanguageServerImpl server = new LanguageServerImpl();
+        LanguageServerImpl server = new LanguageServerImpl(session);
         ConsumeWithLookup msgProcessor = new ConsumeWithLookup(server.getSessionLookup());
-        Launcher<NbCodeLanguageClient> serverLauncher = createLauncher(server, io, msgProcessor::attachLookup);
+        Launcher<NbCodeLanguageClient> serverLauncher = createLauncher(server, io, msgProcessor::attachLookup, msgProcessor::addService);
         NbCodeLanguageClient remote = serverLauncher.getRemoteProxy();
         ((LanguageClientAware) server).connect(remote);
         msgProcessor.attachClient(server.client);
         Future<Void> runningServer = serverLauncher.startListening();
+        LSP_SERVER_TELEMETRY.connect(server.client, runningServer);
+        ERR_NOTIFIER.connect(server, runningServer);
         return new NbLspServer(server, runningServer);
     }
-
+    
     private static Launcher<NbCodeLanguageClient> createLauncher(LanguageServerImpl server, Pair<InputStream, OutputStream> io,
-            Function<MessageConsumer, MessageConsumer> processor) {
-        return new LSPLauncher.Builder<NbCodeLanguageClient>()
+            Function<MessageConsumer, MessageConsumer> processor, Consumer<Object> addService) {
+        return new LSPLauncher.Builder<NbCodeLanguageClient>() {
+                @Override
+                protected MessageJsonHandler createJsonHandler() {
+                    MessageJsonHandler h = super.createJsonHandler(); 
+                    if (addService != null) {
+                        addService.accept(h.getGson());
+                    }
+                    return h;
+                }
+            }
             .setLocalService(server)
             .setRemoteInterface(NbCodeLanguageClient.class)
             .setInput(io.first())
             .setOutput(io.second())
             .wrapMessages(processor)
             .configureGson(gb -> {
+                Lookup.getDefault().lookupAll(LspGsonSetup.class).forEach(s -> s.configureBuilder(gb));
+                
                 gb.registerTypeAdapter(SemanticTokensCapabilities.class, new InstanceCreator<SemanticTokensCapabilities>() {
                     @Override public SemanticTokensCapabilities createInstance(Type type) {
                         return new SemanticTokensCapabilities(null);
@@ -184,6 +226,18 @@ public final class Server {
             })
             .setExceptionHandler((t) -> {
                 LOG.log(Level.WARNING, "Error occurred during LSP message dispatch", t);
+                if (t instanceof CompletionException) {
+                    if (t.getCause() instanceof ResponseErrorException) {
+                        return ((ResponseErrorException)t.getCause()).getResponseError();
+                    }
+                    Throwable cause = t.getCause();
+                    ResponseError error = new ResponseError();
+                    error.setMessage(cause.getMessage());
+                    error.setCode(ResponseErrorCode.InternalError);
+                    error.setData(cause);
+                    
+                    return error;
+                }
                 return RemoteEndpoint.DEFAULT_EXCEPTION_HANDLER.apply(t);
             })
             .create();
@@ -199,9 +253,14 @@ public final class Server {
         private final Lookup sessionLookup;
         private NbCodeLanguageClient client;
         private OperationContext initialContext;
+        private List<Object> additionalServices = new ArrayList<>();
 
         public ConsumeWithLookup(Lookup sessionLookup) {
             this.sessionLookup = sessionLookup;
+        }
+        
+        public void addService(Object o) {
+            this.additionalServices.add(o);
         }
 
         synchronized void attachClient(NbCodeLanguageClient client) {
@@ -212,7 +271,17 @@ public final class Server {
             // PENDING: allow for message consumer wrappers to be registered to add pre/post processing for
             // the request plus build the request's default Lookup contents.
             if (!(delegate instanceof Endpoint)) {
-                return delegate; 
+                return new MessageConsumer() {
+                    @Override
+                    public void consume(Message msg) throws MessageIssueException, JsonRpcException {
+                        if (LSP_LOG.isLoggable(Level.FINEST)) {
+                            LSP_LOG.log(Level.FINEST, "OUT: {0}", 
+                                    msg.toString().replace("\n", "\n\t"));
+                        }
+                        delegate.consume(msg);
+                    }
+                
+                };
             }
             return new MessageConsumer() {
                 @Override
@@ -221,6 +290,10 @@ public final class Server {
                     ProxyLookup ll = new ProxyLookup(new AbstractLookup(ic), sessionLookup);
                     final OperationContext ctx;
 
+                    if (LSP_LOG.isLoggable(Level.FINEST)) {
+                        LSP_LOG.log(Level.FINEST, "IN : {0}", 
+                                msg.toString().replace("\n", "\n\t"));
+                    }
                     // Intercept client REQUESTS; take the progress token from them, if it is
                     // attached.
                     Runnable r;
@@ -254,6 +327,9 @@ public final class Server {
                     }
                     if (ctx != null) {
                         ic.add(ctx);
+                    }
+                    if (additionalServices != null) {
+                        additionalServices.forEach(ic::add);
                     }
                     final InternalHandle ftoCancel = toCancel;
                     try {
@@ -326,8 +402,10 @@ public final class Server {
 
     public static class LanguageServerImpl implements LanguageServer, LanguageClientAware, LspServerState, NbLanguageServer {
 
-        private static final String NETBEANS_FORMAT = "netbeans.format";
-        private static final String NETBEANS_JAVA_IMPORTS = "netbeans.java.imports";
+        private static final String NETBEANS_FORMAT = "format";
+        private static final String NETBEANS_JAVA_IMPORTS = "java.imports";
+        private static final String NETBEANS_PROJECT_JDKHOME = "project.jdkhome";
+        private static final String NETBEANS_JAVA_HINTS = "hints";
 
         // change to a greater throughput if the initialization waits on more processes than just (serialized) project open.
         private static final RequestProcessor SERVER_INIT_RP = new RequestProcessor(LanguageServerImpl.class.getName());
@@ -337,8 +415,9 @@ public final class Server {
         private final TextDocumentServiceImpl textDocumentService = new TextDocumentServiceImpl(this);
         private final WorkspaceServiceImpl workspaceService = new WorkspaceServiceImpl(this);
         private final InstanceContent   sessionServices = new InstanceContent();
+        private final AbstractLookup sessionOnly = new AbstractLookup(sessionServices);
         private final Lookup sessionLookup = new ProxyLookup(
-                new AbstractLookup(sessionServices),
+                sessionOnly,
                 Lookup.getDefault()
         );
 
@@ -381,9 +460,24 @@ public final class Server {
         private final List<FileObject> acceptedWorkspaceFolders = new ArrayList<>();
 
         private final OpenedDocuments openedDocuments = new OpenedDocuments();
+        
+        private final LspSession lspSession;
+        
+        LanguageServerImpl(LspSession session) {
+            this.lspSession = session;
+        }
 
-        Lookup getSessionLookup() {
-            return sessionLookup;
+        private Lookup getSessionLookup() {
+            return lspSession.getLookup();
+        }
+        
+        /**
+         * Returns a Lookup specific for this LSP server's session. Does not include the default Lookup contents,
+         * it is suitable for composing into a ProxyLookup with other parts + the default one.
+         * @return 
+         */
+        Lookup getSessionOnlyLookup() {
+            return sessionOnly;
         }
 
         /**
@@ -399,6 +493,8 @@ public final class Server {
                 return CompletableFuture.completedFuture(new Project[0]);
             }
             CompletableFuture<Project[]> f = new CompletableFuture<>();
+            LOG.log(Level.FINER, "Asked to open project(s): {0}", Arrays.asList(projectCandidates));
+            LOG.log(Level.FINER, "Caller:", new Throwable());
             SERVER_INIT_RP.post(() -> {
                 asyncOpenSelectedProjects0(f, projectCandidates, addWorkspace, false);
             });
@@ -508,16 +604,22 @@ public final class Server {
             List<Project> projects = new ArrayList<>();
             List<FileObject> nonProjects = new ArrayList<>();
             List<FileObject> haveProjects = new ArrayList<>();
+            
+            Project[] candidateMapping = new Project[projectCandidates.size()];
             try {
+                int index = 0;
                 if (projectCandidates != null) {
                     for (FileObject candidate : projectCandidates) {
                         Project prj = FileOwnerQuery.getOwner(candidate);
+                        LOG.log(Level.FINER, "Opening {0} for candidate {1}, directory is {2}", new Object[] { prj, candidate, prj == null ? null : prj.getProjectDirectory() });
                         if (prj != null) {
+                            candidateMapping[index] = prj;
                             projects.add(prj);
                             haveProjects.add(prj.getProjectDirectory());
                         } else if (validParents && candidate.isFolder()) {
                             nonProjects.add(candidate);
                         }
+                        index++;
                     }
                     
                     synchronized (this) {
@@ -561,20 +663,18 @@ public final class Server {
                     throw new IllegalStateException(ex);
 
                 }
-                asyncOpenSelectedProjects1(f, previouslyOpened, projects, asWorkspaceProjects);
+                asyncOpenSelectedProjects1(f, previouslyOpened, candidateMapping, projects, asWorkspaceProjects);
             } catch (RuntimeException ex) {
                 f.completeExceptionally(ex);
             }
         }
-
-        private void asyncOpenSelectedProjects1(CompletableFuture<Project[]> f, Project[] previouslyOpened, List<Project> projects, boolean addToWorkspace) {
-            int id = this.openRequestId.getAndIncrement();
-
-            List<CompletableFuture> primingBuilds = new ArrayList<>();
+        
+        CompletableFuture<Void>[] primeProjects(Collection<Project> projects, int id, Map<Project, CompletableFuture<Void>> local) {
             List<Project> toOpen = new ArrayList<>();
-            Map<Project, CompletableFuture<Void>> local = new HashMap<>();
+            List<CompletableFuture<Void>> primingBuilds = new ArrayList<>();
+            
             synchronized (this) {
-                LOG.log(Level.FINER, "{0}: Asked to open project(s): {1}", new Object[]{ id, Arrays.asList(projects) });
+                LOG.log(Level.FINER, "{0}: Opening project(s): {1}", new Object[]{ id, Arrays.asList(projects) });
                 for (Project p : projects) {
                     CompletableFuture<Void> pending = beingOpened.get(p);
                     if (pending != null) {
@@ -620,52 +720,100 @@ public final class Server {
                     pap.invokeAction(ActionProvider.COMMAND_PRIME, Lookups.fixed(progress));
                 }
             }
+            return primingBuilds.toArray(new CompletableFuture[0]);
+        }
+        
+        private void asyncOpenSelectedProjects1(CompletableFuture<Project[]> f, Project[] previouslyOpened, Project[] candidateMapping, List<Project> initialProjects, boolean addToWorkspace) {
+            long t = System.currentTimeMillis();
+            int id = this.openRequestId.getAndIncrement();
+            Map<Project, CompletableFuture<Void>> local = new HashMap<>();
 
-            // Wait for all priming builds, even those already pending, to finish:
-            CompletableFuture.allOf(primingBuilds.toArray(new CompletableFuture[primingBuilds.size()])).thenRun(() -> {
-                OpenProjects.getDefault().open(projects.toArray(new Project[0]), false);
-                try {
-                    LOG.log(Level.FINER, "{0}: Calling openProjects() for : {1}", new Object[]{id, Arrays.asList(projects)});
-                    OpenProjects.getDefault().openProjects().get();
-                } catch (InterruptedException | ExecutionException ex) {
-                    throw new IllegalStateException(ex);
-                }
+            CompletableFuture[] primingBuilds = primeProjects(initialProjects, id, local);
+            
+            AtomicReference<Consumer<Collection<Project>>> subprojectProcessor = new AtomicReference();
+            Set<Project> processedProjects = new HashSet<>();
+            AtomicInteger level = new AtomicInteger(1);
+            subprojectProcessor.set((projects) -> {
+                Set<Project> additionalProjects = new LinkedHashSet<>();
                 for (Project prj : projects) {
-                    //init source groups/FileOwnerQuery:
-                    ProjectUtils.getSources(prj).getSourceGroups(Sources.TYPE_GENERIC);
-                    final CompletableFuture<Void> prjF = local.get(prj);
-                    if (prjF != null) {
-                        prjF.complete(null);
+                    Set<Project> containedProjects = ProjectUtils.getContainedProjects(prj, true);
+                    if (containedProjects != null) {
+                        LOG.log(Level.FINE, "Project {0} reports contained projects: {1}", new Object[] { prj, containedProjects });
+                        additionalProjects.addAll(containedProjects);
                     }
                 }
-                Set<Project> projectSet = new HashSet<>(Arrays.asList(OpenProjects.getDefault().getOpenProjects()));
-                projectSet.retainAll(openedProjects);
-                projectSet.addAll(projects);
-
-                Project[] prjs = projects.toArray(new Project[projects.size()]);
-                LOG.log(Level.FINER, "{0}: Finished opening projects: {1}", new Object[]{id, Arrays.asList(projects)});
-                synchronized (this) {
-                    openedProjects = projectSet;
-                    if (addToWorkspace) {
-                        Set<Project> ns = new HashSet<>(projects);
-                        List<Project> current = Arrays.asList(workspaceProjects.getNow(new Project[0]));
-                        int s = current.size();
-                        ns.addAll(current);
-                        if (s != ns.size()) {
-                            prjs = ns.toArray(new Project[ns.size()]);
-                            workspaceProjects = CompletableFuture.completedFuture(prjs);
+                additionalProjects.removeAll(processedProjects);
+                additionalProjects.removeAll(projects);
+                
+                processedProjects.addAll(projects);
+                
+                LOG.log(Level.FINE, "Processing subprojects, level {0}: {1}", new Object[] { level.getAndIncrement(), additionalProjects });
+                
+                if (additionalProjects.isEmpty()) {
+                    OpenProjects.getDefault().open(processedProjects.toArray(new Project[processedProjects.size()]), false);
+                    try {
+                        LOG.log(Level.FINER, "{0}: Calling openProjects() for : {1}", new Object[]{id, Arrays.asList(processedProjects)});
+                        OpenProjects.getDefault().openProjects().get();
+                    } catch (InterruptedException | ExecutionException ex) {
+                        throw new IllegalStateException(ex);
+                    }
+                    for (Project prj : processedProjects) {
+                        //init source groups/FileOwnerQuery:
+                        ProjectUtils.getSources(prj).getSourceGroups(Sources.TYPE_GENERIC);
+                        final CompletableFuture<Void> prjF = local.get(prj);
+                        if (prjF != null) {
+                            prjF.complete(null);
                         }
                     }
-                    for (Project p : prjs) {
-                        // override flag in opening cache, no further questions asked.
-                        openingFileOwners.put(p, f.thenApply(unused -> p));
+                    Set<Project> projectSet = new HashSet<>(Arrays.asList(OpenProjects.getDefault().getOpenProjects()));
+                    projectSet.retainAll(openedProjects);
+                    projectSet.addAll(processedProjects);
+
+                    Project[] prjsRequested = projects.toArray(new Project[processedProjects.size()]);
+                    Project[] prjs = projects.toArray(new Project[processedProjects.size()]);
+                    LOG.log(Level.FINER, "{0}: Finished opening projects: {1}", new Object[]{id, Arrays.asList(processedProjects)});
+                    synchronized (this) {
+                        openedProjects = projectSet;
+                        if (addToWorkspace) {
+                            Set<Project> ns = new HashSet<>(processedProjects);
+                            List<Project> current = Arrays.asList(workspaceProjects.getNow(new Project[0]));
+                            int s = current.size();
+                            ns.addAll(current);
+                            LOG.log(Level.FINER, "Current is: {0}, ns: {1}", new Object[] { current, ns });
+                            if (s != ns.size()) {
+                                prjs = ns.toArray(new Project[ns.size()]);
+                                workspaceProjects.complete(prjs);
+                                workspaceProjects = CompletableFuture.completedFuture(prjs);
+                            }
+                        }
+                        for (Project p : prjs) {
+                            // override flag in opening cache, no further questions asked.
+                            openingFileOwners.put(p, f.thenApply(unused -> p));
+                        }
                     }
+                    f.complete(candidateMapping);
+                    List<FileObject> workspaceClientFolders = workspaceService.getClientWorkspaceFolders();
+                    LSP_SERVER_TELEMETRY.sendWorkspaceInfo(client, workspaceClientFolders, openedProjects, System.currentTimeMillis() - t);
+                    LOG.log(Level.INFO, "{0} projects opened in {1}ms", new Object[] { prjsRequested.length, (System.currentTimeMillis() - t) });
+                } else {
+                    LOG.log(Level.FINER, "{0}: Collecting projects to prime from: {1}", new Object[]{id, Arrays.asList(additionalProjects)});
+                    CompletableFuture[] nextPrimingBuilds = primeProjects(additionalProjects, id, local);
+                    CompletableFuture.allOf(nextPrimingBuilds).thenRun(() -> {
+                        subprojectProcessor.get().accept(additionalProjects);
+                    }).exceptionally(e -> {
+                        f.completeExceptionally(e);
+                        return null;
+                    }); 
                 }
-                f.complete(prjs);
+            });
+
+            // Wait for all priming builds, even those already pending, to finish:
+            CompletableFuture.allOf(primingBuilds).thenRun(() -> {
+                subprojectProcessor.get().accept(initialProjects);
             }).exceptionally(e -> {
                 f.completeExceptionally(e);
                 return null;
-            });
+            }); 
         }
 
         private JavaSource checkJavaSupport() {
@@ -712,18 +860,25 @@ public final class Server {
             }
         }
 
-        private InitializeResult constructInitResponse(InitializeParams init, JavaSource src) {
+        private InitializeResult constructInitResponse(InitializeParams init, JavaSource src, NbCodeClientCapabilities capa) {
             ServerCapabilities capabilities = new ServerCapabilities();
             if (src != null) {
                 TextDocumentSyncOptions textDocumentSyncOptions = new TextDocumentSyncOptions();
                 textDocumentSyncOptions.setChange(TextDocumentSyncKind.Incremental);
                 textDocumentSyncOptions.setOpenClose(true);
                 textDocumentSyncOptions.setWillSaveWaitUntil(true);
+                // TODO: we now do not request to send saved contents, but in case of client side applied text edits, it could be cool to 
+                // receive the current document contents at a savepoint.
+                textDocumentSyncOptions.setSave(new SaveOptions(false));
                 capabilities.setTextDocumentSync(textDocumentSyncOptions);
                 CompletionOptions completionOptions = new CompletionOptions();
                 completionOptions.setResolveProvider(true);
                 completionOptions.setTriggerCharacters(Arrays.asList(".", "#", "@", "*"));
                 capabilities.setCompletionProvider(completionOptions);
+                SignatureHelpOptions signatureHelpOptions = new SignatureHelpOptions();
+                signatureHelpOptions.setTriggerCharacters(Arrays.asList("("));
+                signatureHelpOptions.setRetriggerCharacters(Arrays.asList(","));
+                capabilities.setSignatureHelpProvider(signatureHelpOptions);
                 capabilities.setHoverProvider(true);
                 CodeActionOptions codeActionOptions = new CodeActionOptions(Arrays.asList(CodeActionKind.QuickFix, CodeActionKind.Source, CodeActionKind.SourceOrganizeImports, CodeActionKind.Refactor));
                 codeActionOptions.setResolveProvider(true);
@@ -736,36 +891,45 @@ public final class Server {
                 capabilities.setDocumentFormattingProvider(true);
                 capabilities.setDocumentRangeFormattingProvider(true);
                 capabilities.setReferencesProvider(true);
-                
+
                 CallHierarchyRegistrationOptions chOpts = new CallHierarchyRegistrationOptions();
                 chOpts.setWorkDoneProgress(true);
                 capabilities.setCallHierarchyProvider(chOpts);
-                Set<String> commands = new LinkedHashSet<>(Arrays.asList(GRAALVM_PAUSE_SCRIPT,
+                Set<String> commands = new LinkedHashSet<>(Arrays.asList(NBLS_GRAALVM_PAUSE_SCRIPT,
                         NBLS_BUILD_WORKSPACE,
                         NBLS_CLEAN_WORKSPACE,
-                        JAVA_RUN_PROJECT_ACTION,
+                        NBLS_GET_ARCHIVE_FILE_CONTENT,
+                        NBLS_RUN_PROJECT_ACTION,
                         JAVA_FIND_DEBUG_ATTACH_CONFIGURATIONS,
                         JAVA_FIND_DEBUG_PROCESS_TO_ATTACH,
-                        JAVA_FIND_PROJECT_CONFIGURATIONS,
+                        NBLS_FIND_PROJECT_CONFIGURATIONS,
                         JAVA_GET_PROJECT_CLASSPATH,
                         JAVA_GET_PROJECT_PACKAGES,
                         JAVA_GET_PROJECT_SOURCE_ROOTS,
-                        JAVA_LOAD_WORKSPACE_TESTS,
-                        JAVA_NEW_FROM_TEMPLATE,
-                        JAVA_NEW_PROJECT,
-                        JAVA_PROJECT_CONFIGURATION_COMPLETION,
-                        JAVA_PROJECT_RESOLVE_PROJECT_PROBLEMS,
+                        NBLS_LOAD_WORKSPACE_TESTS,
+                        NBLS_RESOLVE_STACKTRACE_LOCATION,
+                        NBLS_NEW_FROM_TEMPLATE,
+                        NBLS_NEW_PROJECT,
+                        NBLS_PROJECT_CONFIGURATION_COMPLETION,
+                        NBLS_PROJECT_RESOLVE_PROJECT_PROBLEMS,
                         JAVA_SUPER_IMPLEMENTATION,
-                        JAVA_SOURCE_FOR,
-                        JAVA_CLEAR_PROJECT_CACHES,
+                        NBLS_CLEAR_PROJECT_CACHES,
                         NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH,
-                        JAVA_PROJECT_INFO
+                        NBLS_PROJECT_INFO,
+                        JAVA_ENABLE_PREVIEW,
+                        NBLS_DOCUMENT_SYMBOLS,
+                        NBLS_GET_DIAGNOSTICS,
+                        NBLS_GET_SERVER_DIRECTORIES
                 ));
                 for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
                     commands.addAll(codeActionsProvider.getCommands());
                 }
+                Utils.ensureCommandsPrefixed(commands);
+                commands = commands.stream().map(cmd -> Utils.encodeCommand(cmd, capa)).collect(Collectors.toSet());
                 capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(new ArrayList<>(commands)));
-                capabilities.setWorkspaceSymbolProvider(true);
+                WorkspaceSymbolOptions wsOpts = new WorkspaceSymbolOptions();
+                wsOpts.setResolveProvider(true);
+                capabilities.setWorkspaceSymbolProvider(wsOpts);
                 capabilities.setCodeLensProvider(new CodeLensOptions(false));
                 RenameOptions renOpt = new RenameOptions();
                 renOpt.setPrepareProvider(true);
@@ -773,6 +937,14 @@ public final class Server {
                 FoldingRangeProviderOptions foldingOptions = new FoldingRangeProviderOptions();
                 capabilities.setFoldingRangeProvider(foldingOptions);
                 textDocumentService.init(init.getCapabilities(), capabilities);
+
+                // register for workspace changess
+                WorkspaceServerCapabilities wcaps = new WorkspaceServerCapabilities();
+                WorkspaceFoldersOptions wfopts = new WorkspaceFoldersOptions();
+                wfopts.setSupported(true);
+                wfopts.setChangeNotifications(true);
+                wcaps.setWorkspaceFolders(wfopts);
+                capabilities.setWorkspace(wcaps);
             }
             return new InitializeResult(capabilities);
         }
@@ -795,7 +967,6 @@ public final class Server {
                 }
             } else {
                 String root = init.getRootUri();
-
                 if (root != null) {
                     try {
                         projectCandidates.add(Utils.fromUri(root));
@@ -806,36 +977,108 @@ public final class Server {
                     //TODO: use getRootPath()?
                 }
             }
-            CompletableFuture<Project[]> prjs = workspaceProjects;
-            SERVER_INIT_RP.post(() -> asyncOpenSelectedProjects0(prjs, projectCandidates, true, true));
+            CompletableFuture<Project[]> possibleWaitedPrjs = workspaceProjects;
+            // this Future will receive candidates, some of them possibly null. Cannot complete directly the existing `workspaceProjects` wit the returned candidates,
+            // as this could return nulls to clients that do not expect any.
+            CompletableFuture<Project[]> prjs = new CompletableFuture<Project[]>();
+            SERVER_INIT_RP.post(() -> {
+                List<FileObject> additionalCandidates = new ArrayList<>();
+                AtomicBoolean cancel = new AtomicBoolean();
+                ProgressHandle h = ProgressHandle.createHandle("Collecting workspace projects...", () -> {
+                    cancel.set(true);
+                    return true;
+                });
+                h.start();
+                try {
+                    for (FileObject candidate : projectCandidates) {
+                        if (cancel.get()) {
+                            break;
+                        }
+                        Project prj = FileOwnerQuery.getOwner(candidate);
+                        if (prj == null) {
+                            collectProjectCandidates(candidate, additionalCandidates, cancel);
+                        }
+                    }
+                } catch (IOException ex) {
+                    LOG.log(Level.FINE, null, ex);
+                } finally {
+                    h.finish();
+                }
+                if (!cancel.get()) {
+                    projectCandidates.addAll(additionalCandidates);
+                }
+                asyncOpenSelectedProjects0(prjs, projectCandidates, true, true);
+            });
 
             // chain showIndexingComplete message after initial project open.
-            prjs.
-                    thenApply(this::showIndexingCompleted);
+            prjs.thenApply((candidates) -> {
+                Project[] nonNulls = Arrays.asList(candidates).stream().filter(Objects::nonNull).toArray(Project[]::new);
+                possibleWaitedPrjs.complete(nonNulls);
+                return nonNulls;
+            }).thenApply(this::showIndexingCompleted);
 
             initializeOptions();
+
+            workspaceService.setClientWorkspaceFolders(init.getWorkspaceFolders());
 
             // but complete the InitializationRequest independently of the project initialization.
             return CompletableFuture.completedFuture(
                     finishInitialization(
-                        constructInitResponse(init, checkJavaSupport())
+                        constructInitResponse(init, checkJavaSupport(), capa)
                     )
             );
         }
 
+        private void collectProjectCandidates(FileObject fo, List<FileObject> candidates, AtomicBoolean cancel) throws IOException {
+            for (FileObject chld : fo.getChildren()) {
+                if (cancel.get()) {
+                    return;
+                }
+                if (chld.isFolder() && !chld.isSymbolicLink()) {
+                    Project prj = FileOwnerQuery.getOwner(chld);
+                    if (prj != null) {
+                        candidates.add(chld);
+                    } else {
+                        collectProjectCandidates(chld, candidates, cancel);
+                    }
+                }
+            }
+        }
+
         private void initializeOptions() {
             getWorkspaceProjects().thenAccept(projects -> {
+                ConfigurationItem item = new ConfigurationItem();
+                // PENDING: what about doing just one roundtrip to the client- we may request multiple ConfiguratonItems in one message ?
+                item.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_JAVA_HINTS);
+                client.configuration(new ConfigurationParams(Collections.singletonList(item))).thenAccept(c -> {
+                    if (c != null && !c.isEmpty() && c.get(0) instanceof JsonObject) {
+                        textDocumentService.updateJavaHintPreferences((JsonObject) c.get(0));
+                    }
+                    else {
+                        textDocumentService.hintsSettingsRead = true;
+                        textDocumentService.reRunDiagnostics();
+                    }
+                });
+                item.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_PROJECT_JDKHOME);
+                client.configuration(new ConfigurationParams(Collections.singletonList(item))).thenAccept(c -> {
+                    JsonPrimitive newProjectJDKHomePath = null;
+
+                    if (c != null && !c.isEmpty() && c.get(0) instanceof JsonPrimitive) {
+                        newProjectJDKHomePath = (JsonPrimitive) c.get(0);
+                    } else {
+                    }
+                    textDocumentService.updateProjectJDKHome(newProjectJDKHomePath);
+                });
                 if (projects != null && projects.length > 0) {
-                    ConfigurationItem item = new ConfigurationItem();
                     FileObject fo = projects[0].getProjectDirectory();
                     item.setScopeUri(Utils.toUri(fo));
-                    item.setSection(NETBEANS_FORMAT);
+                    item.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_FORMAT);
                     client.configuration(new ConfigurationParams(Collections.singletonList(item))).thenAccept(c -> {
                         if (c != null && !c.isEmpty() && c.get(0) instanceof JsonObject) {
                             workspaceService.updateJavaFormatPreferences(fo, (JsonObject) c.get(0));
                         }
                     });
-                    item.setSection(NETBEANS_JAVA_IMPORTS);
+                    item.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_JAVA_IMPORTS);
                     client.configuration(new ConfigurationParams(Collections.singletonList(item))).thenAccept(c -> {
                         if (c != null && !c.isEmpty() && c.get(0) instanceof JsonObject) {
                             workspaceService.updateJavaImportPreferences(fo, (JsonObject) c.get(0));
@@ -905,62 +1148,96 @@ public final class Server {
             sessionServices.add(new WorkspaceUIContext(client));
             sessionServices.add(treeService.getNodeRegistry());
             sessionServices.add(inputService.getRegistry());
+            sessionServices.add(workspaceService.getWorkspace());
             ((LanguageClientAware) getTextDocumentService()).connect(client);
             ((LanguageClientAware) getWorkspaceService()).connect(client);
             ((LanguageClientAware) treeService).connect(client);
+        }
+
+        @Override
+        public void setTrace(SetTraceParams params) {
+            // no op: there's already a lot of noise in the log, and the console log
+            // can be controlled by a commandline parameter to the NBLS.
+        }
+
+        @Override
+        public List<FileObject> getClientWorkspaceFolders() {
+            return workspaceService.getClientWorkspaceFolders();
         }
     }
 
     public static final String NBLS_BUILD_WORKSPACE =  "nbls.build.workspace";
     public static final String NBLS_CLEAN_WORKSPACE =  "nbls.clean.workspace";
-    public static final String JAVA_NEW_FROM_TEMPLATE =  "java.new.from.template";
-    public static final String JAVA_NEW_PROJECT =  "java.new.project";
-    public static final String JAVA_GET_PROJECT_SOURCE_ROOTS = "java.get.project.source.roots";
-    public static final String JAVA_GET_PROJECT_CLASSPATH = "java.get.project.classpath";
-    public static final String JAVA_GET_PROJECT_PACKAGES = "java.get.project.packages";
-    public static final String JAVA_LOAD_WORKSPACE_TESTS =  "java.load.workspace.tests";
-    public static final String JAVA_SUPER_IMPLEMENTATION =  "java.super.implementation";
-    public static final String JAVA_SOURCE_FOR =  "java.source.for";
-    public static final String GRAALVM_PAUSE_SCRIPT =  "graalvm.pause.script";
-    public static final String JAVA_RUN_PROJECT_ACTION = "java.project.run.action";
+    public static final String NBLS_NEW_FROM_TEMPLATE =  "nbls.new.from.template";
+    public static final String NBLS_NEW_PROJECT =  "nbls.new.project";
+    public static final String JAVA_GET_PROJECT_SOURCE_ROOTS = "nbls.java.get.project.source.roots";
+    public static final String JAVA_GET_PROJECT_CLASSPATH = "nbls.java.get.project.classpath";
+    public static final String JAVA_GET_PROJECT_PACKAGES = "nbls.java.get.project.packages";
+    public static final String NBLS_LOAD_WORKSPACE_TESTS =  "nbls.load.workspace.tests";
+    public static final String NBLS_RESOLVE_STACKTRACE_LOCATION = "nbls.resolve.stacktrace.location";
+    public static final String JAVA_SUPER_IMPLEMENTATION = "nbls.java.super.implementation";
+    public static final String NBLS_GRAALVM_PAUSE_SCRIPT = "nbls.graalvm.pause.script";
+    public static final String NBLS_RUN_PROJECT_ACTION = "nbls.project.run.action";
+    public static final String NBLS_GET_ARCHIVE_FILE_CONTENT = "nbls.get.archive.file.content";
 
     /**
      * Enumerates project configurations.
      */
-    public static final String JAVA_FIND_PROJECT_CONFIGURATIONS = "java.project.configurations";
+    public static final String NBLS_FIND_PROJECT_CONFIGURATIONS = "nbls.project.configurations";
     /**
      * Enumerates attach debugger configurations.
      */
-    public static final String JAVA_FIND_DEBUG_ATTACH_CONFIGURATIONS = "java.attachDebugger.configurations";
+    public static final String JAVA_FIND_DEBUG_ATTACH_CONFIGURATIONS = "nbls.java.attachDebugger.configurations";
     /**
      * Enumerates JVM processes eligible for debugger attach.
      */
-    public static final String JAVA_FIND_DEBUG_PROCESS_TO_ATTACH = "java.attachDebugger.pickProcess";
+    public static final String JAVA_FIND_DEBUG_PROCESS_TO_ATTACH = "nbls.java.attachDebugger.pickProcess";
     /**
      * Enumerates native processes eligible for debugger attach.
      */
-    public static final String NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH = "nativeImage.attachDebugger.pickProcess";
+    public static final String NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH = "nbls.nativeImage.attachDebugger.pickProcess";
     /**
      * Provides code-completion of configurations.
      */
-    public static final String JAVA_PROJECT_CONFIGURATION_COMPLETION = "java.project.configuration.completion";
+    public static final String NBLS_PROJECT_CONFIGURATION_COMPLETION = "nbls.project.configuration.completion";
     /**
      * Provides resolution of project problems.
      */
-    public static final String JAVA_PROJECT_RESOLVE_PROJECT_PROBLEMS = "java.project.resolveProjectProblems";
+    public static final String NBLS_PROJECT_RESOLVE_PROJECT_PROBLEMS = "nbls.project.resolveProjectProblems";
 
 
     /**
      * Diagnostic / test command: clears NBLS internal project caches. Useful between testcases and after
      * new project files were generated into workspace subtree.
      */
-    public static final String JAVA_CLEAR_PROJECT_CACHES =  "java.clear.project.caches";
+    public static final String NBLS_CLEAR_PROJECT_CACHES =  "nbls.clear.project.caches";
     
     /**
      * For a project directory, returns basic project information and structure.
      * Syntax: nbls.project.info(locations : String | String[], options? : { projectStructure? : boolean; actions? : boolean; recursive? : boolean }) : LspProjectInfo
      */
-    public static final String JAVA_PROJECT_INFO = "nbls.project.info";
+    public static final String NBLS_PROJECT_INFO = "nbls.project.info";
+
+    /**
+     * Provides enable preview for given project
+     */
+    public static final String JAVA_ENABLE_PREVIEW = "nbls.java.project.enable.preview";
+
+    /**
+     * Provides symbols for the given document
+     */
+    public static final String NBLS_DOCUMENT_SYMBOLS =  "nbls.document.symbols";
+    
+    /**
+     * Returns diagnostics as they would be published by the asynchronous diagnotic task triggered by
+     * text changes.
+     */
+    public static final String NBLS_GET_DIAGNOSTICS = "nbls.get.diagnostics";
+    
+    /**
+     * Returns the directories of NBLS. Returns userdir and the cluster directories.
+     */
+    public static final String NBLS_GET_SERVER_DIRECTORIES = "nbls.server.directories";
 
     static final String INDEXING_COMPLETED = "Indexing completed.";
     static final String NO_JAVA_SUPPORT = "Cannot initialize Java support on JDK ";
@@ -1075,6 +1352,36 @@ public final class Server {
             logWarning(params);
             return CompletableFuture.completedFuture(null);
         }
+
+        @Override
+        public CompletableFuture<Boolean> requestDocumentSave(SaveDocumentRequestParams documentUris) {
+            logWarning(Arrays.asList(documentUris));
+            return CompletableFuture.completedFuture(false);
+        }
+
+        @Override
+        public CompletableFuture<Void> writeOutput(OutputMessage lm) {
+            logWarning(lm.message);
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        public CompletableFuture<Void> showOutput(String outputName) {
+            logWarning("Show output: " + outputName); //NOI18N
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        public CompletableFuture<Void> closeOutput(String outputName) {
+            logWarning("Close output: " + outputName); //NOI18N
+            return CompletableFuture.completedFuture(null);
+        }
+        
+        @Override
+        public CompletableFuture<Void> resetOutput(String outputName) {
+            logWarning("Reset output: " + outputName); //NOI18N
+            return CompletableFuture.completedFuture(null);
+        }
     };
 
 
@@ -1119,6 +1426,68 @@ public final class Server {
                 antClassWarningLogged = true;
                 LOG.log(Level.WARNING, "Unable to configure Ant support", ex);
             }
+        }
+    }
+
+    public static class CustomIndexerTelemetryFactory extends CustomIndexerFactory {
+
+        private static CustomIndexerTelemetryFactory INSTANCE;
+
+        private final CustomIndexer noOp = new CustomIndexer() {
+            @Override
+            protected void index(Iterable<? extends Indexable> files, Context context) {
+            }
+        };
+
+        @MimeRegistration(mimeType="", service=CustomIndexerFactory.class)
+        public static CustomIndexerTelemetryFactory getDefault() {
+            if (INSTANCE == null) {
+                INSTANCE = new CustomIndexerTelemetryFactory();
+            }
+            return INSTANCE;
+        }
+
+        private CustomIndexerTelemetryFactory() {
+        }
+
+        @Override
+        public synchronized boolean scanStarted(Context context) {
+            LSP_SERVER_TELEMETRY.sendTelemetry(new TelemetryEvent(MessageType.Info.toString(), LSP_SERVER_TELEMETRY.SCAN_START_EVT, "nbls.scanStarted")); 
+	    return true;
+        }
+
+        @Override
+        public synchronized void scanFinished(Context context) {
+            LSP_SERVER_TELEMETRY.sendTelemetry(new TelemetryEvent(MessageType.Info.toString(),LSP_SERVER_TELEMETRY.SCAN_END_EVT,"nbls.scanFinished"));
+            ERR_NOTIFIER.notifyErrors(context.getRootURI());
+        }
+
+        @Override
+        public void filesDeleted(Iterable<? extends Indexable> deleted, Context context) {
+        }
+
+        @Override
+        public void filesDirty(Iterable<? extends Indexable> dirty, Context context) {
+        }
+
+        @Override
+        public String getIndexerName() {
+            return "CustomIndexerTelemetryFactory";
+        }
+
+        @Override
+        public int getIndexVersion() {
+            return 1;
+        }
+
+        @Override
+        public CustomIndexer createIndexer() {
+            return noOp;
+        }
+
+        @Override
+        public boolean supportsEmbeddedIndexers() {
+            return false;
         }
     }
 }

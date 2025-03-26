@@ -77,7 +77,8 @@ public class RegisterDerby implements DatabaseRuntime {
     
     private static final int START_TIMEOUT = 0; // seconds
     
-    private static RegisterDerby reg=null;
+    private static RegisterDerby reg = null;
+    private static DatabaseRuntime regModular = null;
     
     /** Derby server process */
     private static Process process = null;
@@ -85,9 +86,9 @@ public class RegisterDerby implements DatabaseRuntime {
     /** Creates a new instance of RegisterDerby */
     private RegisterDerby() {}
     
-    public static synchronized RegisterDerby getDefault(){
-        if (reg==null) {
-            reg= new RegisterDerby();
+    public static synchronized RegisterDerby getDefault() {
+        if (reg == null) {
+            reg = new RegisterDerby();
             if (EventQueue.isDispatchThread()) { // #229741
                 RequestProcessor.getDefault().post(new Runnable() {
 
@@ -102,7 +103,45 @@ public class RegisterDerby implements DatabaseRuntime {
         }
         return reg;
     }
-    
+
+    public static synchronized DatabaseRuntime getModular() {
+        if (regModular == null) {
+            RegisterDerby mainRuntime = getDefault();
+            regModular = new DatabaseRuntime() {
+                @Override
+                public String getJDBCDriverClass() {
+                    return DerbyOptions.DRIVER_CLASS_NET_MODULAR;
+                }
+
+                @Override
+                public boolean acceptsDatabaseURL(String url) {
+                    return mainRuntime.acceptsDatabaseURL(url);
+                }
+
+                @Override
+                public boolean isRunning() {
+                    return mainRuntime.isRunning();
+                }
+
+                @Override
+                public boolean canStart() {
+                    return mainRuntime.canStart();
+                }
+
+                @Override
+                public void start() {
+                    mainRuntime.start();
+                }
+
+                @Override
+                public void stop() {
+                    mainRuntime.stop();
+                }
+            };
+        }
+        return regModular;
+    }
+
     /**
      * Whether this runtime accepts this connection string.
      */
@@ -156,17 +195,6 @@ public class RegisterDerby implements DatabaseRuntime {
             Util.getDerbyFile("lib/derby.jar").getAbsolutePath() + File.pathSeparator +
             Util.getDerbyFile("lib/derbytools.jar").getAbsolutePath() + File.pathSeparator +
             Util.getDerbyFile("lib/derbynet.jar").getAbsolutePath(); // NOI18N
-    }
-    
-    /**
-     * Returns the registered Derby driver.
-     */
-    private JDBCDriver getRegisteredDerbyDriver() {
-        JDBCDriver[] drvs = JDBCDriverManager.getDefault().getDrivers(DerbyOptions.DRIVER_CLASS_NET);
-        if (drvs.length > 0) {
-            return drvs[0];
-        }
-        return null;
     }
     
     public int getPort() {
@@ -377,7 +405,10 @@ public class RegisterDerby implements DatabaseRuntime {
     private String startArgs() {
 
         Preferences prefs = NbPreferences.forModule(RegisterDerby.class);
-        if (prefs.getBoolean(DISABLE_SECURITY_MANAGER, false)) {
+
+        boolean disableSecurityManager = Integer.getInteger("java.specification.version", -1) > 17;
+
+        if (prefs.getBoolean(DISABLE_SECURITY_MANAGER, false) || disableSecurityManager) {
             return " -noSecurityManager";                               //NOI18N
         } else {
             return "";                                                  //NOI18N

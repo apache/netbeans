@@ -63,6 +63,7 @@ import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.api.sendopts.CommandLine;
 import org.netbeans.api.templates.FileBuilder;
 import org.netbeans.junit.NbTestCase;
+import static org.netbeans.modules.java.lsp.server.LspTestUtils.tripleSlashUri;
 import org.netbeans.modules.java.lsp.server.explorer.api.CreateExplorerParams;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeOperationParams;
@@ -76,6 +77,8 @@ import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
 import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
 import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
+import org.netbeans.modules.java.lsp.server.protocol.OutputMessage;
+import org.netbeans.modules.java.lsp.server.protocol.SaveDocumentRequestParams;
 import org.netbeans.modules.java.lsp.server.protocol.SetTextEditorDecorationParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
 import org.netbeans.modules.java.lsp.server.protocol.TestProgressParams;
@@ -98,6 +101,14 @@ public class ProjectViewTest extends NbTestCase {
     private final Gson gson = new Gson();
     private Socket clientSocket;
     private Thread serverThread;
+    
+    static {
+        // TODO remove ASAP from MicronautGradleArtifactsImplTest and ProjectViewTest
+        // investigate "javax.net.ssl.SSLHandshakeException: Received fatal alert: handshake_failure"
+        // during gradle download "at org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitStep.execute(TemplateOperation.java:317)"
+        // this looks like a misconfigured webserver to me
+        System.setProperty("https.protocols", "TLSv1.2");
+    }
 
     public ProjectViewTest(String name) {
         super(name);
@@ -152,7 +163,6 @@ public class ProjectViewTest extends NbTestCase {
         
         @Override
         public void telemetryEvent(Object arg0) {
-            throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
@@ -271,6 +281,31 @@ public class ProjectViewTest extends NbTestCase {
         public CompletableFuture<Void> configurationUpdate(UpdateConfigParams params) {
             return CompletableFuture.completedFuture(null);
         }
+
+        @Override
+        public CompletableFuture<Boolean> requestDocumentSave(SaveDocumentRequestParams documentUris) {
+            return CompletableFuture.completedFuture(false);
+        }
+
+        @Override
+        public CompletableFuture<Void> writeOutput(OutputMessage message) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        public CompletableFuture<Void> showOutput(String outputName) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        public CompletableFuture<Void> closeOutput(String outputName) {
+            return CompletableFuture.completedFuture(null);
+        }
+        
+        @Override
+        public CompletableFuture<Void> resetOutput(String outputName) {
+            return CompletableFuture.completedFuture(null);
+        }
     }
 
     private static Launcher<NbLanguageServer> createLauncher(NbCodeLanguageClient client, InputStream in, OutputStream out,
@@ -311,14 +346,15 @@ public class ProjectViewTest extends NbTestCase {
     }
 
     private void createSimpleProject() throws IOException {
-        FileObject template = FileUtil.getConfigFile("Templates/Project/Gradle/org-netbeans-modules-gradle-java-newproject-SimpleApplicationProjectWizard");
+        FileObject template = FileUtil.getConfigFile("Templates/Project/Gradle/org-netbeans-modules-gradle-java-newproject-Wizards-createJavaApplication");
         FileObject from = FileUtil.toFileObject(getDataDir()).getFileObject("gradle-hello/app");
         FileObject dest = FileUtil.toFileObject(getWorkDir());
         FileBuilder b = new FileBuilder(template, dest).name("app").param("packageBase", "gradle.hello");
         List<FileObject> projectFiles = b.build();
         // the template will create a parent project with 'app' application subproject.
         projectDir = projectFiles.get(0).getFileObject("app");
-                
+        assertNotNull(projectDir);
+
         deepCopy(from, projectDir.getParent());
         project = FileOwnerQuery.getOwner(projectDir);
         OpenProjects.getDefault().open(new Project[] { project } , true);
@@ -359,7 +395,7 @@ public class ProjectViewTest extends NbTestCase {
     public class ServerLookupExtractionCommand extends CodeActionsProvider {
 
         @Override
-        public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+        public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
             return Collections.emptyList();
         }
 
@@ -428,6 +464,8 @@ public class ProjectViewTest extends NbTestCase {
     }
     
     private TreeItem findChild(TreeItem parent, String childLabel) throws Exception {
+        TreeNodeRegistry reg = serverLookup.lookup(TreeNodeRegistry.class);
+        reg.findNode(parent.id).getChildren().getNodes(true);
         for (TreeItem candidate : getChildren(parent)) {
             if (childLabel.equals(candidate.label)) {
                 return candidate;
@@ -488,7 +526,7 @@ public class ProjectViewTest extends NbTestCase {
             }
         }
         
-        assertEquals(URLMapper.findURL(newFile, URLMapper.EXTERNAL).toString(), found.resourceUri);
+        assertEquals(tripleSlashUri(URLMapper.findURL(newFile, URLMapper.EXTERNAL).toString()), found.resourceUri);
     }
     
     /**
@@ -576,6 +614,8 @@ public class ProjectViewTest extends NbTestCase {
         
         TreeItem found = findChild(testRoot, "gradle");
         assertNotNull("Test package exists", found);
+        TreeNodeRegistry reg = serverLookup.lookup(TreeNodeRegistry.class);
+        reg.findNode(found.id).getChildren().getNodes(true);
         int[] childIds = server.getTreeViewService().getChildren(new NodeOperationParams(found.id)).get();
         assertEquals("Test package node is not empty", 1, childIds.length);
         

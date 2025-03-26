@@ -66,20 +66,13 @@ public class GlobalClassPathProviderImpl extends ProjectOpenedHook implements Pr
         if (index < 0) return null;
         ClassPath cp = cache[index];
         if (cp == null) {
-            switch (type) {
-                case ClassPath.BOOT:
-                    cp = createClassPath(new BootClassPathImpl(project));
-                    break;
-                case ClassPath.SOURCE:
-                    cp = createClassPath(new GradleGlobalClassPathImpl.ProjectSourceClassPathImpl(project, excludeTests));
-                    break;
-                case ClassPath.COMPILE:
-                    cp = createClassPath(new GradleGlobalClassPathImpl.ProjectCompileClassPathImpl(project, excludeTests));
-                    break;
-                case ClassPath.EXECUTE:
-                    cp = createClassPath(new GradleGlobalClassPathImpl.ProjectRuntimeClassPathImpl(project, excludeTests));
-                    break;
-            }
+            cp = switch (type) {
+                case ClassPath.BOOT -> createClassPath(new BootClassPathImpl(project, null));
+                case ClassPath.SOURCE -> createClassPath(new GradleGlobalClassPathImpl.ProjectSourceClassPathImpl(project, excludeTests));
+                case ClassPath.COMPILE -> createClassPath(new GradleGlobalClassPathImpl.ProjectCompileClassPathImpl(project, excludeTests));
+                case ClassPath.EXECUTE -> createClassPath(new GradleGlobalClassPathImpl.ProjectRuntimeClassPathImpl(project, excludeTests));
+                default -> null;
+            };
             cache[index] = cp;
         }
         return cp;
@@ -87,22 +80,13 @@ public class GlobalClassPathProviderImpl extends ProjectOpenedHook implements Pr
 
     private static int type2Index(String type, boolean excludeTests) {
         int index;
-        switch (type) {
-            case ClassPath.BOOT:
-                index = BOOT;
-                break;
-            case ClassPath.SOURCE:
-                index = SOURCE;
-                break;
-            case ClassPath.COMPILE:
-                index = COMPILE;
-                break;
-            case ClassPath.EXECUTE:
-                index = RUNTIME;
-                break;
-            default:
-                index = -1;
-        }
+        index = switch (type) {
+            case ClassPath.BOOT -> BOOT;
+            case ClassPath.SOURCE -> SOURCE;
+            case ClassPath.COMPILE -> COMPILE;
+            case ClassPath.EXECUTE -> RUNTIME;
+            default -> -1;
+        };
 
         return (index >= 0) && excludeTests ? index + 1 : index;
     }

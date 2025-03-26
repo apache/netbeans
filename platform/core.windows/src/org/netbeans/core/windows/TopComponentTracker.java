@@ -73,7 +73,13 @@ public final class TopComponentTracker {
         Preferences prefs = getPreferences();
         try {
             for( String key : prefs.keys() ) {
-                boolean view = prefs.getBoolean( key, false );
+                boolean view;
+                try {
+                   view = prefs.getBoolean( key, false );
+                } catch (IllegalArgumentException ex) {
+                    Logger.getLogger(TopComponentTracker.class.getName()).log(Level.INFO, "invalid preferences key", ex);
+                    continue; // e.g invalid code point JDK-8075156
+                }
                 if( view )
                     viewIds.add( key );
                 else

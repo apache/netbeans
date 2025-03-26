@@ -36,7 +36,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.lexer.TokenHierarchy;
+import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.project.libraries.Library;
 import org.netbeans.api.project.libraries.LibraryManager;
 import org.netbeans.api.queries.FileEncodingQuery;
@@ -77,10 +80,21 @@ public class ClassPathProviderImpl implements ClassPathProvider {
                 if (javac) {
                     ClassPath langtoolsCP = ClassPath.getClassPath(keyRoot, ClassPath.COMPILE);
                     Library testngLib = LibraryManager.getDefault().getLibrary("testng");
+                    Library junit5Lib = LibraryManager.getDefault().getLibrary("junit_5");
 
-                    if (testngLib != null) {
-                        return ClassPathSupport.createProxyClassPath(ClassPathSupport.createClassPath(testngLib.getContent("classpath").toArray(new URL[0])),
-                                                                     langtoolsCP);
+                    if (testngLib != null || junit5Lib != null) {
+                        List<ClassPath> parts = new ArrayList<>();
+
+                        if (testngLib != null) {
+                            parts.add(ClassPathSupport.createClassPath(testngLib.getContent("classpath").toArray(new URL[0])));
+                        }
+                        if (junit5Lib != null) {
+                            parts.add(ClassPathSupport.createClassPath(junit5Lib.getContent("classpath").toArray(new URL[0])));
+                        }
+
+                        parts.add(langtoolsCP);
+
+                        return ClassPathSupport.createProxyClassPath(parts.toArray(new ClassPath[0]));
                     }
 
                     if (langtoolsCP == null)
@@ -101,7 +115,7 @@ public class ClassPathProviderImpl implements ClassPathProvider {
                                                               "build/jdk.dev/classes/"}) {
                             roots.add(testRoot.getParent().toURI().resolve(rootPaths).toURL());
                         }
-                        return ClassPathSupport.createProxyClassPath(ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()])), langtoolsBCP);
+                        return ClassPathSupport.createProxyClassPath(ClassPathSupport.createClassPath(roots.toArray(new URL[0])), langtoolsBCP);
                     } catch (MalformedURLException ex) {
                         Exceptions.printStackTrace(ex);
                     }
@@ -131,31 +145,27 @@ public class ClassPathProviderImpl implements ClassPathProvider {
         } else {
             if (file.isFolder()) return null;
 
-            roots.add(file.getParent());
-            try (Reader r = new InputStreamReader(file.getInputStream(), FileEncodingQuery.getEncoding(file))) {
-                StringBuilder content = new StringBuilder();
-                int read;
+           String content = getFileContent(file);
 
-                while ((read = r.read()) != (-1)) {
-                    content.append((char) read);
-                }
-
+            try {
                 Pattern library = Pattern.compile("@library (.*)\n");
                 Matcher m = library.matcher(content.toString());
 
                 if (m.find()) {
                     List<FileObject> libDirs = new ArrayList<>();
-                    try (InputStream in = testRootFile.getInputStream()) {
-                        Properties p = new Properties();
-                        p.load(in);
-                        String externalLibRoots = p.getProperty("external.lib.roots");
-                        if (externalLibRoots != null) {
-                            for (String extLib : externalLibRoots.split("\\s+")) {
-                                FileObject libDir = BuildUtils.getFileObject(testRoot, extLib);
+                    Properties p = new Properties();
+                    if (testRootFile != null) {
+                        try (InputStream in = testRootFile.getInputStream()) {
+                            p.load(in);
+                        }
+                    }
+                    String externalLibRoots = p.getProperty("external.lib.roots");
+                    if (externalLibRoots != null) {
+                        for (String extLib : externalLibRoots.split("\\s+")) {
+                            FileObject libDir = BuildUtils.getFileObject(testRoot, extLib);
 
-                                if (libDir != null) {
-                                    libDirs.add(libDir);
-                                }
+                            if (libDir != null) {
+                                libDirs.add(libDir);
                             }
                         }
                     }
@@ -174,6 +184,20 @@ public class ClassPathProviderImpl implements ClassPathProvider {
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
+
+            String pckge = "";
+
+            pckge = packageClause(content);
+
+            FileObject packageDir = file.getParent();
+
+            if (!pckge.isEmpty()) {
+                for (String s : pckge.split("\\.")) {
+                    packageDir = packageDir.getParent();
+                }
+            }
+
+            roots.add(packageDir);
         }
 
         //XXX:
@@ -190,6 +214,44 @@ public class ClassPathProviderImpl implements ClassPathProvider {
         } else {
             return BuildUtils.getFileObject(file.getParent(), spec);
         }
+    }
+
+    private String getFileContent(FileObject file) {
+        try (Reader r = new InputStreamReader(file.getInputStream(), FileEncodingQuery.getEncoding(file))) {
+            StringBuilder contentBuilder = new StringBuilder();
+            int read;
+
+            while ((read = r.read()) != (-1)) {
+                contentBuilder.append((char) read);
+            }
+
+            return contentBuilder.toString();
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+            return "";
+        }
+    }
+
+    private String packageClause(String fileContent) {
+        TokenSequence<JavaTokenId> ts =
+                TokenHierarchy.create(fileContent, JavaTokenId.language())
+                              .tokenSequence(JavaTokenId.language());
+        while (ts.moveNext()) {
+            if (ts.token().id() == JavaTokenId.PACKAGE) {
+                StringBuilder pckge = new StringBuilder();
+
+                while (ts.moveNext()) {
+                    switch (ts.token().id()) {
+                        case IDENTIFIER, DOT -> pckge.append(ts.token().text());
+                        case BLOCK_COMMENT, JAVADOC_COMMENT, WHITESPACE,
+                             JAVADOC_COMMENT_LINE_RUN, LINE_COMMENT -> {}
+                        default -> {return pckge.toString();}
+                    }
+                }
+            }
+        }
+
+        return "";
     }
 
     private void initializeUsagesQuery(FileObject root) {

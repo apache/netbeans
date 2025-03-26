@@ -30,10 +30,12 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.eclipse.lsp4j.CompletionItem;
+import org.eclipse.lsp4j.CompletionItemKind;
 import org.eclipse.lsp4j.InsertTextFormat;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.protocol.LaunchConfigurationCompletion;
+import org.netbeans.modules.java.lsp.server.protocol.NbCodeClientCapabilities;
 import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -42,20 +44,25 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Martin Entlicher
  */
-@ServiceProvider(service = LaunchConfigurationCompletion.class, position = 200)
 public class AttachConfigurationCompletion implements LaunchConfigurationCompletion {
+
+    private final NbCodeClientCapabilities capa;
+
+    public AttachConfigurationCompletion(NbCodeClientCapabilities capa) {
+        this.capa = capa;
+    }
 
     @Override
     public CompletableFuture<List<CompletionItem>> configurations(Supplier<CompletableFuture<Project>> projectSupplier) {
         return CompletableFuture.supplyAsync(() -> {
-            return createCompletion(AttachConfigurations.get());
+            return createCompletion(AttachConfigurations.get(capa));
         }, AttachConfigurations.RP);
     }
 
     @Override
     public CompletableFuture<List<CompletionItem>> attributes(Supplier<CompletableFuture<Project>> projectSupplier, Map<String, Object> currentAttributes) {
         return CompletableFuture.supplyAsync(() -> {
-            return createAttributesCompletion(AttachConfigurations.get(), currentAttributes);
+            return createAttributesCompletion(AttachConfigurations.get(capa), currentAttributes);
         }, AttachConfigurations.RP);
     }
 
@@ -69,7 +76,8 @@ public class AttachConfigurationCompletion implements LaunchConfigurationComplet
     }
 
     private static CompletionItem createCompletion(ConfigurationAttributes configAttrs) {
-        CompletionItem ci = new CompletionItem("Java 8+: " + configAttrs.getName());    // NOI18N
+        CompletionItem ci = new CompletionItem("Java+: " + configAttrs.getName());    // NOI18N
+        ci.setKind(CompletionItemKind.Module);
         StringWriter sw = new StringWriter();
         try (JsonWriter w = new JsonWriter(sw)) {
             w.setIndent("\t");                                              // NOI18N
@@ -138,4 +146,13 @@ public class AttachConfigurationCompletion implements LaunchConfigurationComplet
         }
     }
 
+    @ServiceProvider(service = Factory.class, position = 200)
+    public static final class FactoryImpl implements Factory {
+
+        @Override
+        public LaunchConfigurationCompletion createLaunchConfigurationCompletion(NbCodeClientCapabilities capa) {
+            return new AttachConfigurationCompletion(capa);
+        }
+
+    }
 }

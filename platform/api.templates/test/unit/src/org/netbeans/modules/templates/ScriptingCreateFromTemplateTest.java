@@ -25,7 +25,6 @@ import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import javax.script.ScriptEngine;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.mimelookup.MimePath;
@@ -41,7 +40,6 @@ import org.openide.loaders.FileEntry;
 import org.openide.loaders.MultiDataObject;
 import org.openide.loaders.MultiFileLoader;
 import org.netbeans.api.editor.mimelookup.test.MockMimeLookup;
-import org.netbeans.api.scripting.Scripting;
 import org.openide.loaders.CreateFromTemplateHandler;
 import org.openide.util.SharedClassObject;
 import org.openide.util.test.MockLookup;
@@ -98,46 +96,39 @@ public class ScriptingCreateFromTemplateTest extends NbTestCase {
     public void testFreeFileExtension() throws Exception {
         FileObject root = FileUtil.createMemoryFileSystem().getRoot();
         FileObject template = FileUtil.createData(root, "simple.pl");
-        OutputStream os = template.getOutputStream();
-        ScriptEngine jsEngine = Scripting.createManager().getEngineByExtension("js");
-        boolean isNashorn = (jsEngine != null && jsEngine.toString().indexOf("Nashorn") > 0);
-        if (isNashorn) {
-            // print() behaves like println() and println() does not exist:
+        try (OutputStream os = template.getOutputStream()) {
             os.write("print('#!/usr/bin/perl'); print('# '+license); print('# '+name+' in '+nameAndExt);".getBytes());
-        } else {
-            os.write("println('#!/usr/bin/perl'); print('# ');println(license);print('# ');print(name);print(' in ');println(nameAndExt);".getBytes());
         }
-        os.close();
         template.setAttribute("template", true);
         template.setAttribute(ScriptingCreateFromTemplateHandler.SCRIPT_ENGINE_ATTR, "js");
-        Map<String,Object> parameters = new HashMap<String,Object>();
+        Map<String,Object> parameters = new HashMap<>();
         parameters.put("license", "GPL");
         parameters.put(CreateFromTemplateHandler.FREE_FILE_EXTENSION, true);
-        String newLine = isNashorn ? System.getProperty("line.separator") : "\n";
-            FileObject inst = DataObject.find(template).createFromTemplate(DataFolder.findFolder(root), "nue", parameters).getPrimaryFile();
-            assertEquals("#!/usr/bin/perl"+newLine+"# GPL"+newLine+"# nue in nue.pl"+newLine, inst.asText());
-            assertEquals("nue.pl", inst.getPath());
-            /* XXX perhaps irrelevant since typical wizards disable Finish in this condition
+        String newLine = System.getProperty("line.separator");
+        FileObject inst = DataObject.find(template).createFromTemplate(DataFolder.findFolder(root), "nue", parameters).getPrimaryFile();
+        assertEquals("#!/usr/bin/perl" + newLine + "# GPL" + newLine + "# nue in nue.pl" + newLine, inst.asText());
+        assertEquals("nue.pl", inst.getPath());
+        /* XXX perhaps irrelevant since typical wizards disable Finish in this condition
             inst = DataObject.find(template).createFromTemplate(DataFolder.findFolder(root), "nue", parameters).getPrimaryFile();
             assertEquals("#!/usr/bin/perl\n# GPL\n# nue_1 in nue_1.pl\n", inst.asText());
             assertEquals("nue_1.pl", inst.getPath());
-             */
-            inst = DataObject.find(template).createFromTemplate(DataFolder.findFolder(root), "nue.cgi", parameters).getPrimaryFile();
-            assertEquals("#!/usr/bin/perl"+newLine+"# GPL"+newLine+"# nue in nue.cgi"+newLine, inst.asText());
-            assertEquals("nue.cgi", inst.getPath());
-            /* XXX
+         */
+        inst = DataObject.find(template).createFromTemplate(DataFolder.findFolder(root), "nue.cgi", parameters).getPrimaryFile();
+        assertEquals("#!/usr/bin/perl" + newLine + "# GPL" + newLine + "# nue in nue.cgi" + newLine, inst.asText());
+        assertEquals("nue.cgi", inst.getPath());
+        /* XXX
             inst = DataObject.find(template).createFromTemplate(DataFolder.findFolder(root), "nue.cgi", parameters).getPrimaryFile();
             assertEquals("#!/usr/bin/perl\n# GPL\n# nue_1 in nue_1.cgi\n", inst.asText());
             assertEquals("nue_1.cgi", inst.getPath());
-             */
-            inst = DataObject.find(template).createFromTemplate(DataFolder.findFolder(root), "explicit.pl", parameters).getPrimaryFile();
-            assertEquals("#!/usr/bin/perl"+newLine+"# GPL"+newLine+"# explicit in explicit.pl"+newLine, inst.asText());
-            assertEquals("explicit.pl", inst.getPath());
-            /* XXX
+         */
+        inst = DataObject.find(template).createFromTemplate(DataFolder.findFolder(root), "explicit.pl", parameters).getPrimaryFile();
+        assertEquals("#!/usr/bin/perl" + newLine + "# GPL" + newLine + "# explicit in explicit.pl" + newLine, inst.asText());
+        assertEquals("explicit.pl", inst.getPath());
+        /* XXX
             inst = DataObject.find(template).createFromTemplate(DataFolder.findFolder(root), "explicit.pl", parameters).getPrimaryFile();
             assertEquals("#!/usr/bin/perl\n# GPL\n# explicit_1 in explicit_1.pl\n", inst.asText());
             assertEquals("explicit_1.pl", inst.getPath());
-             */
+         */
     }
     
     //fix for this test was rolled back because of issue #120865

@@ -238,9 +238,10 @@
 <replacefilter token="@org-netbeans-api-lsp@" value="${javadoc.docs.org-netbeans-api-lsp}"/>
 <replacefilter token="@org-netbeans-modules-java-j2seplatform@" value="${javadoc.docs.org-netbeans-modules-java-j2seplatform}"/>
 <replacefilter token="@org-netbeans-modules-xml-wsdl-model@" value="${javadoc.docs.org-netbeans-modules-xml-wsdl-model}"/>
+<replacefilter token="@org-netbeans-api-dashboard@" value="${javadoc.docs.org-netbeans-api-dashboard}"/>
 <!-- deprecated -->
 <replacefilter token="@org-openidex-util@" value="${javadoc.docs.org-openidex-util}"/>
 <!-- deprecated not linked-->
 <!-- replacefilter token="@org-openide-compat@" value="${javadoc.docs.org-openide-compat}"/ -->
 <!-- replacefilter token="@org-openide-options@" value="${javadoc.docs.org-openide-options}"/ -->
-<!-- unsorted filter -->
+<!-- unsorted filter --><replacefilter token="@org-netbeans-modules-project-dependency@" value="${javadoc.docs.org-netbeans-modules-project-dependency}"/>

@@ -206,7 +206,7 @@ public class CreationDescriptor {
     }
 
     public Creator[] getCreators() {
-        return creators.toArray(new Creator[creators.size()]);
+        return creators.toArray(new Creator[0]);
     }
 
     public Creator findBestCreator(FormProperty[] properties, int style) {
@@ -418,7 +418,7 @@ public class CreationDescriptor {
                 propertyNames[i] = properties[i].getPropertyName();
             }                       
                                     
-            Class[] paramTypes = paramTypesList.toArray(new Class[paramTypesList.size()]);
+            Class[] paramTypes = paramTypesList.toArray(new Class[0]);
 
             method = factoryClass.getMethod(methodName, paramTypes);  
                 
@@ -466,7 +466,7 @@ public class CreationDescriptor {
                 }                                        
             }
             
-            Object[] paramValues = paramValuesList.toArray(new Object[paramValuesList.size()]);
+            Object[] paramValues = paramValuesList.toArray(new Object[0]);
             
             Object ret = method.invoke(null, paramValues);
             if(ret.getClass() != describedClass) {                

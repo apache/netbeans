@@ -105,7 +105,7 @@ public class JsStructureScanner implements StructureScanner {
         if (cancel.isCancelled()) {
             return collectedItems;
         }
-        Collection<? extends JsObject> properties = new ArrayList(jsObject.getProperties().values());
+        Collection<? extends JsObject> properties = new ArrayList<>(jsObject.getProperties().values());
         boolean countFunctionChild = (jsObject.getJSKind().isFunction() && !jsObject.isAnonymous() && jsObject.getJSKind() != JsElement.Kind.CONSTRUCTOR
                 && !containsFunction(jsObject))
                 || (ModelUtils.PROTOTYPE.equals(jsObject.getName()) && properties.isEmpty());
@@ -156,7 +156,7 @@ public class JsStructureScanner implements StructureScanner {
                 }
             } else if (child.getJSKind() == JsElement.Kind.PROPERTY) {
                 if(child.isDeclared() && (child.getModifiers().contains(Modifier.PUBLIC)
-                        || !(jsObject.getParent() instanceof JsFunction)))
+                        || !(jsObject.getParent() instanceof JsFunction) || jsObject.getJSKind() == JsElement.Kind.CLASS))
                     collectedItems.add(new JsSimpleStructureItem(child, children.isEmpty() ? null : children, "prop-", result)); //NOI18N
             } else if ((child.getJSKind() == JsElement.Kind.VARIABLE || child.getJSKind() == JsElement.Kind.CONSTANT)&& child.isDeclared()
                 && (!jsObject.isAnonymous() || (jsObject.isAnonymous() && jsObject.getFullyQualifiedName().indexOf('.') == -1))) {
@@ -476,7 +476,15 @@ public class JsStructureScanner implements StructureScanner {
 
         @Override
         public Set<Modifier> getModifiers() {
-            Set<Modifier> modifiers = modelElement.getModifiers().isEmpty() ? Collections.EMPTY_SET : EnumSet.copyOf(modelElement.getModifiers());
+            Set<Modifier> modifiers;
+
+            if (modelElement.getModifiers().isEmpty()) {
+                modifiers = Collections.EMPTY_SET;
+            } else {
+                modifiers = EnumSet.noneOf(Modifier.class);
+                modifiers.addAll(modelElement.getModifiers());
+            }
+
             if (modifiers.contains(Modifier.PRIVATE) && (modifiers.contains(Modifier.PUBLIC) || modifiers.contains(Modifier.PROTECTED))) {
                 modifiers.remove(Modifier.PUBLIC);
                 modifiers.remove(Modifier.PROTECTED);
@@ -659,30 +667,30 @@ public class JsStructureScanner implements StructureScanner {
         public ImageIcon getCustomIcon() {
             if (getFunctionScope().getJSKind() == JsElement.Kind.CALLBACK) {
                 if (callbackIcon == null) {
-                    callbackIcon = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/editor/resources/methodCallback.png")); //NOI18N
+                    callbackIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/editor/resources/methodCallback.png", false); //NOI18N
                 }
                 return callbackIcon;
             } else  if (getFunctionScope().getJSKind() == JsElement.Kind.GENERATOR) {
                 if (getModifiers().contains(Modifier.PUBLIC)) {
                     if (publicGenerator == null) {
-                        publicGenerator = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/editor/resources/generatorPublic.png")); //NOI18N
+                        publicGenerator = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/editor/resources/generatorPublic.png", false); //NOI18N
                     }
                     return publicGenerator;
                 } else if (getModifiers().contains(Modifier.PRIVATE)) {
                     if (privateGenerator == null) {
-                        privateGenerator = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/editor/resources/generatorPrivate.png")); //NOI18N
+                        privateGenerator = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/editor/resources/generatorPrivate.png", false); //NOI18N
                     }
                     return privateGenerator;
                 } else if (getModifiers().contains(Modifier.PROTECTED)) {
                     if (priviligedGenerator == null) {
-                        priviligedGenerator = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/editor/resources/generatorPriviliged.png")); //NOI18N
+                        priviligedGenerator = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/editor/resources/generatorPriviliged.png", false); //NOI18N
                     }
                     return priviligedGenerator;
                 }
             }
             if (getModifiers().contains(Modifier.PROTECTED)) {
                 if(priviligedIcon == null) {
-                    priviligedIcon = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/editor/resources/methodPriviliged.png")); //NOI18N
+                    priviligedIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/editor/resources/methodPriviliged.png", false); //NOI18N
                 }
                 return priviligedIcon;
             }

@@ -47,6 +47,7 @@ import org.gradle.tooling.events.test.TestSkippedResult;
 import org.gradle.tooling.events.test.TestStartEvent;
 import org.gradle.tooling.events.test.TestSuccessResult;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.gsf.testrunner.api.CommonUtils;
 import org.netbeans.modules.gsf.testrunner.api.CoreManager;
 import org.netbeans.modules.gsf.testrunner.api.Report;
@@ -62,13 +63,13 @@ import org.openide.util.Lookup;
  *
  * @author Laszlo Kishalmi
  */
-@ProjectServiceProvider(service = GradleProgressListenerProvider.class, projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java")
+@ProjectServiceProvider(service = GradleProgressListenerProvider.class, projectType = NbGradleProject.GRADLE_PROJECT_TYPE )
 public final class GradleTestProgressListener implements ProgressListener, GradleProgressListenerProvider {
 
     private final Project project;
-    TestSession session;
+    private final Map<String, TestSession> sessions = new ConcurrentHashMap<>();
 
-    Map<String, Testcase> runningTests = new ConcurrentHashMap<>();
+    private Map<TestSession, Map<String, Testcase>> runningTests = new ConcurrentHashMap<>();
 
     public GradleTestProgressListener(Project project) {
         this.project = project;
@@ -131,17 +132,22 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
     }
 
     private void processTestOutput(TestOutputEvent evt) {
+        TestSession session = sessions.get(getSessionKey(evt.getDescriptor()));
+        assert session != null;
+        if (session == null) {
+            throw new IllegalArgumentException("TestSession is null");
+        }
         TestOutputDescriptor desc = evt.getDescriptor();
         OperationDescriptor parent = desc.getParent();
         CoreManager manager = getManager();
         String msg = desc.getMessage();
         if (msg != null && msg.endsWith("\n")) {
             msg = msg.substring(0, msg.length() - 1);
-            if (manager != null) {
+            if (manager != null && session != null) {
                 manager.displayOutput(session, msg, desc.getDestination().equals(Destination.StdErr));
             }
-            if ((parent != null) && (parent instanceof JvmTestOperationDescriptor)) {
-                Testcase tc = runningTests.get(getTestOpKey((JvmTestOperationDescriptor) parent));
+            if (parent instanceof JvmTestOperationDescriptor) {
+                Testcase tc = runningTests.get(session).get(getTestOpKey((JvmTestOperationDescriptor) parent));
                 if (tc != null) {
                     tc.addOutputLines(Arrays.asList(msg.split("\\R")));
                 }
@@ -151,8 +157,12 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
 
 
     private void sessionStart(TestStartEvent evt) {
-        session = new TestSession(evt.getDisplayName(), project, TestSession.SessionType.TEST);
-        runningTests.clear();
+        String key = getSessionKey(evt.getDescriptor());
+        TestSession session;
+        synchronized (this) {
+            session = sessions.computeIfAbsent(key, name -> new TestSession(name, getProject(key), TestSession.SessionType.TEST));
+            runningTests.put(session, new ConcurrentHashMap<>());
+        }
         CoreManager manager = getManager();
         if (manager != null) {
             manager.registerNodeFactory();
@@ -161,7 +171,12 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
     }
 
     private void sessionFinish(TestFinishEvent evt) {
-        runningTests.clear();
+        TestSession session;
+        synchronized (this) {
+            session = sessions.remove(getSessionKey(evt.getDescriptor()));
+            assert session != null;
+            runningTests.remove(session);
+        }
         CoreManager manager = getManager();
         if (manager != null) {
             manager.sessionFinished(session);
@@ -172,6 +187,8 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
     }
 
     private void suiteFinish(TestFinishEvent evt, JvmTestOperationDescriptor op) {
+        TestSession session = sessions.get(getSessionKey(evt.getDescriptor()));
+        assert session != null;
         TestOperationResult result = evt.getResult();
         TestSuite currentSuite = session.getCurrentSuite();
         String suiteName = GradleTestSuite.suiteName(op);
@@ -186,6 +203,7 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
     }
 
     private void caseStart(TestStartEvent evt, JvmTestOperationDescriptor op) {
+        TestSession session = sessions.get(getSessionKey(evt.getDescriptor()));
         assert session != null;
         assert op.getParent() != null;
         TestSuite currentSuite = session.getCurrentSuite();
@@ -198,12 +216,19 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
             }
         }
         Testcase tc = new GradleTestcase(op, session);
-        runningTests.put(getTestOpKey(op), tc);
-        session.addTestCase(tc);
+        synchronized (this) {  
+            runningTests.get(session).put(getTestOpKey(op), tc);
+            session.addTestCase(tc);   
+        }
     }
 
-    private void caseFinish(TestFinishEvent evt, JvmTestOperationDescriptor op) {
-        Testcase tc = runningTests.get(getTestOpKey(op));
+    private void caseFinish(TestFinishEvent evt, JvmTestOperationDescriptor op) {   
+        Testcase tc;
+        synchronized (this) {
+            TestSession session = sessions.get(getSessionKey(evt.getDescriptor()));
+            assert session != null;
+            tc = runningTests.get(session).remove(getTestOpKey(op));    
+        }
         if (tc != null) {
             TestOperationResult result = evt.getResult();
             long time = result.getEndTime() - result.getStartTime();
@@ -241,9 +266,36 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
                 }
 
             }
-            runningTests.remove(getTestOpKey(op));
         }
 
+    }
+
+    private static final String GRADLE_TEST_RUN = "Gradle Test Run :"; // NOI18N
+    private static String TEST = ":test";
+
+    private Project getProject(String key) {
+        if (key != null && key.startsWith(GRADLE_TEST_RUN)) {
+            key = key.substring(GRADLE_TEST_RUN.length());
+            if (key.endsWith(TEST)) {
+                key = key.substring(0, key.length() - TEST.length()).trim();
+                if (!key.isEmpty()) {
+                    for (Project containedPrj : ProjectUtils.getContainedProjects(project, true)) {
+                        if (key.equals(containedPrj.getProjectDirectory().getName())) {
+                            return containedPrj;
+                        }
+                    }
+                }
+            }
+        }
+        return project;
+    }
+
+    private static String getSessionKey(OperationDescriptor op) {
+        String id = "";
+        for (OperationDescriptor descriptor = op; descriptor != null; descriptor = descriptor.getParent()) {
+            id = descriptor.getName();
+        }
+        return id;
     }
 
     private static JvmTestOperationDescriptor getSuiteOpDesc(JvmTestOperationDescriptor op, String className) {

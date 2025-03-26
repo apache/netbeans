@@ -419,7 +419,8 @@ public final class IntroduceMethodFix extends IntroduceFixBase implements Fix {
     public ChangeInfo implement() throws Exception {
         JButton btnOk = new JButton(NbBundle.getMessage(IntroduceHint.class, "LBL_Ok"));
         JButton btnCancel = new JButton(NbBundle.getMessage(IntroduceHint.class, "LBL_Cancel"));
-        IntroduceMethodPanel panel = new IntroduceMethodPanel("", duplicatesCount, targets, targetIsInterface); //NOI18N
+        btnCancel.setDefaultCapable(false);
+        IntroduceMethodPanel panel = new IntroduceMethodPanel("method", duplicatesCount, targets, targetIsInterface); //NOI18N
         String caption = NbBundle.getMessage(IntroduceHint.class, "CAP_IntroduceMethod");
         DialogDescriptor dd = new DialogDescriptor(panel, caption, true, new Object[]{btnOk, btnCancel}, btnOk, DialogDescriptor.DEFAULT_ALIGN, null, null);
         NotificationLineSupport notifier = dd.createNotificationLineSupport();
@@ -839,7 +840,7 @@ public final class IntroduceMethodFix extends IntroduceFixBase implements Fix {
                 }
                 Pattern p = Pattern.createPatternWithRemappableVariables(statementsPaths, parameters, true);
                 List<? extends Occurrence> occurrences = new ArrayList<Occurrence>(Matcher.create(copy).setSearchRoot(pathToClass).setCancel(new AtomicBoolean()).match(p));
-                Collections.sort(occurrences, new OccurrencePositionComparator(copy.getCompilationUnit(), copy.getTrees().getSourcePositions()));
+                occurrences.sort(new OccurrencePositionComparator(copy.getCompilationUnit(), copy.getTrees().getSourcePositions()));
                 for (Occurrence desc :occurrences ) {
                     TreePath firstLeaf = desc.getOccurrenceRoot();
                     if (!isDuplicateValid(firstLeaf)) {

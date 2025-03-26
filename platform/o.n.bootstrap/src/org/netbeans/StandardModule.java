@@ -87,7 +87,7 @@ class StandardModule extends Module {
     
     /** Use ModuleManager.create as a factory. */
     public StandardModule(ModuleManager mgr, Events ev, File jar, Object history, boolean reloadable, boolean autoload, boolean eager) throws IOException {
-        super(mgr, ev, history, JaveleonModule.isJaveleonPresent || reloadable, autoload, eager);
+        super(mgr, ev, history, reloadable, autoload, eager);
         this.jar = jar;
         moduleJARs.add(jar);
     }
@@ -334,7 +334,7 @@ class StandardModule extends Module {
      * as needed.
      * Note: due to #19698, this cache is not usually used; only if you
      * specifically go to look at the display properties of a disabled module.
-     * @see <a href="http://www.netbeans.org/issues/show_bug.cgi?id=12549">#12549</a>
+     * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=12549">#12549</a>
      */
     private void loadLocalizedProps(JarFile jarFile, Manifest m) throws IOException {
         String locbundle = m.getMainAttributes().getValue("OpenIDE-Module-Localizing-Bundle"); // NOI18N
@@ -542,7 +542,7 @@ class StandardModule extends Module {
      * class loaders.
      */
     protected ClassLoader createNewClassLoader(List<File> classp, List<ClassLoader> parents) {
-        return new OneModuleClassLoader(classp, parents.toArray(new ClassLoader[parents.size()]));
+        return new OneModuleClassLoader(classp, parents.toArray(new ClassLoader[0]));
     }
 
     /** Get the class loader of a particular parent module. */
@@ -557,7 +557,7 @@ class StandardModule extends Module {
         }
         classloader = null;
     }
-    /** Should be called after turning off the classloader of one or more modules & GC'ing. */
+    /** Should be called after turning off the classloader of one or more modules &amp; GC'ing. */
     protected void cleanup() {
         if (isEnabled()) throw new IllegalStateException("cleanup on enabled module: " + this); // NOI18N
         if (classloader != null) throw new IllegalStateException("cleanup on module with classloader: " + this); // NOI18N
@@ -607,7 +607,6 @@ class StandardModule extends Module {
          */
         public OneModuleClassLoader(List<File> classp, ClassLoader[] parents) throws IllegalArgumentException {
             super(classp, parents, false, StandardModule.this);
-            JaveleonModule.registerClassLoader(this, getCodeNameBase());
         }
         
         public Module getModule() {

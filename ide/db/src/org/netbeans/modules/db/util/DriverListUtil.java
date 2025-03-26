@@ -96,11 +96,19 @@ public class DriverListUtil {
         add("Cloudscape RMI",
         "RmiJdbc.RJDriver",
         "jdbc:rmi://<HOST>[:<PORT>]/jdbc:cloudscape:<DB>");
+
+        add(NbBundle.getMessage(DriverListUtil.class, "DRIVERNAME_JavaDbEmbeddedModular"),
+        "org.apache.derby.iapi.jdbc.AutoloadedDriver",
+        "jdbc:derby:<DB>[;<ADDITIONAL>]", true);
+
+        add(NbBundle.getMessage(DriverListUtil.class, "DRIVERNAME_JavaDbNetworkModular"),
+        "org.apache.derby.client.ClientAutoloadedDriver",
+        "jdbc:derby://<HOST>[:<PORT>]/<DB>[;<ADDITIONAL>]", true);
         
         add(NbBundle.getMessage(DriverListUtil.class, "DRIVERNAME_JavaDbEmbedded"),
         "org.apache.derby.jdbc.EmbeddedDriver",
         "jdbc:derby:<DB>[;<ADDITIONAL>]", true);
-        
+
         add(NbBundle.getMessage(DriverListUtil.class, "DRIVERNAME_JavaDbNetwork"),
         "org.apache.derby.jdbc.ClientDriver",
         "jdbc:derby://<HOST>[:<PORT>]/<DB>[;<ADDITIONAL>]", true);

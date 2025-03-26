@@ -104,6 +104,7 @@ public class EqualFlowLayout extends FlowLayout {
     * @see       java.awt.Container#getPreferredSize
     * @since     JDK1.0
     */
+    @Override
     public Dimension preferredLayoutSize(Container target) {
         int maxWidth = getMaximumWidth(target);
 
@@ -145,6 +146,7 @@ public class EqualFlowLayout extends FlowLayout {
     * @see       java.awt.Container#doLayout
     * @since     JDK1.0
     */
+    @Override
     public Dimension minimumLayoutSize(Container target) {
         synchronized (target.getTreeLock()) {
             Dimension dim = new Dimension(0, 0);
@@ -221,6 +223,7 @@ public class EqualFlowLayout extends FlowLayout {
     * @see       java.awt.Container#doLayout
     * @since     JDK1.0
     */
+    @Override
     public void layoutContainer(Container target) {
         int maxWidth = getMaximumWidth(target);
 

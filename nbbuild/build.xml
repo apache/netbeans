@@ -150,7 +150,7 @@
 
     <property name="metabuild.releasejson" value="${nb_all}/nbbuild/build/netbeansrelease.json"/>
     <!-- get all json info we have on apache gitbox  -->
-    <condition property="metabuild.jsonurl" value="https://gitbox.apache.org/repos/asf?p=netbeans-jenkins-lib.git;a=blob_plain;f=meta/netbeansrelease.json">
+    <condition property="metabuild.jsonurl" value="https://netbeans.apache.org/nbbuild/netbeansrelease.json">
         <not>
             <isset property="metabuild.jsonurl"/>
         </not>
@@ -326,6 +326,7 @@ metabuild.hash=${metabuild.hash}</echo>
           <buildpath path="${modules.sorted}"/>
           <property name="base.nbm.target.dir" value="${base.nbm.target.dir}"/>
           <property name="nbm.always.create" value="true" />
+          <property name="buildnumber" value="${buildnumber}" />
       </subant-junit>
   </target>
 
@@ -336,6 +337,7 @@ metabuild.hash=${metabuild.hash}</echo>
       <subant-junit target="nbm-nosignature" failonerror="${nbms.fail.on.error}" report="${nb.build.dir}/build-nbms.xml" inheritall="false">
           <buildpath path="${modules.sorted}"/>
           <property name="base.nbm.target.dir" value="${base.nbm.target.dir}"/>
+          <property name="buildnumber" value="${buildnumber}" />
       </subant-junit>
   </target>
 
@@ -465,7 +467,7 @@ metabuild.hash=${metabuild.hash}</echo>
     </downloadbinaries>
 
     <mkdir dir="${netbeans.dest.dir}/bin" />
-    <unzip src="../nb/ide.launcher/external/launcher-12.5-distribution.zip" dest="${netbeans.dest.dir}/bin">
+    <unzip src="../nb/ide.launcher/external/launcher-external-binaries-2-6c17cc6.zip" dest="${netbeans.dest.dir}/bin">
         <patternset>
             <include name="netbeans*.exe"/>
         </patternset>
@@ -2183,7 +2185,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         
         <taskdef uri="antlib:org.apache.rat.anttasks" resource="org/apache/rat/anttasks/antlib.xml">
             <classpath>
-                <pathelement location="external/apache-rat-0.12.jar"/>
+                <pathelement location="external/apache-rat-0.15.jar"/>
             </classpath>
         </taskdef>
         

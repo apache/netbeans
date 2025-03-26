@@ -63,7 +63,7 @@ public final class CookieSet extends Object implements Lookup.Provider {
     }
     
     /** Factory method to create new, general purpose cookie set. 
-     * The <q>general purpose</q> means that it is possible to store
+     * The <em>general purpose</em> means that it is possible to store
      * any object, into the cookie set and then obtain it using {@link #getLookup}
      * and queries on the returned {@link Lookup}. The before object can
      * be passed in if one wants to do a lazy initialization of the {@link CookieSet}

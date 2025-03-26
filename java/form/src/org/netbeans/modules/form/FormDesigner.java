@@ -1086,7 +1086,7 @@ public class FormDesigner {
         }
         try {
             synchronizingSelection = true;
-            setSelectedNodes(nodes.toArray(new Node[nodes.size()]));
+            setSelectedNodes(nodes.toArray(new Node[0]));
         } finally {
             synchronizingSelection = false;
         }
@@ -1173,7 +1173,7 @@ public class FormDesigner {
             return;
         }
         Node[] nodes = getSelectedNodes();
-        List<RADComponent> components = new ArrayList(nodes.length);
+        List<RADComponent> components = new ArrayList<>(nodes.length);
         for (Node n : nodes) {
             FormCookie formCookie = n.getCookie(FormCookie.class);
             if (formCookie != null) {
@@ -1185,7 +1185,7 @@ public class FormDesigner {
         }
         try {
             synchronizingSelection = true;
-            setSelectedComponents(components.toArray(new RADComponent[components.size()]));
+            setSelectedComponents(components.toArray(new RADComponent[0]));
         } finally {
             synchronizingSelection = false;
         }
@@ -1217,7 +1217,7 @@ public class FormDesigner {
             Collection<String> selectedIds = selectedLayoutComponentIds();
             enabled = layoutDesigner.canAlign(selectedIds);
             selectedIds = getSelectedComponentsForLayoutDesigner(selectedIds);
-            layoutDesigner.setSelectedComponents(selectedIds.toArray(new String[selectedIds.size()]));
+            layoutDesigner.setSelectedComponents(selectedIds.toArray(new String[0]));
         } else {
             enabled = false;
         }
@@ -2384,7 +2384,7 @@ public class FormDesigner {
             if (metacomp instanceof RADVisualContainer) {
                 List<String> l = collectRootLayoutSubComponents((RADVisualContainer)metacomp, null);
                 if (l != null) {
-                    return l.toArray(new String[l.size()]);
+                    return l.toArray(new String[0]);
                 }
             }
             return null;
@@ -2690,7 +2690,7 @@ public class FormDesigner {
         }
         
         private FormModelEvent[] sortEvents(FormModelEvent[] events) {
-            LinkedList<FormModelEvent> l = new LinkedList();
+            LinkedList<FormModelEvent> l = new LinkedList<>();
             for (FormModelEvent event : events) {
                 l.add(event);
                 if (event.getContainer() instanceof RADVisualContainer) {
@@ -2712,7 +2712,7 @@ public class FormDesigner {
                     }
                 }
             }
-            return l.toArray(new FormModelEvent[l.size()]);
+            return l.toArray(new FormModelEvent[0]);
         }
 
         /**

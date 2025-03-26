@@ -67,7 +67,7 @@ public class JavaSourceTaskFactoryTest extends NbTestCase {
     
     private List<FileObject> files;
     private List<FileObject> filesWithTasks = new ArrayList<FileObject>();
-    private Map<FileObject, CancellableTask<CompilationInfo>> file2Task = new HashMap();
+    private Map<FileObject, CancellableTask<CompilationInfo>> file2Task = new HashMap<>();
     
     private Map<FileObject, CancellableTask<CompilationInfo>> addedTasks = new HashMap<FileObject, CancellableTask<CompilationInfo>>();
     private Map<FileObject, CancellableTask<CompilationInfo>> removedTasks = new HashMap<FileObject, CancellableTask<CompilationInfo>>();
@@ -354,7 +354,7 @@ public class JavaSourceTaskFactoryTest extends NbTestCase {
                 }
                 roots.add (url);
             }
-            return ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
+            return ClassPathSupport.createClassPath(roots.toArray(new URL[0]));
         } catch (MalformedURLException ex) {}
         return null;
     }

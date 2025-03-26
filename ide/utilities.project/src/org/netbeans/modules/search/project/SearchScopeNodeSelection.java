@@ -295,7 +295,7 @@ final class SearchScopeNodeSelection extends SearchScopeDefinition
                 result.add(node);
             }
         }
-        return result.toArray(new Node[result.size()]);
+        return result.toArray(new Node[0]);
     }
 
     @Override

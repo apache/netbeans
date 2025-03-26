@@ -52,7 +52,7 @@ async function main() {
             extensionTestsPath,
             extensionTestsEnv: {
                 'ENABLE_CONSOLE_LOG' : 'true',
-                "netbeans.extra.options" : `-J-Dproject.limitScanRoot=${outRoot}`
+                "netbeans_extra_options" : `-J-Dproject.limitScanRoot=${outRoot} -J-Dnetbeans.logger.console=true`
             },
             launchArgs: [
                 '--disable-extensions',

@@ -66,13 +66,13 @@ public class Loader implements Runnable, Cancellable {
                         return;
                     roots.addAll( QuerySupport.findRoots(p, null, null, null) );
                 }
-                loadTasks( roots.toArray( new FileObject[roots.size()] ), null );
+                loadTasks(roots.toArray(new FileObject[0]), null );
             } else {
                 Iterator<FileObject> it = scope.iterator();
                 while( it.hasNext() && !cancelled ) {
                     FileObject fo = it.next();
                     List<FileObject> roots = new ArrayList<FileObject>( QuerySupport.findRoots(fo, null, null, null) );
-                    loadTasks( roots.toArray( new FileObject[roots.size()] ), fo );
+                    loadTasks(roots.toArray(new FileObject[0]), fo );
                 }
             }
         } finally {

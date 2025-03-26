@@ -95,40 +95,42 @@ import org.netbeans.libs.git.progress.StatusListener;
  * This class provides access to all supported git commands, methods that 
  * allow you to get information about a git repository or affect the behavior 
  * of invoked commands.
- * <br/>
+ * <br>
  * An instance of this class is <strong>always</strong> bound to a local git repository.
  * The repository (identified by a git repository root file) may not exist on disk however
  * because obviously when cloning or initializing a repository it may not yet physically exist.
- * 
- * <h5>Working with this class</h5>
+ * <p>
+ * <strong>Working with this class</strong>
+ * </p>
  * A client of the API should follow these steps in order to run a certain git commands:
  * <ol>
- * <li><h6>Acquire an instance of a git client</h6>
+ * <li><strong>Acquire an instance of a git client</strong><br>
  * <p>Instances of a git client are provided by {@link GitRepository}. To get one call
  * {@link GitRepository#createClient() }.</p>
  * </li>
- * <li><h6>Configure the client</h6>
+ * <li><strong>Configure the client</strong><br>
  * <p>Some git client commands may (or may not) require additional setup of the client to successfully finish their work.
  * One quite usual use case is setting an instance of {@link GitClientCallback} to the client so commands like <code>push</code>,
  * <code>fetch</code> or <code>pull</code> may connect to and access a remote repository. To set an instance of <code>GitClientCallback</code>
  * use {@link #setCallback(org.netbeans.libs.git.GitClientCallback) } method.</p>
  * </li>
- * <li><h6>Attaching listeners</h6>
- * <p>Certain git commands may take a long time to finish and they are capable of notifying the world about the progress in their work.<br/>
+ * <li><strong>Attaching listeners</strong><br>
+ * <p>Certain git commands may take a long time to finish and they are capable of notifying the world about the progress in their work.<br>
  * If you want to be notified about such changes while the command is in process, attach a listener to the client 
- * via {@link #addNotificationListener(org.netbeans.libs.git.progress.NotificationListener) }.<br/>
+ * via {@link #addNotificationListener(org.netbeans.libs.git.progress.NotificationListener) }.<br>
  * An example can be the log command. Digging through the history may take a lot of time so if you do not want to wait for the complete result only
  * and want to present the commit information incrementally as it is accepted one by one into the result, you can do so by adding an instance of 
  * {@link RevisionInfoListener} to the client.</p>
  * </li>
- * <li><h6>Running git commands</h6>
+ * <li><strong>Running git commands</strong><br>
  * <p>When you have the client correctly set up, you may call any git command we support. The commands are mapped to appropriate methods in <code>GitClient</code>.
- * <br/>Every method representing a git command accepts as a parameter an instance of {@link ProgressMonitor}. With that class you may affect the flow of commands - it
+ * <br>Every method representing a git command accepts as a parameter an instance of {@link ProgressMonitor}. With that class you may affect the flow of commands - it
  * has the ability to cancel running git commands - and listen for error or information messages the commands produce.</p>
  * </li>
+ * </ol>
  * @author Ondra Vrabec
  */
-public final class GitClient {
+public final class GitClient implements AutoCloseable {
     private final DelegateListener delegateListener;
     private GitClassFactory gitFactory;
 
@@ -237,7 +239,7 @@ public final class GitClient {
     }
     
     /**
-     * Used as a parameter of {@link #cherryPick(org.netbeans.libs.git.GitClient.CherryPickOperation, java.lang.String[], org.netbeans.libs.git.progress.ProgressMonitor) to set the behavior of the command.
+     * Used as a parameter of {@link #cherryPick(org.netbeans.libs.git.GitClient.CherryPickOperation, java.lang.String[], org.netbeans.libs.git.progress.ProgressMonitor)} to set the behavior of the command.
      * @since 1.27
      */
     public enum CherryPickOperation {
@@ -306,7 +308,7 @@ public final class GitClient {
 
     GitClient (JGitRepository gitRepository) throws GitException {
         this.gitRepository = gitRepository;
-        listeners = new HashSet<NotificationListener>();
+        listeners = new HashSet<>();
         delegateListener = new DelegateListener();
         gitRepository.increaseClientUsage();
     }
@@ -356,6 +358,7 @@ public final class GitClient {
      * @param file file to cat
      * @param revision git revision, never <code>null</code>
      * @param out output stream to print the content to.
+     * @param monitor progress monitor
      * @return <code>true</code> if the file was found in the specified revision and printed to out, otherwise <code>false</code>
      * @throws GitException.MissingObjectException if the given revision does not exist
      * @throws GitException an unexpected error occurs
@@ -376,6 +379,7 @@ public final class GitClient {
      *              <code>2</code> for the first merged version ("ours") and 
      *              <code>3</code> for the second merged version ("theirs").
      * @param out output stream
+     * @param monitor progress monitor
      * @return <code>true</code> if the file was found in the index and printed to out, otherwise <code>false</code>
      * @throws GitException an unexpected error occurs
      */
@@ -391,6 +395,8 @@ public final class GitClient {
      * @param revision if not <code>null</code>, index is updated with the revision content before checking out to WC
      * @param roots files/folders to checkout
      * @param recursively if set to <code>true</code>, all files under given roots will be checked out, otherwise only roots and direct file children will be affected.
+     * @param monitor progress monitor
+     * @throws GitException.MissingObjectException missing git object loaded
      * @throws GitException an unexpected error occurs
      */
     public void checkout(File[] roots, String revision, boolean recursively, ProgressMonitor monitor) throws GitException.MissingObjectException, GitException {
@@ -410,6 +416,8 @@ public final class GitClient {
      * @param revision cannot be <code>null</code>. If the value equals to anything other than an existing branch name, the revision will be checked out
      * and the working tree will be in the detached HEAD state.
      * @param failOnConflict if set to <code>false</code>, the command tries to merge local changes into the new branch
+     * @param monitor progress monitor
+     * @throws GitException.MissingObjectException missing git object loaded
      * @throws GitException an unexpected error occurs
      */
     public void checkoutRevision (String revision, boolean failOnConflict, ProgressMonitor monitor) throws GitException.MissingObjectException, GitException {
@@ -458,6 +466,7 @@ public final class GitClient {
      * @param author person who is the author of the changes to be committed
      * @param commiter person who is committing the changes, may not be the same person as author.
      * @param monitor progress monitor
+     * @return git revision info after change
      * @throws GitException an unexpected error occurs
      */
     public GitRevisionInfo commit(File[] roots, String commitMessage, GitUser author, GitUser commiter, ProgressMonitor monitor) throws GitException {
@@ -472,6 +481,7 @@ public final class GitClient {
      * @param commiter person who is committing the changes, may not be the same person as author.
      * @param amend amends and modifies the last commit instead of adding a completely new commit
      * @param monitor progress monitor
+     * @return git revision info after change
      * @throws GitException an unexpected error occurs
      */
     public GitRevisionInfo commit(File[] roots, String commitMessage, GitUser author, GitUser commiter, boolean amend, ProgressMonitor monitor) throws GitException {
@@ -644,6 +654,7 @@ public final class GitClient {
     /**
      * Returns all known branches from the repository
      * @param all if <code>false</code> then only local (and no remote) branches will be returned
+     * @param monitor progress monitor
      * @return all known branches in the repository
      * @throws GitException an unexpected error occurs
      */
@@ -712,6 +723,7 @@ public final class GitClient {
      * statuses for files under given roots
      *
      * @param roots root folders or files to search under
+     * @param monitor progress monitor
      * @return status array
      * @throws GitException an unexpected error occurs
      */
@@ -726,6 +738,7 @@ public final class GitClient {
      * @param roots root folders or files to search under
      * @param revision revision to compare with the working tree. If set
      * to <code>null</code> HEAD will be used instead.
+     * @param monitor progress monitor
      * @return status array
      * @throws GitException an unexpected error occurs
      * @since 1.9
@@ -745,6 +758,7 @@ public final class GitClient {
      * @param roots root folders or files to search under
      * @param revisionFirst first revision to compare
      * @param revisionSecond second revision to compare
+     * @param monitor progress monitor
      * @return status array
      * @throws GitException an unexpected error occurs
      * @since 1.9
@@ -815,6 +829,7 @@ public final class GitClient {
 
     /**
      * Returns the user from this clients repository
+     * @return the user for this client repository
      * @throws GitException an unexpected error occurs
      */
     public GitUser getUser() throws GitException {        
@@ -869,6 +884,7 @@ public final class GitClient {
      * Returns files that are marked as modified between the HEAD and Index.
      * @param roots files or folders to search for modified files.
      * @param monitor progress monitor
+     * @return list of files marked as modified between the HEAD and Index
      * @throws GitException an unexpected error occurs
      */
     public File[] listModifiedIndexEntries (File[] roots, ProgressMonitor monitor) throws GitException {
@@ -1068,6 +1084,14 @@ public final class GitClient {
     }
 
     /**
+     * Calls {@link #release()}.
+     */
+    @Override
+    public void close() {
+        release();
+    }
+
+    /**
      * Removes given files/folders from the index and/or from the working tree
      * @param roots files/folders to remove, can not be empty
      * @param cached if <code>true</code> the working tree will not be affected
@@ -1178,6 +1202,7 @@ public final class GitClient {
      * Sets the remote configuration in the configuration file.
      * @param remoteConfig new remote config to store as a <em>remote</em> section in the repository's <em>config</em> file.
      * @param monitor progress monitor
+     * @throws GitException an unexpected error occurs
      */
     public void setRemote (GitRemoteConfig remoteConfig, ProgressMonitor monitor) throws GitException {
         Repository repository = gitRepository.getRepository();
@@ -1370,7 +1395,7 @@ public final class GitClient {
     private void notifyFile (File file, String relativePathToRoot) {
         List<NotificationListener> lists;
         synchronized (listeners) {
-            lists = new LinkedList<NotificationListener>(listeners);
+            lists = new LinkedList<>(listeners);
         }
         for (NotificationListener list : lists) {
             if (list instanceof FileListener) {
@@ -1382,7 +1407,7 @@ public final class GitClient {
     private void notifyStatus (GitStatus status) {
         List<NotificationListener> lists;
         synchronized (listeners) {
-            lists = new LinkedList<NotificationListener>(listeners);
+            lists = new LinkedList<>(listeners);
         }
         for (NotificationListener list : lists) {
             if (list instanceof StatusListener) {
@@ -1394,7 +1419,7 @@ public final class GitClient {
     private void notifyRevisionInfo (GitRevisionInfo info) {
         List<NotificationListener> lists;
         synchronized (listeners) {
-            lists = new LinkedList<NotificationListener>(listeners);
+            lists = new LinkedList<>(listeners);
         }
         for (NotificationListener list : lists) {
             if (list instanceof RevisionInfoListener) {

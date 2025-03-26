@@ -271,7 +271,7 @@ public class AmazonJ2EEServerWizardComponent extends javax.swing.JPanel implemen
 
     private void initAccounts() {
         List<AmazonInstance> l = AmazonInstanceManager.getDefault().getInstances();
-        DefaultComboBoxModel model = new DefaultComboBoxModel(l.toArray(new AmazonInstance[l.size()]));
+        DefaultComboBoxModel model = new DefaultComboBoxModel(l.toArray(new AmazonInstance[0]));
         accountComboBox.setModel(model);
         accountComboBox.setRenderer(new ListCellRenderer() {
             @Override
@@ -346,7 +346,7 @@ public class AmazonJ2EEServerWizardComponent extends javax.swing.JPanel implemen
             if (templateNames != null && templateNames.size() > 0) {
                 templateNames = new ArrayList<String>(templateNames);
                 templateNames.add(0, "");
-                templateComboBox.setModel(new DefaultComboBoxModel(templateNames.toArray(new String[templateNames.size()])));
+                templateComboBox.setModel(new DefaultComboBoxModel(templateNames.toArray(new String[0])));
                 templateComboBox.setSelectedIndex(0);
                 templateComboBox.setEnabled(true);
                 templateLabel.setEnabled(true);
@@ -372,7 +372,7 @@ public class AmazonJ2EEServerWizardComponent extends javax.swing.JPanel implemen
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        appNameComboBox.setModel(new DefaultComboBoxModel(apps.toArray(new String[apps.size()])));
+                        appNameComboBox.setModel(new DefaultComboBoxModel(apps.toArray(new String[0])));
                         appNameComboBox.setSelectedIndex(0);
                     }
                 });
@@ -445,7 +445,7 @@ public class AmazonJ2EEServerWizardComponent extends javax.swing.JPanel implemen
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        containerComboBox.setModel(new DefaultComboBoxModel(containers.toArray(new String[containers.size()])));
+                        containerComboBox.setModel(new DefaultComboBoxModel(containers.toArray(new String[0])));
                     }
                 });
                 return null;

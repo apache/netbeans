@@ -20,6 +20,7 @@ package org.netbeans.modules.java.hints.suggestions;
 
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.AnyPatternTree;
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.AssertTree;
@@ -65,7 +66,6 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.OpensTree;
 import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.ParameterizedTypeTree;
-import com.sun.source.tree.ParenthesizedPatternTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.PatternCaseLabelTree;
 import com.sun.source.tree.PrimitiveTypeTree;
@@ -1035,7 +1035,7 @@ public class ExpectedTypeResolver implements TreeVisitor<List<? extends TypeMirr
         } else if (el.getKind() == ElementKind.FIELD) {
             // access to a field
             Element parent = el.getEnclosingElement();
-            if (parent.getKind() == ElementKind.CLASS || parent.getKind() == ElementKind.INTERFACE || parent.getKind() == ElementKind.ENUM) {
+            if (parent.getKind() == ElementKind.CLASS || parent.getKind() == ElementKind.INTERFACE || parent.getKind() == ElementKind.ENUM || parent.getKind() == ElementKind.RECORD) {
                 return Collections.singletonList(parent.asType());
             }
         }
@@ -1432,7 +1432,8 @@ public class ExpectedTypeResolver implements TreeVisitor<List<? extends TypeMirr
     }
 
     @Override
-    public List<? extends TypeMirror> visitParenthesizedPattern(ParenthesizedPatternTree node, Object p) {
+    public List<? extends TypeMirror> visitAnyPattern(AnyPatternTree apt, Object p) {
         return null;
     }
+
 }

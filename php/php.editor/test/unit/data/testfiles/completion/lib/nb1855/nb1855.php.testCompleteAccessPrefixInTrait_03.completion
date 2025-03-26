@@ -7,3 +7,4 @@ VARIABLE   ? $protectedTraitStaticPropert  [PROTECTE  Trait1855
 VARIABLE   ? protectedTraitProperty        [PROTECTE  Trait1855
 ------------------------------------
 KEYWORD    protected                                  null
+KEYWORD    protected(set)                             null

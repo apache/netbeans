@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
 
 final class JavaIoFile extends File {
     static final Factory IO = new Factory() {
@@ -50,9 +51,9 @@ final class JavaIoFile extends File {
         @Override
         public File createTempFile(String prefix, String suffix, File cacheDirectory) throws IOException {
             if (cacheDirectory == null) {
-                return newFile(java.io.File.createTempFile(prefix, suffix));
+                return newFile(Files.createTempFile(prefix, suffix).toFile());
             } else {
-                return newFile(java.io.File.createTempFile(prefix, suffix, ((JavaIoFile)cacheDirectory).delegate));
+                return newFile(Files.createTempFile(((JavaIoFile)cacheDirectory).delegate.toPath(), prefix, suffix).toFile());
             }
         }
     };

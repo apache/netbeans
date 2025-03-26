@@ -39,7 +39,7 @@ public class PoliciesVisualPanel extends javax.swing.JPanel {
     public PoliciesVisualPanel(List<String> ids ) {
         initComponents();
         
-        String policies[] = ids.toArray( new String[ ids.size()]);
+        String policies[] = ids.toArray(new String[0]);
         ListModel model = new DefaultComboBoxModel( policies);
         list.setModel( model );
     }

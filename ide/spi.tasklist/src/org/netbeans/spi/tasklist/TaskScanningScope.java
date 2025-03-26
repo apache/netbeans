@@ -125,7 +125,7 @@ public abstract class TaskScanningScope implements Iterable <FileObject>, Lookup
     /**
      * Lookup with scope's contents.
      * @return Lookup that contains either the {@link org.openide.filesystems.FileObject}s to be scanned (for example when 
-     * the scope is 'currently edited file') or {@link org.netbeans.api.project.Project}s that are in this scope.
+     * the scope is 'currently edited file') or <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/Project.html">Project</a>s that are in this scope.
      */
     public abstract Lookup getLookup();
     

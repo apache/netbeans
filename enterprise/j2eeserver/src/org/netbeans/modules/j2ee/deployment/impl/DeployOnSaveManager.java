@@ -20,11 +20,15 @@
 package org.netbeans.modules.j2ee.deployment.impl;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -586,13 +590,13 @@ public final class DeployOnSaveManager {
                 ClassLoader reloadedClassLoader = customDefClassLoaders.get(reloadedPackageName);
                 if (reloadedClassLoader != null) {
                     Class reloadedClass = reloadedClassLoader.loadClass(reloadedClassName);
-                    reloadedClass.getMethod("execute").invoke(reloadedClass.newInstance());
+                    reloadedClass.getMethod("execute").invoke(reloadedClass.getDeclaredConstructor().newInstance());
                 }
             } catch (Exception ex) {
                 Exceptions.printStackTrace(ex);
             }
         }
-        
+
     }
     
 }

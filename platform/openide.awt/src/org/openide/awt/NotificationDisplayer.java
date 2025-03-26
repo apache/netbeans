@@ -46,14 +46,14 @@ public abstract class NotificationDisplayer {
      * Priority of Notification
      */
     public static enum Priority {
-        HIGH(new ImageIcon(ImageUtilities.loadImage("org/openide/awt/resources/priority_high.png"))), //NOI18N
-        NORMAL(new ImageIcon(ImageUtilities.loadImage("org/openide/awt/resources/priority_normal.png"))), //NOI18N
-        LOW(new ImageIcon(ImageUtilities.loadImage("org/openide/awt/resources/priority_low.png"))), //NOI18N
+        HIGH(ImageUtilities.image2Icon(ImageUtilities.loadImage("org/openide/awt/resources/priority_high.png"))), //NOI18N
+        NORMAL(ImageUtilities.image2Icon(ImageUtilities.loadImage("org/openide/awt/resources/priority_normal.png"))), //NOI18N
+        LOW(ImageUtilities.image2Icon(ImageUtilities.loadImage("org/openide/awt/resources/priority_low.png"))), //NOI18N
         /** Priority that shows the notification without details.
          * Details shall be shown only later, per user request.
          * @since 7.18
          */
-        SILENT(new ImageIcon(ImageUtilities.loadImage("org/openide/awt/resources/priority_silent.png"))); //NOI18N
+        SILENT(ImageUtilities.image2Icon(ImageUtilities.loadImage("org/openide/awt/resources/priority_silent.png"))); //NOI18N
 
         private final Icon icon;
 

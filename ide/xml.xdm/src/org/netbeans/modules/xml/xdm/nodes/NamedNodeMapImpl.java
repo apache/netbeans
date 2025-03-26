@@ -44,7 +44,7 @@ public final class NamedNodeMapImpl implements NamedNodeMap {
     
     /**
      * Creates new NamedNodeMapImpl
-     * @param peer a map to delegate to. It must not be modified after this contructor call!
+     * @param attributes a map to delegate to. It must not be modified after this contructor call!
      */
     public NamedNodeMapImpl(List<Attribute> attributes) {
         if (attributes == null) throw new NullPointerException();

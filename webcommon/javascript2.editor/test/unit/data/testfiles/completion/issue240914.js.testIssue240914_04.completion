@@ -3,7 +3,9 @@ Code completion result for source line:
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 CLASS      console                         [PUBLIC]   issue240914.js
+CLASS      import                          [PUBLIC]   <font color=#999999>metaproperties.js</font>
 CLASS      issue290914                     [PUBLIC]   issue240914.js
+CLASS      new                             [PUBLIC]   <font color=#999999>metaproperties.js</font>
 CLASS      prop3                           [PUBLIC]   issue240914.js
 METHOD     create(): issue290914           [PUBLIC]   issue240914.js
 FIELD      prop1: Number                   [PUBLIC]   issue240914.js

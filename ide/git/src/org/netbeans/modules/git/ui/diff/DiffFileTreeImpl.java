@@ -79,7 +79,7 @@ class DiffFileTreeImpl extends FileTreeView<DiffNode> implements DiffFileViewCom
     protected JPopupMenu getPopup () {
         List<Node> nodes = getSelectedNodes();
         File[] files = toFiles(nodes);
-        return master.getPopupFor(nodes.toArray(new Node[nodes.size()]), files);
+        return master.getPopupFor(nodes.toArray(new Node[0]), files);
     }
     
     @Override
@@ -108,7 +108,7 @@ class DiffFileTreeImpl extends FileTreeView<DiffNode> implements DiffFileViewCom
                 files.add(f);
             }
         }
-        return files.toArray(new File[files.size()]);
+        return files.toArray(new File[0]);
     }
     
     private static class ColumnDescriptor<T> extends PropertySupport.ReadOnly<T> {

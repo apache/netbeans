@@ -33,37 +33,36 @@ import java.lang.annotation.Target;
  * visible in the sources (otherwise the change would not serve any good) and
  * specifically, must not be referenced from <i>extends</i> clause of the changed
  * class. 
- * <p/>
+ * <p>
  * The compatibility superclass ought to reside in a <b>different module</b>
  * to allow reduce type dependencies and should be only injected into
  * inheritance chain if and only if some of enabled modules depend on the
  * obsolete version of the API module.
- * <p/>
- * <hr/>
+ * <hr>
  * This annotation is designed to mark code which should be injected to provide 
  * backward compatibility and will provide implementation for removed API methods.
  * The marked class will be used as a <b>superclass</b> 
  * of the API class identified by value of the annotation, so old clients can 
  * still use removed members at run time.
- * <p/>
+ * <p>
  * The injected superclass <b>must</b> extend the same type as the original
  * API class, so that API-visible inheritance chain is preserved. It must declare
  * all non-private constructors as the original superclass.
- * <p/>
+ * <p>
  * The module that contains {@code PatchFor} classes <b>must be</b> defined as
  * <b>module fragment</b>, since it has to share classloader with the patched
  * module: put
- * <code><pre>
+ * <pre>{@code
  * OpenIDE-Module-Fragment-Host: codenamebase
- * </pre></code>
+ * }</pre>
  * into the Module's manifest. The <i><code>codenamebase</code></i> must identify the host module
  * which contains the class(es) to be patched.
- * <p/>
+ * <p>
  * Note that it is not possible to support <b>removed constructors</b> this way; the
  * constructor has to be physically present on the API class. To provide backward-compatibile
  * code injection for constructors, please use {@link ConstructorDelegate} annotation.
- * <p/>
- * For examples, plese see the <a href="http://wiki.netbeans.org/BackwardCompatibilityPatches">NetBeans Wiki</a>
+ * <p>
+ * For examples, plese see the <a href="https://netbeans.apache.org/wiki/BackwardCompatibilityPatches">NetBeans Wiki</a>
  * @since 7.44
  * @author sdedic
  */

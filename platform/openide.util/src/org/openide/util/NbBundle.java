@@ -138,8 +138,8 @@ public class NbBundle extends Object {
     * @return URL of matching localized file
     * @throws MissingResourceException if not found
      * @deprecated Use the <code>nbresloc</code> URL protocol instead. This method does a poor
-     *             job of handling resources such as <samp>/some.dir/res.txt</samp> or
-     *             <samp>/some/res.txt.sample</samp>.
+     *             job of handling resources such as <code>/some.dir/res.txt</code> or
+     *             <code>/some/res.txt.sample</code>.
     */
     @Deprecated
     public static synchronized URL getLocalizedFile(String baseName, String ext)
@@ -155,8 +155,8 @@ public class NbBundle extends Object {
     * @return URL of matching localized file
     * @throws MissingResourceException if not found
      * @deprecated Use the <code>nbresloc</code> URL protocol instead. This method does a poor
-     *             job of handling resources such as <samp>/some.dir/res.txt</samp> or
-     *             <samp>/some/res.txt.sample</samp>.
+     *             job of handling resources such as <code>/some.dir/res.txt</code> or
+     *             <code>/some/res.txt.sample</code>.
     */
     @Deprecated
     public static synchronized URL getLocalizedFile(String baseName, String ext, Locale locale)
@@ -173,8 +173,8 @@ public class NbBundle extends Object {
     * @return URL of matching localized file
     * @throws MissingResourceException if not found
      * @deprecated Use the <code>nbresloc</code> URL protocol instead. This method does a poor
-     *             job of handling resources such as <samp>/some.dir/res.txt</samp> or
-     *             <samp>/some/res.txt.sample</samp>.
+     *             job of handling resources such as <code>/some.dir/res.txt</code> or
+     *             <code>/some/res.txt.sample</code>.
     */
     @Deprecated
     public static synchronized URL getLocalizedFile(String baseName, String ext, Locale locale, ClassLoader loader)
@@ -270,16 +270,16 @@ public class NbBundle extends Object {
      * Find a localized and/or branded value for a given key and locale.
     * Scans through a map to find
     * the most localized match possible. For example:
-    * <p><code><PRE>
+    * <p><code>
     *   findLocalizedValue (hashTable, "keyName", new Locale ("cs_CZ"))
-    * </PRE></code>
+    * </code>
     * <p>This would return the first non-<code>null</code> value obtained from the following tests:
     * <UL>
     * <LI> <CODE>hashTable.get ("keyName_cs_CZ")</CODE>
     * <LI> <CODE>hashTable.get ("keyName_cs")</CODE>
     * <LI> <CODE>hashTable.get ("keyName")</CODE>
     * </UL>
-    *
+    * @param <T> type of returned object
     * @param table mapping from localized strings to objects
     * @param key the key to look for
     * @param locale the locale to use
@@ -308,7 +308,7 @@ public class NbBundle extends Object {
 
     /**
      * Find a localized and/or branded value for a given key in the default system locale.
-    *
+    * @param <T> type of returned object
     * @param table mapping from localized strings to objects
     * @param key the key to look for
     * @return the localized object or <code>null</code> if no key matches
@@ -358,7 +358,7 @@ public class NbBundle extends Object {
     * safer when used from a module as this method relies on the module's
     * classloader to currently be part of the system classloader. NetBeans
     * does add enabled modules to this classloader, however calls to
-    * this variant of the method made in <a href="@org-openide-modules@/org/openide/modules/ModuleInstall.html#validate()">ModuleInstall.validate</a>,
+    * this variant of the method made in <a href="@org-openide-modules@/org/openide/modules/ModuleInstall.html#validate--">ModuleInstall.validate</a>,
     * or made soon after a module is uninstalled (due to background threads)
     * could fail unexpectedly.
     * @param baseName bundle basename
@@ -452,8 +452,8 @@ public class NbBundle extends Object {
      * Get a resource bundle by name.
      * Like {@link ResourceBundle#getBundle(String,Locale,ClassLoader)} but faster,
      * and also understands branding.
-     * First looks for <samp>.properties</samp>-based bundles, then <samp>.class</samp>-based.
-     * @param name the base name of the bundle, e.g. <samp>org.netbeans.modules.foo.Bundle</samp>
+     * First looks for <code>.properties</code>-based bundles, then <code>.class</code>-based.
+     * @param name the base name of the bundle, e.g. <code>org.netbeans.modules.foo.Bundle</code>
      * @param locale the locale to use
      * @param loader a class loader to search in
      * @return a resource bundle (locale- and branding-merged), or null if not found
@@ -520,7 +520,7 @@ public class NbBundle extends Object {
 
     /**
      * Load a resource bundle (without caching).
-     * @param name the base name of the bundle, e.g. <samp>org.netbeans.modules.foo.Bundle</samp>
+     * @param name the base name of the bundle, e.g. <code>org.netbeans.modules.foo.Bundle</code>
      * @param locale the locale to use
      * @param loader a class loader to search in
      * @return a resource bundle (locale- and branding-merged), or null if not found
@@ -581,11 +581,11 @@ public class NbBundle extends Object {
 
     /**
      * Load a class-based resource bundle.
-     * @param name the base name of the bundle, e.g. <samp>org.netbeans.modules.foo.Bundle</samp>
-     * @param sname the name with slashes, e.g. <samp>org/netbeans/modules/foo/Bundle</samp>
+     * @param name the base name of the bundle, e.g. <code>org.netbeans.modules.foo.Bundle</code>
+     * @param sname the name with slashes, e.g. <code>org/netbeans/modules/foo/Bundle</code>
      * @param locale the locale to use
      * @param suffixes a list of suffixes to apply to the bundle name, in <em>increasing</em> order of specificity
-     * @param loader a class loader to search in
+     * @param l a class loader to search in
      * @return a resource bundle (merged according to the suffixes), or null if not found
      */
     private static ResourceBundle loadBundleClass(
@@ -602,7 +602,7 @@ public class NbBundle extends Object {
         for (String suffix : suffixes) {
             try {
                 Class<? extends ResourceBundle> c = Class.forName(name + suffix, true, l).asSubclass(ResourceBundle.class);
-                ResourceBundle b = c.newInstance();
+                ResourceBundle b = c.getDeclaredConstructor().newInstance();
 
                 if (master == null) {
                     master = b;
@@ -748,10 +748,10 @@ public class NbBundle extends Object {
      * For example, when {@link #getBranding} returns <code>branding</code>
      * and the default locale is German, you might get a sequence such as:
      * <ol>
-     * <li><samp>"_branding_de"</samp>
-     * <li><samp>"_branding"</samp>
-     * <li><samp>"_de"</samp>
-     * <li><samp>""</samp>
+     * <li><code>"_branding_de"</code></li>
+     * <li><code>"_branding"</code></li>
+     * <li><code>"_de"</code></li>
+     * <li><code>""</code></li>
      * </ol>
      * @return a read-only iterator of type <code>String</code>
      * @since 1.1.5
@@ -828,6 +828,7 @@ public class NbBundle extends Object {
          * Values containing <code>{0}</code> etc. are assumed to be message formats and so may need escapes for metacharacters such as {@code '}.
          * A line may also be a comment if it starts with {@code #}, which may be useful for translators;
          * it is recommended to use the format {@code # {0} - summary of param}.
+         * @return list of key/value
          */
         String[] value();
     }
@@ -876,7 +877,7 @@ public class NbBundle extends Object {
     }
 
     /**
-     * A resource bundle based on <samp>.properties</samp> files (or any map).
+     * A resource bundle based on <code>.properties</code> files (or any map).
      */
     private static final class PBundle extends ResourceBundle {
         private final Map<String,String> m;

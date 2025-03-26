@@ -43,13 +43,13 @@ import javax.enterprise.deploy.spi.exceptions.OperationUnsupportedException;
  * startDeploymentManager, stopDeploymentManager and startDebugging.  
  * Plugin will update caller on progress of the operation through
  * method calls to set status.
- * <P>
+ *
  * @author  nn136682
  */
 
 public class ServerProgress implements ProgressObject {
     private Object server;
-    private List<ProgressListener> listeners = new CopyOnWriteArrayList();
+    private List<ProgressListener> listeners = new CopyOnWriteArrayList<>();
     private DeploymentStatus status;
     
     /** Creates a new instance of StartServerProgress */

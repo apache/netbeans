@@ -38,7 +38,7 @@ import org.netbeans.modules.maven.indexer.api.RepositoryInfo;
 import org.openide.util.Cancellable;
 import org.openide.util.NbBundle.Messages;
 
-public class RemoteIndexTransferListener implements TransferListener, Cancellable {
+public class RemoteIndexTransferListener implements TransferListener, Cancellable, AutoCloseable {
 
     private static final Logger LOG = Logger.getLogger(RemoteIndexTransferListener.class.getName());
 
@@ -167,7 +167,8 @@ public class RemoteIndexTransferListener implements TransferListener, Cancellabl
         handle.progress(label);
     }
 
-    void close() {
+    @Override
+    public void close() {
         handle.finish();
     }
 

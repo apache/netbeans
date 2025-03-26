@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -210,7 +209,7 @@ public class HintMetadata {
         HEAVY;
 
         public static Set<Options> fromHintOptions(Hint.Options... options) {
-            Set<Options> result = new HashSet<>();
+            Set<Options> result = EnumSet.noneOf(Options.class);
 
             for (Hint.Options opt : options) {
                 result.add(valueOf(opt.name()));

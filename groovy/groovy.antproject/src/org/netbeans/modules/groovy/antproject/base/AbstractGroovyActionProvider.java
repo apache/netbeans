@@ -116,7 +116,7 @@ public abstract class AbstractGroovyActionProvider implements ActionProvider {
 
     @Override
     public boolean isActionEnabled(String command, Lookup context) {
-        if (supportedActions.keySet().contains(command)) {
+        if (supportedActions.containsKey(command)) {
             if (COMMAND_TEST.equals(command)) {
                 return true;
             }
@@ -178,7 +178,7 @@ public abstract class AbstractGroovyActionProvider implements ActionProvider {
     }
 
     private String[] getTargetNames(String command, Lookup context, Properties p) {
-        if (supportedActions.keySet().contains(command)) {
+        if (supportedActions.containsKey(command)) {
             if (command.equals(COMMAND_TEST)) {
                 return setupTestAll(p);
             }
@@ -305,7 +305,7 @@ public abstract class AbstractGroovyActionProvider implements ActionProvider {
                 result.add(root);
             }
         }
-        return result.toArray(new FileObject[result.size()]);
+        return result.toArray(new FileObject[0]);
     }
 
     private static List<String> getTestRootsNames(Project project) {
@@ -418,7 +418,7 @@ public abstract class AbstractGroovyActionProvider implements ActionProvider {
                     while (stok.hasMoreTokens()) {
                         targetNames.add(stok.nextToken());
                     }
-                    targets.put(cmdNameKey, targetNames.toArray(new String[targetNames.size()]));
+                    targets.put(cmdNameKey, targetNames.toArray(new String[0]));
                 }
             }
         }

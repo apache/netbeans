@@ -28,7 +28,16 @@ import javax.swing.JComponent;
 public interface FontsColorsController {
 
     public void update(ColorModel model);
+
+    /**
+     * Changes the profile to the provided profile for configuration. If the
+     * profile name does not exist, the currently set profile will be copied
+     * into a new profile with the provided name.
+     *
+     * @param profile The next profile which should be configured.
+     */
     public void setCurrentProfile(String profile);
+
     public void deleteProfile(String profile);
     public void applyChanges();
     public void cancel();

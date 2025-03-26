@@ -26,12 +26,17 @@
     <target name="-check-prepared-jar">
         <condition property="web.jspparser.jarcreated" value="present">
             <and>
-                <available file="external/generated-glassfish-jspparser-4.0.jar" />
+                <available file="external/generated-glassfish-jspparser-5.1.0.jar" />
+            </and>
+        </condition>
+        <condition property="web.jspparser.tagsjarcreated" value="present">
+            <and>
+                <available file="test/unit/data/emptyWebProject/lib/tags.jar" />
             </and>
         </condition>
     </target>
-    
-    <target name="build-init" depends="-check-prepared-jar,projectized.build-init" unless="web.jspparser.jarcreated">
+
+    <target name="-prepareparser-parser" depends="-check-prepared-jar" unless="web.jspparser.jarcreated">
         <property name="jars_location" location="./external"/>
         <fail message="Set jars_location">
             <condition>
@@ -43,16 +48,30 @@
         <!-- glassfish-jspparser.jar -->
         <echo message="Creating glassfish-jspparser.jar"/>
         <mkdir dir="glassfishjspparser"/>
-        <unzip src="${jars_location}/javax.servlet.jsp-2.3.2.jar" dest="glassfishjspparser/"/>
-        <unzip src="${jars_location}/javax.el-2.2.6.jar" dest="glassfishjspparser/"/>
-        <unzip src="${jars_location}/glassfish-ee-api-4.1.jar" dest="glassfishjspparser/"/>
-        <unzip src="${jars_location}/common-util-5.0.jar" dest="glassfishjspparser/"/>
-        <delete file="./external/generated-glassfish-jspparser-4.0.jar" />
+        <unzip src="${jars_location}/jakarta.servlet.jsp-2.3.6.jar" dest="glassfishjspparser/"/>
+        <unzip src="${jars_location}/jakarta.el-3.0.4.jar" dest="glassfishjspparser/"/>
+        <unzip src="${jars_location}/glassfish-ee-api-5.1.0.jar" dest="glassfishjspparser/"/>
+        <unzip src="${jars_location}/common-util-5.1.0.jar" dest="glassfishjspparser/"/>
+        <delete file="./external/generated-glassfish-jspparser-5.1.0.jar" />
         <zip  basedir="glassfishjspparser"
-        includes="org/apache/jasper/**, com/sun/el/**, com/sun/appserv/ClassLoaderUtil.class, com/sun/appserv/server/util/PreprocessorUtil.class, org/glassfish/jsp/api/**"
-            zipfile="./external/generated-glassfish-jspparser-4.0.jar" />
+              includes="org/apache/jasper/**, com/sun/el/**, com/sun/appserv/server/util/PreprocessorUtil.class, org/glassfish/jsp/api/**"
+              zipfile="./external/generated-glassfish-jspparser-5.1.0.jar" />
 
         <delete dir="glassfishjspparser" />
+    </target>
+
+    <target name="-prepare-tags-jar" depends="-check-prepared-jar" unless="web.jspparser.tagsjarcreated">
+        <jar destfile="test/unit/data/emptyWebProject/lib/tags.jar">
+            <fileset dir="test/unit/data/emptyWebProject/lib/tags/" includes="**/*" excludes="**/.jar" />
+        </jar>
+    </target>
+
+    <target name="build-init" depends="-prepareparser-parser,-prepare-tags-jar,projectized.build-init">
+        <mkdir dir="test/unit/data/project2/lib" />
+        <copy file="test/unit/data/emptyWebProject/lib/tags.jar" tofile="test/unit/data/project2/lib/tags.jar"/>
+        <copy file="external/jakarta.servlet.jsp.jstl-1.2.6.jar" tofile="test/unit/data/project2/lib/standard.jar"/>
+        <copy file="external/jakarta.servlet.jsp.jstl-api-1.2.7.jar" tofile="test/unit/data/project2/lib/jstl.jar"/>
+        <copy file="external/commons-logging-1.3.1.jar" tofile="test/unit/data/project2/lib/commons-logging-api.jar"/>
     </target>
 
     <target name="ext-compile">

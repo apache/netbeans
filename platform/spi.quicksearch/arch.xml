@@ -145,20 +145,18 @@
         </question>
 -->
  <answer id="arch-usecases">
-  <p>
-      
    <usecase id="newProvider" name="How To Add New Quick Search Provider" >
       In order to plug in a new Quick Search provider and new category of results,
       module writers need to complete following steps:
 
-      <h5>1. Implement <a href="@TOP@/org/netbeans/spi/quicksearch/SearchProvider.html">SearchProvider</a></h5>
+      <h4>1. Implement <a href="@TOP@/org/netbeans/spi/quicksearch/SearchProvider.html">SearchProvider</a></h4>
         <ul>
             <li>Implement body of <b><code>SearchProvider.evaluate</code></b> method
             like suggested in its <a href="@TOP@/org/netbeans/spi/quicksearch/SearchProvider.html">javadoc</a>.
             </li>
         </ul>
       
-      <h5>2. Register SearchProvider implementation in xml layer</h5>
+      <h4>2. Register SearchProvider implementation in xml layer</h4>
             Register your SearchProvider implementation in your module's xml layer file under
             main <b>"/QuickSearch"</b> folder. Registration xml syntax is following:
             
@@ -216,7 +214,7 @@
           It means that all providers (possibly in different NetBeans modules)
           need to be registered under the same folder, as shown below:</p>
        
-       <h5>Provider 1</h5>   
+       <h4>Provider 1</h4>   
             Provider 1 is category "owner", which defines properties of <code>SharedCategory</code> such as 
             display name, position and command prefix.
             <pre>
@@ -232,7 +230,7 @@
               &lt;/folder&gt;
             </pre>
 
-       <h5>Provider 2</h5>   
+       <h4>Provider 2</h4>   
             Other providers from other modules are sharing category with Provider 1.
             Provider 2 does not define properties of <code>SharedCategory</code>,
             as they were already defined by Provider 1.
@@ -248,7 +246,7 @@
               &lt;/folder&gt;
             </pre>
 
-       <h5>Provider 3</h5>   
+       <h4>Provider 3</h4>   
             The same rules apply like for Provider 2. Note that position attribute
             can be used to control position of provider's results in shared category.
             Results from provider with lowest position will go first and so on.
@@ -290,12 +288,12 @@
         However, if your module wants to disable "Recent Searches" or any other
         category, follow the steps below:
         
-        <h5>Define module dependency</h5>
+        <h4>Define module dependency</h4>
             Your module have to depend on module where provider you want to disable
             is contained. In case of "Recent Searches" provider, it's <code>spi,quicksearch</code>,
             on which you probably already depend.
 
-        <h5>Disable provider using "_hidden"</h5>
+        <h4>Disable provider using "_hidden"</h4>
             For example, to disable "Recent Searches" provider, write into your layer:
             
             <pre>
@@ -315,7 +313,7 @@
         NetBeans platform. To enable Quick Search feature in your application,
         complete following steps:
         
-        <h5>1. Write XML layer registration</h5>
+        <h4>1. Write XML layer registration</h4>
             Add the following lines to XML layer of some of your modules in your
             application suite:
         
@@ -330,7 +328,7 @@
         &lt;/folder&gt;
         </pre>
         
-        <h5>2. Localize Toolbar Name</h5>
+        <h4>2. Localize Toolbar Name</h4>
              Replace <code>com.myapp.mymodule.MyBundle</code> in the xml registration
              above with path to your properties file, in which you'll define
              localized name of Quick Search toolbar:
@@ -377,7 +375,6 @@
         Look&amp;Feel, you can put a <code>Border</code> instance into
         <code>UIManager</code> under key <code>nb.quicksearch.border</code>.
    </usecase>
-  </p>
  </answer>
 
 

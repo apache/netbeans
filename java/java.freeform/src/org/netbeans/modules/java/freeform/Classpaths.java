@@ -288,7 +288,7 @@ final class Classpaths implements ClassPathProvider, AntProjectListener, Propert
             GlobalPathRegistry gpr = GlobalPathRegistry.getDefault();
             for (String type : TYPES) {
                 Set<ClassPath> registeredClasspathsOfType = _registeredClasspaths.get(type);
-                gpr.register(type, registeredClasspathsOfType.toArray(new ClassPath[registeredClasspathsOfType.size()]));
+                gpr.register(type, registeredClasspathsOfType.toArray(new ClassPath[0]));
             }
     }
     
@@ -318,7 +318,7 @@ final class Classpaths implements ClassPathProvider, AntProjectListener, Propert
         GlobalPathRegistry gpr = GlobalPathRegistry.getDefault();
         for (String type : TYPES) {
             Set<ClassPath> registeredClasspathsOfType = toUnregister.get(type);
-            gpr.unregister(type, registeredClasspathsOfType.toArray(new ClassPath[registeredClasspathsOfType.size()]));
+            gpr.unregister(type, registeredClasspathsOfType.toArray(new ClassPath[0]));
         }
     }
     

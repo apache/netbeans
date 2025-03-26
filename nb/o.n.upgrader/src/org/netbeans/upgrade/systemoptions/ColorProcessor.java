@@ -18,8 +18,6 @@
  */
 
 package org.netbeans.upgrade.systemoptions;
-import java.lang.Object;
-import java.util.Iterator;
 
 
 /**
@@ -35,16 +33,15 @@ class ColorProcessor extends PropertyProcessor {
     }
     
     
+    @Override
     void processPropertyImpl(String propertyName, Object value) {
-        StringBuffer sb = new StringBuffer();
         if ("connectionBorderColor".equals(propertyName)||
                 "dragBorderColor".equals(propertyName)||
                 "formDesignerBackgroundColor".equals(propertyName)||
                 "formDesignerBorderColor".equals(propertyName)||
                 "guidingLineColor".equals(propertyName)||
                 "selectionBorderColor".equals(propertyName)) {//NOI18N
-            for (Iterator it = ((SerParser.ObjectWrapper)value).data.iterator(); it.hasNext();) {
-                Object o = it.next();
+            for (Object o: ((SerParser.ObjectWrapper)value).data) {
                 if (o instanceof SerParser.NameValue && "value".equals(((SerParser.NameValue)o).name.name)) {//NOI18N
                     addProperty(propertyName, ((SerParser.NameValue)o).value.toString());
                 }

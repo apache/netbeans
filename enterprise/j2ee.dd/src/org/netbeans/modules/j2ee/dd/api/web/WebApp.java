@@ -36,7 +36,7 @@ import org.netbeans.modules.j2ee.dd.api.common.SecurityRole;
  * for deployment descriptor(web.xml) file.<br>
  * For getting the root (WebApp object) use the {@link DDProvider#getDDRoot} method.
  *
- *<p><b><font color="red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></font></b>
+ *<p><b><span style="color:red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></span></b>
  *</p>
  */
 public interface WebApp extends org.netbeans.modules.j2ee.dd.api.common.RootInterface {
@@ -61,6 +61,14 @@ public interface WebApp extends org.netbeans.modules.j2ee.dd.api.common.RootInte
      * @since 1.29
      */
     static final String VERSION_5_0 = "5.0"; //NOI18N
+    /**
+     * web.xml, web-fragment.xml DD version for JakartaEE10
+     */
+    static final String VERSION_6_0 = "6.0"; //NOI18N
+    /**
+     * web.xml, web-fragment.xml DD version for Jakarta EE 11
+     */
+    static final String VERSION_6_1 = "6.1"; //NOI18N
     static final int STATE_VALID = 0;
     static final int STATE_INVALID_PARSABLE = 1;
     static final int STATE_INVALID_UNPARSABLE = 2;

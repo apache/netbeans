@@ -1,0 +1,236 @@
+
+
+Document 0
+Searchable Keys:
+  clz : a;A;820;;;Stringable|\Stringable;1;;0;<TESTURL>/testPHP83TypedClassConstants.php;;0;
+  method : __tostring;__toString;866;;@static.constant-type:static.class;1;0;<TESTURL>/testPHP83TypedClassConstants.php;0;0;;
+  superiface : stringable;Stringable;
+  top : a
+
+Not Searchable Keys:
+
+
+Document 1
+Searchable Keys:
+  clz : b;B;926;A|\A;;;1;;0;<TESTURL>/testPHP83TypedClassConstants.php;;0;
+  superclz : a;A;
+  top : b
+
+Not Searchable Keys:
+
+
+Document 2
+Searchable Keys:
+  clz : c;C;947;A|\A;;;1;;0;<TESTURL>/testPHP83TypedClassConstants.php;;0;
+  superclz : a;A;
+  top : c
+
+Not Searchable Keys:
+
+
+Document 3
+Searchable Keys:
+  clz : classtest;ClassTest;969;;;;1;;0;<TESTURL>/testPHP83TypedClassConstants.php;;0;
+  clz.const : array;ARRAY;1329;['t', 'e', 's', 't'];0;<TESTURL>/testPHP83TypedClassConstants.php;1;array;
+  clz.const : bool;BOOL;1293;true;0;<TESTURL>/testPHP83TypedClassConstants.php;1;bool;
+  clz.const : dnf;DNF;1156;?;0;<TESTURL>/testPHP83TypedClassConstants.php;1;(A&B)|C;
+  clz.const : float;FLOAT;1258;1.5;0;<TESTURL>/testPHP83TypedClassConstants.php;1;float;
+  clz.const : int;INT;1226;1;0;<TESTURL>/testPHP83TypedClassConstants.php;1;int;
+  clz.const : intersection;INTERSECTION;1111;?;0;<TESTURL>/testPHP83TypedClassConstants.php;4;A&B;
+  clz.const : iterable;ITERABLE;1385;['a', 'b', 'c'];0;<TESTURL>/testPHP83TypedClassConstants.php;1;iterable;
+  clz.const : mixed;MIXED;1436;1;0;<TESTURL>/testPHP83TypedClassConstants.php;1;mixed;
+  clz.const : nullable;NULLABLE;1038;1;0;<TESTURL>/testPHP83TypedClassConstants.php;1;?int;
+  clz.const : object;OBJECT;1471;?;0;<TESTURL>/testPHP83TypedClassConstants.php;1;object;
+  clz.const : string;STRING;1191;'a';0;<TESTURL>/testPHP83TypedClassConstants.php;1;string;
+  clz.const : union2;UNION2;1515;'a';0;<TESTURL>/testPHP83TypedClassConstants.php;1;string|array;
+  clz.const : union3;UNION3;1555;null;0;<TESTURL>/testPHP83TypedClassConstants.php;1;int|null;
+  clz.const : union;UNION;1074;?;0;<TESTURL>/testPHP83TypedClassConstants.php;2;A|B;
+  clz.const : without_type;WITHOUT_TYPE;998;1;0;<TESTURL>/testPHP83TypedClassConstants.php;1;;
+  top : classtest
+
+Not Searchable Keys:
+
+
+Document 4
+Searchable Keys:
+  clz.const : a;A;2224;?;0;<TESTURL>/testPHP83TypedClassConstants.php;1;static;
+  clz.const : dnf;DNF;2189;?;0;<TESTURL>/testPHP83TypedClassConstants.php;1;(A&B)|(A&C);
+  clz.const : intersection;INTERSECTION;2140;?;0;<TESTURL>/testPHP83TypedClassConstants.php;4;A&B;
+  clz.const : nullable;NULLABLE;2067;1;0;<TESTURL>/testPHP83TypedClassConstants.php;1;?int;
+  clz.const : string;STRING;2026;"string";0;<TESTURL>/testPHP83TypedClassConstants.php;32;string;
+  clz.const : union;UNION;2103;?;0;<TESTURL>/testPHP83TypedClassConstants.php;2;A|B;
+  enum : enumtest;EnumTest;1998;;;;1;;0;<TESTURL>/testPHP83TypedClassConstants.php;
+  enum.case : test;Test;2254;?;0;<TESTURL>/testPHP83TypedClassConstants.php;1;0;
+  top : enumtest
+
+Not Searchable Keys:
+
+
+Document 5
+Searchable Keys:
+  clz.const : dnf;DNF;1771;?;0;<TESTURL>/testPHP83TypedClassConstants.php;1;(A&B)|C;
+  clz.const : intersection;INTERSECTION;1726;?;0;<TESTURL>/testPHP83TypedClassConstants.php;1;A&B;
+  clz.const : nullable;NULLABLE;1657;1;0;<TESTURL>/testPHP83TypedClassConstants.php;1;?int;
+  clz.const : string;STRING;1616;"string";0;<TESTURL>/testPHP83TypedClassConstants.php;32;string;
+  clz.const : union;UNION;1692;?;0;<TESTURL>/testPHP83TypedClassConstants.php;1;A|B;
+  iface : interfacetest;InterfaceTest;1583;;;0;<TESTURL>/testPHP83TypedClassConstants.php;
+  top : interfacetest
+
+Not Searchable Keys:
+
+
+Document 6
+Searchable Keys:
+  clz.const : dnf;DNF;1979;?;0;<TESTURL>/testPHP83TypedClassConstants.php;1;(A&B)|C;
+  clz.const : intersection;INTERSECTION;1934;?;0;<TESTURL>/testPHP83TypedClassConstants.php;4;A&B;
+  clz.const : nullable;NULLABLE;1861;1;0;<TESTURL>/testPHP83TypedClassConstants.php;1;?int;
+  clz.const : string;STRING;1820;"string";0;<TESTURL>/testPHP83TypedClassConstants.php;32;string;
+  clz.const : union;UNION;1897;?;0;<TESTURL>/testPHP83TypedClassConstants.php;2;A|B;
+  top : traittest
+  trait : traittest;TraitTest;1791;;;0;<TESTURL>/testPHP83TypedClassConstants.php;
+
+Not Searchable Keys:
+
+
+Document 7
+Searchable Keys:
+  const : d_a;D_A;2271;;?;0;<TESTURL>/testPHP83TypedClassConstants.php;
+  const : d_b;D_B;2295;;?;0;<TESTURL>/testPHP83TypedClassConstants.php;
+  const : d_c;D_C;2319;;?;0;<TESTURL>/testPHP83TypedClassConstants.php;
+  top : d_a
+  top : d_b
+  top : d_c
+
+Not Searchable Keys:
+
+
+Document 8
+Searchable Keys:
+  identifier_used : __tostring;
+  identifier_used : a;
+  identifier_used : a;
+  identifier_used : a;
+  identifier_used : a;
+  identifier_used : a;
+  identifier_used : a;
+  identifier_used : a;
+  identifier_used : a;
+  identifier_used : a;
+  identifier_used : a;
+  identifier_used : a;
+  identifier_used : a;
+  identifier_used : a;
+  identifier_used : a;
+  identifier_used : a;
+  identifier_used : a;
+  identifier_used : a;
+  identifier_used : a;
+  identifier_used : array;
+  identifier_used : array;
+  identifier_used : array;
+  identifier_used : array;
+  identifier_used : b;
+  identifier_used : b;
+  identifier_used : b;
+  identifier_used : b;
+  identifier_used : b;
+  identifier_used : b;
+  identifier_used : b;
+  identifier_used : b;
+  identifier_used : b;
+  identifier_used : b;
+  identifier_used : b;
+  identifier_used : b;
+  identifier_used : b;
+  identifier_used : b;
+  identifier_used : bool;
+  identifier_used : bool;
+  identifier_used : c;
+  identifier_used : c;
+  identifier_used : c;
+  identifier_used : c;
+  identifier_used : c;
+  identifier_used : c;
+  identifier_used : class;
+  identifier_used : classtest;
+  identifier_used : classtest;
+  identifier_used : classtest;
+  identifier_used : classtest;
+  identifier_used : d_a;
+  identifier_used : d_a;
+  identifier_used : d_a;
+  identifier_used : d_a;
+  identifier_used : d_a;
+  identifier_used : d_b;
+  identifier_used : d_b;
+  identifier_used : d_b;
+  identifier_used : d_b;
+  identifier_used : d_c;
+  identifier_used : d_c;
+  identifier_used : d_c;
+  identifier_used : d_c;
+  identifier_used : define;
+  identifier_used : define;
+  identifier_used : define;
+  identifier_used : dnf;
+  identifier_used : dnf;
+  identifier_used : dnf;
+  identifier_used : dnf;
+  identifier_used : dnf;
+  identifier_used : dnf;
+  identifier_used : enumtest;
+  identifier_used : enumtest;
+  identifier_used : float;
+  identifier_used : float;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : interfacetest;
+  identifier_used : intersection;
+  identifier_used : intersection;
+  identifier_used : intersection;
+  identifier_used : intersection;
+  identifier_used : iterable;
+  identifier_used : iterable;
+  identifier_used : mixed;
+  identifier_used : mixed;
+  identifier_used : null;
+  identifier_used : null;
+  identifier_used : nullable;
+  identifier_used : nullable;
+  identifier_used : nullable;
+  identifier_used : nullable;
+  identifier_used : object;
+  identifier_used : object;
+  identifier_used : php_eol;
+  identifier_used : static;
+  identifier_used : static;
+  identifier_used : string;
+  identifier_used : string;
+  identifier_used : string;
+  identifier_used : string;
+  identifier_used : string;
+  identifier_used : string;
+  identifier_used : string;
+  identifier_used : string;
+  identifier_used : string;
+  identifier_used : stringable;
+  identifier_used : test;
+  identifier_used : test;
+  identifier_used : traittest;
+  identifier_used : true;
+  identifier_used : union2;
+  identifier_used : union3;
+  identifier_used : union;
+  identifier_used : union;
+  identifier_used : union;
+  identifier_used : union;
+  identifier_used : var_dump;
+  identifier_used : var_dump;
+  identifier_used : without_type;
+
+Not Searchable Keys:

@@ -116,7 +116,7 @@ public class FileHistory implements ShellHistory {
         ChangeListener[] ll = null;
         synchronized (this) {
             if (!listeners.isEmpty()) {
-                ll = newItems.toArray(new ChangeListener[newItems.size()]);
+                ll = newItems.toArray(ChangeListener[]::new);
             }
         }
         if (ll != null) {

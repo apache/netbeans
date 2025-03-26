@@ -52,11 +52,20 @@ public class EmbeddableAttributesImpl implements EmbeddableAttributes, PropertyH
             return;
         }
 
-        AnnotationMirror columnAnnotation = annByType.get("javax.persistence.Column"); // NOI18N
-        AnnotationMirror temporalAnnotation = annByType.get("javax.persistence.Temporal"); // NOI18N
+        AnnotationMirror columnAnnotation = annByType.get("jakarta.persistence.Column"); // NOI18N
+        if (columnAnnotation == null) {
+            columnAnnotation = annByType.get("javax.persistence.Column"); // NOI18N
+        }
+        AnnotationMirror temporalAnnotation = annByType.get("jakarta.persistence.Temporal"); // NOI18N
+        if (temporalAnnotation == null) {
+            temporalAnnotation = annByType.get("javax.persistence.Temporal"); // NOI18N
+        }
         String temporal = temporalAnnotation != null ? EntityMappingsUtilities.getTemporalType(helper, temporalAnnotation) : null;
         Column column = new ColumnImpl(helper, columnAnnotation, propertyName.toUpperCase()); // NOI18N
-        AnnotationMirror basicAnnotation = annByType.get("javax.persistence.Basic"); // NOI18N
+        AnnotationMirror basicAnnotation = annByType.get("jakarta.persistence.Basic"); // NOI18N
+        if (basicAnnotation == null) {
+            basicAnnotation = annByType.get("javax.persistence.Basic"); // NOI18N
+        }
         basicList.add(new BasicImpl(helper, basicAnnotation, propertyName, column, temporal));
     }
 
@@ -77,7 +86,7 @@ public class EmbeddableAttributesImpl implements EmbeddableAttributes, PropertyH
     }
 
     public Basic[] getBasic() {
-        return basicList.toArray(new Basic[basicList.size()]);
+        return basicList.toArray(new Basic[0]);
     }
 
     public int addBasic(Basic value) {

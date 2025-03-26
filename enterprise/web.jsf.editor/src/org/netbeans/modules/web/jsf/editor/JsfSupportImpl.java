@@ -36,12 +36,11 @@ import org.netbeans.api.project.Sources;
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModel;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.web.api.webmodule.WebModule;
-import org.netbeans.modules.web.beans.MetaModelSupport;
-import org.netbeans.modules.web.beans.api.model.WebBeansModel;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
 import org.netbeans.modules.web.jsf.editor.facelets.FaceletsLibrarySupport;
 import org.netbeans.modules.web.jsf.editor.index.JsfIndex;
 import org.netbeans.modules.web.jsfapi.api.JsfSupport;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.Library;
 import org.netbeans.modules.web.jsfapi.api.NamespaceUtils;
 import org.netbeans.modules.web.jsfapi.spi.JsfSupportProvider;
@@ -59,7 +58,7 @@ import org.openide.util.lookup.InstanceContent;
 public class JsfSupportImpl implements JsfSupport {
 
 	private static final Logger LOG = Logger.getLogger(JsfSupportImpl.class.getSimpleName());
-    
+
     public static JsfSupportImpl findFor(Source source) {
         return getOwnImplementation(JsfSupportProvider.get(source));
     }
@@ -67,7 +66,7 @@ public class JsfSupportImpl implements JsfSupport {
     public static JsfSupportImpl findFor(FileObject file) {
         return getOwnImplementation(JsfSupportProvider.get(file));
     }
-    
+
     private static JsfSupportImpl getOwnImplementation(JsfSupport instance) {
         if(instance instanceof JsfSupportImpl) {
             return (JsfSupportImpl)instance;
@@ -94,7 +93,7 @@ public class JsfSupportImpl implements JsfSupport {
                 return null;
             }
             ClassPath bootCP = ClassPath.getClassPath(webModule.getDocumentBase(), ClassPath.BOOT);
-            
+
             return new JsfSupportImpl(project, webModule, sourceCP, compileCP, executeCP, bootCP);
         } else {
             //non-web project
@@ -111,15 +110,15 @@ public class JsfSupportImpl implements JsfSupport {
                     executeCps.add(ClassPath.getClassPath(sg.getRootFolder(), ClassPath.EXECUTE));
                     bootCps.add(ClassPath.getClassPath(sg.getRootFolder(), ClassPath.BOOT));
                 }
-                return new JsfSupportImpl(project, null, 
+                return new JsfSupportImpl(project, null,
                         ClassPathSupport.createProxyClassPath(sourceCps.toArray(new ClassPath[]{})),
                         ClassPathSupport.createProxyClassPath(compileCps.toArray(new ClassPath[]{})),
                         ClassPathSupport.createProxyClassPath(executeCps.toArray(new ClassPath[]{})),
                         ClassPathSupport.createProxyClassPath(bootCps.toArray(new ClassPath[]{})));
             }
-            
+
         }
-        
+
         //no jsf support for this project
         return null;
     }
@@ -143,13 +142,13 @@ public class JsfSupportImpl implements JsfSupport {
         return true;
     }
 
-    
+
     private FaceletsLibrarySupport faceletsLibrarySupport;
     private Project project;
     private WebModule wm;
     private ClassPath sourceClassPath, compileClasspath, executeClassPath, bootClassPath;
     private JsfIndex index;
-    private MetadataModel<WebBeansModel> webBeansModel;
+    private MetadataModel<org.netbeans.modules.web.beans.api.model.WebBeansModel> webBeansModel;
     private Lookup lookup;
 
     private JsfSupportImpl(Project project, WebModule wm, ClassPath sourceClassPath, ClassPath compileClassPath, ClassPath executeClassPath, ClassPath bootClassPath) {
@@ -172,14 +171,13 @@ public class JsfSupportImpl implements JsfSupport {
             }
         });
 
-        webBeansModel = new MetaModelSupport(project).getMetaModel();
-
-        //init lookup
         //TODO do it lazy so it creates the web beans model lazily once looked up
         InstanceContent ic = new InstanceContent();
+        webBeansModel = new org.netbeans.modules.web.beans.MetaModelSupport(project).getMetaModel();
         ic.add(webBeansModel);
+        
+        //init lookup
         this.lookup = new AbstractLookup(ic);
-
     }
 
     @Override
@@ -191,7 +189,7 @@ public class JsfSupportImpl implements JsfSupport {
     public ClassPath getClassPath() {
         return compileClasspath;
     }
-    
+
     public FileObject[] getClassPathRoots() {
         Collection<FileObject> roots = new ArrayList<>();
         roots.addAll(Arrays.asList(sourceClassPath.getRoots()));
@@ -215,18 +213,18 @@ public class JsfSupportImpl implements JsfSupport {
 
     @Override
     public Library getLibrary(String namespace) {
-        return NamespaceUtils.getForNs(faceletsLibrarySupport.getLibraries(), namespace);
+        return NamespaceUtils.getForNs(faceletsLibrarySupport.getNamespaceLibraryMapping(), namespace);
     }
 
-    /** Library's uri to library map 
-     * Please note that a composite components library can be preset twice in the values. 
+    /** Library's uri to library map
+     * Please note that a composite components library can be preset twice in the values.
      * Once under the declared namespace key and once under the default cc namespace key.
      */
     @Override
     public Map<String, Library> getLibraries() {
-        return faceletsLibrarySupport.getLibraries();
+        return faceletsLibrarySupport.getNamespaceLibraryMapping();
     }
-    
+
     public boolean isFileOnClasspath(FileObject file) {
         return sourceClassPath.contains(file)
                 || compileClasspath.contains(file)
@@ -239,7 +237,7 @@ public class JsfSupportImpl implements JsfSupport {
     public void indexedContentPossiblyChanged() {
         faceletsLibrarySupport.indexedContentPossiblyChanged();
     }
-    
+
     //garbage methods below, needs cleanup!
     public synchronized JsfIndex getIndex() {
         if(index == null) {
@@ -252,19 +250,20 @@ public class JsfSupportImpl implements JsfSupport {
 	return faceletsLibrarySupport;
     }
 
-    public synchronized MetadataModel<WebBeansModel> getWebBeansModel() {
+    public synchronized MetadataModel<org.netbeans.modules.web.beans.api.model.WebBeansModel> getWebBeansModel() {
 	return webBeansModel;
     }
-
+    
     @Override
-    public boolean isJsf22Plus() {
+    public JsfVersion getJsfVersion() {
         if (wm != null) {
-            JSFVersion version = JSFVersion.forWebModule(wm);
-            // caching is done inside the method
-            return version != null && version.isAtLeast(JSFVersion.JSF_2_2);
+            JsfVersion jsfVersion = JsfVersionUtils.forWebModule(wm);
+            if (jsfVersion != null) {
+                return jsfVersion;
+            }
         }
-        // return the latest supported one until somebody will complain about that
-        return true;
+
+        return JsfVersion.latest();
     }
 
     @Override

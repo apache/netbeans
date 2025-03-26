@@ -58,7 +58,11 @@ class ConverterImpl extends PersistentObject implements FacesConverter, Refresha
             getHelper().getAnnotationsByType(getHelper().getCompilationController().
                     getElements().getAllAnnotationMirrors(type));
         AnnotationMirror annotationMirror = types.get(
-                "javax.faces.convert.FacesConverter");              // NOI18N
+                "jakarta.faces.convert.FacesConverter");              // NOI18N
+        if (annotationMirror == null) {
+            annotationMirror = types.get(
+                    "javax.faces.convert.FacesConverter");              // NOI18N
+        }
         if (annotationMirror == null) {
             return false;
         }

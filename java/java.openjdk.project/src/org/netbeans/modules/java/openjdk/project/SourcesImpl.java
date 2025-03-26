@@ -63,9 +63,12 @@ public class SourcesImpl implements Sources, FileChangeListener, ChangeListener 
     public static final String SOURCES_TYPE_JDK_PROJECT_TESTS = "jdk-project-sources-tests";
     public static final String SOURCES_TYPE_JDK_PROJECT_NATIVE = "jdk-project-sources-native";
 
+    @SuppressWarnings("this-escape")
     private final ChangeSupport cs = new ChangeSupport(this);
     private final JDKProject project;
-    private final Map<Root, SourceGroup> root2SourceGroup = new HashMap<Root, SourceGroup>();
+    private final Map<Root, SourceGroup> root2SourceGroup = new HashMap<>();
+    private final Map<String, List<SourceGroup>> key2SourceGroups = new HashMap<>();
+    private final Set<File> seen = new HashSet<>();
 
     public SourcesImpl(JDKProject project) {
         this.project = project;
@@ -75,48 +78,83 @@ public class SourcesImpl implements Sources, FileChangeListener, ChangeListener 
         }
     }
 
-    private boolean initialized;
-    private final Map<String, List<SourceGroup>> key2SourceGroups = new HashMap<>();
+    private int changeCount = 0;
+    private int changeCountForCurrentValues = -1;
     
     @Override
-    public synchronized SourceGroup[] getSourceGroups(String type) {
-        if (!initialized) {
-            recompute();
-            initialized = true;
-        }
-        
-        List<SourceGroup> groups = key2SourceGroups.get(type);
-        if (groups != null)
-            return groups.toArray(new SourceGroup[0]);
+    public SourceGroup[] getSourceGroups(String type) {
+        while (true) {
+            int currentChangeCount;
+            Map<Root, SourceGroup> root2SourceGroupsCopy;
 
-        return new SourceGroup[0];
+            synchronized (this) {
+                currentChangeCount = changeCount;
+
+                if (changeCountForCurrentValues == currentChangeCount) {
+                    return key2SourceGroups.getOrDefault(type, List.of())
+                                           .toArray(SourceGroup[]::new);
+                }
+
+                root2SourceGroupsCopy = new HashMap<>(root2SourceGroup);
+            }
+
+            RecomputeResult recomputed = recompute(project, root2SourceGroupsCopy);
+
+            synchronized (this) {
+                if (currentChangeCount == changeCount) {
+                    //no intervening change, apply results:
+                    root2SourceGroup.clear();
+                    root2SourceGroup.putAll(recomputed.root2SourceGroup());
+                    key2SourceGroups.clear();
+                    key2SourceGroups.putAll(recomputed.key2SourceGroups());
+
+                    Set<File> added = new HashSet<>(recomputed.seen());
+                    added.removeAll(seen);
+                    Set<File> removed = new HashSet<>(seen);
+                    removed.removeAll(recomputed.seen());
+
+                    for (File a : added) {
+                        FileUtil.addFileChangeListener(this, a);
+                        seen.add(a);
+                        FileOwnerQuery.markExternalOwner(Utilities.toURI(a), null, FileOwnerQuery.EXTERNAL_ALGORITHM_TRANSIENT);
+                        FileOwnerQuery.markExternalOwner(Utilities.toURI(a), project, FileOwnerQuery.EXTERNAL_ALGORITHM_TRANSIENT);
+                    }
+                    for (File r : removed) {
+                        FileUtil.removeFileChangeListener(this, r);
+                        seen.remove(r);
+                        FileOwnerQuery.markExternalOwner(Utilities.toURI(r), null, FileOwnerQuery.EXTERNAL_ALGORITHM_TRANSIENT);
+                    }
+
+                    changeCountForCurrentValues = currentChangeCount;
+                    return key2SourceGroups.getOrDefault(type, List.of())
+                                           .toArray(SourceGroup[]::new);
+                }
+            }
+        }
     }
 
-    private final Set<File> seen = new HashSet<>();
     
-    private synchronized void recompute() {
-        key2SourceGroups.clear();
+    private static RecomputeResult recompute(JDKProject project, Map<Root, SourceGroup> root2SourceGroup) {
+        Map<String, List<SourceGroup>> key2SourceGroups = new HashMap<>();
+        Set<File> seen = new HashSet<>();
 
         for (SourceGroup sg : GenericSources.genericOnly(project).getSourceGroups(TYPE_GENERIC)) {
-            addSourceGroup(TYPE_GENERIC, sg);
+            addSourceGroup(key2SourceGroups, TYPE_GENERIC, sg);
         }
 
-        Set<File> newFiles = new HashSet<>();
         for (Root root : project.getRoots()) {
             URL srcURL = root.getLocation();
 
             if ("file".equals(srcURL.getProtocol())) {
                 try {
-                    newFiles.add(Utilities.toFile(srcURL.toURI()));
+                    seen.add(Utilities.toFile(srcURL.toURI()));
                 } catch (URISyntaxException ex) {
                     Exceptions.printStackTrace(ex);
                 }
             }
 
             FileObject src = URLMapper.findFileObject(srcURL);
-            if (src == null) {
-                root2SourceGroup.remove(root);
-            } else {
+            if (src != null) {
                 SourceGroup sg = root2SourceGroup.get(root);
 
                 if (sg == null) {
@@ -126,41 +164,27 @@ public class SourcesImpl implements Sources, FileChangeListener, ChangeListener 
                 }
 
                 if (root.kind == RootKind.NATIVE_SOURCES) {
-                    addSourceGroup(SOURCES_TYPE_JDK_PROJECT_NATIVE, sg);
+                    addSourceGroup(key2SourceGroups, SOURCES_TYPE_JDK_PROJECT_NATIVE, sg);
                 } else {
-                    addSourceGroup(JavaProjectConstants.SOURCES_TYPE_JAVA, sg);
+                    addSourceGroup(key2SourceGroups, JavaProjectConstants.SOURCES_TYPE_JAVA, sg);
                 }
 
                 if (root.kind == RootKind.TEST_SOURCES) {
-                    addSourceGroup(SOURCES_TYPE_JDK_PROJECT_TESTS, sg);
+                    addSourceGroup(key2SourceGroups, SOURCES_TYPE_JDK_PROJECT_TESTS, sg);
                 }
 
-                addSourceGroup(SOURCES_TYPE_JDK_PROJECT, sg);
+                addSourceGroup(key2SourceGroups, SOURCES_TYPE_JDK_PROJECT, sg);
 
                 if (!FileUtil.isParentOf(project.getProjectDirectory(), src)) {
-                    addSourceGroup(TYPE_GENERIC, GenericSources.group(project, src, root.displayName, root.displayName, null, null));
+                    addSourceGroup(key2SourceGroups, TYPE_GENERIC, GenericSources.group(project, src, root.displayName, root.displayName, null, null));
                 }
             }
         }
-        Set<File> added = new HashSet<>(newFiles);
-        added.removeAll(seen);
-        Set<File> removed = new HashSet<>(seen);
-        removed.removeAll(newFiles);
-        for (File a : added) {
-            FileUtil.addFileChangeListener(this, a);
-            seen.add(a);
-            FileOwnerQuery.markExternalOwner(Utilities.toURI(a), null, FileOwnerQuery.EXTERNAL_ALGORITHM_TRANSIENT);
-            FileOwnerQuery.markExternalOwner(Utilities.toURI(a), project, FileOwnerQuery.EXTERNAL_ALGORITHM_TRANSIENT);
-        }
-        for (File r : removed) {
-            FileUtil.removeFileChangeListener(this, r);
-            seen.remove(r);
-            FileOwnerQuery.markExternalOwner(Utilities.toURI(r), null, FileOwnerQuery.EXTERNAL_ALGORITHM_TRANSIENT);
-        }
-        cs.fireChange();
+
+        return new RecomputeResult(root2SourceGroup, key2SourceGroups, seen);
     }
 
-    private void addSourceGroup(String type, SourceGroup sg) {
+    private static void addSourceGroup(Map<String, List<SourceGroup>> key2SourceGroups, String type, SourceGroup sg) {
         List<SourceGroup> groups = key2SourceGroups.get(type);
 
         if (groups == null) {
@@ -170,6 +194,7 @@ public class SourcesImpl implements Sources, FileChangeListener, ChangeListener 
         groups.add(sg);
     }
 
+    private record RecomputeResult(Map<Root, SourceGroup> root2SourceGroup, Map<String, List<SourceGroup>> key2SourceGroups, Set<File> seen) {}
     @Override public void addChangeListener(ChangeListener listener) {
         cs.addChangeListener(listener);
     }
@@ -180,7 +205,7 @@ public class SourcesImpl implements Sources, FileChangeListener, ChangeListener 
 
     @Override
     public void fileFolderCreated(FileEvent fe) {
-        recompute();
+        changed();
     }
 
     @Override
@@ -191,12 +216,12 @@ public class SourcesImpl implements Sources, FileChangeListener, ChangeListener 
 
     @Override
     public void fileDeleted(FileEvent fe) {
-        recompute();
+        changed();
     }
 
     @Override
     public void fileRenamed(FileRenameEvent fe) {
-        recompute();
+        changed();
     }
 
     @Override
@@ -204,7 +229,14 @@ public class SourcesImpl implements Sources, FileChangeListener, ChangeListener 
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        recompute();
+        changed();
+    }
+
+    private void changed() {
+        synchronized (this) {
+            changeCount++;
+        }
+        cs.fireChange();
     }
 
     private static final class SourceGroupImpl implements SourceGroup {

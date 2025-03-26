@@ -1,0 +1,7 @@
+Code completion result for source line:
+Att|r2(string: CONST_ATTRIBUTES_TEST1, bool: Attr2::CONST_ATTR2),
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO Attr2                           [PUBLIC]   Attributes\Test1
+CONSTRUCTO Attr2(string $string)           [PUBLIC]   Attributes\Test1
+CONSTRUCTO Attr2(string $string, bool $bo  [PUBLIC]   Attributes\Test1
+PACKAGE    Attributes                      [PUBLIC]   null

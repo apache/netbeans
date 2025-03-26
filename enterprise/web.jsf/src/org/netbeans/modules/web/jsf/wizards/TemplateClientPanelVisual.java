@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -240,7 +241,7 @@ public class TemplateClientPanelVisual extends javax.swing.JPanel implements Hel
         // libraries contracts roots
         roots.addAll(getLibContractsRoots());
 
-        return roots.toArray(new FileObject[roots.size()]);
+        return roots.toArray(new FileObject[0]);
     }
 
     private SourceGroup[] getProjectDocumentSourceGroups() {
@@ -395,26 +396,23 @@ public class TemplateClientPanelVisual extends javax.swing.JPanel implements Hel
                     Result result = resultIterator.getParserResult(0);
                     if (result.getSnapshot().getMimeType().equals("text/html")) {
                         HtmlParserResult htmlResult = (HtmlParserResult)result;
-                        String ns = null;
-                        if (htmlResult.getNamespaces().containsKey(DefaultLibraryInfo.FACELETS.getNamespace())) {
-                            ns = DefaultLibraryInfo.FACELETS.getNamespace();
-                        } else if (htmlResult.getNamespaces().containsKey(DefaultLibraryInfo.FACELETS.getLegacyNamespace())) {
-                            ns = DefaultLibraryInfo.FACELETS.getLegacyNamespace();
+                        String ns = DefaultLibraryInfo.FACELETS.getValidNamespaces().stream()
+                                .filter(htmlResult.getNamespaces()::containsKey)
+                                .findFirst()
+                                .orElse(null);
+                        if (ns == null) {
+                            return;
                         }
-                        if (ns != null) {
-                            String faceletsPrefix = htmlResult.getNamespaces().get(ns);
-                            List<OpenTag> foundNodes = findValue(htmlResult.root(ns).children(OpenTag.class), faceletsPrefix + ":insert", new ArrayList<OpenTag>()); // NOI18N
+                        String faceletsPrefix = htmlResult.getNamespaces().get(ns);
+                        List<OpenTag> foundNodes = findValue(htmlResult.root(ns).children(OpenTag.class), faceletsPrefix + ":insert", new ArrayList<OpenTag>()); // NOI18N
 
-                            for (OpenTag node : foundNodes) {
-                                Attribute attr = node.getAttribute(VALUE_NAME);
-                                if (attr !=null) {
-                                     String value = attr.unquotedValue().toString();
-                                    if (value != null && !"".equals(value)) {   //NOI18N
-                                        templateData.add(value);
-                                    }
-                                }
-                            }
-                        }
+                        foundNodes.stream()
+                                .map(node -> node.getAttribute(VALUE_NAME))
+                                .filter(Objects::nonNull)
+                                .map(Attribute::unquotedValue)
+                                .filter(value -> value != null && !"".equals(value))
+                                .map(CharSequence::toString)
+                                .forEach(templateData::add);
                     }
                 }
             });

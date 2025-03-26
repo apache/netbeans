@@ -546,11 +546,11 @@
       <api name="org.netbeans.ui.actions.UI_ACTION_BUTTON_PRESS" category="friend" group="logger" type="export">
       There is a special support for notifying when an action wrapped by
       <a href="@TOP@/org/openide/awt/Actions.html">Actions bridge</a> is 
-      invoked and how. The support is using <a href="@JDK@/java/util/logging/Logger.html">
+      invoked and how. The support is using <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">
       Logger.getLogger("org.netbeans.ui.actions")
-      </a> and sents a <a href="@JDK@/java/util/logging/LogRecord.html">LogRecord</a>
+      </a> and sents a <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">LogRecord</a>
       with message <code>UI_ACTION_BUTTON_PRESS</code>, 
-      <code>FINER</code> <a href="@JDK@/java/util/logging/LogRecord.html">level</a>
+      <code>FINER</code> <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">level</a>
       and paramerters:
       <ul>
           <li>{<b>0</b>} instance of the button</li>
@@ -570,10 +570,10 @@
       </api>
       
       <api name="org.openide.awt.ActionReference.completion" category="devel" group="systemproperty" type="export">
-          If <a href="@JDK@/java/lang/System.html">System.getProperty("org.openide.awt.ActionReference.completion")</a>
+          If <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/System.html">System.getProperty("org.openide.awt.ActionReference.completion")</a>
           is specified, then the dedicated processor for <a href="@TOP@/org/openide/awt/ActionReference.html">ActionReference</a>
           tries to load such class, casts it to 
-          <a href="@JDK@/javax/annotation/processing/Processor.html">Processor</a>
+          <a href="@JDK@@JDKMODULE_JAVA_COMPILER@/javax/annotation/processing/Processor.html">Processor</a>
           and asks it for additional completion items for its
           <code>path</code> attribute. By default, when running inside NetBeans IDE,
           <code>apisupport.project</code> registers such class and provides

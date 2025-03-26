@@ -61,7 +61,7 @@ public class RequireJSCodeCompletionTest extends JsCodeCompletionBase {
         FileObject folder = getTestFile("TestProject1");
         Project tp = new TestProjectSupport.TestProject(folder, null);
 
-        Map<String, String> mappings = new HashMap();
+        Map<String, String> mappings = new HashMap<>();
         mappings.put("utils", "js/folder1/api/utils.js");
         mappings.put("api", "js/folder1/api");
         mappings.put("lib/api", "js/folder1/api");
@@ -98,7 +98,7 @@ public class RequireJSCodeCompletionTest extends JsCodeCompletionBase {
         cpRoots.add(FileUtil.toFileObject(new File(getDataDir(), "/TestProject1")));
         return Collections.singletonMap(
                 JS_SOURCE_ID,
-                ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[cpRoots.size()]))
+                ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[0]))
         );
     }
 

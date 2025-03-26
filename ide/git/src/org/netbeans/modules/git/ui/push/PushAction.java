@@ -190,6 +190,8 @@ public class PushAction extends SingleRepositoryAction {
         "CTL_PushAction.report.outputButton.desc=Opens output with more information",
         "CTL_PushAction.report.pullButton.text=&Pull Changes",
         "CTL_PushAction.report.pullButton.desc=Fetch and merge remote changes.",
+        "CTL_PushAction.report.forceButton.text=&Force push",
+        "CTL_PushAction.report.forceButton.desc=Force push local branch to remote.",
         "LBL_PushAction.report.error.title=Git Push Failed",
         "MSG_PushAction.pullingChanges=Waiting for pull to finish",
         "LBL_PushAction.pullingChanges.finished=Remote Changes Pulled",
@@ -454,7 +456,7 @@ public class PushAction extends SingleRepositoryAction {
                             message.getRevision(),
                             new Date(message.getCommitTime())));
                 }
-                GitHookContext context = new GitHookContext(new File[] { getRepositoryRoot() }, null, entries.toArray(new GitHookContext.LogEntry[entries.size()]));
+                GitHookContext context = new GitHookContext(new File[] { getRepositoryRoot() }, null, entries.toArray(new GitHookContext.LogEntry[0]));
                 return context;
             }
 

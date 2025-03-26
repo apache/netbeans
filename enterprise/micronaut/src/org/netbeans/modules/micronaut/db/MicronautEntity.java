@@ -23,6 +23,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import java.io.IOException;
 import java.sql.Connection;
@@ -33,6 +34,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -52,6 +54,8 @@ import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
+import org.netbeans.api.lsp.WorkspaceEdit;
+import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.aggregate.BasicAggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.ProgressContributor;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -78,6 +82,14 @@ import org.netbeans.modules.j2ee.persistence.wizard.fromdb.ProgressPanel;
 import org.netbeans.modules.j2ee.persistence.wizard.fromdb.RelatedCMPHelper;
 import org.netbeans.modules.j2ee.persistence.wizard.fromdb.RelatedCMPWizard;
 import org.netbeans.modules.j2ee.persistence.wizard.fromdb.UpdateType;
+import org.netbeans.modules.project.dependency.ArtifactSpec;
+import org.netbeans.modules.project.dependency.Dependency;
+import org.netbeans.modules.project.dependency.DependencyChange;
+import org.netbeans.modules.project.dependency.DependencyChangeException;
+import org.netbeans.modules.project.dependency.ProjectDependencies;
+import org.netbeans.modules.project.dependency.ProjectModificationResult;
+import org.netbeans.modules.project.dependency.ProjectOperationException;
+import org.netbeans.modules.project.dependency.Scopes;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -101,10 +113,14 @@ public class MicronautEntity extends RelatedCMPWizard {
 
     @NbBundle.Messages({
         "MSG_NoDbConn=No database connection found",
+        "MSG_NoDdSupport=No Micronaut Data support libraries found for {0}. Add this dependencies?",
         "MSG_NoProject=No project found for {0}",
         "MSG_NoSourceGroup=No source group found for {0}",
         "MSG_SelectTables=Select Database Tables",
-        "MSG_NoDbTables=No database table found for {0}"
+        "MSG_NoDbTables=No database table found for {0}",
+        "MSG_CreatingEntities=Entity Classes from Database",
+        "MSG_ReadingTables=Reading Table Definitions",
+        "MSG_CreatingClasses=Creating Classes"
     })
     public static CreateFromTemplateHandler handler() {
         return new CreateFromTemplateHandler() {
@@ -115,7 +131,10 @@ public class MicronautEntity extends RelatedCMPWizard {
 
             @Override
             protected List<FileObject> createFromTemplate(CreateDescriptor desc) throws IOException {
+                ProgressHandle handle = ProgressHandle.createHandle(Bundle.MSG_CreatingEntities());
+                handle.start();
                 try {
+                    handle.progress(Bundle.MSG_ReadingTables());
                     FileObject folder = desc.getTarget();
                     Project project = FileOwnerQuery.getOwner(folder);
                     if (project == null) {
@@ -125,6 +144,23 @@ public class MicronautEntity extends RelatedCMPWizard {
                     SourceGroup sourceGroup = SourceGroups.getFolderSourceGroup(ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA), folder);
                     if (sourceGroup == null) {
                         DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoSourceGroup(folder.getPath()), NotifyDescriptor.ERROR_MESSAGE));
+                        return Collections.emptyList();
+                    }
+                    if (!Utils.isDBSupported(sourceGroup) && !Utils.isJPASupported(sourceGroup)) {
+                        NotifyDescriptor.Confirmation msg = new NotifyDescriptor.Confirmation(Bundle.MSG_NoDdSupport(folder.getPath()),
+                                NotifyDescriptor.WARNING_MESSAGE, NotifyDescriptor.YES_NO_OPTION);
+                        Object choice = DialogDisplayer.getDefault().notify(msg);
+                        if (NotifyDescriptor.YES_OPTION.equals(choice)) {
+                            ArtifactSpec spec = ArtifactSpec.make("io.micronaut.data", "micronaut-data-jdbc"); //NOI18N
+                            Dependency dep = Dependency.make(spec, Scopes.COMPILE);
+                            DependencyChange change = DependencyChange.add(Collections.singletonList(dep), DependencyChange.Options.skipConflicts);
+                            try {
+                                ProjectModificationResult mod = ProjectDependencies.modifyDependencies(project, change);
+                                WorkspaceEdit.applyEdits(Collections.singletonList(mod.getWorkspaceEdit()), true);
+                            } catch (DependencyChangeException | ProjectOperationException ex) {
+                                throw new IllegalStateException(ex);
+                            }
+                        }
                         return Collections.emptyList();
                     }
                     DatabaseConnection connection = ConnectionManager.getDefault().getPreferredConnection(true);
@@ -146,6 +182,7 @@ public class MicronautEntity extends RelatedCMPWizard {
                     NotifyDescriptor.QuickPick qp = new NotifyDescriptor.QuickPick(Bundle.MSG_SelectTables(), Bundle.MSG_SelectTables(), dbItems, true);
                     if (DialogDescriptor.OK_OPTION == DialogDisplayer.getDefault().notify(qp)) {
                         List<String> selectedItems = qp.getItems().stream().filter(item -> item.isSelected()).map(item -> item.getLabel()).collect(Collectors.toList());
+                        handle.progress(Bundle.MSG_CreatingClasses());
                         EntitiesFromDBGenerator generator = new EntitiesFromDBGenerator(selectedItems, false, false, false,
                                 EntityRelation.FetchType.DEFAULT, EntityRelation.CollectionType.COLLECTION,
                                 SourceGroups.getPackageForFolder(sourceGroup, folder), sourceGroup, connection, project, null, new Generator());
@@ -160,6 +197,8 @@ public class MicronautEntity extends RelatedCMPWizard {
                     }
                 } catch (IOException | SQLException | DatabaseException ex) {
                     DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(ex.getMessage(), NotifyDescriptor.ERROR_MESSAGE));
+                } finally {
+                    handle.finish();
                 }
                 return Collections.emptyList();
             }
@@ -173,9 +212,9 @@ public class MicronautEntity extends RelatedCMPWizard {
     @Override
     public Set<DataObject> instantiate(TemplateWizard wiz) throws IOException {
         String wizardTitle = NbBundle.getMessage(MicronautEntity.class, "Templates/Micronaut/Entity");
-        wiz.putProperty("NewFileWizard_Title", wizardTitle); // NOI18N
-        return super.instantiate(wiz);
-    }
+            wiz.putProperty("NewFileWizard_Title", wizardTitle); // NOI18N
+            return super.instantiate(wiz);
+        }
 
     @org.openide.util.lookup.ServiceProvider(service=org.netbeans.modules.j2ee.persistence.wizard.fromdb.PersistenceGeneratorProvider.class)
     public static class GeneratorProvider implements PersistenceGeneratorProvider {
@@ -194,6 +233,7 @@ public class MicronautEntity extends RelatedCMPWizard {
     private static class Generator extends JavaPersistenceGenerator {
 
         private final Set<FileObject> generatedEntityFOs = new HashSet<>();
+        private final Set<FileObject> generatedFOs = new HashSet<>();
         private final Map<String, String> replacedNames = new HashMap<>();
         private final Map<String, String> replacedTypeNames = new HashMap<>();
         private final Map<String, EntityClass> beanMap = new HashMap<>();
@@ -209,7 +249,7 @@ public class MicronautEntity extends RelatedCMPWizard {
                 doGenerateBeans(progressPanel, helper, progressContributor);
             } catch (IOException e) {
                 Logger.getLogger(Generator.class.getName()).log(Level.INFO, "IOException, remove generated."); //NOI18N
-                for (FileObject generatedFO : generatedEntityFOs) {
+                for (FileObject generatedFO : generatedFOs) {
                     try {
                         generatedFO.delete();
                     } catch (IOException ioe) {}
@@ -258,13 +298,30 @@ public class MicronautEntity extends RelatedCMPWizard {
                             FileObject oldPackage = entityClass.getRootFolder().getFileObject(rel);
                             entity = oldPackage.getFileObject(entityClassName, "java");
                         }
+                        // NO PK classes for views
+                        if (entityClass.isForTable() && !entityClass.isUsePkField()) {
+                            String pkClassName = createPKClassName(entityClassName);
+                            FileObject pkFO = packageFileObject.getFileObject(pkClassName, "java");
+                            if (pkFO == null) { // NOI18N
+                                String fqn = this.getFQClassName(entityClass.getTableName());
+                                int ind = fqn.lastIndexOf('.');
+                                String pkg = ind > -1 ? fqn.substring(0, ind) : "";
+                                String rel = pkg.replaceAll("\\.", "/");
+                                FileObject oldPackage = entityClass.getRootFolder().getFileObject(rel);
+                                pkFO = oldPackage.getFileObject(pkClassName, "java");
+                            }
+                            if (pkFO != null) {
+                                pkFO.delete();
+                            }
+                        }
                         entity.delete();
                         entity = null;
                         //fall through is expected
                     case NEW:
                         generatedEntityClasses.add(entityClassName);
                         try {
-                            String newName = entityClassName;
+                            String pkMemberName = getPkMemberName(entityClass);
+                            String newName = pkMemberName != null ? Character.toUpperCase(pkMemberName.charAt(0)) + pkMemberName.substring(1) : entityClassName;
                             int count = 1;
                             while (packageFileObject.getFileObject(newName, "java") != null && count < 1000) {
                                 newName = entityClassName + "_" + count;
@@ -285,7 +342,16 @@ public class MicronautEntity extends RelatedCMPWizard {
                             throw ex;
                         }
                         generatedEntityFOs.add(entity);
+                        generatedFOs.add(entity);
                         generationPackageFOs.add(packageFileObject);
+                        // NO PK classes for views
+                        if (entityClass.isForTable() && !entityClass.isUsePkField()) {
+                            String pkClassName = createPKClassName(entityClassName);
+                            if (packageFileObject.getFileObject(pkClassName, "java") == null) { // NOI18N
+                                FileObject pkClass = GenerationUtils.createClass(packageFileObject, pkClassName, NbBundle.getMessage(Generator.class, "MSG_PK_Class", pkClassName, entityClassName));
+                                generatedFOs.add(pkClass);
+                            }
+                        }
                 }
             }
 
@@ -312,12 +378,23 @@ public class MicronautEntity extends RelatedCMPWizard {
                 if (progressPanel != null) {
                     progressPanel.setText(progressMsg);
                 }
-                FileObject entityClassPackageFO = entityClass.getPackageFileObject();
-                FileObject entityClassFO = entityClassPackageFO.getFileObject( entityClassName, "java"); // NOI18N
+                final FileObject entityClassPackageFO = entityClass.getPackageFileObject();
+                final FileObject entityClassFO = entityClassPackageFO.getFileObject( entityClassName, "java"); // NOI18N
+                final FileObject pkClassFO = (entityClass.isForTable() && !entityClass.isUsePkField()) ? entityClassPackageFO.getFileObject(createPKClassName(entityClassName), "java") : null; // NOI18N
                 try {
-                    JavaSource javaSource = JavaSource.create(cpHelper.createClasspathInfo(), entityClassFO);
+                    JavaSource javaSource = (pkClassFO != null && entityClass.getUpdateType() != UpdateType.UPDATE)
+                            ? JavaSource.create(cpHelper.createClasspathInfo(), entityClassFO, pkClassFO)
+                            : JavaSource.create(cpHelper.createClasspathInfo(), entityClassFO);
                     javaSource.runModificationTask(copy -> {
-                        new EntityClassGenerator(copy, entityClass, jpaSupported, beanValidationSupported).run();
+                        if (copy.getFileObject().equals(entityClassFO)) {
+                            new EntityClassGenerator(copy, entityClass, jpaSupported, beanValidationSupported).run();
+                        } else {
+                            if (entityClass.getUpdateType() != UpdateType.UPDATE) {
+                                new PKClassGenerator(copy, entityClass, jpaSupported, beanValidationSupported).run();
+                            } else {
+                                Logger.getLogger(Generator.class.getName()).log(Level.INFO, "PK Class update isn't supported"); //NOI18N
+                            }
+                        }
                     }).commit();
                 } catch (IOException e) {
                     String message = e.getMessage();
@@ -330,6 +407,23 @@ public class MicronautEntity extends RelatedCMPWizard {
 
             progressContributor.progress(progressMax);
             PersistenceUtils.logUsage(Generator.class, "USG_PERSISTENCE_ENTITY_DB_CREATED", new Integer[]{entityClasses.length});
+        }
+
+        private static String getPkMemberName(EntityClass entityClass) {
+            if (entityClass != null) {
+                List<EntityMember> pks = entityClass.getFields().stream().filter(f -> f.isPrimaryKey()).collect(Collectors.toList());
+                if (pks.size() == 1) {
+                    String memberName = pks.get(0).getMemberName();
+                    if (memberName.length() > 2 && memberName.endsWith("Id")) {
+                        return memberName.substring(0, memberName.length() - 2);
+                    }
+                }
+            }
+            return null;
+        }
+
+        private static String createPKClassName(String entityClassName) {
+            return entityClassName + "PK"; // NOI18N
         }
 
         private String getClassName(EntityClass entityClass) {
@@ -367,6 +461,12 @@ public class MicronautEntity extends RelatedCMPWizard {
             protected final EntityClass entityClass;
             // the mapping of the entity class to the database
             protected final CMPMappingModel dbMappings;
+            // true if a primary key class needs to be generated along with the entity class
+            protected final boolean needsPKClass;
+            // the simple class name of the primary key class
+            protected final String pkClassName;
+            // the fully-qualified name of the primary key class
+            protected final String pkFQClassName;
             // generated properties
             protected final List<Property> properties = new ArrayList<>();
             // generated methods
@@ -383,18 +483,20 @@ public class MicronautEntity extends RelatedCMPWizard {
             protected TypeElement typeElement;
             // classTree's module
             protected ModuleElement moduleElement;
-            // the generating type like New, Update etc
-            protected UpdateType updateType;
 
             protected final boolean generateJPA;
             protected final boolean generateValidationConstraints;
+            protected final boolean generateSerdeable;
 
             private ClassGenerator(WorkingCopy copy, EntityClass entityClass, boolean jpaSupported, boolean beanValidationSupported) throws IOException {
                 copy.toPhase(JavaSource.Phase.RESOLVED);
                 this.copy = copy;
                 this.entityClass = entityClass;
-                this.updateType = entityClass.getUpdateType();
                 dbMappings = entityClass.getCMPMapping();
+                // NO PK for views
+                needsPKClass = entityClass.isForTable() && !entityClass.isUsePkField();
+                pkClassName = needsPKClass ? createPKClassName(entityClass.getClassName()) : null;
+                pkFQClassName = entityClass.getPackage() + "." + pkClassName; // NOI18N
                 typeElement = SourceUtils.getPublicTopLevelElement(copy);
                 if (typeElement == null) {
                     throw new IllegalStateException("Cannot find a public top-level class named " + entityClass.getClassName() + // NOI18N
@@ -407,6 +509,7 @@ public class MicronautEntity extends RelatedCMPWizard {
                 genUtils = GenerationUtils.newInstance(copy);
                 generateJPA = jpaSupported;
                 generateValidationConstraints = beanValidationSupported;
+                generateSerdeable = copy.getElements().getTypeElement("io.micronaut.serde.annotation.Serdeable") != null;
             }
 
             protected String createFieldName(String capitalizedFieldName) {
@@ -433,7 +536,7 @@ public class MicronautEntity extends RelatedCMPWizard {
                 List<AnnotationTree> annotations = new ArrayList<>();
 
                 //add @Id() only if not in an embeddable PK class
-                if (isPKMember) {
+                if (isPKMember && !needsPKClass) {
                     annotations.add(genUtils.createAnnotation(generateJPA ? "javax.persistence.Id" : "io.micronaut.data.annotation.Id")); // NOI18N
                     if (m.isAutoIncrement()) {
                         annotations.add(genUtils.createAnnotation(generateJPA ? "javax.persistence.GeneratedValue" : "io.micronaut.data.annotation.GeneratedValue")); //NOI18N
@@ -454,11 +557,11 @@ public class MicronautEntity extends RelatedCMPWizard {
 
                 List<ExpressionTree> columnAnnArguments = new ArrayList<>();
                 String memberName = m.getMemberName();
-                String memberType = getMemberType(m);
+                String memberType = m.getMemberType();
 
                 String columnName = dbMappings.getCMPFieldMapping().get(memberName);
                 if (!memberName.equalsIgnoreCase(columnName)){
-                    columnAnnArguments.add(genUtils.createAnnotationArgument("name", columnName)); //NOI18N
+                    columnAnnArguments.add(genUtils.createAnnotationArgument(generateJPA ? "name" : null, columnName)); //NOI18N
                 }
 
                 Integer length = m.getLength();
@@ -473,8 +576,12 @@ public class MicronautEntity extends RelatedCMPWizard {
                     }
                 }
 
-                if (!columnAnnArguments.isEmpty() && generateJPA) {
-                    annotations.add(genUtils.createAnnotation("javax.persistence.Column", columnAnnArguments)); //NOI18N
+                if (!columnAnnArguments.isEmpty()) {
+                    if (generateJPA) {
+                        annotations.add(genUtils.createAnnotation("javax.persistence.Column", columnAnnArguments)); //NOI18N
+                    } else if (isPKMember && needsPKClass) {
+                        annotations.add(genUtils.createAnnotation("io.micronaut.data.annotation.MappedProperty", columnAnnArguments)); //NOI18N
+                    }
                 }
 
                 String temporalType = getMemberTemporalType(m);
@@ -486,16 +593,8 @@ public class MicronautEntity extends RelatedCMPWizard {
                 return new Property(Modifier.PRIVATE, annotations, memberType, memberName);
             }
 
-            String getMemberType(EntityMember m) {
-                String memberType = m.getMemberType();
-                if ("java.sql.Date".equals(memberType)) { //NOI18N
-                    memberType = "java.util.Date";
-                } else if ("java.sql.Time".equals(memberType)) { //NOI18N
-                    memberType = "java.util.Date";
-                } else if ("java.sql.Timestamp".equals(memberType)) { //NOI18N
-                    memberType = "java.util.Date";
-                }
-                return memberType;
+            protected VariableTree createVariable(EntityMember m) {
+                return genUtils.createVariable(typeElement, m.getMemberName(), m.getMemberType());
             }
 
             private boolean isCharacterType(String type) {
@@ -628,6 +727,8 @@ public class MicronautEntity extends RelatedCMPWizard {
             private final List<Property> nonNullableProps = new ArrayList<>();
             // the names of the primary key columns
             private final List<String> pkColumnNames = new ArrayList<>();
+            // variables correspoding to the fields in the primary key classs (or empty if no primary key class)
+            private final List<VariableTree> pkClassVariables = new ArrayList<>();
             private Property pkProperty;
             private boolean pkGenerated;
 
@@ -639,6 +740,19 @@ public class MicronautEntity extends RelatedCMPWizard {
 
             @Override
             protected void initialize() throws IOException {
+                newClassTree = genUtils.ensureNoArgConstructor(newClassTree);
+                if (needsPKClass) {
+                    String pkFieldName = createFieldName(pkClassName);
+                    pkProperty = new Property(
+                            Modifier.PROTECTED,
+                            Collections.singletonList(genUtils.createAnnotation(generateJPA ? "javax.persistence.EmbeddedId" : "io.micronaut.data.annotation.EmbeddedId")), // NOI18N
+                            pkFQClassName,
+                            pkFieldName);
+                    properties.add(pkProperty);
+                }
+                if (generateSerdeable) {
+                    newClassTree = genUtils.addAnnotation(newClassTree, genUtils.createAnnotation("io.micronaut.serde.annotation.Serdeable")); //NOI18N
+                }
                 if (generateJPA) {
                     newClassTree = genUtils.addAnnotation(newClassTree, genUtils.createAnnotation("javax.persistence.Entity")); //NOI18N
                     if (dbMappings.getTableName() != null && !entityClassName.equalsIgnoreCase(dbMappings.getTableName())) {
@@ -658,9 +772,13 @@ public class MicronautEntity extends RelatedCMPWizard {
                 //skip generating already exist members for UPDATE type
                 String memberName = m.getMemberName();
                 boolean isPKMember = m.isPrimaryKey();
-                Property property;
+                Property property = null;
                 if (isPKMember) {
-                    pkProperty = property = createProperty(m);
+                    if (needsPKClass) {
+                        pkClassVariables.add(createVariable(m));
+                    } else {
+                        pkProperty = property = createProperty(m);
+                    }
                     String pkColumnName = dbMappings.getCMPFieldMapping().get(memberName);
                     pkColumnNames.add(pkColumnName);
                     pkGenerated = m.isAutoIncrement();
@@ -670,15 +788,23 @@ public class MicronautEntity extends RelatedCMPWizard {
                         nonNullableProps.add(property);
                     }
                 }
-                properties.add(property);
+                assert (property != null) || (property == null && isPKMember && needsPKClass);
+                if (property != null) {
+                    properties.add(property);
+                }
             }
 
             @Override
             protected void generateRelationship(RelationshipRole role) throws IOException {
                 String memberName = role.getFieldName();
-                if (memberName.endsWith("Collection")) { // NOI18N
-                    memberName = memberName.substring(0, memberName.length() - 10);
-                    memberName += memberName.endsWith("s") ? "es" : "s"; // NOI18N
+                if (role.isMany() && !role.isToMany()) {
+                    String roleName = role.getRoleName();
+                    if (roleName.endsWith("Id")) {
+                        roleName = roleName.substring(0, roleName.length() - 2);
+                    }
+                    if (!roleName.isEmpty()) {
+                        memberName = Character.toLowerCase(roleName.charAt(0)) + roleName.substring(1);
+                    }
                 }
                 String typeName = getRelationshipFieldType(role, entityClass.getPackage());
                 if(replacedTypeNames.containsKey(typeName)) {
@@ -776,17 +902,41 @@ public class MicronautEntity extends RelatedCMPWizard {
 
             @Override
             protected void finish() {
-                // create a constructor which takes all non-nullable non-relationship fields as args
-                if (nonNullableProps.size() > 0) {
-                    List<VariableTree> nonNullableParams = new ArrayList<>(nonNullableProps.size() + 1);
-                    if (pkProperty != null && !pkGenerated) {
-                        VariableTree pkFieldParam = genUtils.removeModifiers(pkProperty.getField());
+                if (pkProperty != null && !pkGenerated) {
+                    // create a constructor which takes the primary key field as argument
+                    VariableTree pkFieldParam = genUtils.removeModifiers(pkProperty.getField());
+                    List<VariableTree> pkFieldParams = Collections.singletonList(pkFieldParam);
+                    constructors.add(genUtils.createAssignmentConstructor(genUtils.createModifiers(Modifier.PUBLIC), entityClassName, pkFieldParams));
+
+                    // if different than pk fields constructor, add constructor
+                    // which takes all non-nullable non-relationship fields as args
+                    if (!nonNullableProps.isEmpty()) {
+                        List<VariableTree> nonNullableParams = new ArrayList<>(nonNullableProps.size() + 1);
                         nonNullableParams.add(pkFieldParam);
+                        for (Property property : nonNullableProps) {
+                            nonNullableParams.add(genUtils.removeModifiers(property.getField()));
+                        }
+                        constructors.add(genUtils.createAssignmentConstructor(genUtils.createModifiers(Modifier.PUBLIC), entityClassName, nonNullableParams));
                     }
-                    for (Property property : nonNullableProps) {
-                        nonNullableParams.add(genUtils.removeModifiers(property.getField()));
+
+                    // create a constructor which takes the fields of the primary key class as arguments
+                    if (!pkClassVariables.isEmpty()) {
+                        StringBuilder body = new StringBuilder(30 + 30 * pkClassVariables.size());
+                        body.append("{"); // NOI18N
+                        body.append("this." + pkProperty.getField().getName() + " = new " + pkClassName + "("); // NOI18N
+                        for (Iterator<VariableTree> i = pkClassVariables.iterator(); i.hasNext();) {
+                            body.append(i.next().getName());
+                            body.append(i.hasNext() ? ", " : ");"); // NOI18N
+                        }
+                        body.append("}"); // NOI18N
+                        TreeMaker make = copy.getTreeMaker();
+                        constructors.add(make.Constructor(
+                                make.Modifiers(EnumSet.of(Modifier.PUBLIC), Collections.<AnnotationTree>emptyList()),
+                                Collections.<TypeParameterTree>emptyList(),
+                                pkClassVariables,
+                                Collections.<ExpressionTree>emptyList(),
+                                body.toString()));
                     }
-                    constructors.add(genUtils.createAssignmentConstructor(genUtils.createModifiers(Modifier.PUBLIC), entityClassName, nonNullableParams));
                 }
             }
 
@@ -827,5 +977,45 @@ public class MicronautEntity extends RelatedCMPWizard {
                 }
             }
         }
+
+        private final class PKClassGenerator extends ClassGenerator {
+
+            public PKClassGenerator(WorkingCopy copy, EntityClass entityClass, boolean jpaSupported, boolean beanValidationSupported) throws IOException {
+                super(copy, entityClass, jpaSupported, beanValidationSupported);
+            }
+
+            @Override
+            protected void initialize() throws IOException {
+                newClassTree = genUtils.ensureNoArgConstructor(newClassTree);
+                if (generateSerdeable) {
+                    newClassTree = genUtils.addAnnotation(newClassTree, genUtils.createAnnotation("io.micronaut.serde.annotation.Serdeable")); //NOI18N
+                }
+                newClassTree = genUtils.addAnnotation(newClassTree, genUtils.createAnnotation(generateJPA ? "javax.persistence.Embeddable" : "io.micronaut.data.annotation.Embeddable")); // NOI18N
+            }
+
+            @Override
+            protected void generateMember(EntityMember m) throws IOException {
+                if (!m.isPrimaryKey()) {
+                    return;
+                }
+                Property property = createProperty(m);
+                properties.add(property);
+            }
+
+            @Override
+            protected void generateRelationship(RelationshipRole relationship) {
+            }
+
+            @Override
+            protected void finish() {
+                // add a constructor which takes the fields of the primary key class as arguments
+                List<VariableTree> parameters = new ArrayList<>(properties.size());
+                for (Property property : properties) {
+                    parameters.add(genUtils.removeModifiers(property.getField()));
+                }
+                constructors.add(genUtils.createAssignmentConstructor(genUtils.createModifiers(Modifier.PUBLIC), pkClassName, parameters));
+            }
+        }
+
     }
 }

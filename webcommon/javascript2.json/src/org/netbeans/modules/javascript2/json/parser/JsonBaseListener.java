@@ -21,10 +21,16 @@
 package org.netbeans.modules.javascript2.json.parser;
 
 /**
- * This class provides an empty implementation of {@link JsonListener},
- * which can be extended to create a listener which only needs to handle a subset
- * of the available methods.
+ * This class provides an empty implementation of {@link JsonListener}, which
+ * can be extended to create a listener which only needs to handle a subset of
+ * the available methods.
+ *
+ * @deprecated This class is deprecated since Antlr4.13.1. Use
+ * JsonParserBaseListener instead.
+ * @see JsonParserBaseListener
+ *
  */
+@Deprecated
 @SuppressWarnings("CheckReturnValue")
 public class JsonBaseListener extends JsonParserBaseListener {
 }

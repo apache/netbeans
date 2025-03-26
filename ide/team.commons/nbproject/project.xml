@@ -206,12 +206,10 @@
                 <friend>oracle.jdevimpl.nbteam.ide</friend>
                 <friend>org.netbeans.modules.bugtracking</friend>
                 <friend>org.netbeans.modules.bugtracking.bridge</friend>
-                <friend>org.netbeans.modules.bugtracking.kenai</friend>
                 <friend>org.netbeans.modules.odcs.tasks.bridge</friend>
                 <friend>org.netbeans.modules.bugtracking.commons</friend>
                 <friend>org.netbeans.modules.bugzilla</friend>
                 <friend>org.netbeans.modules.jira</friend>
-                <friend>org.netbeans.modules.kenai.ui</friend>
                 <friend>org.netbeans.modules.localtasks</friend>
                 <friend>org.netbeans.modules.odcs.ui</friend>
                 <friend>org.netbeans.modules.odcs.versioning</friend>

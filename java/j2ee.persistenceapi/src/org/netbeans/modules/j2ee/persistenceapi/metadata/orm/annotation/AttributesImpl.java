@@ -68,7 +68,11 @@ public class AttributesImpl implements Attributes, PropertyHandler {
                 break;
             }
             Map<String, ? extends AnnotationMirror> annByType = helper.getAnnotationsByType(typeElement.getAnnotationMirrors());
-            if (annByType.get("javax.persistence.Entity") != null || annByType.get("javax.persistence.MappedSuperclass") != null) { // NOI18N
+            if (annByType.get("jakarta.persistence.Entity") != null // NOI18N
+                    || annByType.get("jakarta.persistence.MappedSuperclass") != null // NOI18N
+                    || annByType.get("javax.persistence.Entity") != null // NOI18N
+                    || annByType.get("javax.persistence.MappedSuperclass") != null) // NOI18N
+            {
                 hierarchy.add(typeElement);
             }
         }
@@ -90,24 +94,46 @@ public class AttributesImpl implements Attributes, PropertyHandler {
             return;
         }
 
-        AnnotationMirror oneToOneAnnotation = annByType.get("javax.persistence.OneToOne"); // NOI18N
-        AnnotationMirror oneToManyAnnotation = annByType.get("javax.persistence.OneToMany"); // NOI18N
-        AnnotationMirror manyToOneAnnotation = annByType.get("javax.persistence.ManyToOne"); // NOI18N
-        AnnotationMirror manyToManyAnnotation = annByType.get("javax.persistence.ManyToMany"); // NOI18N
-        AnnotationMirror embeddedIdAnnotation = annByType.get("javax.persistence.EmbeddedId"); // NOI18N
+        AnnotationMirror oneToOneAnnotation = annByType.get("jakarta.persistence.OneToOne"); // NOI18N
+        AnnotationMirror oneToManyAnnotation = annByType.get("jakarta.persistence.OneToMany"); // NOI18N
+        AnnotationMirror manyToOneAnnotation = annByType.get("jakarta.persistence.ManyToOne"); // NOI18N
+        AnnotationMirror manyToManyAnnotation = annByType.get("jakarta.persistence.ManyToMany"); // NOI18N
+        AnnotationMirror embeddedIdAnnotation = annByType.get("jakarta.persistence.EmbeddedId"); // NOI18N
+
+        if(oneToManyAnnotation == null) {
+            oneToOneAnnotation = annByType.get("javax.persistence.OneToOne"); // NOI18N
+        }
+        if(oneToManyAnnotation == null) {
+            oneToManyAnnotation = annByType.get("javax.persistence.OneToMany"); // NOI18N
+        }
+        if(manyToOneAnnotation == null) {
+            manyToOneAnnotation = annByType.get("javax.persistence.ManyToOne"); // NOI18N
+        }
+        if(manyToManyAnnotation == null) {
+            manyToManyAnnotation = annByType.get("javax.persistence.ManyToMany"); // NOI18N
+        }
+        if(embeddedIdAnnotation == null) {
+            embeddedIdAnnotation = annByType.get("javax.persistence.EmbeddedId"); // NOI18N
+        }
 
         AnnotationMirror derivedIdAnnotation = null;
 
         if (oneToOneAnnotation != null) {
             oneToOneList.add(new OneToOneImpl(helper, element, oneToOneAnnotation, propertyName, annByType));
             //it may also be part of derived id
-            derivedIdAnnotation = annByType.get("javax.persistence.Id"); // NOI18N
+            derivedIdAnnotation = annByType.get("jakarta.persistence.Id"); // NOI18N
+            if(derivedIdAnnotation == null) {
+                derivedIdAnnotation = annByType.get("javax.persistence.Id"); // NOI18N
+            }
         } else if (oneToManyAnnotation != null) {
             oneToManyList.add(new OneToManyImpl(helper, element, oneToManyAnnotation, propertyName, annByType));
         } else if (manyToOneAnnotation != null) {
             manyToOneList.add(new ManyToOneImpl(helper, element, manyToOneAnnotation, propertyName, annByType));
             //it may also be part of derived id
-            derivedIdAnnotation = annByType.get("javax.persistence.Id"); // NOI18N
+            derivedIdAnnotation = annByType.get("jakarta.persistence.Id"); // NOI18N
+            if(derivedIdAnnotation == null) {
+                derivedIdAnnotation = annByType.get("javax.persistence.Id"); // NOI18N
+            }
         } else if (manyToManyAnnotation != null) {
             manyToManyList.add(new ManyToManyImpl(helper, element, manyToManyAnnotation, propertyName, annByType));
         } else {
@@ -115,31 +141,58 @@ public class AttributesImpl implements Attributes, PropertyHandler {
             if (embeddedIdAnnotation != null) {
                 embeddedId = new EmbeddedIdImpl(propertyName);
             } else {
-                AnnotationMirror versionAnnotation = annByType.get("javax.persistence.Version"); // NOI18N
-                AnnotationMirror idAnnotation = annByType.get("javax.persistence.Id"); // NOI18N
-                AnnotationMirror columnAnnotation = annByType.get("javax.persistence.Column"); // NOI18N
-                AnnotationMirror temporalAnnotation = annByType.get("javax.persistence.Temporal"); // NOI18N
+                AnnotationMirror versionAnnotation = annByType.get("jakarta.persistence.Version"); // NOI18N
+                AnnotationMirror idAnnotation = annByType.get("jakarta.persistence.Id"); // NOI18N
+                AnnotationMirror columnAnnotation = annByType.get("jakarta.persistence.Column"); // NOI18N
+                AnnotationMirror temporalAnnotation = annByType.get("jakarta.persistence.Temporal"); // NOI18N
+                if (versionAnnotation == null) {
+                    versionAnnotation = annByType.get("javax.persistence.Version"); // NOI18N
+                }
+                if (idAnnotation == null) {
+                    idAnnotation = annByType.get("javax.persistence.Id"); // NOI18N
+                }
+                if (columnAnnotation == null) {
+                    columnAnnotation = annByType.get("javax.persistence.Column"); // NOI18N
+                }
+                if (temporalAnnotation == null) {
+                    temporalAnnotation = annByType.get("javax.persistence.Temporal"); // NOI18N
+                }
                 String temporal = temporalAnnotation != null ? EntityMappingsUtilities.getTemporalType(helper, temporalAnnotation) : null;
                 Column column = new ColumnImpl(helper, columnAnnotation, propertyName.toUpperCase()); // NOI18N
                 if (idAnnotation != null) {
-                    AnnotationMirror generatedValueAnnotation = annByType.get("javax.persistence.GeneratedValue"); // NOI18N
+                    AnnotationMirror generatedValueAnnotation = annByType.get("jakarta.persistence.GeneratedValue"); // NOI18N
+                    if(generatedValueAnnotation == null) {
+                        generatedValueAnnotation = annByType.get("javax.persistence.GeneratedValue"); // NOI18N
+                    }
                     GeneratedValue genValue = generatedValueAnnotation != null ? new GeneratedValueImpl(helper, generatedValueAnnotation) : null;
                     idList.add(new IdImpl(propertyName, genValue, column, temporal));
                 } else if (versionAnnotation != null) {
                     versionList.add(new VersionImpl(propertyName, column, temporal));
                 } else {
-                    AnnotationMirror basicAnnotation = annByType.get("javax.persistence.Basic"); // NOI18N
+                    AnnotationMirror basicAnnotation = annByType.get("jakarta.persistence.Basic"); // NOI18N
+                    if(basicAnnotation == null) {
+                        basicAnnotation = annByType.get("javax.persistence.Basic"); // NOI18N
+                    }
                     basicList.add(new BasicImpl(helper, basicAnnotation, propertyName, column, temporal));
                 }
             }
         }
         //
         if (derivedIdAnnotation != null) {
-            AnnotationMirror columnAnnotation = annByType.get("javax.persistence.Column"); // NOI18N, TODO some annotations may not be valid for derived id and it may  not be requires, also need to separate from usual id later(just like embedded ids) to find if exist
-            AnnotationMirror temporalAnnotation = annByType.get("javax.persistence.Temporal"); // NOI18N
+            AnnotationMirror columnAnnotation = annByType.get("jakarta.persistence.Column"); // NOI18N, TODO some annotations may not be valid for derived id and it may  not be requires, also need to separate from usual id later(just like embedded ids) to find if exist
+            if (columnAnnotation == null) {
+                columnAnnotation = annByType.get("javax.persistence.Column"); // NOI18N, TODO some annotations may not be valid for derived id and it may  not be requires, also need to separate from usual id later(just like embedded ids) to find if exist
+            }
+            AnnotationMirror temporalAnnotation = annByType.get("jakarta.persistence.Temporal"); // NOI18N
+            if(temporalAnnotation == null) {
+                temporalAnnotation = annByType.get("javax.persistence.Temporal"); // NOI18N
+            }
             String temporal = temporalAnnotation != null ? EntityMappingsUtilities.getTemporalType(helper, temporalAnnotation) : null;
             Column column = new ColumnImpl(helper, columnAnnotation, propertyName.toUpperCase()); // NOI18N
-            AnnotationMirror generatedValueAnnotation = annByType.get("javax.persistence.GeneratedValue"); // NOI18N
+            AnnotationMirror generatedValueAnnotation = annByType.get("jakarta.persistence.GeneratedValue"); // NOI18N
+            if(generatedValueAnnotation == null) {
+                generatedValueAnnotation = annByType.get("javax.persistence.GeneratedValue"); // NOI18N
+            }
             GeneratedValue genValue = generatedValueAnnotation != null ? new GeneratedValueImpl(helper, generatedValueAnnotation) : null;
             IdImpl id = new IdImpl(propertyName, genValue, column, temporal);
             idList.add(id);
@@ -169,7 +222,7 @@ public class AttributesImpl implements Attributes, PropertyHandler {
 
     @Override
     public Id[] getId() {
-        return idList.toArray(new Id[idList.size()]);
+        return idList.toArray(new Id[0]);
     }
 
     @Override
@@ -196,7 +249,7 @@ public class AttributesImpl implements Attributes, PropertyHandler {
     }
 
     public Id[] getDerivedId() {
-        return derivedIdList.toArray(new Id[derivedIdList.size()]);
+        return derivedIdList.toArray(new Id[0]);
     }
 
     @Override
@@ -236,7 +289,7 @@ public class AttributesImpl implements Attributes, PropertyHandler {
 
     @Override
     public Basic[] getBasic() {
-        return basicList.toArray(new Basic[basicList.size()]);
+        return basicList.toArray(new Basic[0]);
     }
 
     @Override
@@ -276,7 +329,7 @@ public class AttributesImpl implements Attributes, PropertyHandler {
 
     @Override
     public Version[] getVersion() {
-        return versionList.toArray(new Version[versionList.size()]);
+        return versionList.toArray(new Version[0]);
     }
 
     @Override
@@ -316,7 +369,7 @@ public class AttributesImpl implements Attributes, PropertyHandler {
 
     @Override
     public ManyToOne[] getManyToOne() {
-        return manyToOneList.toArray(new ManyToOne[manyToOneList.size()]);
+        return manyToOneList.toArray(new ManyToOne[0]);
     }
 
     @Override
@@ -356,7 +409,7 @@ public class AttributesImpl implements Attributes, PropertyHandler {
 
     @Override
     public OneToMany[] getOneToMany() {
-        return oneToManyList.toArray(new OneToMany[oneToManyList.size()]);
+        return oneToManyList.toArray(new OneToMany[0]);
     }
 
     @Override
@@ -396,7 +449,7 @@ public class AttributesImpl implements Attributes, PropertyHandler {
 
     @Override
     public OneToOne[] getOneToOne() {
-        return oneToOneList.toArray(new OneToOne[oneToOneList.size()]);
+        return oneToOneList.toArray(new OneToOne[0]);
     }
 
     @Override
@@ -436,7 +489,7 @@ public class AttributesImpl implements Attributes, PropertyHandler {
 
     @Override
     public ManyToMany[] getManyToMany() {
-        return manyToManyList.toArray(new ManyToMany[manyToManyList.size()]);
+        return manyToManyList.toArray(new ManyToMany[0]);
     }
 
     @Override

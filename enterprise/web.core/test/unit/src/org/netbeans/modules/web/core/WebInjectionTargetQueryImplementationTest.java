@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.web.core;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,18 +31,10 @@ import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.modules.j2ee.metadata.model.support.JavaSourceTestCase;
 import org.netbeans.modules.j2ee.metadata.model.support.TestUtilities;
-import org.netbeans.modules.j2ee.core.api.support.java.SourceUtils;
 import static org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 
-
-
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
-
-import org.netbeans.junit.NbTestCase;
-
-import org.netbeans.modules.web.core.test.TestUtil;
 
 /**
  *
@@ -52,7 +43,6 @@ import org.netbeans.modules.web.core.test.TestUtil;
  */
 public class WebInjectionTargetQueryImplementationTest extends JavaSourceTestCase {
     
-    private String serverID;
     private FileObject ordinaryClass;
     private FileObject fileSubclass;
     private FileObject directServletSubclass;
@@ -82,7 +72,7 @@ public class WebInjectionTargetQueryImplementationTest extends JavaSourceTestCas
         final List<String> source = new ArrayList<String>(1);
         final boolean[] result = {false};  
         
-        CancellableTask task = new CancellableTask<CompilationController>() {
+        CancellableTask<CompilationController> task = new CancellableTask<CompilationController>() {
             public void run(CompilationController controller) throws IOException {
                 controller.toPhase(Phase.ELEMENTS_RESOLVED);
                 TypeElement thisTypeEl = controller.getElements().getTypeElement(source.get(0));
@@ -91,7 +81,7 @@ public class WebInjectionTargetQueryImplementationTest extends JavaSourceTestCas
             public void cancel() {}
         };
         
-        IndexingManager.getDefault().refreshIndexAndWait(srcFO.getURL(), null);
+        IndexingManager.getDefault().refreshIndexAndWait(srcFO.toURL(), null);
         ClasspathInfo cpi = ClasspathInfo.create(srcFO);
         
         JavaSource javaSrc;
@@ -144,8 +134,8 @@ public class WebInjectionTargetQueryImplementationTest extends JavaSourceTestCas
         
     }
 
+    @Override
     protected void tearDown()  {
-        serverID = null;
         ordinaryClass = null;
         fileSubclass = null;
         directServletSubclass = null;

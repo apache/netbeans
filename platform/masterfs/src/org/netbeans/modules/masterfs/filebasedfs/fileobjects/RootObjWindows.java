@@ -145,7 +145,7 @@ public final class RootObjWindows extends FileObject {
                 rootChildren.add(root);
             }
         }
-        return rootChildren.toArray(new FileObject[rootChildren.size()]);
+        return rootChildren.toArray(new FileObject[0]);
     }
 
     @Override

@@ -409,7 +409,7 @@ public final class SvnOptionsController extends OptionsPanelController implement
             );
             variables.add(variable);   
         }       
-        labelsPanel.labelsList.setListData(variables.toArray(new LabelVariable[variables.size()]));                
+        labelsPanel.labelsList.setListData(variables.toArray(new LabelVariable[0]));                
                 
         String title = NbBundle.getMessage(AnnotationSettings.class, "AnnotationSettings.labelVariables.title");
         String acsd = NbBundle.getMessage(AnnotationSettings.class, "AnnotationSettings.labelVariables.acsd");
@@ -450,7 +450,7 @@ public final class SvnOptionsController extends OptionsPanelController implement
             sb.append(annotation.substring(0, pos));
             sb.append(variable);
             if(pos < annotation.length()) {
-                sb.append(annotation.substring(pos, annotation.length()));
+                sb.append(annotation.substring(pos));
             }
             panel.annotationTextField.setText(sb.toString());
             panel.annotationTextField.requestFocus();

@@ -136,7 +136,7 @@ public abstract class SearchGroup {
 
     /** Gets search root nodes.  */
     public Node[] getSearchRoots() {
-        return searchRoots.toArray(new Node[searchRoots.size()]);
+        return searchRoots.toArray(new Node[0]);
     }
     
     /** This method is invoked when the current search is being stopped.
@@ -161,7 +161,7 @@ public abstract class SearchGroup {
     /**
      * Does search.
      *
-     * @throw RuntimeException USER level annotated runtime exception
+     * @throws RuntimeException USER level annotated runtime exception
      *        on low memory condition (instead of OutOfMemoryError)
      */
     public void search() {
@@ -274,7 +274,7 @@ public abstract class SearchGroup {
      * to all search types) is computed. Then a search group is created
      * for each of the <code>Class</code>s.
      *
-     * @param  search types to create search groups for
+     * @param items search types to create search groups for
      * @return  created search groups
      * @see  SearchType#getSearchTypeClasses()
      */
@@ -309,7 +309,7 @@ public abstract class SearchGroup {
                 groupSet.add(group);
             }
         }
-        return groupSet.toArray(new SearchGroup[groupSet.size()]);
+        return groupSet.toArray(new SearchGroup[0]);
     }
 
 

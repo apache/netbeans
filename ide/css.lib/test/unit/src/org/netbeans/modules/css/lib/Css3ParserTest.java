@@ -27,9 +27,15 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.text.BadLocationException;
+import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.TokenStream;
+import org.netbeans.junit.Log;
 import org.netbeans.modules.css.lib.api.*;
+import org.netbeans.modules.css.lib.nbparser.ProgressingTokenStream;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.openide.filesystems.FileObject;
+
+import static org.netbeans.modules.css.lib.TestUtil.dumpResult;
 
 /**
  *
@@ -882,7 +888,7 @@ public class Css3ParserTest extends CssTestBase {
         CssParserResult result = TestUtil.parse(invalidCss);
         assertTrue(result.getParserDiagnostics().size() > 0);
         
-        assertParses(validCss1);
+        assertParses(validCss1, true);
         assertParses(validCss2);
         
     }
@@ -907,7 +913,15 @@ public class Css3ParserTest extends CssTestBase {
         assertTrue(result5.getParserDiagnostics().size() > 0);
         
     }
-    
+
+    public void testSupportsFunctions() throws Exception {
+        assertParses("@supports selector(h2 > p) {}");
+        assertParses("@supports font-tech(color-COLRv1) {}");
+        assertParses("@supports font-format(opentype) {}");
+        assertParses("@supports font-format(opentype) and selector(h2 > p) {}");
+        assertParses("@supports font-format(opentype) and (color: hotpink) {}");
+    }
+
     public void testCounterStyle() throws ParseException, BadLocationException {
         String content = "@counter-style cool { glyph: '|'; }";
 
@@ -1216,6 +1230,35 @@ public class Css3ParserTest extends CssTestBase {
 
         assertNotNull(node);
 
+        // Validate, that space between @rule name and opening brace is
+        // supported, but can be omitted
+        assertParses(
+            """
+            @-ms-viewport {
+                width:1024px;
+            }
+            """
+        );
+
+        assertParses(
+            """
+            @-ms-viewport{
+                width:1024px;
+            }
+            """
+        );
+
+        assertParses(
+            """
+            @dummy test {}
+            """
+        );
+
+        assertParses(
+            """
+            @dummy test{}
+            """
+        );
     }
 
     //Bug 211103 - Freezes on starting IDE at "Scanning project" for too long
@@ -1240,6 +1283,64 @@ public class Css3ParserTest extends CssTestBase {
 //
 //
 //    }
+
+    public void testKeyFramesShort()  throws ParseException, BadLocationException {
+        assertParses(
+            """
+            @-webkit-keyframes ozx-delay-anim {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+            """, false
+        );
+        assertParses(
+            """
+            @keyframes ozx-delay-anim {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+            """, false
+        );
+        assertParses(
+            """
+            @-webkit-keyframes ozx-delay-anim {
+                from {
+                    transform: rotate(0deg);
+                }
+                50% {
+                    transform: rotate(180deg);
+                }
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+            """, false
+        );
+        assertParses(
+            """
+            @keyframes ozx-delay-anim {
+                from {
+                    transform: rotate(0deg);
+                }
+                50% {
+                    transform: rotate(180deg);
+                }
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+            """, false
+        );
+    }
+
     public void testWebkitKeyFrames() {
         String code = "@-webkit-keyframes spin { 40% {  left: 150px;  } from { left: 2px } }";
         //             012345678901234567890123456789012345678901234567890123456789
@@ -1280,6 +1381,99 @@ public class Css3ParserTest extends CssTestBase {
         assertNotNull(NodeUtil.query(declarations, "declaration/propertyDeclaration/property"));
         assertNotNull(NodeUtil.query(declarations, "declaration/propertyDeclaration/propertyValue"));
 
+    }
+
+    public void testKeyFrames() {
+        String code = "@keyframes spin { 40% {  left: 150px;  } from { left: 2px } }";
+        //             012345678901234567890123456789012345678901234567890123456789
+        //             0         1         2         3         4         5
+        CssParserResult result = TestUtil.parse(code);
+
+        assertResultOK(result);
+
+//        TestUtil.dumpResult(result);
+        Node wkf = NodeUtil.query(result.getParseTree(),
+                "styleSheet/body/bodyItem/at_rule/vendorAtRule/webkitKeyframes");
+
+        assertNotNull(wkf);
+
+        Node atRuleName = NodeUtil.query(wkf, "atRuleId");
+        assertNotNull(atRuleName);
+        assertEquals("spin", atRuleName.image().toString());
+
+        //block1
+        Node block = NodeUtil.query(wkf, "webkitKeyframesBlock|0");
+        Node selectors = NodeUtil.query(block, "webkitKeyframeSelectors");
+        assertNotNull(selectors);
+        assertEquals("40%", selectors.image().toString());
+
+        Node declarations = NodeUtil.query(wkf, "webkitKeyframesBlock/declarations");
+        assertNotNull(declarations);
+        assertNotNull(NodeUtil.query(declarations, "declaration/propertyDeclaration/property"));
+        assertNotNull(NodeUtil.query(declarations, "declaration/propertyDeclaration/propertyValue"));
+
+        //block2
+        block = NodeUtil.query(wkf, "webkitKeyframesBlock|1");
+        selectors = NodeUtil.query(block, "webkitKeyframeSelectors");
+        assertNotNull(selectors);
+        assertEquals("from", selectors.image().toString());
+
+        declarations = NodeUtil.query(wkf, "webkitKeyframesBlock/declarations");
+        assertNotNull(declarations);
+        assertNotNull(NodeUtil.query(declarations, "declaration/propertyDeclaration/property"));
+        assertNotNull(NodeUtil.query(declarations, "declaration/propertyDeclaration/propertyValue"));
+
+    }
+
+    public void testKeyframesVendored() {
+        assertParses(
+            """
+            @keyframes ozx-delay-anim {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+            """, false
+        );
+        assertParses(
+            """
+            @-webkit-keyframes ozx-delay-anim {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+            """, false
+        );
+        assertParses(
+            """
+            @-moz-keyframes ozx-delay-anim {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+            """, false
+        );
+        assertParses(
+            """
+            @-o-keyframes ozx-delay-anim {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+            """, false
+        );
     }
 
     //http://en.wikipedia.org/wiki/CSS_filter#Star_hack
@@ -1478,10 +1672,25 @@ public class Css3ParserTest extends CssTestBase {
         assertParses(".less {}");
     }
 
+    public void testParseVariable() {
+        assertParses("h1 {--demoVar: 1em; margin: var(--demoVar);}");
+        assertParses("h1 {--demoVar: 1em; margin: var(--demoVar, 3ex 2em);}");
+        assertParses(":root {--primary-font: 'Arial', 'Helvetica', sans-serif;}");
+        assertParses("h1 {--grid-gutter: ( var(--margins) * var(--spacing-unit));}");
+        assertParses("h1 {--grid-gutter:;}");
+    }
+
     public void testMathExpressionInFunction() {
         assertParses("div {\n"
                 + "    padding: calc(1 * 1);\n"
                 + "}");
+    }
+
+    public void testCalcVarCombination() {
+        assertParses("div {width: calc(var(--widthC) + 2px);}");
+        assertParses("div {width: calc(var(--grid-margin) - var(--cell-margin));}");
+        assertParses("div {width: var(--demoVal, calc(var(--grid-margin) - var(--cell-margin)));}");
+        assertParses(read(getTestFile("testfiles/google-chrome-css-custom-properties.css")));
     }
     
     public void testLessScssKeywordInCss() {
@@ -1585,13 +1794,6 @@ public class Css3ParserTest extends CssTestBase {
                 + "}");
     }
 
-    public void testParseVariable() {
-        assertParses("h1 {"
-            + "--demoVar: 1em;"
-            + "margin: var(--demoVar, 3ex 2em);"
-            + "}");
-    }
-
     public void testParseSelectorListCSS4() {
         assertParses("h1:not(.dummy) {}");
         assertParses("h1:not( .h2:visible ) {}");
@@ -1604,6 +1806,9 @@ public class Css3ParserTest extends CssTestBase {
         assertParses("*|*:is(*:hover, *:focus) {}");
         assertParses("a:where(:valid, :unsupported) {}");
         assertParses("a:where(:not(:hover)) {text-decoration: none;}");
+        assertParses("body:has(#aCheck:checked) {}");
+        assertParses(":is(h1, h2, h3):has(+ :is(h2, h3, h4)) {}");
+        assertParses(":is(h1, h2, h3):has(+ h2, + h3, + h4) {}");
     }
 
     public void testParsePage() {
@@ -1618,4 +1823,121 @@ public class Css3ParserTest extends CssTestBase {
         assertParses("@page {  background-color: red; @top-center { content: attr(test) } @bottom-center { content: attr(test2) } }");
         assertParses("@page{@top-left{content: attr(test)}}");
     }
+
+    public void testParseLayer() {
+        assertParses("@layer layer1;");
+        assertParses("@layer layer1, layer2;");
+        assertParses("@layer layer1 {}");
+        assertParses("@layer layer1 {h1 {font-weight: bold}}");
+        assertParses("@layer layer1 {h1 {font-weight: bold}} @layer layer2 {}");
+        assertParses("@layer layer1.sublayer1 {h1 {font-weight: bold}}");
+        assertParses("@layer layer1 { @layer sublayer1 {}}");
+        assertParses("@layer layer1 { @layer sublayer1 {h1 {font-weight: bold}}}");
+        assertParses("@layer layer1 { @layer sublayer1, sublayer2; @layer sublayer1 {} @layer sublayer2{}}");
+        assertParses("@layer {}");
+        assertParses("@layer {h1 {font-weight: bold}}");
+        assertParses("@layer {h1 {font-weight: bold}} @layer layer2 {}");
+        assertParses("@import \"test.css\" layer;");
+        assertParses("@import \"test.css\" layer(test);");
+        assertParses("@import \"test.css\" layer(test.test2);");
+        assertParses("@layer default;\n"
+                + "@import url(theme.css) layer(theme);\n"
+                + "@layer components;\n"
+                + "@layer default {}");
+    }
+
+    public void testParseContainer() throws Exception {
+        assertParses("@container test style(--responsive: true) {}");
+        assertParses("@container style(--responsive: true) {}");
+        assertParses("@container my-layout (inline-size > 45em) {}");
+        assertParses("@container my-layout (45em < inline-size) {}");
+        assertParses("@container (--cards: small) {}");
+        assertParses("@container (--cards: small) { h1 {background: green; border: 1px solid green; } }");
+        assertParses("@container my-component-library (inline-size > 30em) {}");
+        assertParses("@container card (inline-size > 30em) { @container style(--responsive: true) { } }");
+        assertParses("@container (width < 30em) { }");
+        assertParses("@container (20em < width < 30em) { }");
+        assertParses("@container name (max-height: 780px) {}");
+    }
+
+    public void testFlexibleAtRules() throws Exception {
+        assertParses("@apply bg-white p-5 rounded-lg shadow;");
+        assertParses("@tailwind base;");
+
+        assertParses(
+            """
+            @layer components {
+              .card {
+                @apply bg-white p-5 rounded-lg shadow;
+              }
+            }
+            """);
+
+        assertParses(
+            """
+            @layer components{
+              .card {
+                @apply bg-white p-5 rounded-lg shadow;
+              }
+            }
+            """);
+
+        // This should not only parse, but also result in two independent
+        // at rules
+        CssParserResult result = TestUtil.parse(
+            """
+            @layer components {
+              .card {
+                @apply bg-white p-5 rounded-lg shadow;
+              }
+            } @tailwind {}
+            """);
+        assertResultOK(result);
+        //NodeUtil.dumpTree(result.getParseTree());
+        Node layerAtRule = NodeUtil.query(result.getParseTree(), "styleSheet/body/bodyItem|0/at_rule/layerAtRule");
+        Node tailWindRule = NodeUtil.query(result.getParseTree(), "styleSheet/body/bodyItem|1/at_rule/vendorAtRule/generic_at_rule");
+        assertNotNull(layerAtRule);
+        assertNotNull(tailWindRule);
+        assertTrue(layerAtRule.type() == NodeType.layerAtRule);
+        assertTrue(tailWindRule.type() == NodeType.generic_at_rule);
+
+        // Cut out from a real world example where a custom @-rule is followed
+        // by futher rules
+        result = TestUtil.parse(
+            """
+            @-ms-viewport{
+                width:device-width
+            }
+            .visible-lg,.visible-md,.visible-sm,.visible-xs{
+                display:none!important
+            }
+            @media (min-width:768px) and (max-width:991px){
+                .visible-sm{
+                    display:block!important
+                }
+                table.visible-sm{
+                    display:table!important
+                }
+                tr.visible-sm{
+                    display:table-row!important
+                }
+                td.visible-sm,th.visible-sm{
+                    display:table-cell!important
+                }
+            }
+            """
+        );
+
+         TestUtil.dumpResult(result);
+
+        // We should only get a warning fro the `device-width` value for the `width` property
+        assertTrue(result.getDiagnostics().size() == 1);
+        assertTrue(result.getDiagnostics().get(0).getDescription().contains("device-width"));
+
+        assertNotNull(NodeUtil.query(result.getParseTree(), "styleSheet/body/bodyItem|0/at_rule"));
+        assertNotNull(NodeUtil.query(result.getParseTree(), "styleSheet/body/bodyItem|1/rule"));
+        assertNotNull(NodeUtil.query(result.getParseTree(), "styleSheet/body/bodyItem|2/at_rule/media"));
+        assertNull(NodeUtil.query(result.getParseTree(), "styleSheet/body/bodyItem|3"));
+    }
+
 }

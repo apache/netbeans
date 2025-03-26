@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.13
+#Version 2.22
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1285,6 +1285,7 @@ meth public boolean isHotDeployFeatureAvailable()
 meth public boolean isProcessRunning()
 meth public boolean isRemote()
 meth public boolean isRemovable()
+meth public boolean isWSL()
 meth public final org.netbeans.modules.payara.common.CommonServerSupport getCommonSupport()
 meth public final org.netbeans.modules.payara.spi.PayaraModule$ServerState getServerState()
  anno 0 java.lang.Deprecated()
@@ -1338,7 +1339,7 @@ meth public org.openide.nodes.Node getFullNode()
 meth public org.openide.util.Lookup getLookup()
 meth public static java.lang.String getPasswordFromKeyring(java.lang.String,java.lang.String)
 meth public static java.lang.String passwordKey(java.lang.String,java.lang.String)
-meth public static org.netbeans.modules.payara.common.PayaraInstance create(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,int,int,java.lang.String,java.lang.String,boolean,java.lang.String,java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.payara.common.PayaraInstanceProvider)
+meth public static org.netbeans.modules.payara.common.PayaraInstance create(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,int,int,java.lang.String,java.lang.String,boolean,boolean,java.lang.String,java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.payara.common.PayaraInstanceProvider)
 meth public static org.netbeans.modules.payara.common.PayaraInstance create(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,int,int,java.lang.String,java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.payara.common.PayaraInstanceProvider)
  anno 0 java.lang.Deprecated()
 meth public static org.netbeans.modules.payara.common.PayaraInstance create(java.util.Map<java.lang.String,java.lang.String>,org.netbeans.modules.payara.common.PayaraInstanceProvider)
@@ -1353,6 +1354,7 @@ meth public void setAdminPort(int)
 meth public void setAdminPort(java.lang.String)
 meth public void setAdminUser(java.lang.String)
 meth public void setContainerPath(java.lang.String)
+meth public void setDocker(boolean)
 meth public void setHost(java.lang.String)
 meth public void setHostPath(java.lang.String)
 meth public void setHttpPort(int)
@@ -1360,6 +1362,7 @@ meth public void setHttpPort(java.lang.String)
 meth public void setJavaHome(java.lang.String)
 meth public void setProcess(java.lang.Process)
 meth public void setProperties(org.netbeans.modules.payara.common.PayaraInstance$Props)
+meth public void setWSL(boolean)
 supr java.lang.Object
 hfds INSTANCE_FO_ATTR,KEYRING_IDENT_SEPARATOR,KEYRING_NAME_SEPARATOR,KEYRING_NAME_SPACE,LOGGER,LOWEST_USER_PORT,commonInstance,commonSupport,currentFactories,domainXMLListener,full,fullNode,ic,instanceProvider,localLookup,lookupResult,platformVersion,process,properties,removable,version
 
@@ -1523,11 +1526,14 @@ intf org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI
 meth public boolean equals(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public boolean equalsMajorMinor(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public boolean isDownloadable()
+meth public boolean isEE10Supported()
 meth public boolean isEE7Supported()
 meth public boolean isEE8Supported()
+meth public boolean isEE9Supported()
 meth public boolean isInstalledInDirectory(java.io.File)
 meth public boolean isMinimumSupportedVersion()
 meth public int getVersionInt()
+meth public java.lang.String getBuild()
 meth public java.lang.String getDirectUrl()
 meth public java.lang.String getIndirectUrl()
 meth public java.lang.String getLicenseUrl()
@@ -1535,7 +1541,6 @@ meth public java.lang.String getUriFragment()
 meth public java.lang.String toFullString()
 meth public java.lang.String toString()
 meth public org.netbeans.modules.payara.tooling.data.PayaraVersion getVersion()
-meth public short getBuild()
 meth public short getMajor()
 meth public short getMinor()
 meth public short getUpdate()
@@ -1762,6 +1767,7 @@ fld protected javax.swing.JCheckBox jdbcDriverDeployment
 fld protected javax.swing.JCheckBox localIpCB
 fld protected javax.swing.JCheckBox preserveSessions
 fld protected javax.swing.JComboBox hostLocalField
+fld protected javax.swing.JComboBox<java.lang.String> instanceTypeComboBox
 fld protected javax.swing.JLabel containerPathLabel
 fld protected javax.swing.JLabel dasPortLabel
 fld protected javax.swing.JLabel domainLabel
@@ -1771,6 +1777,7 @@ fld protected javax.swing.JLabel hostPathLabel
 fld protected javax.swing.JLabel hostRemoteLabel
 fld protected javax.swing.JLabel httpPortLabel
 fld protected javax.swing.JLabel installationLocationLabel
+fld protected javax.swing.JLabel instanceTypeLabel
 fld protected javax.swing.JLabel passwordLabel
 fld protected javax.swing.JLabel targetLabel
 fld protected javax.swing.JLabel userNameLabel
@@ -1795,22 +1802,22 @@ meth protected void enableFields()
 meth protected void initCheckBoxes()
 meth protected void initCredentials()
 meth protected void initDirectoriesFields()
-meth protected void initDockerVolume()
 meth protected void initDomainAndTarget()
 meth protected void initFlagsFromProperties(org.netbeans.modules.payara.common.ui.InstancePanel$CheckBoxProperties)
 meth protected void initFormFields()
+meth protected void initInstanceType()
 meth protected void storeCheckBoxes()
 meth protected void storeCredentials()
-meth protected void storeDockerVolume()
 meth protected void storeFormFields()
 meth protected void storeHost()
+meth protected void storeInstanceType()
 meth protected void storePorts()
 meth protected void storeTarget()
 meth protected void updatePasswordVisibility()
 meth public void addNotify()
 meth public void removeNotify()
 supr javax.swing.JPanel
-hfds LOGGER,MAX_PORT_VALUE
+hfds DEFAULT_INSTANCE,DOCKER_INSTANCE,LOGGER,MAX_PORT_VALUE,WSL_INSTANCE
 
 CLSS protected static org.netbeans.modules.payara.common.ui.InstancePanel$CheckBoxProperties
  outer org.netbeans.modules.payara.common.ui.InstancePanel
@@ -2146,6 +2153,7 @@ fld public final static java.lang.String USERNAME_ATTR = "username"
 fld public final static java.lang.String USE_IDE_PROXY_FLAG = "useIDEProxyOn"
 fld public final static java.lang.String USE_SHARED_MEM_ATTR = "use.shared.mem"
 fld public final static java.lang.String WEB_CONTAINER = "web"
+fld public final static java.lang.String WSL_ATTR = "wsl"
 innr public final static !enum ServerState
 meth public abstract boolean isRemote()
 meth public abstract boolean isRestfulLogAccessSupported()
@@ -2306,15 +2314,17 @@ fld public final static char SEPARATOR = '.'
 fld public final static java.lang.String SEPARATOR_PATTERN = "\u005c."
 meth public abstract boolean equals(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public abstract boolean equalsMajorMinor(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
+meth public abstract boolean isEE10Supported()
 meth public abstract boolean isEE7Supported()
 meth public abstract boolean isEE8Supported()
+meth public abstract boolean isEE9Supported()
 meth public abstract boolean isMinimumSupportedVersion()
+meth public abstract java.lang.String getBuild()
 meth public abstract java.lang.String getDirectUrl()
 meth public abstract java.lang.String getIndirectUrl()
 meth public abstract java.lang.String getLicenseUrl()
 meth public abstract java.lang.String getUriFragment()
 meth public abstract java.lang.String toFullString()
-meth public abstract short getBuild()
 meth public abstract short getMajor()
 meth public abstract short getMinor()
 meth public abstract short getUpdate()
@@ -2322,6 +2332,7 @@ meth public abstract short getUpdate()
 CLSS public abstract interface org.netbeans.modules.payara.tooling.data.PayaraServer
 meth public abstract boolean isDocker()
 meth public abstract boolean isRemote()
+meth public abstract boolean isWSL()
 meth public abstract int getAdminPort()
 meth public abstract int getPort()
 meth public abstract java.lang.String getAdminPassword()

@@ -187,7 +187,7 @@ NodeActionsProviderFilter, Constants {
             }
         }
         myActions.addAll(Arrays.asList(actions));
-        return (Action[]) myActions.toArray(new Action[myActions.size()]);
+        return (Action[]) myActions.toArray(new Action[0]);
     }
 
     
@@ -220,11 +220,11 @@ NodeActionsProviderFilter, Constants {
                 else
                 if ("short".equals (type)) {
                     String rv = Integer.toHexString(Short.parseShort(var.getValue()));
-                    if (rv.length() > 4) rv = rv.substring(rv.length() - 4, rv.length());
+                    if (rv.length() > 4) rv = rv.substring(rv.length() - 4);
                     return "0x" + rv;
                 } else if ("byte".equals(type)) {
                     String rv = Integer.toHexString(Byte.parseByte(var.getValue()));
-                    if (rv.length() > 2) rv = rv.substring(rv.length() - 2, rv.length());
+                    if (rv.length() > 2) rv = rv.substring(rv.length() - 2);
                     return "0x" + rv;
                 } else if ("char".equals(type)) {
                     int c = getChar(var.getValue());
@@ -264,11 +264,11 @@ NodeActionsProviderFilter, Constants {
                     return Integer.toBinaryString(Integer.parseInt(var.getValue()));
                 else if ("short".equals(type)) {
                     String rv = Integer.toBinaryString(Short.parseShort(var.getValue()));
-                    if (rv.length() > 16) rv = rv.substring(rv.length() - 16, rv.length());
+                    if (rv.length() > 16) rv = rv.substring(rv.length() - 16);
                     return rv;
                 } else if ("byte".equals(type)) {
                     String rv = Integer.toBinaryString(Byte.parseByte(var.getValue()));
-                    if (rv.length() > 8) rv = rv.substring(rv.length() - 8, rv.length());
+                    if (rv.length() > 8) rv = rv.substring(rv.length() - 8);
                     return rv;
                 } else if ("char".equals(type)) {
                     int c = getChar(var.getValue());

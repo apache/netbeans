@@ -58,10 +58,9 @@ import org.openide.util.Lookup;
  * <p>
  * Since these parameters are passed <b>externally</b>, there's an utility method, {@link #buildExplicitParameters(org.openide.util.Lookup)}
  * that builds the explicit parameter instruction based on {@link Lookup} contents. The parameters are
- * merged in the order of the {@link Builder#position configured rank} and appearance (in the sort ascending order). 
+ * merged in the order of the {@link Builder#position(int)  configured rank} and appearance (in the sort ascending order). 
  * The default rank is {@code 0}, which allows both append or prepend parameters. If an item's 
- * {@link ExplicitProcessParametersTest#isArgReplacement()} is true, all arguments collected so far are discarded.
- * <p>
+ * {@link #isArgReplacement()} is true, all arguments collected so far are discarded.
  * <div class="nonnormative">
  * If the combining algorithm is acceptable for the caller's purpose, the following pattern may be used to build the final
  * command line:
@@ -72,14 +71,14 @@ import org.openide.util.Lookup;
  * {@code runContext} Lookup. 
  * Supposing that a Maven project module supports {@code ExplicitProcessParameters} (it does from version 2/2.144), the caller may influence or override the
  * parameters passed to the maven exec:exec task (for Run action) this way:
- * <code><pre>
+ * <pre>
  *   ActionProvider ap = ... ; // obtain ActionProvider from the project.
  *   ExplicitProcessParameters explicit = ExplicitProcessParameters.builder().
  *           launcherArg("-DvmArg2=2").
  *           arg("paramY").
  *      build();
  *   ap.invokeAction(ActionProvider.COMMAND_RUN, Lookups.fixed(explicit));
- * </pre></code>
+ * </pre>
  * By default, <b>args</b> instruction(s) will discard the default parameters, so the above example will also <b>ignore</b> all application
  * parameters provided in maven action mapping. The caller may, for example, want to just <b>append</b> parameters (i.e. list of files ?) and
  * completely replace (default) VM parameters which may be unsuitable for the operation:
@@ -258,8 +257,8 @@ public final class ExplicitProcessParameters {
      */
     public static ExplicitProcessParameters buildExplicitParameters(Collection<? extends ExplicitProcessParameters> items) {
         List<? extends ExplicitProcessParameters> all = new ArrayList<>(items);
-        Collections.sort(all, (a, b) -> a.position - b.position);
-        Builder b = builder();;
+        all.sort((a, b) -> a.position - b.position);
+        Builder b = builder();
         for (ExplicitProcessParameters item : all) {
             b.combine(item);
         }

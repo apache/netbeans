@@ -1,0 +1,36 @@
+    final private const PRIVATE_CONST1 = "foo"; // error1
+                        --------------
+HINT:Constant "PRIVATE_CONST1" cannot be declared final
+FIX:Remove modifier: final
+    private final const PRIVATE_CONST2 = "foo"; // error2
+                        --------------
+HINT:Constant "PRIVATE_CONST2" cannot be declared final
+FIX:Remove modifier: final
+    final private const PRIVATE_CONST3 = "foo", PRIVATE_CONST4 = "foo"; // error3
+                                                --------------
+HINT:Constant "PRIVATE_CONST3" cannot be declared final
+FIX:Remove modifier: final
+HINT:Constant "PRIVATE_CONST4" cannot be declared final
+    private final const PRIVATE_CONST5 = "foo", PRIVATE_CONST6 = "foo"; // error4
+                                                --------------
+HINT:Constant "PRIVATE_CONST5" cannot be declared final
+FIX:Remove modifier: final
+HINT:Constant "PRIVATE_CONST6" cannot be declared final
+    final private const string|int PRIVATE_CONST_TYPE_1 = "foo"; // error5
+                                   --------------------
+HINT:Constant "PRIVATE_CONST_TYPE_1" cannot be declared final
+FIX:Remove modifier: final
+    private final const string|int PRIVATE_CONST_TYPE_2 = "foo"; // error6
+                                   --------------------
+HINT:Constant "PRIVATE_CONST_TYPE_2" cannot be declared final
+FIX:Remove modifier: final
+    final private const string|int PRIVATE_CONST_TYPE_3 = "foo", PRIVATE_CONST_TYPE_4 = "foo"; // error7
+                                                                 --------------------
+HINT:Constant "PRIVATE_CONST_TYPE_3" cannot be declared final
+FIX:Remove modifier: final
+HINT:Constant "PRIVATE_CONST_TYPE_4" cannot be declared final
+    private final const string|int PRIVATE_CONST_TYPE_5 = "foo", PRIVATE_CONST_TYPE_6 = "foo"; // error8
+                                                                 --------------------
+HINT:Constant "PRIVATE_CONST_TYPE_5" cannot be declared final
+FIX:Remove modifier: final
+HINT:Constant "PRIVATE_CONST_TYPE_6" cannot be declared final

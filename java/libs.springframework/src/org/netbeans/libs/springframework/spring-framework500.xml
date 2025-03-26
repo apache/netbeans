@@ -27,27 +27,27 @@
         <type>classpath</type>
         <resource>jar:nbinst://org.apache.commons.logging/modules/org-apache-commons-logging.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.libs.cglib/modules/ext/cglib-2.2.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-aop-5.2.9.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-aspects-5.2.9.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-beans-5.2.9.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-context-5.2.9.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-context-indexer-5.2.9.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-context-support-5.2.9.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-core-5.2.9.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-expression-5.2.9.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-instrument-5.2.9.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-jcl-5.2.9.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-jdbc-5.2.9.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-jms-5.2.9.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-messaging-5.2.9.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-orm-5.2.9.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-oxm-5.2.9.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-test-5.2.9.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-tx-5.2.9.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-web-5.2.9.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-webflux-5.2.9.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-webmvc-5.2.9.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-websocket-5.2.9.RELEASE.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-aop-5.3.31.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-aspects-5.3.31.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-beans-5.3.31.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-context-5.3.31.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-context-indexer-5.3.31.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-context-support-5.3.31.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-core-5.3.31.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-expression-5.3.31.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-instrument-5.3.31.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-jcl-5.3.31.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-jdbc-5.3.31.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-jms-5.3.31.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-messaging-5.3.31.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-orm-5.3.31.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-oxm-5.3.31.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-test-5.3.31.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-tx-5.3.31.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-web-5.3.31.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-webflux-5.3.31.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-webmvc-5.3.31.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-websocket-5.3.31.jar!/</resource>
     </volume>
     <volume>
         <type>src</type>
@@ -59,28 +59,28 @@
         <property>
             <name>maven-dependencies</name>
             <value>
-                org.springframework:spring-aop:5.2.9.RELEASE:jar
-                org.springframework:spring-aspects:5.2.9.RELEASE:jar
-                org.springframework:spring-beans:5.2.9.RELEASE:jar
-                org.springframework:spring-context:5.2.9.RELEASE:jar
-                org.springframework:spring-context-indexer:5.2.9.RELEASE:jar
-                org.springframework:spring-context-support:5.2.9.RELEASE:jar
-                org.springframework:spring-core:5.2.9.RELEASE:jar
-                org.springframework:spring-expression:5.2.9.RELEASE:jar
-                org.springframework:spring-framework-bom:5.2.9.RELEASE:pom
-                org.springframework:spring-instrument:5.2.9.RELEASE:jar
-                org.springframework:spring-jcl:5.2.9.RELEASE:jar
-                org.springframework:spring-jdbc:5.2.9.RELEASE:jar
-                org.springframework:spring-jms:5.2.9.RELEASE:jar
-                org.springframework:spring-messaging:5.2.9.RELEASE:jar
-                org.springframework:spring-orm:5.2.9.RELEASE:jar
-                org.springframework:spring-oxm:5.2.9.RELEASE:jar
-                org.springframework:spring-test:5.2.9.RELEASE:jar
-                org.springframework:spring-tx:5.2.9.RELEASE:jar
-                org.springframework:spring-web:5.2.9.RELEASE:jar
-                org.springframework:spring-webflux:5.2.9.RELEASE:jar
-                org.springframework:spring-webmvc:5.2.9.RELEASE:jar
-                org.springframework:spring-websocket:5.2.9.RELEASE:jar
+                org.springframework:spring-aop:5.3.31:jar
+                org.springframework:spring-aspects:5.3.31:jar
+                org.springframework:spring-beans:5.3.31:jar
+                org.springframework:spring-context:5.3.31:jar
+                org.springframework:spring-context-indexer:5.3.31:jar
+                org.springframework:spring-context-support:5.3.31:jar
+                org.springframework:spring-core:5.3.31:jar
+                org.springframework:spring-expression:5.3.31:jar
+                org.springframework:spring-framework-bom:5.3.31:pom
+                org.springframework:spring-instrument:5.3.31:jar
+                org.springframework:spring-jcl:5.3.31:jar
+                org.springframework:spring-jdbc:5.3.31:jar
+                org.springframework:spring-jms:5.3.31:jar
+                org.springframework:spring-messaging:5.3.31:jar
+                org.springframework:spring-orm:5.3.31:jar
+                org.springframework:spring-oxm:5.3.31:jar
+                org.springframework:spring-test:5.3.31:jar
+                org.springframework:spring-tx:5.3.31:jar
+                org.springframework:spring-web:5.3.31:jar
+                org.springframework:spring-webflux:5.3.31:jar
+                org.springframework:spring-webmvc:5.3.31:jar
+                org.springframework:spring-websocket:5.3.31:jar
             </value>
         </property>
     </properties>

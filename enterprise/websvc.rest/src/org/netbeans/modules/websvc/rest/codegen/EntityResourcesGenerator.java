@@ -34,6 +34,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.Task;
@@ -93,6 +94,7 @@ public abstract class EntityResourcesGenerator extends AbstractGenerator
     private String controllerPackageName;
     private EntityResourceBeanModel model;
     private Project project;
+    private boolean jakartaNamespace;
     
     /** Creates a new instance of EntityRESTServicesCodeGenerator */
     public void initialize(EntityResourceBeanModel model, Project project,
@@ -117,6 +119,10 @@ public abstract class EntityResourcesGenerator extends AbstractGenerator
             this.controllerPackageName = controllerPackage;
         }
 
+        ClassPath cp = ClassPath.getClassPath(targetFolder, ClassPath.COMPILE);
+        boolean jakartaRSPresent = cp.findResource("jakarta/ws/rs/GET.class") != null;
+        boolean javaxRSPresent = cp.findResource("javax/ws/rs/GET.class") != null;
+        jakartaNamespace = jakartaRSPresent || (! javaxRSPresent);
     }
     
     /**
@@ -220,7 +226,7 @@ public abstract class EntityResourcesGenerator extends AbstractGenerator
             TreeMaker maker, RestGenerationOptions option,
             ModifiersTree modifiers )
     {
-        String method = option.getRestMethod().getMethod();
+        String method = option.getRestMethod().getMethod(isJakartaNamespace());
         ModifiersTree modifiersTree = modifiers;
         if ( method != null ){
             modifiersTree = maker.addModifiersAnnotation(modifiers, 
@@ -233,9 +239,9 @@ public abstract class EntityResourcesGenerator extends AbstractGenerator
             ExpressionTree uriValue = maker.Literal(uriPath);
             modifiersTree =
                     maker.addModifiersAnnotation(modifiersTree,
-                    genUtils.createAnnotation(RestConstants.PATH, 
-                            Collections.<ExpressionTree>singletonList(
-                                    uriValue)));
+                    genUtils.createAnnotation(
+                            isJakartaNamespace() ? RestConstants.PATH_JAKARTA : RestConstants.PATH,
+                            Collections.<ExpressionTree>singletonList(uriValue)));
 
         }
         
@@ -249,11 +255,11 @@ public abstract class EntityResourcesGenerator extends AbstractGenerator
         
         // add @Produces annotation
         modifiersTree = addMimeHandlerAnnotation(genUtils, maker,
-                modifiersTree, RestConstants.PRODUCE_MIME, option.getProduces());
+                modifiersTree, isJakartaNamespace() ? RestConstants.PRODUCE_MIME_JAKARTA : RestConstants.PRODUCE_MIME, option.getProduces());
         
         // add @Consumes annotation
         modifiersTree = addMimeHandlerAnnotation(genUtils, maker,
-                modifiersTree, RestConstants.CONSUME_MIME, option.getConsumes());
+                modifiersTree, isJakartaNamespace() ? RestConstants.CONSUME_MIME_JAKARTA : RestConstants.CONSUME_MIME, option.getConsumes());
         return modifiersTree;
     }
     
@@ -303,7 +309,7 @@ public abstract class EntityResourcesGenerator extends AbstractGenerator
                 Collections.<Modifier>emptySet());
         
         ModifiersTree modifiers ;
-        if ( option.getRestMethod().getMethod() == null ){
+        if ( option.getRestMethod().getMethod(true) == null ){
             modifiers = genUtils.createModifiers(
                     Modifier.PRIVATE);
         }
@@ -359,7 +365,7 @@ public abstract class EntityResourcesGenerator extends AbstractGenerator
                     pathParamTree =
                         maker.addModifiersAnnotation(paramModifier, 
                                 genUtils.createAnnotation(
-                                        RestConstants.PATH_PARAM, 
+                                        isJakartaNamespace() ? RestConstants.PATH_PARAM_JAKARTA : RestConstants.PATH_PARAM,
                                         annArguments));
                 }
                 Tree paramTree = genUtils.createType(paramTypes[i], 
@@ -413,11 +419,20 @@ public abstract class EntityResourcesGenerator extends AbstractGenerator
             needPathSegment = idFieldInfo!= null && idFieldInfo.isEmbeddedId()&& 
                     idFieldInfo.getType()!= null;
         }
+        String httpResponseType;
+        String pathSegmentType;
+        if (isJakartaNamespace()) {
+            httpResponseType = RestConstants.HTTP_RESPONSE_JAKARTA;
+            pathSegmentType = "jakarta.ws.rs.core.PathSegment";
+        } else {
+            httpResponseType = RestConstants.HTTP_RESPONSE;
+            pathSegmentType = "javax.ws.rs.core.PathSegment";
+        }
         RestGenerationOptions options = new RestGenerationOptions();
         switch ( method ){
             case CREATE:
                 options.setRestMethod(RestFacadeMethod.CREATE);
-                options.setReturnType(RestConstants.HTTP_RESPONSE);
+                options.setReturnType(httpResponseType);
                 options.setParameterNames(new String[]{"entity"}); //NOI18N
                 options.setParameterTypes(new String[]{entityFQN});
                 options.setConsumes(new String[]{Constants.MimeType.XML.value(), 
@@ -425,7 +440,7 @@ public abstract class EntityResourcesGenerator extends AbstractGenerator
                 return options;
             case EDIT:
                 options.setRestMethod(RestFacadeMethod.EDIT);
-                options.setReturnType(RestConstants.HTTP_RESPONSE);
+                options.setReturnType(httpResponseType);
                 options.setParameterNames(new String[]{"entity"}); //NOI18N
                 options.setParameterTypes(new String[]{entityFQN}); //NOI18N
                 options.setConsumes(new String[]{Constants.MimeType.XML.value(), 
@@ -433,10 +448,10 @@ public abstract class EntityResourcesGenerator extends AbstractGenerator
                 return options;
             case REMOVE:
                 options.setRestMethod(RestFacadeMethod.REMOVE);
-                options.setReturnType(RestConstants.HTTP_RESPONSE);
+                options.setReturnType(httpResponseType);
                 options.setParameterNames(new String[]{"id"}); //NOI18N
                 if ( needPathSegment ){
-                    options.setParameterTypes(new String[]{"javax.ws.rs.core.PathSegment"}); //NOI18N
+                    options.setParameterTypes(new String[]{pathSegmentType}); //NOI18N
                 }
                 else {
                     options.setParameterTypes(new String[]{idType}); //NOI18N
@@ -450,7 +465,7 @@ public abstract class EntityResourcesGenerator extends AbstractGenerator
                         Constants.MimeType.JSON.value()}); 
                 options.setParameterNames(new String[]{"id"}); //NOI18N
                 if ( needPathSegment ){
-                    options.setParameterTypes(new String[]{"javax.ws.rs.core.PathSegment"}); //NOI18N
+                    options.setParameterTypes(new String[]{pathSegmentType}); //NOI18N
                 }
                 else {
                     options.setParameterTypes(new String[]{idType}); //NOI18N
@@ -560,7 +575,11 @@ public abstract class EntityResourcesGenerator extends AbstractGenerator
     protected void createFolders() {
         createFolders( true );
     }
-    
+
+    protected boolean isJakartaNamespace() {
+        return jakartaNamespace;
+    }
+
     private void generateResourceMethods( FileObject fileObject , 
             final String entityFQN, final String idClass) throws IOException 
     {
@@ -577,8 +596,7 @@ public abstract class EntityResourcesGenerator extends AbstractGenerator
                     getElement(TreePath.getPath( tree, classTree));
                 
                 List<String> imports = getResourceImports( entityFQN );
-                JavaSourceHelper.addImports(workingCopy, imports.toArray(
-                        new String[ imports.size()]));
+                JavaSourceHelper.addImports(workingCopy, imports.toArray(new String[0]));
                 
                 GenerationUtils genUtils = GenerationUtils.newInstance(workingCopy);
                 TreeMaker maker = workingCopy.getTreeMaker();
@@ -652,7 +670,7 @@ public abstract class EntityResourcesGenerator extends AbstractGenerator
         if (type == null) {
             result = maker.Literal(mimeType);
         } else {
-            result = type.expressionTree(maker);
+            result = type.expressionTree(maker, isJakartaNamespace());
         }
         return result;
     }

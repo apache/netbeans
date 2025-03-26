@@ -11,7 +11,7 @@
 |--__construct [1276, 1438] : ESCAPED{__construct}ESCAPED{(}ESCAPED{$param1}ESCAPED{, }<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param2}ESCAPED{, }<font color="#999999">ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param3}ESCAPED{, }<font color="#999999">ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param4}ESCAPED{)}
 |--$param2 [1326, 1332] : ESCAPED{$param2}<font color="#999999">:ESCAPED{int}</font>
 |--$param4 [1399, 1405] : ESCAPED{$param4}<font color="#999999">:ESCAPED{string}</font>
-|-#anon#php80ConstructorPropertyPromotion_php#1 [1451, 1565] : ESCAPED{{}}
+|-#anon#php80ConstructorPropertyPromotion_php#1 [1455, 1565] : ESCAPED{{}}
 |--__construct [1487, 1563] : ESCAPED{__construct}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$x}ESCAPED{, }<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$y}ESCAPED{)}
 |--$x [1520, 1521] : ESCAPED{$x}<font color="#999999">:ESCAPED{int}</font>
 |--$y [1543, 1544] : ESCAPED{$y}<font color="#999999">:ESCAPED{int}</font>

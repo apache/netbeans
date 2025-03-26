@@ -181,7 +181,7 @@ final class LazyLoader {
 
         Collection<String> getTopComponents() {
             ArrayList<String> res = new ArrayList<String>( id2position.keySet() );
-            Collections.sort( res, new Comparator<String>() {
+            res.sort(new Comparator<String>() {
 
                 @Override
                 public int compare( String o1, String o2 ) {

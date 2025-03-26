@@ -96,7 +96,7 @@ public class IOManager {
                     synchronized (buffer) {
                         int i, k = buffer.size ();
                         for (i = 0; i < k; i++) {
-                            Text t = (Text) buffer.removeFirst ();
+                            Text t = buffer.removeFirst();
                             try {
                                 OutputWriter ow = (t.important) ? debuggerErr : debuggerOut;
                                 if (t.line != null) {
@@ -136,9 +136,7 @@ public class IOManager {
     // innerclasses ............................................................
     
     private class Listener implements OutputListener {
-        @Override
-        public void outputLineSelected (OutputEvent ev) {
-        }
+
         @Override
         public void outputLineAction (final OutputEvent ev) {
             SwingUtilities.invokeLater (new Runnable () {

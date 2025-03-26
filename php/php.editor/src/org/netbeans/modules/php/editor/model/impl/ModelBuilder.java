@@ -86,7 +86,7 @@ class ModelBuilder {
     NamespaceScope build(NamespaceDeclaration node, OccurenceBuilder occurencesBuilder) {
         final NamespaceDeclarationInfo info = NamespaceDeclarationInfo.create(node);
 
-        NamespaceScopeImpl nScope = (info.isDefaultNamespace()) ? defaultNamespaceScope : ModelElementFactory.create(info, this);
+        NamespaceScopeImpl nScope = /*(info.isDefaultNamespace()) ? defaultNamespaceScope :*/ ModelElementFactory.create(info, this);
         if (!nScope.isDefaultNamespace()) {
             setCurrentScope(nScope);
         }
@@ -316,7 +316,7 @@ class ModelBuilder {
 
         static MethodScopeImpl create(MethodDeclarationInfo nodeInfo, ModelBuilder context, ModelVisitor visitor) {
             String returnType = VariousUtils.getReturnType(context.getProgram(), nodeInfo.getOriginalNode().getFunction());
-            boolean isDeprecated = VariousUtils.isDeprecatedFromPHPDoc(context.getProgram(), nodeInfo.getOriginalNode().getFunction());
+            boolean isDeprecated = VariousUtils.isDeprecated(context.getFileScope(), context.getProgram(), nodeInfo.getOriginalNode());
             String qualifiedReturnType = VariousUtils.qualifyTypeNames(returnType, nodeInfo.getOriginalNode().getStartOffset(), context.getCurrentScope());
             MethodScopeImpl method = new MethodScopeImpl(context.getCurrentScope(), qualifiedReturnType, nodeInfo, visitor, isDeprecated);
             return method;
@@ -341,12 +341,12 @@ class ModelBuilder {
         }
 
         static ClassConstantElementImpl create(ClassConstantDeclarationInfo clsConst, ModelBuilder context) {
-            boolean isDeprecated = VariousUtils.isDeprecatedFromPHPDoc(context.getProgram(), clsConst.getOriginalNode());
+            boolean isDeprecated = VariousUtils.isDeprecated(context.getFileScope(), context.getProgram(), clsConst.getConstantDeclaration());
             return new ClassConstantElementImpl(context.getCurrentScope(), clsConst, isDeprecated);
         }
 
         static CaseElementImpl create(CaseDeclarationInfo enumCase, ModelBuilder context) {
-            boolean isDeprecated = VariousUtils.isDeprecatedFromPHPDoc(context.getProgram(), enumCase.getOriginalNode());
+            boolean isDeprecated = VariousUtils.isDeprecated(context.getFileScope(), context.getProgram(), enumCase.getCaseDeclaration());
             return new CaseElementImpl(context.getCurrentScope(), enumCase, isDeprecated);
         }
     }

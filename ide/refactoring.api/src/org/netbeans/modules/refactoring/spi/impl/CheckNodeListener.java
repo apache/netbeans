@@ -109,9 +109,9 @@ class CheckNodeListener implements MouseListener, KeyListener {
                         o = ((TreeElement) o).getUserObject();
                         if (o instanceof RefactoringElement) {
                                 openDiff(node);
-                            }
                         }
                     }
+                }
             } else {
                 Rectangle chRect = CheckRenderer.getCheckBoxRectangle();
                 Rectangle rowRect = tree.getPathBounds(path);
@@ -355,11 +355,21 @@ class CheckNodeListener implements MouseListener, KeyListener {
             }
         } while (!node.isLeaf());
         tree.setSelectionRow(newRow);
-        tree.scrollRowToVisible(newRow);
-        if (isQuery) {
-            CheckNodeListener.findInSource(node);
-        } else {
-            CheckNodeListener.openDiff(node);
+        verticalScrollRowToVisible(tree, newRow);
+        CheckNodeListener.openDiff(node);
+    }
+
+    /**
+     * Analog to {@link javax.swing.JTree#scrollRowToVisible(int)} but scrolls only vertically.
+     */
+    private static void verticalScrollRowToVisible(JTree tree, int row) {
+        TreePath path = tree.getPathForRow(row);
+        if (path != null) {
+            tree.makeVisible(path);
+            Rectangle bounds = tree.getPathBounds(path);
+            bounds.setLocation(0, (int) bounds.getY());
+            tree.scrollRectToVisible(bounds);
         }
     }
+
 } // end CheckNodeListener

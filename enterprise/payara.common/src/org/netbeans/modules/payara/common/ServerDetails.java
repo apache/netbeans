@@ -407,7 +407,7 @@ public enum ServerDetails implements PayaraPlatformVersionAPI {
     }
 
     @Override
-    public short getBuild() {
+    public String getBuild() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -428,6 +428,16 @@ public enum ServerDetails implements PayaraPlatformVersionAPI {
 
     @Override
     public boolean isEE8Supported() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean isEE9Supported() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean isEE10Supported() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

@@ -203,7 +203,7 @@ final class GeneralOptionsPanel extends javax.swing.JPanel implements ActionList
 
     void load () {
         fillVersioningSystems();
-        originalLabels = VersioningSupport.getPreferences().getBoolean(VersioningSupport.PREF_BOOLEAN_TEXT_ANNOTATIONS_VISIBLE, false);
+        originalLabels = VersioningSupport.isTextAnnotationVisible();
         cbShowLabels.setSelected(originalLabels);
         cmbVersioningSystems.setSelectedIndex(selectedIndex);
         for (int i = 0; i < cmbVersioningSystems.getItemCount(); i++) {
@@ -267,7 +267,7 @@ final class GeneralOptionsPanel extends javax.swing.JPanel implements ActionList
         for (VersioningSystem system : Lookup.getDefault().lookupAll(VersioningSystem.class)) {
             systems.add(system);
         }
-        cmbVersioningSystems.setModel(new DefaultComboBoxModel(systems.toArray(new VersioningSystem[systems.size()])));
+        cmbVersioningSystems.setModel(new DefaultComboBoxModel(systems.toArray(new VersioningSystem[0])));
     }
 
     @Override

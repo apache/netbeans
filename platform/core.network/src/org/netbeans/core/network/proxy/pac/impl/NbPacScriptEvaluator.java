@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -46,17 +47,23 @@ import org.netbeans.core.network.proxy.pac.PacScriptEvaluator;
 import org.netbeans.core.network.proxy.pac.PacUtils;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
+import org.openide.util.RequestProcessor.Task;
+import org.netbeans.core.ProxySettings;
 
 /**
  * NetBeans implementation of a PAC script evaluator. This implementation
  * is the one returned by {@link NbPacScriptEvaluatorFactory}.
  *
- * <h3>Features comparison</h3>
+ * <p>
+ * <strong>Features comparison</strong>
+ * <p>
  * There are differences between how browsers have implemented the PAC
  * evaluation functionality. In the following the Apache NetBeans implementation
  * (this class) is pitched against some of the major browsers.<br><br>
  *
- * <table summary="" style="table-layout: fixed; width:100%;" border="1" cellpadding="10" cellspacing="0">
+ * <table>
+ *   <caption>Features comparison</caption>
  *   <tr><th class="tablersh">Behavior</th>
  *       <th>Apache<br>NetBeans</th>
  *       <th>Chrome<br>{@code 61.0.3163.100}</th>
@@ -105,7 +112,7 @@ import org.openide.util.NbBundle;
  *       <td>???</td>
  *   </tr>
  *   <tr>
- *       <td class="tablersh">Support for <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/gg308476(v=vs.85).aspx">getClientVersion()</a></td>
+ *       <td class="tablersh">Support for <a href="https://docs.microsoft.com/windows/win32/winhttp/getclientversion?redirectedfrom=MSDN">getClientVersion()</a></td>
  *       <td>Yes<br>(returns "1.0")</td>
  *       <td>No</td>
  *       <td>No</td>
@@ -167,7 +174,9 @@ import org.openide.util.NbBundle;
  *    at finding the host's correct IP address, in particular on a multi-homed
  *    computer.
  *
- * <h3>Customization</h3>
+ * <p>
+ * <strong>Customization</strong>
+ * <p>
  * The implementation for
  * {@link org.netbeans.core.network.proxy.pac.PacHelperMethods PacHelperMethods} is
  * found via the global lookup. If you are unhappy with the implementation
@@ -191,6 +200,7 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
     private static final String PAC_SOCKS5_FFEXT = "SOCKS5"; // Mozilla Firefox extension. Not part of original Netscape spec.
     private static final String PAC_HTTP_FFEXT = "HTTP"; // Mozilla Firefox extension. Not part of original Netscape spec.
     private static final String PAC_HTTPS_FFEXT = "HTTPS"; // Mozilla Firefox extension. Not part of original Netscape spec.
+    private static final RequestProcessor RP = new RequestProcessor(NbPacScriptEvaluator.class.getName(), Runtime.getRuntime().availableProcessors(), true, false);
     private final String pacScriptSource;
 
 
@@ -208,7 +218,7 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
     @Override
     public List<Proxy> findProxyForURL(URI uri) throws PacValidationException {
 
-        List<Proxy> jsResultAnalyzed;
+        List<Proxy> jsResultAnalyzed = null;
 
         // First try the cache
         if (resultCache != null) {
@@ -217,38 +227,37 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
                 return jsResultAnalyzed;
             }
         }
-        try {
-            Object jsResult;
-            synchronized (scriptEngine) {
-                jsResult = scriptEngine.findProxyForURL(PacUtils.toStrippedURLStr(uri), uri.getHost());
-            }
-            jsResultAnalyzed = analyzeResult(uri, jsResult);
-            if (canUseURLCaching && (resultCache != null)) {
-                resultCache.put(uri, jsResultAnalyzed);   // save the result in the cache
-            }
-            return jsResultAnalyzed;
-        } catch (NoSuchMethodException ex) {
-            // If this exception occur at this time it is really, really unexpected.
-            // We already gave the function a test spin in the constructor.
-            Exceptions.printStackTrace(ex);
-            return Collections.singletonList(Proxy.NO_PROXY);
-        } catch (ScriptException ex) {
-            LOGGER.log(Level.WARNING, "Error when executing PAC script function " + scriptEngine.getJsMainFunction().getJsFunctionName() + " : ", ex);
-            return Collections.singletonList(Proxy.NO_PROXY);
-        } catch (Exception ex) {  // for runtime exceptions
-            if (ex.getCause() != null) {
-                if (ex.getCause() instanceof ClassNotFoundException) {
-                    // Is someone trying to break out of the sandbox ?
-                    LOGGER.log(Level.WARNING, "The downloaded PAC script is attempting to access Java class ''{0}'' which may be a sign of maliciousness. You should investigate this with your network administrator.", ex.getCause().getMessage());
-                    return Collections.singletonList(Proxy.NO_PROXY);
+        
+        int timeout = ProxySettings.getPacScriptTimeout();
+        
+        if (timeout <= 0){
+            jsResultAnalyzed = executeProxyScript(uri);
+        } else {
+            AtomicReference<List<Proxy>> resultHolder = new AtomicReference<>(null);
+            Task task = RP.post(() -> {
+                resultHolder.set(executeProxyScript(uri));
+            });
+
+            try{
+                if(!task.waitFinished(timeout)){
+                    LOGGER.log(Level.WARNING, "Timeout when executing PAC script function: {0}", scriptEngine.getJsMainFunction().getJsFunctionName());
+                }
+            } catch (InterruptedException ex) {
+                LOGGER.log(Level.WARNING, "PAC script execution interrupted: {0}", ex);
+            } finally {
+                if (!task.isFinished()) {
+                    // interruptThread is set true for the RequestProcessor so cancel will interrupt without any setting
+                    task.cancel();
                 }
             }
-            // other unforseen errors
-            LOGGER.log(Level.WARNING, "Error when executing PAC script function " + scriptEngine.getJsMainFunction().getJsFunctionName() + " : ", ex);
-            return Collections.singletonList(Proxy.NO_PROXY);
+            jsResultAnalyzed  = resultHolder.get();
         }
+        if (canUseURLCaching && (resultCache != null) && (jsResultAnalyzed != null)) {
+                resultCache.put(uri, jsResultAnalyzed);   // save the result in the cache
+        }
+        return jsResultAnalyzed != null ? jsResultAnalyzed : Collections.singletonList(Proxy.NO_PROXY);
     }
-
+    
     @Override
     public boolean usesCaching() {
         return (canUseURLCaching && (resultCache != null));
@@ -270,6 +279,32 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
         return this.pacScriptSource;
     }
 
+    private List<Proxy> executeProxyScript(URI uri) {
+        try{
+            Object jsResult;
+            synchronized (scriptEngine) {
+                jsResult = scriptEngine.findProxyForURL(PacUtils.toStrippedURLStr(uri), uri.getHost());
+            }
+            return analyzeResult(uri, jsResult);
+
+        } catch (NoSuchMethodException ex) {
+            // If this exception occur at this time it is really, really unexpected.
+            // We already gave the function a test spin in the constructor.
+            Exceptions.printStackTrace(ex);
+        } catch (ScriptException ex) {
+            LOGGER.log(Level.WARNING, "Error when executing PAC script function " + scriptEngine.getJsMainFunction().getJsFunctionName() + " : ", ex);
+        } catch (Exception ex) {  // for runtime exceptions
+            if (ex.getCause() != null) {
+                if (ex.getCause() instanceof ClassNotFoundException) {
+                    // Is someone trying to break out of the sandbox ?
+                    LOGGER.log(Level.WARNING, "The downloaded PAC script is attempting to access Java class ''{0}'' which may be a sign of maliciousness. You should investigate this with your network administrator.", ex.getCause().getMessage());
+                }
+            }
+            // other unforseen errors
+            LOGGER.log(Level.WARNING, "Error when executing PAC script function " + scriptEngine.getJsMainFunction().getJsFunctionName() + " : ", ex);
+        }
+        return null;
+    }
 
 
     private PacScriptEngine getScriptEngine(String pacSource) throws PacParsingException {

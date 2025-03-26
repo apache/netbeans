@@ -32,7 +32,7 @@
 
     <p>
     The logging system in NetBeans is based on the standard
-    JDK's <a href="@JDK@/java/util/logging/package-summary.html">java.util.logging</a>
+    JDK's <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/package-summary.html">java.util.logging</a>
     and complies to it as much as possible. This document
     sumarizes the basic usecases and shall be treated as a guide for
     writing good NetBeans ready logging code. The
@@ -40,7 +40,7 @@
     it is used in NetBeans. However it is possible to fully replace
     the system by providing own logging properties as
     in any
-    <a href="@JDK@/java/util/logging/LogManager.html">other JDK application</a>.
+    <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogManager.html">other JDK application</a>.
     Then of course the behaviour may get completely
     different.
     </p>
@@ -48,7 +48,7 @@
     <p>
     Rather than printing raw exceptions to the console
     or implementing custom debug or logging facililities, code may
-    use the <a href="@JDK@/java/util/logging/Logger.html">Logger</a> 
+    use the <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">Logger</a> 
     to access logging in a higher-level
     fashion. This way the logging messages can be dynamically turned
     on and off by single switch on command line or even during runtime.
@@ -56,12 +56,12 @@
     
     <p>Another important thing is to chain stack traces to
     exceptions using 
-    <a href="@JDK@/java/lang/Throwable.html#initCause(java.lang.Throwable)">
+    <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/Throwable.html#initCause(java.lang.Throwable)">
     Throwable.initCause(Throwable)</a>, permitting you to throw an exception 
     of a type permitted by your
     API signature while safely encapsulating the root cause of the problem (in terms
     of other nested exceptions). Code should use 
-    <a href="@JDK@/java/util/logging/Logger.html#log(java.util.logging.Level,%20java.lang.String,%20java.lang.Throwable)">
+    <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html#log(java.util.logging.Level,%20java.lang.String,%20java.lang.Throwable)">
     Logger.log(Level.SEVERE, msg, exception)</a>
     rather than directly printing caught exceptions,
     to make sure nested annotations are not lost and to allow pluged in
@@ -82,11 +82,11 @@
     
     <p>
     It is possible to use 
-    <a href="@JDK@/java/util/logging/Logger.html#global">
+    <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html#global">
         global logger
     </a>
     but it is preferred to create
-    <a href="@JDK@/java/util/logging/Logger.html#getLogger(java.lang.String)">
+    <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html#getLogger(java.lang.String)">
         named and shared instances 
     </a> of loggers.
     The later has the advantage of finer control of what is going
@@ -98,7 +98,7 @@
     <p>
     As the logging system is completely JDK based, one can use the 
     traditional properties of 
-    <a href="@JDK@/java/util/logging/LogManager.html">LogManager</a>
+    <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogManager.html">LogManager</a>
     and customize logging completely by themselves.
     </p>
     
@@ -106,7 +106,7 @@
     However there is a simpler way how to enable logging of an named logger.
     Just start NetBeans with <code>-J-Dname.of.the.Logger.<b>level</b>=100</code>
     or any other number and all the log 
-    <a href="@JDK@/java/util/logging/Level.html">Level</a>s 
+    <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Level.html">Level</a>s 
     with higher or equal value will immediatelly
     be enabled and handled by the system.
     </p>
@@ -129,7 +129,7 @@ LogManager.getLogManager().readConfiguration();
     This can be done by one of two JDK standard properties:
     <code>java.util.logging.config.file</code> or
     <code>java.util.logging.config.class</code> as described at
-    <a href="@JDK@/java/util/logging/LogManager.html">LogManager's javadoc</a>.
+    <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogManager.html">LogManager's javadoc</a>.
     If these properties are provide during the startup of the system,
     then the logging is fully dedicated to the configured custom loggers
     and of course no NetBeans standard configuration properties work.
@@ -146,11 +146,11 @@ show blinking
 icon to the user in bottom right corner of main window):
 </p>
 <pre>
-private static final <a href="@JDK@/java/util/logging/Logger.html">Logger</a> logger = <a href="@JDK@/java/util/logging/Logger.html#getLogger(java.lang.String)">Logger.getLogger</a>(ThisClass.class.getName());
+private static final <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">Logger</a> logger = <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html#getLogger(java.lang.String)">Logger.getLogger</a>(ThisClass.class.getName());
 try {
     foo.doSomething();
 } catch (IOException ioe) {
-    <a href="@JDK@/java/util/logging/Logger.html#log(java.util.logging.Level,%20java.lang.String,%20java.lang.Throwable)">logger.log</a>(Level.SEVERE, null, ioe);
+    <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html#log(java.util.logging.Level,%20java.lang.String,%20java.lang.Throwable)">logger.log</a>(Level.SEVERE, null, ioe);
 }
 </pre>
 
@@ -201,7 +201,7 @@ starvations
     
 <p>
     To rethrow an exception use standard JDK's 
-    <a href="@JDK@/java/lang/Throwable.html#initCause(java.lang.Throwable)">
+    <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/Throwable.html#initCause(java.lang.Throwable)">
     Throwable.initCause(Throwable)</a> method. It is going to
     be properly annotated and printed when sent to logger:
 <pre>
@@ -292,23 +292,23 @@ to exchange structured data. What is even more interesting is that
 this kind of extended usage can coexist very well with the plain old
 good writing of messages to log files. This is all possible due to
 a very nice design of the single <q>logging record</q> - the
-<a href="@JDK@/java/util/logging/LogRecord.html">LogRecord</a>. 
+<a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">LogRecord</a>. 
 </p>
 
 
 <p>
 Well written structured logging shall use the <q>localized</q> message
 approach and thus assign to all its 
-<a href="@JDK@/java/util/logging/LogRecord.html">LogRecord</a>s 
-a <a href="@JDK@/java/util/ResourceBundle.html">ResourceBundle</a> and
+<a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">LogRecord</a>s 
+a <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/util/ResourceBundle.html">ResourceBundle</a> and
 use just a key to the bundle as the actually logged message. 
 This is a good idea anyway, as it speeds up logging, because if the message is not
 going to be needed, the final string is not concatenated at all.
 However this would not be very powerful logging, so
 another important thing is to provide parameters to the 
-<a href="@JDK@/java/util/logging/LogRecord.html">LogRecord</a> via
+<a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">LogRecord</a> via
 its <code>setParameters</code> method. This, in combination with the
-<a href="@JDK@/java/text/MessageFormat.html">MessageFormat</a> used when 
+<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/text/MessageFormat.html">MessageFormat</a> used when 
 the final logger is composing the logged message, further delay's 
 the concatenations of strings. Morevoer it allows the advanced communication
 described above - e.g. there can be another module consumming the message
@@ -404,9 +404,9 @@ public class Test extends Handler {
 </pre>
 <p>
 The basic trick is to register own 
-<a href="@JDK@/java/util/logging/Handler.html">Handler</a>
+<a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Handler.html">Handler</a>
 and thus get access to provided 
-<a href="@JDK@/java/util/logging/LogRecord.html">LogRecord</a>s
+<a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">LogRecord</a>s
 and process them in any custom way, possibly pretty different than just
 printing the strings to log files. Of course, this is only 
 possible because the handler understand the generic names of logged messages - 

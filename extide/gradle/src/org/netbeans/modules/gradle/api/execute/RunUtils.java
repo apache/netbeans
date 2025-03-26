@@ -55,21 +55,25 @@ import java.util.MissingResourceException;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.function.Function;
-import org.gradle.util.GradleVersion;
 import org.netbeans.api.project.ProjectInformation;
+import org.netbeans.api.project.ProjectManager;
+import org.netbeans.api.project.ProjectUtils;
 
 import org.netbeans.api.project.ui.OpenProjects;
-import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.ProjectTrust;
 import org.netbeans.modules.gradle.actions.ActionToTaskUtils;
 import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
 import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
+import static org.netbeans.modules.gradle.customizer.GradleExecutionPanel.HINT_JDK_PLATFORM;
 import org.netbeans.modules.gradle.execute.ConfigurableActionProvider;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.modules.gradle.execute.ProjectConfigurationSupport;
-import org.netbeans.modules.gradle.spi.actions.BeforeBuildActionHook;
+import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
 import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
 import org.netbeans.modules.gradle.spi.execute.GradleDistributionProvider;
+import org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager;
+import org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager.JavaRuntime;
+import org.netbeans.spi.project.AuxiliaryProperties;
 import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.DialogDescriptor;
@@ -120,7 +124,7 @@ public final class RunUtils {
         if (files.isEmpty()) {
             files.addAll(lookup.lookupAll(FileObject.class));
         }
-        return files.toArray(new FileObject[files.size()]);
+        return files.toArray(new FileObject[0]);
     }
     
     /**
@@ -529,9 +533,9 @@ public final class RunUtils {
             );
         }
         List<Object> ordered = new ArrayList<>(options.keySet());
-        Collections.sort(ordered, (a, b) -> options.get(a) - options.get(b));
+        ordered.sort((a, b) -> options.get(a) - options.get(b));
         ordered.add(DialogDescriptor.CANCEL_OPTION);
-        return Pair.of(ordered.toArray(new Object[ordered.size()]), def);
+        return Pair.of(ordered.toArray(new Object[0]), def);
     };
     
     private static final List<String> TRUST_DIALOG_OPTION_IDS = Arrays.asList(
@@ -558,13 +562,14 @@ public final class RunUtils {
     }
 
     private static boolean isOptionEnabled(Project project, String option, boolean defaultValue) {
-        GradleBaseProject gbp = GradleBaseProject.get(project);
+        Project root = ProjectUtils.rootOf(project);
+        GradleBaseProject gbp = GradleBaseProject.get(root);
         if (gbp != null) {
             String value = gbp.getNetBeansProperty(option);
             if (value != null) {
                 return Boolean.valueOf(value);
             } else {
-                return NbGradleProject.getPreferences(project, false).getBoolean(option, defaultValue);
+                return NbGradleProject.getPreferences(root, false).getBoolean(option, defaultValue);
             }
         }
         return false;
@@ -670,6 +675,62 @@ public final class RunUtils {
     @Deprecated
     public static Pair getActivePlatform(Project project) {
         return getActivePlatform("deprecated"); //NOI18N
+    }
+
+    /**
+     * Return the current active JavaRuntime used by the specified project.
+     * JavaRuntime is defined in the root project level. If there is no
+     * runtime specified on the root project, then this method would return the
+     * default runtime. Usually the one, which is used by the IDE.
+     * <p>
+     * It is possible that the ID representing the project runtime, has no
+     * associated runtime in the IDE. In this case a broken JavaRuntime would be
+     * returned with the ID, that would be used.
+     *
+     * @param project the project which root project specifies the runtime.
+     * @return the JavaRuntime to be used by the project, could be broken, but
+     *         not {@code null}
+     *
+     * @since 2.32
+     */
+    public static JavaRuntime getActiveRuntime(Project project) {
+        return ProjectManager.mutex().readAccess(() -> {
+            GradleExperimentalSettings experimental = GradleExperimentalSettings.getDefault();
+
+            Project root = ProjectUtils.rootOf(project);
+            AuxiliaryProperties aux = root.getLookup().lookup(AuxiliaryProperties.class);
+            String id = aux.get(HINT_JDK_PLATFORM, true);
+            if (id == null) {
+                return experimental.getDefaultJavaRuntime();
+            } else {
+                JavaRuntimeManager mgr = Lookup.getDefault().lookup(JavaRuntimeManager.class);
+                Map<String, JavaRuntime> runtimes = mgr.getAvailableRuntimes();
+                if (runtimes.containsKey(id)) {
+                    return runtimes.get(id);
+                }
+                return JavaRuntimeManager.createJavaRuntime(id, null);
+            }
+        });
+    }
+
+    /**
+     * Sets the active JavaRuntime on the specified project root.
+     * 
+     * @param project the project , which root project shall be set the runtime on
+     * @param runtime The JavaRuntime to activate on the project or {@code null}
+     *                can be used to set the default runtime.
+     * 
+     * @since 2.32
+     */
+    public static void setActiveRuntime(Project project, JavaRuntime runtime) {
+        ProjectManager.mutex().postWriteRequest(() -> {
+            GradleExperimentalSettings experimental = GradleExperimentalSettings.getDefault();
+            
+            Project root = ProjectUtils.rootOf(project);
+            AuxiliaryProperties aux = root.getLookup().lookup(AuxiliaryProperties.class);
+            String id = (runtime != null) && experimental.getDefaultJavaRuntime() != runtime ? runtime.getId() : null;
+            aux.put(HINT_JDK_PLATFORM, id, true);
+        });
     }
 
     static GradleCommandLine getIncludedOpenProjects(Project project) {

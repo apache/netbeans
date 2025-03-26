@@ -108,15 +108,24 @@ public class SessionImpl extends PersistentObject implements Session {
         AnnotationMirror annotationMirror = null;
         switch(kind){
             case STATELESS:
-                annotationMirror = annByType.get("javax.ejb.Stateless"); //NOI18N
+                annotationMirror = annByType.get("jakarta.ejb.Stateless"); //NOI18N
+                if (annotationMirror == null) {
+                    annotationMirror = annByType.get("javax.ejb.Stateless"); //NOI18N
+                }
                 sessionType = Session.SESSION_TYPE_STATELESS;
                 break;
             case STATEFUL:
-                annotationMirror = annByType.get("javax.ejb.Stateful"); //NOI18N
+                annotationMirror = annByType.get("jakarta.ejb.Stateful"); //NOI18N
+                if (annotationMirror == null) {
+                    annotationMirror = annByType.get("javax.ejb.Stateful"); //NOI18N
+                }
                 sessionType = Session.SESSION_TYPE_STATEFUL;
                 break;
             case SINGLETON: 
-                annotationMirror = annByType.get("javax.ejb.Singleton"); //NOI18N
+                annotationMirror = annByType.get("jakarta.ejb.Singleton"); //NOI18N
+                if (annotationMirror == null) {
+                    annotationMirror = annByType.get("javax.ejb.Singleton"); //NOI18N
+                }
                 sessionType = Session.SESSION_TYPE_SINGLETON;
                 break;
         }
@@ -136,7 +145,7 @@ public class SessionImpl extends PersistentObject implements Session {
 
         initBusinessInterfaces();
 
-        localBean = annByType.get("javax.ejb.LocalBean") != null;
+        localBean = annByType.get("jakarta.ejb.LocalBean") != null || annByType.get("javax.ejb.LocalBean") != null;
 
         return true;
     }
@@ -201,7 +210,7 @@ public class SessionImpl extends PersistentObject implements Session {
                     TypeElement interfaceTypeElement = (TypeElement) element;
                     String fqn = interfaceTypeElement.getQualifiedName().toString();
                     interfacesSet.add(fqn);
-                    if (!"java.io.Serializable".equals(fqn) && !"java.io.Externalizable".equals(fqn) && !fqn.startsWith("javax.ejb")) {
+                    if (!"java.io.Serializable".equals(fqn) && !"java.io.Externalizable".equals(fqn) && !fqn.startsWith("javax.ejb") && !fqn.startsWith("jakarta.ejb")) {
                         interfaces.add(interfaceTypeElement);
                     }
                 }
@@ -210,9 +219,15 @@ public class SessionImpl extends PersistentObject implements Session {
         
         Map<String, ? extends AnnotationMirror> annByType = getHelper().getAnnotationsByType(typeElement.getAnnotationMirrors());
 
-        AnnotationMirror beanLocalAnnotation = annByType.get("javax.ejb.Local"); // @Local at bean class
+        AnnotationMirror beanLocalAnnotation = annByType.get("jakarta.ejb.Local"); // @Local at bean class
+        if (beanLocalAnnotation == null) {
+            beanLocalAnnotation = annByType.get("javax.ejb.Local"); // @Local at bean class
+        }
         boolean isEmptyBeanLocalAnnotation = beanLocalAnnotation != null && beanLocalAnnotation.getElementValues().isEmpty();
-        AnnotationMirror beanRemoteAnnotation = annByType.get("javax.ejb.Remote"); // @Remote at beans class
+        AnnotationMirror beanRemoteAnnotation = annByType.get("jakarta.ejb.Remote"); // @Remote at beans class
+        if (beanRemoteAnnotation == null) {
+            beanRemoteAnnotation = annByType.get("javax.ejb.Remote"); // @Remote at beans class
+        }
         boolean isEmptyBeanRemoteAnnotation = beanRemoteAnnotation != null && beanRemoteAnnotation.getElementValues().isEmpty();
         
         List<String> annotatedLocalInterfaces = new ArrayList<String>();
@@ -221,16 +236,16 @@ public class SessionImpl extends PersistentObject implements Session {
         
         for (TypeElement interfaceTypeElement : interfaces) {
             Map<String, ? extends AnnotationMirror> ifaceAnnByType = getHelper().getAnnotationsByType(interfaceTypeElement.getAnnotationMirrors());
-            if (ifaceAnnByType.get("javax.ejb.Local") != null) {
+            if (ifaceAnnByType.get("jakarta.ejb.Local") != null || ifaceAnnByType.get("javax.ejb.Local") != null) {
                 annotatedLocalInterfaces.add(interfaceTypeElement.getQualifiedName().toString());
             }
-            if (ifaceAnnByType.get("javax.ejb.Remote") != null) {
+            if (ifaceAnnByType.get("jakarta.ejb.Remote") != null || ifaceAnnByType.get("javax.ejb.Remote") != null) {
                 annotatedRemoteInterfaces.add(interfaceTypeElement.getQualifiedName().toString());
             }
             allInterfaces.add(interfaceTypeElement.getQualifiedName().toString());
         }
 
-        boolean isNoIfaceView = annByType.get("javax.ejb.LocalBean") != null; //NOI18N
+        boolean isNoIfaceView = annByType.get("javax.ejb.LocalBean") != null || annByType.get("jakarta.ejb.LocalBean") != null; //NOI18N
                                      // any interface is explicitly specified
         boolean isAnyIfaceExplicit = !annotatedRemoteInterfaces.isEmpty() || !annotatedLocalInterfaces.isEmpty()
                 // annotated class with non-empty value
@@ -317,8 +332,8 @@ public class SessionImpl extends PersistentObject implements Session {
         
         EjbRefHelper.setEjbRefsForClass(getHelper(), getTypeElement(), resultEjbRefs, resultEjbLocalRefs);
         
-        ejbRefs = resultEjbRefs.toArray(new EjbRef[resultEjbRefs.size()]);
-        ejbLocalRefs = resultEjbLocalRefs.toArray(new EjbLocalRef[resultEjbLocalRefs.size()]);
+        ejbRefs = resultEjbRefs.toArray(new EjbRef[0]);
+        ejbLocalRefs = resultEjbLocalRefs.toArray(new EjbLocalRef[0]);
                 
     }
     
@@ -394,12 +409,12 @@ public class SessionImpl extends PersistentObject implements Session {
     
     public String[] getBusinessLocal() throws VersionNotSupportedException {
         initBusinessInterfaces();
-        return businessLocal.toArray(new String[businessLocal.size()]);
+        return businessLocal.toArray(new String[0]);
     }
     
     public String[] getBusinessRemote() throws VersionNotSupportedException {
         initBusinessInterfaces();
-        return businessRemote.toArray(new String[businessRemote.size()]);
+        return businessRemote.toArray(new String[0]);
     }
     
     public EjbRef[] getEjbRef() {

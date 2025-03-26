@@ -58,8 +58,8 @@ import org.xml.sax.XMLReader;
  * Public for possible access from AU (see #29577).
  * Usage: see implementation of {@link ModuleInstaller#refineDependencies}.
  * @author Jesse Glick, with help from NB XML module
- * @see "#30161"
- * @see <a href="http://www.netbeans.org/dtds/module-auto-deps-1_0.dtd"><samp>-//NetBeans//DTD Module Automatic Dependencies 1.0//EN</samp></a>
+ * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=30161">30161</a>
+ * @see <a href="http://www.netbeans.org/dtds/module-auto-deps-1_0.dtd"><code>-//NetBeans//DTD Module Automatic Dependencies 1.0//EN</code></a>
  * @since org.netbeans.core/1 1.12
  */
 public final class AutomaticDependencies {
@@ -99,7 +99,7 @@ public final class AutomaticDependencies {
                 }
             }
             try {
-                INSTANCE = AutomaticDependencies.parse(urls.toArray(new URL[urls.size()]));
+                INSTANCE = AutomaticDependencies.parse(urls.toArray(new URL[0]));
             } catch (IOException e) {
                 Util.err.log(Level.WARNING, null, e);
             } catch (SAXException e) {
@@ -119,8 +119,8 @@ public final class AutomaticDependencies {
     /**
      * Create a list of transformations based on some XML files.
      * They must be valid (this method may not validate them).
-     * Doctype must be <samp>&lt;transformations&gt;</samp> from
-     * <samp>-//NetBeans//DTD Module Automatic Dependencies 1.0//EN</samp>.
+     * Doctype must be <code>&lt;transformations&gt;</code> from
+     * <code>-//NetBeans//DTD Module Automatic Dependencies 1.0//EN</code>.
      * @param urls the XML files
      * @throws SAXException if malformed
      * @throws IOException if unloadable

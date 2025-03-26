@@ -27,6 +27,67 @@
     <apidef name="actions">Actions API</apidef>
 </apidefs>
 <changes>
+    <change id="moreImageUtilsForHiDPI">
+      <api name="util"/>
+      <summary>Added methods to ImageUtilities, to aid migration from other icon loading methods.</summary>
+      <version major="9" minor="36"/>
+      <date day="5" month="1" year="2025"/>
+      <author login="ebakke"/>
+      <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="yes"/>
+      <description>
+            <p>Added new utility methods to ImageUtilities to ease migration from other image loading methods used throughout the NetBeans codebase.
+            Loading icons via ImageUtilities is preferred as it permits alternative SVG versions to be loaded automatically when available.</p>
+       </description>
+       <class package="org.openide.util" name="ImageUtilities"/>
+    </change>
+
+    <change id="mouseKeyCodes">
+      <api name="util"/>
+      <summary>Added methods to query mouse event pseudo-keycodes</summary>
+      <version major="9" minor="31"/>
+      <date day="25" month="9" year="2023"/>
+      <author login="neilcsmith"/>
+      <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="yes"/>
+      <description>
+            <p>
+               Added methods to query the existing pseudo-keycodes assigned to mouse wheel events, and new pseudo-keycodes added
+               for extended mouse buttons.
+            </p>
+       </description>
+       <class package="org.openide.util" name="Utilities"/>
+    </change>
+    <change id="findDialogParent2">
+         <api name="util"/>
+         <summary>static method Utilities.findDialogParent overloaded and isModalDialogOpen added</summary>
+         <version major="9" minor="30"/>
+         <date day="26" month="5" year="2023"/>
+         <author login="rkeen-siemens"/>
+         <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="yes"/>
+         <description>
+             <p>
+                 Updated <code>findDialogParent</code> to ensure that if a modal dialog is open the returned component is in that dialog
+                 and added an overload that allows providing a fallback component.
+                 Added <code>isModalDialogOpen</code> to determine if there is a modal dialog open.
+             </p>
+         </description>
+         <class package="org.openide.util" name="Utilities"/>
+    </change>
+    <change id="actionsForPathLookup">
+         <api name="util"/>
+         <summary>Added variant Utilities.actionsForPath with Lookup that produces context-aware actions</summary>
+         <version major="9" minor="28"/>
+         <date day="5" month="1" year="2023"/>
+         <author login="sdedic"/>
+         <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+         <description>
+             <p>
+                 Added a variant <a href="@TOP@/org/openide/util/Utilities.html#actionsForPath-java.lang.String-org.openide.util.Lookup-">actionsToPath</a> that instantiates context-bound actions if the registered action(s) implements 
+                 <a href="@TOP@/org/openide/util/ContextAwareAction.html">ContextAwareAction</a>.
+                 Improves consistency with <a href="@TOP@/org/openide/util/Utilities.html#actionsToPopup-javax.swing.Action:A-org.openide.util.Lookup-">actionsToPopup</a> that supports contextual actions. 
+             </p>
+         </description>
+         <class package="org.openide.util" name="Utilities"/>
+    </change>
     <change id="findDialogParent">
          <api name="util"/>
          <summary>static method Utilities.findDialogParent added</summary>
@@ -405,7 +466,7 @@
                 A SPI <a href="@TOP@/org/openide/util/NetworkSettings.ProxyCredentialsProvider.html">
                 NetworkSettings.ProxyCredentialsProvider</a> allows NetBeans Platform
                 users to provide proxy and network credentials separately.
-                See <a href="http://wiki.netbeans.org/Authenticator">http://wiki.netbeans.org/Authenticator</a>
+                See <a href="https://netbeans.apache.org/wiki/Authenticator">https://netbeans.apache.org/wiki/Authenticator</a>
             </p>
         </description>
         <class package="org.openide.util" name="NetworkSettings"/>
@@ -420,11 +481,11 @@
         <compatibility addition="yes"/>
         <description>
             <p>
-                Some plugins needs a way to suppress <a href="@JDK@/java/net/Authenticator.html"><code>java.net.Authenticator</code></a> without asking
+                Some plugins needs a way to suppress <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/net/Authenticator.html"><code>java.net.Authenticator</code></a> without asking
                 user a question about the credentials. 
                 Invoke <a href="@TOP@/org/openide/util/NetworkSettings.html#suppressAuthenticationDialog-java.util.concurrent.Callable-">
                 suppressAuthenticationDialog</a> with a block of code where authentication dialog will be suppressed.                
-                See <a href="http://wiki.netbeans.org/Authenticator">http://wiki.netbeans.org/Authenticator</a>
+                See <a href="https://netbeans.apache.org/wiki/Authenticator">https://netbeans.apache.org/wiki/Authenticator</a>
             </p>
         </description>
         <class package="org.openide.util" name="NetworkSettings"/>
@@ -787,7 +848,7 @@
             <p>
                 In order to align <code>RequestProcessor</code> closer to standard 
                 Java 5 concurrency utilities, the class now implements
-                <a href="@JDK@/java/util/concurrent/Executor.html">Executor</a>
+                <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/util/concurrent/Executor.html">Executor</a>
                 interfaces and its <code>execute(Runnable)</code> method.
             </p>
         </description> 
@@ -997,7 +1058,7 @@
         <description>
             <p>
                 <code>ErrorManager</code> is now deprecated and its replacement
-                is either <a href="@JDK@/java/util/logging/Logger.html">Logger</a> 
+                is either <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">Logger</a> 
                 or <code>Exceptions</code>.
             </p>
         </description>
@@ -1033,7 +1094,7 @@
           <a href="@TOP@/org/openide/ErrorManager.html">ErrorManager</a>
           is no longer the recommended way to do logging in NetBeans based
           application. Instead NetBeans now fully support logging two JDK's
-          standard <a href="@JDK@/java/util/logging/Logger.html">Logger</a>.
+          standard <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">Logger</a>.
           See the
           <a href="@org-openide-util@//org/openide/util/doc-files/logging.html">NetBeans logging guide</a>
           to learn the best practises for logging in NetBeans.
@@ -1042,31 +1103,30 @@
           is still kept around for annotating exceptions with localized
           messages and advanced manipulation and its behaviour is fully
           backward compatible. However modules are adviced to migrate to
-          <a href="@JDK@/java/util/logging/Logger.html">logging</a> whereever
+          <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">logging</a> whereever
           possible.
           <br/>
           To migrate your modules you can install Jackpot modules from
           autoupdate (if they are not yet part of your IDE) and apply
-          precreate <a href="http://www.netbeans.org/source/browse/openide/util/Attic/ErrorManagerJackpot.rules">
-          javapot error manager rule</a>.
+          precreate jackpot error manager rule.
           <br/>
           There is one possible incompatibility from end user point of view.
           The way to <em>enable logging</em> for certain components when
           running inside the whole NetBeans container has changed:
           If there is 
-          <a href="@JDK@/java/util/logging/Logger.html">Logger</a> or
+          <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">Logger</a> or
           <a href="@TOP@/org/openide/ErrorManager.html">ErrorManager</a>
           named <q>org.mymodule.MyComponent</q> then the correct way
           to turn the logging is now to invoke NetBeans with
           <code>-J-Dorg.mymodule.MyComponent<b>.level</b>=100</code>
           (where the possible constants are taken form
-          a JDK's definition of <a href="@JDK@/java/util/logging/Level.html">level</a>).
+          a JDK's definition of <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Level.html">level</a>).
           There is however a certain benefit in this change, the value
           of the property (like <q>org.mymodule.MyComponent.level</q>)
           can be changed during runtime and thus the logging can be
           enabled or disabled dynamically (after changing the value, it is
           necessary to call
-          <a href="@JDK@/java/util/logging/LogManager.html">LogManager.readConfiguration()</a>).
+          <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogManager.html">LogManager.readConfiguration()</a>).
       </description>
       <class package="org.openide" name="ErrorManager"/>
       <issue number="56311"/>

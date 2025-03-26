@@ -285,7 +285,7 @@ public class MoveClassUI implements RefactoringUI, RefactoringUIBypass {
             if (e == null) {
                 return null;
             }
-            JEditorPane textC = NbDocument.findRecentEditorPane(ec);;
+            JEditorPane textC = NbDocument.findRecentEditorPane(ec);
             if (textC == null) {
                 try {
                     return new MoveClassUI(DataObject.find(files[0]), tar, paste);
@@ -320,7 +320,7 @@ public class MoveClassUI implements RefactoringUI, RefactoringUIBypass {
                 if (tphs.isEmpty()) {
                     return doCursorPosition(info, selectedElement, startOffset);
                 }
-                return new MoveMembersUI(tphs.toArray(new TreePathHandle[tphs.size()]));
+                return new MoveMembersUI(tphs.toArray(new TreePathHandle[0]));
             }
         }
 

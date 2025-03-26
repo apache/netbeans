@@ -114,7 +114,7 @@ public final class DeleteLocalAction extends GitAction {
                             }
                             return null;
                         }
-                    }, files.toArray(new File[files.size()]));
+                    }, files.toArray(new File[0]));
                 } catch (GitException ex) {
                     LOG.log(Level.INFO, null, ex);
                 }

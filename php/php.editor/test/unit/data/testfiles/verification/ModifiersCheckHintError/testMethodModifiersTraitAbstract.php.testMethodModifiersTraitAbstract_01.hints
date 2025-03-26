@@ -1,0 +1,16 @@
+    abstract function abstractTraitMethodError(): void {} // method error trait
+                      ------------------------
+HINT:Abstract method "abstractTraitMethodError" cannot contain body
+FIX:Remove body of the method: abstractTraitMethodError
+    abstract public function abstractPublicTraitMethodError(): void {} // method error trait
+                             ------------------------------
+HINT:Abstract method "abstractPublicTraitMethodError" cannot contain body
+FIX:Remove body of the method: abstractPublicTraitMethodError
+    abstract protected function abstractProtectedTraitMethodError(): void {} // method error trait
+                                ---------------------------------
+HINT:Abstract method "abstractProtectedTraitMethodError" cannot contain body
+FIX:Remove body of the method: abstractProtectedTraitMethodError
+    abstract private function abstractPrivateTraitMethodError(): void {} // method error trait
+                              -------------------------------
+HINT:Abstract method "abstractPrivateTraitMethodError" cannot contain body
+FIX:Remove body of the method: abstractPrivateTraitMethodError

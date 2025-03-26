@@ -57,7 +57,7 @@ class CreateTag implements DocumentListener, ActionListener {
     private final Task branchCheckTask;
     private String tagName;
     private final File repository;
-    private final Icon ICON_INFO = org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/info.png", false); //NOI18N
+    private final Icon ICON_INFO = org.openide.util.ImageUtilities.loadIcon("org/netbeans/modules/git/resources/icons/info.png"); //NOI18N
 
     CreateTag (File repository, String initialRevision, String initialTagName) {
         this.repository = repository;

@@ -28,6 +28,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
@@ -42,6 +43,7 @@ import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
+import org.junit.Assume;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.XMLFileSystem;
@@ -271,6 +273,7 @@ public class LayerBuilderTest extends NbTestCase {
      * @throws Exception 
      */
     public void testWarningsFromProcessors() throws Exception {
+        Assume.assumeTrue("Warnings are locale specific and only configured for english locales", Locale.getDefault().getLanguage().equals("en"));
         AnnotationProcessorTestUtils.makeSource(src, "p.C", "@" + A.class.getCanonicalName() + "(displayName=\"#k\") @org.openide.util.NbBundle.Messages(\"k=v\") public class C {}");
         File j = TestFileUtils.writeZipFile(new File(getWorkDir(), "cp.jar"), "other/x1:x1");
         TestFileUtils.writeFile(new File(src, "p/resources/x2"), "x2");
@@ -322,12 +325,28 @@ public class LayerBuilderTest extends NbTestCase {
         boolean status = AnnotationProcessorTestUtils.runJavac(src, null, dest, new File[] {j, BaseUtilities.toFile(LayerBuilderTest.class.getProtectionDomain().getCodeSource().getLocation().toURI())}, err);
         String msgs = err.toString();
         assertTrue(msgs, status);
-        assertTrue(msgs, msgs.contains("r1=x1") ^ AnnotationProcessorTestUtils.searchClasspathBroken());
+        assertTrue(msgs, msgs.contains("r1=x1"));
         assertTrue(msgs, msgs.contains("r2=x2"));
         FileObject f = new XMLFileSystem(BaseUtilities.toURI(new File(dest, "META-INF/generated-layer.xml")).toURL()).findResource("f");
         assertNotNull(f);
         assertEquals("other/x1", f.getAttribute("r1"));
         assertEquals("p/resources/x2", f.getAttribute("r2"));
+    }
+
+    public void testAbsolutizeAndValidateResourcesExistentDefaultPackage() throws Exception {
+        AnnotationProcessorTestUtils.makeSource(src, "C", "@" + V.class.getCanonicalName() + "(r1=\"other/x1\", r2=\"x2\") public class C {}");
+        File j = TestFileUtils.writeZipFile(new File(getWorkDir(), "cp.jar"), "other/x1:x1");
+        TestFileUtils.writeFile(new File(src, "x2"), "x2");
+        ByteArrayOutputStream err = new ByteArrayOutputStream();
+        boolean status = AnnotationProcessorTestUtils.runJavac(src, null, dest, new File[] {j, BaseUtilities.toFile(LayerBuilderTest.class.getProtectionDomain().getCodeSource().getLocation().toURI())}, err);
+        String msgs = err.toString();
+        assertTrue(msgs, status);
+        assertTrue(msgs, msgs.contains("r1=x1"));
+        assertTrue(msgs, msgs.contains("r2=x2"));
+        FileObject f = new XMLFileSystem(BaseUtilities.toURI(new File(dest, "META-INF/generated-layer.xml")).toURL()).findResource("f");
+        assertNotNull(f);
+        assertEquals("other/x1", f.getAttribute("r1"));
+        assertEquals("x2", f.getAttribute("r2"));
     }
 
     public void testValidateResourceNonexistent() throws Exception {
@@ -339,13 +358,13 @@ public class LayerBuilderTest extends NbTestCase {
         String msgs = err.toString();
         assertFalse(msgs, status);
         assertTrue(msgs, msgs.contains("resourcez"));
-        assertTrue(msgs, msgs.contains("r1=x1") ^ AnnotationProcessorTestUtils.searchClasspathBroken());
+        assertTrue(msgs, msgs.contains("r1=x1"));
         AnnotationProcessorTestUtils.makeSource(src, "p.C", "@" + V.class.getCanonicalName() + "(r1=\"othr/x1\", r2=\"resources/x2\") public class C {}");
         err = new ByteArrayOutputStream();
         status = AnnotationProcessorTestUtils.runJavac(src, null, dest, new File[] {j, BaseUtilities.toFile(LayerBuilderTest.class.getProtectionDomain().getCodeSource().getLocation().toURI())}, err);
         msgs = err.toString();
-        assertFalse(msgs, status ^ AnnotationProcessorTestUtils.searchClasspathBroken());
-        assertTrue(msgs, msgs.contains("othr") ^ AnnotationProcessorTestUtils.searchClasspathBroken());
+        assertFalse(msgs, status);
+        assertTrue(msgs, msgs.contains("othr"));
     }
 
     // XXX verify that CLASS_OUTPUT may be used as well

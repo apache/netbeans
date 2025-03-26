@@ -41,9 +41,9 @@ final class MavenProjectPropertiesUiSupport {
 
     private void init() {
         setPlatformComboBoxModel(new CompilePanel.PlatformsModel(project, handle));
-        setCompilePanel(new CompilePanel(handle, project, this));
         String sourceLevel = SourceLevelQuery.getSourceLevel(project.getProjectDirectory());
-        setSourceLevelComboBoxModel(new SourcesPanel.SourceLevelComboBoxModel(getPlatformComboBoxModel(), sourceLevel));
+        setSourceLevelComboBoxModel(new CompilePanel.SourceLevelComboBoxModel(getPlatformComboBoxModel(), sourceLevel));
+        setCompilePanel(new CompilePanel(handle, project, this));
     }
 
     /**

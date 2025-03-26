@@ -19,6 +19,8 @@
 
 package org.netbeans.swing.laf.flatlaf;
 
+import com.formdev.flatlaf.ui.FlatFileChooserUI;
+import com.formdev.flatlaf.util.SystemInfo;
 import com.formdev.flatlaf.util.UIScale;
 import java.awt.Color;
 import java.awt.Font;
@@ -26,8 +28,11 @@ import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 import javax.swing.BorderFactory;
 import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.KeyStroke;
 import javax.swing.UIDefaults;
 import javax.swing.UIDefaults.LazyValue;
@@ -84,6 +89,8 @@ public class FlatLFCustoms extends LFCustoms {
 
             EDITOR_TABSCOMPONENT_BORDER, BorderFactory.createEmptyBorder(),
             EDITOR_TOOLBAR_BORDER, new CompoundBorder(DPISafeBorder.matte(0, 0, 1, 0, editorContentBorderColor), BorderFactory.createEmptyBorder(1, 0, 1, 0)),
+            "NbExplorerView.quicksearch.border.instance",
+                new CompoundBorder(DPISafeBorder.matte(1, 0, 0, 0, editorContentBorderColor), BorderFactory.createEmptyBorder(2, 6, 2, 2)),
             EDITOR_TAB_CONTENT_BORDER, DPISafeBorder.matte(0, 1, 1, 1, editorContentBorderColor),
             VIEW_TAB_CONTENT_BORDER, DPISafeBorder.matte(0, 1, 1, 1, UIManager.getColor("TabbedContainer.view.contentBorderColor")), // NOI18N
 
@@ -128,6 +135,12 @@ public class FlatLFCustoms extends LFCustoms {
             "Table.ancestorInputMap", new LazyModifyInputMap( "Table.ancestorInputMap", removeCtrlPageUpDownKeyBindings ), // NOI18N
             "Table.ancestorInputMap.RightToLeft", new LazyModifyInputMap( "Table.ancestorInputMap.RightToLeft", removeCtrlPageUpDownKeyBindings ), // NOI18N
             "Tree.focusInputMap", new LazyModifyInputMap( "Tree.focusInputMap", removeCtrlPageUpDownKeyBindings ), // NOI18N
+            FILECHOOSER_FAVORITES_ENABLED, FlatLafPrefs.isShowFileChooserFavorites(),
+            FILECHOOSER_SHORTCUTS_PANEL_FACTORY, new Function<JFileChooser, JComponent> () {
+                @Override public JComponent apply(JFileChooser t) {
+                    return new FlatFileChooserUI.FlatShortcutsPanel(t);
+                }
+            }
         };
         List<Object> result = new ArrayList<>();
         result.addAll(Arrays.asList(constants));
@@ -150,6 +163,10 @@ public class FlatLFCustoms extends LFCustoms {
                     result.add(new InsetsUIResource(bm.top, bm.left, bm.bottom + 1, bm.right));
                 }
             }
+        }
+        if (SystemInfo.isLinux) {
+            result.add("windowDefaultLookAndFeelDecorated");
+            result.add(FlatLafPrefs.isUseWindowDecorations());
         }
         return result.toArray();
     }

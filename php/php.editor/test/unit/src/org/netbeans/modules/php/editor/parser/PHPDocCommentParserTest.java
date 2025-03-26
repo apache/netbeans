@@ -385,6 +385,51 @@ public class PHPDocCommentParserTest extends PHPTestBase {
         perform(comment, "MethodStatic03");
     }
 
+    public void testReturnTypeGenerics01() throws Exception {
+        String comment = " * @return array<int> description";
+        perform(comment, "ReturnTypeGenerics01");
+    }
+
+    public void testReturnTypeGenerics02() throws Exception {
+        String comment = " * @return array<int, Test> description";
+        perform(comment, "ReturnTypeGenerics02");
+    }
+
+    public void testReturnTypeGenerics03() throws Exception {
+        String comment = " * @return list<int> description";
+        perform(comment, "ReturnTypeGenerics03");
+    }
+
+    public void testReturnTypeGenerics04() throws Exception {
+        String comment = " * @return Test<int> description";
+        perform(comment, "ReturnTypeGenerics04");
+    }
+
+    public void testReturnTypeGenerics05() throws Exception {
+        String comment = " * @return Test<max> description";
+        perform(comment, "ReturnTypeGenerics05");
+    }
+
+    public void testReturnTypeArrayShapes01() throws Exception {
+        String comment = " * @return array{'foo':int} description";
+        perform(comment, "ReturnTypeArrayShapes01");
+    }
+
+    public void testReturnTypeArrayShapes02() throws Exception {
+        String comment = " * @return array{'foo':int, \"bar\": string} description";
+        perform(comment, "ReturnTypeArrayShapes02");
+    }
+
+    public void testReturnTypeObjectShapes01() throws Exception {
+        String comment = " * @return object{'foo':int} description";
+        perform(comment, "ReturnTypeObjectShapes01");
+    }
+
+    public void testReturnTypeObjectShapes02() throws Exception {
+        String comment = " * @return object{'foo':int, \"bar\": string} description";
+        perform(comment, "ReturnTypeObjectShapes02");
+    }
+
     public void perform(String comment, String filename) throws Exception {
         PHPDocCommentParser parser = new PHPDocCommentParser();
         PHPDocBlock block = parser.parse(0, comment.length(), comment);

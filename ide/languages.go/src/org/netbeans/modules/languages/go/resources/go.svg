@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!--
+Icon was created using inkscape. The basis was created using the font
+LexendPeta:
+
+https://fonts.google.com/specimen/Lexend+Peta
+
+The font was used with in the "900" variant and simulated italic, the
+character distance reduced and the color used by Go applied.
+-->
+
+<svg
+   version="1.1"
+   id="Go"
+   x="0px"
+   y="0px"
+   width="16px"
+   height="16px"
+   viewBox="0 0 16 16"
+   style="enable-background:new 0 0 16 16;"
+   xml:space="preserve"
+   sodipodi:docname="go.svg"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><g
+   id="g41855"
+   transform="translate(-0.11839993,-0.1326296)"><path
+     d="m 3.5913422,11.591335 q -0.8907351,0 -1.5635244,-0.227422 Q 1.3550285,11.136492 0.91913686,10.7006 0.49272113,10.264708 0.35058254,9.6203468 0.20844396,8.9759853 0.37901026,8.1326297 0.53062475,7.3745573 0.95704048,6.7491474 1.3929321,6.1142618 2.0278178,5.6499424 2.6721794,5.1856231 3.4871072,4.9297736 4.311511,4.6739242 5.2401497,4.6739242 q 0.7296447,0 1.2887231,0.1610904 0.5685543,0.1516145 0.9760182,0.397988 0.4169399,0.2368976 0.6633134,0.5116989 L 6.6899632,7.0713283 Q 6.5004451,6.9007619 6.2445957,6.7586233 5.9887462,6.6070089 5.6476136,6.5122498 5.306481,6.4174908 4.8611135,6.4174908 q -0.4264157,0 -0.8244038,0.1326626 Q 3.6481976,6.6733402 3.3260169,6.9007619 3.013312,7.1281837 2.7953662,7.4503645 q -0.20847,0.3127049 -0.2842773,0.6822652 -0.094759,0.4737952 0,0.8054519 0.094759,0.3221808 0.3316568,0.5211748 0.2463735,0.198994 0.5875061,0.2937531 0.3506085,0.094759 0.7580724,0.094759 0.3885121,0 0.7296447,-0.075807 Q 5.2591015,9.6866781 5.514951,9.5445396 5.7802763,9.402401 5.9508426,9.203407 6.1214089,8.9949371 6.1687884,8.7485635 L 6.2161679,8.5211418 6.3867342,9.0328407 H 4.1219929 L 4.40627,7.601979 H 8.2819153 Q 8.2629635,7.7346417 8.2250598,7.9620634 8.1966321,8.1894851 8.1587285,8.3884791 8.1208249,8.5874731 8.111349,8.6348527 7.9692104,9.3455456 7.5806983,9.8951481 7.1921862,10.444751 6.5952041,10.823787 q -0.596982,0.36956 -1.3645303,0.568554 -0.7580724,0.198994 -1.6393316,0.198994 z"
+     stroke-width="0.236898" fill="#00aed8"
+     id="path41729" /><path
+     d="m 11.077231,11.591335 q -0.909686,0 -1.6203793,-0.255849 Q 8.7556347,11.07016 8.3007913,10.605841 7.8459478,10.141522 7.6659056,9.5161118 7.4953393,8.8812262 7.6469538,8.1326297 7.7985683,7.3840332 8.224984,6.7586233 8.6513998,6.1237377 9.2957613,5.6594183 9.9401229,5.195099 10.745575,4.9392495 q 0.805452,-0.2653253 1.705663,-0.2653253 0.909687,0 1.610904,0.2653253 0.701217,0.2558495 1.15606,0.7201688 0.454844,0.4643194 0.634886,1.099205 0.180042,0.6254099 0.02843,1.3645305 -0.151614,0.7580724 -0.57803,1.392958 -0.426416,0.6254102 -1.070777,1.0897292 -0.644362,0.464319 -1.449814,0.729645 -0.805452,0.255849 -1.705663,0.255849 z m 0.369561,-1.895181 q 0.445367,0 0.843355,-0.1137108 0.397988,-0.1231868 0.710693,-0.3316567 0.312705,-0.2179458 0.521175,-0.502223 0.20847,-0.2842771 0.274801,-0.6159338 Q 13.863148,7.800973 13.768389,7.5166959 13.67363,7.2324187 13.446208,7.0239488 13.218786,6.8060029 12.868178,6.692292 12.517569,6.5691052 12.072202,6.5691052 q -0.445368,0 -0.843356,0.1231868 -0.388512,0.1137109 -0.710693,0.3221809 -0.312705,0.2084699 -0.5211747,0.492747 -0.198994,0.2842772 -0.2653253,0.6254098 -0.066331,0.3316567 0.018952,0.6254097 0.094759,0.2842772 0.322181,0.4927471 0.236897,0.2084699 0.57803,0.3316567 0.350608,0.1137108 0.795976,0.1137108 z"
+     stroke-width="0.236898" fill="#00aed8"
+     id="path41731" /></g><defs
+   id="defs11" /><sodipodi:namedview
+   id="namedview9"
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1.0"
+   inkscape:pageshadow="2"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="0"
+   showgrid="false"
+   inkscape:zoom="38.581514"
+   inkscape:cx="16.562336"
+   inkscape:cy="8.864349"
+   inkscape:window-width="2490"
+   inkscape:window-height="1376"
+   inkscape:window-x="0"
+   inkscape:window-y="0"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="Go" />
+
+
+
+</svg>

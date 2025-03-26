@@ -29,10 +29,10 @@ import org.openide.explorer.propertysheet.PropertyEnv;
 * @author  Ian Formanek
 * @deprecated Use {@link PropertyEnv} instead. An example of what needs to be
 *    done can be found in the rewrite of
-*    <a href="http://hg.netbeans.org/main/diff/375290349033/o.n.core/src/org/netbeans/beaninfo/editors/RectangleCustomEditor.java">RectangleCustomEditor</a>.
+*    <a href="https://github.com/apache/netbeans/tree/master/platform/o.n.core/src/org/netbeans/beaninfo/editors/RectangleCustomEditor.java">RectangleCustomEditor</a>.
 *  Another example showing the changes in property editor as well as in its
 *  custom component can be found in
-*  <a href="http://hg.netbeans.org/main/rev/6ec9ed2b2062">NbProcessDescriptor{,Custom}Editor</a>.
+*  <a href="https://github.com/apache/netbeans/tree/master/platform/openide.execution/src/org/openide/execution/NbProcessDescriptor.java">NbProcessDescriptor{,Custom}Editor</a>.
 */
 public @Deprecated interface EnhancedCustomPropertyEditor {
     /** Get the customized property value.

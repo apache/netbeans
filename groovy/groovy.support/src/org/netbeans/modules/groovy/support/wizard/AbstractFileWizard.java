@@ -72,7 +72,7 @@ public abstract class AbstractFileWizard implements WizardDescriptor.ProgressIns
         // Make sure list of steps is accurate.
         String[] beforeSteps = null;
         Object prop = wiz.getProperty(WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[]) prop;
         }
         String[] steps = createSteps(beforeSteps, panels);
@@ -101,7 +101,7 @@ public abstract class AbstractFileWizard implements WizardDescriptor.ProgressIns
     }
 
     protected final SourceGroup[] sourceGroupToArray(List<SourceGroup> groups) {
-        return groups.toArray(new SourceGroup[groups.size()]);
+        return groups.toArray(new SourceGroup[0]);
     }
 
     private String[] createSteps(String[] before, WizardDescriptor.Panel[] panels) {

@@ -23,6 +23,7 @@ import java.awt.event.*;
 import java.lang.ref.WeakReference;
 import java.util.function.Consumer;
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.PopupMenuEvent;
@@ -156,7 +157,7 @@ public class QuickSearch {
      * If <code>true</code>, three notification methods are called asynchronously
      * on a background thread. These are
      * {@link Callback#quickSearchUpdate(java.lang.String)},
-     * {@link Callback#showNextSelection(javax.swing.text.Position.Bias)},
+     * {@link Callback#showNextSelection(boolean)},
      * {@link Callback#findMaxPrefix(java.lang.String)}.
      * If <code>false</code> all methods are called synchronously on EQ thread.
      * @param popupMenu A pop-up menu, that is displayed on the find icon, next to the search
@@ -610,7 +611,11 @@ public class QuickSearch {
         public SearchPanel(JComponent component, boolean alwaysShown) {
             this.component = component;
             this.alwaysShown = alwaysShown;
-            if (isAquaLaF) {
+
+            Border customBorder = UIManager.getBorder("NbExplorerView.quicksearch.border.instance");
+            if (customBorder != null) {
+                setBorder(customBorder);
+            } else if (isAquaLaF) {
                 setBorder(BorderFactory.createEmptyBorder(9,6,8,2));
             } else {
                 setBorder(BorderFactory.createEmptyBorder(2,6,2,2));
@@ -876,8 +881,6 @@ public class QuickSearch {
         
         /**
          * Called with an updated search text.
-         * When {@link #isAsynchronous()} is <code>false</code>
-         * it's called in EQ thread, otherwise, it's called in a background thread.
          * The client should update the visual representation of the search results
          *  and then return.<p>
          * This method is called to initiate and update the search process.
@@ -887,10 +890,8 @@ public class QuickSearch {
 
         /**
          * Called to select a next occurrence of the search result.
-         * When {@link #isAsynchronous()} is <code>false</code>
-         * it's called in EQ thread, otherwise, it's called in a background thread.
          * The client should update the visual representation of the search results
-         * and then return.<p>
+         * and then return.
          * @param forward The direction of the next search result.
          *                <code>true</code> for forward direction,
          *                <code>false</code> for backward direction.
@@ -901,8 +902,6 @@ public class QuickSearch {
          * Find the maximum prefix among the search results, that starts with the provided string.
          * This method is called when user press TAB in the search field, to auto-complete
          * the maximum prefix.
-         * When {@link #isAsynchronous()} is <code>false</code>
-         * it's called in EQ thread, otherwise, it's called in a background thread.
          * Utility method {@link QuickSearch#findMaxPrefix(java.lang.String, java.lang.String, boolean)}
          * can be used by the implementation.
          * @param prefix The prefix to start with

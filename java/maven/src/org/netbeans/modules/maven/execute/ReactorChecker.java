@@ -45,10 +45,11 @@ import org.openide.util.Exceptions;
 public class ReactorChecker implements PrerequisitesChecker {
     
     public @Override boolean checkRunConfig(RunConfig config) {
-        if (config.getPreExecution() != null && !checkRunConfig(config.getPreExecution())) {
+        RunConfig preExecution = config.getPreExecution();
+        if (preExecution != null && !checkRunConfig(preExecution)) {
             return false;
         }
-        if (config.getReactorStyle() == RunConfig.ReactorStyle.NONE) {
+        if (preExecution == null && (config.getReactorStyle() == RunConfig.ReactorStyle.NONE)) {
             return true;
         }
         File dir = config.getExecutionDirectory();
@@ -63,11 +64,17 @@ public class ReactorChecker implements PrerequisitesChecker {
             // Unloadable?
             return true;
         }
-        if (NbMavenProject.isErrorPlaceholder(mavenprj.getMavenProject())) {
-            return true; // broken project
-        }
         NbMavenProject reactor = findReactor(mavenprj);
         File reactorRoot = reactor.getMavenProject().getBasedir();
+        
+        if (config.getReactorStyle() == RunConfig.ReactorStyle.NONE) {
+            if (preExecution != null && "build-with-dependencies".equals(preExecution.getActionName()) ) { // NOI18N
+                if (reactor == mavenprj) {
+                    config.setPreExecution(null);
+                }
+            }
+            return true;
+        }
         if (reactor != mavenprj) {
             try {
                 M2Configuration cfg = ProjectManager.getDefault().findProject(FileUtil.toFileObject(reactorRoot)).getLookup().lookup(M2ConfigProvider.class).getActiveConfiguration();
@@ -94,7 +101,7 @@ public class ReactorChecker implements PrerequisitesChecker {
      * @return its apparent reactor root; maybe just the same project
      */
     public static @NonNull NbMavenProject findReactor(@NonNull NbMavenProject module) { // #197232
-        MavenProject prj = module.getMavenProject();
+        MavenProject prj = NbMavenProject.getPartialProject(module.getMavenProject());
         List<ModelDescription> models = MavenEmbedder.getModelDescriptors(prj);
         File moduleDir = prj.getBasedir();
         File current = moduleDir;
@@ -124,8 +131,11 @@ public class ReactorChecker implements PrerequisitesChecker {
             }
         }
         NbMavenProject p = load(prj.getBasedir().getParentFile());
-        if (p != null && listsModule(moduleDir.getParentFile(), moduleDir, p.getMavenProject().getModules())) {
-            return findReactor(p);
+        if (p != null) {
+            MavenProject mp = NbMavenProject.getPartialProject(p.getMavenProject());
+            if (listsModule(moduleDir.getParentFile(), moduleDir, mp.getModules())) {
+                return findReactor(p);
+            }
         }
         return module;
     }

@@ -86,7 +86,7 @@ public final class BaseUtilities {
         }
 
         @Override public Project[] getOpenProjectsAPI() {
-            return open.toArray(new Project[open.size()]);
+            return open.toArray(new Project[0]);
         }
         @Override public void openAPI(Project[] projects, boolean openRequiredProjects, boolean showProgress) {
             open.addAll(Arrays.asList(projects));

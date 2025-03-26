@@ -81,7 +81,7 @@ public abstract class DialogDisplayer {
     /** Notify the user of something in a message box, possibly with feedback,
      * this method may be called
      * from any thread. The thread will return immediately and
-     * the dialog will be shown <q>later</q>, usually when AWT thread
+     * the dialog will be shown <em>later</em>, usually when AWT thread
      * is empty and can handle the request.
      * 
      * <p class="non-normative">
@@ -114,11 +114,11 @@ public abstract class DialogDisplayer {
      * <p>
      * It is possible to call {@link CompletableFuture#cancel(boolean)} on the returned value.
      * The implementation may (through it is not guaranteed) abort and hide the UI. If cancel() is 
-     * called, the returned Future always completes exceptionally, with a {@link CancellationException}.
+     * called, the returned Future always completes exceptionally, with a {@link java.util.concurrent.CancellationException}.
      * <p>
      * The thread that will execute the continuation or exception handler is undefined. Use usual
      * precautions against EDT blocking and use {@link CompletableFuture#thenAcceptAsync(java.util.function.Consumer, java.util.concurrent.Executor)}
-     * or similar to execute in a specific thread. Prefer usage of {@link RequestProcessor} to the
+     * or similar to execute in a specific thread. Prefer usage of <a href="@org-openide-util@/org/openide/util/RequestProcessor.html" >RequestProcessor</a> to the
      * builtin thread pool.
      * <div class="nonnormative">
      * The following snippet is an example of chained dialogs (can be any other processing): 
@@ -361,6 +361,7 @@ public abstract class DialogDisplayer {
                 getRootPane().getActionMap().put(actionKey, cancelAction);
                 addWindowListener(
                     new WindowAdapter() {
+                        @Override
                         public void windowClosing(WindowEvent ev) {
                             if (!haveFinalValue) {
                                 StandardDialog.this.nd.setValue(NotifyDescriptor.CLOSED_OPTION);

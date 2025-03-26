@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.47
+#Version 0.56
 
 CLSS public java.lang.Object
 cons public init()
@@ -15,6 +15,19 @@ meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
 
+CLSS public final org.netbeans.modules.javascript.nodejs.api.DebuggerOptions
+meth public boolean isBreakAtFirstLine()
+meth public boolean isLiveEdit()
+meth public java.lang.String getDebuggerProtocol()
+meth public static org.netbeans.modules.javascript.nodejs.api.DebuggerOptions getInstance()
+meth public void addPreferenceChangeListener(java.util.prefs.PreferenceChangeListener)
+meth public void removePreferenceChangeListener(java.util.prefs.PreferenceChangeListener)
+meth public void setBreakAtFirstLine(boolean)
+meth public void setDebuggerProtocol(java.lang.String)
+meth public void setLiveEdit(boolean)
+supr java.lang.Object
+hfds DEBUGGER_PREFS,INSTANCE,PROP_BRK_1ST,PROP_DEBUGGER_PROTOCOL,PROP_LIVE_EDIT,prefs
+
 CLSS public final org.netbeans.modules.javascript.nodejs.api.NodeJsSupport
 meth public boolean isEnabled(org.netbeans.api.project.Project)
  anno 1 org.netbeans.api.annotations.common.NonNull()
@@ -26,4 +39,12 @@ meth public void openNodeSettings(org.netbeans.api.project.Project)
  anno 1 org.netbeans.api.annotations.common.NullAllowed()
 supr java.lang.Object
 hfds INSTANCE
+
+CLSS public abstract interface org.netbeans.modules.javascript.nodejs.spi.DebuggerStartModifier
+meth public abstract boolean startProcessingDone()
+meth public abstract java.util.List<java.lang.String> getArguments(org.openide.util.Lookup)
+meth public abstract void processOutputLine(java.lang.String)
+
+CLSS public abstract interface org.netbeans.modules.javascript.nodejs.spi.DebuggerStartModifierFactory
+meth public abstract org.netbeans.modules.javascript.nodejs.spi.DebuggerStartModifier create(org.netbeans.api.project.Project,java.util.List<java.lang.String>,java.util.List<java.lang.String>,java.util.List<java.lang.String>,java.util.concurrent.atomic.AtomicReference<java.util.concurrent.Future<java.lang.Integer>>)
 

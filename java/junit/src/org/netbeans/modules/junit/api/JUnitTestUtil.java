@@ -155,8 +155,8 @@ public class JUnitTestUtil extends CommonTestUtil {
     
     /**
      * Converts given package filename to test suite filename, e.g.
-     * &quot;<tt>org/netbeans/foo</tt>&quot; -&gt;
-     * &quot;<tt>org/netbeans/foo/{suite-prefix}Foo{suite-suffix}</tt>&quot;
+     * &quot;<code>org/netbeans/foo</code>&quot; -&gt;
+     * &quot;<code>org/netbeans/foo/{suite-prefix}Foo{suite-suffix}</code>&quot;
      * @param packageFileName package filename in form of "org/netbeans/foo"
      */
     public static String convertPackage2SuiteName(String packageFileName) {
@@ -172,8 +172,8 @@ public class JUnitTestUtil extends CommonTestUtil {
     
     /**
      * Converts given package filename to integration test suite filename, e.g.
-     * &quot;<tt>org/netbeans/foo</tt>&quot; -&gt;
-     * &quot;<tt>org/netbeans/foo/{suite-prefix}FooIT{suite-suffix}</tt>&quot;
+     * &quot;<code>org/netbeans/foo</code>&quot; -&gt;
+     * &quot;<code>org/netbeans/foo/{suite-prefix}FooIT{suite-suffix}</code>&quot;
      * @param packageFileName package filename in form of "org/netbeans/foo"
      */
     public static String convertPackage2ITSuiteName(String packageFileName) {
@@ -189,11 +189,11 @@ public class JUnitTestUtil extends CommonTestUtil {
     
     /**
      * Converts given class filename to test filename, e.g.
-     * &quot;<tt>org/netbeans/Foo</tt>&quot;
-     * -&gt; &quot;<tt>org/netbeans/{test-prefix}Foo{test-suffix}</tt>&quot;
+     * &quot;<code>org/netbeans/Foo</code>&quot;
+     * -&gt; &quot;<code>org/netbeans/{test-prefix}Foo{test-suffix}</code>&quot;
      *
      * @param  classFileName  class filename in form of
-     *                        &quot;<tt>org/netbeans/Foo</tt>&quot;,
+     *                        &quot;<code>org/netbeans/Foo</code>&quot;,
      *                        i.e. without extension, no inner class
      */
     public static String convertClass2TestName(String classFileName) {
@@ -314,7 +314,6 @@ public class JUnitTestUtil extends CommonTestUtil {
      * Finds a main class.
      *
      * @param  compInfo  defines scope in which the class is to be found
-     * @param  className  name of the class to be found
      * @return  the found class; or <code>null</code> if the class was not
      *          found (e.g. because of a broken source file)
      */
@@ -337,7 +336,7 @@ public class JUnitTestUtil extends CommonTestUtil {
     /**
      * Converts filename to the fully qualified name of the main class
      * residing in the file.<br />
-     * For example: <tt>test/myapp/App.java</tt> --&gt; <tt>test.myapp.App</tt>
+     * For example: <code>test/myapp/App.java</code> --&gt; <code>test.myapp.App</code>
      *
      * @param  filename
      * @return  corresponding package name. Null if the input is not
@@ -356,7 +355,7 @@ public class JUnitTestUtil extends CommonTestUtil {
      * withing the specified folder (non-recursive).
      *
      * @param  packageFolder  folder to search
-     * @param  classPath  classpath to be used for the search
+     * @param  cpInfo  classpath to be used for the search
      * @return  list of full names of all primary Java classes
      *          within the specified package
      */
@@ -380,7 +379,7 @@ public class JUnitTestUtil extends CommonTestUtil {
 
         FileObject[] javaFilesArr = (javaFiles.size() == children.length)
                                     ? children
-                                    : javaFiles.toArray(new FileObject[javaFiles.size()]);
+                                    : javaFiles.toArray(new FileObject[0]);
         final JavaSource source = JavaSource.create(cpInfo, javaFilesArr);
         if (source == null) {
             ErrorManager.getDefault().log(

@@ -15,7 +15,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
-59EB84EE0D616332FF44ABA065F3888CF002CD2D jakarta.annotation:jakarta.annotation-api:1.3.5
+934C04D3CFEF185A8008E7BF34331B79730A9D43 javax.annotation:javax.annotation-api:1.3.2
+562A587FACE36EC7EFF2DB7F2FC95425C6602BC1 jakarta.activation:jakarta.activation-api:1.2.1
+48B9BDA22B091B1F48B13AF03FE36DB3BE6E1AE3 jakarta.annotation:jakarta.annotation-api:2.1.1
 8F6EA5DAEDC614F07A3654A455660145286F024E jakarta.persistence:jakarta.persistence-api:2.2.3
 B8A1142E04838FE54194049C6E7A18DAE8F9B960 jakarta.servlet:jakarta.servlet-api:4.0.4
 5EACC6522521F7EACB081F95CEE1E231648461E7 jakarta.validation:jakarta.validation-api:2.0.2
@@ -24,15 +26,16 @@ B8A1142E04838FE54194049C6E7A18DAE8F9B960 jakarta.servlet:jakarta.servlet-api:4.0
 114BD7AFB4A1BD9993527F52A08A252B5D2ACAC5 org.glassfish.hk2:hk2-api:2.6.1
 9DEDF9D2022E38EC0743ED44C1AC94AD6149ACDD org.glassfish.hk2:hk2-locator:2.6.1
 396513AA96C1D5A10AA4F75C4DCBF259A698D62D org.glassfish.hk2:hk2-utils:2.6.1
-8096EBF722902E75FBD4F532A751E514F02E1EB7 org.glassfish.hk2.external:jakarta.inject:2.6.1
 B2EB0A83BCBB44CC5D25F8B18F23BE116313A638 org.glassfish.hk2.external:aopalliance-repackaged:2.6.1
 DE3B21279DF7E755E38275137539BE5E2C80DD58 org.glassfish.hk2:osgi-resource-locator:1.0.3
-F9C6C7C6429A1EDE8E73CF077BDCA28EBFF67681 org.glassfish.jersey.core:jersey-client:2.34
-CEA85E85B1C19657EC3EA41B26351A53A40CAA3C org.glassfish.jersey.core:jersey-common:2.34
-3F3AD63CE2B51FF565D3BA85EEB8202983E9BE13 org.glassfish.jersey.core:jersey-server:2.34
-6848A8321CFA554DE4456A8230E141CF410FEADB org.glassfish.jersey.containers:jersey-container-servlet:2.34
-E71FB899349874CB2877656680508A257947601C org.glassfish.jersey.containers:jersey-container-servlet-core:2.34
-B3112E9EDC3B1A138B31862ED4AAA48F60CF1F73 org.glassfish.jersey.ext:jersey-entity-filtering:2.34
-15BB093C57C0CAC880AD7B474F7FD653CAC840A1 org.glassfish.jersey.inject:jersey-hk2:2.34
-18D8BF2AC05E7D1EB9DDDE21BF21304E211F9DC2 org.glassfish.jersey.media:jersey-media-moxy:2.34
+EA92BE0DD34D0B298930A7514E715783F4EABA97 org.glassfish.jersey.core:jersey-client:2.35
+2F15EC1B3A3598D6B12D4B0C6FF6F0905F5E5B4C org.glassfish.jersey.core:jersey-common:2.35
+C6EFC2EE82D2550E6385A7F7B1C08651F71AFB7A org.glassfish.jersey.core:jersey-server:2.35
+B09CFD6D2E645F1D8DB538BA93201B2D69B8403D org.glassfish.jersey.connectors:jersey-apache-connector:2.35
+898EF84B72E75788811DD709FE7C7051F61A943E org.glassfish.jersey.containers:jersey-container-servlet:2.35
+7CC48F2529B921F25A020C821DDE23753F6E60BB org.glassfish.jersey.containers:jersey-container-servlet-core:2.35
+2FBE9E89F6597E10976D1431DDE64B282A761AEB org.glassfish.jersey.ext:jersey-entity-filtering:2.35
+2BE6D2227081028566E8E2B0FC6A1ABBAECF56F7 org.glassfish.jersey.inject:jersey-hk2:2.35
+6383927E15ECB4BAEEF2CF0D3373B1FF1795C062 org.glassfish.jersey.media:jersey-media-json-jackson:2.35
+9B27FC01599CAB6AF757F0F0799D451A09F57E14 org.glassfish.jersey.media:jersey-media-moxy:2.35
 DAA42A0E96C3B881E8C330A413813983E92D2426 org.osgi:osgi.core:8.0.0

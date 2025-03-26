@@ -1,0 +1,4 @@
+Code completion result for source line:
+$testFunctionReturnType::IMPLICIT_Z_|CONSTANT(); // (ClassX&ClassY)|ClassZ
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   IMPLICIT_Z_CONSTANT "implicit   [PUBLIC]   ClassZ

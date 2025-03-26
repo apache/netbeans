@@ -16,7 +16,8 @@
     under the License.
 -->
 
-<!-- @start region="ActionsExample" -->
+<!-- // @start region="ActionsExample" 
+-->
 <actions>
     <actions>
         <action>
@@ -58,4 +59,5 @@
         </profile>
     </profiles>
 </actions>
-<!-- @end region="ActionsExample" -->
+<!-- // @end region="ActionsExample" 
+-->

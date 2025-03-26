@@ -88,6 +88,136 @@ public class AdminFactoryTest extends CommandTest {
         // Stored command entity should be the one we supplied.
         assertTrue(cmd.equals(runner.getCommand()));
     }
+    
+    /**
+     * Test factory functionality for GlassFish v. 4.1.2
+     * <p/>
+     * Factory should initialize REST {@code Runner} and point it to
+     * provided {@code Command} instance.
+     */
+    @Test
+    public void testGetInstanceforVersionGF4() {
+        GlassFishServerEntity srv = new GlassFishServerEntity();
+        srv.setVersion(GlassFishVersion.GF_4_1_2);
+        AdminFactory af = AdminFactory.getInstance(srv.getVersion());
+        assertTrue(af instanceof AdminFactoryRest);
+        Command cmd = new CommandVersion();
+        Runner runner;
+        try {
+          runner = af.getRunner(srv, cmd);
+        } catch (GlassFishIdeException gfie) {
+            runner = null;
+            fail("Exception in Runner initialization: " + gfie.getMessage());
+        }
+        // Returned runner should be REST interface.
+        assertTrue(runner instanceof RunnerRest);
+        // Stored command entity should be the one we supplied.
+        assertTrue(cmd.equals(runner.getCommand()));
+    }
+    
+    /**
+     * Test factory functionality for GlassFish v. 5.1.0
+     * <p/>
+     * Factory should initialize REST {@code Runner} and point it to
+     * provided {@code Command} instance.
+     */
+    @Test
+    public void testGetInstanceforVersionGF5() {
+        GlassFishServerEntity srv = new GlassFishServerEntity();
+        srv.setVersion(GlassFishVersion.GF_5_1_0);
+        AdminFactory af = AdminFactory.getInstance(srv.getVersion());
+        assertTrue(af instanceof AdminFactoryRest);
+        Command cmd = new CommandVersion();
+        Runner runner;
+        try {
+          runner = af.getRunner(srv, cmd);
+        } catch (GlassFishIdeException gfie) {
+            runner = null;
+            fail("Exception in Runner initialization: " + gfie.getMessage());
+        }
+        // Returned runner should be REST interface.
+        assertTrue(runner instanceof RunnerRest);
+        // Stored command entity should be the one we supplied.
+        assertTrue(cmd.equals(runner.getCommand()));
+    }
+    
+    /**
+     * Test factory functionality for GlassFish v. 6.2.5
+     * <p/>
+     * Factory should initialize REST {@code Runner} and point it to
+     * provided {@code Command} instance.
+     */
+    @Test
+    public void testGetInstanceforVersionGF6() {
+        GlassFishServerEntity srv = new GlassFishServerEntity();
+        srv.setVersion(GlassFishVersion.GF_6_2_5);
+        AdminFactory af = AdminFactory.getInstance(srv.getVersion());
+        assertTrue(af instanceof AdminFactoryRest);
+        Command cmd = new CommandVersion();
+        Runner runner;
+        try {
+          runner = af.getRunner(srv, cmd);
+        } catch (GlassFishIdeException gfie) {
+            runner = null;
+            fail("Exception in Runner initialization: " + gfie.getMessage());
+        }
+        // Returned runner should be REST interface.
+        assertTrue(runner instanceof RunnerRest);
+        // Stored command entity should be the one we supplied.
+        assertTrue(cmd.equals(runner.getCommand()));
+    }
+    
+    /**
+     * Test factory functionality for GlassFish v. 7.0.21
+     * <p/>
+     * Factory should initialize REST {@code Runner} and point it to
+     * provided {@code Command} instance.
+     */
+    @Test
+    public void testGetInstanceforVersionGF7() {
+        GlassFishServerEntity srv = new GlassFishServerEntity();
+        srv.setVersion(GlassFishVersion.GF_7_0_21);
+        AdminFactory af = AdminFactory.getInstance(srv.getVersion());
+        assertTrue(af instanceof AdminFactoryRest);
+        Command cmd = new CommandVersion();
+        Runner runner;
+        try {
+          runner = af.getRunner(srv, cmd);
+        } catch (GlassFishIdeException gfie) {
+            runner = null;
+            fail("Exception in Runner initialization: " + gfie.getMessage());
+        }
+        // Returned runner should be REST interface.
+        assertTrue(runner instanceof RunnerRest);
+        // Stored command entity should be the one we supplied.
+        assertTrue(cmd.equals(runner.getCommand()));
+    }
+    
+    /**
+     * Test factory functionality for GlassFish v. 8.0.0
+     * <p/>
+     * Factory should initialize REST {@code Runner} and point it to
+     * provided {@code Command} instance.
+     */
+    @Test
+    public void testGetInstanceforVersionGF8() {
+        GlassFishServerEntity srv = new GlassFishServerEntity();
+        srv.setVersion(GlassFishVersion.GF_8_0_0);
+        AdminFactory af = AdminFactory.getInstance(srv.getVersion());
+        assertTrue(af instanceof AdminFactoryRest);
+        Command cmd = new CommandVersion();
+        Runner runner;
+        try {
+          runner = af.getRunner(srv, cmd);
+        } catch (GlassFishIdeException gfie) {
+            runner = null;
+            fail("Exception in Runner initialization: " + gfie.getMessage());
+        }
+        // Returned runner should be REST interface.
+        assertTrue(runner instanceof RunnerRest);
+        // Stored command entity should be the one we supplied.
+        assertTrue(cmd.equals(runner.getCommand()));
+    }
 
     /**
      * Test factory functionality for GlassFish using REST administration

@@ -84,7 +84,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>2</release-version>
-                        <specification-version>2.72</specification-version>
+                        <specification-version>2.78</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -304,7 +304,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>2.83</specification-version>
+                        <specification-version>2.101</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

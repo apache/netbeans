@@ -21,7 +21,7 @@ package org.netbeans.editor;
 
 /**
 * Token-id with the fixed token image. The image text
-* can be retrieved by <tt>getImage()</tt>.
+* can be retrieved by <code>getImage()</code>.
 * The image token-ids are treated specially in some
 * editor parts for example in the indentation engine.
 *

@@ -42,12 +42,10 @@ public class KnowledgeBaseItem extends OCIItem implements URLProvider{
     private static Map<OCID, Collection<Reference<KnowledgeBaseItem>>> itemInstances = new HashMap<>();
     
     protected final Date timeUpdated;
-    protected final String compartmentId;
     
-    public KnowledgeBaseItem(OCID id, String compartmentId, String displayName, Date timeUpdated) {
-        super(id, displayName);
+    public KnowledgeBaseItem(OCID id, String compartmentId, String displayName, Date timeUpdated, String tenancyId, String regionCode) {
+        super(id, compartmentId, displayName, tenancyId, regionCode);
         this.timeUpdated = timeUpdated;
-        this.compartmentId = compartmentId;
         registerItem();
     }
     

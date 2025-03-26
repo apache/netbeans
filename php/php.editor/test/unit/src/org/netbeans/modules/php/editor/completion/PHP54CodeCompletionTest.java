@@ -61,6 +61,10 @@ public class PHP54CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion("testfiles/completion/lib/php54/traitsMultiUse.php", "$wmu->^publicFirstField;", false);
     }
 
+    public void testTraitsAliasedName01() throws Exception {
+        checkCompletion("testfiles/completion/lib/php54/traitsAliasedName01.php", "    use Alias^", false);
+    }
+
     public void testShortArrays() throws Exception {
         checkCompletion("testfiles/completion/lib/php54/shortArrays.php", "$xxxAr^r;", false);
     }

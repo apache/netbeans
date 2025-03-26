@@ -32,8 +32,8 @@ CF_Linux-x86_64	    = -DLINUX   -D_GNU_SOURCE -D_XOPEN_SOURCE=700 -m64
 CF_Linux-sparc_64   = -DLINUX   -D_GNU_SOURCE -D_XOPEN_SOURCE=700 -m64
 CF_Linux-arm	    = -DLINUX   -D_GNU_SOURCE -D_XOPEN_SOURCE=700 -std=c99
 CF_Linux-aarch64    = -DLINUX   -D_GNU_SOURCE -D_XOPEN_SOURCE=700 -std=c99
-CF_MacOSX-x86	    = -DMAXOSX  -D_DARWIN_C_SOURCE -m32
-CF_MacOSX-x86_64    = -DMAXOSX  -D_DARWIN_C_SOURCE -m64
+CF_MacOSX-arm	    = -DMAXOSX  -D_DARWIN_C_SOURCE -target arm64-apple-macos
+CF_MacOSX-x86_64    = -DMAXOSX  -D_DARWIN_C_SOURCE -target x86_64-apple-macos
 CF_SunOS-sparc_64   = -DSOLARIS -D__EXTENSIONS__ -m64
 CF_SunOS-x86	    = -DSOLARIS -m32
 CF_SunOS-x86_64	    = -DSOLARIS -m64

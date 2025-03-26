@@ -74,7 +74,7 @@ what is selected).
 The Actions API allows users to interact with module code, by invoking
 actions via menus, toolbars or keyboard shortcuts.
 
-<h2><a name="standard">Using Standard Swing Actions</a></h2>
+<h2 id="standard">Using Standard Swing Actions</h2>
 For uncomplicated cases (such as adding an always-enabled action to the main
 menu or the context menu of a <code>Node</code>), it is not necessary to use
 any of the Actions API classes at all - just register an instance of the action class into
@@ -87,9 +87,8 @@ Actions are typically either presented in popup menus, or otherwise
 <a href="#attach">attached</a> to a component such as a window, node,
 data object, or filesystem, or installed globally in the main menu or
 toolbars.
-<p>
 
-<h2><a name="intro">Introduction to NetBeans' Action classes</a></h2>
+<h2 id="intro">Introduction to NetBeans' Action classes</h2>
 For historical reasons, the action subclasses available in NetBeans' APIs 
 are subclasses of
 <a href="@org-openide-util-ui@/org/openide/util/actions/SystemAction.html"><code>SystemAction</code></a>.
@@ -107,7 +106,7 @@ important thing to note is that <code>SystemAction</code> objects should be
 <em>singletons</em>, meaning that any instance of the class is
 interchangeable, and all useful state should be static. For this
 reason, actions are commonly specified by class name only.
-<p>
+
 <blockquote><strong>Important:
 For historical reasons, by default, all <code>SystemAction</code> classes run
 their <code>actionPerformed</code> method <i>off</i> the AWT event dispatch thread.  For 
@@ -120,7 +119,7 @@ Watch your console (or <code>var/log/messages.log</code> file) - if you forget t
 override this method on some action, you will be warned when it is run.
 </strong></blockquote>
 
-<h3><a name="intro-callback">Callback Actions</a></h3>
+<h3 id="intro-callback">Callback Actions</h3>
 
 Some global actions should perform a different function depending on which
 component has focus.  For example, Ctrl-F runs a generic &quot;Find&quot; action.
@@ -128,7 +127,7 @@ In the editor, this searches text, but in the Explorer it searches files, and so
 <p>
 To make this possible, <code>FindAction</code> is a public API; modules providing implementations
 affect its behavior by setting its <i>action delegate</i> into <a
-href="@JDK@/javax/swing/ActionMap.html"><code>ActionMap</code></a>.
+href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/ActionMap.html"><code>ActionMap</code></a>.
 <p>
 The typical usage pattern for these is along the lines of:
 <pre>
@@ -142,7 +141,7 @@ actionMap.put("the-key", new MyAction());
 </pre>
 if the key has been made publicly known and the action is not accessible.
 
-<h3><a name="intro-sense">Context-sensitive actions</a></h3>
+<h3 id="intro-sense">Context-sensitive actions</h3>
 
 Often you will want to have actions be enabled or disabled based on what
 is selected.  Historically this was based on the activated <code>Node</code>;  in more
@@ -176,7 +175,7 @@ requested classes in their <code>Lookup</code> or if the presence of the classes
 on any of the selected <code>Node</code>s is enough, or if the action should
 be disabled if more than one <code>Node</code> is selected.
 
-<h3><a name="intro-present">Presenters</a></h3>
+<h3 id="intro-present">Presenters</h3>
 Sometimes an action needs to provide a custom component to be used in menus
 or toolbars.  For example, the memory meter (enabled in development builds
 of NetBeans) provides a custom component that shows the amount of memory
@@ -198,7 +197,7 @@ Apple Macintosh, which expects all menu contents to be <code>JMenuItem</code>
 or <code>JMenu</code> instances.</strong>
 </blockquote>
 
-<h2><a name="using-callback">Using <code>CallbackSystemAction</code></a></h2>
+<h2 id="using-callback">Using <code>CallbackSystemAction</code></h2>
 <a href="@org-openide-util-ui@/org/openide/util/actions/CallbackSystemAction.html">
 <code>CallbackSystemAction</code></a> makes it possible for a single action to have
 multiple implementations, depending on what is selected.  A <code>CallbackSystemAction</code>
@@ -309,7 +308,7 @@ be implemented, for example:
 it will be enabled automatically whenever the node selection includes
 at least one "scannable" object.</p>
 
-<h3><a name="install">Installation</a></h3>
+<h3 id="install">Installation</h3>
 
 Global installation of an action may be accomplished by
 adding it to the <code>Actions</code> folder of the system filesystem,
@@ -331,7 +330,7 @@ them into appropriate editor kits (content types). Actions may be
 bound to keyboard shortcuts active only in the editor window; added to
 the editor toolbar; or added to the editor's context menu. </p>
 
-<h2><a name="use-std">Using Standard Actions Found in NetBeans' APIs</a></h2>
+<h2 id="use-std">Using Standard Actions Found in NetBeans' APIs</h2>
 
 Many of the commonly-used actions available in NetBeans are located in
 the
@@ -341,7 +340,7 @@ the
 package.  Typically you don't subclass one of these actions - you simply
 find the default instance (via <code>SystemAction.findAction()</code>and use it.
 
-<h3><a name="attach">Attaching to an Existing Object</a></h3>
+<h3 id="attach">Attaching to an Existing Object</h3>
 An action that does not have global scope and sensitivity should
 usually be explicitly attached to components that can use it. For
 example,
@@ -408,14 +407,14 @@ Editor tab, such as Save and Close.
 
 </ol>
 
-<h2><a name="adv-install">Installation and Maintenance</a></h2>
+<h2 id="adv-install">Installation and Maintenance</h2>
 Except for programmatic uses (overriding <code>Node.getActions()</code> and the
 like), actions are installed via module XML layer files - by placing a JavaBean
 &quot;instance&quot; of a given action class into a folder in the system 
 filesystem which represents a menu or a toolbar.
 For details see <a href="@org-openide-util@/org/openide/util/doc-files/api.html#instances">Working with Instances</a>.
 
-<h3><a name="install-menu">Menu installation</a></h3>
+<h3 id="install-menu">Menu installation</h3>
 The main menu in NetBeans is constructed from a set of folders in the 
 system filesystem.  There is a folder called <samp>Menu</samp>.  Each
 child folder of it is one menu;  child folders may contain additional child
@@ -436,7 +435,7 @@ Typical installation of an action into a menu looks like this:
 
 You could also, if you wished, provide an object whose
 instance was of type
-<a href="@JDK@/javax/swing/JMenu.html"><code>JMenu</code></a>,
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JMenu.html"><code>JMenu</code></a>,
 as an item in the top-level <code>Menu</code> folder if you had very
 special requirements that demanded complete control over the menu at all
 times.
@@ -451,7 +450,7 @@ names the action class required, i.e. <code>com-foo-mymodule-MyAction.instance</
 
 <li>An actual
 
-<a href="@JDK@/javax/swing/JMenuItem.html"><code>JMenuItem</code></a>,
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JMenuItem.html"><code>JMenuItem</code></a>,
 
 which will be inserted as-is; you are responsible for its
 appearance and behavior.  This uses the same syntax as above, the only difference
@@ -468,7 +467,7 @@ module provide a cookie implementing this interface and so are useful things
 to place in menus.</li>
 
 <li>An instance of
-<a href="@JDK@/javax/swing/JSeparator.html"><code>JSeparator</code></a>, 
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JSeparator.html"><code>JSeparator</code></a>, 
 to separate items in the menu.</li>
 
 </ol>
@@ -480,7 +479,7 @@ to separate items in the menu.</li>
 for a precise list of what kinds of instances are permitted and how
 they will be treated.</p>
 
-<h3><a name="install-toolbar">Toolbar installation</a></h3>
+<h3 id="install-toolbar">Toolbar installation</h3>
 
 Installing items into toolbars can be done in a similar fashion to
 that available for menu installation, but with more options for
@@ -495,7 +494,7 @@ entirely replace a toolbar with your choice of components;  read
 about advanced Toolbar configuration <a href="toolbarsAdvanced.html">here</a>.
 
 
-<h3><a name="install-pool">The Global Actions Pool</a></h3>
+<h3 id="install-pool">The Global Actions Pool</h3>
 
 The <samp>Actions/</samp> folder in the system filesystem
 contains a list of standard actions, as instances in the same style
@@ -513,9 +512,8 @@ users to customize menus and toolbars - meaning that a user can delete your
 action, effectively making it inaccessible.  The actions pool provides a way
 to restore an action that has been deleted, so any global action should be
 found here as well as in whatever toolbar or menu it is displayed in.
-<p>
 
-<h3><a name="keymap">Installing Keyboard Shortcuts</a></h3>
+<h3 id="keymap">Installing Keyboard Shortcuts</h3>
 
 <p>The way to install keyboard shortcuts is to make an instance of
 the action in question, and place it in the <samp>Shortcuts/</samp>

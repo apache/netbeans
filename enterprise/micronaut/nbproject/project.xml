@@ -57,7 +57,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.2</specification-version>
+                        <specification-version>1.24</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -66,32 +66,6 @@
                     <compile-dependency/>
                     <run-dependency>
                         <specification-version>1.18</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.modules.maven</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>2</release-version>
-                        <specification-version>2.156</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.modules.project.dependency</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <implementation-version/>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.modules.maven.embedder</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>2</release-version>
-                        <specification-version>2.72</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -116,6 +90,15 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency/>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.classfile</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.75</specification-version>
+                    </run-dependency>
                 </dependency>
                 <dependency>
                     <code-name-base>org.netbeans.modules.csl.api</code-name-base>
@@ -197,6 +180,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.editor.lib2</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>2.43</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.editor.mimelookup</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -241,6 +233,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.java.hints.legacy.spi</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.39</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.java.lexer</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -272,7 +273,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>2.49</specification-version>
+                        <specification-version>2.68</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -294,12 +295,46 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.maven</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>2.157</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.maven.embedder</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>2.72</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.parsing.api</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
                         <specification-version>9.18</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.parsing.indexing</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <implementation-version/>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.project.dependency</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <implementation-version/>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -326,6 +361,32 @@
                     <compile-dependency/>
                     <run-dependency>
                         <specification-version>1.58</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.textmate.lexer</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>0-1</release-version>
+                        <specification-version>1.22</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.spi.editor.hints</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>0-1</release-version>
+                        <specification-version>1.64</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.spi.java.hints</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.56</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -425,9 +486,15 @@
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.netbeans.modules.nbjunit</code-name-base>
+                        <code-name-base>org.netbeans.modules.editor.mimelookup.impl</code-name-base>
                         <recursive/>
-                        <compile-dependency/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.gradle.java</code-name-base>
+                        <recursive/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.java.j2seplatform</code-name-base>
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.java.source.base</code-name-base>
@@ -435,13 +502,16 @@
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.netbeans.modules.editor.mimelookup.impl</code-name-base>
-                        <recursive/>
+                        <code-name-base>org.netbeans.modules.lexer.nbbridge</code-name-base>
+                        <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.openide.modules</code-name-base>
+                        <code-name-base>org.netbeans.modules.nbjunit</code-name-base>
+                        <recursive/>
                         <compile-dependency/>
-                        <test/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.parsing.nb</code-name-base>
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.projectapi.nb</code-name-base>
@@ -449,8 +519,9 @@
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.netbeans.modules.gradle.java</code-name-base>
-                        <recursive/>
+                        <code-name-base>org.openide.modules</code-name-base>
+                        <compile-dependency/>
+                        <test/>
                     </test-dependency>
                 </test-type>
             </test-dependencies>

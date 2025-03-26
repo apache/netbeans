@@ -27,7 +27,6 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +35,9 @@ import java.util.stream.Collectors;
 import javax.swing.event.ChangeEvent;
 import org.eclipse.tm4e.core.registry.IRegistryOptions;
 import org.eclipse.tm4e.core.registry.Registry;
+import org.netbeans.modules.lsp.client.debugger.api.RegisterDAPBreakpoints;
+import org.eclipse.tm4e.core.internal.grammar.raw.RawGrammarReader;
+import org.eclipse.tm4e.core.registry.IGrammarSource;
 import org.netbeans.modules.textmate.lexer.TextmateTokenId;
 import org.netbeans.spi.navigator.NavigatorPanel;
 import org.openide.filesystems.FileObject;
@@ -153,7 +155,25 @@ public class LanguageStorage {
                             langServer.setAttribute("name", description.name);
                         }
                     }
-                    
+
+                    deleteConfigFileIfExists("Editors/" + description.mimeType + "/generic-breakpoints.instance");
+                    deleteConfigFileIfExists("Editors/" + description.mimeType + "/GlyphGutterActions/generic-toggle-breakpoint.shadow");
+
+                    if (description.debugger) {
+                        FileObject genericBreakpoints = FileUtil.createData(FileUtil.getConfigRoot(), "Editors/" + description.mimeType + "/generic-breakpoints.instance");
+
+                        genericBreakpoints.setAttribute("instanceOf", RegisterDAPBreakpoints.class.getName());
+                        Method newInstance = RegisterDAPBreakpoints.class.getDeclaredMethod("newInstance");
+                        genericBreakpoints.setAttribute("methodvalue:instanceCreate", newInstance);
+
+                        FileObject genericGutterAction = FileUtil.createData(FileUtil.getConfigRoot(), "Editors/" + description.mimeType + "/GlyphGutterActions/generic-toggle-breakpoint.shadow");
+
+                        genericGutterAction.setAttribute("originalFile", "Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance");
+                        genericGutterAction.setAttribute("position", 500);
+                    } else {
+                        //TODO: remove
+                    }
+
                     mimeTypesToClear.remove(description.mimeType);
                 } catch (Exception ex) {
                     Exceptions.printStackTrace(ex);
@@ -162,18 +182,11 @@ public class LanguageStorage {
 
             for (String mimeType : mimeTypesToClear) {
                 try {
-                    FileObject syntax = FileUtil.getConfigFile("Editors/" + mimeType + "/syntax.json");
-                    if (syntax != null) {
-                        syntax.delete();
-                    }
-                    FileObject langServer = FileUtil.getConfigFile("Editors/" + mimeType + "/org-netbeans-modules-lsp-client-options-GenericLanguageServer.instance");
-                    if (langServer != null) {
-                        langServer.delete();
-                    }
-                    FileObject loader = FileUtil.getConfigFile("Loaders/" + mimeType + "/Factories/data-object.instance");
-                    if (loader != null) {
-                        loader.delete();
-                    }
+                    deleteConfigFileIfExists("Editors/" + mimeType + "/syntax.json");
+                    deleteConfigFileIfExists("Editors/" + mimeType + "/org-netbeans-modules-lsp-client-options-GenericLanguageServer.instance");
+                    deleteConfigFileIfExists("Loaders/" + mimeType + "/Factories/data-object.instance");
+                    deleteConfigFileIfExists("Editors/" + mimeType + "/generic-breakpoints.instance");
+                    deleteConfigFileIfExists("Editors/" + mimeType + "/GlyphGutterActions/generic-toggle-breakpoint.shadow");
                 } catch (Exception ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -213,24 +226,18 @@ public class LanguageStorage {
         NbPreferences.forModule(LanguageServersPanel.class).put(KEY, new Gson().toJson(languages));
     }
 
-    private static String findScope(File grammar) throws Exception {
-        IRegistryOptions opts = new IRegistryOptions() {
-            @Override
-            public String getFilePath(String scopeName) {
-                return null;
-            }
-            @Override
-            public InputStream getInputStream(String scopeName) throws IOException {
-                return null;
-            }
-            @Override
-            public Collection<String> getInjections(String scopeName) {
-                return null;
-            }
-        };
-        return new Registry(opts).loadGrammarFromPathSync(grammar).getScopeName();
+    private static void deleteConfigFileIfExists(String path) throws IOException {
+        FileObject file = FileUtil.getConfigFile(path);
+
+        if (file != null) {
+            file.delete();
+        }
     }
-    
+
+    private static String findScope(File grammar) throws Exception {
+        return RawGrammarReader.readGrammar(IGrammarSource.fromFile(grammar.toPath())).getScopeName();
+    }
+
     public static class LanguageDescription {
 
         public String id;
@@ -240,6 +247,7 @@ public class LanguageStorage {
         public String name;
         public String icon;
         public String mimeType;
+        public boolean debugger;
 
         public LanguageDescription() {
             this.id = null;
@@ -248,16 +256,18 @@ public class LanguageStorage {
             this.languageServer = null;
             this.name = null;
             this.icon = null;
+            this.debugger = false;
             this.mimeType = null;
         }
 
-        public LanguageDescription(String id, String extensions, String syntaxGrammar, String languageServer, String name, String icon) {
+        public LanguageDescription(String id, String extensions, String syntaxGrammar, String languageServer, String name, String icon, boolean debugger) {
             this.id = id;
             this.extensions = extensions;
             this.syntaxGrammar = syntaxGrammar;
             this.languageServer = languageServer;
             this.name = name;
             this.icon = icon;
+            this.debugger = debugger;
             this.mimeType = "text/x-ext-" + id;
         }
 

@@ -24,7 +24,6 @@ import com.sun.tools.javac.code.ModuleFinder;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.jvm.Target;
-import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Name;
 import java.util.Arrays;
@@ -53,7 +52,7 @@ import org.openide.util.WeakSet;
 /**
  * Represents a handle for {@link Element} which can be kept and later resolved
  * by another javac. The javac {@link Element}s are valid only in a single
- * {@link javax.tools.CompilationTask} or a single run of a
+ * {@link javax.tools.JavaCompiler.CompilationTask} or a single run of a
  * {@link CancellableTask}. A client needing to
  * keep a reference to an {@link Element} and use it in another {@link CancellableTask}
  * must serialize it into an {@link ElementHandle}.
@@ -106,10 +105,10 @@ public final class ElementHandle<T extends Element> {
     
     /**
      * Resolves an {@link Element} from the {@link ElementHandle}.
-     * @param compilationInfo representing the {@link javax.tools.CompilationTask}
+     * @param compilationInfo representing the {@link javax.tools.JavaCompiler.CompilationTask}
      * in which the {@link Element} should be resolved.
      * @return resolved subclass of {@link Element} or null if the elment does not exist on
-     * the classpath/sourcepath of {@link javax.tools.CompilationTask}.
+     * the classpath/sourcepath of {@link javax.tools.JavaCompiler.CompilationTask}.
      */
     @SuppressWarnings ("unchecked")     // NOI18N
     public @CheckForNull T resolve (@NonNull final CompilationInfo compilationInfo) {
@@ -234,6 +233,31 @@ public final class ElementHandle<T extends Element> {
                     log.log(Level.INFO, "Resolved type is null for kind = {0}", this.kind); // NOI18N
                 break;
             }
+            case PARAMETER:
+            {
+                assert signatures.length == 4;
+                final Element type = getTypeElementByBinaryName (module, signatures[0], jt);
+                if (type instanceof TypeElement) {
+                    final List<? extends Element> members = type.getEnclosedElements();
+                    for (Element member : members) {
+                        if (member.getKind() == ElementKind.METHOD || member.getKind() == ElementKind.CONSTRUCTOR) {
+                            String[] desc = ClassFileUtil.createExecutableDescriptor((ExecutableElement)member);
+                            assert desc.length == 3;
+                            if (this.signatures[1].equals(desc[1]) && this.signatures[2].equals(desc[2])) {
+                                assert member instanceof ExecutableElement;
+                                List<? extends VariableElement> ves =((ExecutableElement)member).getParameters();
+                                for (VariableElement ve : ves) {
+                                    if (ve.getSimpleName().contentEquals(signatures[3])) {
+                                        return (T) ve;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else
+                    log.log(Level.INFO, "Resolved type is null for kind = {0} signatures.length = {1}", new Object[] {this.kind, signatures.length}); // NOI18N
+                break;
+            }
             case TYPE_PARAMETER:
             {
                 if (signatures.length == 2) {
@@ -331,7 +355,7 @@ public final class ElementHandle<T extends Element> {
      * {@link ElementHandle}. When the {@link ElementHandle} doesn't represent
      * a {@link TypeElement} it throws a {@link IllegalStateException}
      * @return the qualified name
-     * @throws an {@link IllegalStateException} when this {@link ElementHandle} 
+     * @throws IllegalStateException when this {@link ElementHandle} 
      * isn't created for the {@link TypeElement}.
      */
     public @NonNull String getBinaryName () throws IllegalStateException {
@@ -352,7 +376,7 @@ public final class ElementHandle<T extends Element> {
      * {@link ElementHandle}. When the {@link ElementHandle} doesn't represent
      * a {@link TypeElement} it throws a {@link IllegalStateException}
      * @return the qualified name
-     * @throws an {@link IllegalStateException} when this {@link ElementHandle} 
+     * @throws IllegalStateException when this {@link ElementHandle} 
      * isn't creatred for the {@link TypeElement}.
      */
     public @NonNull String getQualifiedName () throws IllegalStateException {
@@ -496,6 +520,26 @@ public final class ElementHandle<T extends Element> {
                 assert element instanceof VariableElement;
                 signatures = ClassFileUtil.createFieldDescriptor((VariableElement)element);
                 break;
+            case PARAMETER:
+                assert element instanceof VariableElement;
+                Element ee = element.getEnclosingElement();
+                ElementKind eek = ee.getKind();
+                if (eek == ElementKind.METHOD || eek == ElementKind.CONSTRUCTOR) {
+                    assert ee instanceof ExecutableElement;
+                    ExecutableElement eel = (ExecutableElement)ee;
+                    if (!eel.getParameters().contains(element)) {
+                        //may be e.g. a lambda parameter:
+                        throw new IllegalArgumentException("Not a parameter for a method or a constructor.");
+                    }
+                    String[] _sigs = ClassFileUtil.createExecutableDescriptor(eel);
+                    signatures = new String[_sigs.length + 1];
+                    System.arraycopy(_sigs, 0, signatures, 0, _sigs.length);
+                    signatures[_sigs.length] = element.getSimpleName().toString();
+                }
+                else {
+                    throw new IllegalArgumentException(eek.toString());
+                }
+                break;
             case TYPE_PARAMETER:
                 assert element instanceof TypeParameterElement;
                 TypeParameterElement tpe = (TypeParameterElement) element;
@@ -557,7 +601,7 @@ public final class ElementHandle<T extends Element> {
     }
     
     
-    /**@inheritDoc*/
+    /**{@inheritDoc}*/
     @Override
     public int hashCode () {
         int hashCode = 0;
@@ -569,7 +613,7 @@ public final class ElementHandle<T extends Element> {
         return hashCode;
     }
     
-    /**@inheritDoc*/
+    /**{@inheritDoc}*/
     @Override
     public boolean equals (Object other) {
         if (other instanceof ElementHandle) {

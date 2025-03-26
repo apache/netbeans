@@ -1,13 +1,1 @@
-[[54,62]-Syntax error
- unexpected:	abstract
- after:	final
- expected:	function, const, static, private, protected, public] 54-62:Syntax error
- unexpected:	abstract
- after:	final
- expected:	function, const, static, private, protected, public
-[[63,71]-POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	function] 63-71:POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	function
-[[88,89]-POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	}] 88-89:POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	}
+

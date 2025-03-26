@@ -205,7 +205,7 @@ public class DictionaryInstallerPanel extends javax.swing.JPanel {
     public final void initValues () {
         tDictionary.setText (System.getProperty ("user.home")); // NOI18N
         Set<String> set = Charset.availableCharsets ().keySet ();
-        cEncoding.setModel(new javax.swing.DefaultComboBoxModel(set.toArray (new String[set.size ()])));
+        cEncoding.setModel(new javax.swing.DefaultComboBoxModel(set.toArray (new String[0])));
         cEncoding.setSelectedItem ("ISO-8859-1"); // NOI18N
         tLocale.setText (""); // NOI18N
 //        rAllUsers.setEnabled (availHomedir);

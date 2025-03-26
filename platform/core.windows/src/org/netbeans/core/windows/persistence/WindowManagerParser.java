@@ -471,7 +471,7 @@ public class WindowManagerParser {
         //remove modes still defined in Windows2 folder if they were merged into some other mode
         mergeModes( modeCfgList );
         
-        wmc.modes = modeCfgList.toArray(new ModeConfig[modeCfgList.size()]);
+        wmc.modes = modeCfgList.toArray(new ModeConfig[0]);
         
         if (DEBUG) Debug.log(WindowManagerParser.class, "readModes LEAVE");
     }
@@ -508,7 +508,7 @@ public class WindowManagerParser {
                                 refs.add( tcrf );
                             }
                         }
-                        mc.tcRefConfigs = refs.toArray( new TCRefConfig[refs.size()] );
+                        mc.tcRefConfigs = refs.toArray(new TCRefConfig[0] );
                         break;
                     }
                 }
@@ -635,7 +635,7 @@ public class WindowManagerParser {
             groupParserMap.remove(groupParser.getName());
         }
         
-        wmc.groups = groupCfgList.toArray(new GroupConfig[groupCfgList.size()]);
+        wmc.groups = groupCfgList.toArray(new GroupConfig[0]);
         
         if (DEBUG) Debug.log(WindowManagerParser.class, "readGroups LEAVE");
     }
@@ -981,16 +981,17 @@ public class WindowManagerParser {
             }
             
             winMgrConfig.editorAreaConstraints =
-                itemList.toArray(new SplitConstraint[itemList.size()]);
+                itemList.toArray(new SplitConstraint[0]);
             winMgrConfig.tcIdViewList = 
-                tcIdList.toArray(new String[tcIdList.size()]);
+                tcIdList.toArray(new String[0]);
             winMgrCfg = winMgrConfig;
             internalCfg = internalConfig;
             
             winMgrConfig = null;
             internalConfig = null;
         }
-        
+
+        @Override
         public void startElement (String nameSpace, String name, String qname, Attributes attrs) throws SAXException {
             if ("windowmanager".equals(qname)) { // NOI18N
                 handleWindowManager(attrs);
@@ -1032,6 +1033,7 @@ public class WindowManagerParser {
             }
         }
 
+        @Override
         public void error(SAXParseException ex) throws SAXException  {
             throw ex;
         }

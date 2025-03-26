@@ -278,7 +278,7 @@ public class NativeExecutionTestSupport {
                     }
                 }
                 Collections.sort(result);
-                return result.toArray(new String[result.size()]);
+                return result.toArray(new String[0]);
             } catch (FileNotFoundException ex) {
                 // rcfile does not exists - no tests to run
             }

@@ -270,7 +270,7 @@ public class JavaKit extends NbEditorKit {
                 value.add(action);
             }
         }
-        return value.toArray(new Action[value.size()]);
+        return value.toArray(new Action[0]);
     }
 
     @Override
@@ -322,7 +322,7 @@ public class JavaKit extends NbEditorKit {
                         addAcceleretors(a, item, target);
                         item.setEnabled(a.isEnabled());
                         Object helpID = a.getValue ("helpID"); // NOI18N
-                        if (helpID != null && (helpID instanceof String))
+                        if (helpID instanceof String)
                             item.putClientProperty ("HelpID", helpID); // NOI18N
                     }else{
                         if (ExtKit.gotoSourceAction.equals(actionName)){
@@ -458,6 +458,7 @@ public class JavaKit extends NbEditorKit {
                 if (isJavadocTouched) {
                     blockCommentComplete(doc, dotPos, context);
                 }
+                TypingCompletion.javadocLineRunCompletion(context);
             }
         }
 
@@ -561,11 +562,13 @@ public class JavaKit extends NbEditorKit {
             switch(insertedChar) {
                 case '(':
                 case '[':
+                case '{':
                     if (TypingCompletion.isCompletionSettingEnabled())
                         TypingCompletion.completeOpeningBracket(context);
                     break;
                 case ')':
                 case ']':
+                case '}':
                     if (TypingCompletion.isCompletionSettingEnabled())
                         caretPosition = TypingCompletion.skipClosingBracket(context);
                     break;

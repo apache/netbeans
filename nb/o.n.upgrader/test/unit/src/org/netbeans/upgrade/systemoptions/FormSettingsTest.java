@@ -26,9 +26,11 @@ public class FormSettingsTest extends BasicTestForImport {
     public FormSettingsTest(String testName) {
         super(testName, "formsettings.settings");
     }
+    @Override
     public void testPreferencesNodePath() throws Exception {
         assertPreferencesNodePath("/org/netbeans/modules/form");
     }
+    @Override
     public void testPropertyNames() throws Exception {
         assertPropertyNames(new String[] {
             "applyGridToPosition",

@@ -22,6 +22,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.InitializeParams;
+import org.netbeans.modules.java.lsp.server.Utils;
 
 /**
  * Encapsulates all nbcode-specific client capabilities. Need to be passed in
@@ -74,6 +75,21 @@ public final class NbCodeClientCapabilities {
      * Asks for groovy support. Temporary option, will be removed.
      */
     private Boolean wantsGroovySupport = Boolean.TRUE;
+
+    /**
+     * Common prefix for all commands.
+     */
+    private String commandPrefix = Utils.DEFAULT_COMMAND_PREFIX;
+
+    /**
+     * Common prefix for configuration.
+     */
+    private String configurationPrefix = "netbeans.";
+
+    /**
+     * Secondary prefix for configuration.
+     */
+    private String altConfigurationPrefix = "java+.";
 
     public ClientCapabilities getClientCapabilities() {
         return clientCaps;
@@ -137,6 +153,30 @@ public final class NbCodeClientCapabilities {
 
     public boolean wantsGroovySupport() {
         return wantsGroovySupport.booleanValue();
+    }
+
+    public String getCommandPrefix() {
+        return commandPrefix;
+    }
+
+    public void setCommandPrefix(String commandPrefix) {
+        this.commandPrefix = commandPrefix;
+    }
+
+    public String getConfigurationPrefix() {
+        return configurationPrefix;
+    }
+
+    public void setConfigurationPrefix(String configurationPrefix) {
+        this.configurationPrefix = configurationPrefix;
+    }
+
+    public String getAltConfigurationPrefix() {
+        return altConfigurationPrefix;
+    }
+
+    public void setAltConfigurationPrefix(String altConfigurationPrefix) {
+        this.altConfigurationPrefix = altConfigurationPrefix;
     }
 
     private NbCodeClientCapabilities withCapabilities(ClientCapabilities caps) {

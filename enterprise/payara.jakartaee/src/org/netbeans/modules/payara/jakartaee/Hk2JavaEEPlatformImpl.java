@@ -205,6 +205,14 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
                                break;
                 case v9_1_0:     profiles[index++] = Profile.JAKARTA_EE_9_1_FULL;
                                break;
+                case v10_0_0_web: profiles[index++] = Profile.JAKARTA_EE_10_WEB;
+                               break;
+                case v10_0_0:     profiles[index++] = Profile.JAKARTA_EE_10_FULL;
+                               break;
+                case v11_0_0_web: profiles[index++] = Profile.JAKARTA_EE_11_WEB;
+                               break;
+                case v11_0_0:     profiles[index++] = Profile.JAKARTA_EE_11_FULL;
+                               break;
             }
         } else {
             profiles = new Profile[0];
@@ -501,7 +509,7 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
                         cPath.add(f);
                     }
                 }
-                return cPath.toArray(new File[cPath.size()]);
+                return cPath.toArray(new File[0]);
             }
 
             if (TOOL_WSCOMPILE.equals(toolName)) {
@@ -514,7 +522,7 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
                         cPath.add(f);
                     }
                 }
-                return cPath.toArray(new File[cPath.size()]);
+                return cPath.toArray(new File[0]);
             }
 
             File domainDir;
@@ -1000,8 +1008,7 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
                 else {
                     classPathType = ClassPath.COMPILE;
                 }
-                ProjectClassPathModifier.addRoots(urls.toArray( new URL[ urls.size()]),
-                        sourceRoot, classPathType );
+                ProjectClassPathModifier.addRoots(urls.toArray(new URL[0]), sourceRoot, classPathType);
             }
             catch (UnsupportedOperationException | IOException ex) {
                 return false;

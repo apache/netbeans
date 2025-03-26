@@ -50,7 +50,7 @@
 -->
  <answer id="arch-overall">
   <p>
-    The library is a facade over a java implementation of Git client - <a href="http://eclipse.org/jgit/">JGit</a>. Because JGit does not provide a full-featured high-level API
+    The library is a facade over a java implementation of Git client - <a href="https://www.eclipse.org/jgit">JGit</a>. Because JGit does not provide a full-featured high-level API
     (on the level of whole git commands), this library groups the JGit low-level API into bigger pieces and exports the API in the form of full Git commandline commands 
     (e.g. status, commit, checkout, reset, etc.).
     <api name="GitlibraryAPI" group="java" type="export" category="devel">
@@ -876,7 +876,7 @@
 -->
  <answer id="perf-mem">
   <p>
-   Repository metadata is cached as long as someone holds a reference to the repository root folder (<a href="@JDK@/java/io/File.html">java.io.File</a>).
+   Repository metadata is cached as long as someone holds a reference to the repository root folder (<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/io/File.html">java.io.File</a>).
    The underlying JGit library caches:
   </p>
   <ul>

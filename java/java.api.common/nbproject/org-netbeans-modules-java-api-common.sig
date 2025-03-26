@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.141
+#Version 1.150
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1150,7 +1150,7 @@ meth public org.netbeans.api.java.classpath.ClassPath findClassPath(org.openide.
 meth public org.netbeans.api.java.classpath.ClassPath getProjectSourcesClassPath(java.lang.String)
 meth public org.netbeans.api.java.classpath.ClassPath[] getProjectClassPaths(java.lang.String)
 supr org.netbeans.modules.java.api.common.classpath.AbstractClassPathProvider
-hfds INTERNAL_MOUDLE_BINARIES_PATH,LOG,buildModulesDirProperty,dirCache,eval,executeClassPath,executeModulePath,helper,javacClassPath,modSensitivePrjPathFcts,modulePath,platformType,processorClassPath,processorModulePath,projectDirectory,sourceCache,testCache,testExecuteClassPath,testExecuteModulePath,testJavacClassPath,testModulePath,testProcessorClassPath,testProcessorModulePath,urlCache
+hfds INTERNAL_MODULE_BINARIES_PATH,LOG,buildModulesDirProperty,dirCache,eval,executeClassPath,executeModulePath,helper,javacClassPath,modSensitivePrjPathFcts,modulePath,platformType,processorClassPath,processorModulePath,projectDirectory,sourceCache,testCache,testExecuteClassPath,testExecuteModulePath,testJavacClassPath,testModulePath,testProcessorClassPath,testProcessorModulePath,urlCache
 hcls Cache,Filter,Location,Owner,TranslateBuildModules
 
 CLSS public final static org.netbeans.modules.java.api.common.classpath.MultiModuleClassPathProvider$Builder
@@ -2137,6 +2137,14 @@ supr javax.swing.JPanel
 hfds LOG,TESTS_RE,addButton,fcMessage,jLabel1,jScrollPane1,lastUsedFolder,projectFolder,relatedFolderFilter,relatedFolderList,removeButton,roots
 hcls ContextFileFilter,DNDHandle,FileListTransferable,Renderer
 
+CLSS public org.netbeans.modules.java.api.common.queries.GenericModuleInfoAccessibilityQuery
+cons public init()
+intf org.netbeans.spi.java.queries.AccessibilityQueryImplementation2
+meth public org.netbeans.spi.java.queries.AccessibilityQueryImplementation2$Result isPubliclyAccessible(org.openide.filesystems.FileObject)
+supr java.lang.Object
+hfds LOG,path2Result,sourcePath2Listener
+hcls ClassPathListener,CleanPath2Result,ResultImpl,TextJFO
+
 CLSS public abstract interface org.netbeans.modules.java.api.common.queries.MultiModuleGroupQuery
 innr public final static Result
 meth public abstract org.netbeans.api.project.SourceGroup[] filterModuleGroups(java.lang.String,org.netbeans.api.project.SourceGroup[])
@@ -2403,6 +2411,12 @@ meth protected static java.net.URI[] convertURLsToURIs(java.net.URL[])
 supr java.lang.Object
 hcls Accessor
 
+CLSS public abstract interface org.netbeans.spi.java.queries.AccessibilityQueryImplementation2
+innr public abstract interface static Result
+meth public abstract org.netbeans.spi.java.queries.AccessibilityQueryImplementation2$Result isPubliclyAccessible(org.openide.filesystems.FileObject)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+
 CLSS public abstract interface org.netbeans.spi.project.ActionProvider
 fld public final static java.lang.String COMMAND_BUILD = "build"
 fld public final static java.lang.String COMMAND_CLEAN = "clean"
@@ -2423,6 +2437,7 @@ fld public final static java.lang.String COMMAND_RENAME = "rename"
 fld public final static java.lang.String COMMAND_RUN = "run"
 fld public final static java.lang.String COMMAND_RUN_SINGLE = "run.single"
 fld public final static java.lang.String COMMAND_TEST = "test"
+fld public final static java.lang.String COMMAND_TEST_PARALLEL = "test.parallel"
 fld public final static java.lang.String COMMAND_TEST_SINGLE = "test.single"
 meth public abstract boolean isActionEnabled(java.lang.String,org.openide.util.Lookup)
 meth public abstract java.lang.String[] getSupportedActions()

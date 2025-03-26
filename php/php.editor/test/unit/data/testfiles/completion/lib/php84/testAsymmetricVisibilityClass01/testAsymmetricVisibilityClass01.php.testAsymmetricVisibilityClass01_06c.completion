@@ -1,0 +1,26 @@
+Code completion result for source line:
+final protected |private(set) int $finalProtectedPrivateSet; // prop
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      AsymmetricVisibility            [PUBLIC]   testAsymmetricVisibilityClass01.php
+CLASS      AsymmetricVisibilityPromoted    [PUBLIC]   testAsymmetricVisibilityClass01.php
+CLASS      Bar                             [PUBLIC]   testAsymmetricVisibilityClass01.php
+CLASS      Foo                             [PUBLIC]   testAsymmetricVisibilityClass01.php
+------------------------------------
+KEYWORD    array                                      null
+KEYWORD    bool                                       null
+KEYWORD    false                                      null
+KEYWORD    float                                      null
+KEYWORD    int                                        null
+KEYWORD    iterable                                   null
+KEYWORD    mixed                                      null
+KEYWORD    null                                       null
+KEYWORD    object                                     null
+KEYWORD    parent                                     null
+KEYWORD    private(set)                               null
+KEYWORD    protected(set)                             null
+KEYWORD    public(set)                                null
+KEYWORD    readonly                                   null
+KEYWORD    self                                       null
+KEYWORD    static                                     null
+KEYWORD    string                                     null
+KEYWORD    true                                       null

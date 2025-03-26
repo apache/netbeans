@@ -24,8 +24,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.ArrayList;
+
 import static java.util.Arrays.asList;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -277,7 +280,7 @@ public class CreateDomain extends Thread {
         PrintWriter p = null;
         File retVal = null;
         try {
-            retVal = File.createTempFile("admin", null);//NOI18N
+            retVal = Files.createTempFile("admin", null).toFile();//NOI18N
 
             retVal.deleteOnExit();
             output = new FileOutputStream(retVal);

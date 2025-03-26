@@ -152,7 +152,7 @@ public abstract class AbstractApplyHintsRefactoringPlugin extends ProgressProvid
         }
         
         for (List<RefactoringElementImplementation> changes : file2Changes.values()) {
-            Collections.sort(changes, new Comparator<RefactoringElementImplementation>() {
+            changes.sort(new Comparator<RefactoringElementImplementation>() {
                 @Override public int compare(RefactoringElementImplementation o1, RefactoringElementImplementation o2) {
                     return o1.getPosition().getBegin().getOffset() - o2.getPosition().getBegin().getOffset();
                 }
@@ -608,7 +608,7 @@ public abstract class AbstractApplyHintsRefactoringPlugin extends ProgressProvid
             }
 
             private synchronized ProgressListener[] getListenersCopy() {
-                return progressListenerList.toArray(new ProgressListener[progressListenerList.size()]);
+                return progressListenerList.toArray(new ProgressListener[0]);
             }
 
             private void log(Exception e) {

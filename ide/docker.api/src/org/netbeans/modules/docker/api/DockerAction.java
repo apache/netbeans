@@ -148,9 +148,9 @@ public class DockerAction {
                 JSONObject json = (JSONObject) o;
                 JSONArray repoTags = (JSONArray) json.get("RepoTags");
                 String id = (String) json.get("Id");
-                long created = (long) json.get("Created");
-                long size = (long) json.get("Size");
-                long virtualSize = (long) json.get("VirtualSize");
+                long created = (long) json.getOrDefault("Created", 0L);
+                long size = (long) json.getOrDefault("Size", 0L);
+                long virtualSize = (long) json.getOrDefault("VirtualSize", size);
                 ret.add(new DockerImage(instance, repoTags, id, created, size, virtualSize));
             }
             return ret;

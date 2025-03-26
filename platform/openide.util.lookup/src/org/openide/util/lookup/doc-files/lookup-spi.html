@@ -60,13 +60,13 @@ your own results. Here the class ProxyLookup comes into the play.
 You simply create a new lookup like this:
 
 <pre>
-    <font class="keyword">import</FONT> org.openide.util.Lookup;
-    <font class="keyword">import</FONT> org.openide.util.lookup.*;
+    <span class="keyword">import</span> org.openide.util.Lookup;
+    <span class="keyword">import</span> org.openide.util.lookup.*;
 
-    <font class="type">Lookup</font> <font class="variable-name">lookup1</font> = ...;
+    <span class="type">Lookup</span> <span class="variable-name">lookup1</span> = ...;
 
-    <font class="type">Lookup</font> <font class="variable-name">lookup2</font> = Lookups.singleton(MyService.<font class="keyword">class</font>);
-    <font class="keyword">return</font> <font class="keyword">new</font> <font class="type">ProxyLookup</font>(<font class="keyword">new</font> <font class="type">Lookup</font>[] { lookup, lookup2 });
+    <span class="type">Lookup</span> <span class="variable-name">lookup2</span> = Lookups.singleton(MyService.<span class="keyword">class</span>);
+    <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">ProxyLookup</span>(<span class="keyword">new</span> <span class="type">Lookup</span>[] { lookup, lookup2 });
 </pre>
 
 <H2> AbstractLookup </H2>
@@ -103,10 +103,10 @@ at any time and will update the set of registered instances (firing
 result changes as needed).
 
 <pre>
-    <font class="keyword">import</FONT> org.openide.util.lookup.*;
-    <font class="type">InstanceContent</font> <font class="variable-name">ic</font> = <font class="keyword">new</font> <font class="type">InstanceContent</font> ();
+    <span class="keyword">import</span> org.openide.util.lookup.*;
+    <span class="type">InstanceContent</span> <span class="variable-name">ic</span> = <span class="keyword">new</span> <span class="type">InstanceContent</span> ();
     ic.add(firstObject);
-    <font class="keyword">return</font> <font class="keyword">new</font> <font class="type">AbstractLookup</font> (ic);
+    <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">AbstractLookup</span> (ic);
 </pre>
 
 <p>In case it is expensive to actually compute the object in the

@@ -507,7 +507,7 @@ final class DnDSupport implements DragSourceListener, DragGestureListener, DropT
             children.add( targetIndex, objToMove );
         }
 
-        backingFolder.setOrder( children.toArray( new DataObject[children.size()]) );
+        backingFolder.setOrder(children.toArray(new DataObject[0]) );
     }
 
     private DataObject getDataObjectUnderDropCursor( int dropIndex, boolean dropBefore ) {
@@ -579,7 +579,7 @@ final class DnDSupport implements DragSourceListener, DragGestureListener, DropT
             if( t.isDataFlavorSupported(buttonDataFlavor) ) {
                 o = t.getTransferData(buttonDataFlavor);
             }
-            if( null != o && o instanceof DataObject ) {
+            if(o instanceof DataObject) {
                 ((DataObject) o).delete();
                 sourceToolbar.repaint();
             }

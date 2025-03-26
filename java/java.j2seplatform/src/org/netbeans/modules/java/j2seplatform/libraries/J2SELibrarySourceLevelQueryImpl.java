@@ -88,7 +88,7 @@ public class J2SELibrarySourceLevelQueryImpl implements SourceLevelQueryImplemen
                 if (sourceRoots.isEmpty()) {
                     continue;
                 }
-                ClassPath cp = ClassPathSupport.createClassPath(sourceRoots.toArray(new URL[sourceRoots.size()]));
+                ClassPath cp = ClassPathSupport.createClassPath(sourceRoots.toArray(new URL[0]));
                 FileObject root = cp.findOwnerRoot(javaFile);
                 if (root != null) {
                     setLastUsedRoot(root, lib);

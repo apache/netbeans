@@ -78,6 +78,7 @@ public class ExtKit extends BaseKit {
      * its name is defined here for clarity
      * @deprecated Without any replacement.
      */
+    @Deprecated
     public static final String findAction = "find"; // NOI18N
 
     /** Open replace dialog action - this action is defined in view package, but
@@ -113,11 +114,13 @@ public class ExtKit extends BaseKit {
     /** Advanced code selection technique
      * @deprecated this action name is not actively used by ExtKit and will be removed in future releases.
      */
+    @Deprecated
     public static final String codeSelectAction = "code-select"; // NOI18N
 
     /** Action used when escape is pressed. By default it hides popup-menu
      * @deprecated this action name is not actively used by ExtKit and will be removed in future releases.
      */
+    @Deprecated
     public static final String escapeAction = "escape"; // NOI18N
 
     /** Find the completion help and show it in the completion pane. */
@@ -173,7 +176,7 @@ public class ExtKit extends BaseKit {
             try {
                 ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
                 Class extEditorUIClass = loader.loadClass("org.netbeans.editor.ext.ExtEditorUI"); //NOI18N
-                return (EditorUI) extEditorUIClass.newInstance();
+                return (EditorUI) extEditorUIClass.getDeclaredConstructor().newInstance();
             } catch (Exception e) {
                 noExtEditorUIClass = true;
             }
@@ -193,12 +196,12 @@ public class ExtKit extends BaseKit {
         actions.add(new CommentAction()); // to make ctrl-shift-T in Netbeans55 profile work
         actions.add(new UncommentAction()); // to make ctrl-shift-D in Netbeans55 profile work
                 
-        return TextAction.augmentList(super.createActions(), actions.toArray(new Action[actions.size()]));
+        return TextAction.augmentList(super.createActions(), actions.toArray(new Action[0]));
     }
     
     /**
      * Action that is localized in org.netbeans.editor package.
-     * <br/>
+     * <br>
      * <code>BaseKit.class</code> is used as a bundle class.
      */
     private abstract static class BaseKitLocalizedAction extends BaseAction {
@@ -292,7 +295,7 @@ public class ExtKit extends BaseKit {
          * @param popupMenu popup menu to which this method should add
          *  the item corresponding to the action-name.
          * @param actionName name of the action to add. The real action
-         *  can be retrieved from the kit by calling <tt>getActionByName()</tt>.
+         *  can be retrieved from the kit by calling <code>getActionByName()</code>.
          */
         protected void addAction(JTextComponent target, JPopupMenu popupMenu,
         String actionName) {
@@ -317,7 +320,7 @@ public class ExtKit extends BaseKit {
                         }
                         item.setEnabled(a.isEnabled());
                         Object helpID = a.getValue ("helpID"); // NOI18N
-                        if (helpID != null && (helpID instanceof String))
+                        if (helpID instanceof String)
                             item.putClientProperty ("HelpID", helpID); // NOI18N
                     }
                 }
@@ -487,6 +490,7 @@ public class ExtKit extends BaseKit {
      * Action to go to the declaration of the variable under the caret.
      * @deprecated this action is no longer used. It is reimplemented in editor.actions module.
      */
+    @Deprecated
     public static class GotoDeclarationAction extends BaseKitLocalizedAction {
 
         static final long serialVersionUID =-6440495023918097760L;
@@ -586,6 +590,7 @@ public class ExtKit extends BaseKit {
      * @deprecated Please use Braces Matching SPI instead, for details see
      *   <a href="@org-netbeans-modules-editor-bracesmatching@/overview-summary.html">Editor Braces Matching</a>.
      */
+    @Deprecated
     public static class MatchBraceAction extends BaseKitLocalizedAction {
 // XXX: remove
 //        boolean select;
@@ -642,6 +647,7 @@ public class ExtKit extends BaseKit {
     /**
      * @deprecated this action is deprecated and will be removed in future releases.
      */
+    @Deprecated
     public static class CodeSelectAction extends BaseKitLocalizedAction {
 
         static final long serialVersionUID =4033474080778585860L;
@@ -1036,6 +1042,7 @@ public class ExtKit extends BaseKit {
 //            name = defaultKeyTypedAction,
 //            shortDescription = editorBundleHash + defaultKeyTypedAction
 //    )
+    @Deprecated
     public static class ExtDefaultKeyTypedAction extends DefaultKeyTypedAction {
 
         static final long serialVersionUID =5273032708909044812L;
@@ -1073,7 +1080,7 @@ public class ExtKit extends BaseKit {
         /** 
          * Check the characters that should cause reindenting the line. 
          * 
-         * @deprecated Please use <a href="@org-netbeans-modules-editor-indent@/org/netbeans/modules/editor/indent/spi/support/AutomatedIndenting.html">AutomatedIndentig</a>
+         * @deprecated Please use <a href="@org-netbeans-modules-editor-indent-support@/org/netbeans/modules/editor/indent/spi/support/AutomatedIndenting.html">AutomatedIndentig</a>
          *   or Typing Hooks instead, for details see
          *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
          */
@@ -1094,6 +1101,7 @@ public class ExtKit extends BaseKit {
      * @deprecated Please use Editor Code Completion API instead, for details see
      *   <a href="@org-netbeans-modules-editor-completion@/overview-summary.html">Editor Code Completion</a>.
      */
+    @Deprecated
     @EditorActionRegistration(
             name = completionShowAction,
             shortDescription = editorBundleHash + completionShowAction
@@ -1114,6 +1122,7 @@ public class ExtKit extends BaseKit {
      * @deprecated Please use Editor Code Completion API instead, for details see
      *   <a href="@org-netbeans-modules-editor-completion@/overview-summary.html">Editor Code Completion</a>.
      */
+    @Deprecated
     @EditorActionRegistration(
             name = allCompletionShowAction,
             shortDescription = editorBundleHash + allCompletionShowAction
@@ -1132,6 +1141,7 @@ public class ExtKit extends BaseKit {
      * @deprecated Please use Editor Code Completion API instead, for details see
      *   <a href="@org-netbeans-modules-editor-completion@/overview-summary.html">Editor Code Completion</a>.
      */
+    @Deprecated
     @EditorActionRegistration(
             name = documentationShowAction,
             shortDescription = editorBundleHash + documentationShowAction
@@ -1150,6 +1160,7 @@ public class ExtKit extends BaseKit {
      * @deprecated Please use Editor Code Completion API instead, for details see
      *   <a href="@org-netbeans-modules-editor-completion@/overview-summary.html">Editor Code Completion</a>.
      */
+    @Deprecated
     @EditorActionRegistration(
             name = completionTooltipShowAction,
             shortDescription = editorBundleHash + completionTooltipShowAction
@@ -1168,7 +1179,8 @@ public class ExtKit extends BaseKit {
      * @deprecated Please do not subclass this class. Use Typing Hooks instead, for details see
      *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
      */
-  public static class ExtDeleteCharAction extends DeleteCharAction {
+    @Deprecated
+    public static class ExtDeleteCharAction extends DeleteCharAction {
 
     public ExtDeleteCharAction(String nm, boolean nextChar) {
       super(nm, nextChar);

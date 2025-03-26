@@ -22,8 +22,6 @@ import java.io.File;
 import java.util.logging.Level;
 import junit.framework.Test;
 import junit.framework.TestCase;
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.JPDASupport;
 import org.netbeans.api.debugger.jpda.JPDAThread;
@@ -49,6 +47,9 @@ public abstract class JPDATestCase extends NbTestCase {
                 failOnException(Level.INFO).
                 enableClasspathModules(false). 
                 clusters(".*").
+                // TODO remove once polyglot tests can run on JDK 17+ and uncomment the other line again
+                enableModules("(?!org.netbeans.modules.languages.hcl|org.netbeans.lib.nbjshell9|org.netbeans.lib.nbjshell|org.netbeans.libs.graalsdk.system).*").hideExtraModules(true).
+//                enableModules("org.netbeans.libs.nbjavacapi").
                 suite();
     }
 
@@ -79,6 +80,7 @@ public abstract class JPDATestCase extends NbTestCase {
     }
 
     protected final void runScriptUnderJPDA(String launcher, String scriptPath, ThrowableConsumer<JPDASupport> supportConsumer) throws Exception {
+        assertTrue("'"+launcher+"' launcher not available", JPDASupport.isLauncherAvailable(launcher));
         // Translate script path from source dir to target dir:
         scriptPath = getBinariesPath(scriptPath);
         JPDASupport support = JPDASupport.attachScript(launcher, scriptPath);
@@ -109,6 +111,7 @@ public abstract class JPDATestCase extends NbTestCase {
     }
 
     protected TruffleStackFrame checkStoppedAtScript(JPDAThread thread, String sourcePath, int line) {
+        assertNotNull("JPDAThread was null while testing (JVM crash?): "+sourcePath, thread);
         CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(thread);
         assertNotNull("Missing CurrentPCInfo, suspended at " + thread.getClassName() + "." + thread.getMethodName(), currentPCInfo);
         TruffleStackFrame topFrame = currentPCInfo.getTopFrame();

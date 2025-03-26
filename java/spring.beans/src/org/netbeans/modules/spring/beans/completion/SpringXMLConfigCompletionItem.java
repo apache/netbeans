@@ -504,7 +504,7 @@ public abstract class SpringXMLConfigCompletionItem implements CompletionItem {
         private static final String METHOD_ST_PROTECTED = "org/netbeans/modules/editor/resources/completion/method_static_protected_16.png"; //NOI18N
         private static final String METHOD_ST_PRIVATE = "org/netbeans/modules/editor/resources/completion/method_static_private_16.png"; //NOI18N
         private static final String METHOD_ST_PACKAGE = "org/netbeans/modules/editor/resources/completion/method_static_package_private_16.png"; //NOI18N
-        private static final String METHOD_COLOR = getHTMLColor(0, 0, 0);; //NOI18N
+        private static final String METHOD_COLOR = getHTMLColor(0, 0, 0); //NOI18N
         private static final String PARAMETER_NAME_COLOR = getHTMLColor(160, 96, 1);
         private static ImageIcon icon[][] = new ImageIcon[2][4];
 
@@ -795,7 +795,7 @@ public abstract class SpringXMLConfigCompletionItem implements CompletionItem {
 
         @Override
         protected ImageIcon getIcon() {
-            return new ImageIcon(getTreeFolderIcon());
+            return ImageUtilities.icon2ImageIcon(ImageUtilities.image2Icon(getTreeFolderIcon()));
         }
 
         @Override

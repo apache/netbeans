@@ -30,6 +30,7 @@ import org.netbeans.modules.csl.api.HintFix;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
 import org.netbeans.modules.php.editor.CodeUtils;
+import org.netbeans.modules.php.editor.PredefinedSymbols;
 import org.netbeans.modules.php.editor.model.EnumScope;
 import org.netbeans.modules.php.editor.model.FieldElement;
 import org.netbeans.modules.php.editor.model.FileScope;
@@ -46,6 +47,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.EnumDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Statement;
+import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
@@ -56,7 +58,25 @@ import org.openide.util.NbBundle;
  */
 public class IncorrectEnumHintError extends HintErrorRule {
 
+    private static final Map<String, String> FORBIDDEN_MAGIC_METHODS = new HashMap<>();
+    private static final Map<String, String> FORBIDDEN_BACKED_ENUM_METHODS = new HashMap<>();
+
     private FileObject fileObject;
+
+    static {
+        for (String methodName : PredefinedSymbols.MAGIC_METHODS) {
+            // Methods __call, __callStatic and __invoke are allowed in enum.
+            if ("__call".equals(methodName) // NOI18N
+                    || "__callStatic".equals(methodName) // NOI18N
+                    || "__invoke".equals(methodName)) { // NOI18N
+                continue;
+            }
+            FORBIDDEN_MAGIC_METHODS.put(methodName.toLowerCase(), methodName);
+        }
+
+        FORBIDDEN_BACKED_ENUM_METHODS.put("from", "from"); // NOI18N
+        FORBIDDEN_BACKED_ENUM_METHODS.put("tryfrom", "tryFrom"); // NOI18N
+    }
 
     @Override
     @NbBundle.Messages("IncorrectEnumHintError.displayName=Incorrect Declaration of Enumeration")
@@ -65,14 +85,6 @@ public class IncorrectEnumHintError extends HintErrorRule {
     }
 
     @Override
-    @NbBundle.Messages({
-        "IncorrectEnumHintError.incorrectEnumCases=\"case\" can only be in enums",
-        "IncorrectEnumHintError.incorrectEnumBackingTypes=Backing type must be \"string\" or \"int\"",
-        "IncorrectEnumHintError.incorrectEnumProperties=Enum cannot have properties",
-        "# {0} - the trait name",
-        "IncorrectEnumHintError.incorrectEnumPropertiesWithTrait=Enum cannot have properties, but \"{0}\" has properties",
-        "IncorrectEnumHintError.incorrectEnumConstructor=Enum cannot have a constructor",
-    })
     public void invoke(PHPRuleContext context, List<Hint> hints) {
         PHPParseResult phpParseResult = (PHPParseResult) context.parserResult;
         if (phpParseResult.getProgram() == null) {
@@ -86,24 +98,11 @@ public class IncorrectEnumHintError extends HintErrorRule {
             }
             CheckVisitor checkVisitor = new CheckVisitor();
             phpParseResult.getProgram().accept(checkVisitor);
-            for (CaseDeclaration incorrectEnumCase : checkVisitor.getIncorrectEnumCases()) {
-                if (CancelSupport.getDefault().isCancelled()) {
-                    return;
-                }
-                addHint(incorrectEnumCase, Bundle.IncorrectEnumHintError_incorrectEnumCases(), hints);
-            }
-            for (Expression incorrectBackingTypes : checkVisitor.getIncorrectBackingTypes()) {
-                if (CancelSupport.getDefault().isCancelled()) {
-                    return;
-                }
-                addHint(incorrectBackingTypes, Bundle.IncorrectEnumHintError_incorrectEnumBackingTypes(), hints);
-            }
-            for (FieldsDeclaration incorrectEnumProperty : checkVisitor.getIncorrectEnumProperties()) {
-                if (CancelSupport.getDefault().isCancelled()) {
-                    return;
-                }
-                addHint(incorrectEnumProperty, Bundle.IncorrectEnumHintError_incorrectEnumProperties(), hints);
-            }
+            addIncorrectEnumCases(checkVisitor, hints);
+            addIncorrectNonBackedEnumCases(checkVisitor, hints);
+            addIncorrectBackedEnumCases(checkVisitor, hints);
+            addIncorrectBackingTypes(checkVisitor, hints);
+            addIncorrectEnumProperties(checkVisitor, hints);
 
             // incorrect property with trait
             Collection<? extends EnumScope> declaredEnums = ModelUtils.getDeclaredEnums(fileScope);
@@ -112,11 +111,79 @@ public class IncorrectEnumHintError extends HintErrorRule {
                     return;
                 }
                 checkTraits(declaredEnum.getTraits(), declaredEnum, hints, checkVisitor.getUseTraits());
-                checkConstructor(declaredEnum.getDeclaredMethods(), hints);
+                // Forbidden methods from traits are ignored by PHP
+                boolean isBackedEnum = declaredEnum.getBackingType() != null;
+                checkMethods(declaredEnum.getDeclaredMethods(), isBackedEnum, hints);
             }
         }
     }
 
+    @NbBundle.Messages({
+        "IncorrectEnumHintError.incorrectEnumCases=\"case\" can only be in enums",
+    })
+    private void addIncorrectEnumCases(CheckVisitor checkVisitor, List<Hint> hints) {
+        for (CaseDeclaration incorrectEnumCase : checkVisitor.getIncorrectEnumCases()) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            addHint(incorrectEnumCase, Bundle.IncorrectEnumHintError_incorrectEnumCases(), hints);
+        }
+    }
+
+    @NbBundle.Messages({
+        "# {0} - case name",
+        "IncorrectEnumHintError.incorrectNonBackedEnumCases=Case \"{0}\" of non-backed enum must not have a value",
+    })
+    private void addIncorrectNonBackedEnumCases(CheckVisitor checkVisitor, List<Hint> hints) {
+        for (CaseDeclaration incorrectEnumCase : checkVisitor.getIncorrectNonBackedEnumCases()) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            addHint(incorrectEnumCase, Bundle.IncorrectEnumHintError_incorrectNonBackedEnumCases(incorrectEnumCase.getName().getName()), hints);
+        }
+    }
+
+    @NbBundle.Messages({
+        "# {0} - case name",
+        "IncorrectEnumHintError.incorrectBackedEnumCases=Case \"{0}\" of backed enum must have a value",
+    })
+    private void addIncorrectBackedEnumCases(CheckVisitor checkVisitor, List<Hint> hints) {
+        for (CaseDeclaration incorrectEnumCase : checkVisitor.getIncorrectBackedEnumCases()) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            addHint(incorrectEnumCase, Bundle.IncorrectEnumHintError_incorrectBackedEnumCases(incorrectEnumCase.getName().getName()), hints);
+        }
+    }
+
+    @NbBundle.Messages({
+        "IncorrectEnumHintError.incorrectEnumBackingTypes=Backing type must be \"string\" or \"int\"",
+    })
+    private void addIncorrectBackingTypes(CheckVisitor checkVisitor, List<Hint> hints) {
+        for (Expression incorrectBackingTypes : checkVisitor.getIncorrectBackingTypes()) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            addHint(incorrectBackingTypes, Bundle.IncorrectEnumHintError_incorrectEnumBackingTypes(), hints);
+        }
+    }
+
+    @NbBundle.Messages({
+        "IncorrectEnumHintError.incorrectEnumProperties=Enum cannot have properties",
+    })
+    private void addIncorrectEnumProperties(CheckVisitor checkVisitor, List<Hint> hints) {
+        for (FieldsDeclaration incorrectEnumProperty : checkVisitor.getIncorrectEnumProperties()) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            addHint(incorrectEnumProperty, Bundle.IncorrectEnumHintError_incorrectEnumProperties(), hints);
+        }
+    }
+
+    @NbBundle.Messages({
+        "# {0} - the trait name",
+        "IncorrectEnumHintError.incorrectEnumPropertiesWithTrait=Enum cannot have properties, but \"{0}\" has properties",
+    })
     private void checkTraits(Collection<? extends TraitScope> traits, EnumScope enumScope, List<Hint> hints, Map<EnumDeclaration, UseTraitStatement> useTraits) {
         for (TraitScope trait : traits) {
             if (CancelSupport.getDefault().isCancelled()) {
@@ -141,13 +208,30 @@ public class IncorrectEnumHintError extends HintErrorRule {
         }
     }
 
-    private void checkConstructor(Collection<? extends MethodScope> methods, List<Hint> hints) {
+    @NbBundle.Messages({
+        "IncorrectEnumHintError.incorrectEnumConstructor=Enum cannot have a constructor",
+        "IncorrectEnumHintError.incorrectEnumMethodCases=Enum cannot redeclare method \"cases\"",
+        "# {0} - the method name",
+        "IncorrectEnumHintError.incorrectEnumMagicMethod=Enum cannot contain magic method method \"{0}\"",
+        "# {0} - the method name",
+        "IncorrectEnumHintError.incorrectBackedEnumMethod=Backed enum cannot redeclare method \"{0}\"",
+    })
+    private void checkMethods(Collection<? extends MethodScope> methods, boolean isBackedEnum, List<Hint> hints) {
         for (MethodScope method : methods) {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
             if (method.isConstructor()) {
                 addHint(method, Bundle.IncorrectEnumHintError_incorrectEnumConstructor(), hints);
+                continue;
+            }
+            String methodName = method.getName().toLowerCase();
+            if ("cases".equals(methodName)) { // NOI18N
+                addHint(method, Bundle.IncorrectEnumHintError_incorrectEnumMethodCases(), hints);
+            } else if (FORBIDDEN_MAGIC_METHODS.containsKey(methodName)) {
+                addHint(method, Bundle.IncorrectEnumHintError_incorrectEnumMagicMethod(FORBIDDEN_MAGIC_METHODS.get(methodName)), hints);
+            } else if (isBackedEnum && FORBIDDEN_BACKED_ENUM_METHODS.containsKey(methodName)) {
+                addHint(method, Bundle.IncorrectEnumHintError_incorrectBackedEnumMethod(FORBIDDEN_BACKED_ENUM_METHODS.get(methodName)), hints);
             }
         }
     }
@@ -186,6 +270,8 @@ public class IncorrectEnumHintError extends HintErrorRule {
     private static final class CheckVisitor extends DefaultVisitor {
 
         private final Set<CaseDeclaration> incorrectEnumCases = new HashSet<>();
+        private final Set<CaseDeclaration> incorrectNonBackedEnumCases = new HashSet<>();
+        private final Set<CaseDeclaration> incorrectBackedEnumCases = new HashSet<>();
         private final Set<Expression> incorrectBackingTypes = new HashSet<>();
         private final Set<FieldsDeclaration> incorrectEnumProperties = new HashSet<>();
         private final Map<EnumDeclaration, UseTraitStatement> useTraits = new HashMap<>();
@@ -198,8 +284,19 @@ public class IncorrectEnumHintError extends HintErrorRule {
             scan(node.getAttributes());
             scan(node.getName());
             scan(node.getSuperClass());
-            scan(node.getInterfaes());
+            scan(node.getInterfaces());
             checkEnumCases(node.getBody().getStatements());
+        }
+
+        @Override
+        public void visit(TraitDeclaration traitDeclaration) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            scan(traitDeclaration.getAttributes());
+            scan(traitDeclaration.getName());
+            scan(traitDeclaration.getBody());
+            checkEnumCases(traitDeclaration.getBody().getStatements());
         }
 
         private void checkEnumCases(List<Statement> statements) {
@@ -221,7 +318,7 @@ public class IncorrectEnumHintError extends HintErrorRule {
             }
             scan(node.getAttributes());
             scan(node.getName());
-            scan(node.getInterfaes());
+            scan(node.getInterfaces());
             Expression backingType = node.getBackingType();
             if (backingType != null) {
                 String name = CodeUtils.extractQualifiedName(backingType);
@@ -235,6 +332,7 @@ public class IncorrectEnumHintError extends HintErrorRule {
         }
 
         private void checkStatements(List<Statement> statements, EnumDeclaration node) {
+            boolean isBackedEnum = node.getBackingType() != null;
             for (Statement statement : statements) {
                 if (CancelSupport.getDefault().isCancelled()) {
                     return;
@@ -243,13 +341,38 @@ public class IncorrectEnumHintError extends HintErrorRule {
                     incorrectEnumProperties.add((FieldsDeclaration) statement);
                 } else if (statement instanceof UseTraitStatement) {
                     useTraits.put(node, (UseTraitStatement) statement);
+                } else if (statement instanceof CaseDeclaration) {
+                    checkCaseDeclaration((CaseDeclaration) statement, isBackedEnum);
                 }
                 scan(statement);
             }
         }
 
+        private void checkCaseDeclaration(CaseDeclaration caseDeclaration, boolean isBacked) {
+            Expression initializer = caseDeclaration.getInitializer();
+            if (isBacked) {
+                if (initializer == null) {
+                    // enum Backed: int { case A;} // fatal error
+                    incorrectBackedEnumCases.add(caseDeclaration);
+                }
+            } else {
+                // enum NonBacked { case A = 1;} // fatal error
+                if (initializer != null) {
+                    incorrectNonBackedEnumCases.add(caseDeclaration);
+                }
+            }
+        }
+
         public Set<CaseDeclaration> getIncorrectEnumCases() {
             return Collections.unmodifiableSet(incorrectEnumCases);
+        }
+
+        public Set<CaseDeclaration> getIncorrectNonBackedEnumCases() {
+            return Collections.unmodifiableSet(incorrectNonBackedEnumCases);
+        }
+
+        public Set<CaseDeclaration> getIncorrectBackedEnumCases() {
+            return Collections.unmodifiableSet(incorrectBackedEnumCases);
         }
 
         public Set<Expression> getIncorrectBackingTypes() {

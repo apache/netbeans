@@ -268,8 +268,18 @@ public final class TerminalContainerTabbed extends TerminalContainerCommon {
 
 	@Override
 	protected void showPopup(MouseEvent e) {
-	    Terminal selected = (Terminal) getSelected();
-	    
+            Terminal selected = null;
+            if (e.getSource() == tabbedPane) {
+                int tabIndex = tabbedPane.indexAtLocation(e.getX(), e.getY());
+                if(tabIndex >= 0) {
+                    selected = (Terminal) tabbedPane.getComponentAt(tabIndex);
+                }
+            }
+
+            if (selected == null) {
+                selected = (Terminal) getSelected();
+            }
+
 	    Action close = ActionFactory.forID(ActionFactory.CLOSE_ACTION_ID);
 	    Action setTitle = ActionFactory.forID(ActionFactory.SET_TITLE_ACTION_ID);
 	    Action pin = ActionFactory.forID(ActionFactory.PIN_TAB_ACTION_ID);
@@ -285,7 +295,7 @@ public final class TerminalContainerTabbed extends TerminalContainerCommon {
 			null,
 			setTitle,
 			pin
-		    }, Lookups.fixed(getSelected())
+		    }, Lookups.fixed(selected)
 	    );
 	    menu.show(TerminalContainerTabbed.this, e.getX(), e.getY());
 	}

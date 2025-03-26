@@ -18,9 +18,56 @@
  */
 'use strict';
 
-import { commands, CompletionItem, CompletionList, ExtensionContext, languages, ProviderResult, SnippetString } from 'vscode';
+import { commands, CompletionItem, CompletionList, ExtensionContext, languages, ProviderResult, SnippetString, window, workspace } from 'vscode';
 import { InsertTextFormat } from 'vscode-languageclient';
 import * as jsoncp from 'jsonc-parser';
+import * as fs from 'fs';
+import { COMMAND_PREFIX } from "./extension";
+
+export function updateLaunchConfig() {
+    workspace.findFiles('.vscode/launch.json').then(async files => {
+        const updateOption = 'Update the existing launch.json file(s)';
+        let selection: any = undefined;
+        for (const file of files) {
+            let edits: jsoncp.Edit[] = [];
+            const content = fs.readFileSync(file.fsPath, 'utf8');
+            const root = jsoncp.parseTree(content);
+            root?.children?.forEach(rch => {
+                if (rch.type === 'property' && rch.children?.length === 2) {
+                    const name = rch.children[0].type === 'string' ? rch.children[0].value : undefined;
+                    if (name === 'configurations' && rch.children[1].type === 'array') {
+                        rch.children[1].children?.forEach(config => {
+                            if (config.type === 'object') {
+                                config.children?.forEach(cch => {
+                                    if (cch.type === 'property' && cch.children?.length === 2) {
+                                        const cname = cch.children[0].type === 'string' ? cch.children[0].value : undefined;
+                                        if (cname === 'type' && cch.children[1].type === 'string' && cch.children[1].value === 'java8+') {
+                                            const path = jsoncp.getNodePath(cch.children[1]);
+                                            if (path) {
+                                                edits = edits.concat(jsoncp.modify(content, path, 'java+', {}));
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }
+            });
+            const newContent = jsoncp.applyEdits(content, edits);
+            if (newContent !== content) {
+                if (!selection) {
+                    selection = await window.showWarningMessage('Java 8+ debug configuration has been renamed to Java+', updateOption);
+                }
+                if (selection === updateOption) {
+                    fs.writeFileSync(file.fsPath, newContent);
+                } else {
+                    return;
+                }
+            }
+        };
+    });
+}
 
 export function registerCompletion(context: ExtensionContext) {
    context.subscriptions.push(languages.registerCompletionItemProvider({ language: 'jsonc', pattern: '**/launch.json' }, {
@@ -37,7 +84,7 @@ export function registerCompletion(context: ExtensionContext) {
                         let completionItems: ProviderResult<CompletionList<CompletionItem>> | CompletionItem[];
                         if (path.length == 1) {
                             // Get all configurations:
-                            completionItems = commands.executeCommand('java.project.configuration.completion', uri);
+                            completionItems = commands.executeCommand(COMMAND_PREFIX + '.project.configuration.completion', uri);
                         } else {
                             let node: jsoncp.Node = currentNode;
                             if (currentNode.type == 'property' && currentNode.parent) {
@@ -48,42 +95,26 @@ export function registerCompletion(context: ExtensionContext) {
                                 node = currentNode.parent;
                                 let attributesMap = getAttributes(node);
                                 // Get possible values of property 'propName':
-                                completionItems = commands.executeCommand('java.project.configuration.completion', uri, attributesMap, propName);
+                                completionItems = commands.executeCommand(COMMAND_PREFIX + '.project.configuration.completion', uri, attributesMap, propName);
                             } else {
                                 let attributesMap = getAttributes(node);
                                 // Get additional possible attributes:
-                                completionItems = commands.executeCommand('java.project.configuration.completion', uri, attributesMap);
+                                completionItems = commands.executeCommand(COMMAND_PREFIX + '.project.configuration.completion', uri, attributesMap);
                             }
                         }
-
-
-			return (completionItems as Thenable<CompletionList<CompletionItem>>).then(itemsList => {
+                        return (completionItems as Thenable<CompletionList<CompletionItem>>).then(itemsList => {
                             let items = itemsList.items;
-			    if (!items) {
+                            if (!items) {
                                 items = ((itemsList as unknown) as CompletionItem[]);
-			    }
+                            }
                             addCommas(sourceText, offset, items);
-			    return new CompletionList(items);
+                            return new CompletionList(items);
                         });
                     }
                 }
             }
         }
     }));
-}
-
-function getAttributesMap(node: jsoncp.Node) {
-    let attributes = new Map<string, object>();
-    if (node.children) {
-        for (let index in node.children) {
-            let ch = node.children[index];
-            let prop = ch.children;
-            if (prop) {
-                attributes.set(prop[0].value, prop[1].value);
-            }
-        }
-    }
-    return attributes;
 }
 
 function getAttributes(node: jsoncp.Node) {
@@ -136,7 +167,7 @@ function addCommas(sourceText: string, offset: number, completionItems: Completi
                 if (append) {
                     snippet.value = snippet.value + ',';
                 }
-	    } else {
+            } else {
                 if (prepend) {
                     ci.insertText = ',' + ci.insertText;
                 }
@@ -144,6 +175,9 @@ function addCommas(sourceText: string, offset: number, completionItems: Completi
                     ci.insertText = ci.insertText + ',';
                 }
             }
+        }
+        if (ci.kind) {
+            ci.kind--; // Note difference between vscode's CompletionItemKind and lsp's CompletionItemKind
         }
     }
 }

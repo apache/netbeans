@@ -33,4 +33,8 @@ public class IncorrectEnumHintErrorTest extends PHPHintsTestBase {
         checkHints(new IncorrectEnumHintError(), "testIncorrectEnums.php");
     }
 
+    public void testIncorrectEnumCases_01() throws Exception {
+        checkHints(new IncorrectEnumHintError(), "testIncorrectEnumCases_01.php");
+    }
+
 }

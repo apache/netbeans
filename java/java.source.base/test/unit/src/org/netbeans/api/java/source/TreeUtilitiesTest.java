@@ -18,6 +18,7 @@
  */
 package org.netbeans.api.java.source;
 
+import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
@@ -48,11 +49,14 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.Comment.Style;
 import org.netbeans.api.java.source.JavaSource.Phase;
+import org.netbeans.api.java.source.TestUtilities.TestInput;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
@@ -63,7 +67,9 @@ import org.openide.filesystems.FileUtil;
  * @author Jan Lahoda
  */
 public class TreeUtilitiesTest extends NbTestCase {
-    
+
+    private String sourceLevel;
+
     public TreeUtilitiesTest(String testName) {
         super(testName);
     }
@@ -100,6 +106,8 @@ public class TreeUtilitiesTest extends NbTestCase {
         
         TestUtilities.copyStringToFile(FileUtil.toFile(testSource), code);
         
+        SourceUtilsTestUtil.setSourceLevel(testSource, sourceLevel);
+
         JavaSource js = JavaSource.forFileObject(testSource);
         
         assertNotNull(js);
@@ -140,6 +148,54 @@ public class TreeUtilitiesTest extends NbTestCase {
         assertTrue(info.getTreeUtilities().isSynthetic(new TreePath(new TreePath(tp, nct.getClassBody()), nct.getClassBody().getExtendsClause())));
         assertFalse(info.getTreeUtilities().isSynthetic(new TreePath(new TreePath(tp, nct.getClassBody()), nct.getClassBody().getMembers().get(1))));
         assertFalse(info.getTreeUtilities().isSynthetic(new TreePath(tp, nct.getIdentifier())));
+    }
+
+    public void testIsSyntheticCompactConstructorParams() throws Exception {
+        TestInput input = TestUtilities.splitCodeAndPos("""
+                                                        package t;
+                                                        public record R(String component) {
+                                                            public R| {
+                                                            }
+                                                        }
+                                                        """);
+        prepareTest("Test", input.code());
+
+        TreePath tp = info.getTreeUtilities().pathFor(input.pos());
+        MethodTree mt = (MethodTree) tp.getLeaf();
+
+        assertTrue(info.getTreeUtilities().isSynthetic(new TreePath(tp, mt.getParameters().get(0))));
+    }
+
+    public void testIsNotSyntheticExplicitConstructorParams() throws Exception {
+        TestInput input = TestUtilities.splitCodeAndPos("""
+                                                        package t;
+                                                        public record R(String component) {
+                                                            public R|(String component) {
+                                                            }
+                                                        }
+                                                        """);
+        prepareTest("Test", input.code());
+
+        TreePath tp = info.getTreeUtilities().pathFor(input.pos());
+        MethodTree mt = (MethodTree) tp.getLeaf();
+
+        assertFalse(info.getTreeUtilities().isSynthetic(new TreePath(tp, mt.getParameters().get(0))));
+    }
+
+    public void testIsNotSyntheticImplicitValueAttributeAssignment() throws Exception {
+        TestInput input = TestUtilities.splitCodeAndPos("""
+                                                        package t;
+                                                        @An|n(1)
+                                                        public @interface Ann {
+                                                            public int value();
+                                                        }
+                                                        """);
+        prepareTest("Test", input.code());
+
+        TreePath tp = info.getTreeUtilities().pathFor(input.pos());
+        AnnotationTree at = (AnnotationTree) tp.getParentPath().getLeaf();
+
+        assertFalse(info.getTreeUtilities().isSynthetic(new TreePath(tp, at.getArguments().get(0))));
     }
 
     public void testIsSyntheticNewClassImplements() throws Exception {
@@ -415,6 +471,15 @@ public class TreeUtilitiesTest extends NbTestCase {
         
         assertEquals(Kind.MEMBER_SELECT, tp.getLeaf().getKind());
         assertEquals("Test.VALUE", tp.getLeaf().toString());
+    }
+
+    public void testAnnotationSyntheticValue4() throws Exception {
+        prepareTest("Test", "package test; @Meta(String.class) public class Test { } @interface Meta { public Class value(); }");
+
+        TreePath tp = info.getTreeUtilities().pathFor(24);
+
+        assertEquals(Kind.IDENTIFIER, tp.getLeaf().getKind());
+        assertEquals("String", tp.getLeaf().toString());
     }
     
     public void testAutoMapComments1() throws Exception {
@@ -794,5 +859,44 @@ public class TreeUtilitiesTest extends NbTestCase {
             }.scan(info.getCompilationUnit(), null);
             assertEquals(expectedNames, actualNames);
         }
+    }
+
+    public void testPathForInUnnamedClass() throws Exception {
+        this.sourceLevel = "21";
+
+        String code = "void main() {\n" +
+                      "    Sys|tem.err.println();\n" +
+                      "}\n";
+
+        prepareTest("Test", code.replace("|", ""));
+
+        int pos = code.indexOf("|");
+        TreePath tp = info.getTreeUtilities().pathFor(pos);
+        IdentifierTree it = (IdentifierTree) tp.getLeaf();
+
+        assertEquals("System", it.getName().toString());
+    }
+
+    public void testAttributeTreeCrashes() throws Exception {
+        this.sourceLevel = "21";
+
+        String code = """
+                      package test;
+                      public class Test {
+                          private void test(Runnable r) {
+                              test(() -> {
+                                  |
+                              });
+                          }
+                      }
+                      """;
+
+        prepareTest("Test", code.replace("|", ""));
+
+        int pos = code.indexOf("|");
+        TreePath tp = info.getTreeUtilities().pathFor(pos);
+        Scope scope = info.getTrees().getScope(tp);
+        StatementTree tree = info.getTreeUtilities().parseStatement("{ return super.test(p); }", new SourcePositions[1]);
+        info.getTreeUtilities().attributeTree(tree, scope);
     }
 }

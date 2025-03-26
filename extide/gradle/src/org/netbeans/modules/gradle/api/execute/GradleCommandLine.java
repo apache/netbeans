@@ -143,7 +143,7 @@ public final class GradleCommandLine implements Serializable {
         PARALLEL(PARAM, "--parallel"),
         PROFILE(PARAM, "--profile"),
         RECOMPILE_SCRIPTS(UNSUPPORTED, GradleVersionRange.until("5.0"), "--recompile-scripts"),
-        REFRESH_DEPENDENCIES(PARAM, "--refresh-dependencies"),
+        REFRESH_DEPENDENCIES(PARAM, "-U", "--refresh-dependencies"),
         REFRESH_KEYS(PARAM, GradleVersionRange.from("6.2"), "--refresh-keys"),
         RERUN_TASKS(PARAM, "--rerun-tasks"),
         SCAN(PARAM, GradleVersionRange.from("4.3"), "--scan"),
@@ -1126,7 +1126,6 @@ public final class GradleCommandLine implements Serializable {
 
         ret.setFlag(Flag.OFFLINE, settings.isOffline());
         ret.setFlag(Flag.CONFIGURE_ON_DEMAND, settings.isConfigureOnDemand());
-        ret.setFlag(Flag.NO_REBUILD, settings.getNoRebuild());
         ret.setFlag(Flag.CONFIGURATION_CACHE, settings.getUseConfigCache());
 
         ret.setLogLevel(settings.getDefaultLogLevel());

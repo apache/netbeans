@@ -272,7 +272,7 @@ public final class J2eePlatform implements Lookup.Provider {
     public File[] getClasspathEntries() {
         if (classpathCache == null) {
             List<File> classpath = getClasspath(impl.getLibraries());
-            classpathCache = (File[]) classpath.toArray(new File[classpath.size()]);
+            classpathCache = (File[]) classpath.toArray(new File[0]);
         }
         return classpathCache;
     }
@@ -281,11 +281,11 @@ public final class J2eePlatform implements Lookup.Provider {
     public File[] getClasspathEntries(Set<ServerLibraryDependency> libraries) {
         // FIXME optimize - cache
         List<File> classpath = getClasspath(impl.getLibraries(libraries));
-        return (File[]) classpath.toArray(new File[classpath.size()]);
+        return (File[]) classpath.toArray(new File[0]);
     }
     
     private List<File> getClasspath(LibraryImplementation[] libraries) {
-        List<File> classpath = new ArrayList();
+        List<File> classpath = new ArrayList<>();
         for (int i = 0; i < libraries.length; i++) {
             List classpathList = libraries[i].getContent(J2eeLibraryTypeProvider.VOLUME_TYPE_CLASSPATH);
             for (Iterator iter = classpathList.iterator(); iter.hasNext();) {
@@ -335,6 +335,7 @@ public final class J2eePlatform implements Lookup.Provider {
      * @since 1.16
      * @deprecated {@link #getLookup()} should be used to obtain tool specifics
      */
+    @Deprecated
     public String getToolProperty(String toolName, String propertyName) {
         return impl.getToolProperty(toolName, propertyName);
     }
@@ -348,6 +349,7 @@ public final class J2eePlatform implements Lookup.Provider {
      *         <code>false</code> otherwise.
      * @deprecated {@link #getLookup()} should be used to obtain tool specifics
      */
+    @Deprecated
     public boolean isToolSupported(String toolName) {
         return impl.isToolSupported(toolName);
     }
@@ -390,6 +392,7 @@ public final class J2eePlatform implements Lookup.Provider {
      * @deprecated use {@link #getServerHome()} or {@link #getDomainHome()}
      *             or {@link #getMiddlewareHome()}
      */
+    @Deprecated
     public File[] getPlatformRoots() {
         return impl.getPlatformRoots();
     }
@@ -457,6 +460,7 @@ public final class J2eePlatform implements Lookup.Provider {
      * @return list of supported J2EE specification versions.
      * @deprecated use {@link #getSupportedProfiles()}
      */
+    @Deprecated
     public Set/*<String>*/ getSupportedSpecVersions() {
         boolean assertsEnabled = false;
         assert assertsEnabled = true;
@@ -475,8 +479,9 @@ public final class J2eePlatform implements Lookup.Provider {
      * @param moduleType one of the constants defined in
      *   {@link org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule}
      * @return list of supported J2EE specification versions.
-     * @deprecated use {@link #getSupportedProfiles(java.lang.Object)}
+     * @deprecated use {@link #getSupportedProfiles(Type)}
      */
+    @Deprecated
     public Set<String> getSupportedSpecVersions(Object moduleType) {
         boolean assertsEnabled = false;
         assert assertsEnabled = true;
@@ -508,9 +513,9 @@ public final class J2eePlatform implements Lookup.Provider {
 
     /**
      * Returns the set of supported profiles (terminology of Java EE 6) for
-     * the given module type (one of {@link J2eeModule#EAR},
-     * {@link J2eeModule#EJB}, {@link J2eeModule#WAR}, {@link J2eeModule#RAR}
-     * and {@link J2eeModule#CAR}).
+     * the given module type (one of {@link J2eeModule.Type#EAR},
+     * {@link J2eeModule.Type#EJB}, {@link J2eeModule.Type#WAR}, {@link J2eeModule.Type#RAR}
+     * and {@link J2eeModule.Type#CAR}).
      *
      * @param moduleType type of the module
      * @return set of {@link Profile}s supported by the server.
@@ -531,6 +536,7 @@ public final class J2eePlatform implements Lookup.Provider {
      * @return list of supported J2EE module types.
      * @deprecated use {@link #getSupportedTypes()}
      */
+    @Deprecated
     public Set getSupportedModuleTypes() {
         boolean assertsEnabled = false;
         assert assertsEnabled = true;
@@ -705,7 +711,6 @@ public final class J2eePlatform implements Lookup.Provider {
     /**
      * Lookup providing a way to find non mandatory technologies supported
      * by the platform.
-     * <p>
      * <div class="nonnormative">
      * The typical example of such support is a webservice stack.
      * </div>
@@ -769,7 +774,7 @@ public final class J2eePlatform implements Lookup.Provider {
                 }
             }
         }
-        return ret.toArray(new FileObject[ret.size()]);
+        return ret.toArray(new FileObject[0]);
     }
 
     private void copyFiles(Map<FileObject, String> copied, Map<String, Integer> usedNames,
@@ -790,7 +795,7 @@ public final class J2eePlatform implements Lookup.Provider {
             }
         }
         copyFiles(copied, usedNames, jarFolder, folderName,
-                fileObjects.toArray(new FileObject[fileObjects.size()]), content);
+                fileObjects.toArray(new FileObject[0]), content);
     }
 
     private void copyFiles(Map<FileObject, String> copied, Map<String, Integer> usedNames,

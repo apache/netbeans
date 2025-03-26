@@ -109,7 +109,7 @@ public final class GridGraphLayout<N,E> extends GraphLayout<N,E> {
             }
             Point index = new Point ();
             ArrayList<N> connected = new ArrayList<N> (node2connected.get (node));
-            Collections.sort (connected, new Comparator<N>() {
+            connected.sort(new Comparator<N>() {
                 public int compare (N node1, N node2) {
                     return node2connected.get (node1).size () - node2connected.get (node2).size ();
                 }

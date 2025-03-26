@@ -166,7 +166,7 @@ public class SourceRoots extends Roots {
                     if (sourceRootNames == null) {
                         readProjectMetadata();
                     }
-                    return sourceRootNames.toArray(new String[sourceRootNames.size()]);
+                    return sourceRootNames.toArray(new String[0]);
                 }
             }
         });
@@ -192,7 +192,7 @@ public class SourceRoots extends Roots {
     public String[] getRootProperties() {
         synchronized (this) {
             if (sourceRootProperties != null) {
-                return sourceRootProperties.toArray(new String[sourceRootProperties.size()]);
+                return sourceRootProperties.toArray(new String[0]);
             }
         }
         return ProjectManager.mutex().readAccess(new Mutex.Action<String[]>() {
@@ -202,7 +202,7 @@ public class SourceRoots extends Roots {
                     if (sourceRootProperties == null) {
                         readProjectMetadata();
                     }
-                    return sourceRootProperties.toArray(new String[sourceRootProperties.size()]);
+                    return sourceRootProperties.toArray(new String[0]);
                 }
             }
         });
@@ -211,7 +211,7 @@ public class SourceRoots extends Roots {
     String[] getRootPathProperties() {
         synchronized (this) {
             if (sourceRootPathProperties != null) {
-                return sourceRootPathProperties.toArray(new String[sourceRootPathProperties.size()]);
+                return sourceRootPathProperties.toArray(new String[0]);
             }
         }
         return ProjectManager.mutex().readAccess(() -> {
@@ -219,7 +219,7 @@ public class SourceRoots extends Roots {
                 if (sourceRootPathProperties == null) {
                     readProjectMetadata();
                 }
-                return sourceRootPathProperties.toArray(new String[sourceRootPathProperties.size()]);
+                return sourceRootPathProperties.toArray(new String[0]);
             }
         });
     }
@@ -231,7 +231,7 @@ public class SourceRoots extends Roots {
     public FileObject[] getRoots() {
         synchronized (this) {
             if (sourceRoots != null && validFiles(sourceRoots)) {
-                return sourceRoots.toArray(new FileObject[sourceRoots.size()]);
+                return sourceRoots.toArray(new FileObject[0]);
             }
         }
         return ProjectManager.mutex().readAccess(new Mutex.Action<FileObject[]>() {
@@ -240,7 +240,7 @@ public class SourceRoots extends Roots {
                     synchronized (SourceRoots.this) {
                         // local caching
                         if (sourceRoots != null && validFiles(sourceRoots)) {
-                            return sourceRoots.toArray(new FileObject[sourceRoots.size()]);
+                            return sourceRoots.toArray(new FileObject[0]);
                         }
                         URL [] rootURLs = getRootURLs();
                         List<FileObject> result = new ArrayList<FileObject>(rootURLs.length);
@@ -262,7 +262,7 @@ public class SourceRoots extends Roots {
                                 System.identityHashCode(SourceRoots.this),
                                 sourceRoots
                         });
-                        return sourceRoots.toArray(new FileObject[sourceRoots.size()]);
+                        return sourceRoots.toArray(new FileObject[0]);
                     }
                 }
         });
@@ -286,7 +286,7 @@ public class SourceRoots extends Roots {
     public URL[] getRootURLs(final boolean removeInvalidRoots) {
         synchronized (this) {
             if (sourceRootURLs != null) {
-                return sourceRootURLs.toArray(new URL[sourceRootURLs.size()]);
+                return sourceRootURLs.toArray(new URL[0]);
             }
         }
         return ProjectManager.mutex().readAccess(() -> {
@@ -340,7 +340,7 @@ public class SourceRoots extends Roots {
                     }
                     sourceRootURLs = Collections.unmodifiableList(result);
                 }
-                return sourceRootURLs.toArray(new URL[sourceRootURLs.size()]);
+                return sourceRootURLs.toArray(new URL[0]);
             }
         });
     }

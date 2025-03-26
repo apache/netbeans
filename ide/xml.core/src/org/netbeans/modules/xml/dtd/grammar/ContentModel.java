@@ -49,7 +49,7 @@ abstract class ContentModel {
 
     private static ContentModel parseContentModel(PushbackStringTokenizer tokens) {
 
-        ContentModel model = null;;
+        ContentModel model = null;
         List<ContentModel> models = new ArrayList<>(7);
         char type = 'E';
         char ch;            
@@ -598,7 +598,7 @@ abstract class ContentModel {
         public boolean hasNext() {
             if (list.size() > current) return true;
             if (en.hasMoreElements()) {
-                String next = (String) en.nextElement();
+                String next = en.nextElement();
                 return list.add(next);                
             } else {
                 return false;

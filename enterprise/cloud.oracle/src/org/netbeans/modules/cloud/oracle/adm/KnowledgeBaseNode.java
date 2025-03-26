@@ -19,6 +19,7 @@
 package org.netbeans.modules.cloud.oracle.adm;
 
 import com.oracle.bmc.adm.ApplicationDependencyManagementClient;
+import com.oracle.bmc.adm.model.KnowledgeBase;
 import com.oracle.bmc.adm.model.KnowledgeBaseSummary;
 import com.oracle.bmc.adm.requests.ListKnowledgeBasesRequest;
 import com.oracle.bmc.adm.responses.ListKnowledgeBasesResponse;
@@ -26,7 +27,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.netbeans.modules.cloud.oracle.ChildrenProvider;
 import org.netbeans.modules.cloud.oracle.NodeProvider;
-import org.netbeans.modules.cloud.oracle.OCIManager;
 import org.netbeans.modules.cloud.oracle.OCINode;
 import org.netbeans.modules.cloud.oracle.compartment.CompartmentItem;
 import org.netbeans.modules.cloud.oracle.items.OCID;
@@ -76,23 +76,34 @@ public class KnowledgeBaseNode extends OCINode {
 //        }
 //        
 //    }
-    
+
 //    @ChildrenProvider.Registration(parentPath = "Oracle/Compartment")
-    public static ChildrenProvider<CompartmentItem, KnowledgeBaseItem> listKnowledgeBases() {
-        return compartment -> {
-            try ( ApplicationDependencyManagementClient client 
-                    = new ApplicationDependencyManagementClient(OCIManager.getDefault().getConfigProvider())) {
-                
+    public static ChildrenProvider.SessionAware<CompartmentItem, KnowledgeBaseItem> listKnowledgeBases() {
+        return (compartment, session) -> {
+            try ( ApplicationDependencyManagementClient client
+                    = session.newClient(ApplicationDependencyManagementClient.class)) {
+
                 ListKnowledgeBasesRequest request = ListKnowledgeBasesRequest.builder()
-                        .compartmentId(compartment.getKey().getValue()).build();
+                        .compartmentId(compartment.getKey().getValue())
+                        .lifecycleState(KnowledgeBase.LifecycleState.Active)
+                        .build();
                 ListKnowledgeBasesResponse response = client.listKnowledgeBases(request);
                 List<KnowledgeBaseSummary> projects = response.getKnowledgeBaseCollection().getItems();
-                return projects.stream().map(p -> new KnowledgeBaseItem(
-                        OCID.of(p.getId(), "KnowledgeBase"), // NOI18N 
-                        p.getCompartmentId(),
-                        p.getDisplayName(), p.getTimeUpdated())).collect(Collectors.toList());
+
+                String tenancyId = session.getTenancy().isPresent() ?
+                        session.getTenancy().get().getKey().getValue() : null;
+                String regionCode = session.getRegion().getRegionCode();
+
+                return projects.stream()
+                        .map(p -> new KnowledgeBaseItem(
+                                OCID.of(p.getId(), "KnowledgeBase"), // NOI18N
+                                p.getCompartmentId(),
+                                p.getDisplayName(),
+                                p.getTimeUpdated(),
+                                tenancyId,
+                                regionCode)).collect(Collectors.toList());
             }
         };
     }
-    
+
 }

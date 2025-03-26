@@ -25,12 +25,12 @@
 
 package org.netbeans.modules.tomcat5.util;
 
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
 import org.netbeans.modules.tomcat5.config.gen.Engine;
 import org.netbeans.modules.tomcat5.config.gen.Host;
 import org.netbeans.modules.tomcat5.config.gen.Server;
@@ -223,8 +223,8 @@ public class TomcatInstallUtil {
     
     private static boolean isHttpConnector(String protocol, String scheme, String secure) {
         return (protocol == null || protocol.length() == 0 || protocol.toLowerCase().startsWith(HTTP))
-                && (scheme == null || !scheme.toLowerCase().equals(HTTPS))
-                && (secure == null || !secure.toLowerCase().equals(TRUE));
+                && (scheme == null || !scheme.equalsIgnoreCase(HTTPS))
+                && (secure == null || !secure.equalsIgnoreCase(TRUE));
     }
     
     public static boolean setServerPort(int port, File tomcatConf) {

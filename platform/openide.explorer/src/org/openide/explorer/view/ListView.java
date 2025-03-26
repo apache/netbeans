@@ -80,7 +80,7 @@ import org.openide.util.actions.CallbackSystemAction;
 
 /** Explorer view to display items in a list.
  * <p>
- * This class is a <q>view</q>
+ * This class is a <em>view</em>
  * to use it properly you need to add it into a component which implements
  * {@link Provider}. Good examples of that can be found 
  * in {@link org.openide.explorer.ExplorerUtils}. Then just use 
@@ -88,7 +88,7 @@ import org.openide.util.actions.CallbackSystemAction;
  * and control its state.
  * </p>
  * <p>
- * There can be multiple <q>views</q> under one container implementing {@link Provider}. Select from
+ * There can be multiple <em>views</em> under one container implementing {@link Provider}. Select from
  * range of predefined ones or write your own:
  * </p>
  * <ul>
@@ -1431,7 +1431,7 @@ public class ListView extends JScrollPane implements Externalizable {
                 }
             }
 
-            Node[] nodes = ll.toArray(new Node[ll.size()]);
+            Node[] nodes = ll.toArray(new Node[0]);
 
             // forwarding TO E.M., so we won't listen to its cries for a while
             manager.removePropertyChangeListener(wlpc);

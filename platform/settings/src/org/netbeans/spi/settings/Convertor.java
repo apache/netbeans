@@ -31,14 +31,14 @@ public abstract class Convertor {
     /** Subclasses can implement own storing format.
      * @param w stream into which inst is written
      * @param inst the setting object to be written
-     * @exception IOException if the object cannot be written
+     * @exception java.io.IOException if the object cannot be written
      */
     public abstract void write (java.io.Writer w, Object inst) throws java.io.IOException;
 
     /** Subclasses have to be able to read format implemented by {@link #write}.
      * @param r stream containing stored object
      * @return the read setting object
-     * @exception IOException if the object cannot be read
+     * @exception java.io.IOException if the object cannot be read
      * @exception ClassNotFoundException if the object class cannot be resolved
      */
     public abstract Object read (java.io.Reader r) throws java.io.IOException, ClassNotFoundException;

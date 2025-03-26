@@ -48,13 +48,14 @@ import org.openide.util.Exceptions;
  * {@link org.netbeans.api.debugger.Watch}es.
  *  
  *
- * <p><br><table border="1" cellpadding="3" cellspacing="0" width="100%">
- * <tbody><tr bgcolor="#ccccff">
- * <td colspan="2"><font size="+2"><b>Description </b></font></td>
- * </tr><tr><td align="left" valign="top" width="1%"><font size="+1">
- * <b>Functionality</b></font></td><td> 
+ * <table>
+ * <caption>Description of DebuggerManager</caption>
+ * <tbody><tr>
+ * <td colspan="2" style="background-color:#4D7A97"><b>Description </b></td>
+ * </tr><tr><td>
+ * <b>Functionality</b></td><td> 
  *
- * <b>Start & finish debugging:</b>
+ * <b>Start &amp; finish debugging:</b>
  *    DebuggerManager manages a process of starting a new debugging (
  *    {@link #startDebugging}). It cooperates with all installed
  *    {@link org.netbeans.spi.debugger.DebuggerEngineProvider}s to create a new 
@@ -89,7 +90,7 @@ import org.openide.util.Exceptions;
  * <br><br>
  * <b>Watches management:</b>
  *    DebuggerManager keeps list of all shared watches ({@link #getWatches}).
- *    Watch can be created & added ({@link #createWatch}).
+ *    Watch can be created &amp; added ({@link #createWatch}).
  *
  * <br><br>
  * <b>Support for listening:</b>
@@ -98,22 +99,22 @@ import org.openide.util.Exceptions;
  *    {@link org.netbeans.api.debugger.DebuggerManagerListener}.
  *
  * <br>
- * </td></tr><tr><td align="left" valign="top" width="1%"><font size="+1">
- * <b>Clinents / Providers</b></font></td><td> 
+ * </td></tr><tr><td>
+ * <b>Clinents / Providers</b></td><td> 
  *
  * DebuggerCore module should be the only one provider of this abstract class.
  * This class should be called from debugger plug-in modules and from debugger
  * UI modules. 
  * 
  * <br>
- * </td></tr><tr><td align="left" valign="top" width="1%"><font size="+1">
- * <b>Lifecycle</b></font></td><td> 
+ * </td></tr><tr><td>
+ * <b>Lifecycle</b></td><td> 
  *
  * The only one instance of DebuggerManager should exist, and it should be 
  * created in {@link #getDebuggerManager} method.
  * 
- * </td></tr><tr><td align="left" valign="top" width="1%"><font size="+1">
- * <b>Evolution</b></font></td><td>
+ * </td></tr><tr><td>
+ * <b>Evolution</b></td><td>
  *
  * No method should be removed from this class, but some functionality can 
  * be added.
@@ -227,7 +228,7 @@ public final class DebuggerManager implements ContextProvider {
     /**
      * Join two lookups together.
      * The result will merge the lookups.
-     * The result of its {@link #lookup} method will additionally implement {@link Customizer}.
+     * The result of its {@link #lookup(String,Class)} method will additionally implement {@link Customizer}.
      * @param cp1 first lookup
      * @param cp2 second lookup
      * @return a merger of the two
@@ -486,7 +487,7 @@ public final class DebuggerManager implements ContextProvider {
      */
     public DebuggerEngine[] getDebuggerEngines () {
         synchronized (engines) {
-            return (DebuggerEngine[]) engines.toArray (new DebuggerEngine [engines.size ()]);
+            return (DebuggerEngine[]) engines.toArray (new DebuggerEngine [0]);
         }
     }
     
@@ -624,7 +625,7 @@ public final class DebuggerManager implements ContextProvider {
      *    a variable name).
      * @return the new watch
      * @throws ArrayIndexOutOfBoundsException if the index is out of range
-     *         <code>(index < 0 || index > getWatches().length)</code>
+     *         <code>(index &lt; 0 || index &gt; getWatches().length)</code>
      * @since 1.22
      */
     public Watch createWatch (int index, String expr) {
@@ -1642,9 +1643,9 @@ public final class DebuggerManager implements ContextProvider {
         DebuggerEngine[] ne;
         synchronized (engines) {
             if (engines.contains (engine)) return;
-            old = (DebuggerEngine[]) engines.toArray (new DebuggerEngine [engines.size ()]);
+            old = (DebuggerEngine[]) engines.toArray (new DebuggerEngine [0]);
             engines.add (engine);
-            ne = (DebuggerEngine[]) engines.toArray (new DebuggerEngine [engines.size ()]);
+            ne = (DebuggerEngine[]) engines.toArray (new DebuggerEngine [0]);
         }
         fireEngineAdded (engine, old, ne);
     }
@@ -1654,9 +1655,9 @@ public final class DebuggerManager implements ContextProvider {
         DebuggerEngine[] ne;
         synchronized (engines) {
             if (!engines.contains (engine)) return;
-            old = (DebuggerEngine[]) engines.toArray (new DebuggerEngine [engines.size ()]);
+            old = (DebuggerEngine[]) engines.toArray (new DebuggerEngine [0]);
             engines.remove (engine);
-            ne = (DebuggerEngine[]) engines.toArray (new DebuggerEngine [engines.size ()]);
+            ne = (DebuggerEngine[]) engines.toArray (new DebuggerEngine [0]);
         }
         fireEngineRemoved (engine, old, ne);
     }

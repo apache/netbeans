@@ -71,13 +71,8 @@ public class Unbalanced {
             info.putCachedValue(SEEN_KEY, cache = new HashMap<>(), CompilationInfo.CacheClearPolicy.ON_CHANGE);
         }
 
-        Set<State> state = cache.get(el);
-
-        if (state == null) {
-            cache.put(el, state = EnumSet.noneOf(State.class));
-        }
-        
-        state.addAll(Arrays.asList(states));
+        cache.computeIfAbsent(el, k -> EnumSet.noneOf(State.class))
+             .addAll(Arrays.asList(states));
     }
 
     private static ErrorDescription produceWarning(HintContext ctx, String keyBase) {
@@ -101,7 +96,9 @@ public class Unbalanced {
         return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), warning);
     }
 
-    @Hint(displayName = "#DN_org.netbeans.modules.java.hints.bugs.Unbalanced.Array", description = "#DESC_org.netbeans.modules.java.hints.bugs.Unbalanced.Array", category="bugs", options=Options.QUERY, suppressWarnings="MismatchedReadAndWriteOfArray")
+    @Hint(displayName = "#DN_org.netbeans.modules.java.hints.bugs.Unbalanced.Array",
+          description = "#DESC_org.netbeans.modules.java.hints.bugs.Unbalanced.Array",
+          category="bugs", options=Options.QUERY, suppressWarnings="MismatchedReadAndWriteOfArray")
     public static final class Array {
 
         private static VariableElement testElement(HintContext ctx) {
@@ -194,13 +191,17 @@ public class Unbalanced {
         }
     }
 
-    @Hint(displayName = "#DN_org.netbeans.modules.java.hints.bugs.Unbalanced.Collection", description = "#DESC_org.netbeans.modules.java.hints.bugs.Unbalanced.Collection", category="bugs", options=Options.QUERY, suppressWarnings="MismatchedQueryAndUpdateOfCollection")
+    @Hint(displayName = "#DN_org.netbeans.modules.java.hints.bugs.Unbalanced.Collection",
+          description = "#DESC_org.netbeans.modules.java.hints.bugs.Unbalanced.Collection",
+          category="bugs", options=Options.QUERY, suppressWarnings="MismatchedQueryAndUpdateOfCollection")
     public static final class Collection {
         private static final Set<String> READ_METHODS = new HashSet<>(Arrays.asList(
                 "get", "getOrDefault", "contains", "remove", "containsAll", "removeAll", "removeIf", "retain", "retainAll", "containsKey",
                 "containsValue", "iterator", "listIterator", "isEmpty", "size", "toArray", "entrySet", "keySet", "values", "indexOf", "lastIndexOf",
-                "stream", "parallelStream", "spliterator", "forEach"));
-        private static final Set<String> WRITE_METHODS = new HashSet<>(Arrays.asList("add", "addAll", "set", "put", "putAll", "putIfAbsent"));
+                "stream", "parallelStream", "spliterator", "reversed", "getFirst", "getLast", "removeFirst", "removeLast"));
+        private static final Set<String> STANDALONE_READ_METHODS = new HashSet<>(Arrays.asList(
+                "forEach"));
+        private static final Set<String> WRITE_METHODS = new HashSet<>(Arrays.asList("add", "addAll", "set", "put", "putAll", "putIfAbsent", "addFirst", "addLast"));
 
         private static boolean testType(CompilationInfo info, TypeMirror actualType, String superClass) {
             TypeElement juCollection = info.getElements().getTypeElement(superClass);
@@ -243,6 +244,9 @@ public class Unbalanced {
                     if (tp.getParentPath().getParentPath().getParentPath().getLeaf().getKind() != Kind.EXPRESSION_STATEMENT) {
                         record(ctx.getInfo(), var, State.READ);
                     }
+                    return null;
+                } else if (STANDALONE_READ_METHODS.contains(methodName)) {
+                    record(ctx.getInfo(), var, State.READ);
                     return null;
                 } else if (WRITE_METHODS.contains(methodName)) {
                     if (tp.getParentPath().getParentPath().getParentPath().getLeaf().getKind() != Kind.EXPRESSION_STATEMENT) {

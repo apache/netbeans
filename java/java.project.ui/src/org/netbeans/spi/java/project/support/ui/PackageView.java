@@ -38,7 +38,6 @@ import javax.swing.Action;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
@@ -63,6 +62,7 @@ import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Parameters;
 import org.openide.util.WeakListeners;
@@ -129,7 +129,7 @@ public class PackageView {
         Parameters.notNull("group", group); //NOI18N
         SortedSet<PackageItem> data = new TreeSet<PackageItem>();
         findNonExcludedPackages(null, data, group.getRootFolder(), group, false);
-        return new DefaultComboBoxModel(data.toArray(new PackageItem[data.size()]));
+        return new DefaultComboBoxModel(data.toArray(new PackageItem[0]));
     }
 
     /**
@@ -374,7 +374,7 @@ public class PackageView {
                 Image image = PackageDisplayUtils.getIcon(pkg, empty);
                 icon = image2icon.get(image);
                 if ( icon == null ) {            
-                    icon = new ImageIcon( image );
+                    icon = ImageUtilities.image2Icon( image );
                     image2icon.put( image, icon );
                 }
             }

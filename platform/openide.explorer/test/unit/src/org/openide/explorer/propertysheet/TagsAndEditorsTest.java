@@ -187,7 +187,8 @@ public class TagsAndEditorsTest extends ExtTestCase {
             assertSame("Wrong component repainted:" + repaintedComponent, repaintedComponent, target);
             assertEquals("Wrong rectangle repainted:" + repaintedRect + " should be " + rect, rect, repaintedRect);
         }
-        
+
+        @Override
         public synchronized void addDirtyRegion(JComponent c, int x, int y, int w, int h) {
             super.addDirtyRegion(c, x, y, w, h);
             if (repaintedComponent == null) {
@@ -311,7 +312,8 @@ public class TagsAndEditorsTest extends ExtTestCase {
         
         public SingleTagEditor() {
         }
-        
+
+        @Override
         public String[] getTags() {
             return new String[]{"lonely tag"};
         }
@@ -319,11 +321,13 @@ public class TagsAndEditorsTest extends ExtTestCase {
         public void attachEnv(PropertyEnv env) {
             this.env = env;
         }
-        
+
+        @Override
         public boolean supportsCustomEditor() {
             return false;
         }
-        
+
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }
@@ -334,7 +338,8 @@ public class TagsAndEditorsTest extends ExtTestCase {
         
         public EditableSingleTagEditor() {
         }
-        
+
+        @Override
         public String[] getTags() {
             return new String[]{"lonely tag"};
         }
@@ -343,11 +348,13 @@ public class TagsAndEditorsTest extends ExtTestCase {
             this.env = env;
             env.getFeatureDescriptor().setValue("canEditAsText", Boolean.TRUE);
         }
-        
+
+        @Override
         public boolean supportsCustomEditor() {
             return false;
         }
-        
+
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }
@@ -358,7 +365,8 @@ public class TagsAndEditorsTest extends ExtTestCase {
         
         public EmptyTagsEditor() {
         }
-        
+
+        @Override
         public String[] getTags() {
             return new String[0];
         }
@@ -366,11 +374,13 @@ public class TagsAndEditorsTest extends ExtTestCase {
         public void attachEnv(PropertyEnv env) {
             this.env = env;
         }
-        
+
+        @Override
         public boolean supportsCustomEditor() {
             return false;
         }
-        
+
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }
@@ -381,7 +391,8 @@ public class TagsAndEditorsTest extends ExtTestCase {
         
         public EditableEmptyTagsEditor() {
         }
-        
+
+        @Override
         public String[] getTags() {
             return new String[0];
         }
@@ -390,11 +401,13 @@ public class TagsAndEditorsTest extends ExtTestCase {
             this.env = env;
             env.getFeatureDescriptor().setValue("canEditAsText", Boolean.TRUE);
         }
-        
+
+        @Override
         public boolean supportsCustomEditor() {
             return false;
         }
-        
+
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }
@@ -406,7 +419,8 @@ public class TagsAndEditorsTest extends ExtTestCase {
         
         public BadEditorWithoutTags() {
         }
-        
+
+        @Override
         public String[] getTags() {
             return null;
         }
@@ -415,15 +429,18 @@ public class TagsAndEditorsTest extends ExtTestCase {
             this.env = env;
             env.setState(env.STATE_INVALID);
         }
-        
+
+        @Override
         public boolean supportsCustomEditor() {
             return false;
         }
-        
+
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }
-        
+
+        @Override
         public Object getValue() {
             return Boolean.FALSE;
         }
@@ -434,7 +451,8 @@ public class TagsAndEditorsTest extends ExtTestCase {
         
         public BadEditorWithTags() {
         }
-        
+
+        @Override
         public String[] getTags() {
             return new String[] {"a","b","c","d","Value"};
         }
@@ -443,15 +461,18 @@ public class TagsAndEditorsTest extends ExtTestCase {
             this.env = env;
             env.setState(env.STATE_INVALID);
         }
-        
+
+        @Override
         public boolean supportsCustomEditor() {
             return false;
         }
-        
+
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }
-        
+
+        @Override
         public Object getValue() {
             return Boolean.FALSE;
         }

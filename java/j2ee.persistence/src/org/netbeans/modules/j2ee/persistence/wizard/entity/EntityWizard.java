@@ -33,10 +33,10 @@ import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.modules.j2ee.core.api.support.java.SourceUtils;
 import org.netbeans.modules.j2ee.persistence.provider.ProviderUtil;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.EnumSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.lang.model.element.Modifier;
@@ -58,6 +58,7 @@ import org.netbeans.modules.j2ee.core.api.support.wizard.Wizards;
 import org.netbeans.modules.j2ee.persistence.dd.PersistenceUtils;
 import org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit;
 import org.netbeans.modules.j2ee.persistence.provider.InvalidPersistenceXmlException;
+import org.netbeans.modules.j2ee.persistence.spi.moduleinfo.JPAModuleInfo;
 import org.netbeans.modules.j2ee.persistence.unit.PUDataObject;
 import org.netbeans.modules.j2ee.persistence.util.EntityMethodGenerator;
 import org.netbeans.modules.j2ee.persistence.util.JPAClassPathHelper;
@@ -79,6 +80,7 @@ import org.openide.util.NbBundle;
  */
 
 public final class EntityWizard implements WizardDescriptor.InstantiatingIterator {
+
     private WizardDescriptor.Panel[] panels;
     private int index = 0;
     private EntityWizardDescriptor ejbPanel;
@@ -119,9 +121,7 @@ public final class EntityWizard implements WizardDescriptor.InstantiatingIterato
         boolean noPuNeeded = true;
         try {
             noPuNeeded = ProviderUtil.persistenceExists(project, Templates.getTargetFolder(wiz)) || !ProviderUtil.isValidServerInstanceOrNone(project);
-        } catch (InvalidPersistenceXmlException ex){
-            Logger.getLogger(EntityWizard.class.getName()).log(Level.FINE, "Invalid persistence.xml"); //NOI18N
-        } catch (RuntimeException ex){
+        } catch (InvalidPersistenceXmlException | RuntimeException ex){
             Logger.getLogger(EntityWizard.class.getName()).log(Level.FINE, "Invalid persistence.xml"); //NOI18N
         }
         if(noPuNeeded){
@@ -136,17 +136,25 @@ public final class EntityWizard implements WizardDescriptor.InstantiatingIterato
     
     @Override
     public Set instantiate() throws IOException {
+        Project project = Templates.getProject(wiz);
+
+        ClassPath compileCP = ClassPath.getClassPath(sourceGroups[0].getRootFolder(), ClassPath.COMPILE);
+
+        String enterprisePrefix = "jakarta";
+        if (compileCP != null && compileCP.findResource("javax/persistence/Entity.class") != null) {
+            enterprisePrefix = "javax";
+        }
         
         FileObject result = generateEntity(
                 Templates.getTargetFolder(wiz),
                 Templates.getTargetName(wiz),
                 ejbPanel.getPrimaryKeyClassName(),
-                true // setting field access type by default
+                true, // setting field access type by default
+                enterprisePrefix
                 );
         
         try{
             boolean isCreatePU = ejbPanel.isCreatePU();
-            Project project = Templates.getProject(wiz);
             if(isCreatePU)
             {
                 PersistenceUnit punit = Util.buildPersistenceUnitUsingData(project, puPanel.getPersistenceUnitName(), puPanel.getPersistenceConnection()!=null ? puPanel.getPersistenceConnection().getName() : puPanel.getDatasource(), TableGeneration.NONE, puPanel.getSelectedProvider());
@@ -254,7 +262,7 @@ public final class EntityWizard implements WizardDescriptor.InstantiatingIterato
      * @return a FileObject representing the generated entity.
      */
     public static FileObject generateEntity(final FileObject targetFolder, final String targetName,
-            final String primaryKeyClassName, final boolean isAccessProperty) throws IOException {
+            final String primaryKeyClassName, final boolean isAccessProperty, final String enterprisePrefix) throws IOException {
         
         FileObject entityFo = GenerationUtils.createClass(targetFolder, targetName, null);
         ClassPath boot = ClassPath.getClassPath(targetFolder, ClassPath.BOOT);
@@ -276,61 +284,53 @@ public final class EntityWizard implements WizardDescriptor.InstantiatingIterato
         
 
         JavaSource targetSource = JavaSource.create(cpHelper.createClasspathInfo(), entityFo);
-        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+        Task<WorkingCopy> task = (WorkingCopy workingCopy) -> {
+            workingCopy.toPhase(Phase.RESOLVED);
+            TypeElement typeElement = SourceUtils.getPublicTopLevelElement(workingCopy);
+            assert typeElement != null;
+            ClassTree clazz = workingCopy.getTrees().getTree(typeElement);
+            GenerationUtils genUtils = GenerationUtils.newInstance(workingCopy);
+            ClassTree modifiedClazz = genUtils.ensureNoArgConstructor(clazz);
+            TreeMaker make = workingCopy.getTreeMaker();
             
-            @Override
-            public void run(WorkingCopy workingCopy) throws Exception {
-                workingCopy.toPhase(Phase.RESOLVED);
-                TypeElement typeElement = SourceUtils.getPublicTopLevelElement(workingCopy);
-                assert typeElement != null;
-                ClassTree clazz = workingCopy.getTrees().getTree(typeElement);
-                GenerationUtils genUtils = GenerationUtils.newInstance(workingCopy);
-                ClassTree modifiedClazz = genUtils.ensureNoArgConstructor(clazz);
-                TreeMaker make = workingCopy.getTreeMaker();
-                
-                String idFieldName = "id"; // NOI18N
-                TypeMirror type = workingCopy.getTreeUtilities().parseType(primaryKeyClassName, typeElement);
-                Tree typeTree = make.Type(type);
-                
-                Set<Modifier> serialVersionUIDModifiers = new HashSet<Modifier>();
-                serialVersionUIDModifiers.add(Modifier.PRIVATE);
-                serialVersionUIDModifiers.add(Modifier.STATIC);
-                serialVersionUIDModifiers.add(Modifier.FINAL);
-                
-                VariableTree serialVersionUID = make.Variable(make.Modifiers(serialVersionUIDModifiers), "serialVersionUID", genUtils.createType("long", typeElement), make.Literal(Long.valueOf("1"))); //NOI18N
-                VariableTree idField = make.Variable(genUtils.createModifiers(Modifier.PRIVATE), idFieldName, typeTree, null);
-                ModifiersTree idMethodModifiers = genUtils.createModifiers(Modifier.PUBLIC);
-                MethodTree idGetter = genUtils.createPropertyGetterMethod(idMethodModifiers, idFieldName, typeTree);
-                MethodTree idSetter = genUtils.createPropertySetterMethod(idMethodModifiers, idFieldName, typeTree);
-                AnnotationTree idAnnotation = genUtils.createAnnotation("javax.persistence.Id"); //NOI18N
-                ExpressionTree generationStrategy = genUtils.createAnnotationArgument("strategy", "javax.persistence.GenerationType", "AUTO"); //NOI18N
-                AnnotationTree generatedValueAnnotation = genUtils.createAnnotation("javax.persistence.GeneratedValue", Collections.singletonList(generationStrategy)); //NOI18N
-                
-                if (isAccessProperty){
-                    idField = genUtils.addAnnotation(idField, idAnnotation);
-                    idField = genUtils.addAnnotation(idField, generatedValueAnnotation);
-                } else {
-                    idGetter = genUtils.addAnnotation(idGetter, idAnnotation);
-                    idGetter = genUtils.addAnnotation(idGetter, generatedValueAnnotation);
-                }
-                
-                List<VariableTree> classFields = new ArrayList<VariableTree>();
-                classFields.add(serialVersionUID);
-                classFields.add(idField);
-                modifiedClazz = genUtils.addClassFields(clazz, classFields);
-                modifiedClazz = make.addClassMember(modifiedClazz, idGetter);
-                modifiedClazz = make.addClassMember(modifiedClazz, idSetter);
-                modifiedClazz = genUtils.addImplementsClause(modifiedClazz, "java.io.Serializable");
-                modifiedClazz = genUtils.addAnnotation(modifiedClazz, genUtils.createAnnotation("javax.persistence.Entity"));
-                
-                String entityClassFqn = typeElement.getQualifiedName().toString();
-                EntityMethodGenerator methodGenerator = new EntityMethodGenerator(workingCopy, genUtils, typeElement);
-                List<VariableTree> fieldsForEquals = Collections.<VariableTree>singletonList(idField); 
-                modifiedClazz = make.addClassMember(modifiedClazz, methodGenerator.createHashCodeMethod(fieldsForEquals));
-                modifiedClazz = make.addClassMember(modifiedClazz, methodGenerator.createEqualsMethod(targetName, fieldsForEquals));
-                modifiedClazz = make.addClassMember(modifiedClazz, methodGenerator.createToStringMethod(entityClassFqn, fieldsForEquals));
-                workingCopy.rewrite(clazz, modifiedClazz);
+            String idFieldName = "id"; // NOI18N
+            TypeMirror type = workingCopy.getTreeUtilities().parseType(primaryKeyClassName, typeElement);
+            Tree typeTree = make.Type(type);
+            
+            Set<Modifier> serialVersionUIDModifiers = EnumSet.of(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL);
+            VariableTree serialVersionUID = make.Variable(make.Modifiers(serialVersionUIDModifiers), "serialVersionUID", genUtils.createType("long", typeElement), make.Literal(Long.valueOf("1"))); //NOI18N
+            VariableTree idField = make.Variable(genUtils.createModifiers(Modifier.PRIVATE), idFieldName, typeTree, null);
+            ModifiersTree idMethodModifiers = genUtils.createModifiers(Modifier.PUBLIC);
+            MethodTree idGetter = genUtils.createPropertyGetterMethod(idMethodModifiers, idFieldName, typeTree);
+            MethodTree idSetter = genUtils.createPropertySetterMethod(idMethodModifiers, idFieldName, typeTree);
+            AnnotationTree idAnnotation = genUtils.createAnnotation(enterprisePrefix + ".persistence.Id"); //NOI18N
+            ExpressionTree generationStrategy = genUtils.createAnnotationArgument("strategy", enterprisePrefix + ".persistence.GenerationType", "AUTO"); //NOI18N
+            AnnotationTree generatedValueAnnotation = genUtils.createAnnotation(enterprisePrefix + ".persistence.GeneratedValue", Collections.singletonList(generationStrategy)); //NOI18N
+            
+            if (isAccessProperty){
+                idField = genUtils.addAnnotation(idField, idAnnotation);
+                idField = genUtils.addAnnotation(idField, generatedValueAnnotation);
+            } else {
+                idGetter = genUtils.addAnnotation(idGetter, idAnnotation);
+                idGetter = genUtils.addAnnotation(idGetter, generatedValueAnnotation);
             }
+            
+            List<VariableTree> classFields = new ArrayList<>();
+            classFields.add(serialVersionUID);
+            classFields.add(idField);
+            modifiedClazz = genUtils.addClassFields(clazz, classFields);
+            modifiedClazz = make.addClassMember(modifiedClazz, idGetter);
+            modifiedClazz = make.addClassMember(modifiedClazz, idSetter);
+            modifiedClazz = genUtils.addImplementsClause(modifiedClazz, "java.io.Serializable");
+            modifiedClazz = genUtils.addAnnotation(modifiedClazz, genUtils.createAnnotation(enterprisePrefix + ".persistence.Entity"));
+            
+            String entityClassFqn = typeElement.getQualifiedName().toString();
+            EntityMethodGenerator methodGenerator = new EntityMethodGenerator(workingCopy, genUtils, typeElement);
+            List<VariableTree> fieldsForEquals = Collections.<VariableTree>singletonList(idField);
+            modifiedClazz = make.addClassMember(modifiedClazz, methodGenerator.createHashCodeMethod(fieldsForEquals));
+            modifiedClazz = make.addClassMember(modifiedClazz, methodGenerator.createEqualsMethod(targetName, fieldsForEquals));
+            modifiedClazz = make.addClassMember(modifiedClazz, methodGenerator.createToStringMethod(entityClassFqn, fieldsForEquals));
+            workingCopy.rewrite(clazz, modifiedClazz);
         };
         
         if(targetSource == null) {

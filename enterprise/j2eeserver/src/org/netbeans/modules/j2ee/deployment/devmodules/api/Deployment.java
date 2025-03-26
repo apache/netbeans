@@ -91,6 +91,7 @@ public final class Deployment {
      * @return complete URL to be displayed in browser (server part plus the client module and/or client part provided as a parameter)
      * @deprecated Should use {@link Deployment#deploy(org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider, org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment.Mode, java.lang.String, java.lang.String, boolean) } instead
      */
+    @Deprecated
     public String deploy (J2eeModuleProvider jmp, boolean debug, String clientModuleUrl, String clientUrlPart, boolean forceRedeploy) throws DeploymentException {
         return deploy(jmp, debug ? Mode.DEBUG : Mode.RUN, clientModuleUrl, clientUrlPart, forceRedeploy, null);
     }
@@ -110,6 +111,7 @@ public final class Deployment {
     /**
      * @deprecated Should use {@link Deployment#deploy(org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider, org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment.Mode, java.lang.String, java.lang.String, boolean, org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment.Logger) } instead
      */
+    @Deprecated
     public String deploy (J2eeModuleProvider jmp, boolean debug, String clientModuleUrl, String clientUrlPart, boolean forceRedeploy, Logger logger) throws DeploymentException {
         return deploy(jmp, debug ? Mode.DEBUG : Mode.RUN, clientModuleUrl, clientUrlPart, forceRedeploy, logger);
     }
@@ -379,6 +381,7 @@ public final class Deployment {
      * @since 1.6
      * @deprecated {@link #getServerInstanceIDs(java.util.Collection)}
      */
+    @Deprecated
     public String[] getServerInstanceIDs(Object[] moduleTypes) {
         return getServerInstanceIDs(moduleTypes, (String) null, null);
     }
@@ -409,6 +412,7 @@ public final class Deployment {
      * @since 1.6
      * @deprecated use {@link #getServerInstanceIDs(java.util.Collection, org.netbeans.modules.j2ee.deployment.devmodules.api.Profile)}
      */
+    @Deprecated
     public String[] getServerInstanceIDs(Object[] moduleTypes, String specVersion) {
         return getServerInstanceIDs(moduleTypes, specVersion, null);
     }
@@ -440,6 +444,7 @@ public final class Deployment {
      * @since 1.6
      * @deprecated use {@link #getServerInstanceIDs(java.util.Collection, org.netbeans.modules.j2ee.deployment.capabilities.Profile, java.lang.String[]) }
      */
+    @Deprecated
     public String[] getServerInstanceIDs(Object[] moduleTypes, String specVersion, String[] tools) {
         Profile profile = specVersion != null ? Profile.fromPropertiesString(specVersion) : null;
         if (profile == null && specVersion != null) {
@@ -505,7 +510,7 @@ public final class Deployment {
                 }
             }
         }
-        return (String[]) result.toArray(new String[result.size()]);
+        return (String[]) result.toArray(new String[0]);
     }
 
     /**
@@ -516,6 +521,7 @@ public final class Deployment {
      *             instance does not exist or not defined
      * @deprecated use <code>getServerInstance(serverInstanceID).getDisplayName()</code>
      */
+    @Deprecated
     public String getServerInstanceDisplayName (String id) {
         ServerInstance si = ServerRegistry.getInstance().getServerInstance(id);
         if (si != null) {
@@ -533,6 +539,7 @@ public final class Deployment {
      *             instance does not exist
      * @deprecated use <code>getServerInstance(serverInstanceID).getServerID()</code>
      */
+    @Deprecated
     public String getServerID (String instanceId) {
         ServerInstance si = ServerRegistry.getInstance().getServerInstance(instanceId);
         if (si != null) {
@@ -555,6 +562,7 @@ public final class Deployment {
      *             of appropriate server instance. Method will be removed in
      *             near future. See issue 83934.
      */
+    @Deprecated
     public String getDefaultServerInstanceID () {
         return null;
     }
@@ -628,6 +636,7 @@ public final class Deployment {
      * @since 1.5
      * @deprecated use <code>getServerInstance(serverInstanceID).getJ2eePlatform()</code>
      */
+    @Deprecated
     public J2eePlatform getJ2eePlatform(String serverInstanceID) {
         ServerInstance serInst = ServerRegistry.getInstance().getServerInstance(serverInstanceID);
         if (serInst == null) return null;
@@ -669,6 +678,7 @@ public final class Deployment {
      * @since 1.32
      * @deprecated use <code>getServerInstance(serverInstanceID).isRunning()</code>
      */
+    @Deprecated
     public boolean isRunning(String serverInstanceID) {
         Parameters.notNull("serverInstanceID", serverInstanceID); // NOI18N
         ServerInstance serverInstance = ServerRegistry.getInstance().getServerInstance(serverInstanceID);

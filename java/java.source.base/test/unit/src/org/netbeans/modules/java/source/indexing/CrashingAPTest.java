@@ -21,6 +21,7 @@ package org.netbeans.modules.java.source.indexing;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
@@ -31,10 +32,15 @@ import java.util.List;
 import junit.framework.*;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.Completion;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.CheckForNull;
@@ -47,6 +53,7 @@ import org.netbeans.api.java.queries.AnnotationProcessingQuery.Trigger;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.source.TestUtil;
@@ -55,7 +62,6 @@ import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.java.queries.AnnotationProcessingQueryImplementation;
 import org.netbeans.spi.java.queries.SourceLevelQueryImplementation;
-import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
@@ -71,7 +77,7 @@ public class CrashingAPTest extends NbTestCase {
         CrashingAPTest.class.getClassLoader().setDefaultAssertionStatus(true);
         System.setProperty("org.openide.util.Lookup", CrashingAPTest.Lkp.class.getName());
         Assert.assertEquals(CrashingAPTest.Lkp.class, Lookup.getDefault().getClass());
-    }   
+    }
 
     public static class Lkp extends ProxyLookup {
 
@@ -87,7 +93,6 @@ public class CrashingAPTest extends NbTestCase {
                     Lookups.singleton(l),
                     Lookups.singleton(ClassPathProviderImpl.getDefault()),
                     Lookups.singleton(SourceLevelQueryImpl.getDefault()),
-                    Lookups.singleton(new APQImpl()),
             });
         }
 
@@ -108,17 +113,6 @@ public class CrashingAPTest extends NbTestCase {
         assertNotNull(wd);
         this.src = wd.createFolder("src");
         this.data = src.createData("Test","java");
-        FileLock lock = data.lock();
-        try {
-            PrintWriter out = new PrintWriter ( new OutputStreamWriter (data.getOutputStream(lock)));
-            try {
-                out.println ("public class Test {}");
-            } finally {
-                out.close ();
-            }
-        } finally {
-            lock.releaseLock();
-        }
         ClassPathProviderImpl.getDefault().setClassPaths(TestUtil.getBootClassPath(),
                                                          ClassPathSupport.createClassPath(new URL[0]),
                                                          ClassPathSupport.createClassPath(new FileObject[]{this.src}),
@@ -126,21 +120,72 @@ public class CrashingAPTest extends NbTestCase {
     }
 
     public void testElementHandle() throws Exception {
-        final JavaSource js = JavaSource.forFileObject(data);
-        assertNotNull(js);
+        try (OutputStream dataOut = data.getOutputStream();
+            PrintWriter out = new PrintWriter ( new OutputStreamWriter (dataOut))) {
+                out.println ("public class Test {}");
+        }
 
-        js.runUserActionTask(new Task<CompilationController>() {            
-            public void run(CompilationController parameter) throws IOException {
-                parameter.toPhase(Phase.RESOLVED);
-                List<String> messages = parameter.getDiagnostics()
-                                                 .stream()
-                                                 .map(d -> d.getMessage(null))
-                                                 .map(m -> firstLine(m))
-                                                 .collect(Collectors.toList());
-                List<String> expected = Arrays.asList(Bundle.ERR_ProcessorException("org.netbeans.modules.java.source.indexing.CrashingAPTest$TestAP", "Crash"));
-                assertEquals(expected, messages);
+        runWithProcessors(Arrays.asList(TestAP.class.getName()), () -> {
+            final JavaSource js = JavaSource.forFileObject(data);
+            assertNotNull(js);
+
+            js.runUserActionTask(new Task<CompilationController>() {
+                public void run(CompilationController parameter) throws IOException {
+                    parameter.toPhase(Phase.RESOLVED);
+                    List<String> messages = parameter.getDiagnostics()
+                                                     .stream()
+                                                     .map(d -> d.getMessage(null))
+                                                     .map(m -> firstLine(m))
+                                                     .collect(Collectors.toList());
+                    List<String> expected = Arrays.asList(Bundle.ERR_ProcessorException("org.netbeans.modules.java.source.indexing.CrashingAPTest$TestAP", "Crash"));
+                    assertEquals(expected, messages);
+                }
+            },true);
+
+            return null;
+        });
+    }
+
+    public void testCompletionQuery() throws Exception {
+        try (OutputStream dataOut = data.getOutputStream();
+            PrintWriter out = new PrintWriter ( new OutputStreamWriter (dataOut))) {
+                out.println ("@I(g=) public class Test {} @interface I { public String g(); }");
+        }
+
+        runWithProcessors(Arrays.asList(TestAP.class.getName()), () -> {
+            final JavaSource js = JavaSource.forFileObject(data);
+            assertNotNull(js);
+
+            js.runUserActionTask(new Task<CompilationController>() {
+                public void run(CompilationController parameter) throws IOException {
+                    parameter.toPhase(Phase.RESOLVED);
+                    TypeElement clazz = parameter.getTopLevelElements().get(0);
+                    AnnotationMirror am = clazz.getAnnotationMirrors().get(0);
+                    ExecutableElement method = am.getElementValues().keySet().iterator().next();
+                    List<String> result =
+                            SourceUtils.getAttributeValueCompletions(parameter, clazz, am, method, "")
+                                       .stream()
+                                       .map(c -> c.getValue() + "-" + c.getMessage())
+                                       .collect(Collectors.toList());
+
+                    assertEquals(Arrays.asList("value-message"), result);
+                }
+            },true);
+
+            return null;
+        });
+    }
+
+    private void runWithProcessors(Iterable<? extends String> processors, Callable<Void> toRun) {
+        ProxyLookup newLookup = new ProxyLookup(Lookup.getDefault(),
+                                                Lookups.fixed(new APQImpl(processors)));
+        Lookups.executeWith(newLookup, () -> {
+            try {
+                toRun.call();
+            } catch (Exception ex) {
+                throw new IllegalStateException(ex);
             }
-        },true);
+        });
     }
 
     private String firstLine(String m) {
@@ -216,27 +261,32 @@ public class CrashingAPTest extends NbTestCase {
 
     private static class APQImpl implements AnnotationProcessingQueryImplementation {
 
-        private final Result result = new Result() {
-            public @NonNull Set<? extends Trigger> annotationProcessingEnabled() {
-                return EnumSet.allOf(Trigger.class);
-            }
+        private final Result result;
 
-            public @CheckForNull Iterable<? extends String> annotationProcessorsToRun() {
-                return Arrays.asList(TestAP.class.getName());
-            }
+        public APQImpl(Iterable<? extends String> processors) {
+            result = new Result() {
+                public @NonNull Set<? extends Trigger> annotationProcessingEnabled() {
+                    return EnumSet.allOf(Trigger.class);
+                }
 
-            public @CheckForNull URL sourceOutputDirectory() {
-                return null;
-            }
+                public @CheckForNull Iterable<? extends String> annotationProcessorsToRun() {
+                    return processors;
+                }
 
-            public @NonNull Map<? extends String, ? extends String> processorOptions() {
-                return Collections.emptyMap();
-            }
+                public @CheckForNull URL sourceOutputDirectory() {
+                    return null;
+                }
 
-            public void addChangeListener(@NonNull ChangeListener l) {}
+                public @NonNull Map<? extends String, ? extends String> processorOptions() {
+                    return Collections.emptyMap();
+                }
 
-            public void removeChangeListener(@NonNull ChangeListener l) {}
-        };
+                public void addChangeListener(@NonNull ChangeListener l) {}
+
+                public void removeChangeListener(@NonNull ChangeListener l) {}
+            };
+        }
+
         @Override
         public AnnotationProcessingQuery.Result getAnnotationProcessingOptions(FileObject file) {
             return result;
@@ -250,6 +300,22 @@ public class CrashingAPTest extends NbTestCase {
         public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
             throw new IllegalStateException("Crash");
         }
+
+        @Override
+        public Iterable<? extends Completion> getCompletions(Element element, AnnotationMirror annotation, ExecutableElement member, String userText) {
+            return Arrays.asList(new Completion() {
+                @Override
+                public String getValue() {
+                    return "value";
+                }
+
+                @Override
+                public String getMessage() {
+                    return "message";
+                }
+            });
+        }
+
     }
 
     static {

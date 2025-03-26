@@ -149,7 +149,7 @@ public class LspBrokenReferencesImplTest extends NbTestCase {
     final TestedImpl tested = new TestedImpl();
     
     final AtomicBoolean resolveCalled = new AtomicBoolean(false);
-    final AtomicReference<ProjectProblemsProvider.ProjectProblem> ref = new AtomicReference();
+    final AtomicReference<ProjectProblemsProvider.ProjectProblem> ref = new AtomicReference<>();
     
     /**
      * Fills in 'ref'
@@ -1279,7 +1279,7 @@ public class LspBrokenReferencesImplTest extends NbTestCase {
             if (services == null) {
                 return Lookup.EMPTY;
             } else {
-                return Lookups.fixed(services.toArray(new Object[services.size()]));
+                return Lookups.fixed(services.toArray(new Object[0]));
             }
         }
     }

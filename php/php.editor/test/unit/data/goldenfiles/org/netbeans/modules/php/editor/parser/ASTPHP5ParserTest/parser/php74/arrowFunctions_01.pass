@@ -1365,7 +1365,9 @@
                 <ArrowFunctionDeclaration start='1002' end='1021' isReference='false' isStatic='false'>
                     <FormalParameter start='1006' end='1014' isMandatory='true' isVariadic='false'>
                         <ParametrType>
-                            <Identifier start='1006' end='1011' name='array'/>
+                            <NamespaceName start='1006' end='1011' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1006' end='1011' name='array'/>
+                            </NamespaceName>
                         </ParametrType>
                         <ParametrName>
                             <Variable start='1012' end='1014' isDollared='true'>
@@ -1395,7 +1397,9 @@
                     <FormalParameter start='1078' end='1087' isMandatory='true' isVariadic='false'>
                         <ParametrType>
                             <NullableType start='1078' end='1084'>
-                                <Identifier start='1079' end='1084' name='array'/>
+                                <NamespaceName start='1079' end='1084' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1079' end='1084' name='array'/>
+                                </NamespaceName>
                             </NullableType>
                         </ParametrType>
                         <ParametrName>
@@ -2028,7 +2032,7 @@
                                             <Identifier start='2044' end='2046' name='af'/>
                                         </Variable>
                                         <ArrowFunctionDeclaration start='2049' end='2068' isReference='false' isStatic='false'>
-                                            <StaticConstantAccess start='2057' end='2068'>
+                                            <StaticConstantAccess start='2057' end='2068' isDynamicName='false'>
                                                 <NamespaceName start='2057' end='2061' isCurrent='false' isGlobal='false'>
                                                     <Identifier start='2057' end='2061' name='self'/>
                                                 </NamespaceName>

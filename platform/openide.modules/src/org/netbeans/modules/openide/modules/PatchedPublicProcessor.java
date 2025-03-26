@@ -35,7 +35,6 @@ import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
@@ -87,7 +86,7 @@ public class PatchedPublicProcessor extends AbstractProcessor {
             try (OutputStream os = processingEnv.getFiler().createResource(
                     StandardLocation.CLASS_OUTPUT,
                     "", "META-INF/.bytecodePatched",
-                    originatingElements.toArray(new Element[originatingElements.size()])).openOutputStream()) {
+                    originatingElements.toArray(new Element[0])).openOutputStream()) {
                 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
                 for (Map.Entry<String, String> exEntry : superclasses.entrySet()) {
                     String api = exEntry.getKey();

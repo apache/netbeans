@@ -23,7 +23,6 @@ import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 import javax.swing.tree.TreePath;
 
@@ -44,6 +43,7 @@ import org.netbeans.jemmy.operators.Operator.ComponentVisualizer;
 import org.netbeans.jemmy.operators.Operator.DefaultStringComparator;
 import org.netbeans.jemmy.operators.Operator.StringComparator;
 import org.netbeans.jemmy.util.EmptyVisualizer;
+import org.openide.awt.Actions;
 import org.openide.cookies.InstanceCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -782,14 +782,14 @@ public class Action {
                     } else if (javax.swing.Action.class.isAssignableFrom(systemActionClass)) {
                         // action implements javax.swing.Action
                         try {
-                            ((javax.swing.Action) systemActionClass.newInstance()).actionPerformed(
+                            ((javax.swing.Action) systemActionClass.getDeclaredConstructor().newInstance()).actionPerformed(
                                     new ActionEvent(new Container(), 0, null));
                         } catch (Exception e) {
                             throw new JemmyException("Exception when trying to create instance of action \"" + systemActionClass.getName() + "\".", e);
                         }
                     } else if (ActionListener.class.isAssignableFrom(systemActionClass)) {
                         try {
-                            ((ActionListener) systemActionClass.newInstance()).actionPerformed(
+                            ((ActionListener) systemActionClass.getDeclaredConstructor().newInstance()).actionPerformed(
                                     new ActionEvent(new Container(), 0, null));
                         } catch (Exception e) {
                             throw new JemmyException("Exception when trying to create instance of action \"" + systemActionClass.getName() + "\".", e);
@@ -1281,8 +1281,8 @@ public class Action {
          */
         @Override
         public String toString() {
-            String s = KeyEvent.getKeyModifiersText(getKeyModifiers());
-            return s + (s.length() > 0 ? "+" : "") + KeyEvent.getKeyText(getKeyCode());
+            return Actions.keyStrokeToString(
+                    KeyStroke.getKeyStroke(getKeyCode(), getKeyModifiers()));
         }
     }
 }

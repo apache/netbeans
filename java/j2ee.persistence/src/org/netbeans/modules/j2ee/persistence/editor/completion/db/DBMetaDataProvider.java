@@ -48,7 +48,7 @@ public class DBMetaDataProvider {
     // instead of List in order to be consistent with dbschema.
     
     // Maps java.sql.Connection-s to DB metadata providers.
-    private static final Map/*<Connection, DBMetadataProvider>*/ CONN_TO_PROVIDER = new WeakHashMap();
+    private static final Map<Connection, DBMetaDataProvider> CONN_TO_PROVIDER = new WeakHashMap();
     
     // must be a weak reference -- we don't want to prevent the connection from being GCd
     // it is OK to be a weak reference -- the connection is hold strongly by the DB Explorer
@@ -56,14 +56,14 @@ public class DBMetaDataProvider {
     private final Reference<Connection> conn;
     private final String driverClass;
     
-    private Map/*<String, Catalog>*/ catalogs;
+    private Map<String, Catalog> catalogs;
     
     /**
      * Returns a DB metadata provider for the given connection.
      */
     public static synchronized DBMetaDataProvider get(Connection conn, String driverClass) {
         assert conn != null;
-        DBMetaDataProvider provider = (DBMetaDataProvider)CONN_TO_PROVIDER.get(conn);
+        DBMetaDataProvider provider = CONN_TO_PROVIDER.get(conn);
         if (provider == null) {
             provider = new DBMetaDataProvider(conn, driverClass);
             CONN_TO_PROVIDER.put(conn, provider);
@@ -92,9 +92,7 @@ public class DBMetaDataProvider {
         if (catalogs == null) {
             catalogs = new TreeMap(new CatalogComparator());
             
-            ResultSet rs = getMetaData().getCatalogs();
-            
-            try {
+            try (ResultSet rs = getMetaData().getCatalogs()) {
                 while (rs.next()) {
                     String catalogName = rs.getString("TABLE_CAT"); // NOI18N
                     Catalog catalog = new Catalog(this, catalogName);
@@ -104,8 +102,6 @@ public class DBMetaDataProvider {
                     //    result.add(catalogName);
                     //}
                 }
-            } finally {
-                rs.close();
             }
             
             if (catalogs.size() <= 0) {
@@ -114,20 +110,22 @@ public class DBMetaDataProvider {
             }
         }
         
-        return (Catalog[])catalogs.values().toArray(new Catalog[catalogs.size()]);
+        return catalogs.values().toArray(new Catalog[catalogs.size()]);
     }
     
     public synchronized Catalog getCatalog(String name) throws SQLException {
         if (catalogs == null) {
             getCatalogs();
         }
-        Catalog ret = (Catalog)catalogs.get(name);
-        if(ret == null && "".equals(name))ret = (Catalog)catalogs.get(null);
+        Catalog ret = catalogs.get(name);
+        if(ret == null && "".equals(name)) {
+            ret = catalogs.get(null);
+        }
         return ret;
     }
     
     Connection getConnection() {
-        return (Connection)conn.get();
+        return conn.get();
     }
     
     String getDriverClass() {
@@ -138,16 +136,19 @@ public class DBMetaDataProvider {
         return getConnection().getMetaData();
     }
     
+    @Override
     public String toString() {
         return "DBMetadataProvider[conn=" + getConnection() + "]"; // NOI18N
     }
     
     private static final class CatalogComparator implements Comparator {
         
+        @Override
         public boolean equals(Object that) {
             return that instanceof CatalogComparator;
         }
         
+        @Override
         public int compare(Object o1, Object o2) {
             String name1 = (String)o1;
             String name2 = (String)o2;
@@ -165,6 +166,7 @@ public class DBMetaDataProvider {
         public MetaDataListenerImpl() {
         }
 
+        @Override
         public void tablesChanged(final DatabaseConnection dbconn) {
             try {
                 Schema schema = getSchema(dbconn);
@@ -176,6 +178,7 @@ public class DBMetaDataProvider {
             }
         }
 
+        @Override
         public void tableChanged(DatabaseConnection dbconn, String tableName) {
             tablesChanged(dbconn);
         }
@@ -187,7 +190,7 @@ public class DBMetaDataProvider {
             }
             DBMetaDataProvider provider;
             synchronized (this) {
-                provider = (DBMetaDataProvider)CONN_TO_PROVIDER.get(conn);
+                provider = CONN_TO_PROVIDER.get(conn);
             }
             if (provider == null) {
                 return null;

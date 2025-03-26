@@ -19,8 +19,6 @@
 
 -->
 
-<a href="https://foojay.io/today/works-with-openjdk"><img align="right" src="https://github.com/foojayio/badges/raw/main/works_with_openjdk/Works-with-OpenJDK.png" width="100"></a>
-
 # Apache NetBeans
 
 Apache NetBeans is an open source development environment, tooling platform, and application framework.
@@ -29,8 +27,7 @@ Apache NetBeans is an open source development environment, tooling platform, and
    * GitHub actions
      * [![Build Status](https://github.com/apache/netbeans/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/apache/netbeans/actions/workflows/main.yml)
      * [![Profiler Lib Native Binaries](https://github.com/apache/netbeans/actions/workflows/native-binary-build-lib.profiler.yml/badge.svg?branch=master)](https://github.com/apache/netbeans/actions/workflows/native-binary-build-lib.profiler.yml)
-   * TravisCI:
-     * [![Build Status](https://app.travis-ci.com/apache/netbeans.svg?branch=master)](https://app.travis-ci.com/apache/netbeans)
+     * [![NetBeans Native Execution Libraries](https://github.com/apache/netbeans/actions/workflows/native-binary-build-dlight.nativeexecution.yml/badge.svg?branch=master)](https://github.com/apache/netbeans/actions/workflows/native-binary-build-dlight.nativeexecution.yml)
    * Apache Jenkins:
      * Linux: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/)
      * Windows: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows) 
@@ -40,8 +37,8 @@ Apache NetBeans is an open source development environment, tooling platform, and
 ### Requirements
 
   * Git
-  * Ant 1.9.9 or above
-  * JDK 11 or above (to build and run NetBeans)
+  * Ant
+  * JDK 17 or above (to build and run NetBeans)
 
 #### Notes:
 
@@ -50,25 +47,30 @@ Apache NetBeans is an open source development environment, tooling platform, and
 
 ### Building NetBeans
 
-Build with the default config (See the [cluster.config](https://github.com/apache/netbeans/blob/ab66c7fdfdcbf0bde67b96ddb075c83451cdd1a6/nbbuild/cluster.properties#L19) property.)
+Build the default `release` config (See the [cluster.config](https://github.com/apache/netbeans/blob/ab66c7fdfdcbf0bde67b96ddb075c83451cdd1a6/nbbuild/cluster.properties#L19) property.)
 ```
-$ ant
+$ ant build
 ```
-Build the basic project (mainly, JavaSE features):
+Build the basic project (mainly Java features):
 ```
-$ ant -Dcluster.config=basic
+$ ant -Dcluster.config=basic build
 ```
-Build the full project (including Groovy, PHP, JavaEE/JakartaEE, and JavaScript features):
+Build the full project (may include clusters which are not be in the release):
 ```
-$ ant -Dcluster.config=full
+$ ant -Dcluster.config=full build
 ```
 Build the NetBeans Platform:
 ```
-$ ant -Dcluster.config=platform
+$ ant -Dcluster.config=platform build
+```
+Cleanup:
+```
+$ ant -q clean
 ```
 
 #### Notes:
 * You can also use `php`, `enterprise`, etc. See the [cluster.properties](https://github.com/apache/netbeans/blob/master/nbbuild/cluster.properties) file.
+* Once built, you can simply open individual modules of interest with NetBeans and run/rebuild/debug them like any other project
 
 #### Generating Javadoc
 
@@ -90,19 +92,17 @@ $ ant tryme
 
 ### Get In Touch
 
-[Subscribe](mailto:users-subscribe@netbeans.apache.org) or [mail](mailto:users@netbeans.apache.org) the [users@netbeans.apache.org](mailto:users@netbeans.apache.org) list - Ask questions, find answers, and also help other users.
-
-[Subscribe](mailto:dev-subscribe@netbeans.apache.org) or [mail](mailto:dev@netbeans.apache.org) the [dev@netbeans.apache.org](mailto:dev@netbeans.apache.org) list - Join development discussions, propose new ideas and connect with contributors.
+ * [Subscribe](mailto:users-subscribe@netbeans.apache.org) or [mail](mailto:users@netbeans.apache.org) the [users@netbeans.apache.org](mailto:users@netbeans.apache.org) list - Ask questions, find answers, and also help other users.
+ * [Subscribe](mailto:dev-subscribe@netbeans.apache.org) or [mail](mailto:dev@netbeans.apache.org) the [dev@netbeans.apache.org](mailto:dev@netbeans.apache.org) list - Join development discussions, propose new ideas and connect with contributors.
 
 ### Download
 
-Developer builds can be downloaded: [Latest build (netbeans-xxx.zip)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/lastSuccessfulBuild/artifact/nbbuild/).
-
-Latest release (convenience binary of released source artifacts): https://netbeans.apache.org/download/index.html.
+ * [Developer builds](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/lastSuccessfulBuild/artifact/nbbuild/) on Jenkins (NetBeans-dev-xxx.zip).
+ * [Latest release](https://netbeans.apache.org/download) (convenience binary of released source artifacts).
 
 ### Reporting Bugs
 
-Bugs should be reported to https://github.com/apache/netbeans/issues
+ * [How to report bugs](https://netbeans.apache.org/participate/report-issue)
 
 ### Log, Config and Cache Locations
 
@@ -116,6 +116,13 @@ Bugs should be reported to https://github.com/apache/netbeans/issues
    `$DEFAULT_USERDIR_ROOT/var/log/messages.log`
 
 **Note:** removing/changing the user settings directory will reset NetBeans to first launch defaults
+
+### Other Repositories
+
+ * [NetBeans website repos](https://github.com/apache/netbeans-antora?tab=readme-ov-file#basic-structure)
+ * [NBPackage](https://github.com/apache/netbeans-nbpackage)
+ * [NetBeans maven utilities](https://github.com/apache/netbeans-mavenutils-nbm-maven-plugin)
+ * [NetBeans maven archetypes](https://github.com/apache/netbeans-mavenutils-archetypes)
 
 ### Full History
 

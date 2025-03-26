@@ -55,8 +55,9 @@ import javax.swing.border.*;
 * right/bottom component resizes), while in the proportional mode the splitPosition
 * is a percentage of the width/height assigned to the left/top component.
 
-* <P><TABLE BORDER COLS=3 WIDTH=100%>
-* <TR><TH WIDTH=15%>Property<TH WIDTH=15%>Property Type<TH>Description
+* <TABLE>
+* <caption>properties of SplittedPanel</caption>
+* <TR><TH style="width:15%" >Property<TH style="width:15%" >Property Type<TH>Description
 * <TR><TD> SplitType            <TD> int       <TD> The type of the splitting - HORIZONTAL, VERTICAL or NONE
 * <TR><TD> SplitPosition        <TD> int       <TD> The position of the split point - either absolute position or number of percents
 *                                                   according to the "Absolute" property settings, could be one of FIRST_PREFERRED or
@@ -234,6 +235,7 @@ public class SplittedPanel extends JComponent implements Accessible {
     }
 
     /** Updates splitting, too. */
+    @Override
     public void updateUI() {
         super.updateUI();
         updateSplitting();
@@ -778,14 +780,12 @@ public class SplittedPanel extends JComponent implements Accessible {
 
         getAccessibleContext().setAccessibleName(
             nameFormat.format(
-                new Object[] {
-                    ((firstComponent == null) || !(firstComponent instanceof Accessible)) ? null
-                                                                                          : firstComponent.getAccessibleContext()
-                                                                                                          .getAccessibleName(),
-                    ((secondComponent == null) || !(secondComponent instanceof Accessible)) ? null
-                                                                                            : secondComponent.getAccessibleContext()
-                                                                                                             .getAccessibleName()
-                }
+                    new Object[]{
+                            (!(firstComponent instanceof Accessible)) ? null
+                                    : firstComponent.getAccessibleContext().getAccessibleName(),
+                            (!(secondComponent instanceof Accessible)) ? null
+                                    : secondComponent.getAccessibleContext().getAccessibleName()
+                    }
             )
         );
 
@@ -796,14 +796,12 @@ public class SplittedPanel extends JComponent implements Accessible {
 
         getAccessibleContext().setAccessibleDescription(
             descriptionFormat.format(
-                new Object[] {
-                    ((firstComponent == null) || !(firstComponent instanceof Accessible)) ? null
-                                                                                          : firstComponent.getAccessibleContext()
-                                                                                                          .getAccessibleDescription(),
-                    ((secondComponent == null) || !(secondComponent instanceof Accessible)) ? null
-                                                                                            : secondComponent.getAccessibleContext()
-                                                                                                             .getAccessibleDescription()
-                }
+                    new Object[]{
+                            (!(firstComponent instanceof Accessible)) ? null
+                                    : firstComponent.getAccessibleContext().getAccessibleDescription(),
+                            (!(secondComponent instanceof Accessible)) ? null
+                                    : secondComponent.getAccessibleContext().getAccessibleDescription()
+                    }
             )
         );
     }
@@ -884,13 +882,16 @@ public class SplittedPanel extends JComponent implements Accessible {
             getAccessibleContext().setAccessibleName(bundle.getString("ACSD_SplittedPanel_EmptySplitter"));
         }
 
+        @Override
         public Dimension getPreferredSize() {
             return new Dimension(width, width);
         }
 
+        @Override
         public AccessibleContext getAccessibleContext() {
             if (accessibleContext == null) {
                 accessibleContext = new AccessibleJComponent() {
+                            @Override
                             public AccessibleRole getAccessibleRole() {
                                 return AccessibleRole.SPLIT_PANE;
                             }
@@ -920,10 +921,12 @@ public class SplittedPanel extends JComponent implements Accessible {
             }
         }
 
+        @Override
         public Dimension getPreferredSize() {
             return new Dimension(splitterSize, splitterSize);
         }
 
+        @Override
         public void paint(Graphics g) {
             super.paint(g);
 
@@ -1034,6 +1037,7 @@ public class SplittedPanel extends JComponent implements Accessible {
             }
         }
 
+        @Override
         public AccessibleContext getAccessibleContext() {
             return SplittedPanel.this.getAccessibleContext();
         }

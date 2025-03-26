@@ -50,7 +50,7 @@ class PropertiesStorage  {
     
     /** Creates a new instance */
     private PropertiesStorage(final String absolutePath) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(USERROOT_PREFIX).append(absolutePath);
         folderPath = sb.toString();
     }
@@ -74,12 +74,8 @@ class PropertiesStorage  {
     
     public void save(final Properties properties) throws IOException {
         if (!properties.isEmpty()) {
-            OutputStream os = null;
-            try {
-                os = outputStream();
+            try (OutputStream os = outputStream()) {
                 properties.store(os,new Date().toString());//NOI18N
-            } finally {
-                if (os != null) os.close();
             }
         } else {
             FileObject file = toPropertiesFile();
@@ -104,6 +100,7 @@ class PropertiesStorage  {
         final FileLock lock = fo.lock();
         final OutputStream os = fo.getOutputStream(lock);
         return new FilterOutputStream(os) {
+            @Override
             public void close() throws IOException {
                 super.close();
                 lock.releaseLock();

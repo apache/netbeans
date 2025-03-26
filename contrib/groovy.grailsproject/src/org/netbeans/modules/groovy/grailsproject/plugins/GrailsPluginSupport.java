@@ -339,7 +339,7 @@ public class GrailsPluginSupport {
                 }
 
                 Callable<Process> callable = ExecutionSupport.getInstance().createSimpleCommand(
-                        command, GrailsProjectConfig.forProject(project), args.toArray(new String[args.size()]));
+                        command, GrailsProjectConfig.forProject(project), args.toArray(new String[0]));
                 ExecutionDescriptor descriptor = new ExecutionDescriptor().frontWindow(true)
                         .postExecution(new RefreshProjectRunnable(project));
 

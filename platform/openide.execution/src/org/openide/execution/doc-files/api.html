@@ -42,8 +42,6 @@ package.
 <li><a href="#io">Managing I/O</a>
 </ul>
 
-</ul>
-
 <h1>Execution API</h1>
 
 <p>
@@ -64,7 +62,7 @@ an external process whose output you wish to capture should
 generally have its streams redirected to the Output Window, e.g. by
 using
 
-<a href="@JDK@/java/lang/Process.html#getInputStream--"><code>Process.getInputStream()</code></a>.
+<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/Process.html#getInputStream--"><code>Process.getInputStream()</code></a>.
 
 The streams on the Output Window may be obtained from the execution
 engine (see below), using
@@ -133,7 +131,7 @@ it convenient to use as a Bean property on service types such as
 executors.
 </p>
 
-<h3><a name="io">Managing I/O</a></h3>
+<h2 id="io">Managing I/O</h2>
 
 Typically, implementors of executors (or other external services such
 as compilation) will wish for any I/O via standard system streams
@@ -266,11 +264,11 @@ exit status (since the execution engine is not aware of such codes).
 <p>The dynamic scope of <code>execute(...)</code> also covers
 attempted uses of
 
-<a href="@JDK@/java/lang/System.html#exit-int-"><code>System.exit(int)</code></a>
+<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/System.html#exit-int-"><code>System.exit(int)</code></a>
 
 (or
 
-<a href="@JDK@/java/lang/Runtime.html#exit-int-"><code>Runtime.exit(int)</code></a>).
+<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/Runtime.html#exit-int-"><code>Runtime.exit(int)</code></a>).
 
 If an exit is attempted within the task's dynamic scope (i.e. thread
 group), this is caught by the NetBeans security manager implementation,
@@ -281,7 +279,7 @@ and the task is instead stopped (as if by
 In practice this means that all living threads in the thread group
 will receive
 
-<a href="@JDK@/java/lang/ThreadDeath.html"><code>ThreadDeath</code></a>
+<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/ThreadDeath.html"><code>ThreadDeath</code></a>
 
 to stop them. So executor implementations should be prepared to have
 thread death thrown on them, and anyone catching

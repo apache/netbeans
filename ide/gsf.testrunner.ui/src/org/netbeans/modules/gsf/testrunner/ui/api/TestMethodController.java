@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeMap;
 import javax.swing.text.Document;
 import javax.swing.text.Position;
 import javax.swing.text.StyledDocument;
@@ -55,33 +56,32 @@ public class TestMethodController {
             doc.putProperty(TestMethodAnnotation.DOCUMENT_ANNOTATIONS_KEY, annotations);
         }
 
-        Map<Integer, TestMethod> annotationLines = (Map<Integer, TestMethod>) doc.getProperty(TestMethodAnnotation.DOCUMENT_ANNOTATION_LINES_KEY);
+        Map<Position, TestMethod> annotationPositions = (Map<Position, TestMethod>) doc.getProperty(TestMethodAnnotation.DOCUMENT_ANNOTATION_LINES_KEY);
 
-        if (annotationLines == null) {
-            annotationLines = new HashMap<>();
-            doc.putProperty(TestMethodAnnotation.DOCUMENT_ANNOTATION_LINES_KEY, annotationLines);
+        if (annotationPositions == null) {
+            annotationPositions = new TreeMap<>((p1, p2) -> p1.getOffset() - p2.getOffset());
+            doc.putProperty(TestMethodAnnotation.DOCUMENT_ANNOTATION_LINES_KEY, annotationPositions);
         }
 
+        Set<TestMethod> added = new HashSet<>(methods);
         Map<TestMethod, TestMethodAnnotation> removed = new HashMap<>(annotations);
 
-        methods.forEach(tm -> removed.remove(tm));
-
-        Set<TestMethod> added = new HashSet<>(methods);
-
+        removed.keySet().removeAll(added);
         added.removeAll(annotations.keySet());
 
+        //remove dropped test methods:
+        for (Entry<TestMethod, TestMethodAnnotation> e : removed.entrySet()) {
+            NbDocument.removeAnnotation(doc, e.getValue());
+            annotations.remove(e.getKey());
+            annotationPositions.remove(e.getKey().preferred);
+        }
+
+        //add new test methods
         for (TestMethod method : added) {
             TestMethodAnnotation a = new TestMethodAnnotation(method);
             NbDocument.addAnnotation(doc, method.preferred, 0, a);
             annotations.put(method, a);
-            int line = NbDocument.findLineNumber(doc, method.preferred.getOffset());
-            annotationLines.put(line, method);
-        }
-        for (Entry<TestMethod, TestMethodAnnotation> e : removed.entrySet()) {
-            NbDocument.removeAnnotation(doc, e.getValue());
-            annotations.remove(e.getKey());
-            int line = NbDocument.findLineNumber(doc, e.getKey().preferred.getOffset());
-            annotationLines.remove(line);
+            annotationPositions.put(method.preferred, method);
         }
     }
 

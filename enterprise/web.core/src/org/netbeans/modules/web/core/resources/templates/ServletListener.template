@@ -7,9 +7,16 @@
 package ${package};
 </#if>
 
+<#if jakartaPackages>
+<#if classAnnotation??>
+import jakarta.servlet.annotation.WebListener;
+
+</#if>
+<#else>
 <#if classAnnotation??>
 import javax.servlet.annotation.WebListener;
 
+</#if>
 </#if>
 /**
  * Web application lifecycle listener.

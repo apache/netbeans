@@ -10,5 +10,4 @@ class Foo implements FooInterface
     public function someMethod(?string $string, int $int) {
         
     }
-
 }

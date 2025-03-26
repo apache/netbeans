@@ -106,9 +106,8 @@ abstract class AbstractJUnitTestCreatorProvider extends TestCreatorProvider {
 
         if (theProject != null) {
             JUnitPlugin plugin = JUnitTestUtil.getPluginForProject(theProject);
-            result &= JUnitTestUtil.canCreateTests(
-                            plugin,
-                            fileObjs.toArray(new FileObject[fileObjs.size()]));
+            result &= JUnitTestUtil.canCreateTests(plugin,
+                            fileObjs.toArray(new FileObject[0]));
         }
 
         return result;
@@ -248,8 +247,7 @@ abstract class AbstractJUnitTestCreatorProvider extends TestCreatorProvider {
         }
         if (fileObjects == null) {
             if (fileObjectsList != null) {
-                fileObjects = fileObjectsList.toArray(
-                        new FileObject[fileObjectsList.size()]);
+                fileObjects = fileObjectsList.toArray(new FileObject[0]);
                 fileObjectsList = null;
             }
         }

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.89
+#Version 1.99
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -50,6 +50,12 @@ meth public abstract java.lang.annotation.ElementType[] value()
 CLSS public abstract interface java.util.concurrent.Callable<%0 extends java.lang.Object>
  anno 0 java.lang.FunctionalInterface()
 meth public abstract {java.util.concurrent.Callable%0} call() throws java.lang.Exception
+
+CLSS public final org.netbeans.api.project.ContainedProjectFilter
+meth public java.util.List<org.netbeans.api.project.Project> getProjectsToProcess()
+meth public static java.util.Optional<org.netbeans.api.project.ContainedProjectFilter> of(java.util.List<org.netbeans.api.project.Project>)
+supr java.lang.Object
+hfds projectsToProcess
 
 CLSS public org.netbeans.api.project.FileOwnerQuery
 fld public final static int EXTERNAL_ALGORITHM_TRANSIENT = 0
@@ -261,6 +267,7 @@ fld public final static java.lang.String COMMAND_RENAME = "rename"
 fld public final static java.lang.String COMMAND_RUN = "run"
 fld public final static java.lang.String COMMAND_RUN_SINGLE = "run.single"
 fld public final static java.lang.String COMMAND_TEST = "test"
+fld public final static java.lang.String COMMAND_TEST_PARALLEL = "test.parallel"
 fld public final static java.lang.String COMMAND_TEST_SINGLE = "test.single"
 meth public abstract boolean isActionEnabled(java.lang.String,org.openide.util.Lookup)
 meth public abstract java.lang.String[] getSupportedActions()
@@ -359,6 +366,18 @@ CLSS public abstract interface org.netbeans.spi.project.MoveOrRenameOperationImp
 intf org.netbeans.spi.project.MoveOperationImplementation
 meth public abstract void notifyRenamed(java.lang.String) throws java.io.IOException
 meth public abstract void notifyRenaming() throws java.io.IOException
+
+CLSS public final org.netbeans.spi.project.NestedClass
+cons public init(java.lang.String,java.lang.String,org.openide.filesystems.FileObject)
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.String getClassName()
+meth public java.lang.String getFQN(java.lang.String)
+meth public java.lang.String getFQN(java.lang.String,java.lang.String)
+meth public java.lang.String getTopLevelClassName()
+meth public org.openide.filesystems.FileObject getFile()
+supr java.lang.Object
+hfds className,file,topLevelClassName
 
 CLSS public abstract interface org.netbeans.spi.project.ParentProjectProvider
 meth public abstract org.netbeans.api.project.Project getPartentProject()
@@ -469,15 +488,17 @@ CLSS public abstract interface org.netbeans.spi.project.RootProjectProvider
 meth public abstract org.netbeans.api.project.Project getRootProject()
 
 CLSS public final org.netbeans.spi.project.SingleMethod
+cons public init(java.lang.String,org.netbeans.spi.project.NestedClass)
 cons public init(org.openide.filesystems.FileObject,java.lang.String)
 fld public final static java.lang.String COMMAND_DEBUG_SINGLE_METHOD = "debug.single.method"
 fld public final static java.lang.String COMMAND_RUN_SINGLE_METHOD = "run.single.method"
 meth public boolean equals(java.lang.Object)
 meth public int hashCode()
 meth public java.lang.String getMethodName()
+meth public org.netbeans.spi.project.NestedClass getNestedClass()
 meth public org.openide.filesystems.FileObject getFile()
 supr java.lang.Object
-hfds file,methodName
+hfds file,methodName,nestedClass
 
 CLSS public abstract interface org.netbeans.spi.project.SourceGroupModifierImplementation
 meth public abstract boolean canCreateSourceGroup(java.lang.String,java.lang.String)

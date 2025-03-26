@@ -25,7 +25,6 @@ class Bar {
     public function __invoke() {
         echo "class __invoke" . PHP_EOL;
     }
-
 }
 
 (new Bar())();
@@ -52,7 +51,6 @@ class ArrayCall {
     public static function test() {
         echo "array call" . PHP_EOL;
     }
-
 }
 
 $array = new ArrayCall();
@@ -77,5 +75,4 @@ class Foo {
     public function doSomething() {
         ($this->callable)();
     }
-
 }

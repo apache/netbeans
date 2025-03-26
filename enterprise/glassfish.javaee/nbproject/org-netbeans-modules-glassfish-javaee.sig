@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.59
+#Version 1.68
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -17,6 +17,7 @@ intf java.awt.MenuContainer
 intf java.awt.image.ImageObserver
 intf java.io.Serializable
 meth protected boolean requestFocus(boolean)
+meth protected boolean requestFocus(boolean,java.awt.event.FocusEvent$Cause)
 meth protected boolean requestFocusInWindow(boolean)
 meth protected final void disableEvents(long)
 meth protected final void enableEvents(long)
@@ -37,20 +38,20 @@ meth protected void processMouseMotionEvent(java.awt.event.MouseEvent)
 meth protected void processMouseWheelEvent(java.awt.event.MouseWheelEvent)
 meth public <%0 extends java.util.EventListener> {%%0}[] getListeners(java.lang.Class<{%%0}>)
 meth public boolean action(java.awt.Event,java.lang.Object)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean areFocusTraversalKeysSet(int)
 meth public boolean contains(int,int)
 meth public boolean contains(java.awt.Point)
 meth public boolean getFocusTraversalKeysEnabled()
 meth public boolean getIgnoreRepaint()
 meth public boolean gotFocus(java.awt.Event,java.lang.Object)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean handleEvent(java.awt.Event)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean hasFocus()
 meth public boolean imageUpdate(java.awt.Image,int,int,int,int,int)
 meth public boolean inside(int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isBackgroundSet()
 meth public boolean isCursorSet()
 meth public boolean isDisplayable()
@@ -59,7 +60,7 @@ meth public boolean isEnabled()
 meth public boolean isFocusCycleRoot(java.awt.Container)
 meth public boolean isFocusOwner()
 meth public boolean isFocusTraversable()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isFocusable()
 meth public boolean isFontSet()
 meth public boolean isForegroundSet()
@@ -72,28 +73,29 @@ meth public boolean isShowing()
 meth public boolean isValid()
 meth public boolean isVisible()
 meth public boolean keyDown(java.awt.Event,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean keyUp(java.awt.Event,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean lostFocus(java.awt.Event,java.lang.Object)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean mouseDown(java.awt.Event,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean mouseDrag(java.awt.Event,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean mouseEnter(java.awt.Event,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean mouseExit(java.awt.Event,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean mouseMove(java.awt.Event,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean mouseUp(java.awt.Event,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean postEvent(java.awt.Event)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean prepareImage(java.awt.Image,int,int,java.awt.image.ImageObserver)
 meth public boolean prepareImage(java.awt.Image,java.awt.image.ImageObserver)
 meth public boolean requestFocusInWindow()
+meth public boolean requestFocusInWindow(java.awt.event.FocusEvent$Cause)
 meth public final java.lang.Object getTreeLock()
 meth public final void dispatchEvent(java.awt.AWTEvent)
 meth public float getAlignmentX()
@@ -110,7 +112,7 @@ meth public java.awt.Color getForeground()
 meth public java.awt.Component getComponentAt(int,int)
 meth public java.awt.Component getComponentAt(java.awt.Point)
 meth public java.awt.Component locate(int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Component$BaselineResizeBehavior getBaselineResizeBehavior()
 meth public java.awt.ComponentOrientation getComponentOrientation()
 meth public java.awt.Container getFocusCycleRootAncestor()
@@ -122,11 +124,11 @@ meth public java.awt.Dimension getPreferredSize()
 meth public java.awt.Dimension getSize()
 meth public java.awt.Dimension getSize(java.awt.Dimension)
 meth public java.awt.Dimension minimumSize()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Dimension preferredSize()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Dimension size()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Font getFont()
 meth public java.awt.FontMetrics getFontMetrics(java.awt.Font)
 meth public java.awt.Graphics getGraphics()
@@ -138,9 +140,9 @@ meth public java.awt.Point getLocation(java.awt.Point)
 meth public java.awt.Point getLocationOnScreen()
 meth public java.awt.Point getMousePosition()
 meth public java.awt.Point location()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Rectangle bounds()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Rectangle getBounds()
 meth public java.awt.Rectangle getBounds(java.awt.Rectangle)
 meth public java.awt.Toolkit getToolkit()
@@ -181,14 +183,14 @@ meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void addPropertyChangeListener(java.lang.String,java.beans.PropertyChangeListener)
 meth public void applyComponentOrientation(java.awt.ComponentOrientation)
 meth public void deliverEvent(java.awt.Event)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void disable()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void doLayout()
 meth public void enable()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void enable(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void enableInputMethods(boolean)
 meth public void firePropertyChange(java.lang.String,byte,byte)
 meth public void firePropertyChange(java.lang.String,char,char)
@@ -197,19 +199,19 @@ meth public void firePropertyChange(java.lang.String,float,float)
 meth public void firePropertyChange(java.lang.String,long,long)
 meth public void firePropertyChange(java.lang.String,short,short)
 meth public void hide()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void invalidate()
 meth public void layout()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void list()
 meth public void list(java.io.PrintStream)
 meth public void list(java.io.PrintStream,int)
 meth public void list(java.io.PrintWriter)
 meth public void list(java.io.PrintWriter,int)
 meth public void move(int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void nextFocus()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void paint(java.awt.Graphics)
 meth public void paintAll(java.awt.Graphics)
 meth public void print(java.awt.Graphics)
@@ -232,12 +234,13 @@ meth public void repaint(int,int,int,int)
 meth public void repaint(long)
 meth public void repaint(long,int,int,int,int)
 meth public void requestFocus()
+meth public void requestFocus(java.awt.event.FocusEvent$Cause)
 meth public void reshape(int,int,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void resize(int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void resize(java.awt.Dimension)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void revalidate()
 meth public void setBackground(java.awt.Color)
 meth public void setBounds(int,int,int,int)
@@ -257,15 +260,16 @@ meth public void setLocation(int,int)
 meth public void setLocation(java.awt.Point)
 meth public void setMaximumSize(java.awt.Dimension)
 meth public void setMinimumSize(java.awt.Dimension)
+meth public void setMixingCutoutShape(java.awt.Shape)
 meth public void setName(java.lang.String)
 meth public void setPreferredSize(java.awt.Dimension)
 meth public void setSize(int,int)
 meth public void setSize(java.awt.Dimension)
 meth public void setVisible(boolean)
 meth public void show()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void show(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void transferFocus()
 meth public void transferFocusBackward()
 meth public void transferFocusUpCycle()
@@ -293,7 +297,7 @@ meth public final void setFocusTraversalPolicyProvider(boolean)
 meth public float getAlignmentX()
 meth public float getAlignmentY()
 meth public int countComponents()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public int getComponentCount()
 meth public int getComponentZOrder(java.awt.Component)
 meth public java.awt.Component add(java.awt.Component)
@@ -305,19 +309,19 @@ meth public java.awt.Component getComponent(int)
 meth public java.awt.Component getComponentAt(int,int)
 meth public java.awt.Component getComponentAt(java.awt.Point)
 meth public java.awt.Component locate(int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Component[] getComponents()
 meth public java.awt.Dimension getMaximumSize()
 meth public java.awt.Dimension getMinimumSize()
 meth public java.awt.Dimension getPreferredSize()
 meth public java.awt.Dimension minimumSize()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Dimension preferredSize()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.FocusTraversalPolicy getFocusTraversalPolicy()
 meth public java.awt.Insets getInsets()
 meth public java.awt.Insets insets()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.LayoutManager getLayout()
 meth public java.awt.Point getMousePosition(boolean)
 meth public java.awt.event.ContainerListener[] getContainerListeners()
@@ -330,11 +334,11 @@ meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void addPropertyChangeListener(java.lang.String,java.beans.PropertyChangeListener)
 meth public void applyComponentOrientation(java.awt.ComponentOrientation)
 meth public void deliverEvent(java.awt.Event)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void doLayout()
 meth public void invalidate()
 meth public void layout()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void list(java.io.PrintStream,int)
 meth public void list(java.io.PrintWriter,int)
 meth public void paint(java.awt.Graphics)
@@ -359,7 +363,7 @@ supr java.awt.Component
 
 CLSS public abstract interface java.awt.MenuContainer
 meth public abstract boolean postEvent(java.awt.Event)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.awt.Font getFont()
 meth public abstract void remove(java.awt.MenuComponent)
 
@@ -373,6 +377,15 @@ fld public final static int PROPERTIES = 4
 fld public final static int SOMEBITS = 8
 fld public final static int WIDTH = 1
 meth public abstract boolean imageUpdate(java.awt.Image,int,int,int,int,int)
+
+CLSS public abstract interface !annotation java.beans.JavaBean
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String defaultEventSet()
+meth public abstract !hasdefault java.lang.String defaultProperty()
+meth public abstract !hasdefault java.lang.String description()
 
 CLSS public abstract interface java.io.Serializable
 
@@ -399,6 +412,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -408,6 +422,32 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
+
+CLSS public abstract interface java.lang.annotation.Annotation
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract java.lang.Class<? extends java.lang.annotation.Annotation> annotationType()
+meth public abstract java.lang.String toString()
+
+CLSS public abstract interface !annotation java.lang.annotation.Documented
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation java.lang.annotation.Retention
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.RetentionPolicy value()
+
+CLSS public abstract interface !annotation java.lang.annotation.Target
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.ElementType[] value()
 
 CLSS public abstract interface javax.accessibility.Accessible
 meth public abstract javax.accessibility.AccessibleContext getAccessibleContext()
@@ -465,6 +505,7 @@ meth public abstract void removeProgressListener(javax.enterprise.deploy.spi.sta
 meth public abstract void stop() throws javax.enterprise.deploy.spi.exceptions.OperationUnsupportedException
 
 CLSS public abstract javax.swing.JComponent
+ anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="UIClassID", java.lang.String description="")
 cons public init()
 fld protected javax.swing.event.EventListenerList listenerList
 fld protected javax.swing.plaf.ComponentUI ui
@@ -492,6 +533,7 @@ meth protected void processKeyEvent(java.awt.event.KeyEvent)
 meth protected void processMouseEvent(java.awt.event.MouseEvent)
 meth protected void processMouseMotionEvent(java.awt.event.MouseEvent)
 meth protected void setUI(javax.swing.plaf.ComponentUI)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The component's look and feel delegate.", java.lang.String[] enumerationValues=[])
 meth public <%0 extends java.util.EventListener> {%%0}[] getListeners(java.lang.Class<{%%0}>)
 meth public boolean contains(int,int)
 meth public boolean getAutoscrolls()
@@ -499,17 +541,21 @@ meth public boolean getInheritsPopupMenu()
 meth public boolean getVerifyInputWhenFocusTarget()
 meth public boolean isDoubleBuffered()
 meth public boolean isManagingFocus()
- anno 0 java.lang.Deprecated()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isOpaque()
 meth public boolean isOptimizedDrawingEnabled()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public boolean isPaintingTile()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public boolean isRequestFocusEnabled()
 meth public boolean isValidateRoot()
 meth public boolean requestDefaultFocus()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean requestFocus(boolean)
 meth public boolean requestFocusInWindow()
 meth public final boolean isPaintingForPrint()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public final java.lang.Object getClientProperty(java.lang.Object)
 meth public final javax.swing.ActionMap getActionMap()
 meth public final javax.swing.InputMap getInputMap()
@@ -523,39 +569,54 @@ meth public int getBaseline(int,int)
 meth public int getConditionForKeyStroke(javax.swing.KeyStroke)
 meth public int getDebugGraphicsOptions()
 meth public int getHeight()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public int getWidth()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public int getX()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public int getY()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.awt.Component getNextFocusableComponent()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Component$BaselineResizeBehavior getBaselineResizeBehavior()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.awt.Container getTopLevelAncestor()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.awt.Dimension getMaximumSize()
 meth public java.awt.Dimension getMinimumSize()
 meth public java.awt.Dimension getPreferredSize()
 meth public java.awt.Dimension getSize(java.awt.Dimension)
 meth public java.awt.FontMetrics getFontMetrics(java.awt.Font)
 meth public java.awt.Graphics getGraphics()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.awt.Insets getInsets()
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.awt.Insets getInsets(java.awt.Insets)
 meth public java.awt.Point getLocation(java.awt.Point)
 meth public java.awt.Point getPopupLocation(java.awt.event.MouseEvent)
 meth public java.awt.Point getToolTipLocation(java.awt.event.MouseEvent)
 meth public java.awt.Rectangle getBounds(java.awt.Rectangle)
 meth public java.awt.Rectangle getVisibleRect()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.awt.event.ActionListener getActionForKeyStroke(javax.swing.KeyStroke)
 meth public java.beans.VetoableChangeListener[] getVetoableChangeListeners()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.lang.String getToolTipText()
 meth public java.lang.String getToolTipText(java.awt.event.MouseEvent)
 meth public java.lang.String getUIClassID()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="UIClassID", java.lang.String[] enumerationValues=[])
 meth public javax.swing.InputVerifier getInputVerifier()
 meth public javax.swing.JPopupMenu getComponentPopupMenu()
 meth public javax.swing.JRootPane getRootPane()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.JToolTip createToolTip()
 meth public javax.swing.KeyStroke[] getRegisteredKeyStrokes()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.TransferHandler getTransferHandler()
 meth public javax.swing.border.Border getBorder()
 meth public javax.swing.event.AncestorListener[] getAncestorListeners()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
+meth public javax.swing.plaf.ComponentUI getUI()
 meth public static boolean isLightweightComponent(java.awt.Component)
 meth public static java.util.Locale getDefaultLocale()
 meth public static void setDefaultLocale(java.util.Locale)
@@ -564,15 +625,15 @@ meth public void addNotify()
 meth public void addVetoableChangeListener(java.beans.VetoableChangeListener)
 meth public void computeVisibleRect(java.awt.Rectangle)
 meth public void disable()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void enable()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void firePropertyChange(java.lang.String,boolean,boolean)
 meth public void firePropertyChange(java.lang.String,char,char)
 meth public void firePropertyChange(java.lang.String,int,int)
 meth public void grabFocus()
 meth public void hide()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void paint(java.awt.Graphics)
 meth public void paintImmediately(int,int,int,int)
 meth public void paintImmediately(java.awt.Rectangle)
@@ -588,40 +649,61 @@ meth public void repaint(long,int,int,int,int)
 meth public void requestFocus()
 meth public void resetKeyboardActions()
 meth public void reshape(int,int,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void revalidate()
 meth public void scrollRectToVisible(java.awt.Rectangle)
 meth public void setAlignmentX(float)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The preferred horizontal alignment of the component.", java.lang.String[] enumerationValues=[])
 meth public void setAlignmentY(float)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The preferred vertical alignment of the component.", java.lang.String[] enumerationValues=[])
 meth public void setAutoscrolls(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Determines if this component automatically scrolls its contents when dragged.", java.lang.String[] enumerationValues=[])
 meth public void setBackground(java.awt.Color)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=true, java.lang.String description="The background color of the component.", java.lang.String[] enumerationValues=[])
 meth public void setBorder(javax.swing.border.Border)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=true, java.lang.String description="The component's border.", java.lang.String[] enumerationValues=[])
 meth public void setComponentPopupMenu(javax.swing.JPopupMenu)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=false, java.lang.String description="Popup to show", java.lang.String[] enumerationValues=[])
 meth public void setDebugGraphicsOptions(int)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=false, java.lang.String description="Diagnostic options for graphics operations.", java.lang.String[] enumerationValues=["DebugGraphics.NONE_OPTION", "DebugGraphics.LOG_OPTION", "DebugGraphics.FLASH_OPTION", "DebugGraphics.BUFFERED_OPTION"])
 meth public void setDoubleBuffered(boolean)
 meth public void setEnabled(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=true, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=true, java.lang.String description="The enabled state of the component.", java.lang.String[] enumerationValues=[])
 meth public void setFocusTraversalKeys(int,java.util.Set<? extends java.awt.AWTKeyStroke>)
 meth public void setFont(java.awt.Font)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=true, java.lang.String description="The font for the component.", java.lang.String[] enumerationValues=[])
 meth public void setForeground(java.awt.Color)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=true, java.lang.String description="The foreground color of the component.", java.lang.String[] enumerationValues=[])
 meth public void setInheritsPopupMenu(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Whether or not the JPopupMenu is inherited", java.lang.String[] enumerationValues=[])
 meth public void setInputVerifier(javax.swing.InputVerifier)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The component's input verifier.", java.lang.String[] enumerationValues=[])
 meth public void setMaximumSize(java.awt.Dimension)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The maximum size of the component.", java.lang.String[] enumerationValues=[])
 meth public void setMinimumSize(java.awt.Dimension)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The minimum size of the component.", java.lang.String[] enumerationValues=[])
 meth public void setNextFocusableComponent(java.awt.Component)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setOpaque(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The component's opacity", java.lang.String[] enumerationValues=[])
 meth public void setPreferredSize(java.awt.Dimension)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=false, java.lang.String description="The preferred size of the component.", java.lang.String[] enumerationValues=[])
 meth public void setRequestFocusEnabled(boolean)
 meth public void setToolTipText(java.lang.String)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=false, java.lang.String description="The text to display in a tool tip.", java.lang.String[] enumerationValues=[])
 meth public void setTransferHandler(javax.swing.TransferHandler)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Mechanism for transfer of data to and from the component", java.lang.String[] enumerationValues=[])
 meth public void setVerifyInputWhenFocusTarget(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Whether the Component verifies input before accepting focus.", java.lang.String[] enumerationValues=[])
 meth public void setVisible(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public void unregisterKeyboardAction(javax.swing.KeyStroke)
 meth public void update(java.awt.Graphics)
 meth public void updateUI()
 supr java.awt.Container
 
 CLSS public javax.swing.JPanel
+ anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="UI", java.lang.String description="A generic lightweight container.")
 cons public init()
 cons public init(boolean)
 cons public init(java.awt.LayoutManager)
@@ -630,9 +712,12 @@ innr protected AccessibleJPanel
 intf javax.accessibility.Accessible
 meth protected java.lang.String paramString()
 meth public java.lang.String getUIClassID()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="A string that specifies the name of the L&F class.", java.lang.String[] enumerationValues=[])
 meth public javax.accessibility.AccessibleContext getAccessibleContext()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.plaf.PanelUI getUI()
 meth public void setUI(javax.swing.plaf.PanelUI)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The UI object that implements the Component's LookAndFeel.", java.lang.String[] enumerationValues=[])
 meth public void updateUI()
 supr javax.swing.JComponent
 
@@ -663,7 +748,7 @@ CLSS public abstract org.netbeans.modules.glassfish.eecommon.api.config.Glassfis
 cons protected init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.glassfish.eecommon.api.config.J2eeModuleHelper,org.netbeans.modules.glassfish.tooling.data.GlassFishVersion) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 cons protected init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.glassfish.tooling.data.GlassFishVersion) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 cons public init()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld protected final java.io.File primarySunDD
 fld protected final java.io.File secondarySunDD
 fld protected final org.netbeans.modules.glassfish.eecommon.api.config.J2eeModuleHelper moduleHelper
@@ -748,7 +833,7 @@ hfds file,isApplicationScoped,namespaces
 
 CLSS public org.netbeans.modules.glassfish.javaee.Hk2Configuration
 cons public init(javax.enterprise.deploy.model.DeployableObject)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.glassfish.eecommon.api.config.J2eeModuleHelper,org.netbeans.modules.glassfish.tooling.data.GlassFishVersion) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 cons public init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.glassfish.tooling.data.GlassFishVersion) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 intf javax.enterprise.deploy.spi.DeploymentConfiguration
@@ -777,11 +862,13 @@ meth public javax.enterprise.deploy.spi.DeploymentManager getDisconnectedDeploym
 meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createEe6()
 meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createEe7()
 meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createEe8()
+meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createJakartaEe10()
+meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createJakartaEe11()
 meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createJakartaEe8()
 meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createJakartaEe9()
 meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createJakartaEe91()
 supr java.lang.Object
-hfds displayName,ee6Instance,ee7Instance,ee8Instance,jakartaee8Instance,jakartaee91Instance,jakartaee9Instance,preludeInstance,su,uriFragments,version
+hfds displayName,ee6Instance,ee7Instance,ee8Instance,jakartaee10Instance,jakartaee11Instance,jakartaee8Instance,jakartaee91Instance,jakartaee9Instance,preludeInstance,su,uriFragments,version
 
 CLSS public org.netbeans.modules.glassfish.javaee.Hk2DeploymentManager
 cons public init(java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.glassfish.spi.ServerUtilities)
@@ -826,7 +913,7 @@ cons public init()
 meth public org.netbeans.modules.j2ee.deployment.plugins.spi.J2eePlatformImpl getJ2eePlatformImpl(javax.enterprise.deploy.spi.DeploymentManager)
 meth public static org.netbeans.modules.glassfish.javaee.Hk2JavaEEPlatformFactory getFactory()
 supr org.netbeans.modules.j2ee.deployment.plugins.spi.J2eePlatformFactory
-hfds V3_LOOKUP_KEY,V4_LOOKUP_KEY,V510_LOOKUP_KEY,V5_LOOKUP_KEY,V610_LOOKUP_KEY,V6_LOOKUP_KEY,instance
+hfds V3_LOOKUP_KEY,V4_LOOKUP_KEY,V510_LOOKUP_KEY,V5_LOOKUP_KEY,V610_LOOKUP_KEY,V6_LOOKUP_KEY,V7_LOOKUP_KEY,V8_LOOKUP_KEY,instance
 
 CLSS public org.netbeans.modules.glassfish.javaee.Hk2JavaEEPlatformImpl
 cons public init(org.netbeans.modules.glassfish.javaee.Hk2DeploymentManager,java.lang.String[],org.netbeans.api.j2ee.core.Profile[],org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule$Type[],java.lang.String,java.lang.String,java.lang.String)
@@ -969,6 +1056,8 @@ meth public org.openide.WizardDescriptor$InstantiatingIterator getAddInstanceIte
 meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createEe6()
 meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createEe7()
 meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createEe8()
+meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createJakartaEe10()
+meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createJakartaEe11()
 meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createJakartaEe8()
 meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createJakartaEe9()
 meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createJakartaEe91()
@@ -1073,7 +1162,7 @@ meth public boolean isModuleSupported(java.lang.String,java.util.Properties)
 meth public java.lang.Object createModule(org.openide.util.Lookup)
 meth public static org.netbeans.modules.glassfish.spi.GlassfishModuleFactory getDefault()
 supr java.lang.Object
-hfds CLASSPATH_VOLUME,CLASS_LIBRARY_TYPE,COMET_JAR_2_MATCHER,COMET_JAR_MATCHER,COMET_LIB,COMET_LIB_2,ECLIPSE_LINK_LIB,ECLIPSE_LINK_LIB_2,EL_CORE_JAR_MATCHER,GRIZZLY_OPTIONAL_JAR_MATCHER,JAKARTA_EE_8_JAVADOC,JAKARTA_EE_9_JAVADOC,JAVADOC_VOLUME,JAVA_EE_5_LIB,JAVA_EE_6_LIB,JAVA_EE_JAVADOC,JAXRS_LIBRARIES,JAXRS_LIBRARIES_31,JERSEY_GF_SERVER,LOG,PERSISTENCE_API_JAR_MATCHER_1,PERSISTENCE_API_JAR_MATCHER_2,PERSISTENCE_JAVADOC,RP,SOURCE_VOLUME,singleton
+hfds CLASSPATH_VOLUME,CLASS_LIBRARY_TYPE,COMET_JAR_2_MATCHER,COMET_JAR_MATCHER,COMET_LIB,COMET_LIB_2,ECLIPSE_LINK_LIB,ECLIPSE_LINK_LIB_2,EL_CORE_JAR_MATCHER,GRIZZLY_OPTIONAL_JAR_MATCHER,JAKARTA_EE_10_JAVADOC,JAKARTA_EE_11_JAVADOC,JAKARTA_EE_8_JAVADOC,JAKARTA_EE_9_JAVADOC,JAVADOC_VOLUME,JAVA_EE_5_LIB,JAVA_EE_6_LIB,JAVA_EE_JAVADOC,JAXRS_LIBRARIES,JAXRS_LIBRARIES_31,JERSEY_GF_SERVER,LOG,PERSISTENCE_API_JAR_MATCHER_1,PERSISTENCE_API_JAR_MATCHER_2,PERSISTENCE_JAVADOC,RP,SOURCE_VOLUME,singleton
 hcls InitializeLibrary
 
 CLSS public org.netbeans.modules.glassfish.javaee.ModuleConfigurationImpl
@@ -1139,12 +1228,16 @@ hfds nameKey,properties,resourceData
 
 CLSS public org.netbeans.modules.glassfish.javaee.RunTimeDDCatalog
 cons public init()
+fld public final static java.lang.String APPCLIENT_10_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/application-client_10.xsd"
+fld public final static java.lang.String APPCLIENT_11_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/application-client_11.xsd"
 fld public final static java.lang.String APPCLIENT_1_4_ID = "SCHEMA:http://java.sun.com/xml/ns/j2ee/application-client_1_4.xsd"
 fld public final static java.lang.String APPCLIENT_5_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/application-client_5.xsd"
 fld public final static java.lang.String APPCLIENT_6_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/application-client_6.xsd"
 fld public final static java.lang.String APPCLIENT_7_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/application-client_7.xsd"
 fld public final static java.lang.String APPCLIENT_8_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/application-client_8.xsd"
 fld public final static java.lang.String APPCLIENT_9_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/application-client_9.xsd"
+fld public final static java.lang.String APP_10_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/application_10.xsd"
+fld public final static java.lang.String APP_11_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/application_11.xsd"
 fld public final static java.lang.String APP_1_4_ID = "SCHEMA:http://java.sun.com/xml/ns/j2ee/application_1_4.xsd"
 fld public final static java.lang.String APP_5_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/application_5.xsd"
 fld public final static java.lang.String APP_6_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/application_6.xsd"
@@ -1169,12 +1262,16 @@ fld public final static java.lang.String PERSISTENCEORM_2_0_ID = "SCHEMA:http://
 fld public final static java.lang.String PERSISTENCEORM_2_1_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/persistence/orm/orm_2_1.xsd"
 fld public final static java.lang.String PERSISTENCEORM_2_2_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/persistence/orm/orm_2_2.xsd"
 fld public final static java.lang.String PERSISTENCEORM_3_0_ID = "SCHEMA:https://jakarta.ee/xml/ns/persistence/orm/orm_3_0.xsd"
+fld public final static java.lang.String PERSISTENCEORM_3_1_ID = "SCHEMA:https://jakarta.ee/xml/ns/persistence/orm/orm_3_1.xsd"
+fld public final static java.lang.String PERSISTENCEORM_3_2_ID = "SCHEMA:https://jakarta.ee/xml/ns/persistence/orm/orm_3_2.xsd"
 fld public final static java.lang.String PERSISTENCEORM_ID = "SCHEMA:http://java.sun.com/xml/ns/persistence/orm_1_0.xsd"
 fld public final static java.lang.String PERSISTENCEORM_NS = "http://java.sun.com/xml/ns/persistence/orm"
 fld public final static java.lang.String PERSISTENCE_2_0_ID = "SCHEMA:http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
 fld public final static java.lang.String PERSISTENCE_2_1_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
 fld public final static java.lang.String PERSISTENCE_2_2_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
 fld public final static java.lang.String PERSISTENCE_3_0_ID = "SCHEMA:https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+fld public final static java.lang.String PERSISTENCE_3_1_ID = "SCHEMA:https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+fld public final static java.lang.String PERSISTENCE_3_2_ID = "SCHEMA:https://jakarta.ee/xml/ns/persistence/persistence_3_2.xsd"
 fld public final static java.lang.String PERSISTENCE_ID = "SCHEMA:http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
 fld public final static java.lang.String PERSISTENCE_NS = "http://java.sun.com/xml/ns/persistence"
 fld public final static java.lang.String RI_CONFIG_NS = "http://java.sun.com/xml/ns/jax-rpc/ri/config"
@@ -1183,14 +1280,20 @@ fld public final static java.lang.String WEBAPP_3_0_ID = "SCHEMA:http://java.sun
 fld public final static java.lang.String WEBAPP_3_1_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
 fld public final static java.lang.String WEBAPP_4_0_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
 fld public final static java.lang.String WEBAPP_5_0_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+fld public final static java.lang.String WEBAPP_6_0_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+fld public final static java.lang.String WEBAPP_6_1_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/web-app_6_1.xsd"
 fld public final static java.lang.String WEBCOMMON_3_0_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/web-common_3_0.xsd"
 fld public final static java.lang.String WEBCOMMON_3_1_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/web-common_3_1.xsd"
 fld public final static java.lang.String WEBCOMMON_4_0_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/web-common_4_0.xsd"
 fld public final static java.lang.String WEBCOMMON_5_0_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/web-common_5_0.xsd"
+fld public final static java.lang.String WEBCOMMON_6_0_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/web-common_6_0.xsd"
+fld public final static java.lang.String WEBCOMMON_6_1_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/web-common_6_1.xsd"
 fld public final static java.lang.String WEBFRAGMENT_3_0_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd"
 fld public final static java.lang.String WEBFRAGMENT_3_1_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/web-fragment_3_1.xsd"
 fld public final static java.lang.String WEBFRAGMENT_4_0_ID = "SCHEMA:http://xmlns.jcp.org/xml/ns/javaee/web-fragment_4_0.xsd"
 fld public final static java.lang.String WEBFRAGMENT_5_0_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/web-fragment_5_0.xsd"
+fld public final static java.lang.String WEBFRAGMENT_6_0_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/web-fragment_6_0.xsd"
+fld public final static java.lang.String WEBFRAGMENT_6_1_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/web-fragment_6_1.xsd"
 fld public final static java.lang.String WEBSERVICES_1_1_ID = "SCHEMA:http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd"
 fld public final static java.lang.String WEBSERVICES_1_2_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/javaee_web_services_1_2.xsd"
 fld public final static java.lang.String WEBSERVICES_1_3_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/javaee_web_services_1_3.xsd"
@@ -1227,7 +1330,7 @@ meth public void removeCatalogListener(org.netbeans.modules.xml.catalog.spi.Cata
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setInstanceProvider(org.netbeans.spi.server.ServerInstanceProvider)
 supr org.netbeans.modules.xml.api.model.GrammarQueryManager
-hfds APPCLIENT_1_4,APPCLIENT_1_4_XSD,APPCLIENT_5,APPCLIENT_5_XSD,APPCLIENT_6,APPCLIENT_6_XSD,APPCLIENT_7,APPCLIENT_7_XSD,APPCLIENT_8,APPCLIENT_8_XSD,APPCLIENT_9,APPCLIENT_9_XSD,APPCLIENT_TAG,APP_1_4,APP_1_4_XSD,APP_5,APP_5_XSD,APP_6,APP_6_XSD,APP_7,APP_7_XSD,APP_8,APP_8_XSD,APP_9,APP_9_XSD,APP_TAG,EJBJAR_2_1,EJBJAR_2_1_XSD,EJBJAR_3_0,EJBJAR_3_0_XSD,EJBJAR_3_1,EJBJAR_3_1_XSD,EJBJAR_3_2,EJBJAR_3_2_XSD,EJBJAR_4_0,EJBJAR_4_0_XSD,EJB_JAR_TAG,JavaEE6SchemaToURLMap,JavaEE6TypeToURLMap,PERSISTENCE,PERSISTENCEORM,PERSISTENCEORM_2_0,PERSISTENCEORM_2_0_XSD,PERSISTENCEORM_2_1,PERSISTENCEORM_2_1_XSD,PERSISTENCEORM_2_2,PERSISTENCEORM_2_2_XSD,PERSISTENCEORM_3_0,PERSISTENCEORM_3_0_XSD,PERSISTENCEORM_TAG,PERSISTENCEORM_XSD,PERSISTENCE_2_0,PERSISTENCE_2_0_XSD,PERSISTENCE_2_1,PERSISTENCE_2_1_XSD,PERSISTENCE_2_2,PERSISTENCE_2_2_XSD,PERSISTENCE_3_0,PERSISTENCE_3_0_XSD,PERSISTENCE_TAG,PERSISTENCE_XSD,SCHEMASLOCATION,SchemaToURLMap,TypeToURLMap,WEBAPP_2_5,WEBAPP_2_5_XSD,WEBAPP_3_0,WEBAPP_3_0_XSD,WEBAPP_3_1,WEBAPP_3_1_XSD,WEBAPP_4_0,WEBAPP_4_0_XSD,WEBAPP_5_0,WEBAPP_5_0_XSD,WEBAPP_TAG,WEBCOMMON_3_0,WEBCOMMON_3_0_XSD,WEBCOMMON_3_1,WEBCOMMON_3_1_XSD,WEBCOMMON_4_0,WEBCOMMON_4_0_XSD,WEBCOMMON_5_0,WEBCOMMON_5_0_XSD,WEBFRAGMENT_3_0,WEBFRAGMENT_3_0_XSD,WEBFRAGMENT_3_1,WEBFRAGMENT_3_1_XSD,WEBFRAGMENT_4_0,WEBFRAGMENT_4_0_XSD,WEBFRAGMENT_5_0,WEBFRAGMENT_5_0_XSD,WEBSERVICES_1_1,WEBSERVICES_1_1_XSD,WEBSERVICES_1_2,WEBSERVICES_1_2_XSD,WEBSERVICES_1_3,WEBSERVICES_1_3_XSD,WEBSERVICES_1_4,WEBSERVICES_1_4_XSD,WEBSERVICES_2_0,WEBSERVICES_2_0_XSD,WEBSERVICES_CLIENT_1_1,WEBSERVICES_CLIENT_1_1_XSD,WEBSERVICES_CLIENT_1_2,WEBSERVICES_CLIENT_1_2_XSD,WEBSERVICES_CLIENT_1_3,WEBSERVICES_CLIENT_1_3_XSD,WEBSERVICES_CLIENT_1_4,WEBSERVICES_CLIENT_1_4_XSD,WEBSERVICES_CLIENT_2_0,WEBSERVICES_CLIENT_2_0_XSD,WEBSERVICES_TAG,XMLNS_ATTR,XML_XSD,XML_XSD_DEF,catalogListeners,ddCatalogMap,displayNameKey,hasAdditionalMap,javaEE6DDCatalog,platformRootDir,shortDescriptionKey
+hfds APPCLIENT_10,APPCLIENT_10_XSD,APPCLIENT_11,APPCLIENT_11_XSD,APPCLIENT_1_4,APPCLIENT_1_4_XSD,APPCLIENT_5,APPCLIENT_5_XSD,APPCLIENT_6,APPCLIENT_6_XSD,APPCLIENT_7,APPCLIENT_7_XSD,APPCLIENT_8,APPCLIENT_8_XSD,APPCLIENT_9,APPCLIENT_9_XSD,APPCLIENT_TAG,APP_10,APP_10_XSD,APP_11,APP_11_XSD,APP_1_4,APP_1_4_XSD,APP_5,APP_5_XSD,APP_6,APP_6_XSD,APP_7,APP_7_XSD,APP_8,APP_8_XSD,APP_9,APP_9_XSD,APP_TAG,EJBJAR_2_1,EJBJAR_2_1_XSD,EJBJAR_3_0,EJBJAR_3_0_XSD,EJBJAR_3_1,EJBJAR_3_1_XSD,EJBJAR_3_2,EJBJAR_3_2_XSD,EJBJAR_4_0,EJBJAR_4_0_XSD,EJB_JAR_TAG,JavaEE6SchemaToURLMap,JavaEE6TypeToURLMap,LOGGER,PERSISTENCE,PERSISTENCEORM,PERSISTENCEORM_2_0,PERSISTENCEORM_2_0_XSD,PERSISTENCEORM_2_1,PERSISTENCEORM_2_1_XSD,PERSISTENCEORM_2_2,PERSISTENCEORM_2_2_XSD,PERSISTENCEORM_3_0,PERSISTENCEORM_3_0_XSD,PERSISTENCEORM_3_1,PERSISTENCEORM_3_1_XSD,PERSISTENCEORM_3_2,PERSISTENCEORM_3_2_XSD,PERSISTENCEORM_TAG,PERSISTENCEORM_XSD,PERSISTENCE_2_0,PERSISTENCE_2_0_XSD,PERSISTENCE_2_1,PERSISTENCE_2_1_XSD,PERSISTENCE_2_2,PERSISTENCE_2_2_XSD,PERSISTENCE_3_0,PERSISTENCE_3_0_XSD,PERSISTENCE_3_1,PERSISTENCE_3_1_XSD,PERSISTENCE_3_2,PERSISTENCE_3_2_XSD,PERSISTENCE_TAG,PERSISTENCE_XSD,SCHEMASLOCATION,SUPPORTED_SCHEMAS,SchemaToURLMap,TypeToURLMap,WEBAPP_2_5,WEBAPP_2_5_XSD,WEBAPP_3_0,WEBAPP_3_0_XSD,WEBAPP_3_1,WEBAPP_3_1_XSD,WEBAPP_4_0,WEBAPP_4_0_XSD,WEBAPP_5_0,WEBAPP_5_0_XSD,WEBAPP_6_0,WEBAPP_6_0_XSD,WEBAPP_6_1,WEBAPP_6_1_XSD,WEBAPP_TAG,WEBCOMMON_3_0,WEBCOMMON_3_0_XSD,WEBCOMMON_3_1,WEBCOMMON_3_1_XSD,WEBCOMMON_4_0,WEBCOMMON_4_0_XSD,WEBCOMMON_5_0,WEBCOMMON_5_0_XSD,WEBCOMMON_6_0,WEBCOMMON_6_0_XSD,WEBCOMMON_6_1,WEBCOMMON_6_1_XSD,WEBFRAGMENT_3_0,WEBFRAGMENT_3_0_XSD,WEBFRAGMENT_3_1,WEBFRAGMENT_3_1_XSD,WEBFRAGMENT_4_0,WEBFRAGMENT_4_0_XSD,WEBFRAGMENT_5_0,WEBFRAGMENT_5_0_XSD,WEBFRAGMENT_6_0,WEBFRAGMENT_6_0_XSD,WEBFRAGMENT_6_1,WEBFRAGMENT_6_1_XSD,WEBSERVICES_1_1,WEBSERVICES_1_1_XSD,WEBSERVICES_1_2,WEBSERVICES_1_2_XSD,WEBSERVICES_1_3,WEBSERVICES_1_3_XSD,WEBSERVICES_1_4,WEBSERVICES_1_4_XSD,WEBSERVICES_2_0,WEBSERVICES_2_0_XSD,WEBSERVICES_CLIENT_1_1,WEBSERVICES_CLIENT_1_1_XSD,WEBSERVICES_CLIENT_1_2,WEBSERVICES_CLIENT_1_2_XSD,WEBSERVICES_CLIENT_1_3,WEBSERVICES_CLIENT_1_3_XSD,WEBSERVICES_CLIENT_1_4,WEBSERVICES_CLIENT_1_4_XSD,WEBSERVICES_CLIENT_2_0,WEBSERVICES_CLIENT_2_0_XSD,WEBSERVICES_TAG,XMLNS_ATTR,XML_XSD,XML_XSD_DEF,catalogListeners,ddCatalogMap,displayNameKey,hasAdditionalMap,javaEE6DDCatalog,platformRootDir,shortDescriptionKey
 
 CLSS public org.netbeans.modules.glassfish.javaee.SunMessageDestination
 cons public init(java.lang.String,org.netbeans.modules.j2ee.deployment.common.api.MessageDestination$Type)
@@ -1243,7 +1346,7 @@ hfds name,resourceDir,type
 
 CLSS public org.netbeans.modules.glassfish.javaee.Three1Configuration
 cons public init(javax.enterprise.deploy.model.DeployableObject)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.glassfish.tooling.data.GlassFishVersion) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 intf javax.enterprise.deploy.spi.DeploymentConfiguration
 meth protected org.openide.filesystems.FileObject getSunDD(java.io.File,boolean) throws java.io.IOException
@@ -1471,6 +1574,7 @@ fld public final static java.lang.String PROP_DISPLAY_NAME = "displayName"
 fld public final static java.lang.String PROP_LIBRARIES = "libraries"
 fld public final static java.lang.String PROP_SERVER_LIBRARIES = "serverLibraries"
 meth public abstract boolean isToolSupported(java.lang.String)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.awt.Image getIcon()
 meth public abstract java.io.File[] getPlatformRoots()
 meth public abstract java.io.File[] getToolClasspathEntries(java.lang.String)
@@ -1482,9 +1586,13 @@ meth public final void addPropertyChangeListener(java.beans.PropertyChangeListen
 meth public final void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)
 meth public final void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public java.lang.String getToolProperty(java.lang.String,java.lang.String)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Set getSupportedModuleTypes()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Set<java.lang.String> getSupportedSpecVersions()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Set<java.lang.String> getSupportedSpecVersions(java.lang.Object)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Set<org.netbeans.api.j2ee.core.Profile> getSupportedProfiles()
 meth public java.util.Set<org.netbeans.api.j2ee.core.Profile> getSupportedProfiles(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule$Type)
 meth public java.util.Set<org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule$Type> getSupportedTypes()

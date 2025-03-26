@@ -181,7 +181,15 @@ public class JsCompletionItem implements CompletionProposal {
 
     @Override
     public Set<Modifier> getModifiers() {
-        Set<Modifier> modifiers = (getElement() == null || getElement().getModifiers().isEmpty() ? Collections.EMPTY_SET : EnumSet.copyOf(getElement().getModifiers()));
+        Set<Modifier> modifiers;
+
+        if (getElement() == null || getElement().getModifiers().isEmpty()) {
+            modifiers = Collections.EMPTY_SET;
+        } else {
+            modifiers = EnumSet.noneOf(Modifier.class);
+            modifiers.addAll(getElement().getModifiers());
+        }
+
         if (modifiers.contains(Modifier.PRIVATE) && (modifiers.contains(Modifier.PUBLIC) || modifiers.contains(Modifier.PROTECTED))) {
             modifiers.remove(Modifier.PUBLIC);
             modifiers.remove(Modifier.PROTECTED);
@@ -198,7 +206,7 @@ public class JsCompletionItem implements CompletionProposal {
     @Override
     public int getSortPrioOverride() {
         int order = 100;
-        if (element != null && element instanceof JsElement) {
+        if (element instanceof JsElement) {
             if (((JsElement)element).isPlatform()) {
                 if (ModelUtils.PROTOTYPE.equals(element.getName())) { //NOI18N
                     order = 1;
@@ -330,7 +338,7 @@ public class JsCompletionItem implements CompletionProposal {
         public ImageIcon getIcon() {
             if (getModifiers().contains(Modifier.PROTECTED)) {
                 if(priviligedIcon == null) {
-                    priviligedIcon = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/editor/resources/methodPriviliged.png")); //NOI18N
+                    priviligedIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/editor/resources/methodPriviliged.png", false); //NOI18N
                 }
                 return priviligedIcon;
             }
@@ -400,17 +408,17 @@ public class JsCompletionItem implements CompletionProposal {
         public ImageIcon getIcon() {
             if (getModifiers().contains(Modifier.PUBLIC)) {
                 if (publicGenerator == null) {
-                    publicGenerator = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/editor/resources/generatorPublic.png")); //NOI18N
+                    publicGenerator = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/editor/resources/generatorPublic.png", false); //NOI18N
                 }
                 return publicGenerator;
             } else if (getModifiers().contains(Modifier.PRIVATE)) {
                 if (privateGenerator == null) {
-                    privateGenerator = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/editor/resources/generatorPrivate.png")); //NOI18N
+                    privateGenerator = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/editor/resources/generatorPrivate.png", false); //NOI18N
                 }
                 return privateGenerator;
             } else if (getModifiers().contains(Modifier.PROTECTED)) {
                 if (priviligedGenerator == null) {
-                    priviligedGenerator = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/editor/resources/generatorPriviliged.png")); //NOI18N
+                    priviligedGenerator = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/editor/resources/generatorPriviliged.png", false); //NOI18N
                 }
                 return priviligedGenerator;
             }
@@ -431,7 +439,7 @@ public class JsCompletionItem implements CompletionProposal {
         @Override
         public ImageIcon getIcon() {
             if (callbackIcon == null) {
-                callbackIcon = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/editor/resources/methodCallback.png")); //NOI18N
+                callbackIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/editor/resources/methodCallback.png", false); //NOI18N
             }
             return callbackIcon;
         }
@@ -564,7 +572,7 @@ public class JsCompletionItem implements CompletionProposal {
         @Override
         public ImageIcon getIcon() {
             if (keywordIcon == null) {
-                keywordIcon = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/editor/resources/javascript.png")); //NOI18N
+                keywordIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/editor/resources/javascript.png", false); //NOI18N
             }
             return keywordIcon;
         }
@@ -692,6 +700,7 @@ public class JsCompletionItem implements CompletionProposal {
                         case FUNCTION:
                         case METHOD:
                         case GENERATOR:
+                        case ARROW_FUNCTION:
                             Set<String> returnTypes = new HashSet<>();
                             HashMap<String, Set<String>> allParameters = new LinkedHashMap<>();
                             if (element instanceof JsFunction) {
@@ -706,7 +715,7 @@ public class JsCompletionItem implements CompletionProposal {
                                     for (TypeUsage type : jsObject.getAssignmentForOffset(jsObject.getOffset() + 1)) {
                                         Set<String> resolvedType = resolvedTypes.get(type.getType());
                                         if (resolvedType == null) {
-                                            resolvedType = new HashSet(1);
+                                            resolvedType = new HashSet<>(1);
                                             String displayName = ModelUtils.getDisplayName(type);
                                             if (!displayName.isEmpty()) {
                                                 resolvedType.add(displayName);
@@ -734,7 +743,7 @@ public class JsCompletionItem implements CompletionProposal {
                                     for (String type : paramEntry.getValue()) {
                                         Set<String> resolvedType = resolvedTypes.get(type);
                                         if (resolvedType == null) {
-                                            resolvedType = new HashSet(1);
+                                            resolvedType = new HashSet<>(1);
                                             String displayName = ModelUtils.getDisplayName(type);
                                             if (!displayName.isEmpty()) {
                                                 resolvedType.add(displayName);
@@ -782,7 +791,7 @@ public class JsCompletionItem implements CompletionProposal {
                                         if (resolvedType == null) {
                                             toResolve.clear();
                                             toResolve.add(type);
-                                            resolvedType = new HashSet(1);
+                                            resolvedType = new HashSet<>(1);
                                             Collection<TypeUsage> resolved = ModelUtils.resolveTypes(toResolve,
                                                     Model.getModel(request.result, false),
                                                     jsIndex, false);

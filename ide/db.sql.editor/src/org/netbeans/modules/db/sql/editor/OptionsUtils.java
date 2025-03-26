@@ -32,7 +32,9 @@ import org.openide.util.WeakListeners;
  */
 public final class OptionsUtils {
     // package visible to allow access from unit tests
-    static final String PAIR_CHARACTERS_COMPLETION = "pair-characters-completion";
+    public static final String PAIR_CHARACTERS_COMPLETION = "pair-characters-completion"; //NOI18N
+    public static final String SQL_AUTO_COMPLETION_SUBWORDS = "sql-completion-subwords"; //NOI18N
+    public static final boolean SQL_AUTO_COMPLETION_SUBWORDS_DEFAULT = false;
     private static final AtomicBoolean INITED = new AtomicBoolean(false);
 
     private static final PreferenceChangeListener PREFERENCES_TRACKER = new PreferenceChangeListener() {
@@ -40,17 +42,20 @@ public final class OptionsUtils {
         public void preferenceChange(PreferenceChangeEvent evt) {
             String settingName = evt == null ? null : evt.getKey();
 
-            if (settingName == null
-                    || PAIR_CHARACTERS_COMPLETION.equals(settingName)) {
-                pairCharactersCompletion = preferences.getBoolean(
-                        PAIR_CHARACTERS_COMPLETION, true);
+            if (settingName == null || PAIR_CHARACTERS_COMPLETION.equals(settingName)) {
+                pairCharactersCompletion = preferences.getBoolean(PAIR_CHARACTERS_COMPLETION, true);
             }
+
+            if (settingName == null || SQL_AUTO_COMPLETION_SUBWORDS.equals(settingName)) {
+                sqlCompletionSubwords = preferences.getBoolean(SQL_AUTO_COMPLETION_SUBWORDS, SQL_AUTO_COMPLETION_SUBWORDS_DEFAULT);
             }
+        }
     };
 
     private static Preferences preferences;
 
     private static boolean pairCharactersCompletion = true;
+    private static boolean sqlCompletionSubwords = SQL_AUTO_COMPLETION_SUBWORDS_DEFAULT;
 
     private OptionsUtils() {
     }
@@ -63,6 +68,16 @@ public final class OptionsUtils {
     public static boolean isPairCharactersCompletion() {
         lazyInit();
         return pairCharactersCompletion;
+    }
+
+    /**
+     * Option: "Subword Completion"
+     *
+     * @return true if code completion should be subword based
+     */
+    public static boolean isSqlCompletionSubwords() {
+        lazyInit();
+        return sqlCompletionSubwords;
     }
 
     private static void lazyInit() {

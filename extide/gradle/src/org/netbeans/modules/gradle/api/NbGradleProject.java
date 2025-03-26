@@ -70,7 +70,7 @@ public final class NbGradleProject {
      * E.g. If we just need to know if the project is a Gradle project, there
      * is no need to go and fetch all the dependencies.
      * <p>
-     * <img src="doc-files/gradle-quality.png" alt="Quality States"/>
+     * <img src="doc-files/gradle-quality.png" alt="Quality States">
      * </p>
      * <p>
      * Gradle project is associated with the quality of the
@@ -184,8 +184,9 @@ public final class NbGradleProject {
         }
 
         @Override
-        public GradleReport createReport(String errorClass, String location, int line, String message, GradleReport causedBy) {
-            return new GradleReport(errorClass, location, line, message, causedBy);
+        public GradleReport createReport(GradleReport.Severity severity, String errorClass, String location, int line, String message, 
+                GradleReport causedBy, String[] traceLines) {
+            return new GradleReport(severity, errorClass, location, line, message, causedBy, traceLines);
         }
 
         @Override
@@ -199,6 +200,15 @@ public final class NbGradleProject {
     private NbGradleProject(NbGradleProjectImpl project) {
         this.project = project;
         support = new PropertyChangeSupport(project);
+    }
+    
+    /**
+     * Provides full lookup of the currently loaded project state. This Lookup does NOT refreshes
+     * as project is reload, the client must eventually watch {@link #PROP_PROJECT_INFO} property change and obtain a fresh lookup.
+     * @return Lookup that contains the current metadata for the project.
+     */
+    public Lookup curretLookup() {
+        return project.getGradleProject().getLookup();
     }
 
     public <T> T projectLookup(Class<T> clazz) {
@@ -256,15 +266,24 @@ public final class NbGradleProject {
     }
     
     /**
+     * Returns the time the project was evaluated. If the project has not been loaded at least in its
+     * 'fallback' state, it returns a negative value.
+     * @return evaluation time of the project.
+     */
+    public long getEvaluateTime() {
+        return project.getEvaluationTime();
+    }
+    
+    /**
      * Attempts to refresh the project to at least the desired quality. The project information
      * may be reloaded, if the project is currently loaded with lower {@link Quality} than {@code q}.
      * If {@code forceLoad} is true, the project reloads even if the {@code q} is worse quality than
      * the current {@link #getQuality()} level. Reason for the reload may be specified: if the reload
      * takes some time (i.e. executing Gradle build), the IDE may use the {@code reason} text to annotate
      * the ongoing progress.
-     * <p/>
+     * <p>
      * The returned {@link CompletionStage} may complete in this thread, or asynchronously in an unspecified thread.
-     * <p/>
+     * <p>
      * Note that the loading may fail, so the returned Quality may be <b>less than requested</b>. For example
      * if the project is not trusted, its Gradle build will not be executed, so the returned quality can be {@link Quality#EVALUATED}.
      * 
@@ -276,7 +295,160 @@ public final class NbGradleProject {
      * @since 2.11
      */
     public @NonNull CompletionStage<NbGradleProject> toQuality(@NullAllowed String reason, @NonNull Quality q, boolean forceLoad) {
-        return project.projectWithQualityTask(reason, q, false, forceLoad).thenApply(p -> this);
+        return project.projectWithQualityTask(loadOptions(q).setDescription(reason).setForce(forceLoad)).thenApply(p -> this);
+    }
+    
+    /**
+     * Creates a {@link LoadOptions} object to be used with {@link #toQuality(org.netbeans.modules.gradle.api.NbGradleProject.LoadOptions)}.
+     * @param aim the target quality
+     * @return options object.
+     * @since 2.43
+     */
+    public static LoadOptions loadOptions(Quality aim) {
+        return new LoadOptions(aim);
+    }
+    
+    /**
+     * Describes options for loading a Gradle project.
+     * @since 2.43
+     */
+    public static final class LoadOptions {
+        private final Quality aim;
+        private boolean force;
+        private String description;
+        private boolean ignoreCache;
+        private boolean interactive;
+        private boolean offline;
+        private boolean checkFiles;
+
+        LoadOptions(Quality aim) {
+            this.aim = aim;
+        }
+        
+        /**
+         * Instructs to check file timestamps against project loading time when deciding whether to use current data. The default is {@code false}.
+         * @param b true to check file timestamps.
+         * @return this options object.
+         */
+        public LoadOptions setCheckFiles(boolean b) {
+            this.checkFiles = b;
+            return this;
+        }
+        
+        /**
+         * Forces offline operation. The default is {@code false}.
+         * @param b true, if the operation must be offline
+         * @return this options object
+         */
+        public LoadOptions setOffline(boolean b) {
+            this.offline = b;
+            return this;
+        }
+        
+        /**
+         * Sets an interactive flag. If interactive, the implementation is allowed to ask for confirmation
+         * or other questions. False means that questions will fail as if cancelled, other prompts will resolve to
+         * their default options. The default is {@code false}.
+         * @param b true, if interactive process
+         * @return this options object
+         */
+        public LoadOptions setInteractive(boolean b) {
+            this.interactive = b;
+            return this;
+        }
+
+        /**
+         * Sets description of the operation. The description serves as part of a message to the user about project being
+         * loaded or a progress status indicator. The text should describe the operation that requires a load, e.g. "Creating classpath".
+         * There's no default description.
+         * @param desc description
+         * @return this options object
+         */
+        public LoadOptions setDescription(String desc) {
+            this.description = desc;
+            return this;
+        }
+        
+        /**
+         * Forces the load to bypass the on-disk cache. If set, cached data will be ignored. If false, the implementation
+         * is allowed to satisfy the load from the cache, if the cached quality is sufficient. The default is {@code false}.
+         * @param b true to bypass caches
+         * @return this options object
+         */
+        public LoadOptions setIgnoreCache(boolean b) {
+            this.ignoreCache = b;
+            return this;
+        }
+        
+        /**
+         * Forces the load, even though the quality of current project is OK and no files have been modified. The default is {@code false}.
+         * @param b true to force load the project.
+         * @return this options object
+         */
+        public LoadOptions setForce(boolean b) {
+            this.force = b;
+            return this;
+        }
+
+        /**
+         * @return true to force the load regardless of consistency and quality
+         */
+        public boolean isForce() {
+            return force;
+        }
+
+        /**
+         * @return the desired quality level
+         */
+        public NbGradleProject.Quality getAim() {
+            return aim;
+        }
+
+        /**
+         * @return description of the operation that initiated the load
+         */
+        public String getDescription() {
+            return description;
+        }
+
+        /**
+         * @return true to ignore netbeans caches
+         */
+        public boolean isIgnoreCache() {
+            return ignoreCache;
+        }
+
+        /**
+         * @return true, if the process is interactive
+         */
+        public boolean isInteractive() {
+            return interactive;
+        }
+
+        /**
+         * @return true, if the load must not use online resources.
+         */
+        public boolean isOffline() {
+            return offline;
+        }
+
+        /**
+         * @return true to check timestamps of gradle files
+         */
+        public boolean isCheckFiles() {
+            return checkFiles;
+        }
+    }
+
+    /**
+     * Unlike {@link #toQuality}, this method loads the project, if the project files have changed since the last load. If project definition
+     * files did not change, 
+     * @param options load options and requiremens.
+     * @return Future with the result project.
+     * @since 2.43
+     */
+    public @NonNull CompletionStage<NbGradleProject> toQuality(LoadOptions options) {
+        return project.projectWithQualityTask(options).thenApply(p -> this);
     }
 
     public Preferences getPreferences(boolean shared) {
@@ -396,7 +568,7 @@ public final class NbGradleProject {
      * @param l
      */
     public static void addPropertyChangeListener(Project project, PropertyChangeListener l) {
-        if (project != null && project instanceof NbGradleProjectImpl) {
+        if (project instanceof NbGradleProjectImpl) {
             ((NbGradleProjectImpl) project).getProjectWatcher().addPropertyChangeListener(l);
         } else {
             assert false : "Attempted to add PropertyChangeListener to project " + project; //NOI18N
@@ -410,7 +582,7 @@ public final class NbGradleProject {
      * @param l
      */
     public static void removePropertyChangeListener(Project project, PropertyChangeListener l) {
-        if (project != null && project instanceof NbGradleProjectImpl) {
+        if (project instanceof NbGradleProjectImpl) {
             ((NbGradleProjectImpl) project).getProjectWatcher().removePropertyChangeListener(l);
         } else {
             assert false : "Attempted to remove PropertyChangeListener to project " + project; //NOI18N

@@ -65,17 +65,24 @@ import com.sun.faces.util.FacesLogger;
 import com.sun.faces.util.Timer;
 import com.sun.faces.util.Util;
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringWriter;
 import java.lang.annotation.Annotation;
+import java.lang.ref.WeakReference;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -93,6 +100,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.el.ELContext;
 import javax.el.ELContextEvent;
 import javax.el.ELContextListener;
@@ -112,8 +121,16 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import org.netbeans.api.xml.services.UserCatalog;
+import org.netbeans.modules.web.jsf.editor.facelets.DefaultFaceletLibraries;
+import org.netbeans.modules.web.jsfapi.api.JsfNamespaces;
+import org.openide.util.Exceptions;
 import org.w3c.dom.*;
+import org.w3c.dom.ls.LSInput;
+import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
@@ -564,7 +581,7 @@ public class ConfigManager {
                 list.add(new DocumentOrderingWrapper(facesDocuments[i]));
             }
             DocumentOrderingWrapper[] ordering =
-                  list.toArray(new DocumentOrderingWrapper[list.size()]);
+                  list.toArray(new DocumentOrderingWrapper[0]);
             if (absoluteOrdering == null) {
                 DocumentOrderingWrapper.sort(ordering);
                 // sorting complete, now update the appropriate locations within
@@ -672,6 +689,39 @@ public class ConfigManager {
 
     }
 
+        /**
+     * <p>
+     * Obtains an array of <code>Document</code>s to be processed by
+     * {@link ConfigManager#FACES_CONFIG_PROCESSOR_CHAIN}.
+     * </p>
+     *
+     * @param sc the <code>ServletContext</code> for the application to be
+     * processed
+     * @param providers <code>List</code> of
+     * <code>ConfigurationResourceProvider</code> instances that provide the URL
+     * of the documents to parse.
+     * @param executor the <code>ExecutorService</code> used to dispatch parse
+     * request to
+     * @param validating flag indicating whether or not the documents should be
+     * validated
+     * @return an array of <code>DocumentInfo</code>s
+     */
+    public static DocumentInfo[] getConfigDocuments(ServletContext sc,
+            List<ConfigurationResourceProvider> providers,
+            ExecutorService executor,
+            boolean validating) {
+        DefaultFaceletLibraries defaultFaceletLibraries = DefaultFaceletLibraries.getInstance();
+        File jsfImplJar = defaultFaceletLibraries.getJsfImplJar();
+
+        URLClassLoader jsfImplJarClassLoader = null;
+        try {
+            jsfImplJarClassLoader = new URLClassLoader(new URL[]{jsfImplJar.toURI().toURL()});
+        } catch (MalformedURLException ex) {
+            // should only happen when bundleling a broken JSF implementation, so ignore
+        }
+
+        return getConfigDocuments(jsfImplJarClassLoader, sc, providers, executor, validating);
+    }
 
     /**
      * <p>
@@ -689,7 +739,7 @@ public class ConfigManager {
      *  should be validated
      * @return an array of <code>DocumentInfo</code>s
      */
-    public static DocumentInfo[] getConfigDocuments(ServletContext sc,
+    public static DocumentInfo[] getConfigDocuments(URLClassLoader jsfRIClassLoader, ServletContext sc,
                                                  List<ConfigurationResourceProvider> providers,
                                                  ExecutorService executor,
                                                  boolean validating) {
@@ -715,7 +765,7 @@ public class ConfigManager {
                 Collection<URI> l = t.get();
                 for (URI u : l) {
                     FutureTask<DocumentInfo> d =
-                         new FutureTask<DocumentInfo>(new ParseTask(sc, validating, u));
+                         new FutureTask<DocumentInfo>(new ParseTask(jsfRIClassLoader, sc, validating, u));
                     docTasks.add(d);
                     if (executor != null) {
                         executor.execute(d);
@@ -746,7 +796,7 @@ public class ConfigManager {
             } catch (InterruptedException ignored) { }
         }
 
-        return docs.toArray(new DocumentInfo[docs.size()]);
+        return docs.toArray(new DocumentInfo[0]);
 
     }
 
@@ -764,25 +814,6 @@ public class ConfigManager {
         return Executors.newFixedThreadPool(tc);
 
     }
-
-
-//    /**
-//     * @param throwable Throwable
-//     * @return the root cause of this error
-//     */
-//    private Throwable unwind(Throwable throwable) {
-//
-//          Throwable t = null;
-//          if (throwable != null) {
-//              t =  unwind(throwable.getCause());
-//              if (t == null) {
-//                  t = throwable;
-//              }
-//          }
-//          return t;
-//
-//    }
-
 
     /**
      * Calls through to {@link javax.faces.FactoryFinder#releaseFactories()}
@@ -936,12 +967,39 @@ public class ConfigManager {
      * </p>
      */
     private static class ParseTask implements Callable<DocumentInfo> {
-        private static final String JAVAEE_SCHEMA_LEGACY_DEFAULT_NS =
-            "http://java.sun.com/xml/ns/javaee";
-        private static final String JAVAEE_SCHEMA_DEFAULT_NS =
-            "http://xmlns.jcp.org/xml/ns/javaee";
-        private static final String EMPTY_FACES_CONFIG =
-                "com/sun/faces/empty-faces-config.xml";
+
+        private static final String EMPTY_FACES_CONFIG = "com/sun/faces/empty-faces-config.xml";
+
+        private static final Map<String, String> VERSION_FACES_SCHEMA_FACES_MAPPING;
+        static {
+            Map<String, String> map = new HashMap<>();
+            map.put("4.1", "com/sun/faces/web-facesconfig_4_1.xsd");
+            map.put("4.0", "com/sun/faces/web-facesconfig_4_0.xsd");
+            map.put("3.0", "com/sun/faces/web-facesconfig_3_0.xsd");
+            map.put("2.3", "com/sun/faces/web-facesconfig_2_3.xsd");
+            map.put("2.2", "com/sun/faces/web-facesconfig_2_2.xsd");
+            map.put("2.1", "com/sun/faces/web-facesconfig_2_1.xsd");
+            map.put("2.0", "com/sun/faces/web-facesconfig_2_0.xsd");
+            map.put("1.2", "com/sun/faces/web-facesconfig_1_2.xsd");
+            VERSION_FACES_SCHEMA_FACES_MAPPING = Collections.unmodifiableMap(map);
+        }
+
+        private static final Map<String, String> VERSION_FACES_SCHEMA_FACELET_TAGLIB_MAPPING;
+        static {
+            Map<String, String> map = new HashMap<>();
+            map.put("4.1", "com/sun/faces/web-facelettaglibrary_4_1.xsd");
+            map.put("4.0", "com/sun/faces/web-facelettaglibrary_4_0.xsd");
+            map.put("3.0", "com/sun/faces/web-facelettaglibrary_3_0.xsd");
+            map.put("2.3", "com/sun/faces/web-facelettaglibrary_2_3.xsd");
+            map.put("2.2", "com/sun/faces/web-facelettaglibrary_2_2.xsd");
+            map.put("2.1", "com/sun/faces/web-facelettaglibrary_2_0.xsd");
+            map.put("2.0", "com/sun/faces/web-facelettaglibrary_2_0.xsd");
+            VERSION_FACES_SCHEMA_FACELET_TAGLIB_MAPPING = Collections.unmodifiableMap(map);
+        }
+
+        private static final Map<String, WeakReference<Schema>> SCHEMA_CACHE = new HashMap<>();
+
+        private URLClassLoader jsfRIClassLoader;
         private ServletContext servletContext;
         private URI documentURI;
         private DocumentBuilderFactory factory;
@@ -960,12 +1018,12 @@ public class ConfigManager {
          * @param documentURI a URL to the configuration resource to be parsed
          * @throws Exception general error
          */
-        public ParseTask(ServletContext servletContext, boolean validating, URI documentURI)
+        public ParseTask(URLClassLoader jsfRIClassLoader, ServletContext servletContext, boolean validating, URI documentURI)
         throws Exception {
+            this.jsfRIClassLoader = jsfRIClassLoader;
             this.servletContext = servletContext;
             this.documentURI = documentURI;
             this.validating = validating;
-
         }
 
 
@@ -1059,72 +1117,27 @@ public class ConfigManager {
                  * we need to transform it to reference a special 1.1 schema before validating.
                  */
                 Node documentElement = ((Document) domSource.getNode()).getDocumentElement();
-                if (JAVAEE_SCHEMA_DEFAULT_NS.equals(documentNS)) {
-                    Attr version = (Attr)
-                            documentElement.getAttributes().getNamedItem("version");
-                    Schema schema;
-                    if (version != null) {
-                        String versionStr = version.getValue();
-                        if ("2.3".equals(versionStr)) {
-                            if ("facelet-taglib".equals(documentElement.getLocalName())) {
-                                schema = DbfFactory.getSchema(servletContext, DbfFactory.FacesSchema.FACELET_TAGLIB_22);
-                            } else {
-                                schema = DbfFactory.getSchema(servletContext, DbfFactory.FacesSchema.FACES_23);
-                            }
-                        } else if ("2.2".equals(versionStr)) {
-                            if ("facelet-taglib".equals(documentElement.getLocalName())) {
-                                schema = DbfFactory.getSchema(servletContext, DbfFactory.FacesSchema.FACELET_TAGLIB_22);
-                            } else {
-                                schema = DbfFactory.getSchema(servletContext, DbfFactory.FacesSchema.FACES_22);
-                            }
-                        } else {
-                            throw new ConfigurationException("Unknown Schema version: " + versionStr);
-                        }
-                        DocumentBuilder builder = getBuilderForSchema(schema);
-                        if (builder.isValidating()) {
-                            builder.getSchema().newValidator().validate(domSource);
-                            returnDoc = ((Document) domSource.getNode());
-                        } else {
-                            returnDoc = ((Document) domSource.getNode());
-                        }
-                    } else {
+                Schema schema = null;
+                
+                if (isKnownNamespace(documentNS)) {
+                    Attr versionAttr = (Attr) documentElement.getAttributes().getNamedItem("version");
+                    if (versionAttr == null) {
                         // this shouldn't happen, but...
                         throw new ConfigurationException("No document version available.");
                     }
-                } else if (JAVAEE_SCHEMA_LEGACY_DEFAULT_NS.equals(documentNS)) {
-                    Attr version = (Attr)
-                            documentElement.getAttributes().getNamedItem("version");
-                    Schema schema;
-                    if (version != null) {
-                        String versionStr = version.getValue();
-                        if ("2.0".equals(versionStr)) {
-                            if ("facelet-taglib".equals(documentElement.getLocalName())) {
-                                schema = DbfFactory.getSchema(servletContext, DbfFactory.FacesSchema.FACELET_TAGLIB_20);
-                            } else {
-                                schema = DbfFactory.getSchema(servletContext, DbfFactory.FacesSchema.FACES_20);
-                            }
-                        } else if ("2.1".equals(versionStr)) {
-                            if ("facelet-taglib".equals(documentElement.getLocalName())) {
-                                schema = DbfFactory.getSchema(servletContext, DbfFactory.FacesSchema.FACELET_TAGLIB_20);
-                            } else {
-                                schema = DbfFactory.getSchema(servletContext, DbfFactory.FacesSchema.FACES_21);
-                            }
-                        } else if ("1.2".equals(versionStr)) {
-                            schema = DbfFactory.getSchema(servletContext, DbfFactory.FacesSchema.FACES_12);
-                        } else {
-                            throw new ConfigurationException("Unknown Schema version: " + versionStr);
-                        }
-                        DocumentBuilder builder = getBuilderForSchema(schema);
-                        if (builder.isValidating()) {
-                            builder.getSchema().newValidator().validate(domSource);
-                            returnDoc = ((Document) domSource.getNode());
-                        } else {
-                            returnDoc = ((Document) domSource.getNode());
-                        }
+                    String version = versionAttr.getValue();
+
+                    String schemaResourceName;
+                    if ("facelet-taglib".equals(documentElement.getLocalName())) {
+                        schemaResourceName = VERSION_FACES_SCHEMA_FACELET_TAGLIB_MAPPING.get(version);
                     } else {
-                        // this shouldn't happen, but...
-                        throw new ConfigurationException("No document version available.");
+                        schemaResourceName = VERSION_FACES_SCHEMA_FACES_MAPPING.get(version);
                     }
+                    if (schemaResourceName == null) {
+                        throw new ConfigurationException("Unknown Schema version: " + version);
+                    }
+                    
+                    schema = getSchema(schemaResourceName);
                 } else {
                     DOMResult domResult = new DOMResult();
                     Transformer transformer = getTransformer(documentNS);
@@ -1135,22 +1148,21 @@ public class ConfigManager {
                     ((Document) domResult.getNode())
                           .setDocumentURI(((Document) domSource
                                 .getNode()).getDocumentURI());
-                    Schema schemaToApply;
                     if (FACES_CONFIG_1_X_DEFAULT_NS.equals(documentNS)) {
-                        schemaToApply = DbfFactory.getSchema(servletContext, DbfFactory.FacesSchema.FACES_11);
+                        schema = DbfFactory.getSchema(servletContext, DbfFactory.FacesSchema.FACES_11);
                     } else if (FACELETS_1_0_DEFAULT_NS.equals(documentNS)) {
-                        schemaToApply = DbfFactory.getSchema(servletContext, DbfFactory.FacesSchema.FACELET_TAGLIB_20);
+                        schema = DbfFactory.getSchema(servletContext, DbfFactory.FacesSchema.FACELET_TAGLIB_20);
                     } else {
                         throw new IllegalStateException();
                     }
-                    DocumentBuilder builder = getBuilderForSchema(schemaToApply);
-                    if (builder.isValidating()) {
-                        builder.getSchema().newValidator().validate(new DOMSource(domResult.getNode()));
-                        returnDoc = (Document) domResult.getNode();
-                    } else {
-                        returnDoc = (Document) domResult.getNode();
-                    }
                 }
+
+                DocumentBuilder builder = getBuilderForSchema(schema);
+                if (builder.isValidating()) {
+                    builder.getSchema().newValidator().validate(domSource);
+                }
+
+                returnDoc = ((Document) domSource.getNode());
             } else {
                 returnDoc = doc;
             }
@@ -1164,7 +1176,53 @@ public class ConfigManager {
                 returnDoc.getDocumentElement().getAttributes().setNamedItem(webInf);
             }
             return returnDoc;
+        }
 
+        private Schema getSchema(String schemaResourceName) throws SAXException {
+            URL[] schemaResourceSource = jsfRIClassLoader.getURLs();
+            if (schemaResourceSource.length == 0) {
+                throw new IllegalArgumentException("Expected URLClassLoader to have only one entry");
+            }
+
+            String id = Stream.of(schemaResourceSource).map(URL::toString).collect(Collectors.joining("+"));
+            WeakReference<Schema> schema = SCHEMA_CACHE.get(id);
+            if (schema == null || schema.get() == null) {
+                SchemaFactory schemaFactory = SchemaFactory.newDefaultInstance();
+                schemaFactory.setResourceResolver(new LSResourceResolver() {
+                    @Override
+                    public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
+                        try {
+                            InputSource is = UserCatalog.getDefault().
+                                    getEntityResolver().
+                                    resolveEntity(publicId, systemId);
+                            if (is != null) {
+                                return new LSInputFromInputSource(is);
+                            }
+                        } catch (SAXException | IOException ex) {
+                            LOGGER.log(
+                                    Level.FINE,
+                                    "Failed to resolve namespaceURI: {}, publicId: {}, systemId: {}, baseURI: {}",
+                                    new Object[] {
+                                        namespaceURI,
+                                        publicId,
+                                        systemId,
+                                        baseURI
+                                    }
+                            );
+                        }
+                        return null;
+                    }
+                });
+                schema = new WeakReference<>(schemaFactory.newSchema(jsfRIClassLoader.getResource(schemaResourceName)));
+
+                SCHEMA_CACHE.put(id, schema);
+            }
+
+            return schema.get();
+        }
+
+        private boolean isKnownNamespace(String namespace) {
+            return Stream.of(JsfNamespaces.values()).map(value -> value.getNamespace(JsfNamespaces.Type.TAGLIB)).anyMatch(namespace::equals);
         }
 
         private boolean streamIsZeroLengthOrEmpty(InputStream is) throws IOException {
@@ -1320,4 +1378,96 @@ public class ConfigManager {
     } // END URITask
 
 
+    /**
+     * Helperclass to supply the SchemaFactory with XSDs from the NB catalog
+     */
+    private static class LSInputFromInputSource implements LSInput {
+
+        private final InputSource is;
+
+        public LSInputFromInputSource(InputSource is) {
+            this.is = is;
+        }
+
+        @Override
+        public Reader getCharacterStream() {
+            return is.getCharacterStream();
+        }
+
+        @Override
+        public void setCharacterStream(Reader characterStream) {
+        }
+
+        @Override
+        public InputStream getByteStream() {
+            return is.getByteStream();
+        }
+
+        @Override
+        public void setByteStream(InputStream byteStream) {
+        }
+
+        @Override
+        public String getStringData() {
+            try (Reader r = getCharacterStream()) {
+                if (r == null) {
+                    return null;
+                }
+                StringWriter sw = new StringWriter();
+                getCharacterStream().transferTo(sw);
+                return sw.toString();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+
+        @Override
+        public void setStringData(String stringData) {
+        }
+
+        @Override
+        public String getSystemId() {
+            return is.getSystemId();
+        }
+
+        @Override
+        public void setSystemId(String systemId) {
+        }
+
+        @Override
+        public String getPublicId() {
+            return is.getPublicId();
+        }
+
+        @Override
+        public void setPublicId(String publicId) {
+        }
+
+        @Override
+        public String getBaseURI() {
+            return "";
+        }
+
+        @Override
+        public void setBaseURI(String baseURI) {
+        }
+
+        @Override
+        public String getEncoding() {
+            return is.getEncoding();
+        }
+
+        @Override
+        public void setEncoding(String encoding) {
+        }
+
+        @Override
+        public boolean getCertifiedText() {
+            return false;
+        }
+
+        @Override
+        public void setCertifiedText(boolean certifiedText) {
+        }
+    }
 }

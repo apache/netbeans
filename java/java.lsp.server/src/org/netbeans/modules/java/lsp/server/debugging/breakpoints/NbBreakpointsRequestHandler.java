@@ -37,6 +37,7 @@ import org.eclipse.lsp4j.debug.Source;
 import org.eclipse.lsp4j.debug.SourceBreakpoint;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.netbeans.modules.java.lsp.server.URITranslator;
+import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 
@@ -80,7 +81,7 @@ public final class NbBreakpointsRequestHandler {
         List<Breakpoint> res = new ArrayList<>();
         NbBreakpoint[] toAdds = this.convertClientBreakpointsToDebugger(source, sourcePath, arguments.getBreakpoints(), context);
         // Decode the URI if it comes encoded:
-        NbBreakpoint[] added = context.getBreakpointManager().setBreakpoints(decodeURI(sourcePath), toAdds, arguments.getSourceModified());
+        NbBreakpoint[] added = context.getBreakpointManager().setBreakpoints(decodeURI(sourcePath), toAdds, Utils.wrappedBoolean2Boolean(arguments.getSourceModified(), false));
         for (int i = 0; i < arguments.getBreakpoints().length; i++) {
             // For newly added breakpoint, should install it to debuggee first.
             if (toAdds[i] == added[i]) {
@@ -103,7 +104,7 @@ public final class NbBreakpointsRequestHandler {
             res.add(added[i].convertDebuggerBreakpointToClient());
         }
         SetBreakpointsResponse response = new SetBreakpointsResponse();
-        response.setBreakpoints(res.toArray(new Breakpoint[res.size()]));
+        response.setBreakpoints(res.toArray(new Breakpoint[0]));
         resultFuture.complete(response);
         return resultFuture;
     }

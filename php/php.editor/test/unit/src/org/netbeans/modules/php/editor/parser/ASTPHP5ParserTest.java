@@ -185,6 +185,14 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/nowdoc_015");
     }
 
+    public void testIssueGH4345_01() throws Exception {
+        performTest("parser/issueGH4345_01");
+    }
+
+    public void testIssueGH4345_02() throws Exception {
+        performTest("parser/issueGH4345_02");
+    }
+
     public void testHereDoc_01() throws Exception {
         performTest("parser/heredoc00");
     }
@@ -790,6 +798,11 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/uniformVariableSyntax_38");
     }
 
+    public void testUniformVariableSyntax_39() throws Exception {
+        // Test::{test('foo')}()::{test('bar')}();
+        performTest("parser/uniformVariableSyntax_39");
+    }
+
     public void testCloneExpression_01() throws Exception {
         performTest("parser/cloneExpression_01");
     }
@@ -1324,15 +1337,21 @@ public class ASTPHP5ParserTest extends ParserTestBase {
     }
 
     public void testReadonlyPropertiesWithConstError() throws Exception {
+        // parser allows readonly
         performTest("parser/php81/readonlyPropertiesWithConstError");
     }
 
     public void testReadonlyPropertiesWithStaticError() throws Exception {
+        // parser allows readonly static
         performTest("parser/php81/readonlyPropertiesWithStaticError");
     }
 
     public void testNewInInitializers_01() throws Exception {
         performTest("parser/php81/newInInitializers_01");
+    }
+
+    public void testNewInInitializers_02() throws Exception {
+        performTest("parser/php81/newInInitializers_02");
     }
 
     public void testNewInInitializersWithClassConstantError() throws Exception {
@@ -1376,12 +1395,44 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php81/enumAsTypeName");
     }
 
+    public void testEnumCasesWithError() throws Exception {
+        performTest("parser/php81/enumCasesWithError");
+    }
+
     public void testFirstClassCallableSyntax_01() throws Exception {
         performTest("parser/php81/firstClassCallableSyntax_01");
     }
 
     public void testTreatNamespacedNamesAsSingleToken_01a() throws Exception {
         performTest("parser/php80/treatNamespacedNamesAsSingleToken_01a");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotation_01() throws Exception {
+        performTest("parser/php81/explicitOctalIntegerLiteralNotation_01");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotationParseError_01() throws Exception {
+        performTest("parser/php81/explicitOctalIntegerLiteralNotationParseError_01");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotationParseError_02() throws Exception {
+        performTest("parser/php81/explicitOctalIntegerLiteralNotationParseError_02");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotationParseError_03() throws Exception {
+        performTest("parser/php81/explicitOctalIntegerLiteralNotationParseError_03");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotationParseError_04() throws Exception {
+        performTest("parser/php81/explicitOctalIntegerLiteralNotationParseError_04");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotationParseError_05() throws Exception {
+        performTest("parser/php81/explicitOctalIntegerLiteralNotationParseError_05");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotationParseError_06() throws Exception {
+        performTest("parser/php81/explicitOctalIntegerLiteralNotationParseError_06");
     }
 
     public void testTreatNamespacedNamesAsSingleToken_01b() throws Exception {
@@ -1430,6 +1481,143 @@ public class ASTPHP5ParserTest extends ParserTestBase {
 
     public void testGH4684() throws Exception {
         performTest("parser/gh4684");
+    }
+
+    // PHP 8.2 gh-4725
+    public void testReadonlyClass_01() throws Exception {
+        performTest("parser/php82/readonlyClass_01");
+    }
+
+    public void testReadonlyTraitError_01() throws Exception {
+        performTest("parser/php82/readonlyTraitError_01");
+    }
+
+    public void testReadonlyInterfaceError_01() throws Exception {
+        performTest("parser/php82/readonlyInterfaceError_01");
+    }
+
+    public void testReadonlyEnumError_01() throws Exception {
+        performTest("parser/php82/readonlyEnumError_01");
+    }
+
+    public void testFetchPropertiesInConstExpressions_01() throws Exception {
+        performTest("parser/php82/fetchPropertiesInConstExpressions_01");
+    }
+
+    public void testConstantsInTraits_01() throws Exception {
+        performTest("parser/php82/constantsInTraits_01");
+    }
+
+    public void testDnfTypes_01() throws Exception {
+        performTest("parser/php82/dnfTypes_01");
+    }
+
+    public void testIssueGH5585_01() throws Exception {
+        performTest("parser/issueGH5585_01");
+    }
+
+    public void testIssueGH5585_02() throws Exception {
+        performTest("parser/issueGH5585_02");
+    }
+
+    public void testTrueFalseNull() throws Exception {
+        performTest("parser/TrueFalseNull");
+    }
+
+    public void testIssueGH5933_01() throws Exception {
+        performTest("parser/issueGH5933_01");
+    }
+
+    public void testIssueGH6075_01() throws Exception {
+        performTest("parser/issueGH6075_01");
+    }
+
+    // PHP 8.3
+    public void testArbitraryStaticVariableInitializers_01() throws Exception {
+        performTest("parser/php83/arbitraryStaticVariableInitializers_01");
+    }
+
+    public void testDynamicClassConstantFetch_01() throws Exception {
+        performTest("parser/php83/dynamicClassConstantFetch_01");
+    }
+
+    public void testTypedClassConstants_01() throws Exception {
+        performTest("parser/php83/typedClassConstants_01");
+    }
+
+    // PHP 8.4
+    public void testNewWithoutParentheses_01() throws Exception {
+        performTest("parser/php84/newWithoutParentheses_01");
+    }
+
+    public void testNewWithoutParentheses_02() throws Exception {
+        performTest("parser/php84/newWithoutParentheses_02");
+    }
+
+    public void testNewWithoutParenthesesError_01() throws Exception {
+        performTest("parser/php84/newWithoutParenthesesError_01");
+    }
+
+    public void testNewWithoutParenthesesError_02() throws Exception {
+        performTest("parser/php84/newWithoutParenthesesError_02");
+    }
+
+    public void testNewWithoutParenthesesError_03() throws Exception {
+        performTest("parser/php84/newWithoutParenthesesError_03");
+    }
+
+    public void testNewWithoutParenthesesError_04() throws Exception {
+        performTest("parser/php84/newWithoutParenthesesError_04");
+    }
+
+//    public void testNewWithoutParenthesesError_05() throws Exception {
+//        // NPE occurs without sanitizing
+//        // see SanitizeSourceTest.testNewWithoutParenthesesError01()
+//        performTest("parser/php84/newWithoutParenthesesError_05");
+//    }
+
+    public void testNewWithoutParenthesesError_06() throws Exception {
+        performTest("parser/php84/newWithoutParenthesesError_06");
+    }
+
+    public void testNewWithoutParenthesesError_07() throws Exception {
+        performTest("parser/php84/newWithoutParenthesesError_07");
+    }
+
+    public void testNewWithoutParenthesesError_08() throws Exception {
+        performTest("parser/php84/newWithoutParenthesesError_08");
+    }
+
+    public void testNewWithoutParenthesesError_09() throws Exception {
+        performTest("parser/php84/newWithoutParenthesesError_09");
+    }
+
+    public void testAsymmetricVisibilityClass() throws Exception {
+        performTest("parser/php84/asymmetricVisibilityClass");
+    }
+
+    public void testAsymmetricVisibilityTrait() throws Exception {
+        performTest("parser/php84/asymmetricVisibilityTrait");
+    }
+
+    public void testAsymmetricVisibilityAnonClass() throws Exception {
+        performTest("parser/php84/asymmetricVisibilityAnonClass");
+    }
+
+    public void testAsymmetricVisibilityConstructorPropertyPromotion() throws Exception {
+        performTest("parser/php84/asymmetricVisibilityConstructorPropertyPromotion");
+    }
+
+    public void testFinalFieldsClass() throws Exception {
+        performTest("parser/php84/finalFieldsClass");
+    }
+
+    public void testFinalFieldsTrait() throws Exception {
+        performTest("parser/php84/finalFieldsTrait");
+    }
+
+    public void testFinalFieldsAnonClass() throws Exception {
+        performTest("parser/php84/finalFieldsAnonClass");
     }
 
     @Override

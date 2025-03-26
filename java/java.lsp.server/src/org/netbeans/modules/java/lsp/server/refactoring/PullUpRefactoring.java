@@ -76,21 +76,20 @@ import org.openide.util.lookup.ServiceProvider;
 public final class PullUpRefactoring extends CodeRefactoring {
 
     private static final String PULL_UP_REFACTORING_KIND = "refactor.pull.up";
-    private static final String PULL_UP_REFACTORING_COMMAND =  "java.refactor.pull.up";
+    private static final String PULL_UP_REFACTORING_COMMAND =  "nbls.java.refactor.pull.up";
 
-    private final Set<String> commands = Collections.singleton(PULL_UP_REFACTORING_COMMAND);
     private final Gson gson = new Gson();
 
     @Override
     @NbBundle.Messages({
         "DN_PullUp=Pull Up...",
     })
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+    public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
         List<String> only = params.getContext().getOnly();
         if (only == null || !only.contains(CodeActionKind.Refactor)) {
             return Collections.emptyList();
         }
-        CompilationController info = CompilationController.get(resultIterator.getParserResult());
+        CompilationController info = resultIterator.getParserResult() != null ? CompilationController.get(resultIterator.getParserResult()) : null;
         if (info == null || !JavaRefactoringUtils.isRefactorable(info.getFileObject())) {
             return Collections.emptyList();
         }
@@ -126,12 +125,12 @@ public final class PullUpRefactoring extends CodeRefactoring {
         }
         QuickPickItem elementItem = new QuickPickItem(createLabel(info, element));
         elementItem.setUserData(new ElementData(element));
-        return Collections.singletonList(createCodeAction(Bundle.DN_PullUp(), PULL_UP_REFACTORING_KIND, null, PULL_UP_REFACTORING_COMMAND, uri, offset, elementItem, supertypeItems));
+        return Collections.singletonList(createCodeAction(client, Bundle.DN_PullUp(), PULL_UP_REFACTORING_KIND, null, PULL_UP_REFACTORING_COMMAND, uri, offset, elementItem, supertypeItems));
     }
 
     @Override
     public Set<String> getCommands() {
-        return commands;
+        return Collections.singleton(PULL_UP_REFACTORING_COMMAND);
     }
 
     @Override
@@ -245,7 +244,7 @@ public final class PullUpRefactoring extends CodeRefactoring {
             }, true);
             org.netbeans.modules.refactoring.java.api.PullUpRefactoring refactoring = new org.netbeans.modules.refactoring.java.api.PullUpRefactoring(TreePathHandle.from(sourceHandle, info));
             refactoring.setTargetType(targetHandle);
-            refactoring.setMembers(memberHandles.toArray(new MemberInfo[memberHandles.size()]));
+            refactoring.setMembers(memberHandles.toArray(new MemberInfo[0]));
             refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(file));
             client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, "PullUp")));
         } catch (Exception ex) {

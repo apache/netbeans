@@ -4306,9 +4306,7 @@ public final class Models {
             this.tableRendererModel = tableRendererModel;
             this.tablePropertyEditorsModel = tablePropertyEditorsModel;
             this.nodeActionsProvider = nodeActionsProvider;
-            this.columnModels = columnModels.toArray (
-                new ColumnModel [columnModels.size ()]
-            );
+            this.columnModels = columnModels.toArray(new ColumnModel[0]);
             this.asynchModel = asynchModel;
             this.propertiesHelpID = propertiesHelpID;
         }
@@ -4525,7 +4523,6 @@ public final class Models {
          *
          * @throws  UnknownTypeException if this NodeActionsProvider implementation 
          *          is not able to resolve actions for given node type
-         * @return  display name for given node
          */
         @Override
         public void performDefaultAction (Object node) throws UnknownTypeException {

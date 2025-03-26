@@ -21,7 +21,6 @@ package org.netbeans.modules.java.editor.codegen.ui;
 
 import java.awt.Image;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -120,8 +119,8 @@ public class ElementNode extends AbstractNode {
             
         public ElementChilren(List<Description> descriptions, boolean sortChildren) {
             if( sortChildren ) {
-                descriptions = new ArrayList<Description>(descriptions);
-                Collections.sort( descriptions, Description.ALPHA_COMPARATOR );
+                descriptions = new ArrayList<>(descriptions);
+                descriptions.sort(Description.ALPHA_COMPARATOR );
             }
             setKeys(descriptions);            
         }
@@ -156,7 +155,7 @@ public class ElementNode extends AbstractNode {
         private List<Description> subs; 
         private String htmlHeader;
         private boolean isSelected;
-        private boolean isSelectable;
+        private final boolean isSelectable;
         
         public static Description create(List<Description> subs) {
             return new Description("<root>", null, null, subs, null, false, false); // NOI18N
@@ -169,6 +168,7 @@ public class ElementNode extends AbstractNode {
                 case ANNOTATION_TYPE:
                 case CLASS:
                 case ENUM:
+                case RECORD:
                 case INTERFACE:
                     htmlHeader = createHtmlHeader(deprecated, (TypeElement)element);
                     break;
@@ -463,6 +463,7 @@ public class ElementNode extends AbstractNode {
         
         private static class DescriptionComparator implements Comparator<Description> {
             
+            @Override
             public int compare(Description d1, Description d2) {
                 
                 if ( k2i(d1.elementHandle.getKind()) != k2i(d2.elementHandle.getKind()) ) {

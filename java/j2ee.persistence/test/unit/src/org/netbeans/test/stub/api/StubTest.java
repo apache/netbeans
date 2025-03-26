@@ -19,7 +19,6 @@
 
 package org.netbeans.test.stub.api;
 
-import java.sql.Connection;
 import org.netbeans.junit.NbTestCase;
 
 /**

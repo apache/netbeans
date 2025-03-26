@@ -70,7 +70,7 @@ public class LocalHistoryVCSAnnotator extends VCSAnnotator {
                                             context));           
             
         }
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }    
     
 }

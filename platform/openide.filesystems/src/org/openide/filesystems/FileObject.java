@@ -114,7 +114,8 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
 
     /** Copies this file. This allows the filesystem to perform any additional
     * operation associated with the copy. But the default implementation is simple
-    * copy of the file and its attributes
+    * copy of the file and its attributes  Since version 9.32, the file POSIX
+    * permissions are copied as well.
     *
     * @param target target folder to move this file to
     * @param name new basename of file
@@ -167,14 +168,14 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
     }
 
     /**
-     * Gets a textual represtentation of this <code>FileObject</code>.
+     * Gets a textual representation of this <code>FileObject</code>.
      * The precise format is not defined. In particular it is probably
      * <em>not</em> a resource path.
      * For that purpose use {@link #getPath} directly.
      * <p>Typically it is useful for debugging purposes. Example of correct usage:
      * <pre>
-     * <font class="type">FileObject</font> <font class="variable-name">fo</font> = getSomeFileObject();
-     * ErrorManager.getDefault().log(<font class="string">"Got a change from "</font> + fo);
+     * <span class="type">FileObject</span> <span class="variable-name">fo</span> = getSomeFileObject();
+     * ErrorManager.getDefault().log(<span class="string">"Got a change from "</span> + fo);
      * </pre>
      * @return some representation of this file object
      */
@@ -197,7 +198,7 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
      * <p>Subclasses are strongly encouraged to override this method.
      * <p>Never use this to get a display name for the file! Use {@link FileUtil#getFileDisplayName}.
      * <p>Do not use this method to find a file path on disk! Use {@link FileUtil#toFile}.
-     * @return the path, for example <samp>path/from/root.ext</samp>
+     * @return the path, for example <code>path/from/root.ext</code>
      * @see FileSystem#findResource
      * @since 3.7
      */
@@ -210,8 +211,8 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
     /** Get fully-qualified filename. Does so by walking through all folders
     * to the root of the filesystem. Separates files with provided <code>separatorChar</code>.
     * The extension, if present, is separated from the basename with <code>extSepChar</code>.
-    * <p><strong>Note:</strong> <samp>fo.getPath()</samp> will have the
-    * same effect as using this method with <samp>/</samp> and <samp>.</samp> (the standard
+    * <p><strong>Note:</strong> <code>fo.getPath()</code> will have the
+    * same effect as using this method with <code>/</code> and <code>.</code> (the standard
     * path and extension delimiters).
     * @param separatorChar char to separate folders and files
     * @param extSepChar char to separate extension
@@ -450,7 +451,6 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
      * this method is implementation dependent. It is generally expected that
      * the attribute will later be available from {@link #getAttribute(java.lang.String)}
      * method.
-     * <p>
      * <div class="nonnormative">
      *   Many <a href="@TOP@/org/openide/filesystems/FileSystem.html">FileSystem</a>
      *   implementations (since version 7.43) 
@@ -458,8 +458,8 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
      *   <code>setAttribute</code> method. One can use 
      *   prefix <code>methodvalue:</code> or <code>newvalue:</code>
      *   to store references to 
-     *   <a href="@JDK@/java/lang/reflect/Method.html">Method</a> or
-     *   <a href="@JDK@/java/lang/Class.html">Class</a> respectively. 
+     *   <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/reflect/Method.html">Method</a> or
+     *   <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/Class.html">Class</a> respectively. 
      *   The meaning is then similar to {@link XMLFileSystem} attributes
      *  <code>methodvalue</code> and <code>newvalue</code>.
      * </div>
@@ -1060,7 +1060,7 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
      * events. Preferably it delivers them asynchronously. The assumption
      * is that the file will be (at least partially) written before
      * the listeners start to process the first event. The safety is additionally
-     * ensured by <q>mutual exclusion</q> between output and input streams 
+     * ensured by <em>mutual exclusion</em> between output and input streams 
      * for the same file (any call to {@link #getInputStream()} will be blocked
      * for at least two seconds if there is existing open output stream). 
      * If you finish writing the content of your file in those two seconds,
@@ -1121,7 +1121,7 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
      * <ul>
      * <li>If no exception is thrown, proceed with the operation.
      * <li>If a UserQuestionException is thrown,
-     * call {@link UserQuestionException#confirmed} on it
+     * call <a href="@org-openide-util-ui@/org/openide/util/UserQuestionException.html#confirmed--" >UserQuestionException#confirmed</a> on it
      * (asynchronously - do not block any important threads). If <code>true</code>,
      * proceed with the operation. If <code>false</code>, exit.
      * If an <code>IOException</code> is thrown, notify it and exit.
@@ -1131,7 +1131,6 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
      * </ul>
      * In either case, exit.
      * </ol>
-     * <p>
      *
      * @return <CODE>true</CODE> if file is read-only
      * @deprecated Please use the {@link #canWrite}.
@@ -1197,7 +1196,7 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
      * Note that while content can be reset, it may not be possible to reset attributes.
      * <p>Implementors: for historical reasons this method checks {@link #getAttribute}
      * for a special attribute named {@code removeWritables} which must be of type
-     * {@link Callable Callable<Void>}. If present, the file is considered modified.
+     * {@link Callable Callable&lt;Void&gt;}. If present, the file is considered modified.
      * @since 7.55
      */
     public final void revert() throws IOException {

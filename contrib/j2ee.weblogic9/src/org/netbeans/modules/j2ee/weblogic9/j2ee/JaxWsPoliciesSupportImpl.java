@@ -149,7 +149,7 @@ class JaxWsPoliciesSupportImpl implements JaxWsPoliciesSupportImplementation {
         }
         List<URL> urls = new LinkedList<URL>(archive2Url.values());
         try {
-            ProjectClassPathModifier.addRoots(urls.toArray(new URL[urls.size()]), sourceRoot, ClassPath.COMPILE);
+            ProjectClassPathModifier.addRoots(urls.toArray(new URL[0]), sourceRoot, ClassPath.COMPILE);
         } catch (IOException ex) {
             Logger.getLogger(getClass().getName()).log(Level.INFO, "Couldn't extends compile classpath with required jars " + "for WL policy support", ex); // NOI18N
         }

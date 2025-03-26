@@ -118,7 +118,7 @@ public class DictionaryProviderImpl implements DictionaryProvider {
 
         hardcoded.removeAll(maskedHardcoded);
         hardcoded.addAll(user);
-        return hardcoded.toArray(new Locale[hardcoded.size()]);
+        return hardcoded.toArray(new Locale[0]);
     }
     
     private synchronized Dictionary createDictionary(Locale locale) {

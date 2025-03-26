@@ -26,15 +26,6 @@
             <code-name-base>org.netbeans.modules.gradle.java</code-name-base>
             <module-dependencies>
                 <dependency>
-                    <code-name-base>org.netbeans.modules.gradle</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>2</release-version>
-                        <specification-version>2.28</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.netbeans.api.annotations.common</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -114,6 +105,24 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.gradle</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>2.40</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.java.api.common</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>0</release-version>
+                        <specification-version>1.127</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.java.platform</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -158,20 +167,19 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.modules.java.api.common</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>0</release-version>
-                        <specification-version>1.127</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.netbeans.modules.java.source.base</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>2.20.1.2.2.25.8.1</specification-version>
+                        <specification-version>2.74</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.project.dependency</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <implementation-version/>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -180,7 +188,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.57.1</specification-version>
+                        <specification-version>1.99</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -306,14 +314,6 @@
                         <specification-version>9.4.1</specification-version>
                     </run-dependency>
                 </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.modules.project.dependency</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <implementation-version/>
-                    </run-dependency>
-                </dependency>
             </module-dependencies>
             <test-dependencies>
                 <test-type>
@@ -337,6 +337,7 @@
                         <code-name-base>org.netbeans.modules.projectapi.nb</code-name-base>
                         <recursive/>
                         <compile-dependency/>
+                        <test/>
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.projectui</code-name-base>
@@ -376,12 +377,20 @@
                         <code-name-base>org.netbeans.modules.project.dependency</code-name-base>
                         <compile-dependency/>
                     </test-dependency>
+                    <test-dependency>
+                        <!-- Because otherwise data systems and their services will not materialize -->
+                        <code-name-base>org.netbeans.modules.settings</code-name-base>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.editor.mimelookup.impl</code-name-base>
+                    </test-dependency>
                 </test-type>
             </test-dependencies>
             <public-packages>
                 <package>org.netbeans.modules.gradle.java.api</package>
                 <package>org.netbeans.modules.gradle.java.api.output</package>
                 <package>org.netbeans.modules.gradle.java.spi.debug</package>
+                <package>org.netbeans.modules.gradle.java.spi.support</package>
             </public-packages>
         </data>
     </configuration>

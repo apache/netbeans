@@ -14,7 +14,6 @@ class Test {
       $this->_flashMessenger->addMessage('Chyba: ' . $e);
     }
   }
-
 }
 
 ?>

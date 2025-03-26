@@ -115,51 +115,49 @@ public final class BrokenReferencesModel extends AbstractListModel implements Pr
      * @param fire 
      */
     void refresh(boolean fire) {
-        AtomicBoolean changed = new AtomicBoolean(false);
-        final int size = ProjectManager.mutex().readAccess(new Mutex.Action<Integer>() {
-            @Override
-            public Integer run() {
-                synchronized (lock) {
-                    final Map<ProjectProblemsProvider,Project> newProviders = new LinkedHashMap<ProjectProblemsProvider,Project>();
-                    for (Project bprj : ctx.getBrokenProjects()) {
-                        final ProjectProblemsProvider provider = bprj.getLookup().lookup(ProjectProblemsProvider.class);
-                        if (provider != null) {
-                            newProviders.put(provider, bprj);
-                        }
+        ProjectManager.mutex().postReadRequest(() -> {
+            int size;
+            boolean changed = false;
+            synchronized (lock) {
+                final Map<ProjectProblemsProvider,Project> newProviders = new LinkedHashMap<ProjectProblemsProvider,Project>();
+                for (Project bprj : ctx.getBrokenProjects()) {
+                    final ProjectProblemsProvider provider = bprj.getLookup().lookup(ProjectProblemsProvider.class);
+                    if (provider != null) {
+                        newProviders.put(provider, bprj);
                     }
-                    for (Iterator<Map.Entry<ProjectProblemsProvider,PropertyChangeListener>> it = providers.entrySet().iterator(); it.hasNext();) {
-                        final Map.Entry<ProjectProblemsProvider,PropertyChangeListener> e = it.next();
-                        if (!newProviders.containsKey(e.getKey())) {
-                            e.getKey().removePropertyChangeListener(e.getValue());
-                            it.remove();
-                        }
-                    }
-                    final Set<ProblemReference> all = new LinkedHashSet<ProblemReference>();
-                    for (Map.Entry<ProjectProblemsProvider,Project> ne : newProviders.entrySet()) {
-                        final ProjectProblemsProvider ppp = ne.getKey();
-                        final Project bprj = ne.getValue();
-                        if (!providers.containsKey(ppp)) {
-                            final PropertyChangeListener l = WeakListeners.propertyChange(BrokenReferencesModel.this, ppp);
-                            ppp.addPropertyChangeListener(l);
-                            providers.put(ppp, l);
-                        }
-                        for (ProjectProblem problem : ppp.getProblems()) {
-                            all.add(new ProblemReference(problem, bprj, global));
-                        }
-                    }
-                    changed.set(updateReferencesList(problems, all));
-                    return getSize();
                 }
+                for (Iterator<Map.Entry<ProjectProblemsProvider,PropertyChangeListener>> it = providers.entrySet().iterator(); it.hasNext();) {
+                    final Map.Entry<ProjectProblemsProvider,PropertyChangeListener> e = it.next();
+                    if (!newProviders.containsKey(e.getKey())) {
+                        e.getKey().removePropertyChangeListener(e.getValue());
+                        it.remove();
+                    }
+                }
+                final Set<ProblemReference> all = new LinkedHashSet<ProblemReference>();
+                for (Map.Entry<ProjectProblemsProvider,Project> ne : newProviders.entrySet()) {
+                    final ProjectProblemsProvider ppp = ne.getKey();
+                    final Project bprj = ne.getValue();
+                    if (!providers.containsKey(ppp)) {
+                        final PropertyChangeListener l = WeakListeners.propertyChange(BrokenReferencesModel.this, ppp);
+                        ppp.addPropertyChangeListener(l);
+                        providers.put(ppp, l);
+                    }
+                    for (ProjectProblem problem : ppp.getProblems()) {
+                        all.add(new ProblemReference(problem, bprj, global));
+                    }
+                }
+                changed = updateReferencesList(problems, all);
+                size = getSize();
+            }
+            if (fire && changed) {
+                Mutex.EVENT.postReadRequest(new Runnable() {
+                    @Override
+                    public void run() {
+                        fireContentsChanged(BrokenReferencesModel.this, 0, size);
+                    }
+                });
             }
         });
-        if (fire && changed.get()) {
-            Mutex.EVENT.readAccess(new Runnable() {
-                @Override
-                public void run() {
-                    fireContentsChanged(BrokenReferencesModel.this, 0, size);
-                }
-            });
-        }
     }
 
     private ProblemReference getOneReference(int index) {
@@ -300,7 +298,7 @@ public final class BrokenReferencesModel extends AbstractListModel implements Pr
 
         public Project[] getBrokenProjects() {
             synchronized (toResolve) {
-                return toResolve.toArray(new Project[toResolve.size()]);
+                return toResolve.toArray(new Project[0]);
             }
         }
 

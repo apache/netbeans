@@ -27,7 +27,7 @@ import org.netbeans.modules.editor.indent.api.Reformat;
 /**
  * Java formatter tests.
  *
- * @autor Miloslav Metelka
+ * @author Miloslav Metelka
  */
 public class JavaFormatterUnitTestCase extends JavaBaseDocumentUnitTestCase {
 

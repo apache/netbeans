@@ -26,6 +26,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
@@ -33,6 +34,7 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.TreePathScanner;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
@@ -579,6 +581,18 @@ public class GeneratorUtilitiesTest extends NbTestCase {
                 assertEquals(0, info.getDiagnostics().size());
                 List<? extends ImportTree> imports = info.getCompilationUnit().getImports();
                 assertEquals(0, imports.size());
+            }
+        }, false);
+    }
+
+    public void testAddImports14() throws Exception {
+        performTest("test/Process.java", "package test;\nimport java.util.Collections;\npublic class Process {\npublic static void main(String... args) {\n" +
+        "Collections.singleton(Process.class).forEach(System.out::println);\n}\n}", "1.5", new AddImportsTask("test.Process"), new Validator() {
+            public void validate(CompilationInfo info) {
+                assertEquals(0, info.getDiagnostics().size());
+                List<? extends ImportTree> imports = info.getCompilationUnit().getImports();
+                assertEquals(1, imports.size());
+                assertEquals("java.util.Collections", imports.get(0).getQualifiedIdentifier().toString());
             }
         }, false);
     }
@@ -1540,6 +1554,63 @@ public class GeneratorUtilitiesTest extends NbTestCase {
             
             parameter.rewrite(testTree, nueTestTree);
         }
+    }
+
+    public void testGenerateMethodInLambda() throws Exception {
+        performTest("test/Test.java",
+                    """
+                    package test;
+                    public class Test {
+                        private void test(Runnable r) {
+                            test(() -> {
+                                new Base<Void, Void>() {};
+                            });
+                        }
+                    }
+                    class Base<T1, T2> {
+                        public T1 test(T1 p) {}
+                    }
+                    """,
+                    "17",
+                    new Task<WorkingCopy>() {
+                        @Override
+                        public void run(WorkingCopy copy) throws java.lang.Exception {
+                            copy.toPhase(Phase.RESOLVED);
+                            new TreePathScanner<Void, Void>() {
+                                @Override
+                                public Void visitNewClass(NewClassTree node, Void p) {
+                                    if (node.getClassBody() != null) {
+                                        ClassTree clazz = node.getClassBody();
+                                        TypeElement anon = (TypeElement) copy.getTrees().getElement(new TreePath(getCurrentPath(), clazz));
+                                        TypeElement superClass = (TypeElement) ((DeclaredType) anon.getSuperclass()).asElement();
+                                        ExecutableElement method = (ExecutableElement) superClass.getEnclosedElements().stream().filter(el -> el.getSimpleName().contentEquals("test")).findAny().get();
+                                        copy.rewrite(clazz, copy.getTreeMaker().addClassMember(clazz, GeneratorUtilities.get(copy).createOverridingMethod(anon, method)));
+                                    }
+                                    return super.visitNewClass(node, p);
+                                }
+
+                            }.scan(copy.getCompilationUnit(), null);
+                        }
+                    },
+                    new ContentValidator("""
+                                         package test;
+                                         public class Test {
+                                             private void test(Runnable r) {
+                                                 test(() -> {
+                                                     new Base<Void, Void>() {
+                                                         @Override
+                                                         public Void test(Void p) {
+                                                             return super.test(p); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+                                                         }
+                                                     };
+                                                 });
+                                             }
+                                         }
+                                         class Base<T1, T2> {
+                                             public T1 test(T1 p) {}
+                                         }
+                                         """),
+                    false);
     }
     
     private static final class ContentValidator implements Validator {

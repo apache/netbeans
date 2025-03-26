@@ -118,8 +118,6 @@ public final class ModificationResult {
                     } finally {
                         WorkingCopy.instance = null;
                     }
-                    final JavacTaskImpl jt = copy.impl.getJavacTask();
-                    Log.instance(jt.getContext()).nerrors = 0;
                     final List<ModificationResult.Difference> diffs = copy.getChanges(result.tag2Span);
                     if (diffs != null && diffs.size() > 0)
                         result.diffs.put(copy.getFileObject(), diffs);
@@ -440,7 +438,7 @@ public final class ModificationResult {
      * Returned string represents preview of resulting source. No difference
      * really is applied. Respects {@code isExcluded()} flag of difference.
      * 
-     * @param   there can be more resulting source, user has to specify
+     * @param fileObject there can be more resulting source, user has to specify
      *          which wants to preview.
      * @return  if changes are applied source looks like return string
      * @throws  IllegalArgumentException if the provided {@link FileObject} is not
@@ -556,7 +554,7 @@ public final class ModificationResult {
          * Gets flag if it is possible to write to guarded sections.
          * @return {@code true} in case the difference may be written even into
          *          guarded sections.
-         * @see #guards(boolean)
+         * @see #setCommitToGuards(boolean)
          * @since 0.33
          */
         public boolean isCommitToGuards() {

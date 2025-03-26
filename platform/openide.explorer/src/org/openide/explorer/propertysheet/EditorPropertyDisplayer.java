@@ -25,7 +25,6 @@ package org.openide.explorer.propertysheet;
 
 import org.openide.nodes.Node.Property;
 import org.openide.util.ImageUtilities;
-import org.openide.util.Utilities;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -86,6 +85,7 @@ class EditorPropertyDisplayer extends JComponent implements PropertyDisplayer_In
         }
     }
 
+    @Override
     public void addNotify() {
         try {
             if (inner == null) {
@@ -96,6 +96,7 @@ class EditorPropertyDisplayer extends JComponent implements PropertyDisplayer_In
         }
     }
 
+    @Override
     protected void processFocusEvent(FocusEvent fe) {
         super.processFocusEvent(fe);
 
@@ -104,6 +105,7 @@ class EditorPropertyDisplayer extends JComponent implements PropertyDisplayer_In
         }
     }
 
+    @Override
     public void removeNotify() {
         super.removeNotify();
         setInplaceEditor(null);
@@ -219,6 +221,7 @@ class EditorPropertyDisplayer extends JComponent implements PropertyDisplayer_In
         }
     }
 
+    @Override
     public final void requestFocus() {
         if (inner != null) {
             inner.requestFocus();
@@ -227,6 +230,7 @@ class EditorPropertyDisplayer extends JComponent implements PropertyDisplayer_In
         }
     }
 
+    @Override
     public final Dimension getPreferredSize() {
         Dimension result;
 
@@ -240,6 +244,7 @@ class EditorPropertyDisplayer extends JComponent implements PropertyDisplayer_In
         return result;
     }
 
+    @Override
     public final boolean requestFocusInWindow() {
         boolean result;
 
@@ -351,6 +356,7 @@ class EditorPropertyDisplayer extends JComponent implements PropertyDisplayer_In
         }
     }
 
+    @Override
     public void setEnabled(boolean b) {
         if (inner != null) {
             inner.setEnabled(b);
@@ -359,6 +365,7 @@ class EditorPropertyDisplayer extends JComponent implements PropertyDisplayer_In
         super.setEnabled(b);
     }
 
+    @Override
     public void setBackground(Color c) {
         super.setBackground(c);
 
@@ -371,6 +378,7 @@ class EditorPropertyDisplayer extends JComponent implements PropertyDisplayer_In
         }
     }
 
+    @Override
     public void setForeground(Color c) {
         super.setForeground(c);
 
@@ -407,6 +415,7 @@ class EditorPropertyDisplayer extends JComponent implements PropertyDisplayer_In
     }
 
     @SuppressWarnings("deprecation")
+    @Override
     public void reshape(int x, int y, int w, int h) {
         if (inner != null) {
             inner.setBounds(0, 0, w, h);
@@ -497,7 +506,7 @@ class EditorPropertyDisplayer extends JComponent implements PropertyDisplayer_In
             Object o = getProperty().getValue("valueIcon"); //NOI18N
 
             if (o instanceof Image) {
-                ic = new ImageIcon((Image) o);
+                ic = ImageUtilities.image2Icon((Image) o);
             } else {
                 ic = (Icon) o;
             }

@@ -50,7 +50,7 @@ public class RepositorySelector {
                 l.add(dc);
             }
         }
-        connectors = l.toArray(new DelegatingConnector[l.size()]);
+        connectors = l.toArray(new DelegatingConnector[0]);
         connectors = addJiraProxyIfNeeded(connectors);
         selectorPanel.setConnectors(connectors);
         boolean didCreate = selectorPanel.create();

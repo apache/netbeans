@@ -371,7 +371,7 @@ public class ControllerGenerator implements Task<WorkingCopy> {
         
         // @FXML private void {handlerName}({eventType} event);
         MethodTree handler = mk.Method(
-                mk.Modifiers(Collections.singleton(Modifier.PRIVATE), 
+                mk.Modifiers(Collections.singleton(Modifier.PRIVATE),
                     Collections.singletonList(fxmlAnnotationTree)
                 ),
                 handlerName, 
@@ -379,7 +379,7 @@ public class ControllerGenerator implements Task<WorkingCopy> {
                 Collections.<TypeParameterTree>emptyList(),
                 Collections.singletonList(
                     mk.Variable(
-                        mk.Modifiers(Collections.<Modifier>emptySet()), 
+                        mk.Modifiers(Collections.<Modifier>emptySet()),
                         "event", mk.Type(eventType.asType()), null)
                 ), 
                 Collections.<ExpressionTree>emptyList(),
@@ -462,7 +462,7 @@ public class ControllerGenerator implements Task<WorkingCopy> {
             return p.getTypes().getDeclaredType(
                 (DeclaredType)enclosing,
                 (TypeElement)t.asElement(), 
-                newArgs.toArray(new TypeMirror[newArgs.size()]));
+                newArgs.toArray(new TypeMirror[0]));
         }
 
         @Override
@@ -543,7 +543,7 @@ public class ControllerGenerator implements Task<WorkingCopy> {
         TreeMaker make = wcopy.getTreeMaker();
         
         VariableTree newVar = make.Variable(
-                make.Modifiers(Collections.singleton(Modifier.PRIVATE), 
+                make.Modifiers(Collections.singleton(Modifier.PRIVATE),
                     Collections.singletonList(fxmlAnnotationTree)
                 ),
                 name, typeTree, null);

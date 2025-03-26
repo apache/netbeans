@@ -123,9 +123,8 @@ public final class ReplaceTask implements Runnable {
     }
 
     /**
-     * 
-     * @return  list of strings describing problems that happened during
-     *          the replace, or {@code null} if no problem happened
+     * Fill internal list of strings describing problems that happened during
+     * the replace and set resultStatus variable
      */
     private void doReplace() {
         assert !EventQueue.isDispatchThread();
@@ -205,7 +204,7 @@ public final class ReplaceTask implements Runnable {
     String[] getProblems() {
         return problems.isEmpty()
                ? null
-               : problems.toArray(new String[problems.size()]);
+               : problems.toArray(new String[0]);
     }
 
     BasicReplaceResultsPanel getPanel() {

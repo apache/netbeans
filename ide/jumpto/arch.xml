@@ -118,12 +118,10 @@
         </question>
 -->
  <answer id="arch-usecases">
-  <p>
       <usecase id="TypeBrowser" name="Open the GoTo dialog">
           Use <a href="@TOP@/org/netbeans/api/jumpto/type/TypeBrowser.html">TypeBrowser</a>
           to open various versions of the GoTo dialog programatically.
       </usecase>
-  </p>
  </answer>
 
 

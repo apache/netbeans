@@ -1272,14 +1272,8 @@ public abstract class Properties {
                 }
                 Collection c;
                 try {
-                    c = (Collection) Class.forName (typeID.substring (2)).newInstance ();
-                } catch (ClassNotFoundException ex) {
-                    LOG.log(Level.WARNING, ex.getLocalizedMessage(), ex);
-                    return defaultValue;
-                } catch (InstantiationException ex) {
-                    LOG.log(Level.WARNING, ex.getLocalizedMessage(), ex);
-                    return defaultValue;
-                } catch (IllegalAccessException ex) {
+                    c = (Collection) Class.forName(typeID.substring(2)).getDeclaredConstructor().newInstance();
+                } catch (ReflectiveOperationException ex) {
                     LOG.log(Level.WARNING, ex.getLocalizedMessage(), ex);
                     return defaultValue;
                 }
@@ -1338,14 +1332,8 @@ public abstract class Properties {
                 }
                 Map m;
                 try {
-                    m = (Map) Class.forName (typeID.substring (2)).newInstance ();
-                } catch (ClassNotFoundException ex) {
-                    LOG.log(Level.WARNING, ex.getLocalizedMessage(), ex);
-                    return defaultValue;
-                } catch (InstantiationException ex) {
-                    LOG.log(Level.WARNING, ex.getLocalizedMessage(), ex);
-                    return defaultValue;
-                } catch (IllegalAccessException ex) {
+                    m = (Map) Class.forName(typeID.substring(2)).getDeclaredConstructor().newInstance();
+                } catch (ReflectiveOperationException ex) {
                     LOG.log(Level.WARNING, ex.getLocalizedMessage(), ex);
                     return defaultValue;
                 }
@@ -1480,7 +1468,7 @@ public abstract class Properties {
                 } else if (classNames[6].equals(className)) {
                     return properties.getFloat(propertyName, 0f);
                 } else if (classNames[7].equals(className)) {
-                    return new Double(properties.getDouble(propertyName, 0d));
+                    return properties.getDouble(propertyName, 0D);
                 }
                 throw new IllegalArgumentException("Class = '"+className+"'.");
             }

@@ -50,13 +50,14 @@ final class MessageBuilder {
 
     static DbgpMessage createResponse(Node node) {
         String command = DbgpMessage.getAttribute(node, DbgpResponse.COMMAND);
-        if (RunCommand.RUN.equals(command)
-                || StatusCommand.STATUS.equals(command)
+        if (StatusCommand.STATUS.equals(command)
                 || StepOutCommand.STEP_OUT.equals(command)
                 || StepOverCommand.STEP_OVER.equals(command)
                 || StepIntoCommand.STEP_INTO.equals(command)
                 || StopCommand.COMMAND.equals(command)) {
             return new StatusResponse(node);
+        } else if (RunCommand.RUN.equals(command)) {
+            return new RunResponse(node);
         } else if (BrkpntSetCommand.BREAKPOINT_SET.equals(command)) {
             return new BrkpntSetResponse(node);
         } else if (BrkpntUpdateCommand.UPDATE.equals(command)) {

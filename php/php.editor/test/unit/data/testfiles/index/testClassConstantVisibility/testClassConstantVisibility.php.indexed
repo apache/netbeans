@@ -8,13 +8,13 @@ Not Searchable Keys:
 
 Document 1
 Searchable Keys:
-  clz : classconstantvisibility;ClassConstantVisibility;13;;;;1;;0;<TESTURL>/testClassConstantVisibility.php;;
-  clz.const : implicit_public_const;IMPLICIT_PUBLIC_CONST;50;0;0;<TESTURL>/testClassConstantVisibility.php;32;
-  clz.const : private_bar;PRIVATE_BAR;225;[1, 2];0;<TESTURL>/testClassConstantVisibility.php;2;
-  clz.const : private_const;PRIVATE_CONST;130;2;0;<TESTURL>/testClassConstantVisibility.php;2;
-  clz.const : private_foo;PRIVATE_FOO;208;1;0;<TESTURL>/testClassConstantVisibility.php;2;
-  clz.const : protected_const;PROTECTED_CONST;169;3;0;<TESTURL>/testClassConstantVisibility.php;4;
-  clz.const : public_const;PUBLIC_CONST;94;1;0;<TESTURL>/testClassConstantVisibility.php;1;
+  clz : classconstantvisibility;ClassConstantVisibility;13;;;;1;;0;<TESTURL>/testClassConstantVisibility.php;;0;
+  clz.const : implicit_public_const;IMPLICIT_PUBLIC_CONST;50;0;0;<TESTURL>/testClassConstantVisibility.php;32;;
+  clz.const : private_bar;PRIVATE_BAR;225;[1, 2];0;<TESTURL>/testClassConstantVisibility.php;2;;
+  clz.const : private_const;PRIVATE_CONST;130;2;0;<TESTURL>/testClassConstantVisibility.php;2;;
+  clz.const : private_foo;PRIVATE_FOO;208;1;0;<TESTURL>/testClassConstantVisibility.php;2;;
+  clz.const : protected_const;PROTECTED_CONST;169;3;0;<TESTURL>/testClassConstantVisibility.php;4;;
+  clz.const : public_const;PUBLIC_CONST;94;1;0;<TESTURL>/testClassConstantVisibility.php;1;;
   top : classconstantvisibility
 
 Not Searchable Keys:
@@ -22,8 +22,8 @@ Not Searchable Keys:
 
 Document 2
 Searchable Keys:
-  clz.const : implicit_public_interface_const;IMPLICIT_PUBLIC_INTERFACE_CONST;302;0;0;<TESTURL>/testClassConstantVisibility.php;32;
-  clz.const : public_interface_const;PUBLIC_INTERFACE_CONST;356;1;0;<TESTURL>/testClassConstantVisibility.php;1;
+  clz.const : implicit_public_interface_const;IMPLICIT_PUBLIC_INTERFACE_CONST;302;0;0;<TESTURL>/testClassConstantVisibility.php;32;;
+  clz.const : public_interface_const;PUBLIC_INTERFACE_CONST;356;1;0;<TESTURL>/testClassConstantVisibility.php;1;;
   iface : interfaceconstantvisibility;InterfaceConstantVisibility;261;;;0;<TESTURL>/testClassConstantVisibility.php;
   top : interfaceconstantvisibility
 

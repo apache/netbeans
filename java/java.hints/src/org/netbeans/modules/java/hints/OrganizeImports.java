@@ -48,7 +48,6 @@ import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
-import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Name;
@@ -204,7 +203,7 @@ public class OrganizeImports {
             return;
         }
         if (!imps.isEmpty()) {
-            Collections.sort(imps, new Comparator<ImportTree>() {
+            imps.sort(new Comparator<ImportTree>() {
 
                 private CodeStyle.ImportGroups groups = cs.getImportGroups();
 

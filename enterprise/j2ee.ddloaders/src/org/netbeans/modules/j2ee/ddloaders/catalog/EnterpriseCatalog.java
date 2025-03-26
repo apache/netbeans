@@ -49,7 +49,7 @@ public final class EnterpriseCatalog implements CatalogReader, CatalogDescriptor
     private static final String JAKARTAEE_NS = "https://jakarta.ee/xml/ns/jakartaee"; //NOI18N
     private static final String RESOURCE_PATH = "nbres:/org/netbeans/modules/j2ee/dd/impl/resources/"; //NO18N
 
-    private List<SchemaInfo> schemas = new ArrayList<>();
+    private List<SchemaInfo> schemas = new ArrayList<>(256);
 
     private static final Logger LOGGER = Logger.getLogger(EnterpriseCatalog.class.getName());
 
@@ -67,6 +67,8 @@ public final class EnterpriseCatalog implements CatalogReader, CatalogDescriptor
         schemas.add(new SchemaInfo("application-client_7.xsd", NEW_JAVAEE_NS));
         schemas.add(new SchemaInfo("application-client_8.xsd", NEW_JAVAEE_NS));
         schemas.add(new SchemaInfo("application-client_9.xsd", JAKARTAEE_NS));
+        schemas.add(new SchemaInfo("application-client_10.xsd", JAKARTAEE_NS));
+        schemas.add(new SchemaInfo("application-client_11.xsd", JAKARTAEE_NS));
         // Application schema
         schemas.add(new SchemaInfo("application_1_4.xsd", J2EE_NS));
         schemas.add(new SchemaInfo("application_5.xsd", JAVAEE_NS));
@@ -74,6 +76,8 @@ public final class EnterpriseCatalog implements CatalogReader, CatalogDescriptor
         schemas.add(new SchemaInfo("application_7.xsd", NEW_JAVAEE_NS));
         schemas.add(new SchemaInfo("application_8.xsd", NEW_JAVAEE_NS));
         schemas.add(new SchemaInfo("application_9.xsd", JAKARTAEE_NS));
+        schemas.add(new SchemaInfo("application_10.xsd", JAKARTAEE_NS));
+        schemas.add(new SchemaInfo("application_11.xsd", JAKARTAEE_NS));
         // Web services schema
         schemas.add(new SchemaInfo("j2ee_web_services_1_1.xsd", J2EE_NS));
         schemas.add(new SchemaInfo("javaee_web_services_1_2.xsd", JAVAEE_NS));
@@ -91,6 +95,7 @@ public final class EnterpriseCatalog implements CatalogReader, CatalogDescriptor
         schemas.add(new SchemaInfo("connector_1_6.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("connector_1_7.xsd", NEW_JAVAEE_NS));
         schemas.add(new SchemaInfo("connector_2_0.xsd", JAKARTAEE_NS));
+        schemas.add(new SchemaInfo("connector_2_1.xsd", JAKARTAEE_NS));
         // Enterprise JavaBeans Deployment Descriptor Schema
         schemas.add(new SchemaInfo("ejb-jar_2_1.xsd", J2EE_NS));
         schemas.add(new SchemaInfo("ejb-jar_3_0.xsd", JAVAEE_NS));
@@ -104,22 +109,30 @@ public final class EnterpriseCatalog implements CatalogReader, CatalogDescriptor
         schemas.add(new SchemaInfo("web-app_3_1.xsd", NEW_JAVAEE_NS));
         schemas.add(new SchemaInfo("web-app_4_0.xsd", NEW_JAVAEE_NS));
         schemas.add(new SchemaInfo("web-app_5_0.xsd", JAKARTAEE_NS));
+        schemas.add(new SchemaInfo("web-app_6_0.xsd", JAKARTAEE_NS));
+        schemas.add(new SchemaInfo("web-app_6_1.xsd", JAKARTAEE_NS));
         // Web Application Deployment Descriptor common definitions schema
         schemas.add(new SchemaInfo("web-common_3_0.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("web-common_3_1.xsd", NEW_JAVAEE_NS));
         schemas.add(new SchemaInfo("web-common_4_0.xsd", NEW_JAVAEE_NS));
         schemas.add(new SchemaInfo("web-common_5_0.xsd", JAKARTAEE_NS));
+        schemas.add(new SchemaInfo("web-common_6_0.xsd", JAKARTAEE_NS));
+        schemas.add(new SchemaInfo("web-common_6_1.xsd", JAKARTAEE_NS));
         // Web Application Deployment Descriptor fragment schema
         schemas.add(new SchemaInfo("web-fragment_3_0.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("web-fragment_3_1.xsd", NEW_JAVAEE_NS));
         schemas.add(new SchemaInfo("web-fragment_4_0.xsd", NEW_JAVAEE_NS));
         schemas.add(new SchemaInfo("web-fragment_5_0.xsd", JAKARTAEE_NS));
+        schemas.add(new SchemaInfo("web-fragment_6_0.xsd", JAKARTAEE_NS));
+        schemas.add(new SchemaInfo("web-fragment_6_1.xsd", JAKARTAEE_NS));
         // JavaServer Pages Deployment Descriptor schema
         schemas.add(new SchemaInfo("jsp_2_0.xsd", J2EE_NS));
         schemas.add(new SchemaInfo("jsp_2_1.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("jsp_2_2.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("jsp_2_3.xsd", NEW_JAVAEE_NS));
         schemas.add(new SchemaInfo("jsp_3_0.xsd", JAKARTAEE_NS));
+        schemas.add(new SchemaInfo("jsp_3_1.xsd", JAKARTAEE_NS));
+        schemas.add(new SchemaInfo("jsp_4_0.xsd", JAKARTAEE_NS));
         // J2EE and Java EE definitions file that contains common schema components
         schemas.add(new SchemaInfo("j2ee_1_4.xsd", J2EE_NS));
         schemas.add(new SchemaInfo("javaee_5.xsd", JAVAEE_NS));
@@ -127,6 +140,8 @@ public final class EnterpriseCatalog implements CatalogReader, CatalogDescriptor
         schemas.add(new SchemaInfo("javaee_7.xsd", NEW_JAVAEE_NS));
         schemas.add(new SchemaInfo("javaee_8.xsd", NEW_JAVAEE_NS));
         schemas.add(new SchemaInfo("jakartaee_9.xsd", JAKARTAEE_NS));
+        schemas.add(new SchemaInfo("jakartaee_10.xsd", JAKARTAEE_NS));
+        schemas.add(new SchemaInfo("jakartaee_11.xsd", JAKARTAEE_NS));
         // web 2.2 and 2.3 dtds
         schemas.add(new SchemaInfo("web-app_2_2.dtd", "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN", true)); //NO18N
         schemas.add(new SchemaInfo("web-app_2_3.dtd", "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN", true)); //NO18N
@@ -135,9 +150,12 @@ public final class EnterpriseCatalog implements CatalogReader, CatalogDescriptor
         schemas.add(new SchemaInfo("beans_1_1.xsd", NEW_JAVAEE_NS));
         schemas.add(new SchemaInfo("beans_2_0.xsd", NEW_JAVAEE_NS));
         schemas.add(new SchemaInfo("beans_3_0.xsd", JAKARTAEE_NS));
+        schemas.add(new SchemaInfo("beans_4_0.xsd", JAKARTAEE_NS));
+        schemas.add(new SchemaInfo("beans_4_1.xsd", JAKARTAEE_NS));
         // Java EE application permissions schema
         schemas.add(new SchemaInfo("permissions_7.xsd", NEW_JAVAEE_NS));
         schemas.add(new SchemaInfo("permissions_9.xsd", JAKARTAEE_NS));
+        schemas.add(new SchemaInfo("permissions_10.xsd", JAKARTAEE_NS));
         // Schema for batch.xml-based artifact loading in Java Batch
         schemas.add(new SchemaInfo("batchXML_1_0.xsd", NEW_JAVAEE_NS));
         schemas.add(new SchemaInfo("batchXML_2_0.xsd", JAKARTAEE_NS));

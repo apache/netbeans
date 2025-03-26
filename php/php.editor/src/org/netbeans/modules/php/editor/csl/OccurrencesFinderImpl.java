@@ -68,7 +68,10 @@ public class OccurrencesFinderImpl extends OccurrencesFinder {
 
     @Override
     public Map<OffsetRange, ColoringAttributes> getOccurrences() {
-        return range2Attribs;
+        // must not return null
+        return range2Attribs != null
+                ? Collections.unmodifiableMap(range2Attribs)
+                : Collections.emptyMap();
     }
 
     @Override
@@ -99,9 +102,11 @@ public class OccurrencesFinderImpl extends OccurrencesFinder {
             return;
         }
 
-        if (!node.getBoolean(MarkOccurencesSettings.KEEP_MARKS, true) || localRange2Attribs.size() > 0) {
-            //store the occurrences if not empty, return null in getOccurrences() otherwise
+        if (!node.getBoolean(MarkOccurencesSettings.KEEP_MARKS, true) || !localRange2Attribs.isEmpty()) {
+            //store the occurrences if not empty
             range2Attribs = localRange2Attribs;
+        } else {
+            range2Attribs = Collections.emptyMap();
         }
     }
 

@@ -150,7 +150,7 @@ public class ProjectsRootNode extends AbstractNode {
             return new Action[0];
         } else {
             List<? extends Action> actions = Utilities.actionsForPath(type == PHYSICAL_VIEW ? ACTIONS_FOLDER_PHYSICAL : ACTIONS_FOLDER);
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
     }
     
@@ -331,7 +331,7 @@ public class ProjectsRootNode extends AbstractNode {
                         nodes.add(n);
                     }
                 }
-                origNodes = nodes.toArray(new Node[nodes.size()]);
+                origNodes = nodes.toArray(new Node[0]);
             } else {
                 assert type == LOGICAL_VIEW;
                 origNodes = new Node[] {
@@ -464,7 +464,7 @@ public class ProjectsRootNode extends AbstractNode {
         
         public Collection<Pair> getKeys() {
             List<Project> projects = Arrays.asList( OpenProjectList.getDefault().getOpenProjects() );
-            Collections.sort(projects, OpenProjectList.projectByDisplayName());
+            projects.sort(OpenProjectList.projectByDisplayName());
             
             final List<Pair> dirs = new ArrayList<>(projects.size());
             final java.util.Map<Project,Pair> snapshot = new HashMap<>();

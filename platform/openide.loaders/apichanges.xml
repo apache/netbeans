@@ -274,7 +274,7 @@ is the proper place.
           <compatibility addition="yes"/>
           <description>
              <p>Layer declaration of a menu can influence what client properties
-                 the actual <a href="@JDK@/javax/swing/JMenu.html">JMenu</a> 
+                 the actual <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JMenu.html">JMenu</a> 
                  instances will have. More 
                  <a href="architecture-summary.html#layer-Menu">details</a>.
               </p>
@@ -688,7 +688,7 @@ is the proper place.
             <a href="@TOP@/org/openide/loaders/DataObject.html">DataObject</a>.createFromTemplate,
             it passes as argument all its <a href="@org-openide-dialogs@/org/openide/WizardDescriptor.html#getProperties--">properties</a>
             to it with <code>wizard.</code> as a prefix. That way they are available to
-            underlying <a href="@TOP@/architecture-summary.html#script">scripting and templating
+            underlying <a href="@TOP@/architecture-summary.html#loaders-script">scripting and templating
             engines</a>.
         </p>
         </description>
@@ -786,7 +786,7 @@ is the proper place.
         that can be processed during instantiation of the template.
         </p>
         <p>
-        This is particallary useful when using <a href="@TOP@/architecture-summary.html#script">scripting and templating
+        This is particallary useful when using <a href="@TOP@/architecture-summary.html#loaders-script">scripting and templating
         languages</a> during create from template operation.
         </p>
         </description>
@@ -1093,7 +1093,7 @@ is the proper place.
         to be notified when the DataObject is being created, but the notification 
         shall be done when its constructor finishes otherwise magic race 
         conditions can happen, see for example 
-        <a href="http://www.netbeans.org/issues/show_bug.cgi?id=20022">issue 20022</a>.
+        <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=20022">issue 20022</a>.
         The previous solution was to wait 500ms after the start of DataObject's 
         constructor and notifying the creation than, but of course it means 
         that if the constructor takes longer time, we were in the same problem again.

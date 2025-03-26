@@ -307,7 +307,7 @@ public class AntDebugger extends ActionsProviderSupport {
         currentFile = event.getScriptLocation();
         // update variable values
         Set<String> properties = event.getPropertyNames();
-        variables = properties.toArray(new String[properties.size()]);
+        variables = properties.toArray(new String[0]);
         fireVariables ();
         fireWatches ();
         fireBreakpoints ();

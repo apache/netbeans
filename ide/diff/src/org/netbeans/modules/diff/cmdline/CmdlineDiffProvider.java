@@ -20,6 +20,7 @@
 package org.netbeans.modules.diff.cmdline;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -132,8 +133,8 @@ public class CmdlineDiffProvider extends DiffProvider implements java.io.Seriali
         File f1 = null;
         File f2 = null;
         try {
-            f1 = FileUtil.normalizeFile(File.createTempFile("TempDiff".intern(), null));
-            f2 = FileUtil.normalizeFile(File.createTempFile("TempDiff".intern(), null));
+            f1 = FileUtil.normalizeFile(Files.createTempFile("TempDiff".intern(), null).toFile());
+            f2 = FileUtil.normalizeFile(Files.createTempFile("TempDiff".intern(), null).toFile());
             FileWriter fw1 = new FileWriter(f1);
             FileWriter fw2 = new FileWriter(f2);
             char[] buffer = new char[BUFF_LENGTH];
@@ -227,7 +228,7 @@ public class CmdlineDiffProvider extends DiffProvider implements java.io.Seriali
                     if (outBuffer.length() > 0) outputLine(outBuffer.toString(), pattern, differences,
                                                            firstText, secondText);
                     setTextOnLastDifference(differences, firstText, secondText);
-                    ret[0] =  differences.toArray(new Difference[differences.size()]);
+                    ret[0] =  differences.toArray(new Difference[0]);
                 } catch (IOException ioex) {
                     ret[0] = (IOException) ErrorManager.getDefault().annotate(ioex,
                             NbBundle.getMessage(CmdlineDiffProvider.class, "runtimeError", cmd));
@@ -301,7 +302,7 @@ public class CmdlineDiffProvider extends DiffProvider implements java.io.Seriali
                 index++;
                 commaIndex = elements.indexOf(',', index);
                 if (commaIndex < 0) {
-                    nStr = elements.substring(index, elements.length());
+                    nStr = elements.substring(index);
                     if (checkEmpty(nStr, elements)) return;
                     n3 = Integer.parseInt(nStr);
                     n4 = n3;
@@ -309,7 +310,7 @@ public class CmdlineDiffProvider extends DiffProvider implements java.io.Seriali
                     nStr = elements.substring(index, commaIndex);
                     if (checkEmpty(nStr, elements)) return;
                     n3 = Integer.parseInt(nStr);
-                    nStr = elements.substring(commaIndex+1, elements.length());
+                    nStr = elements.substring(commaIndex+1);
                     if (nStr == null || nStr.length() == 0) n4 = n3;
                     else n4 = Integer.parseInt(nStr);
                 }
@@ -341,7 +342,7 @@ public class CmdlineDiffProvider extends DiffProvider implements java.io.Seriali
                     if (checkEmpty(nStr, elements)) return;
                     n2 = Integer.parseInt(nStr);
                 }
-                nStr = elements.substring(index+1, elements.length());
+                nStr = elements.substring(index+1);
                 if (checkEmpty(nStr, elements)) return;
                 n3 = Integer.parseInt(nStr);
             } catch (NumberFormatException e) {
@@ -375,7 +376,7 @@ public class CmdlineDiffProvider extends DiffProvider implements java.io.Seriali
                 index++;
                 commaIndex = elements.indexOf(',', index);
                 if (commaIndex < 0) {
-                    nStr = elements.substring(index, elements.length());
+                    nStr = elements.substring(index);
                     if (checkEmpty(nStr, elements)) return;
                     n3 = Integer.parseInt(nStr);
                     n4 = n3;
@@ -383,7 +384,7 @@ public class CmdlineDiffProvider extends DiffProvider implements java.io.Seriali
                     nStr = elements.substring(index, commaIndex);
                     if (checkEmpty(nStr, elements)) return;
                     n3 = Integer.parseInt(nStr);
-                    nStr = elements.substring(commaIndex+1, elements.length());
+                    nStr = elements.substring(commaIndex+1);
                     if (nStr == null || nStr.length() == 0) n4 = n3;
                     else n4 = Integer.parseInt(nStr);
                 }

@@ -44,6 +44,8 @@ import javax.lang.model.element.Name;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.*;
 import org.netbeans.api.java.source.support.ReferencesCount;
+import org.netbeans.api.lexer.PartType;
+import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.UserTask;
@@ -174,6 +176,7 @@ abstract class BaseTask extends UserTask {
                 case LINE_COMMENT:
                 case BLOCK_COMMENT:
                 case JAVADOC_COMMENT:
+                case JAVADOC_COMMENT_LINE_RUN:
                     break;
                 default:
                     return ts;
@@ -204,6 +207,7 @@ abstract class BaseTask extends UserTask {
                 case LINE_COMMENT:
                 case BLOCK_COMMENT:
                 case JAVADOC_COMMENT:
+                case JAVADOC_COMMENT_LINE_RUN:
                     break;
                 default:
                     return ts;
@@ -233,8 +237,11 @@ abstract class BaseTask extends UserTask {
                             ts.token().id().primaryCategory().startsWith("string") || //NOI18N
                             ts.token().id().primaryCategory().equals("literal")) //NOI18N
                     { //TODO: Use isKeyword(...) when available
-                        prefix = ts.token().text().toString().substring(0, len);
-                        offset = ts.offset();
+                        String prefixInToken = ts.token().text().toString().substring(0, len);
+                        if (!ts.token().id().primaryCategory().startsWith("string") || !prefixInToken.endsWith("\\{")) {
+                            prefix = prefixInToken;
+                            offset = ts.offset();
+                        }
                     } else if ((ts.token().id() == JavaTokenId.DOUBLE_LITERAL
                             || ts.token().id() == JavaTokenId.FLOAT_LITERAL
                             || ts.token().id() == JavaTokenId.FLOAT_LITERAL_INVALID
@@ -255,6 +262,8 @@ abstract class BaseTask extends UserTask {
                         && (ts.token().id() == JavaTokenId.IDENTIFIER
                         || ts.token().id().primaryCategory().startsWith("keyword") || //NOI18N
                         ts.token().id().primaryCategory().startsWith("string") || //NOI18N
+                        ts.token().id().primaryCategory().equals("number") || //NOI18N
+                        ts.token().id().primaryCategory().equals("character") || //NOI18N
                         ts.token().id().primaryCategory().equals("literal"))) { //NOI18N
                     offset++;
                 }
@@ -274,6 +283,10 @@ abstract class BaseTask extends UserTask {
                 treePath = treePath.getParentPath();
             }
         } else {
+            TreePath newClassPath = findNewClassForConstructorName(path);
+            if (newClassPath != null) {
+                path = newClassPath;
+            }
             if (JavaSource.Phase.RESOLVED.compareTo(controller.getPhase()) > 0) {
                 LinkedList<TreePath> reversePath = new LinkedList<>();
                 TreePath treePath = path;
@@ -294,6 +307,34 @@ abstract class BaseTask extends UserTask {
         return new Env(offset, prefix, controller, path, controller.getTrees().getSourcePositions(), null);
     }
 
+    private TreePath findNewClassForConstructorName(TreePath tp) {
+        if (tp == null) {
+            return null;
+        }
+
+        TreePath parentPath = tp.getParentPath();
+
+        while (parentPath != null) {
+            boolean goUp = false;
+            goUp = goUp || (parentPath.getLeaf().getKind() == Kind.PARAMETERIZED_TYPE &&
+                            ((ParameterizedTypeTree) parentPath.getLeaf()).getType() == tp.getLeaf());
+            goUp = goUp || (parentPath.getLeaf().getKind() == Kind.ANNOTATED_TYPE &&
+                            ((AnnotatedTypeTree) parentPath.getLeaf()).getUnderlyingType() == tp.getLeaf());
+            if (goUp) {
+                tp = parentPath;
+                parentPath = parentPath.getParentPath();
+            } else {
+                break;
+            }
+        }
+
+        if (parentPath != null && parentPath.getLeaf().getKind() == Kind.NEW_CLASS && ((NewClassTree) parentPath.getLeaf()).getIdentifier() == tp.getLeaf()) {
+            return parentPath;
+        }
+
+        return null;
+    }
+
     private Env getEnvImpl(CompilationController controller, TreePath orig, TreePath path, TreePath pPath, TreePath gpPath, int offset, String prefix, boolean upToOffset) throws IOException {
         Tree tree = path != null ? path.getLeaf() : null;
         Tree parent = pPath != null ? pPath.getLeaf() : null;
@@ -308,7 +349,7 @@ abstract class BaseTask extends UserTask {
                 && (parent.getKind() == Tree.Kind.METHOD || TreeUtilities.CLASS_TREE_KINDS.contains(parent.getKind()))) {
             controller.toPhase(withinAnonymousOrLocalClass(tu, path) ? JavaSource.Phase.RESOLVED : JavaSource.Phase.ELEMENTS_RESOLVED);
             int blockPos = (int) sourcePositions.getStartPosition(root, tree);
-            String blockText = controller.getText().substring(blockPos, upToOffset ? offset : (int) sourcePositions.getEndPosition(root, tree));
+            String blockText = fixStringTemplates(path, controller.getText().substring(blockPos, upToOffset ? offset : (int) sourcePositions.getEndPosition(root, tree)));
             final SourcePositions[] sp = new SourcePositions[1];
             final StatementTree block = (((BlockTree) tree).isStatic() ? tu.parseStaticBlock(blockText, sp) : tu.parseStatement(blockText, sp));
             if (block == null) {
@@ -340,10 +381,32 @@ abstract class BaseTask extends UserTask {
                         }
                         if (lastCase != null) {
                             stmts = lastCase.getStatements();
+                            if (stmts == null || stmts.isEmpty()) {
+                                Tree body = lastCase.getBody();
+                                if (body != null) {
+                                    last = body;
+                                } else {
+                                    Tree guard = lastCase.getGuard();
+                                    if (guard != null) {
+                                        last = guard;
+                                    }
+                                }
+                            }
                         }
                         break;
                     case CASE:
                         stmts = ((CaseTree) path.getLeaf()).getStatements();
+                        if (stmts == null || stmts.isEmpty()) {
+                            Tree body = ((CaseTree) path.getLeaf()).getBody();
+                            if (body != null) {
+                                last = body;
+                            } else {
+                                Tree guard = ((CaseTree) path.getLeaf()).getGuard();
+                                if (guard != null) {
+                                    last = guard;
+                                }
+                            }
+                        }
                         break;
                     case CONDITIONAL_AND: case CONDITIONAL_OR:
                         BinaryTree bt = (BinaryTree) last;
@@ -400,6 +463,7 @@ abstract class BaseTask extends UserTask {
                                     case LINE_COMMENT:
                                     case BLOCK_COMMENT:
                                     case JAVADOC_COMMENT:
+                                    case JAVADOC_COMMENT_LINE_RUN:
                                         break;
                                     case ARROW:
                                         scope = controller.getTrees().getScope(blockPath);
@@ -429,6 +493,7 @@ abstract class BaseTask extends UserTask {
                             case LINE_COMMENT:
                             case BLOCK_COMMENT:
                             case JAVADOC_COMMENT:
+                            case JAVADOC_COMMENT_LINE_RUN:
                                 break;
                             case ARROW:
                                 return new Env(offset, prefix, controller, path, sourcePositions, scope);
@@ -482,10 +547,32 @@ abstract class BaseTask extends UserTask {
                         }
                         if (lastCase != null) {
                             stmts = lastCase.getStatements();
+                            if (stmts == null || stmts.isEmpty()) {
+                                Tree caseBody = lastCase.getBody();
+                                if (caseBody != null) {
+                                    last = caseBody;
+                                } else {
+                                    Tree guard = lastCase.getGuard();
+                                    if (guard != null) {
+                                        last = guard;
+                                    }
+                                }
+                            }
                         }
                         break;
                     case CASE:
                         stmts = ((CaseTree) path.getLeaf()).getStatements();
+                        if (stmts == null || stmts.isEmpty()) {
+                            Tree caseBody = ((CaseTree) path.getLeaf()).getBody();
+                            if (caseBody != null) {
+                                last = caseBody;
+                            } else {
+                                Tree guard = ((CaseTree) path.getLeaf()).getGuard();
+                                if (guard != null) {
+                                    last = guard;
+                                }
+                            }
+                        }
                         break;
                 }
                 if (stmts != null) {
@@ -574,7 +661,34 @@ abstract class BaseTask extends UserTask {
         }
         return null;
     }
-    
+
+    private static String fixStringTemplates(TreePath tp, String blockText) {
+        if (!blockText.contains("\\{")) {
+            return blockText;
+        }
+
+        TokenHierarchy<String> th = TokenHierarchy.create(blockText, JavaTokenId.language());
+        TokenSequence<JavaTokenId> ts = th.tokenSequence(JavaTokenId.language());
+        StringBuilder augmented = new StringBuilder();
+
+        augmented.append(blockText);
+        ts.moveEnd();
+
+        while (ts.movePrevious()) {
+            if ((ts.token().id() == JavaTokenId.STRING_LITERAL ||
+                 ts.token().id() == JavaTokenId.MULTILINE_STRING_LITERAL) &&
+                ts.token().partType() == PartType.START) {
+                if (ts.token().id() == JavaTokenId.STRING_LITERAL) {
+                    augmented.append("}\"");
+                } else {
+                    augmented.append("}\"\"\"");
+                }
+            }
+        }
+
+        return augmented.toString();
+    }
+
     private static String whitespaceString(int length) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < length; i++) {

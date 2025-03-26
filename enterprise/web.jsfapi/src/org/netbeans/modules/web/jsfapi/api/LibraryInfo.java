@@ -18,7 +18,7 @@
  */
 package org.netbeans.modules.web.jsfapi.api;
 
-import org.netbeans.api.annotations.common.CheckForNull;
+import java.util.Set;
 
 /**
  *
@@ -28,8 +28,13 @@ public interface LibraryInfo {
 
     public String getNamespace();
 
-    @CheckForNull
-    public String getLegacyNamespace();
+    /**
+     *
+     * @return all compatible namespaces for that library. 
+     * First namespace is default one.
+     * The last one is the oldest supported namespace
+     */
+    public Set<String> getValidNamespaces();
 
     public String getDefaultPrefix();
 

@@ -99,22 +99,21 @@ import org.openide.util.lookup.ServiceProvider;
 public final class MoveRefactoring extends CodeRefactoring {
 
     private static final String MOVE_REFACTORING_KIND = "refactor.move";
-    private static final String MOVE_REFACTORING_COMMAND =  "java.refactor.move";
+    private static final String MOVE_REFACTORING_COMMAND =  "nbls.java.refactor.move";
     private static final ClassPath EMPTY_PATH = ClassPathSupport.createClassPath(new URL[0]);
 
-    private final Set<String> commands = Collections.singleton(MOVE_REFACTORING_COMMAND);
     private final Gson gson = new Gson();
 
     @Override
     @NbBundle.Messages({
         "DN_Move=Move...",
     })
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+    public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
         List<String> only = params.getContext().getOnly();
         if (only == null || !only.contains(CodeActionKind.Refactor)) {
             return Collections.emptyList();
         }
-        CompilationController info = CompilationController.get(resultIterator.getParserResult());
+        CompilationController info = resultIterator.getParserResult() != null ? CompilationController.get(resultIterator.getParserResult()) : null;
         if (info == null || !JavaRefactoringUtils.isRefactorable(info.getFileObject())) {
             return Collections.emptyList();
         }
@@ -128,15 +127,15 @@ public final class MoveRefactoring extends CodeRefactoring {
         String uri = Utils.toUri(info.getFileObject());
         Element element = elementForOffset(info, offset);
         if (element != null) {
-            return Collections.singletonList(createCodeAction(Bundle.DN_Move(), MOVE_REFACTORING_KIND, null, MOVE_REFACTORING_COMMAND, uri, new ElementData(element)));
+            return Collections.singletonList(createCodeAction(client, Bundle.DN_Move(), MOVE_REFACTORING_KIND, null, MOVE_REFACTORING_COMMAND, uri, new ElementData(element)));
         } else {
-            return Collections.singletonList(createCodeAction(Bundle.DN_Move(), MOVE_REFACTORING_KIND, null, MOVE_REFACTORING_COMMAND, uri));
+            return Collections.singletonList(createCodeAction(client, Bundle.DN_Move(), MOVE_REFACTORING_KIND, null, MOVE_REFACTORING_COMMAND, uri));
         }
     }
 
     @Override
     public Set<String> getCommands() {
-        return commands;
+        return Collections.singleton(MOVE_REFACTORING_COMMAND);
     }
 
     @Override
@@ -384,7 +383,7 @@ public final class MoveRefactoring extends CodeRefactoring {
                     if (handle.getKind() == Tree.Kind.CLASS) {
                         refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(handle.getFileObject()));
                     } else {
-                        JavaMoveMembersProperties properties = new JavaMoveMembersProperties(selectedElements.toArray(new TreePathHandle[selectedElements.size()]));
+                        JavaMoveMembersProperties properties = new JavaMoveMembersProperties(selectedElements.toArray(new TreePathHandle[0]));
                         properties.setVisibility(JavaMoveMembersProperties.Visibility.valueOf(ui.getSelectedVisibility().name()));
                         properties.setDelegate(ui.isKeepMethodSelected());
                         properties.setUpdateJavaDoc(ui.getSelectedJavaDoc() == JavaDoc.UPDATE);
@@ -421,6 +420,9 @@ public final class MoveRefactoring extends CodeRefactoring {
         }
 
         private static Project getSelectedProject(NamedPath selectedProject) {
+            if (selectedProject == null) {
+                return null;
+            }
             try {
                 String path = selectedProject.getPath();
                 return path != null ? FileOwnerQuery.getOwner(Utils.fromUri(path)) : null;
@@ -430,6 +432,9 @@ public final class MoveRefactoring extends CodeRefactoring {
         }
 
         private static FileObject getSelectedRoot(NamedPath selectedRoot) {
+            if (selectedRoot == null) {
+                return null;
+            }
             try {
                 String path = selectedRoot.getPath();
                 return path != null ? Utils.fromUri(path) : null;

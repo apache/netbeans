@@ -14,4 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-F81E5AF49571A9D5A109A88F239A73CE87055417 org.bouncycastle:bcpkix-jdk15on:1.70
+ED953791BA0229747DD0FD9911E3D76A462ACFD3 org.bouncycastle:bcpkix-jdk18on:1.77

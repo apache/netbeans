@@ -36,7 +36,6 @@ import java.util.regex.Pattern;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
-import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
@@ -549,7 +548,7 @@ final class Worker implements Runnable {
             final QuerySupport q = QuerySupport.forRoots(
                 FileIndexer.ID,
                 FileIndexer.VERSION,
-                roots.toArray(new FileObject[roots.size()]));
+                roots.toArray(new FileObject[0]));
             final QuerySupport.Query.Factory f = q.getQueryFactory().
                     setCamelCaseSeparator(FileSearchAction.CAMEL_CASE_SEPARATOR).
                     setCamelCasePart(Utils.isCaseSensitive(Utils.toSearchType(request.getSearchKind())) ?

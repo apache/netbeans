@@ -59,7 +59,7 @@ public class AgentTest extends NetigsoHid {
         Module m = mgr.create(agent, null, false, false, false);
         try {
             mgr.enable(m);
-            Callable<?> c = (Callable<?>) m.getClassLoader().loadClass("org.agent.HelloWorld").newInstance();
+            Callable<?> c = (Callable<?>) m.getClassLoader().loadClass("org.agent.HelloWorld").getDeclaredConstructor().newInstance();
             assertEquals("Bytecode has been patched", "Ahoj World!", c.call());
         } finally {
             mgr.disable(m);

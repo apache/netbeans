@@ -30,5 +30,25 @@
                 <attr name="instanceCreate" methodvalue="org.netbeans.modules.lsp.client.bindings.BreadcrumbsImpl.createSideBarFactory" />
             </file>
         </folder>
+        <!-- Folder is required so that the (pseudo) mimetype is recognized -->
+        <folder name="text">
+            <folder name="x-generic-lsp">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.lsp.client.options.Bundle#text/x-generic-lsp"/>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="OptionsDialog">
+        <folder name="Editor">
+            <folder name="MarkOccurrences">
+                <folder name="text">
+                    <folder name="x-generic-lsp">
+                        <file name="LSPMarkOccurences.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.spi.options.OptionsPanelController"/>
+                            <attr name="instanceCreate" newvalue="org.netbeans.modules.lsp.client.options.MarkOccurencesOptionsPanelController"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
     </folder>
 </filesystem>

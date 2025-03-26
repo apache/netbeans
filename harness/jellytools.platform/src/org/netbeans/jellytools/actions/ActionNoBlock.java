@@ -36,7 +36,7 @@ import org.openide.util.actions.SystemAction;
 /**
  * Ancestor class for all non-blocking actions.<p>
  * This class re-implements all blocking calls from parent Action class to
- * non-blocking call.<p>
+ * non-blocking call.
  * @author <a href="mailto:adam.sotona@sun.com">Adam Sotona</a>
  * @see Action
  */
@@ -313,7 +313,7 @@ public class ActionNoBlock extends Action {
                             } else {
                                 // action implements javax.swing.Action
                                 try {
-                                    ((javax.swing.Action) systemActionClass.newInstance()).actionPerformed(
+                                    ((javax.swing.Action) systemActionClass.getDeclaredConstructor().newInstance()).actionPerformed(
                                             new ActionEvent(new Container(), 0, null));
                                 } catch (Exception e) {
                                     throw new JemmyException("Exception when trying to create instance of action \"" + systemActionClass.getName() + "\".", e);

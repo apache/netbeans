@@ -21,7 +21,10 @@ package org.netbeans.api.lsp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import org.openide.util.Lookup;
 import org.openide.util.Union2;
+import org.netbeans.spi.lsp.ApplyEditsImplementation;
 
 /**
  * A set of edits over the workspace.
@@ -50,4 +53,31 @@ public class WorkspaceEdit {
         return documentChanges;
     }
     
+    
+    /**
+     * Attempts to apply workspace edits to the resources. The resource(s) are optionally
+     * saved after modification. The caller may request just save of the resources, by supplying
+     * a {@link WorkspaceEdit} with {@link TextDocumentEdit}s that have empty set of changes. 
+     * The implementation must apply edits so they result in the same result as if the contents
+     * of the WorkspaceEdit are applied in the order.
+     *
+     * Upon failure, the returned Future completes with {@link ResourceModificationException}. 
+     * Completed WorkspaceEdits, the failed one and the index of a failed operation within it should be reported.
+     * If any resource was saved before the failure, it should be reported as saved.
+     * 
+     * @param edits edits to apply.
+     * @param save if true, resources are saved after they are modified.
+     * @return future that completes with a list of resource URIs modified, or fails with {@link ResourceModificationException}.
+     * @since 1.27
+     */
+    public static CompletableFuture<List<String>> applyEdits(List<WorkspaceEdit> edits, boolean save) {
+        ApplyEditsImplementation impl = Lookup.getDefault().lookup(ApplyEditsImplementation.class);
+        if (impl == null) {
+            ResourceModificationException ex = new ResourceModificationException(Collections.<WorkspaceEdit>emptyList(),
+                    null, -1, -1, Collections.emptyList(), "Unsupported operation", new UnsupportedOperationException());
+            return CompletableFuture.failedFuture(ex);
+        }
+        return impl.applyChanges(edits, save);
+    }
 }
+ 

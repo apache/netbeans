@@ -44,6 +44,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -55,8 +56,8 @@ import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.cli.MavenCli;
 import org.apache.maven.execution.MavenExecutionRequest;
-import org.apache.maven.execution.MavenExecutionResult;
 import org.apache.maven.model.Model;
+import org.apache.maven.model.Plugin;
 import org.apache.maven.model.Resource;
 import org.apache.maven.model.building.ModelBuildingException;
 import org.apache.maven.model.building.ModelBuildingResult;
@@ -71,6 +72,7 @@ import org.netbeans.api.annotations.common.NullUnknown;
 import org.netbeans.api.java.project.classpath.ProjectClassPathModifier;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectActionContext;
+import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.queries.VisibilityQuery;
 import org.netbeans.modules.maven.api.Constants;
 import org.netbeans.modules.maven.api.FileUtilities;
@@ -107,6 +109,7 @@ import org.openide.filesystems.MIMEResolver;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.NbCollections;
+import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
@@ -132,10 +135,21 @@ public final class NbMavenProjectImpl implements Project {
     private final RequestProcessor.Task reloadTask = RELOAD_RP.create(new Runnable() {
         @Override
         public void run() {
+            if (LOG.isLoggable(Level.FINE)) {
+                MavenProject x;
+                synchronized (NbMavenProjectImpl.this) {
+                    x = project == null ? null : project.get();
+                }
+                LOG.log(Level.FINE, "Project {0} starting reload. Currentproject is: {1}", 
+                        new Object[] { Integer.toHexString(System.identityHashCode(x)), x });
+            }
             problemReporter.clearReports(); //#167741 -this will trigger node refresh?
             MavenProject prj = loadOriginalMavenProject(true);
+            MavenProject old;
             synchronized (NbMavenProjectImpl.this) {
-                MavenProject old = project == null ? null : project.get();
+                old = project == null ? null : project.get();
+                LOG.log(Level.FINE, "Project {0} reloaded. Old project is: {1}, new project {2}", 
+                        new Object[] { prj, Integer.toHexString(System.identityHashCode(old)), Integer.toHexString(System.identityHashCode(prj)) });
                 if (old != null && MavenProjectCache.isFallbackproject(prj)) {
                     prj.setPackaging(old.getPackaging()); //#229366 preserve packaging for broken projects to avoid changing lookup.
                 }
@@ -146,8 +160,9 @@ public final class NbMavenProjectImpl implements Project {
                 projectVariants.clear();
             }
             ACCESSOR.doFireReload(watcher);
+            reloadPossibleBrokenModules(old, prj);
         }
-    });
+    }, true);
     private final FileObject fileObject;
     private final FileObject folderFileObject;
     private final File projectFile;
@@ -280,6 +295,10 @@ public final class NbMavenProjectImpl implements Project {
         return problemReporter;
     }
 
+    public long getLoadTimestamp() {
+        return MavenProjectCache.getLoadTimestamp(this.project.get());
+    }
+    
     public String getHintJavaPlatform() {
         String hint = getAuxProps().get(Constants.HINT_JDK_PLATFORM, true);
         if (hint == null) {
@@ -297,6 +316,16 @@ public final class NbMavenProjectImpl implements Project {
      */
     //TODO revisit usage, eventually should be only reuse MavenProjectCache
     public @NonNull MavenProject loadMavenProject(MavenEmbedder embedder, List<String> activeProfiles, Properties properties) {
+        ProjectActionContext.Builder b = ProjectActionContext.newBuilder(this).
+                withProfiles(activeProfiles);
+        if (properties != null) {
+            for (String pn : properties.stringPropertyNames()) {
+                b.withProperty(pn, properties.getProperty(pn));
+            }
+        }
+        return MavenProjectCache.loadMavenProject(projectFile, 
+                b.context(), null);
+        /*
         try {
             MavenExecutionRequest req = embedder.createMavenExecutionRequest();
             req.addActiveProfiles(activeProfiles);
@@ -334,6 +363,7 @@ public final class NbMavenProjectImpl implements Project {
             LOG.log(Level.INFO, "Runtime exception thrown while loading maven project at " + getProjectDirectory(), exc); //NOI18N
         }
         return MavenProjectCache.getFallbackProject(this.getPOMFile());
+        */
     }
     
     /**
@@ -368,7 +398,8 @@ public final class NbMavenProjectImpl implements Project {
         request.setRepositorySession(maven.newRepositorySession(req));
 
         if (project.getParentFile() != null) {
-            parent = builder.build(project.getParentFile(), request).getProject();
+            req.setPom(project.getParentFile());
+            parent = MavenProjectCache.loadOriginalMavenProjectInternal(embedder, req);
         } else if (project.getModel().getParent() != null) {
             parent = builder.build(project.getParentArtifact(), request).getProject();
         }
@@ -402,6 +433,21 @@ public final class NbMavenProjectImpl implements Project {
     public  Map<? extends String,? extends String> createUserPropsForPropertyExpressions() {
          return NbCollections.checkedMapByCopy(configProvider.getActiveConfiguration().getProperties(), String.class, String.class, true);
     }
+    
+    /**
+     * Returns the current parsed project state. May return {@code null}, if the project was never loaded or expired from the cache, but 
+     * never blocks on Maven infrastructure and is very fast.
+     * @return current project or {@code null}
+     */
+    @CheckForNull
+    public MavenProject getOriginalMavenProjectOrNull() {
+        synchronized (this) {
+            if (project == null) {
+                return null;
+            }
+            return project.get();
+        }
+    }
 
     /**
      * getter for the maven's own project representation.. this instance is cached but gets reloaded
@@ -417,7 +463,7 @@ public final class NbMavenProjectImpl implements Project {
             if (mp == null) {
                 // PENDING: should be the whole project load synchronized ?
                 mp = loadOriginalMavenProject(false);
-                project = new SoftReference<MavenProject>(mp);
+                project = new SoftReference<>(mp);
                 if (hardReferencingMavenProject) {
                     hardRefProject = mp;
                 }
@@ -426,6 +472,26 @@ public final class NbMavenProjectImpl implements Project {
         // in case someone got already information from the NbMavenProject:
         ACCESSOR.doFireReload(watcher);
         return mp;
+    }
+    
+    /**
+     * Returns the original project, or waits for reload task if already pending. Use with care, as
+     * the method blocks until the project reload eventually finishes in the reload thread / RP.
+     * @return possibly reloaded Maven project.
+     */
+    public CompletableFuture<MavenProject> getFreshOriginalMavenProject() {
+        if (reloadTask.isFinished()) {
+            return CompletableFuture.completedFuture(getOriginalMavenProject());
+        } else {
+            LOG.log(Level.FINE, "Asked for project {0} being updated, waiting for the refresh to complete.", projectFile);
+            CompletableFuture<MavenProject> f = new CompletableFuture<>();
+            reloadTask.addTaskListener((e) -> {
+                 // TODO: must remove the listener, it is one shot !
+                LOG.log(Level.FINE, "Project {0} update done.", projectFile);
+                f.complete(getOriginalMavenProject());
+            });
+            return f;
+        }
     }
     
     /**
@@ -524,12 +590,6 @@ public final class NbMavenProjectImpl implements Project {
                 model = null;
             }
             newproject = MavenProjectCache.getMavenProject(this.getPOMFile(), reload);
-            if (newproject == null) { //null when no pom.xml in project folder..
-                newproject = MavenProjectCache.getFallbackProject(projectFile);
-                LOG.log(Level.FINE, "Project {0} going to fallback, with packaging: {1}", new Object[] { getPOMFile(), newproject.getPackaging() });
-            }
-            final MavenExecutionResult res = MavenProjectCache.getExecutionResult(newproject);
-            final MavenProject np = newproject;
         } finally {
             if (LOG.isLoggable(Level.FINE) && SwingUtilities.isEventDispatchThread()) {
                 LOG.log(Level.FINE, "Project " + getProjectDirectory().getPath() + " loaded in AWT event dispatching thread!", new RuntimeException());
@@ -539,18 +599,205 @@ public final class NbMavenProjectImpl implements Project {
         return newproject;
     }
 
-
-
+    /**
+     * Task that potential project reloads should wait on. If set, a {@link fireProjectReload}(true) will be scheduled only after this blocker finishes.
+     */
+    // @GuardedBy(this)
+    private List<RequestProcessor.Task> blockingList = new ArrayList<>();
+    
+    /**
+     * Task, that will be returned if the reload is blocked. Needed as an existing available reload task instance is finished before it is scheduled again.
+     */
+    // @GuardedBy(this)
+    private RequestProcessor.Task reloadCompletionTask;
+    
+    // @GuardedBy(this)
+    private RequestProcessor.Task operationCompletionTask;
+        
+    // tests only !
+    synchronized Pair<List<RequestProcessor.Task>, RequestProcessor.Task> reloadBlockingState() {
+        return Pair.of(new ArrayList<>(this.blockingList), this.reloadCompletionTask);
+    }
+    
+    // tests only !
+    RequestProcessor.Task getReloadTask() {
+        return reloadTask;
+    }
+    
+    public RequestProcessor.Task scheduleProjectOperation(RequestProcessor rp, Runnable r,  int delay) {
+        return scheduleProjectOperation(rp, r, delay, false);
+    }
+    
+    /**
+     * Schedules project operation that delays potential reloads. If a reload is posted, it will be performed only after
+     * this operation compeltes (successfully, or erroneously). Multiple project operations can be scheduled, an eventual project reload
+     * should happen after all those operations complete. It is possible to postpone project reload indefinitely, avoid unnecessary
+     * operation schedules.
+     * <p>
+     * To avoid race condition on task startup, this method actually creates and schedules the task so it blocks reloads from its inception.
+     * Since the project might be reloaded and full effects of the reload will be visible only after broadcasting and completing PROP_PROJECT
+     * event, the caller might ask to return a Task that will complete after all that is complete. If no project reload happens the task
+     * completes as soon as the Runnable finishes.
+     *
+     * @param rp request processor that should schedule the task
+     * @param delay optional delay, use 0 for immediate run
+     * @param r operation to run
+     * @param afterChangesFired if true, the returned Task will complete only after the post-operation project reload fires its events.
+     * @return the scheduled task
+     */
+    public RequestProcessor.Task scheduleProjectOperation(RequestProcessor rp, Runnable r,  int delay, boolean afterChangesFired) {
+        RequestProcessor.Task t = rp.create(r);
+        if (Boolean.getBoolean("test.reload.sync")) {
+            LOG.log(Level.FINE, "Running the blocking task synchronously (test.reload.sync set)");
+            t.run();
+            return t;
+        } else {
+            RequestProcessor.Task t2;
+            synchronized (this) {
+                if (operationCompletionTask == null) {
+                    operationCompletionTask = RELOAD_RP.create(() -> {});
+                }
+                t2 = operationCompletionTask;
+                blockingList.add(t);
+                if (LOG.isLoggable(Level.FINER)) {
+                    LOG.log(Level.FINER, "Blocking project reload on task {0}, blocking queue: {1}", new Object[] { t, blockingList });
+                }
+                t.addTaskListener((e) -> {
+                    boolean runImmediately;
+                    synchronized (this) {
+                        blockingList.remove(t);
+                        if (!blockingList.isEmpty()) {
+                            LOG.log(Level.FINER, "Project {0} task {1} finished, still blocked", new Object[] { this, t });
+                            return;
+                        }
+                        // the value is still cached in t2
+                        operationCompletionTask = null;
+                        runImmediately = reloadCompletionTask == null;
+                    }
+                    if (runImmediately) {
+                        LOG.log(Level.FINER, "Project {0} task {1} finished, no reload requested", new Object[] { this, t });
+                        t2.run();
+                        return;
+                    }
+                    LOG.log(Level.FINER, "Project {0} task {1} finished, project reload released", new Object[] { this, t });
+                    fireProjectReload(true).addTaskListener((e2) -> {
+                        t2.run();
+                    });
+                });
+            }
+            t.schedule(delay);
+            return afterChangesFired ? t2 : t;
+        }
+    }
+    
     public RequestProcessor.Task fireProjectReload() {
+        return fireProjectReload(false);
+    }
+    
+    /**
+     * Schedules project reload. If `waitForBlockers` is true and {@link #scheduleProjectOperation} registered some task(s), project reload
+     * will be postponed until after those task(s) finish. The returned task completes after the project reload itself completes (after the potential
+     * delays).
+     * <p>
+     * As a result of project's reload, child projects may be reloaded, but the returned task does not wait for children reload to complete.
+     * 
+     * @param waitForBlockers
+     * @return the task that completes after project reloads. 
+     */
+    public RequestProcessor.Task fireProjectReload(boolean waitForBlockers) {
         //#227101 not only AWT and project read/write mutex has to be checked, there are some additional more
         //complex scenarios that can lead to deadlock. Just give up and always fire changes in separate RP.
         if (Boolean.getBoolean("test.reload.sync")) {
             reloadTask.run();
             //for tests just do sync reload, even though silly, even sillier is to attempt to sync the threads..
         } else {
-            reloadTask.schedule(0); //asuming here that schedule(0) will move the scheduled task in the queue if not yet executed
+            synchronized (this) {
+                if (blockingList.isEmpty()) {
+                    RequestProcessor.Task fin;
+                    
+                    fin = this.reloadCompletionTask;
+                    reloadCompletionTask = null;
+                    LOG.log(Level.FINER, "Project {0} reload scheduled, no blockers", this );
+                    reloadTask.schedule(0);
+                    if (fin != null) {
+                        reloadTask.addTaskListener((e) -> {
+                            fin.run();
+                        });
+                    }
+                } else if (waitForBlockers) {
+                    LOG.log(Level.FINER, "Project {0} reload blocked, blockers: {1}", new Object[] { this, blockingList });
+                    if (reloadCompletionTask == null) {
+                        reloadCompletionTask = RELOAD_RP.create(() -> {});
+                    }
+                    return reloadCompletionTask;
+                } else {
+                    // potentially reload will happen again, after all blocking tasks will complete.
+                    LOG.log(Level.FINER, "Project {0} reload forced, blockers: {1}, completion task: {2}", new Object[] { this, blockingList, reloadCompletionTask });
+                    reloadTask.schedule(0);
+                }
+            }
         }
         return reloadTask;
+    }
+    
+    private void reloadPossibleBrokenModules(MavenProject preceding, MavenProject p) {
+        LOG.log(Level.FINE, "Recovery for project {2}, preceding: {0}, current: {1}, ", 
+                new Object[] { preceding == null ? -1 : System.identityHashCode(preceding), System.identityHashCode(p), p });
+        // restrict to just poms that were marked as broken/incomplete.
+        if (!(MavenProjectCache.isIncompleteProject(preceding) || 
+            // the project is tagged by Boolean.TRUE, if a SanityBuildAction was created for it.
+            preceding.getContextValue("org.netbeans.modules.maven.problems.primingNotDone") == Boolean.TRUE)) {
+            LOG.log(Level.FINER, "Project is not fallbach: {0}, {1}", new Object[] {
+                MavenProjectCache.isIncompleteProject(preceding),
+                preceding.getContextValue("org.netbeans.modules.maven.problems.primingNotDone")
+            });
+            return;
+        }
+        // but do not cascade from projects, which are themselves broken.
+        if (MavenProjectCache.isFallbackproject(p)) {
+            LOG.log(Level.FINE, "New project is still fallback, skipping");
+            return;
+        }
+        File basePOMFile = p.getFile().getParentFile();
+        for (String modName : p.getModules()) {
+            File modPom = new File(new File(basePOMFile, modName), "pom.xml");
+            if (!modPom.exists() || !modPom.isFile()) {
+                LOG.log(Level.FINE, "POM file {0} for module {1} does not exist", new Object[] { modPom, modName });
+                continue;
+            }
+            MavenProject child = MavenProjectCache.getMavenProject(modPom, true, false);
+            if (child == null) {
+                LOG.log(Level.FINE, "Child project {0} is not cached yet", modPom);
+                continue;
+            }
+            LOG.log(Level.FINE, "Child project fallback status: {0}, {1}", new Object[] {
+                MavenProjectCache.isIncompleteProject(child),
+                child.getContextValue("org.netbeans.modules.maven.problems.primingNotDone")
+            });
+            // the project may have more problems, more subtle, but now repair just total breakage
+            if (!MavenProjectCache.isIncompleteProject(child) && child.getContextValue("org.netbeans.modules.maven.problems.primingNotDone") != Boolean.TRUE) {
+                LOG.log(Level.FINE, "Project for module {0} is not a fallback, skipping", modName);
+                continue;
+            }
+            FileObject dir = FileUtil.toFileObject(modPom.getParentFile());
+            if (dir == null) {
+                LOG.log(Level.FINE, "Project directory for {0} is not a FileObject", modName);
+                continue;
+            }
+            try {
+                Project c = ProjectManager.getDefault().findProject(dir);
+                if (c == null) {
+                    LOG.log(Level.FINE, "Module {0} is not a project", modName);
+                } else {
+                    LOG.log(Level.INFO, "Recovering module {0}, pomfile {1}", new Object[] { modName, modPom });
+                    NbMavenProjectImpl childImpl = c.getLookup().lookup(NbMavenProjectImpl.class);
+                    childImpl.fireProjectReload(true).waitFinished();
+                }
+            } catch (IOException ex) {
+                LOG.log(Level.FINE, "Error getting module project {0} is not a project", modName);
+                LOG.log(Level.FINE, "Exception was: ", ex);
+            }
+        }
     }
 
     public static void refreshLocalRepository(NbMavenProjectImpl project) {
@@ -654,7 +901,7 @@ public final class NbMavenProjectImpl implements Project {
                 uris.add(root.toURI());
             }
         }
-        return uris.toArray(new URI[uris.size()]);
+        return uris.toArray(new URI[0]);
     }
 
     public URI[] getGeneratedSourceRoots(boolean test) {
@@ -728,7 +975,7 @@ public final class NbMavenProjectImpl implements Project {
             uris.addAll(BHTestUris);
         }
 
-        return uris.toArray(new URI[uris.size()]);
+        return uris.toArray(new URI[0]);
     }
 
     public URI getWebAppDirectory() {
@@ -800,7 +1047,7 @@ public final class NbMavenProjectImpl implements Project {
             toRet.add(uri);
 //            }
         }
-        return toRet.toArray(new URI[toRet.size()]);
+        return toRet.toArray(new URI[0]);
     }
 
     public File[] getOtherRoots(boolean test) {
@@ -929,7 +1176,6 @@ public final class NbMavenProjectImpl implements Project {
         private final WeakReference<NbMavenProject> watcherRef;
         private String packaging;
         private final Lookup general;
-        
         private volatile List<String> currentIds = new ArrayList<>();
 
         @SuppressWarnings("LeakingThisInConstructor")
@@ -954,8 +1200,19 @@ public final class NbMavenProjectImpl implements Project {
          * @return 
          */
         private List<String> partialComponentsOrder(Collection<String> componentSet) {
+            return partialComponentsOrder(componentSet, null); // NOI18N
+        }
+        
+        private List<String> partialComponentsOrder(Collection<String> componentSet, String subdir) {
             List<FileObject> fos = new ArrayList<>();
-            FileObject root = FileUtil.getConfigFile("Projects/org-netbeans-modules-maven");
+            String r = "Projects/org-netbeans-modules-maven";
+            if (subdir != null) {
+                r = r + "/" + subdir;
+            }
+            FileObject root = FileUtil.getConfigFile(r);
+            if (root == null) {
+                return Collections.emptyList();
+            }
             for (String s : componentSet) {
                 FileObject f = root.getFileObject(s);
                 if (f != null) {
@@ -966,6 +1223,11 @@ public final class NbMavenProjectImpl implements Project {
             List<String> origList = new ArrayList<>(componentSet);
             origList.removeAll(orderedNames);
             orderedNames.addAll(origList);
+            if (subdir != null) {
+                for (int i = 0; i < orderedNames.size(); i++) {
+                    orderedNames.set(i, subdir + "/" + orderedNames.get(i));
+                }
+            }
             return orderedNames;
         }
 
@@ -984,16 +1246,29 @@ public final class NbMavenProjectImpl implements Project {
                 if (newPackaging == null) {
                     newPackaging = NbMavenProject.TYPE_JAR;
                 }
-                Set<Artifact> arts = watcher.getMavenProject().getPluginArtifacts();
+                MavenProject mprj = watcher.getMavenProject();
+                Set<Artifact> arts = mprj.getPluginArtifacts();
                 List<String> compNames = new ArrayList<>();
                 if (arts != null) {
                     for (Artifact a : arts) {
                         compNames.add(pluginDirectory(a));
                     }
                 }
+                List<String> configuredCompNames = new ArrayList<>();
+                if (mprj.getPluginManagement() != null) {
+                    for (Plugin p : mprj.getPluginManagement().getPlugins()) {
+                        String groupId = p.getGroupId();
+                        String artId = p.getArtifactId();
+
+                        String pn = groupId + ":" + artId;
+                        configuredCompNames.add(pn);
+                    }
+                }
+                
                 compNames.add(newPackaging);
                 
                 newComponents = partialComponentsOrder(compNames);
+                newComponents.addAll(partialComponentsOrder(configuredCompNames, "configuredPlugins")); // NOI18N
             } else {
                 newComponents.add(newPackaging);
             }
@@ -1014,7 +1289,7 @@ public final class NbMavenProjectImpl implements Project {
                 }
                 LOG.log(Level.FINE, "Composing lookups for {0}, packaging: {1}, lookups: {2}: ", 
                         new Object[] { watcher.getMavenProject().getFile(), newPackaging, newComponents });
-                setLookups(lookups.toArray(new Lookup[lookups.size()]));
+                setLookups(lookups.toArray(new Lookup[0]));
             }
         }
         
@@ -1191,7 +1466,10 @@ public final class NbMavenProjectImpl implements Project {
             while(true) {
                 try {
                     MavenProject parent = loadParentOf(getEmbedder(), project);
-                    File parentFile = parent != null ? parent.getFile() : null;
+                    if (parent == null || NbMavenProject.isErrorPlaceholder(parent)) {
+                        break;
+                    }
+                    File parentFile = parent.getFile();
                     if(parentFile != null) {
                         ret.add(parentFile);
                         project = parent;

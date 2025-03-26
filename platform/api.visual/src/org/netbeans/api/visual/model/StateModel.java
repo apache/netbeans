@@ -52,7 +52,7 @@ public final class StateModel {
     private void fireChanged () {
         Listener[] ls;
         synchronized (listeners) {
-            ls = this.listeners.toArray (new Listener[this.listeners.size ()]);
+            ls = this.listeners.toArray (new Listener[0]);
         }
         for (Listener listener : ls)
             listener.stateChanged ();

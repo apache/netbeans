@@ -38,11 +38,13 @@ import org.netbeans.modules.php.editor.parser.astnodes.CastExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.CatchClause;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
+import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreationVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassName;
 import org.netbeans.modules.php.editor.parser.astnodes.CloneExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Comment;
 import org.netbeans.modules.php.editor.parser.astnodes.ConditionalExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.ConstantVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ContinueStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.DeclareStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.DereferencableVariable;
@@ -238,6 +240,7 @@ public class DefaultVisitor implements Visitor {
     @Override
     public void visit(ConstantDeclaration node) {
         scan(node.getAttributes());
+        scan(node.getConstType());
         scan(node.getNames());
         scan(node.getInitializers());
     }
@@ -247,7 +250,7 @@ public class DefaultVisitor implements Visitor {
         scan(node.getAttributes());
         scan(node.getName());
         scan(node.getSuperClass());
-        scan(node.getInterfaes());
+        scan(node.getInterfaces());
         scan(node.getBody());
     }
 
@@ -262,6 +265,11 @@ public class DefaultVisitor implements Visitor {
     }
 
     @Override
+    public void visit(ClassInstanceCreationVariable node) {
+        scan(node.getName());
+    }
+
+    @Override
     public void visit(ClassName node) {
         scan(node.getName());
     }
@@ -273,6 +281,11 @@ public class DefaultVisitor implements Visitor {
 
     @Override
     public void visit(Comment comment) {
+    }
+
+    @Override
+    public void visit(ConstantVariable constantVariable) {
+        scan(constantVariable.getName());
     }
 
     @Override
@@ -319,7 +332,7 @@ public class DefaultVisitor implements Visitor {
         scan(node.getAttributes());
         scan(node.getName());
         scan(node.getBackingType());
-        scan(node.getInterfaes());
+        scan(node.getInterfaces());
         scan(node.getBody());
     }
 
@@ -447,7 +460,7 @@ public class DefaultVisitor implements Visitor {
     public void visit(InterfaceDeclaration node) {
         scan(node.getAttributes());
         scan(node.getName());
-        scan(node.getInterfaes());
+        scan(node.getInterfaces());
         scan(node.getBody());
     }
 

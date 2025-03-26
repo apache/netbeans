@@ -44,7 +44,7 @@ import org.openide.windows.*;
  * @author  Stepan Herold
  */
 public class LogSupport {
-    private Map/*<Link, Link>*/ links = Collections.synchronizedMap(new HashMap());
+    private Map<Link, Link> links = Collections.synchronizedMap(new HashMap());
     private Annotation errAnnot;
     
     /**
@@ -254,9 +254,6 @@ public class LogSupport {
                 links.clear();
             }
         }
-        
-        @Override
-        public void outputLineSelected(OutputEvent ev) {           
-        }
+
     }    
 }

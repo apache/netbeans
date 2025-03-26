@@ -405,7 +405,7 @@ public class DependencyNode extends AbstractNode implements PreferenceChangeList
          */
         acts.add(null);
         acts.add(PropertiesAction.get(PropertiesAction.class));
-        return acts.toArray(new Action[acts.size()]);
+        return acts.toArray(new Action[0]);
     }
 
     
@@ -499,7 +499,7 @@ public class DependencyNode extends AbstractNode implements PreferenceChangeList
                 artifact.getType(),
                 classifier); 
             progress.progress(org.openide.util.NbBundle.getMessage(DependencyNode.class, bundleName,artifact.getId()), 1);
-            online.resolve(sources, prjimpl.getOriginalMavenProject().getRemoteArtifactRepositories(), prjimpl.getEmbedder().getLocalRepository());
+            online.resolveArtifact(sources, prjimpl.getOriginalMavenProject().getRemoteArtifactRepositories(), prjimpl.getEmbedder().getLocalRepository());
             if (artifact.getFile() != null && artifact.getFile().exists()) {
                 List<Coordinates> coordinates = RepositoryForBinaryQueryImpl.getJarMetadataCoordinates(artifact.getFile());
                 if (coordinates != null) {
@@ -511,7 +511,7 @@ public class DependencyNode extends AbstractNode implements PreferenceChangeList
                             "jar",
                             baseClassifier);
                         progress.progress(org.openide.util.NbBundle.getMessage(DependencyNode.class, bundleName, artifact.getId()), 1);
-                        online.resolve(sources, prjimpl.getOriginalMavenProject().getRemoteArtifactRepositories(), prjimpl.getEmbedder().getLocalRepository());
+                        online.resolveArtifact(sources, prjimpl.getOriginalMavenProject().getRemoteArtifactRepositories(), prjimpl.getEmbedder().getLocalRepository());
                     }
                 }
             }
@@ -1402,7 +1402,7 @@ public class DependencyNode extends AbstractNode implements PreferenceChangeList
             result.addAll(Arrays.asList(super.getActions(false)));
             result.add(new OpenJavadocAction());
 
-            return result.toArray(new Action[result.size()]);
+            return result.toArray(new Action[0]);
         }
 
         @Messages("BTN_View_Javadoc=Show Javadoc")
@@ -1490,7 +1490,7 @@ public class DependencyNode extends AbstractNode implements PreferenceChangeList
                             }
                         }
                     }
-                    OpenProjects.getDefault().open(projects.toArray(new NbMavenProjectImpl[projects.size()]), false, true);
+                    OpenProjects.getDefault().open(projects.toArray(new NbMavenProjectImpl[0]), false, true);
                 }
             };
         }

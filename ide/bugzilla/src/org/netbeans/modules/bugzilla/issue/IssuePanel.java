@@ -113,7 +113,6 @@ import org.netbeans.modules.bugzilla.Bugzilla;
 import org.netbeans.modules.bugzilla.BugzillaConfig;
 import org.netbeans.modules.bugzilla.issue.BugzillaIssue.Attachment;
 import org.netbeans.modules.bugzilla.issue.BugzillaIssue.Comment;
-import org.netbeans.modules.bugzilla.kenai.KenaiRepository;
 import org.netbeans.modules.bugzilla.repository.BugzillaConfiguration;
 import org.netbeans.modules.bugzilla.repository.BugzillaRepository;
 import org.netbeans.modules.bugzilla.repository.CustomIssueField;
@@ -124,7 +123,6 @@ import org.netbeans.modules.bugzilla.util.NbBugzillaConstants;
 import org.netbeans.modules.mylyn.util.NbDateRange;
 import org.netbeans.modules.spellchecker.api.Spellchecker;
 import org.netbeans.modules.team.ide.spi.IDEServices;
-import org.netbeans.modules.team.spi.TeamAccessorUtils;
 import org.openide.awt.HtmlBrowser;
 import org.openide.filesystems.FileUtil;
 import org.openide.nodes.Node;
@@ -469,10 +467,7 @@ public class IssuePanel extends javax.swing.JPanel {
             }
         } else {
             BugzillaRepository repository = issue.getRepository();
-            if (repository instanceof KenaiRepository) {
-                String productName = ((KenaiRepository)repository).getProductName();
-                productCombo.setSelectedItem(productName);
-            } else if (BugzillaUtil.isNbRepository(repository)) {
+            if (BugzillaUtil.isNbRepository(repository)) {
                 // IssueProvider 181224
                 String defaultProduct = "ide"; // NOI18N
                 String defaultComponent = "Code"; // NOI18N
@@ -489,7 +484,7 @@ public class IssuePanel extends javax.swing.JPanel {
         ComboBoxModel model = combo.getModel();
         for(int i = 0; i < model.getSize(); i++) {
             String element = model.getElementAt(i).toString();
-            if(value.toLowerCase().equals(element.toString().toLowerCase())) {
+            if(value.equalsIgnoreCase(element)) {
                 return element;
             }
         }
@@ -512,7 +507,7 @@ public class IssuePanel extends javax.swing.JPanel {
         clearHighlights();
 
         boolean isNew = issue.isNew();
-        boolean showProductCombo = isNew || !(issue.getRepository() instanceof KenaiRepository) || NBBugzillaUtils.isNbRepository(issue.getRepository().getUrl());
+        boolean showProductCombo = true;
         boolean hasTimeTracking = !isNew && issue.hasTimeTracking();
         GroupLayout layout = (GroupLayout) attributesSectionPanel.getLayout();
         if (showProductCombo) {
@@ -621,7 +616,6 @@ public class IssuePanel extends javax.swing.JPanel {
                 reloadField(addCommentArea, IssueField.COMMENT);
             }
 
-            boolean isKenaiRepository = (issue.getRepository() instanceof KenaiRepository);
             if (!isNew) {
                 // reported field
                 format = NbBundle.getMessage(IssuePanel.class, "IssuePanel.reportedLabel.format"); // NOI18N
@@ -633,17 +627,6 @@ public class IssuePanel extends javax.swing.JPanel {
                 String reportedTxt = MessageFormat.format(format, creationTxt, reporterTxt);
                 reportedField.setText(reportedTxt);
                 fixPrefSize(reportedField);
-                if (isKenaiRepository && (reportedStatusLabel.getIcon() == null)) {
-                    int index = reporter.indexOf('@');
-                    String userName = (index == -1) ? reporter : reporter.substring(0,index);
-                    String host = ((KenaiRepository) issue.getRepository()).getHost();
-                    JLabel label = TeamAccessorUtils.createUserWidget(issue.getRepository().getUrl(), userName, host, TeamAccessorUtils.getChatLink(issue.getID()));
-                    if (label != null) {
-                        label.setText(null);
-                        ((GroupLayout) attributesSectionPanel.getLayout()).replace(reportedStatusLabel, label);
-                        reportedStatusLabel = label;
-                    }
-                }
 
                 // modified field
                 Date modification = issue.getLastModifyDate();
@@ -686,18 +669,6 @@ public class IssuePanel extends javax.swing.JPanel {
 
             String assignee = issue.getFieldValue(IssueField.ASSIGNED_TO);
             String selectedAssignee = (assignedField.getParent() == null) ? assignedCombo.getSelectedItem().toString() : assignedField.getText();
-            if (isKenaiRepository && (assignee.trim().length() > 0) && (force || !selectedAssignee.equals(assignee))) {
-                int index = assignee.indexOf('@');
-                String userName = (index == -1) ? assignee : assignee.substring(0,index);
-                String host = ((KenaiRepository) issue.getRepository()).getHost();
-                JLabel label = TeamAccessorUtils.createUserWidget(issue.getRepository().getUrl(), userName, host, TeamAccessorUtils.getChatLink(issue.getID()));
-                if (label != null) {
-                    label.setText(null);
-                    ((GroupLayout) attributesSectionPanel.getLayout()).replace(assignedToStatusLabel, label);
-                    label.setVisible(assignedToStatusLabel.isVisible());
-                    assignedToStatusLabel = label;
-                }
-            }
             if (force) {
                 assignedToStatusLabel.setVisible(assignee.trim().length() > 0);
             }
@@ -1508,25 +1479,25 @@ public class IssuePanel extends javax.swing.JPanel {
             JLabel noSummaryLabel = new JLabel();
             noSummaryLabel.setText(NbBundle.getMessage(IssuePanel.class, "IssuePanel.noSummary")); // NOI18N
             String icon = issue.isNew() ? "org/netbeans/modules/bugzilla/resources/info.png" : "org/netbeans/modules/bugzilla/resources/error.gif"; // NOI18N
-            noSummaryLabel.setIcon(new ImageIcon(ImageUtilities.loadImage(icon)));
+            noSummaryLabel.setIcon(ImageUtilities.loadImageIcon(icon, false));
             messagePanel.add(noSummaryLabel);
         }
         if (cyclicDependency) {
             JLabel cyclicDependencyLabel = new JLabel();
             cyclicDependencyLabel.setText(NbBundle.getMessage(IssuePanel.class, "IssuePanel.cyclicDependency")); // NOI18N
-            cyclicDependencyLabel.setIcon(new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/bugzilla/resources/error.gif"))); // NOI18N
+            cyclicDependencyLabel.setIcon(ImageUtilities.loadImageIcon("org/netbeans/modules/bugzilla/resources/error.gif", false)); // NOI18N
             messagePanel.add(cyclicDependencyLabel);
         }
         if (invalidKeyword) {
             JLabel invalidKeywordLabel = new JLabel();
             invalidKeywordLabel.setText(NbBundle.getMessage(IssuePanel.class, "IssuePanel.invalidKeyword")); // NOI18N
-            invalidKeywordLabel.setIcon(new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/bugzilla/resources/error.gif"))); // NOI18N
+            invalidKeywordLabel.setIcon(ImageUtilities.loadImageIcon("org/netbeans/modules/bugzilla/resources/error.gif", false)); // NOI18N
             messagePanel.add(invalidKeywordLabel);
         }
         if (noDuplicateId) {
             JLabel noDuplicateLabel = new JLabel();
             noDuplicateLabel.setText(NbBundle.getMessage(IssuePanel.class, "IssuePanel.noDuplicateId")); // NOI18N
-            noDuplicateLabel.setIcon(new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/bugzilla/resources/error.gif"))); // NOI18N
+            noDuplicateLabel.setIcon(ImageUtilities.loadImageIcon("org/netbeans/modules/bugzilla/resources/error.gif", false)); // NOI18N
             messagePanel.add(noDuplicateLabel);
         }
         if (noSummary || cyclicDependency || invalidKeyword || noComponent || noVersion || noTargetMilestione || noDuplicateId || (noReproducibility && issue.isNew())) {
@@ -1558,7 +1529,7 @@ public class IssuePanel extends javax.swing.JPanel {
         JLabel messageLabel = new JLabel();
         messageLabel.setText(NbBundle.getMessage(IssuePanel.class, messageKey));
         String icon = issue.isNew() ? "org/netbeans/modules/bugzilla/resources/info.png" : "org/netbeans/modules/bugzilla/resources/error.gif"; // NOI18N
-        messageLabel.setIcon(new ImageIcon(ImageUtilities.loadImage(icon)));
+        messageLabel.setIcon(ImageUtilities.loadImageIcon(icon, false));
         messagePanel.add(messageLabel);
     }
 
@@ -3011,7 +2982,7 @@ public class IssuePanel extends javax.swing.JPanel {
                 List<String> versions = repository.getConfiguration().getVersions(product);
                 String defaultVersion = getCurrentNetBeansVersion();
                 for (String v : versions) {
-                    if (v.trim().toLowerCase().equals(defaultVersion.toLowerCase())) {
+                    if (v.trim().equalsIgnoreCase(defaultVersion)) {
                         issue.setFieldValue(IssueField.VERSION, v);
                     }
                 }
@@ -3305,9 +3276,6 @@ public class IssuePanel extends javax.swing.JPanel {
         if (value instanceof RepositoryUser) {
             String assignee = ((RepositoryUser)value).getUserName();
             BugzillaRepository repository = issue.getRepository();
-            if (repository instanceof KenaiRepository) {
-                assignee += '@' + ((KenaiRepository)repository).getHost();
-            }
             assignedCombo.setSelectedItem(assignee);
         }
     }//GEN-LAST:event_assignedComboActionPerformed
@@ -3391,7 +3359,7 @@ private void workedFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
                 idx = comment.indexOf(s);
                 if(idx > 0) {
                     idx += s.length() + 1;
-                    comment = comment.substring(0, idx) + "\n\n" + repro + comment.substring(idx, comment.length()); // NOI18N
+                    comment = comment.substring(0, idx) + "\n\n" + repro + comment.substring(idx); // NOI18N
                 } else {
                     comment = repro + "\n\n" + comment; // NOI18N
                 }               
@@ -3727,7 +3695,7 @@ private void workedFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
     private String getCurrentNetBeansVersion() {        
         String version = parseProductVersion(getProductVersionValue());        
         if(version != null) {
-            if(version.toLowerCase().equals("dev")) {                           // NOI18N
+            if(version.equalsIgnoreCase("dev")) {                           // NOI18N
                 return CURRENT_NB_VERSION;
             } else {                
                 return version;
@@ -4126,7 +4094,7 @@ private void workedFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
                     }
                 });
             }
-            attachmentsSectionActions = actions.toArray(new Action[actions.size()]);
+            attachmentsSectionActions = actions.toArray(new Action[0]);
         }
         return attachmentsSectionActions;
     }

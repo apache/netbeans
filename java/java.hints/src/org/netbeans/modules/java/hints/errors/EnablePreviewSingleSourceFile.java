@@ -18,31 +18,22 @@
  */
 package org.netbeans.modules.java.hints.errors;
 
-import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import javax.lang.model.SourceVersion;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.project.FileOwnerQuery;
-import org.netbeans.modules.java.hints.spi.ErrorRule;
-import org.netbeans.spi.editor.hints.ChangeInfo;
-import org.netbeans.spi.editor.hints.Fix;
 import org.openide.filesystems.FileObject;
-import org.openide.util.NbBundle;
 import org.openide.util.Parameters;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.modules.java.hints.spi.preview.PreviewEnabler;
 import org.openide.util.EditableProperties;
 import org.openide.util.Mutex;
 import org.openide.util.MutexException;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Handle error rule "compiler.err.preview.feature.disabled.plural" and provide
@@ -50,90 +41,43 @@ import org.openide.util.MutexException;
  *
  * @author Arunava Sinha
  */
-public class EnablePreviewSingleSourceFile implements ErrorRule<Void> {
+public class EnablePreviewSingleSourceFile implements PreviewEnabler {
 
-    private static final Set<String> ERROR_CODES = new HashSet<String>(Arrays.asList(
-            "compiler.err.preview.feature.disabled",           //NOI18N  
-            "compiler.err.preview.feature.disabled.plural")); // NOI18N
     private static final String ENABLE_PREVIEW_FLAG = "--enable-preview";   // NOI18N
     private static final String SOURCE_FLAG = "--source";   // NOI18N
+    private static final Pattern SOURCE_FLAG_PATTERN = Pattern.compile(SOURCE_FLAG + "[ \t]+[0-9]+");
 
     private static final String FILE_VM_OPTIONS = "single_file_vm_options"; //NOI18N
 
-    @Override
-    public Set<String> getCodes() {
-        return Collections.unmodifiableSet(ERROR_CODES);
+    private FileObject file;
+
+    private EnablePreviewSingleSourceFile(@NonNull FileObject file) {
+        Parameters.notNull("file", file); //NOI18N
+        this.file = file;
     }
 
     @Override
-    @NonNull
-    public List<Fix> run(CompilationInfo compilationInfo, String diagnosticKey, int offset, TreePath treePath, Data<Void> data) {
-        if (SourceVersion.latest() != compilationInfo.getSourceVersion()) {
-            return Collections.<Fix>emptyList();
+    public void enablePreview(String newSourceLevel) throws Exception {
+        EditableProperties ep = getEditableProperties(file);
+        String compilerArgs = (String) file.getAttribute(FILE_VM_OPTIONS);
+
+        if (compilerArgs == null) {
+            compilerArgs = "";
         }
 
-        final FileObject file = compilationInfo.getFileObject();
+        Matcher m = SOURCE_FLAG_PATTERN.matcher(compilerArgs);
 
-        Fix fix = null;
-        if (file != null) {
-            final Project prj = FileOwnerQuery.getOwner(file);
-            if (prj == null) {
-                fix = new EnablePreviewSingleSourceFile.ResolveFix(file);
-            } else {
-                fix = null;
-            }
-        }
-        return (fix != null) ? Collections.<Fix>singletonList(fix) : Collections.<Fix>emptyList();
-    }
-
-    @Override
-    public String getId() {
-        return EnablePreviewSingleSourceFile.class.getName();
-    }
-
-    @Override
-    public String getDisplayName() {
-        return NbBundle.getMessage(EnablePreviewSingleSourceFile.class, "FIX_EnablePreviewFeature"); // NOI18N
-    }
-
-    public String getDescription() {
-        return NbBundle.getMessage(EnablePreviewSingleSourceFile.class, "FIX_EnablePreviewFeature"); // NOI18N
-    }
-
-    @Override
-    public void cancel() {
-    }
-
-    private static final class ResolveFix implements Fix {
-
-        private FileObject file;
-
-        ResolveFix(@NonNull FileObject file) {
-            Parameters.notNull("file", file); //NOI18N
-            this.file = file;
+        if (newSourceLevel == null) {
+            newSourceLevel = getJdkRunVersion();
         }
 
-        @Override
-        public String getText() {
-            return NbBundle.getMessage(EnablePreviewSingleSourceFile.class, "FIX_EnablePreviewFeature");  // NOI18N
+        if (compilerArgs.contains(SOURCE_FLAG)) {
+            compilerArgs = m.replaceAll("--enable-preview " + SOURCE_FLAG + " " + newSourceLevel);
+        } else {
+            compilerArgs += (compilerArgs.isEmpty() ? "" : " ") + ENABLE_PREVIEW_FLAG + " " + SOURCE_FLAG + " " + newSourceLevel;
         }
-
-        @Override
-        public ChangeInfo implement() throws Exception {
-
-            EditableProperties ep = getEditableProperties(file);
-            String compilerArgs = (String) file.getAttribute(FILE_VM_OPTIONS);
-
-            if (compilerArgs != null && !compilerArgs.isEmpty()) {
-                compilerArgs = compilerArgs.contains(SOURCE_FLAG) ? compilerArgs + " " + ENABLE_PREVIEW_FLAG : compilerArgs + " " + ENABLE_PREVIEW_FLAG + " " + SOURCE_FLAG + " " + getJdkRunVersion();
-            } else {
-                compilerArgs = ENABLE_PREVIEW_FLAG + " " + SOURCE_FLAG + " " + getJdkRunVersion();
-            }
-            file.setAttribute(FILE_VM_OPTIONS, compilerArgs);
-            storeEditableProperties(ep, file);
-            return null;
-        }
-
+        file.setAttribute(FILE_VM_OPTIONS, compilerArgs);
+        storeEditableProperties(ep, file);
     }
 
     private static EditableProperties getEditableProperties(FileObject file)
@@ -201,6 +145,23 @@ public class EnablePreviewSingleSourceFile implements ErrorRule<Void> {
         }
 
         return javaVersion;
+    }
+
+    @ServiceProvider(service=Factory.class)
+    public static final class FactoryImpl implements Factory {
+
+        @Override
+        public PreviewEnabler enablerFor(FileObject file) {
+            if (file != null) {
+                final Project prj = FileOwnerQuery.getOwner(file);
+                if (prj == null) {
+                    return new EnablePreviewSingleSourceFile(file);
+                }
+            }
+
+            return null;
+        }
+
     }
 
 }

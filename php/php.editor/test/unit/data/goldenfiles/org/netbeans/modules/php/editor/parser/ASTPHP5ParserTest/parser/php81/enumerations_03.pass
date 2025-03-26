@@ -255,7 +255,7 @@
                                         <MatchArms>
                                             <MatchArm start='1000' end='1045' isDefault='false'>
                                                 <Conditions>
-                                                    <StaticConstantAccess start='1000' end='1011'>
+                                                    <StaticConstantAccess start='1000' end='1011' isDynamicName='false'>
                                                         <NamespaceName start='1000' end='1004' isCurrent='false' isGlobal='false'>
                                                             <Identifier start='1000' end='1004' name='self'/>
                                                         </NamespaceName>
@@ -270,7 +270,7 @@
                                                 <InfixExpression start='1015' end='1045' operator='IS_IDENTICAL'>
                                                     <Scalar start='1015' end='1022' type='STRING' value='"apple"'/>
                                                     <FieldAccess start='1027' end='1045' isNullsafe='false'>
-                                                        <StaticConstantAccess start='1027' end='1038'>
+                                                        <StaticConstantAccess start='1027' end='1038' isDynamicName='false'>
                                                             <NamespaceName start='1027' end='1031' isCurrent='false' isGlobal='false'>
                                                                 <Identifier start='1027' end='1031' name='self'/>
                                                             </NamespaceName>
@@ -291,7 +291,7 @@
                                             </MatchArm>
                                             <MatchArm start='1059' end='1108' isDefault='false'>
                                                 <Conditions>
-                                                    <StaticConstantAccess start='1059' end='1071'>
+                                                    <StaticConstantAccess start='1059' end='1071' isDynamicName='false'>
                                                         <NamespaceName start='1059' end='1063' isCurrent='false' isGlobal='false'>
                                                             <Identifier start='1059' end='1063' name='self'/>
                                                         </NamespaceName>
@@ -306,7 +306,7 @@
                                                 <InfixExpression start='1075' end='1108' operator='IS_IDENTICAL'>
                                                     <Scalar start='1075' end='1083' type='STRING' value='"banana"'/>
                                                     <FieldAccess start='1088' end='1108' isNullsafe='true'>
-                                                        <StaticConstantAccess start='1088' end='1100'>
+                                                        <StaticConstantAccess start='1088' end='1100' isDynamicName='false'>
                                                             <NamespaceName start='1088' end='1092' isCurrent='false' isGlobal='false'>
                                                                 <Identifier start='1088' end='1092' name='self'/>
                                                             </NamespaceName>

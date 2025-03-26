@@ -23,7 +23,6 @@ import com.sun.source.tree.IfTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.StatementTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
@@ -59,10 +58,10 @@ import org.openide.util.NbBundle;
  * @author sdedic
  */
 @NbBundle.Messages({
-    "DN_ConvertToPatternInstanceOf=Convert to instanceof <pattern>",
-    "DESC_ConvertToPatternInstanceOf=Convert to instanceof <pattern>",
-    "ERR_ConvertToPatternInstanceOf=instanceof <pattern> can be used here",
-    "FIX_ConvertToPatternInstanceOf=Use instanceof <pattern>"
+    "DN_ConvertToPatternInstanceOf=Convert to instanceof pattern",
+    "DESC_ConvertToPatternInstanceOf=Convert to instanceof pattern",
+    "ERR_ConvertToPatternInstanceOf=instanceof pattern can be used here",
+    "FIX_ConvertToPatternInstanceOf=Use instanceof pattern"
 })
 @Hint(displayName="#DN_ConvertToPatternInstanceOf", description="#DESC_ConvertToPatternInstanceOf", category="rules15",
         minSourceVersion = "14")

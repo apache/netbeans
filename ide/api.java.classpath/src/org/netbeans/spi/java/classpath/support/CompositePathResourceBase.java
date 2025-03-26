@@ -58,7 +58,7 @@ public abstract class CompositePathResourceBase implements PathResourceImplement
                     for (PathResourceImplementation pri : resources) {
                         result.addAll (Arrays.asList(pri.getRoots()));
                     }
-                    this.roots = result.toArray (new URL [result.size()]);
+                    this.roots = result.toArray (new URL [0]);
                 }
             }
         }
@@ -107,7 +107,7 @@ public abstract class CompositePathResourceBase implements PathResourceImplement
         synchronized (this) {
             if (this.pListeners == null)
                 return;
-            _listeners = this.pListeners.toArray(new PropertyChangeListener[this.pListeners.size()]);
+            _listeners = this.pListeners.toArray(new PropertyChangeListener[0]);
         }
         PropertyChangeEvent event = new PropertyChangeEvent (this, propName, oldValue, newValue);
         for (PropertyChangeListener l : _listeners) {

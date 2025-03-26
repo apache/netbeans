@@ -1,0 +1,5 @@
+Code completion result for source line:
+} catch(Err|) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      Error                           [PUBLIC]   stub.php

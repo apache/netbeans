@@ -34,5 +34,7 @@ public class JndiResourcesDefinition {
     //public static final String ANN_MAIL_SESSION = ".MailSessionDefinition"; //NOI18N
     public static final String ANN_CONNECTION_RESOURCE = "javax.resource.ConnectorResourceDefinition"; //NOI18N
     public static final String ANN_ADMINISTRED_OBJECT = "javax.resource.AdministeredObjectDefinition"; //NOI18N
+    public static final String ANN_JMS_DESTINATION_JAKARTA = "jakarta.jms.JMSDestinationDefinition"; //NOI18N
+    public static final String ANN_JMS_DESTINATIONS_JAKARTA = "jakarta.jms.JMSDestinationDefinitions"; //NOI18N
 
 }

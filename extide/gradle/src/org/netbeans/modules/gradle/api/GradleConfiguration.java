@@ -85,7 +85,11 @@ public final class GradleConfiguration implements Serializable, ModuleSearchSupp
      * @return direct dependencies
      */
     public Collection<? extends GradleDependency> getConfiguredDependencies() {
-        return directChildren;
+        if (canBeResolved) {
+            return directChildren;
+        } else {
+            return unresolved;
+        }
     }
     
     /**
@@ -100,12 +104,13 @@ public final class GradleConfiguration implements Serializable, ModuleSearchSupp
      * @return configuration of origin or {@code null}.
      */
     public GradleConfiguration getDependencyOrigin(GradleDependency d) {
-        if (!getDependencies().contains(d)) {
+        if (!getDependencies().contains(d) && !getConfiguredDependencies().contains(d)) {
             return null;
         }
         // TODO: possibly create a dependency-to-config cache in this instance to speed up further queries
         Set<GradleConfiguration> done = new HashSet<>();
-        Queue<GradleConfiguration> toProcess = new ArrayDeque<>(getExtendsFrom());
+        Queue<GradleConfiguration> toProcess = new ArrayDeque<>();
+        toProcess.add(this);
         
         GradleConfiguration conf;
         while ((conf = toProcess.poll()) != null) {
@@ -216,7 +221,7 @@ public final class GradleConfiguration implements Serializable, ModuleSearchSupp
     /**
      * Returns the attributes of this configuration. The returned map is a
      * simplified version of the Gradle configuration
-     * {@link https://docs.gradle.org/current/javadoc/org/gradle/api/attributes/AttributeContainer.html AttributeContainer},
+     * <a href="https://docs.gradle.org/current/javadoc/org/gradle/api/attributes/AttributeContainer.html">AttributeContainer</a>,
      * where the attribute names are the keys and the attribute string values are the values.
      *
      * @return the attributes of this configuration

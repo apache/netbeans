@@ -85,7 +85,7 @@ final class ComponentBuilders {
         ChildrenBuilder(Instance instance, Heap heap) {
             super(instance, heap);
             
-            component = new ArrayList();
+            component = new ArrayList<>();
             
             if (instance instanceof ObjectArrayInstance) {                      // Component[] (JDK 5-)
                 List<Instance> components = ((ObjectArrayInstance)instance).getValues();

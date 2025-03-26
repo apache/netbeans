@@ -36,6 +36,138 @@
         </properties>
     </action>
     
+    <!-- Redefine the default action to use mn:run -->
+    <action>
+        <actionName>run</actionName>
+        <packagings>
+            <packaging>jar</packaging>
+        </packagings>
+        <goals>
+            <goal>process-classes</goal>
+            <goal>io.micronaut.maven:micronaut-maven-plugin:run</goal>
+        </goals>
+        <properties>
+            <!-- will not be used by MN plugin -->
+            <exec.args>-classpath %classpath</exec.args>
+            <mn.appArgs>${exec.appArgs}</mn.appArgs>
+            <mn.jvmArgs>${exec.vmArgs} -classpath %classpath</mn.jvmArgs>
+            <exec.mainClass>${packageClassName}</exec.mainClass>
+            <mn.watch>false</mn.watch>
+        </properties>
+    </action>
+    <action>
+        <actionName>run.single.main</actionName>
+        <packagings>
+            <packaging>*</packaging>
+        </packagings>
+        <goals>
+            <goal>process-classes</goal>
+            <goal>io.micronaut.maven:micronaut-maven-plugin:run</goal>
+        </goals>
+        <properties>
+            <!-- will not be used by MN plugin -->
+            <exec.args>-classpath %classpath</exec.args>
+            <mn.appArgs>${exec.appArgs}</mn.appArgs>
+            <mn.jvmArgs>${exec.vmArgs} -classpath %classpath</mn.jvmArgs>
+            <exec.mainClass>${packageClassName}</exec.mainClass>
+            <mn.watch>false</mn.watch>
+        </properties>
+    </action>
+    <!-- The original Run action, for the reference -->
+    <action>
+        <actionName>run-simple</actionName>
+        <packagings>
+            <packaging>jar</packaging>
+        </packagings>
+        <goals>
+            <goal>process-classes</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.1.0:exec</goal>
+        </goals>
+        <properties>
+            <exec.vmArgs></exec.vmArgs>
+            <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+            <exec.appArgs></exec.appArgs>
+            <exec.mainClass>${packageClassName}</exec.mainClass>
+            <exec.executable>java</exec.executable>
+        </properties>
+    </action>
+
+    <action>
+        <actionName>debug</actionName>
+        <packagings>
+            <packaging>jar</packaging>
+        </packagings>
+        <goals>
+            <goal>process-classes</goal>
+            <goal>io.micronaut.maven:micronaut-maven-plugin:run</goal>
+        </goals>
+        <properties>
+            <!-- will not be used by MN plugin -->
+            <exec.args>-classpath %classpath</exec.args>
+            <mn.appArgs>${exec.appArgs}</mn.appArgs>
+            <mn.jvmArgs>${exec.vmArgs} -classpath %classpath</mn.jvmArgs>
+            <exec.mainClass>${packageClassName}</exec.mainClass>
+            <exec.vmArgs>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</exec.vmArgs>
+            <mn.watch>false</mn.watch>
+            <jpda.listen>true</jpda.listen>
+        </properties>
+    </action>
+    <action>
+        <actionName>debug.single.main</actionName>
+        <packagings>
+            <packaging>*</packaging>
+        </packagings>
+        <goals>
+            <goal>process-test-classes</goal>
+            <goal>io.micronaut.maven:micronaut-maven-plugin:run</goal>
+        </goals>
+        <properties>
+            <!-- will not be used by MN plugin -->
+            <exec.args>-classpath %classpath</exec.args>
+            <mn.appArgs>${exec.appArgs}</mn.appArgs>
+            <mn.jvmArgs>${exec.vmArgs} -classpath %classpath</mn.jvmArgs>
+            <exec.mainClass>${packageClassName}</exec.mainClass>
+            <mn.watch>false</mn.watch>
+            <exec.vmArgs>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</exec.vmArgs>
+            <jpda.listen>true</jpda.listen>
+        </properties>
+    </action>
+
+    <!-- The original debug action, for reference -->
+    <action>
+        <actionName>debug-simple</actionName>
+        <packagings>
+            <packaging>jar</packaging>
+        </packagings>
+        <goals>
+            <goal>process-classes</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.1.0:exec</goal>
+        </goals>
+        <properties>
+            <exec.vmArgs>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</exec.vmArgs>
+            <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+            <exec.appArgs></exec.appArgs>
+            <exec.mainClass>${packageClassName}</exec.mainClass>
+            <exec.executable>java</exec.executable>
+            <jpda.listen>true</jpda.listen>
+        </properties>
+    </action>
+
+    <action>
+        <actionName>test.single</actionName>
+        <packagings>
+            <packaging>*</packaging>
+        </packagings>
+        <goals>
+            <goal>io.micronaut.maven:micronaut-maven-plugin:start-testresources-service</goal>
+            <goal>process-test-classes</goal>
+            <goal>surefire:test</goal>
+        </goals>
+        <properties>
+            <test>${packageClassName}</test>
+        </properties>
+    </action>
+    
     <profiles>
         <profile>
             <id>micronaut-auto</id>
@@ -49,11 +181,14 @@
                     <goals>
                         <goal>mn:run</goal>
                     </goals>
+                    <reactor>am</reactor>
                     <properties>
                         <exec.vmArgs></exec.vmArgs>
                         <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
                         <exec.appArgs></exec.appArgs>
                         <exec.mainClass>${packageClassName}</exec.mainClass>
+                        <mn.appArgs>${exec.appArgs}</mn.appArgs>
+                        <mn.jvmArgs>${exec.vmArgs}</mn.jvmArgs>
                     </properties>
                 </action>
                 <action>
@@ -64,11 +199,14 @@
                     <goals>
                         <goal>mn:run</goal>
                     </goals>
+                    <reactor>am</reactor>
                     <properties>
                         <exec.vmArgs></exec.vmArgs>
                         <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
                         <exec.mainClass>${packageClassName}</exec.mainClass>
                         <exec.classpathScope>${classPathScope}</exec.classpathScope>
+                        <mn.appArgs>${exec.appArgs}</mn.appArgs>
+                        <mn.jvmArgs>${exec.vmArgs}</mn.jvmArgs>
                     </properties>
                 </action>
 

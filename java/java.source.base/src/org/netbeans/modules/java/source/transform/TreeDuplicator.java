@@ -20,6 +20,7 @@ package org.netbeans.modules.java.source.transform;
 
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.AnyPatternTree;
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.AssertTree;
@@ -65,7 +66,6 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.OpensTree;
 import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.ParameterizedTypeTree;
-import com.sun.source.tree.ParenthesizedPatternTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.PatternCaseLabelTree;
 import com.sun.source.tree.PrimitiveTypeTree;
@@ -195,8 +195,8 @@ public class TreeDuplicator implements TreeVisitor<Tree, Void> {
     @Override
     public Tree visitCase(CaseTree tree, Void p) {
         CaseTree n = tree.getCaseKind() == CaseTree.CaseKind.STATEMENT
-                ? make.Case(tree.getExpressions(), tree.getStatements())
-                : make.Case(tree.getExpressions(), tree.getBody());
+                ? make.CaseMultiplePatterns(tree.getLabels(), tree.getGuard(), tree.getStatements())
+                : make.CaseMultiplePatterns(tree.getLabels(), tree.getGuard(), tree.getBody());
         model.setType(n, model.getType(tree));
         comments.copyComments(tree, n);
         model.setPos(n, model.getPos(tree));
@@ -692,7 +692,7 @@ public class TreeDuplicator implements TreeVisitor<Tree, Void> {
 
     @Override
     public Tree visitPatternCaseLabel(PatternCaseLabelTree tree, Void p) {
-        PatternCaseLabelTree n = make.PatternCaseLabel(tree.getPattern(), tree.getGuard());
+        PatternCaseLabelTree n = make.PatternCaseLabel(tree.getPattern());
         model.setType(n, model.getType(tree));
         comments.copyComments(tree, n);
         model.setPos(n, model.getPos(tree));
@@ -701,7 +701,7 @@ public class TreeDuplicator implements TreeVisitor<Tree, Void> {
 
     @Override
     public Tree visitDeconstructionPattern(DeconstructionPatternTree tree, Void p) {
-        DeconstructionPatternTree n = make.DeconstructionPattern(tree.getDeconstructor(), tree.getNestedPatterns(), tree.getVariable());
+        DeconstructionPatternTree n = make.DeconstructionPattern(tree.getDeconstructor(), tree.getNestedPatterns());
         model.setType(n, model.getType(tree));
         comments.copyComments(tree, n);
         model.setPos(n, model.getPos(tree));
@@ -709,12 +709,8 @@ public class TreeDuplicator implements TreeVisitor<Tree, Void> {
     }
 
     @Override
-    public Tree visitParenthesizedPattern(ParenthesizedPatternTree tree, Void p) {
-        ParenthesizedPatternTree n = make.ParenthesizedPattern(tree.getPattern());
-        model.setType(n, model.getType(tree));
-        comments.copyComments(tree, n);
-        model.setPos(n, model.getPos(tree));
-        return n;
+    public Tree visitAnyPattern(AnyPatternTree tree, Void p) {
+        return make.AnyPattern();
     }
 
     @Override

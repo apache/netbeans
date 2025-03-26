@@ -83,14 +83,16 @@ public final class PersistentTimerInEjbLite {
         final List<ErrorDescription> problems = new ArrayList<>();
         final EJBProblemContext ctx = HintsUtils.getOrCacheContext(hintContext);
         if (ctx != null && ctx.getEjb() instanceof Session) {
-            boolean ee9lite = ctx.getEjbModule().getJ2eeProfile().isAtLeast(Profile.JAKARTA_EE_9_WEB);
-            boolean ee7lite = ctx.getEjbModule().getJ2eeProfile().isAtLeast(Profile.JAVA_EE_7_WEB);
-            boolean ee6lite = ctx.getEjbModule().getJ2eeProfile() == Profile.JAVA_EE_6_WEB;
+            final Profile profile = ctx.getEjbModule().getJ2eeProfile();
+            boolean ee9lite = profile != null && profile.isAtLeast(Profile.JAKARTA_EE_9_WEB);
+            boolean ee7lite = profile != null && profile.isAtLeast(Profile.JAVA_EE_7_WEB);
+            boolean ee6lite = profile == Profile.JAVA_EE_6_WEB;
             J2eePlatform platform = ProjectUtil.getPlatform(ctx.getProject());
             if ((ee6lite || ee7lite || ee9lite) && nonEeFullServer(platform)) {
                 for (Element element : ctx.getClazz().getEnclosedElements()) {
                     for (AnnotationMirror annm : element.getAnnotationMirrors()) {
-                        if (EJBAPIAnnotations.SCHEDULE.equals(annm.getAnnotationType().toString())) {
+                        if (EJBAPIAnnotations.SCHEDULE_JAKARTA.equals(annm.getAnnotationType().toString())
+                                || EJBAPIAnnotations.SCHEDULE.equals(annm.getAnnotationType().toString())) {
                             if (ee6lite) {
                                 problems.add(HintsUtils.createProblem(element, hintContext.getInfo(),
                                         Bundle.PersistentTimerInEjbLite_err_timer_in_ee6lite(), Severity.ERROR));
@@ -113,21 +115,13 @@ public final class PersistentTimerInEjbLite {
         if (platform == null) {
             return true;
         }
-        if(platform.getSupportedProfiles().contains(Profile.JAVA_EE_6_FULL)) {
-            return false;
-        } else if(platform.getSupportedProfiles().contains(Profile.JAVA_EE_7_FULL)) {
-            return false;
-        } else if(platform.getSupportedProfiles().contains(Profile.JAVA_EE_8_FULL)) {
-            return false;
-        } else if(platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_8_FULL)) {
-            return false;
-        } else if(platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_9_FULL)) {
-            return false;
-        } else if(platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_9_1_FULL)) {
-            return false;
-        } else {
-            return true;
+        
+        for (Profile profile: platform.getSupportedProfiles()) {
+            if (profile.isFullProfile() && profile.isAtLeast(Profile.JAVA_EE_6_FULL)) {
+                return false;
+            }
         }
+        return true;
     }
 
     private static boolean isTimerPersistent(Map<? extends ExecutableElement, ? extends AnnotationValue> values) {
@@ -177,7 +171,10 @@ public final class PersistentTimerInEjbLite {
         }
 
         public void fixTimerAnnotation(WorkingCopy copy) {
-            TypeElement scheduleAnnotation = copy.getElements().getTypeElement(EJBAPIAnnotations.SCHEDULE);
+            TypeElement scheduleAnnotation = copy.getElements().getTypeElement(EJBAPIAnnotations.SCHEDULE_JAKARTA);
+            if(scheduleAnnotation == null) {
+                scheduleAnnotation = copy.getElements().getTypeElement(EJBAPIAnnotations.SCHEDULE);
+            }
             ModifiersTree modifiers = ((MethodTree) copy.getTrees().getPath(methodElement.resolve(copy)).getLeaf()).getModifiers();
             TreeMaker tm = copy.getTreeMaker();
             for (AnnotationTree at : modifiers.getAnnotations()) {

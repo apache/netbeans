@@ -542,6 +542,7 @@ public final class PhpCommentGenerator {
                                                             type = Type.INTEGER;
                                                             break;
                                                         case REAL:
+                                                        case FLOAT:
                                                             type = Type.FLOAT;
                                                             break;
                                                         case STRING:

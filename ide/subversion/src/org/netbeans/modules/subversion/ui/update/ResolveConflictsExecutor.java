@@ -22,6 +22,7 @@ package org.netbeans.modules.subversion.ui.update;
 import java.awt.*;
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.logging.Level;
 import javax.swing.*;
@@ -120,9 +121,9 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
                                 final MergeVisualizer merge) throws IOException {
         String mimeType = (fo == null) ? "text/plain" : fo.getMIMEType(); // NOI18N
         String ext = "."+fo.getExt(); // NOI18N
-        File f1 = FileUtil.normalizeFile(File.createTempFile(TMP_PREFIX, ext));
-        File f2 = FileUtil.normalizeFile(File.createTempFile(TMP_PREFIX, ext));
-        File f3 = FileUtil.normalizeFile(File.createTempFile(TMP_PREFIX, ext));
+        File f1 = FileUtil.normalizeFile(Files.createTempFile(TMP_PREFIX, ext).toFile());
+        File f2 = FileUtil.normalizeFile(Files.createTempFile(TMP_PREFIX, ext).toFile());
+        File f3 = FileUtil.normalizeFile(Files.createTempFile(TMP_PREFIX, ext).toFile());
         f1.deleteOnExit();
         f2.deleteOnExit();
         f3.deleteOnExit();
@@ -375,7 +376,7 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
             }
         }
         if (generateDiffs) {
-            return diffList.toArray(new Difference[diffList.size()]);
+            return diffList.toArray(new Difference[0]);
         } else {
             return null;
         }

@@ -501,9 +501,9 @@ public class ClassNameList extends javax.swing.JPanel implements Runnable {
                 cpPaths.add(p.getStandardLibraries());
             }
 
-            ClassPath compPath = ClassPathSupport.createProxyClassPath(cpPaths.toArray(new ClassPath[cpPaths.size()]));
-            ClassPath bootPath = ClassPathSupport.createProxyClassPath(bootPaths.toArray(new ClassPath[bootPaths.size()]));
-            ClassPath sourcePath = ClassPathSupport.createProxyClassPath(sourcePaths.toArray(new ClassPath[sourcePaths.size()]));
+            ClassPath compPath = ClassPathSupport.createProxyClassPath(cpPaths.toArray(new ClassPath[0]));
+            ClassPath bootPath = ClassPathSupport.createProxyClassPath(bootPaths.toArray(new ClassPath[0]));
+            ClassPath sourcePath = ClassPathSupport.createProxyClassPath(sourcePaths.toArray(new ClassPath[0]));
             
             classpathInfo = ClasspathInfo.create(bootPath, compPath, sourcePath);
         }

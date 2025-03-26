@@ -45,6 +45,7 @@ import org.netbeans.modules.php.editor.model.FieldElement;
 import org.netbeans.modules.php.editor.model.MethodScope;
 import org.netbeans.modules.php.editor.model.ModelElement;
 import org.netbeans.modules.php.editor.model.Scope;
+import org.netbeans.modules.php.editor.model.TraitScope;
 import org.netbeans.modules.php.editor.model.TypeScope;
 import org.openide.filesystems.FileObject;
 
@@ -75,8 +76,13 @@ public class OverridingMethodsImpl implements OverridingMethods {
         if (handle instanceof MethodScope) {
             MethodScope method = (MethodScope) handle;
             final ElementFilter methodNameFilter = ElementFilter.forName(NameKind.exact(method.getName()));
-            final Set<MethodElement> overridenMethods = methodNameFilter.filter(getInheritedMethods(info, method));
+            Set<MethodElement> overridenMethods = methodNameFilter.filter(getInheritedMethods(info, method));
             List<AlternativeLocation> retval = new ArrayList<>();
+            Scope typeScope = method.getInScope();
+            if (!(typeScope instanceof TraitScope)) {
+                ElementFilter notPrivateFilter = ElementFilter.forPrivateModifiers(false);
+                overridenMethods = notPrivateFilter.filter(overridenMethods);
+            }
             for (MethodElement methodElement : overridenMethods) {
                 retval.add(MethodLocation.newInstance(methodElement));
             }
@@ -232,6 +238,10 @@ public class OverridingMethodsImpl implements OverridingMethods {
         Scope inScope = method.getInScope();
         assert inScope instanceof TypeScope;
         TypeScope typeScope = (TypeScope) inScope;
+        if (!(typeScope instanceof TraitScope)
+                && method.getPhpModifiers().isPrivate()) {
+            return Collections.emptySet();
+        }
         final String signature = ((TypeScope) inScope).getIndexSignature();
         if (signature != null && !signature.equals(classSignatureForInheritedByMethods)) {
             Index index = ElementQueryFactory.getIndexQuery(info);

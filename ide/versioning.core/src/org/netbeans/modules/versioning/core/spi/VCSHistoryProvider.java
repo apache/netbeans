@@ -63,24 +63,24 @@ public interface VCSHistoryProvider {
      * in places with limited space, but should be descriptive enough to identify the 
      * particular user or revision - e.g in case of Mercurial it would be something like:
      * 
-     * <table border="0" cellpadding="1" cellspacing="1">
-     *   <tr align="left">
-     *     <th bgcolor="#CCCCFF"></th>
-     *     <th bgcolor="#CCCCFF">short</th>
-     *     <th bgcolor="#CCCCFF">long</th>
+     * <table>
+     *   <caption>example of output for Mercurial</caption>
+     *   <tr>
+     *     <th style="background-color:#CCCCFF"></th>
+     *     <th style="background-color:#CCCCFF">short</th>
+     *     <th style="background-color:#CCCCFF">long</th>
      *   </tr>
-     *   <tr align="left">
+     *   <tr>
      *     <td>revision</td>
      *     <td>210767</td>
      *     <td>210767:2dd617e260fc</td>
      *   </tr>
-     *   <tr align="left">
+     *   <tr>
      *     <td>user</td>
      *     <td>john.doe@netbeans.org</td>
      *     <td>John Doe &lt;john.doe@netbeans.org&gt;</td>
      *   </tr>
      * </table>
-     * </p> 
      */
     public static final class HistoryEntry {
         private Date dateTime;
@@ -236,7 +236,7 @@ public interface VCSHistoryProvider {
          * 
          * @throws IOException if it wasn't possible to set the message
          * 
-         * @throws IllegalStateException if no {@link #MessageEditProvider} was passed to this HistoryEntry instance
+         * @throws IllegalStateException if no {@link MessageEditProvider} was passed to this HistoryEntry instance
          */        
         public void setMessage(String message) throws IOException {
             if(!canEdit()) throw new IllegalStateException("This entry is read-only");
@@ -389,10 +389,10 @@ public interface VCSHistoryProvider {
     
     /**
      * Implement and pass over to {@link HistoryEntry} in case 
-     * {@link HistoryEntry#getRevisionFile(java.io.File, java.io.File)}
+     * {@link HistoryEntry#getRevisionFile(VCSFileProxy, VCSFileProxy)}
      * is expected to work.
      * 
-     * @see HistoryEntry#getRevisionFile(java.io.File, java.io.File) 
+     * @see HistoryEntry#getRevisionFile(VCSFileProxy, VCSFileProxy) 
      */    
     public interface RevisionProvider {
         void getRevisionFile(VCSFileProxy originalFile, VCSFileProxy revisionFile);

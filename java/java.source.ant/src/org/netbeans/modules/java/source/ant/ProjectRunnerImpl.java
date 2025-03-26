@@ -493,7 +493,7 @@ public class ProjectRunnerImpl implements JavaRunnerImplementation {
                 roots.add(orig);
             }
         }
-        return ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
+        return ClassPathSupport.createClassPath(roots.toArray(new URL[0]));
     }
     
     @CheckForNull
@@ -545,7 +545,7 @@ public class ProjectRunnerImpl implements JavaRunnerImplementation {
         }
         return res.isEmpty() ?
                 orig :
-                res.toArray(new URL[res.size()]);
+                res.toArray(new URL[0]);
     }
 
     private static ExecutorTask clean(Map<String, ?> properties) {

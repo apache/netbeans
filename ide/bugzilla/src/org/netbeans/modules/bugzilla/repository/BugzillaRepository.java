@@ -172,7 +172,7 @@ public class BugzillaRepository {
 
     public void remove() {
         Collection<BugzillaQuery> qs = getQueries();
-        BugzillaQuery[] toRemove = qs.toArray(new BugzillaQuery[qs.size()]);
+        BugzillaQuery[] toRemove = qs.toArray(new BugzillaQuery[0]);
         for (BugzillaQuery q : toRemove) {
             removeQuery(q);
         }

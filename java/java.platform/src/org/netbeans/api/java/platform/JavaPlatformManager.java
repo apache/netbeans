@@ -105,7 +105,7 @@ public final class JavaPlatformManager {
             new JavaPlatform[] {
                 FallbackDefaultJavaPlatform.getInstance()
             }:
-            cachedPlatforms.toArray(new JavaPlatform[cachedPlatforms.size()]);
+            cachedPlatforms.toArray(new JavaPlatform[0]);
     }
 
     /**
@@ -129,7 +129,7 @@ public final class JavaPlatformManager {
                 result.add(platform);
             }
         }
-        return result.toArray(new JavaPlatform[result.size()]);
+        return result.toArray(new JavaPlatform[0]);
     }
 
     /**

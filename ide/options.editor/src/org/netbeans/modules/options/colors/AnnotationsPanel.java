@@ -27,10 +27,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,8 +37,6 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -60,12 +56,17 @@ import org.openide.util.NbBundle;
 public class AnnotationsPanel extends JPanel implements ActionListener, 
     ItemListener, FontsColorsController {
     
-    private ColorModel          colorModel;
-    private boolean		listen = false;
-    private String              currentScheme;
-    private Map<String, List<AttributeSet>> schemes = new HashMap<String, List<AttributeSet>>();
-    private Set<String> toBeSaved = new HashSet<String>();
-    private boolean             changed = false;
+    private ColorModel colorModel;
+    /// Currently displayed profile.
+    private String currentProfile;
+    /// History of all profiles and their attributes which were at some point displayed in this panel. May hold modified data.
+    /// null value indicates the profile is marked for deletion.
+    private Map<String, List<AttributeSet>> profiles;
+    /// Profile names to save.
+    private Set<String> toBeSaved;
+
+    private boolean changed;
+    private boolean listen;
     
     
     /** Creates new form AnnotationsPanel1 */
@@ -85,10 +86,9 @@ public class AnnotationsPanel extends JPanel implements ActionListener,
         lCategories.getAccessibleContext ().setAccessibleDescription (loc ("AD_Categories"));
         lCategories.setSelectionMode (ListSelectionModel.SINGLE_SELECTION);
         lCategories.setVisibleRowCount (3);
-        lCategories.addListSelectionListener (new ListSelectionListener () {
-            public void valueChanged (ListSelectionEvent e) {
-                if (!listen) return;
-                refreshUI ();
+        lCategories.addListSelectionListener(evt -> {
+            if (listen) {
+                refreshUI();
             }
         });
 	lCategories.setCellRenderer (new CategoryRenderer ());
@@ -107,6 +107,7 @@ public class AnnotationsPanel extends JPanel implements ActionListener,
         cbEffects.getAccessibleContext ().setAccessibleName (loc ("AN_Effects"));
         cbEffects.getAccessibleContext ().setAccessibleDescription (loc ("AD_Effects"));
         cbEffects.addActionListener (this);
+        clearState();
     }
     
     /** This method is called from within the constructor to
@@ -213,6 +214,7 @@ public class AnnotationsPanel extends JPanel implements ActionListener,
     // End of variables declaration//GEN-END:variables
     
  
+    @Override
     public void actionPerformed (ActionEvent evt) {
         if (!listen) return;
         if (evt.getSource () == cbEffects) {
@@ -236,75 +238,94 @@ public class AnnotationsPanel extends JPanel implements ActionListener,
         updateData ();
         fireChanged();
     }
+
+    private void clearState() {
+        toBeSaved = new HashSet<>();
+        profiles = new HashMap<>();
+        changed = false;
+        currentProfile = null;
+    }
     
-    public void update (ColorModel colorModel) {
+    @Override
+    public void update(ColorModel colorModel) {
+        clearState();
         this.colorModel = colorModel;
-        listen = false;
-        currentScheme = colorModel.getCurrentProfile ();
-        lCategories.setListData (getAnnotations (currentScheme).toArray(new AttributeSet[]{}));
-        if (lCategories.getModel ().getSize () > 0)
-            lCategories.setSelectedIndex (0);
-        refreshUI ();
-        listen = true;
+        setCurrentProfile(colorModel.getCurrentProfile());
+        toBeSaved.remove(currentProfile);
         changed = false;
     }
     
-    public void cancel () {
-        toBeSaved = new HashSet<String>();
-        schemes = new HashMap<String, List<AttributeSet>>();
-        changed = false;
+    @Override
+    public void cancel() {
+        clearState();
     }
     
+    @Override
     public void applyChanges() {
         if (colorModel == null) return;
-        for(String scheme : toBeSaved) {
+        boolean currentChanged = toBeSaved.remove(currentProfile);
+        for (String scheme : toBeSaved) {
             colorModel.setAnnotations(scheme, getAnnotations(scheme));
         }
-        toBeSaved = new HashSet<String>();
-        schemes = new HashMap<String, List<AttributeSet>>();
-        changed = false;
+        // TODO the editor sometimes refreshes to whatever is set last instead of the current profile
+        // Setting current profile last fixes it in most cases. Restart helps too.
+        if (currentChanged) {
+            colorModel.setAnnotations(currentProfile, getAnnotations(currentProfile));
+        }
+        clearState();
     }
     
+    @Override
     public boolean isChanged () {
         return changed;
     }
     
-    public void setCurrentProfile (String currentScheme) {
-        if (this.currentScheme.equals(currentScheme)) {
+    @Override
+    public void setCurrentProfile(String profile) {
+        if (profile.equals(currentProfile)) {
             return;
         }
-        String oldScheme = this.currentScheme;
-        this.currentScheme = currentScheme;
-        List<AttributeSet> v = getAnnotations(currentScheme);
-        if (v == null) {
-            // clone scheme
-            v = getAnnotations (oldScheme);
-            schemes.put (currentScheme, new ArrayList<AttributeSet>(v));
-            toBeSaved.add (currentScheme);
-            v = getAnnotations (currentScheme);
+        // copy current if profile is new
+        if (!profiles.containsKey(profile)) {
+            if (!colorModel.getProfiles().contains(profile)) {
+                profiles.put(profile, copy(getAnnotations(currentProfile)));
+            }
         }
-        toBeSaved.add(currentScheme);
-        lCategories.setListData (v.toArray(new AttributeSet[v.size()]));
-        if (lCategories.getModel ().getSize () > 0)
-            lCategories.setSelectedIndex (0);
-        refreshUI ();
+        toBeSaved.add(profile);
+        currentProfile = profile;
+        invokeWithoutListeners(() -> {
+            int selected = Math.max(lCategories.getSelectedIndex(), 0);
+            lCategories.setListData(getAnnotations(profile).toArray(AttributeSet[]::new));
+            if (lCategories.getModel().getSize() > selected) {
+                lCategories.setSelectedIndex(selected);
+            }
+        });
+        refreshUI();
         fireChanged();
     }
     
-    public void deleteProfile (String scheme) {
-        if (colorModel.isCustomProfile (scheme)) {
-            schemes.put(scheme,null);
+    @Override
+    public void deleteProfile(String profile) {
+        if (colorModel.isCustomProfile(profile)) {
+            // mark for deletion
+            profiles.put(profile, null);
         } else {
-            schemes.put (scheme, getDefaults (scheme));
-            lCategories.setListData (getAnnotations(scheme).toArray(new AttributeSet[]{}));
-            lCategories.repaint();
-            lCategories.setSelectedIndex (0);   
-            refreshUI ();
+            // restore default profile
+            profiles.put(profile, copy(getDefaults(profile)));
+            invokeWithoutListeners(() -> {
+                int selected = Math.max(lCategories.getSelectedIndex(), 0);
+                lCategories.setListData(getAnnotations(profile).toArray(AttributeSet[]::new));
+                if (lCategories.getModel().getSize() > selected) {
+                    lCategories.setSelectedIndex(selected);
+                }
+            });
+            refreshUI();
         }
-        toBeSaved.add(scheme); // 'default' profile restored
+        toBeSaved.add(profile); // restore or delete
         fireChanged();
     }
 
+    @Override
     public JComponent getComponent() {
         return this;
     }
@@ -315,21 +336,25 @@ public class AnnotationsPanel extends JPanel implements ActionListener,
         return NbBundle.getMessage (SyntaxColoringPanel.class, key);
     }
     
-    private static void loc (Component c, String key) {
-        if (c instanceof AbstractButton)
-            Mnemonics.setLocalizedText (
-                (AbstractButton) c, 
-                loc (key)
-            );
-        else
-            Mnemonics.setLocalizedText (
-                (JLabel) c, 
-                loc (key)
-            );
+    private static void loc(Component c, String key) {
+        if (c instanceof AbstractButton button) {
+            Mnemonics.setLocalizedText(button, loc(key));
+        } else {
+            Mnemonics.setLocalizedText((JLabel) c,loc(key));
+        }
+    }
+    
+    private void invokeWithoutListeners(Runnable run) {
+        try {
+            listen = false;
+            run.run();
+        } finally {
+            listen = true;
+        }
     }
 
     private void updateData () {
-        List<AttributeSet> annotations = getAnnotations(currentScheme);
+        List<AttributeSet> annotations = getAnnotations(currentProfile);
         int index = lCategories.getSelectedIndex();
         SimpleAttributeSet c = new SimpleAttributeSet(annotations.get(index));
         
@@ -357,8 +382,7 @@ public class AnnotationsPanel extends JPanel implements ActionListener,
         }
         
         annotations.set(index, c);
-        
-        toBeSaved.add(currentScheme);
+        toBeSaved.add(currentProfile);
     }
     
     private void fireChanged() {
@@ -409,7 +433,7 @@ public class AnnotationsPanel extends JPanel implements ActionListener,
     
     private Map<String, AttributeSet> toMap(Collection<AttributeSet> categories) {
         if (categories == null) return null;
-        Map<String, AttributeSet> result = new HashMap<String, AttributeSet>();
+        Map<String, AttributeSet> result = new HashMap<>();
         for(AttributeSet as : categories) {
             result.put((String) as.getAttribute(StyleConstants.NameAttribute), as);
         }
@@ -429,76 +453,70 @@ public class AnnotationsPanel extends JPanel implements ActionListener,
         cbBackground.setEnabled (true);
         cbEffectColor.setEnabled (true);
         
-        listen = false;
-        
-        // set defaults
-        AttributeSet defAs = getDefaultColoring();
-        if (defAs != null) {
-            Color inheritedForeground = (Color) defAs.getAttribute(StyleConstants.Foreground);
-            if (inheritedForeground == null) {
-                inheritedForeground = Color.black;
-            }
-            ColorComboBoxSupport.setInheritedColor((ColorComboBox)cbForeground, inheritedForeground);
-            
-            Color inheritedBackground = (Color) defAs.getAttribute(StyleConstants.Background);
-            if (inheritedBackground == null) {
-                inheritedBackground = Color.white;
-            }
-            ColorComboBoxSupport.setInheritedColor((ColorComboBox)cbBackground, inheritedBackground);
-        }
+        invokeWithoutListeners(() -> {
+            // set defaults
+            AttributeSet defAs = getDefaultColoring(currentProfile);
+            if (defAs != null) {
+                Color inheritedForeground = (Color) defAs.getAttribute(StyleConstants.Foreground);
+                if (inheritedForeground == null) {
+                    inheritedForeground = Color.black;
+                }
+                ColorComboBoxSupport.setInheritedColor((ColorComboBox)cbForeground, inheritedForeground);
 
-        // set values
-        List<AttributeSet> annotations = getAnnotations (currentScheme);
-        AttributeSet c = annotations.get (index);
-        ColorComboBoxSupport.setSelectedColor( (ColorComboBox)cbForeground, (Color) c.getAttribute (StyleConstants.Foreground));
-        ColorComboBoxSupport.setSelectedColor( (ColorComboBox)cbBackground, (Color) c.getAttribute (StyleConstants.Background));
-        if (c.getAttribute(EditorStyleConstants.WaveUnderlineColor) != null) {
-            cbEffects.setSelectedIndex(1);
-            cbEffectColor.setEnabled(true);
-            ((ColorComboBox)cbEffectColor).setSelectedColor((Color) c.getAttribute (EditorStyleConstants.WaveUnderlineColor));
-        } else {
-            cbEffects.setSelectedIndex(0);
-            cbEffectColor.setEnabled(false);
-            cbEffectColor.setSelectedIndex(-1);
-        } 
-        listen = true;
+                Color inheritedBackground = (Color) defAs.getAttribute(StyleConstants.Background);
+                if (inheritedBackground == null) {
+                    inheritedBackground = Color.white;
+                }
+                ColorComboBoxSupport.setInheritedColor((ColorComboBox)cbBackground, inheritedBackground);
+            }
+
+            // set values
+            AttributeSet c = getAnnotations(currentProfile).get(index);
+            ColorComboBoxSupport.setSelectedColor((ColorComboBox)cbForeground, (Color)c.getAttribute(StyleConstants.Foreground));
+            ColorComboBoxSupport.setSelectedColor((ColorComboBox)cbBackground, (Color)c.getAttribute(StyleConstants.Background));
+
+            if (c.getAttribute(EditorStyleConstants.WaveUnderlineColor) != null) {
+                cbEffects.setSelectedIndex(1);
+                cbEffectColor.setEnabled(true);
+                ((ColorComboBox)cbEffectColor).setSelectedColor((Color) c.getAttribute (EditorStyleConstants.WaveUnderlineColor));
+            } else {
+                cbEffects.setSelectedIndex(0);
+                cbEffectColor.setEnabled(false);
+                cbEffectColor.setSelectedIndex(-1);
+            }
+        });
     }
     
-    private AttributeSet getDefaultColoring() {
-        Collection<AttributeSet> defaults = colorModel.getCategories(currentScheme, ColorModel.ALL_LANGUAGES);
-        
-        for(Iterator i = defaults.iterator(); i.hasNext(); ) {
-            AttributeSet as = (AttributeSet) i.next();
-            String name = (String) as.getAttribute(StyleConstants.NameAttribute);
-            if (name != null && "default".equals(name)) { //NOI18N
-                return as;
+    private AttributeSet getDefaultColoring(String profile) {
+        for (AttributeSet set : colorModel.getCategories(profile, ColorModel.ALL_LANGUAGES)) {
+            if ("default".equals(set.getAttribute(StyleConstants.NameAttribute))) { //NOI18N
+                return set.copyAttributes();
             }
         }
-        
         return null;
     }
     
-    private List<AttributeSet> getAnnotations(String scheme) {
-        if (!schemes.containsKey(scheme)) {
-            Collection<AttributeSet> c = colorModel.getAnnotations(currentScheme);
-            if (c == null) return null;
-            List<AttributeSet> l = new ArrayList<AttributeSet>(c);
-            Collections.sort(l, new CategoryComparator());
-            schemes.put(scheme, new ArrayList<AttributeSet>(l));
+    private List<AttributeSet> getAnnotations(String profile) {
+        if (!profiles.containsKey(profile)) {
+            List<AttributeSet> copy = copy(colorModel.getAnnotations(profile));
+            copy.sort(new CategoryComparator());
+            profiles.put(profile, copy);
         }
-        return schemes.get(scheme);
+        return profiles.get(profile);
     }
-    /** cache Map (String (profile name) > List (AttributeSet)). */
-    private Map<String, List<AttributeSet>> profileToDefaults = new HashMap<String, List<AttributeSet>>();
     
     private List<AttributeSet> getDefaults(String profile) {
-        if (!profileToDefaults.containsKey(profile)) {
-            Collection<AttributeSet> c = colorModel.getAnnotationsDefaults(profile);
-            List<AttributeSet> l = new ArrayList<AttributeSet>(c);
-            Collections.sort(l, new CategoryComparator());
-            profileToDefaults.put(profile, l);
-        }
-        List<AttributeSet> defaultprofile = profileToDefaults.get(profile);
-        return new ArrayList<AttributeSet>(defaultprofile);
+        List<AttributeSet> defaults = new ArrayList<>(colorModel.getAnnotationsDefaults(profile));
+        defaults.sort(new CategoryComparator());
+        return defaults;
     }
+
+    private static List<AttributeSet> copy(Collection<AttributeSet> annotations) {
+        List<AttributeSet> copy = new ArrayList<>(annotations.size());
+        for (AttributeSet set : annotations) {
+            copy.add(set.copyAttributes());
+        }
+        return copy;
+    }
+
 }

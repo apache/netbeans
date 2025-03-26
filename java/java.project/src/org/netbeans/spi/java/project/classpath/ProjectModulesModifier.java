@@ -32,10 +32,10 @@ import org.openide.filesystems.FileObject;
  * it is not sufficient just to add artifacts on classpath - modular projects cannot access unnamed module,
  * so the project would not see such classes/resources during compilation. Even if added to the module path,
  * a directive needs to be added so that compiler and runtime honour the dependency.
- * <p/>
+ * <p>
  * This SPI allows the project implementation for modular project to diverge additions to a more suitable classpath,
  * and to update the module information.
- * <p/>
+ * <p>
  * Project-specific implementation should be placed in <b>project lookup</b>. If not present, default implementation
  * will handle the requests, so that artifacts, libraries and projects will land on {@link JavaClassPathConstants#MODULE_COMPILE_PATH}
  * or {@link JavaClassPathConstants#MODULE_EXECUTE_PATH} respectively. The default implementation does nothing for projects (sources), which do
@@ -52,7 +52,7 @@ public interface ProjectModulesModifier {
      * diverge the request to some other classpath type.
      * If the project is not modular, or modular project can use artifacts from the original classpath
      * type, the value of {@code null} should be returned. If {@code null} is returned,
-     * the {@link #addRequiredModules} or {@link #removeRequiredModuels} should not be called.
+     * the {@link #addRequiredModules} or {@link #removeRequiredModules} should not be called.
      * 
      * @param classPathType original classpath type
      * @param projectArtifact source, directory which will determine the proper {@code module-info.java}

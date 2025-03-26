@@ -360,6 +360,36 @@ public class MarkOccDetTest extends TestBase {
                    "[MARK_OCCURRENCES], 3:30-3:33");
     }
 
+    public void testRecordCompactConstructors1() throws Exception {
+        performTest("MatchBindings.java",
+                    "public record MatchBindings(String compact) {\n" +
+                    "    public MatchBindings {\n" +
+                    "    }\n" +
+                    "    private static MatchBindings create() {\n" +
+                    "        return new MatchBindings(null);\n" +
+                    "    }\n" +
+                    "}\n",
+                   1,
+                   20,
+                   "[MARK_OCCURRENCES], 1:11-1:24",
+                   "[MARK_OCCURRENCES], 4:19-4:32");
+    }
+
+    public void testRecordCompactConstructors2() throws Exception {
+        performTest("MatchBindings.java",
+                    "public record MatchBindings(String compact) {\n" +
+                    "    public MatchBindings {\n" +
+                    "    }\n" +
+                    "    private static MatchBindings create() {\n" +
+                    "        return new MatchBindings(null);\n" +
+                    "    }\n" +
+                    "}\n",
+                   4,
+                   20,
+                   "[MARK_OCCURRENCES], 1:11-1:24",
+                   "[MARK_OCCURRENCES], 4:19-4:32");
+    }
+
     //Support for exotic identifiers has been removed 6999438
     public void REMOVEDtestExoticIdentifiers1() throws Exception {
         performTest("ExoticIdentifier", 3, 43);

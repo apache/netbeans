@@ -97,6 +97,7 @@ import org.netbeans.modules.nativeimage.api.debug.NIVariable;
 import org.netbeans.spi.debugger.ui.DebuggingView;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVFrame;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVThread;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 
@@ -173,7 +174,7 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
         NbDebugSession debugSession = context.getDebugSession();
         if (debugSession != null) {
             // Breakpoints were submitted, we can resume the debugger
-            context.getConfigurationSemaphore().notifyCongigurationDone();;
+            context.getConfigurationSemaphore().notifyCongigurationDone();
             future.complete(null);
         } else {
             ErrorUtilities.completeExceptionally(future, "Failed to launch debug session, the debugger will exit.", ResponseErrorCode.ServerNotInitialized);
@@ -374,7 +375,7 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
                     }
                 }
                 StackTraceResponse response = new StackTraceResponse();
-                response.setStackFrames(result.toArray(new StackFrame[result.size()]));
+                response.setStackFrames(result.toArray(new StackFrame[0]));
                 response.setTotalFrames(cnt);
                 long t2 = System.nanoTime();
                 LOGGER.log(LOGLEVEL, "stackTrace() END after {0} ns", (t2 - t1));
@@ -425,7 +426,7 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
             result.add(scope);
         }
         ScopesResponse response = new ScopesResponse();
-        response.setScopes(result.toArray(new Scope[result.size()]));
+        response.setScopes(result.toArray(new Scope[0]));
         return CompletableFuture.completedFuture(response);
     }
 
@@ -474,7 +475,7 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
                     result.add(thread);
                 });
                 ThreadsResponse response = new ThreadsResponse();
-                response.setThreads(result.toArray(new org.eclipse.lsp4j.debug.Thread[result.size()]));
+                response.setThreads(result.toArray(new org.eclipse.lsp4j.debug.Thread[0]));
                 long t2 = System.nanoTime();
                 LOGGER.log(LOGLEVEL, "threads() END after {0} ns", (t2 - t1));
                 return response;

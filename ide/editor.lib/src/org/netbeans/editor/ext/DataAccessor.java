@@ -48,7 +48,6 @@ public interface DataAccessor {
      *  @param  buffer the buffer from which the data is appended.
      *  @param  off    the start offset of the data in the buffer.
      *  @param  len    the number of bytes to append.
-     *  @return        the actual file offset.
      */
     public void append(byte buffer[], int off, int len) throws IOException;
     

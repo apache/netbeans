@@ -54,19 +54,32 @@ public class RepositoryNode extends OCINode {
         return RepositoryNode::new;
     }
 
-    public static ChildrenProvider<DevopsProjectItem, RepositoryFolder> listRepositories() {
-        return project -> {
-            try ( DevopsClient client = new DevopsClient(OCIManager.getDefault().getConfigProvider())) {
+    public static ChildrenProvider.SessionAware<DevopsProjectItem, RepositoryFolder> listRepositories() {
+        return (project, session) -> {
+            try ( DevopsClient client = session.newClient(DevopsClient.class)) {
                 ListRepositoriesRequest listRepositoriesRequest = ListRepositoriesRequest.builder()
                         .projectId(project.getKey().getValue()).build();
                 ListRepositoriesResponse response = client.listRepositories(listRepositoriesRequest);
                 List<RepositorySummary> projects = response.getRepositoryCollection().getItems();
+
+                String tenancyId = session.getTenancy().isPresent() ?
+                        session.getTenancy().get().getKey().getValue() : null;
+                String regionCode = session.getRegion().getRegionCode();
+
                 return Collections.singletonList(
                         new RepositoryFolder(OCID.of(project.getKey().getValue(), "RepositoryFolder"),
+                                project.getCompartmentId(),
                                 Bundle.Repositories(),
                                 projects.stream()
-                                        .map(p -> new RepositoryItem(OCID.of(p.getId(), "Repository"), p.getName()))
-                                        .collect(Collectors.toList()))
+                                        .map(p -> new RepositoryItem(
+                                                OCID.of(p.getId(), "Repository"),
+                                                project.getCompartmentId(),
+                                                p.getName(),
+                                                tenancyId,
+                                                regionCode))
+                                        .collect(Collectors.toList()),
+                                tenancyId,
+                                regionCode)
                 );
             }
         };

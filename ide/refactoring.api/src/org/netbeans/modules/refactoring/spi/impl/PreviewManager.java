@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.refactoring.spi.impl;
 
+import java.awt.Component;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Reader;
@@ -27,12 +28,18 @@ import java.util.HashMap;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JEditorPane;
+import javax.swing.JScrollPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.swing.text.EditorKit;
 import javax.swing.text.StyledDocument;
 import org.netbeans.api.diff.DiffController;
 import org.netbeans.api.diff.Difference;
 import org.netbeans.api.diff.StreamSource;
+import org.netbeans.api.editor.mimelookup.MimeLookup;
+import org.netbeans.editor.EditorUI;
+import org.netbeans.editor.Utilities;
 import org.netbeans.modules.refactoring.api.impl.SPIAccessor;
 import org.netbeans.modules.refactoring.spi.SimpleRefactoringElementImplementation;
 import org.netbeans.modules.refactoring.spi.ui.UI;
@@ -65,7 +72,7 @@ public class PreviewManager {
     }
 
     private static PreviewManager manager;
-    private WeakHashMap<RefactoringPanel, HashMap<FileObject, Pair>> map = new WeakHashMap();
+    private WeakHashMap<RefactoringPanel, HashMap<FileObject, Pair>> map = new WeakHashMap<>();
     private PreviewManager() {
     }
     
@@ -106,6 +113,47 @@ public class PreviewManager {
     }
     
     public void refresh(SimpleRefactoringElementImplementation element) {
+        RefactoringPanel current = RefactoringPanel.getCurrentRefactoringPanel();
+        if (current != null && current.isQuery()) {
+            showQueryPreview(element);
+        } else {
+            showDiffView(element);
+        }
+    }
+
+    private void showQueryPreview(SimpleRefactoringElementImplementation element) {
+        try {
+            FileObject fileObject = element.getParentFile();
+            DataObject dataObject = DataObject.find(fileObject);
+            EditorCookie editorCookie = dataObject != null ? dataObject.getLookup().lookup(org.openide.cookies.EditorCookie.class) : null;
+            if (editorCookie != null) {
+                StyledDocument document = editorCookie.openDocument();
+                if (document != null) {
+                    String mimeType = (String) document.getProperty("mimeType"); //NOI18N
+                    if (mimeType != null) {
+                        JEditorPane pane = new JEditorPane();
+                        EditorKit editorKit = MimeLookup.getLookup(mimeType).lookup(EditorKit.class);
+                        pane.setEditorKit(editorKit);
+                        pane.setDocument(document);
+                        pane.setEditable(false);
+                        Component editorComponent;
+                        EditorUI editorUI = Utilities.getEditorUI(pane);
+                        if (editorUI != null) {
+                            editorComponent = editorUI.getExtComponent();
+                        } else {
+                            editorComponent = new JScrollPane(pane);
+                        }
+                        pane.setCaretPosition(element.getPosition().getBegin().getOffset());
+                        UI.setComponentForRefactoringPreview(editorComponent);
+                    }
+                }
+            }
+        } catch (IOException ioe) {
+            throw new RuntimeException(ioe);
+        }
+    }
+
+    private void showDiffView(SimpleRefactoringElementImplementation element) {
         try {
             String newText = SPIAccessor.DEFAULT.getNewFileContent(element);
             if (newText==null) {

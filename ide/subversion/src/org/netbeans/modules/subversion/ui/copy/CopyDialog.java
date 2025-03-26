@@ -223,7 +223,7 @@ public abstract class CopyDialog {
         }
         model.addAll(relatedLocations.keySet());
         
-        ComboBoxModel rootsModel = new DefaultComboBoxModel(model.toArray(new String[model.size()]));
+        ComboBoxModel rootsModel = new DefaultComboBoxModel(model.toArray(new String[0]));
         cbo.setModel(rootsModel);        
         JTextComponent comp = (JTextComponent) cbo.getEditor().getEditorComponent();
         if (preselectCurrentFile) {

@@ -12,6 +12,7 @@ CLASS      Interface1                      [PUBLIC]   EnumTestNamespace2
 KEYWORD    array                                      null
 KEYWORD    bool                                       null
 KEYWORD    false                                      null
+KEYWORD    final                                      null
 KEYWORD    float                                      null
 KEYWORD    int                                        null
 KEYWORD    iterable                                   null
@@ -22,3 +23,4 @@ KEYWORD    parent                                     null
 KEYWORD    readonly                                   null
 KEYWORD    self                                       null
 KEYWORD    string                                     null
+KEYWORD    true                                       null

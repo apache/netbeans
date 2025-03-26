@@ -25,18 +25,22 @@ import com.sun.source.doctree.AttributeTree;
 import com.sun.source.doctree.DeprecatedTree;
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.DocTree;
+import static com.sun.source.doctree.DocTree.Kind.SUMMARY;
 import com.sun.source.doctree.EndElementTree;
 import com.sun.source.doctree.EntityTree;
 import com.sun.source.doctree.InheritDocTree;
 import com.sun.source.doctree.LinkTree;
 import com.sun.source.doctree.LiteralTree;
 import com.sun.source.doctree.ParamTree;
+import com.sun.source.doctree.RawTextTree;
 import com.sun.source.doctree.ReferenceTree;
 import com.sun.source.doctree.ReturnTree;
 import com.sun.source.doctree.SeeTree;
 import com.sun.source.doctree.SinceTree;
 import com.sun.source.doctree.SnippetTree;
 import com.sun.source.doctree.StartElementTree;
+import com.sun.source.doctree.SummaryTree;
+import com.sun.source.doctree.SystemPropertyTree;
 import com.sun.source.doctree.TextTree;
 import com.sun.source.doctree.ThrowsTree;
 import com.sun.source.doctree.UnknownBlockTagTree;
@@ -116,6 +120,12 @@ import javax.tools.SimpleJavaFileObject;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.JavacTask;
+import com.vladsch.flexmark.ext.tables.TablesExtension;
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.util.data.DataHolder;
+import com.vladsch.flexmark.util.data.MutableDataSet;
+import javax.lang.model.element.RecordComponentElement;
 import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.java.queries.SourceLevelQuery.Profile;
 import org.netbeans.api.java.source.ui.snippet.MarkupTagProcessor;
@@ -391,11 +401,15 @@ public class ElementJavadoc {
     public Action getGotoSourceAction() {
         return goToSource;
     }
-    
+
     private ElementJavadoc(CompilationInfo compilationInfo, Element element, final URL url, final Callable<Boolean> cancel) {
         this.cpInfo = compilationInfo.getClasspathInfo();
         this.fileObject = compilationInfo.getFileObject();
-        this.handle = element == null ? null : ElementHandle.create(element);
+        ElementHandle<Element> eh = null;
+        try {
+            eh = element == null ? null : ElementHandle.create(element);
+        } catch (IllegalArgumentException iae) {}
+        this.handle = eh;
         this.cancel = cancel;
         this.packageName = compilationInfo.getCompilationUnit().getPackageName() != null ? compilationInfo.getCompilationUnit().getPackageName().toString()
                                                                                          : "";
@@ -403,6 +417,10 @@ public class ElementJavadoc {
         this.className = compilationInfo.getCompilationUnit().getSourceFile().getName().replaceFirst("[.][^.]+$", "");
 
         final StringBuilder header = getElementHeader(element, compilationInfo);
+        if (handle == null) {
+            this.content = CompletableFuture.completedFuture(header.toString());
+            return;
+        }
         try {
             //Optimisitic no http
             CharSequence doc = getElementDoc(element, compilationInfo, header, url, true);
@@ -462,21 +480,34 @@ public class ElementJavadoc {
     private StringBuilder getElementHeader(final Element element, final CompilationInfo info) {
         final StringBuilder sb = new StringBuilder();
         if (element != null) {
-            sb.append(getContainingClassOrPackageHeader(element, info.getElements(), info.getElementUtilities()));
             switch(element.getKind()) {
                 case METHOD:
                 case CONSTRUCTOR:
+                    sb.append(getContainingClassOrPackageHeader(element, info.getElements(), info.getElementUtilities()));
                     sb.append(getMethodHeader((ExecutableElement)element));
                     break;
                 case FIELD:
                 case ENUM_CONSTANT:
+                    sb.append(getContainingClassOrPackageHeader(element, info.getElements(), info.getElementUtilities()));
                     sb.append(getFieldHeader((VariableElement)element));
+                    break;
+                case RECORD_COMPONENT:
+                    sb.append(getContainingClassOrPackageHeader(element, info.getElements(), info.getElementUtilities()));
+                    sb.append(getRecordComponentHeader((RecordComponentElement)element));
                     break;
                 case CLASS:
                 case INTERFACE:
                 case ENUM:
                 case ANNOTATION_TYPE:
+                case RECORD:
+                    sb.append(getContainingClassOrPackageHeader(element, info.getElements(), info.getElementUtilities()));
                     sb.append(getClassHeader((TypeElement)element));
+                    break;
+                case LOCAL_VARIABLE:
+                case PARAMETER:
+                case EXCEPTION_PARAMETER:
+                case RESOURCE_VARIABLE:
+                    sb.append(getFieldHeader((VariableElement)element));
                     break;
                 case PACKAGE:
                     sb.append(getPackageHeader((PackageElement)element));
@@ -491,26 +522,25 @@ public class ElementJavadoc {
     
     private StringBuilder getContainingClassOrPackageHeader(Element el, Elements elements, ElementUtilities eu) {
         StringBuilder sb = new StringBuilder();
-        if (el.getKind() != ElementKind.PACKAGE && el.getKind() != ElementKind.MODULE) {
-            TypeElement cls = eu.enclosingTypeElement(el);
-            if (cls != null) {
-                switch(cls.getEnclosingElement().getKind()) {
-                    case ANNOTATION_TYPE:
-                    case CLASS:
-                    case ENUM:
-                    case INTERFACE:
-                    case PACKAGE:
-                        sb.append("<font size='+0'><b>"); //NOI18N
-                        createLink(sb, cls, makeNameLineBreakable(cls.getQualifiedName().toString()));
-                        sb.append("</b></font>"); //NOI18N)
-                }
-            } else {
-                PackageElement pkg = elements.getPackageOf(el);
-                if (pkg != null) {
+        TypeElement cls = eu.enclosingTypeElement(el);
+        if (cls != null) {
+            switch(cls.getKind()) {
+                case ANNOTATION_TYPE:
+                case CLASS:
+                case ENUM:
+                case INTERFACE:
+                case RECORD:
+                case PACKAGE:
                     sb.append("<font size='+0'><b>"); //NOI18N
-                    createLink(sb, pkg, makeNameLineBreakable(pkg.getQualifiedName().toString()));
+                    createLink(sb, cls, makeNameLineBreakable(cls.getQualifiedName().toString()));
                     sb.append("</b></font>"); //NOI18N)
-                }
+            }
+        } else {
+            PackageElement pkg = elements.getPackageOf(el);
+            if (pkg != null && !pkg.isUnnamed()) {
+                sb.append("<font size='+0'><b>"); //NOI18N
+                createLink(sb, pkg, makeNameLineBreakable(pkg.getQualifiedName().toString()));
+                sb.append("</b></font>"); //NOI18N)
             }
         }
         return sb;
@@ -612,6 +642,18 @@ public class ElementJavadoc {
         sb.append("</pre>"); //NOI18N
         return sb;
     }
+
+    private StringBuilder getRecordComponentHeader(RecordComponentElement rcdoc) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<pre>"); //NOI18N
+        rcdoc.getAnnotationMirrors().forEach((annotationDesc) -> {
+            appendAnnotation(sb, annotationDesc, true);
+        });
+        appendType(sb, rcdoc.asType(), false, false, false);
+        sb.append(" <b>").append(rcdoc.getSimpleName()).append("</b>"); //NOI18N
+        sb.append("</pre>"); //NOI18N
+        return sb;
+    }
     
     private StringBuilder getClassHeader(TypeElement cdoc) {
         StringBuilder sb = new StringBuilder();
@@ -623,6 +665,10 @@ public class ElementJavadoc {
             switch(cdoc.getKind()) {
                 case ENUM:
                     if (modifier == Modifier.FINAL)
+                        continue;
+                    break;
+                case RECORD:
+                    if (modifier == Modifier.FINAL || modifier == Modifier.STATIC)
                         continue;
                     break;
                 case INTERFACE:
@@ -643,6 +689,9 @@ public class ElementJavadoc {
             case INTERFACE:
                 sb.append("interface "); //NOI18N
                 break;
+            case RECORD:
+                sb.append("record "); //NOI18N
+                break;
             default:
                 sb.append("class "); //NOI18N            
         }
@@ -659,7 +708,7 @@ public class ElementJavadoc {
             sb.append("&gt;"); //NOI18N
         }
         sb.append("</b>"); //NOi18N
-        if (cdoc.getKind() != ElementKind.ANNOTATION_TYPE) {
+        if (cdoc.getKind() != ElementKind.ANNOTATION_TYPE && cdoc.getKind() != ElementKind.RECORD) {
             TypeMirror supercls = cdoc.getSuperclass();
             if (supercls != null && supercls.getKind() != TypeKind.NONE) {
                 sb.append("<br>extends "); //NOI18N
@@ -686,7 +735,11 @@ public class ElementJavadoc {
         pdoc.getAnnotationMirrors().forEach((annotationDesc) -> {
             appendAnnotation(sb, annotationDesc, true);
         });
-        sb.append("package <b>").append(pdoc.getQualifiedName()).append("</b>"); //NOI18N
+        if (pdoc.isUnnamed()) {
+            sb.append("package <b>&lt;unnamed&gt;</b>"); //NOI18N
+        } else {
+            sb.append("package <b>").append(pdoc.getQualifiedName()).append("</b>"); //NOI18N
+        }
         sb.append("</pre>"); //NOI18N
         return sb;
     }
@@ -1060,8 +1113,8 @@ public class ElementJavadoc {
                                 }
                                 sb.append(inlineTags(unTag.getContent(), path, doc, info.getDocTrees(), null));
                                 break;
-                    }
-                    break;
+                        }
+                        break;
                 }
             }
 
@@ -1200,7 +1253,7 @@ public class ElementJavadoc {
             if (cp != null) {
                 cps.add(cp);
             }
-            cp = ClassPathSupport.createProxyClassPath(cps.toArray(new ClassPath[cps.size()]));
+            cp = ClassPathSupport.createProxyClassPath(cps.toArray(new ClassPath[0]));
             String toSearch = SourceUtils.getJVMSignature(handle)[0].replace('.', '/');
             if (handle.getKind() != ElementKind.PACKAGE) {
                 toSearch += ".class"; //NOI18N
@@ -1228,7 +1281,7 @@ public class ElementJavadoc {
     private StringBuilder inlineTags(List<? extends DocTree> tags, TreePath docPath, DocCommentTree doc, DocTrees trees, CharSequence inherited) {
         StringBuilder sb = new StringBuilder();
         Integer snippetCount=0;
-        for (DocTree tag : tags) {
+        for (DocTree tag : resolveMarkdown(trees, tags)) {
             switch (tag.getKind()) {
                 case REFERENCE:
                     ReferenceTree refTag = (ReferenceTree)tag;
@@ -1240,6 +1293,9 @@ public class ElementJavadoc {
                     break;
                 case LINK:
                     linkTag = (LinkTree)tag;
+                    if (linkTag.getReference() == null) {
+                        break;
+                    }
                     sb.append("<code>"); //NOI18N
                     appendReference(sb, linkTag.getReference(), linkTag.getLabel(), docPath, doc, trees);
                     sb.append("</code>"); //NOI18N
@@ -1325,9 +1381,74 @@ public class ElementJavadoc {
                     snippetCount++;
                     processDocSnippet(sb, (SnippetTree)tag, snippetCount,docPath, doc, trees);
                     break;
+                case SUMMARY:
+                    SummaryTree summaryTag = (SummaryTree)tag;
+                    List<? extends DocTree> summary = summaryTag.getSummary();
+                    sb.append(inlineTags(summary, docPath, doc, trees, null));
+                    break;
+                case SYSTEM_PROPERTY:
+                    SystemPropertyTree systemPropTag = (SystemPropertyTree) tag;
+                    sb.append("<code>"); //NOI18N
+                    sb.append(systemPropTag.getPropertyName());
+                    sb.append("</code>"); //NOI18N
+                    break;
+                default:
+                    sb.append("<code>"); //NOI18N
+                    try {
+                        sb.append(XMLUtil.toElementContent(tag.toString()));
+                    } catch (IOException ioe) {}
+                    sb.append("</code>"); //NOI18N
+                    break;
             }
         }
         return sb;
+    }
+
+    private static final char REPLACEMENT = '\uFFFD';
+    private List<? extends DocTree> resolveMarkdown(DocTrees trees, List<? extends DocTree> tags) {
+        if (tags.stream().noneMatch(t -> t.getKind() == DocTree.Kind.MARKDOWN)) {
+            return tags;
+        }
+
+        StringBuilder markdownSource = new StringBuilder();
+        List<DocTree> replacements = new ArrayList<>();
+
+        for (DocTree t : tags) {
+            if (t.getKind() == DocTree.Kind.MARKDOWN) {
+                markdownSource.append(((RawTextTree) t).getContent());
+            } else {
+                markdownSource.append(REPLACEMENT);
+                replacements.add(t);
+            }
+        }
+
+        TablesExtension tablesExtension = TablesExtension.create();
+
+        Parser.Builder parserBuilder = Parser.builder();
+        tablesExtension.extend(parserBuilder);
+
+        HtmlRenderer.Builder rendererBuilder = HtmlRenderer.builder();
+        tablesExtension.extend(rendererBuilder, "HTML");
+
+        String html = rendererBuilder.build()
+                                     .render(parserBuilder.build()
+                                                          .parse(markdownSource.toString()));
+
+        if (html.startsWith("<p>")) {
+            html = html.substring("<p>".length());
+        }
+        html = html.replace("</p>", "");
+        List<DocTree> result = new ArrayList<>();
+        String[] parts = html.split(Pattern.quote("" + REPLACEMENT));
+
+        result.add(trees.getDocTreeFactory().newTextTree(parts[0]));
+
+        for (int i = 1; i < parts.length; i++) {
+            result.add(replacements.get(i - 1));
+            result.add(trees.getDocTreeFactory().newTextTree(parts[i]));
+        }
+
+        return result;
     }
 
     private void processDocSnippet(StringBuilder sb, SnippetTree javadocSnippet, Integer snippetCount, TreePath docPath,DocCommentTree doc, DocTrees trees) {
@@ -2105,12 +2226,14 @@ public class ElementJavadoc {
             if (docURL == null && goToSource == null) {
                 content.insert(0, "<base href=\"" + fo.toURL() + "\"></base>"); //NOI18N
             }
-            goToSource = new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent evt) {
-                    ElementOpen.open(fo, handle);
-                }
-            };
+            if (handle != null) {
+                goToSource = new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent evt) {
+                        ElementOpen.open(fo, handle);
+                    }
+                };
+            }
         }
         if (url != null) {
             docURL = url;

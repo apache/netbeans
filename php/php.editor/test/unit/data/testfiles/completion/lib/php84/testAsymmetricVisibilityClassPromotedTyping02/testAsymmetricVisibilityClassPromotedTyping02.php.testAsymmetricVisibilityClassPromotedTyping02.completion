@@ -1,0 +1,11 @@
+Code completion result for source line:
+p|// test
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    parent                                     null
+KEYWORD    private                                    null
+KEYWORD    private(set)                               null
+KEYWORD    protected                                  null
+KEYWORD    protected(set)                             null
+KEYWORD    public                                     null
+KEYWORD    public(set)                                null

@@ -26,7 +26,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.swing.JButton;
 import org.netbeans.modules.form.ParametersPicker.ComponentComparator;
@@ -70,7 +69,7 @@ class ConnectionCustomEditor extends javax.swing.JPanel {
                 beanList.add(radComp);
         }
         if (beanList.size() > 0) {
-            Collections.sort(beanList, new ComponentComparator());
+            beanList.sort(new ComponentComparator());
 
             beanCombo.addItem(FormUtils.getBundleString("CTL_CW_SelectBean")); // NOI18N
             for (RADComponent metacomp : beanList) {

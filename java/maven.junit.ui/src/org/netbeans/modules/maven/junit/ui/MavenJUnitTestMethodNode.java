@@ -21,7 +21,6 @@ package org.netbeans.modules.maven.junit.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -112,7 +111,7 @@ public class MavenJUnitTestMethodNode extends JUnitTestMethodNode {
             }
         }
 
-        Collections.sort(actions, (a, b) -> {
+        actions.sort((a, b) -> {
             String aName = (String)a.getValue(Action.NAME);
             String bName = (String)b.getValue(Action.NAME);
             if(aName == null) {
@@ -130,7 +129,7 @@ public class MavenJUnitTestMethodNode extends JUnitTestMethodNode {
         }
         actions.addAll(Arrays.asList(super.getActions(context)));
 
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     public FileObject getTestcaseFileObject() {

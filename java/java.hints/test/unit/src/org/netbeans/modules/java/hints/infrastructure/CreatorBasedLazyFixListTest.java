@@ -54,7 +54,7 @@ public class CreatorBasedLazyFixListTest extends HintsTestBase {
         final AtomicBoolean[] cancel = new AtomicBoolean[1];
         final CreatorBasedLazyFixList[] list = new CreatorBasedLazyFixList[1];
         
-        list[0] = new CreatorBasedLazyFixList(null, "", 0, Collections.singleton((ErrorRule) new ErrorRule() {
+        list[0] = new CreatorBasedLazyFixList(null, "", "", 0, Collections.singleton((ErrorRule) new ErrorRule() {
             public Set getCodes() {
                 throw new UnsupportedOperationException("Not supported yet.");
             }

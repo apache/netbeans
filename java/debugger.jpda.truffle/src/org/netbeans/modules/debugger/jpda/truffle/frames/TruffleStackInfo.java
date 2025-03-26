@@ -119,7 +119,7 @@ public final class TruffleStackInfo {
                 i1 = i2 + frameSeparator.length();
                 depth++;
             }
-            return truffleFrames.toArray(new TruffleStackFrame[truffleFrames.size()]);
+            return truffleFrames.toArray(new TruffleStackFrame[0]);
         } catch (InvalidExpressionException | InvalidObjectException ex) {
             return new TruffleStackFrame[] {};
         } catch (NoSuchMethodException ex) {

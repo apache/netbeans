@@ -20,6 +20,7 @@ package org.netbeans.api.java.source;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Scope;
+import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacScope;
@@ -59,6 +60,9 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -169,7 +173,9 @@ public final class ElementUtilities {
      *  @return true if and only if the given element is synthetic, false otherwise
      */
     public boolean isSynthetic(Element element) {
-        return (((Symbol) element).flags() & Flags.SYNTHETIC) != 0 || (((Symbol) element).flags() & Flags.GENERATEDCONSTR) != 0;
+        return (((Symbol) element).flags() & Flags.SYNTHETIC) != 0
+            || (((Symbol) element).flags() & Flags.GENERATEDCONSTR) != 0 
+            || (((Symbol) element).flags() & Flags.GENERATED_MEMBER) != 0;
     }
     
     /**Returns true if the given module is open.
@@ -289,11 +295,11 @@ public final class ElementUtilities {
      * will <b>also</b> map to the outer class' scope. The caller can then determine, based on {@link Element#getEnclosingElement()} and
      * the mapped Scope whether the symbol is directly declared, or inherited. Non-member symbols (variables, parameters, try resources, ...) 
      * map to Scope of their defining Method.
-     * <p/>
+     * <p>
      * If an Element from outer Scope is hidden by a similar Element
      * in inner scope, only the Element visible to the passed Scope is returned. For example, if both the starting (inner) class and its outer class
      * define method m(), only InnerClass.m() will be returned.
-     * <p/>
+     * <p>
      * Note that {@link Scope#getEnclosingMethod()} returns non-null even for class scopes of local or anonymous classes; check both {@link Scope#getEnclosingClass()}
      * and {@link Scope#getEnclosingMethod()} and their relationship to get the appropriate Element associated with the Scope.
      * 
@@ -313,8 +319,8 @@ public final class ElementUtilities {
         Elements elements = JavacElements.instance(ctx);
         Types types = JavacTypes.instance(ctx);
         TypeElement cls;
-        Deque<Scope>  outerScopes = new ArrayDeque();
-        Deque<Map>  visibleEls = new ArrayDeque();
+        Deque<Scope>  outerScopes = new ArrayDeque<>();
+        Deque<Map>  visibleEls = new ArrayDeque<>();
         Element current = null;
         
         while (scope != null) {
@@ -485,7 +491,7 @@ public final class ElementUtilities {
         for (CompilationUnitTree unit : Collections.singletonList(info.getCompilationUnit())) {
             TreePath path = new TreePath(unit);
             Scope scope = trees.getScope(path);
-            while (scope instanceof JavacScope && !((JavacScope)scope).isStarImportScope()) {
+            while (scope instanceof JavacScope && ((JavacScope)scope).getScopeType() == ORDINARY_SCOPE_TYPE) {
                 for (Element local : scope.getLocalElements()) {
                     if (local.getKind().isClass() || local.getKind().isInterface()) {
                         if (acceptor.accept(local, null)) {
@@ -515,6 +521,21 @@ public final class ElementUtilities {
             }
         }
         return membersList;
+    }
+
+    private static final Object ORDINARY_SCOPE_TYPE;
+    private static final Logger LOG = Logger.getLogger(ElementUtilities.class.getName());
+
+    static {
+        Object ordinary = null;
+
+        try {
+            ordinary = Enum.valueOf((Class<Enum>) Class.forName("com.sun.tools.javac.api.JavacScope$ScopeType"), "ORDINARY");
+        } catch (ClassNotFoundException ex) {
+            LOG.log(Level.FINE, null, ex);
+        }
+
+        ORDINARY_SCOPE_TYPE = ordinary;
     }
 
     /**Filter {@link Element}s
@@ -677,7 +698,7 @@ public final class ElementUtilities {
     /**
      * Finds all unimplemented methods in the given type and supertypes, but possibly include
      * also interface default methods.
-     * <p/>
+     * <p>
      * If the platform configured for the type is older than JDK8, the method is equivalent
      * to {@link #findUnimplementedMethods(javax.lang.model.element.TypeElement)}. If `includeDefaults'
      * is {@code true}, returns also default methods as if the methods were required to be
@@ -709,6 +730,8 @@ public final class ElementUtilities {
         DeclaredType dt = (DeclaredType)type.asType();
         Types types = JavacTypes.instance(ctx);
         Set<String> typeStrings = new HashSet<>();
+        Tree.Kind kind = info.getTrees().getTree(type).getKind();
+
         for (ExecutableElement ee : ElementFilter.methodsIn(info.getElements().getAllMembers(type))) {
             
             TypeMirror methodType = types.erasure(types.asMemberOf(dt, ee));
@@ -716,11 +739,14 @@ public final class ElementUtilities {
             if (typeStrings.contains(methodTypeString)) {
                 continue;
             }
+            // javac generated record members disappear if overridden
+            boolean replaceable = kind == Tree.Kind.RECORD && isSynthetic(ee);
+
             Set<Modifier> set = EnumSet.copyOf(notOverridable);                
-            set.removeAll(ee.getModifiers());                
+            set.removeAll(ee.getModifiers());
             if (set.size() == notOverridable.size()
                     && !overridesPackagePrivateOutsidePackage(ee, type) //do not offer package private methods in case they're from different package
-                    && !isOverridden(ee, type)) {
+                    && (replaceable || !isOverridden(ee, type))) {
                 overridable.add(ee);
                 if (ee.getModifiers().contains(Modifier.ABSTRACT)) {
                     typeStrings.add(methodTypeString);
@@ -819,7 +845,7 @@ public final class ElementUtilities {
      *         See method format for more details on parameter types.</dd>
      * </dl>
      * 
-     * @param elementDescription the description of the element that should be checked for existence
+     * @param description the description of the element that should be checked for existence
      * @return the found element, or null if not available
      * @since 0.115
      */
@@ -920,7 +946,143 @@ public final class ElementUtilities {
         }
         return null;
     }
-    
+
+    /**
+     * Find all elements that are linked record elements for the given input. Will
+     * return the record component element, field, accessor method, and canonical constructor
+     * parameters.
+     *
+     * This method can be called on any {@code Element}, and will return a collection
+     * with a single entry if the provided element is not a record element.
+     *
+     * @param forElement for which the linked elements should be found
+     * @return a collection containing the provided element, plus any additional elements
+     *         that are linked to it by the Java record specification
+     * @since 2.70
+     */
+    public Collection<? extends Element> getLinkedRecordElements(Element forElement) {
+        Parameters.notNull("forElement", forElement);
+
+        TypeElement record = null;
+        Name componentName = null;
+
+        switch (forElement.getKind()) {
+            case FIELD -> {
+                Element enclosing = forElement.getEnclosingElement();
+                if (enclosing.getKind() == ElementKind.RECORD) {
+                    record = (TypeElement) enclosing;
+                    componentName = forElement.getSimpleName();
+                }
+            }
+            case PARAMETER -> {
+                Element enclosing = forElement.getEnclosingElement();
+                if (enclosing.getKind() == ElementKind.CONSTRUCTOR) {
+                    Element enclosingType = enclosing.getEnclosingElement();
+                    if (enclosingType.getKind() == ElementKind.RECORD) {
+                        TypeElement recordType = (TypeElement) enclosingType;
+                        ExecutableElement constructor = recordCanonicalConstructor(recordType);
+                        if (constructor != null && constructor.equals(enclosing)) {
+                            int idx = constructor.getParameters().indexOf(forElement);
+                            if (idx >= 0 && idx < recordType.getRecordComponents().size()) {
+                                RecordComponentElement component = recordType.getRecordComponents().get(idx);
+                                if (component.getSimpleName().equals(forElement.getSimpleName())) {
+                                    record = recordType;
+                                    componentName = component.getSimpleName();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            case METHOD -> {
+                Element enclosing = forElement.getEnclosingElement();
+                ExecutableElement method = (ExecutableElement) forElement;
+                if (method.getParameters().isEmpty() && enclosing.getKind() == ElementKind.RECORD) {
+                    TypeElement recordType = (TypeElement) enclosing;
+                    for (RecordComponentElement component : recordType.getRecordComponents()) {
+                        if (forElement.equals(component.getAccessor())) {
+                            record = recordType;
+                            componentName = component.getSimpleName();
+                        }
+                    }
+                }
+            }
+            case RECORD_COMPONENT -> {
+                record = (TypeElement) forElement.getEnclosingElement();
+                componentName = forElement.getSimpleName();
+            }
+        }
+
+        if (record == null) {
+            return Collections.singleton(forElement);
+        }
+
+        RecordComponentElement component = null;
+        int componentIdx = 0;
+
+        for (RecordComponentElement c : record.getRecordComponents()) {
+            if (c.getSimpleName().equals(componentName)) {
+                component = c;
+                break;
+            }
+            componentIdx++;
+        }
+
+        if (component == null) {
+            //erroneous state(?), ignore:
+            return Collections.singleton(forElement);
+        }
+
+        Set<Element> result = new HashSet<>();
+
+        result.add(component);
+        result.add(component.getAccessor());
+
+        for (Element el : record.getEnclosedElements()) {
+            if (el.getKind() == ElementKind.FIELD && el.getSimpleName().equals(componentName)) {
+                result.add(el);
+                break;
+            }
+        }
+
+        ExecutableElement canonicalConstructor = recordCanonicalConstructor(record);
+        if (canonicalConstructor != null && componentIdx < canonicalConstructor.getParameters().size()) {
+            result.add(canonicalConstructor.getParameters().get(componentIdx));
+        }
+
+        return result;
+    }
+
+    private ExecutableElement recordCanonicalConstructor(TypeElement recordType) {
+        Supplier<ExecutableElement> fallback =
+                () -> {
+                          List<? extends RecordComponentElement> recordComponents = recordType.getRecordComponents();
+                          for (ExecutableElement c : ElementFilter.constructorsIn(recordType.getEnclosedElements())) {
+                              if (recordComponents.size() == c.getParameters().size()) {
+                                  Iterator<? extends RecordComponentElement> componentIt = recordComponents.iterator();
+                                  Iterator<? extends VariableElement> parameterIt = c.getParameters().iterator();
+                                  boolean componentMatches = true;
+
+                                  while (componentIt.hasNext() && parameterIt.hasNext() && componentMatches) {
+                                      TypeMirror componentType = componentIt.next().asType();
+                                      TypeMirror parameterType = parameterIt.next().asType();
+
+                                      componentMatches &= info.getTypes().isSameType(componentType, parameterType);
+                                  }
+                                  if (componentMatches) {
+                                      return c;
+                                  }
+                             }
+                          }
+                         return null;
+                    };
+        return ElementFilter.constructorsIn(recordType.getEnclosedElements())
+                            .stream()
+                            .filter(info.getElements()::isCanonicalConstructor)
+                            .findAny()
+                            .orElseGet(fallback);
+    }
+
     // private implementation --------------------------------------------------
 
     private static final Set<Modifier> NOT_OVERRIDABLE = EnumSet.of(Modifier.STATIC, Modifier.FINAL, Modifier.PRIVATE);

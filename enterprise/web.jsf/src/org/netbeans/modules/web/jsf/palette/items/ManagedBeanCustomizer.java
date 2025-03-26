@@ -59,13 +59,13 @@ import org.netbeans.modules.j2ee.persistence.api.EntityClassScope;
 import org.netbeans.modules.j2ee.persistence.wizard.EntityClosure;
 import org.netbeans.modules.j2ee.persistence.wizard.jpacontroller.JpaControllerUtil;
 import org.netbeans.modules.web.api.webmodule.WebModule;
-import org.netbeans.modules.web.beans.MetaModelSupport;
-import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 import org.netbeans.modules.web.jsf.JsfTemplateUtils;
 import org.netbeans.modules.web.jsf.JsfTemplateUtils.OpenTemplateAction;
 import org.netbeans.modules.web.jsf.JsfTemplateUtils.TemplateType;
 import org.netbeans.modules.web.jsf.api.editor.JSFBeanCache;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
 import org.netbeans.modules.web.jsf.api.metamodel.FacesManagedBean;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.DialogDescriptor;
 import org.openide.filesystems.FileObject;
@@ -84,7 +84,7 @@ public class ManagedBeanCustomizer extends javax.swing.JPanel implements Cancell
     public static final String TABLE_TEMPLATE = "table.ftl"; // NOI18N
 
     private Project project;
-    private MetaModelSupport metaModelSupport;
+    private org.netbeans.modules.web.beans.MetaModelSupport metaModelSupport;
     private boolean collection;
     private boolean dummyBean = false;
     private Dialog dialog;
@@ -113,7 +113,8 @@ public class ManagedBeanCustomizer extends javax.swing.JPanel implements Cancell
             }
         });
         this.project = project;
-        this.metaModelSupport = new MetaModelSupport(project);
+        this.metaModelSupport = new org.netbeans.modules.web.beans.MetaModelSupport(project);
+        
         this.collection = collection;
         readOnlyCheckBox.setVisible(enableReadOnly);
         hint.setVisible(false);
@@ -291,7 +292,7 @@ public class ManagedBeanCustomizer extends javax.swing.JPanel implements Cancell
                                 props.add(NbBundle.getMessage(ManagedBeanCustomizer.class, "ManagedBeanCustomizer.notManagedBeanFound")); // NOI18N
                                 dummyBean = true;
                             }
-                            managedBeanCombo.setModel(new DefaultComboBoxModel(props.toArray(new String[props.size()])));
+                            managedBeanCombo.setModel(new DefaultComboBoxModel(props.toArray(new String[0])));
                         }
                     });
                 }
@@ -367,9 +368,9 @@ public class ManagedBeanCustomizer extends javax.swing.JPanel implements Cancell
         }
         try {
             //check web beans
-            metaModelSupport.getMetaModel().runReadAction(new MetadataModelAction<WebBeansModel, Void>() {
+            metaModelSupport.getMetaModel().runReadAction(new MetadataModelAction<org.netbeans.modules.web.beans.api.model.WebBeansModel, Void>() {
                 @Override
-                public Void run(WebBeansModel metadata) throws Exception {
+                public Void run(org.netbeans.modules.web.beans.api.model.WebBeansModel metadata) throws Exception {
                     for (Element bean : metadata.getNamedElements()) {
                         if (bean == null) {
                             continue;
@@ -439,7 +440,7 @@ public class ManagedBeanCustomizer extends javax.swing.JPanel implements Cancell
         private final List<String> result;
         private boolean scanning;
 
-        public SearchTask(String managedBean, String entityClassName, String managedBeanName, 
+        public SearchTask(String managedBean, String entityClassName, String managedBeanName,
                 List<String> result, boolean scanning) {
             this.managedBean = managedBean;
             this.entityClassName = entityClassName;

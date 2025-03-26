@@ -389,7 +389,7 @@ public class PropertyUtils {
      * @param basedir a directory to resolve relative to (need not exist on disk)
      * @param file a file or directory to find a relative path for
      * @return a relativized path (slash-separated), or null if it is not possible (e.g. different DOS drives);
-     *         just <samp>.</samp> in case the paths are the same
+     *         just <em>.</em> in case the paths are the same
      * @throws IllegalArgumentException if the basedir is known to be a file and not a directory
      */
     public static @CheckForNull String relativizeFile(File basedir, File file) {
@@ -458,7 +458,7 @@ public class PropertyUtils {
     /**
      * Split an Ant-style path specification into components.
      * Tokenizes on <code>:</code> and <code>;</code>, paying
-     * attention to DOS-style components such as <samp>C:\FOO</samp>.
+     * attention to DOS-style components such as <em>C:\FOO</em>.
      * Also removes any empty components.
      * @param path an Ant-style path (elements arbitrary) using DOS or Unix separators
      * @return a tokenization of that path into components
@@ -515,7 +515,7 @@ public class PropertyUtils {
             //Fix for issue #57304
             l.add(Character.toString(dosHack));
         }
-        return l.toArray(new String[l.size()]);
+        return l.toArray(new String[0]);
     }
 
     private static final Pattern VALID_PROPERTY_NAME = Pattern.compile("[-._a-zA-Z0-9]+"); // NOI18N

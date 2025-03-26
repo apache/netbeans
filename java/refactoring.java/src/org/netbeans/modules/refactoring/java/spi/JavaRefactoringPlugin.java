@@ -89,7 +89,7 @@ public abstract class JavaRefactoringPlugin extends ProgressProviderAdapter impl
     }
 
     private static Collection<org.netbeans.modules.refactoring.spi.ModificationResult> createJavaModifications(Collection<ModificationResult> modifications) {
-        LinkedList<org.netbeans.modules.refactoring.spi.ModificationResult> result = new LinkedList();
+        LinkedList<org.netbeans.modules.refactoring.spi.ModificationResult> result = new LinkedList<>();
         for (ModificationResult r:modifications) {
             result.add(new JavaModificationResult(r));
         }
@@ -161,7 +161,7 @@ public abstract class JavaRefactoringPlugin extends ProgressProviderAdapter impl
         if (cpInfo==null) {
             Collection<? extends TreePathHandle> handles = refactoring.getRefactoringSource().lookupAll(TreePathHandle.class);
             if (!handles.isEmpty()) {
-                cpInfo = RefactoringUtils.getClasspathInfoFor(handles.toArray(new TreePathHandle[handles.size()]));
+                cpInfo = RefactoringUtils.getClasspathInfoFor(handles.toArray(new TreePathHandle[0]));
             } else {
                 cpInfo = JavaRefactoringUtils.getClasspathInfoFor((FileObject)null);
             }

@@ -23,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -177,6 +178,15 @@ public final class CachingArchiveClassLoader extends ClassLoader {
                             usedRoots
                                     .map((c) -> RES_PROCESSORS.equals(name) ? null : c)
                                     .ifPresent((c) -> c.accept(p.first()));
+                        } else {
+                            URI dirURI = archive.getDirectory(name);
+
+                            if (dirURI != null) {
+                                v.add(dirURI.toURL());
+                                usedRoots
+                                        .map((c) -> RES_PROCESSORS.equals(name) ? null : c)
+                                        .ifPresent((c) -> c.accept(p.first()));
+                            }
                         }
                     }
                     return v.elements();

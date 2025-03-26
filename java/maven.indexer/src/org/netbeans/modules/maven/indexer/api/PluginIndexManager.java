@@ -24,7 +24,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -265,7 +264,7 @@ public class PluginIndexManager {
         qf.setValue(prefix);
         qf.setOccur(QueryField.OCCUR_MUST);
         qf.setMatch(QueryField.MATCH_EXACT);
-        for (NBVersionInfo v : RepositoryQueries.findResult(Collections.singletonList(qf), null).getResults()) {
+        for (NBVersionInfo v : RepositoryQueries.findResult(List.of(qf), null).getResults()) {
             result.add(v.getGroupId() + '|' + v.getArtifactId() + '|' + v.getVersion());
         }
         // This is more complete but much too slow:
@@ -319,7 +318,7 @@ public class PluginIndexManager {
             String[] gav = extensionPlugin.split(":", 3);
             MavenEmbedder online = EmbedderFactory.getOnlineEmbedder();
             Artifact art = online.createArtifact(gav[0], gav[1], gav[2], "maven-plugin");
-            online.resolve(art, Collections.<ArtifactRepository>emptyList(), online.getLocalRepository());
+            online.resolveArtifact(art, Collections.<ArtifactRepository>emptyList(), online.getLocalRepository());
             File jar = art.getFile();
             if (jar.isFile()) {
                 Map<String, List<String>> phases = parsePhases("jar:" + BaseUtilities.toURI(jar) + "!/META-INF/plexus/components.xml", packaging);

@@ -1,0 +1,41 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+TMPFLD = ./build/
+OFLD = ./build/
+
+all: prepfolder app64.exe app.exe
+
+prepfolder:
+	mkdir -p $(TMPFLD)
+	mkdir -p $(OFLD)
+
+clean:
+	rm -f *.res *.exe
+
+app64.res: app.rc app.exe.manifest
+	x86_64-w64-mingw32-windres -o$(TMPFLD)app64.res -Ocoff -DMANIFEST_FILE=app.exe.manifest app.rc
+
+app64.exe: app.cpp applauncher.cpp app64.res ../../../platform/o.n.bootstrap/launcher/windows/utilsfuncs.cpp
+	x86_64-w64-mingw32-gcc -s -DNBEXEC_DLL='"/lib/nbexec64.dll"' -DARCHITECTURE=64 -Wl,--nxcompat -Wl,--dynamicbase -Wl,--no-seh app.cpp -mwindows applauncher.cpp $(TMPFLD)app64.res ../../../platform/o.n.bootstrap/launcher/windows/utilsfuncs.cpp ../../../nb/ide.launcher/windows/nblauncher.cpp -I ../../../platform/o.n.bootstrap/launcher/windows/ -o$(OFLD)app64.exe -static -lstdc++ -static-libstdc++ -static-libgcc
+
+app.res: app.rc app.exe.manifest
+	i686-w64-mingw32-windres -o$(TMPFLD)app.res -Ocoff -DMANIFEST_FILE=app.exe.manifest app.rc
+
+app.exe: app.cpp applauncher.cpp app.res ../../../platform/o.n.bootstrap/launcher/windows/utilsfuncs.cpp
+	i686-w64-mingw32-gcc -s -DNBEXEC_DLL='"/lib/nbexec.dll"' -DARCHITECTURE=32 -Wl,--nxcompat -Wl,--dynamicbase -Wl,--no-seh -mwindows app.cpp applauncher.cpp $(TMPFLD)app.res ../../../platform/o.n.bootstrap/launcher/windows/utilsfuncs.cpp ../../../nb/ide.launcher/windows/nblauncher.cpp -I ../../../platform/o.n.bootstrap/launcher/windows/ -o$(OFLD)app.exe -static -lstdc++ -static-libstdc++ -static-libgcc
+

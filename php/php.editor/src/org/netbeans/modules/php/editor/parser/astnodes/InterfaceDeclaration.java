@@ -41,7 +41,7 @@ public class InterfaceDeclaration extends TypeDeclaration {
     }
 
     private InterfaceDeclaration(int start, int end, Identifier interfaceName, List<Expression> interfaces, Block body, List<Attribute> attributes) {
-        this(start, end, interfaceName, interfaces.toArray(new Expression[interfaces.size()]), body, attributes);
+        this(start, end, interfaceName, interfaces.toArray(new Expression[0]), body, attributes);
     }
 
     public InterfaceDeclaration(int start, int end, Identifier interfaceName, List<Expression> interfaces, Block body) {
@@ -55,7 +55,7 @@ public class InterfaceDeclaration extends TypeDeclaration {
                 start,
                 declaration.getEndOffset(),
                 declaration.getName(),
-                declaration.getInterfaes(),
+                declaration.getInterfaces(),
                 declaration.getBody(),
                 attributes
         );

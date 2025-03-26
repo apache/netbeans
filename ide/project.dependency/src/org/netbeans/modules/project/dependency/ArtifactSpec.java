@@ -316,6 +316,31 @@ public final class ArtifactSpec<T> {
         }
         return new ArtifactSpec<V>(VersionKind.REGULAR, groupId, artifactId, versionSpec, type, classifier, optional, uri, localFile, Collections.emptySet(), data);
     }
+    
+    /**
+     * Creates a partial artifact specification, usable as a description. The artifact does not contain all the metadata, but serves as a match
+     * for artifacts managed by the build system.
+     * @param groupId
+     * @param artifactId
+     * @return spec instance
+     * @since 1.7
+     */
+    public static ArtifactSpec make(String groupId, String artifactId) {
+        return createVersionSpec(groupId, artifactId, null, null, null, false, null, null);
+    }
+
+    /**
+     * Creates a partial artifact specification, usable as a description. The artifact does not contain all the metadata, but serves as a match
+     * for artifacts managed by the build system.
+     * @param groupId group ID
+     * @param artifactId artifact ID
+     * @param versionSpec version
+     * @return spec instance
+     * @since 1.7
+     */
+    public static ArtifactSpec make(String groupId, String artifactId, String versionSpec) {
+        return createVersionSpec(groupId, artifactId, null, null, versionSpec, false, null, null);
+    }
 
     public static <V> ArtifactSpec<V> createSnapshotSpec(
             @NullAllowed String groupId, @NullAllowed String artifactId, 
@@ -335,6 +360,10 @@ public final class ArtifactSpec<T> {
         return new ArtifactSpec<V>(VersionKind.SNAPSHOT, groupId, artifactId, versionSpec, type, classifier, optional, uri, localFile, Collections.emptySet(), data);
     }
     
+    public static final <T> Builder<T> describe(String group, String artifact) {
+        return new Builder(group, artifact, null, null);
+    }
+    
     public static final <T> Builder<T> builder(String group, String artifact, String version, T projectData) {
         return new Builder(group, artifact, version, projectData);
     }
@@ -343,7 +372,7 @@ public final class ArtifactSpec<T> {
         private final T data;
         private final String groupId;
         private final String artifactId;
-        private final String versionSpec;
+        private String versionSpec;
         private VersionKind kind = VersionKind.REGULAR;
         private String type;
         private String classifier;
@@ -357,6 +386,16 @@ public final class ArtifactSpec<T> {
             this.artifactId = artifactId;
             this.versionSpec = versionSpec;
             this.data = data;
+        }
+        
+        public Builder versionKind(VersionKind kind) {
+            this.kind = kind;
+            return this;
+        }
+        
+        public Builder version(String versionSpec) {
+            this.versionSpec = versionSpec;
+            return this;
         }
 
         public Builder type(String type) {

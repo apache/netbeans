@@ -26,11 +26,19 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -41,31 +49,43 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
+import org.eclipse.lsp4j.CreateFile;
+import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
+import org.eclipse.lsp4j.ResourceOperation;
 import org.eclipse.lsp4j.SymbolKind;
 import org.eclipse.lsp4j.SymbolTag;
+import org.eclipse.lsp4j.TextDocumentEdit;
+import org.eclipse.lsp4j.TextEdit;
+import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
+import org.eclipse.lsp4j.WorkspaceEdit;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.api.editor.document.LineDocument;
-import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.lsp.StructureElement;
 import org.netbeans.modules.editor.java.Utilities;
+import org.netbeans.modules.java.lsp.server.protocol.NbCodeClientCapabilities;
+import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
 import org.netbeans.spi.jumpto.type.SearchType;
 import org.openide.cookies.EditorCookie;
+import org.openide.cookies.SaveCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
+import org.openide.util.Union2;
 
 /**
  *
  * @author lahvac
  */
 public class Utils {
+
+    public static final String DEFAULT_COMMAND_PREFIX = "nbls";
 
     public static SymbolKind structureElementKind2SymbolKind (StructureElement.Kind kind) {
         switch (kind) {
@@ -327,19 +347,15 @@ public class Utils {
         }
     }
 
-    public static Position createPosition(LineDocument doc, int offset) {
-        try {
-            int line = LineDocumentUtils.getLineIndex(doc, offset);
-            int column = offset - LineDocumentUtils.getLineStart(doc, offset);
+    public static Position createPosition(StyledDocument doc, int offset) {
+        int line = NbDocument.findLineNumber(doc, offset);
+        int column = offset - NbDocument.findLineOffset(doc, line);
 
-            return new Position(line, column);
-        } catch (BadLocationException ex) {
-            throw new IllegalStateException(ex);
-        }
+        return new Position(line, column);
     }
 
-    public static int getOffset(LineDocument doc, Position pos) {
-        return LineDocumentUtils.getLineStartFromIndex(doc, pos.getLine()) + pos.getCharacter();
+    public static int getOffset(StyledDocument doc, Position pos) {
+        return NbDocument.findLineOffset(doc,pos.getLine()) + pos.getCharacter();
     }
 
     public static synchronized String toUri(FileObject file) {
@@ -374,7 +390,7 @@ public class Utils {
                 i += 1;
             }
             if (replaced != null) {
-                replaced.append(text.substring(lastPos, text.length()));
+                replaced.append(text.substring(lastPos));
                 text = replaced.toString();
             }
             replaced = null;
@@ -405,43 +421,184 @@ public class Utils {
 
     /**
      * Simple conversion from HTML to plaintext. Removes all html tags incl. attributes,
-     * replaces BR, P and HR tags with newlines.
+     * replaces BR, P and HR tags with newlines. The method optionally collapses whitespaces:
+     * all whitespace characters are replaced by spaces, adjacent spaces collapsed to single one, leading
+     * and trailing spaces removed.
      * @param s html text
+     * @param collapseWhitespaces to collapse 
      * @return plaintext
      */
-    public static String html2plain(String s) {
+    public static String html2plain(String s, boolean collapseWhitespaces) {
+        if (s == null) {
+            return null;
+        }
         boolean inTag = false;
+        boolean whitespace = false;
+
         int tagStart = -1;
         StringBuilder sb = new StringBuilder();
+        String additional = null;
         for (int i = 0; i < s.length(); i++) {
             char ch = s.charAt(i);
-            if (inTag) {
+            T: if (inTag) {
                 boolean alpha = Character.isAlphabetic(ch);
                 if (tagStart > 0 && !alpha) {
                     String t = s.substring(tagStart, i).toLowerCase(Locale.ENGLISH);
-                    switch (t) {
-                        case "br": case "p": case "hr": // NOI1N
-                            sb.append("\n");
-                            break;
-                    }
                     // prevent entering tagstart state again
                     tagStart = -2;
+                    if (ch == '>') { // NOI18N
+                        inTag = false;
+                    }
+                    switch (t) {
+                        case "br": case "p": case "hr": // NOI1N
+                            ch ='\n'; // NOI18N
+                            // continues to process 'ch' as if it came from the string, but `inTag` remains
+                            // the same.
+                            break T;
+                        case "li":
+                            ch = '\n';
+                            additional = "* ";
+                            break T;
+                    }
                 }
                 if (ch == '>') { // NOI18N
                     inTag = false;
                 } else if (tagStart == -1 && alpha) {
                     tagStart = i;
                 }
+                continue;
             } else {
                 if (ch == '<') { // NOI18N
                     tagStart = -1;
                     inTag = true;
                     continue;
+                } else if (ch == '&') {
+                    if ("&nbsp;".contentEquals(s.subSequence(i, Math.min(s.length(), i + 6)))) {
+                        i += 5;
+                        ch = ' ';  // NOI18N
+                    }
                 }
-                sb.append(ch);
+            }
+            if (collapseWhitespaces) {
+                if (ch == '\n') {
+                    ch = ' ';
+                }
+                if (Character.isWhitespace(ch)) {
+                    if (whitespace) {
+                        continue;
+                    }
+                    ch = ' '; // NOI18N
+                    whitespace = true;
+                } else {
+                    whitespace = false;
+                }
+            }
+            sb.append(ch);
+            if (additional != null) {
+                sb.append(additional);
+                additional = null;
             }
         }
-        return sb.toString();
+        return collapseWhitespaces ? sb.toString().trim() : sb.toString();
     }
 
+    /**
+     * Simple conversion from HTML to plaintext. Removes all html tags incl. attributes,
+     * replaces BR, P and HR tags with newlines.
+     * @param s html text
+     * @return plaintext
+     */
+    public static String html2plain(String s) {
+        return html2plain(s, false);
+    }
+
+    public static String encodeCommand(String cmd, NbCodeClientCapabilities capa) {
+        String prefix = capa != null ? capa.getCommandPrefix()
+                                     : DEFAULT_COMMAND_PREFIX;
+
+        if (cmd.startsWith(DEFAULT_COMMAND_PREFIX) &&
+            !DEFAULT_COMMAND_PREFIX.equals(prefix)) {
+            return prefix + cmd.substring(DEFAULT_COMMAND_PREFIX.length());
+        } else {
+            return cmd;
+        }
+    }
+
+    public static String decodeCommand(String cmd, NbCodeClientCapabilities capa) {
+        String prefix = capa != null ? capa.getCommandPrefix()
+                                     : DEFAULT_COMMAND_PREFIX;
+
+        if (cmd.startsWith(prefix) &&
+            !DEFAULT_COMMAND_PREFIX.equals(prefix)) {
+            return DEFAULT_COMMAND_PREFIX + cmd.substring(prefix.length());
+        } else {
+            return cmd;
+        }
+    }
+
+    public static void ensureCommandsPrefixed(Collection<String> commands) {
+        Set<String> wrongCommands = commands.stream()
+                                            .filter(cmd -> !cmd.startsWith(DEFAULT_COMMAND_PREFIX))
+                                            .filter(cmd -> !cmd.startsWith("test."))
+                                            .collect(Collectors.toSet());
+
+        if (!wrongCommands.isEmpty()) {
+            throw new IllegalStateException("Some commands are not properly prefixed: " + wrongCommands);
+        }
+    }
+    
+    private static String nonNull(String t) {
+        return t == null ? "" : t;
+    }
+    
+    public static WorkspaceEdit workspaceEditFromApi(org.netbeans.api.lsp.WorkspaceEdit edit, String uri, NbCodeLanguageClient client) {
+        Set<String> createdResources = new HashSet<>();
+        List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
+        for (Union2<org.netbeans.api.lsp.TextDocumentEdit, org.netbeans.api.lsp.ResourceOperation> parts : edit.getDocumentChanges()) {
+            if (parts.hasFirst()) {
+                String docUri = parts.first().getDocument();
+                try {
+                    FileObject file = Utils.fromUri(docUri);
+                    if (file == null && uri != null) {
+                        file = Utils.fromUri(uri);
+                    }
+                    FileObject fo = file;
+                    if (fo != null) {
+                        List<TextEdit> edits = parts.first().getEdits().stream().map(te -> new TextEdit(new Range(Utils.createPosition(fo, te.getStartOffset()), Utils.createPosition(fo, te.getEndOffset())), nonNull(te.getNewText()))).collect(Collectors.toList());
+                        TextDocumentEdit tde = new TextDocumentEdit(new VersionedTextDocumentIdentifier(docUri, -1), edits);
+                        documentChanges.add(Either.forLeft(tde));
+                    } else if (createdResources.contains(docUri)) {
+                        // PENDING: now accept just initial content. In theory, no edits can overlap, so for a new resource,
+                        // only inserts with 0 offset are permitted.
+                        List<TextEdit> edits = parts.first().getEdits().stream().filter(te -> te.getStartOffset() == 0 && te.getEndOffset() == 0).
+                                map(te -> new TextEdit(new Range(new Position(0, 0), new Position(0, 0)), nonNull(te.getNewText()))).
+                                collect(Collectors.toList());
+                        TextDocumentEdit tde = new TextDocumentEdit(new VersionedTextDocumentIdentifier(docUri, -1), edits);
+                        documentChanges.add(Either.forLeft(tde));
+                    }
+                } catch (Exception ex) {
+                    client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                }
+            } else {
+                if (parts.second() instanceof org.netbeans.api.lsp.ResourceOperation.CreateFile) {
+                    String res = ((org.netbeans.api.lsp.ResourceOperation.CreateFile) parts.second()).getNewFile();
+                    documentChanges.add(Either.forRight(new CreateFile(res)));
+                    createdResources.add(res);
+                } else {
+                    throw new IllegalStateException(String.valueOf(parts.second()));
+                }
+            }
+        }
+        return new WorkspaceEdit(documentChanges);
+    }
+
+    public static Predicate<String> codeActionKindFilter(List<String> only) {
+        return k -> only == null ||
+                    only.stream()
+                        .anyMatch(o -> k.equals(o) || k.startsWith(o + "."));
+    }
+
+    public static boolean wrappedBoolean2Boolean(Boolean b, boolean defaultValue) {
+        return b != null ? b : defaultValue;
+    }
 }

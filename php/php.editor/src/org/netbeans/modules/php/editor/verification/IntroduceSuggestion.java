@@ -20,6 +20,7 @@ package org.netbeans.modules.php.editor.verification;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.swing.text.BadLocationException;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
@@ -40,6 +42,7 @@ import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.UiUtils;
 import org.netbeans.modules.csl.spi.GsfUtilities;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
+import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.completion.PHPCompletionItem;
@@ -51,13 +54,16 @@ import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.api.elements.BaseFunctionElement.PrintAs;
 import org.netbeans.modules.php.editor.api.elements.ClassElement;
 import org.netbeans.modules.php.editor.api.elements.ElementFilter;
+import org.netbeans.modules.php.editor.api.elements.EnumCaseElement;
 import org.netbeans.modules.php.editor.api.elements.FieldElement;
 import org.netbeans.modules.php.editor.api.elements.MethodElement;
 import org.netbeans.modules.php.editor.api.elements.TypeConstantElement;
 import org.netbeans.modules.php.editor.elements.MethodElementImpl;
 import org.netbeans.modules.php.editor.lexer.LexUtilities;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
+import org.netbeans.modules.php.editor.model.CaseElement;
 import org.netbeans.modules.php.editor.model.ClassScope;
+import org.netbeans.modules.php.editor.model.EnumScope;
 import org.netbeans.modules.php.editor.model.InterfaceScope;
 import org.netbeans.modules.php.editor.model.MethodScope;
 import org.netbeans.modules.php.editor.model.Model;
@@ -74,6 +80,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
+import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticConstantAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticFieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticMethodInvocation;
@@ -114,6 +121,10 @@ public class IntroduceSuggestion extends SuggestionRule {
         return Bundle.IntroduceHintDispName();
     }
 
+    protected PhpVersion getPhpVersion(@NullAllowed FileObject fileObject) {
+        return fileObject == null ? PhpVersion.getDefault() : CodeUtils.getPhpVersion(fileObject);
+    }
+
     @Override
     public void invoke(PHPRuleContext context, List<Hint> hints) {
         PHPParseResult phpParseResult = (PHPParseResult) context.parserResult;
@@ -132,28 +143,38 @@ public class IntroduceSuggestion extends SuggestionRule {
         OffsetRange lineBounds = VerificationUtils.createLineBounds(caretOffset, doc);
         if (lineBounds.containsInclusive(caretOffset)) {
             final Model model = phpParseResult.getModel();
-            IntroduceFixVisitor introduceFixVisitor = new IntroduceFixVisitor(model, lineBounds);
+            IntroduceFixVisitor introduceFixVisitor = new IntroduceFixVisitor(model, lineBounds, getPhpVersion(fileObject));
             phpParseResult.getProgram().accept(introduceFixVisitor);
-            IntroduceFix variableFix = introduceFixVisitor.getIntroduceFix();
-            if (variableFix != null) {
-                if (CancelSupport.getDefault().isCancelled()) {
-                    return;
+            List<IntroduceFix> variableFixes = introduceFixVisitor.getIntroduceFixes();
+            if (!variableFixes.isEmpty()) {
+                for (IntroduceFix variableFixe : variableFixes) {
+                    if (CancelSupport.getDefault().isCancelled()) {
+                        return;
+                    }
+                    hints.add(new Hint(IntroduceSuggestion.this, getDisplayName(),
+                            fileObject, variableFixe.getOffsetRange(),
+                            Collections.<HintFix>singletonList(variableFixe), 500));
                 }
-                hints.add(new Hint(IntroduceSuggestion.this, getDisplayName(),
-                        fileObject, variableFix.getOffsetRange(),
-                        Collections.<HintFix>singletonList(variableFix), 500));
             }
         }
     }
 
     private static class IntroduceFixVisitor extends DefaultTreePathVisitor {
+
         private final Model model;
         private final OffsetRange lineBounds;
-        private IntroduceFix fix;
+        private final List<IntroduceFix> fixes = new ArrayList<>();
+        private final PhpVersion phpVersion;
 
-        IntroduceFixVisitor(Model model, OffsetRange lineBounds) {
+        IntroduceFixVisitor(Model model, OffsetRange lineBounds, PhpVersion phpVersion) {
             this.lineBounds = lineBounds;
             this.model = model;
+            this.phpVersion = phpVersion;
+        }
+
+        private boolean hasConstants(TypeScope typeScope) {
+            return phpVersion.hasConstantsInTraits()
+                    || !(typeScope instanceof TraitScope);
         }
 
         @Override
@@ -185,7 +206,7 @@ public class IntroduceSuggestion extends SuggestionRule {
                     if (clzName != null && classes.isEmpty()) {
                         ClassElement clz = getIndexedClass(clzName);
                         if (clz == null) {
-                            fix = IntroduceClassFix.getInstance(clzName, model, instanceCreation);
+                            fixes.add(IntroduceClassFix.getInstance(clzName, model, instanceCreation));
                         }
                     }
                 }
@@ -209,9 +230,9 @@ public class IntroduceSuggestion extends SuggestionRule {
                         if (allMethods.isEmpty()) {
                             assert type != null;
                             FileObject fileObject = type.getFileObject();
-                            BaseDocument document = fileObject != null ? GsfUtilities.getDocument(fileObject, true) : null;
+                            BaseDocument document = fileObject != null ? (BaseDocument) GsfUtilities.getADocument(fileObject, true) : null;
                             if (document != null && fileObject.canWrite()) {
-                                fix = new IntroduceMethodFix(document, methodInvocation, type);
+                                fixes.add(new IntroduceMethodFix(document, methodInvocation, type));
                             }
                         }
                     }
@@ -240,9 +261,9 @@ public class IntroduceSuggestion extends SuggestionRule {
                         if (allMethods.isEmpty()) {
                             assert type != null;
                             FileObject fileObject = type.getFileObject();
-                            BaseDocument document = fileObject != null ? GsfUtilities.getDocument(fileObject, true) : null;
+                            BaseDocument document = fileObject != null ? (BaseDocument) GsfUtilities.getADocument(fileObject, true) : null;
                             if (document != null && fileObject.canWrite()) {
-                                fix = new IntroduceStaticMethodFix(document, methodInvocation, type);
+                                fixes.add(new IntroduceStaticMethodFix(document, methodInvocation, type));
                             }
                         }
                     }
@@ -267,10 +288,10 @@ public class IntroduceSuggestion extends SuggestionRule {
                         if (allFields.isEmpty()) {
                             assert type != null;
                             FileObject fileObject = type.getFileObject();
-                            BaseDocument document = fileObject != null ? GsfUtilities.getDocument(fileObject, false) : null;
+                            BaseDocument document = fileObject != null ? (BaseDocument) GsfUtilities.getADocument(fileObject, true) : null;
                             if (document != null && fileObject.canWrite()) {
                                 if (type instanceof ClassScope || type instanceof TraitScope) {
-                                    fix = new IntroduceFieldFix(document, fieldAccess, type);
+                                    fixes.add(new IntroduceFieldFix(document, fieldAccess, type));
                                 }
                             }
                         }
@@ -310,10 +331,10 @@ public class IntroduceSuggestion extends SuggestionRule {
                         if (allFields.isEmpty()) {
                             assert type != null;
                             FileObject fileObject = type.getFileObject();
-                            BaseDocument document = fileObject != null ? GsfUtilities.getDocument(fileObject, true) : null;
+                            BaseDocument document = fileObject != null ? (BaseDocument) GsfUtilities.getADocument(fileObject, true) : null;
                             if (document != null && fileObject.canWrite()) {
                                 if (type instanceof ClassScope || type instanceof TraitScope) {
-                                    fix = new IntroduceStaticFieldFix(document, fieldAccess, type);
+                                    fixes.add(new IntroduceStaticFieldFix(document, fieldAccess, type));
                                 }
                             }
                         }
@@ -329,7 +350,9 @@ public class IntroduceSuggestion extends SuggestionRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
-            if (lineBounds.containsInclusive(staticConstantAccess.getStartOffset())) {
+            if (!staticConstantAccess.isDynamicName()
+                    && (staticConstantAccess.getDispatcher() instanceof NamespaceName) // e.g. ClassName::CONSTANT, self::CONSTANT
+                    && lineBounds.containsInclusive(staticConstantAccess.getStartOffset())) {
                 String constName = staticConstantAccess.getConstantName().getName();
                 String clzName = CodeUtils.extractUnqualifiedClassName(staticConstantAccess);
 
@@ -337,16 +360,23 @@ public class IntroduceSuggestion extends SuggestionRule {
                     Collection<? extends TypeScope> allTypes = ModelUtils.resolveType(model, staticConstantAccess);
                     if (allTypes.size() == 1) {
                         TypeScope type = ModelUtils.getFirst(allTypes);
-                        // trait can't have constants
-                        if (!(type instanceof TraitScope)) {
+                        // trait can have constants since PHP 8.2
+                        if (hasConstants(type)) {
                             ElementQuery.Index index = model.getIndexScope().getIndex();
                             Set<TypeConstantElement> allConstants = ElementFilter.forName(NameKind.exact(constName)).filter(index.getAllTypeConstants(type));
-                            if (allConstants.isEmpty()) {
+                            Set<EnumCaseElement> allEnumCases = type instanceof EnumScope
+                                    ? ElementFilter.forName(NameKind.exact(constName)).filter(index.getAllEnumCases(type))
+                                    : Collections.emptySet();
+                            if (allConstants.isEmpty() && allEnumCases.isEmpty()) {
                                 assert type != null;
                                 FileObject fileObject = type.getFileObject();
-                                BaseDocument document = fileObject != null ? GsfUtilities.getDocument(fileObject, false) : null;
+                                BaseDocument document = fileObject != null ? (BaseDocument) GsfUtilities.getADocument(fileObject, true) : null;
+                                // if fileObject is null, document is null
                                 if (document != null && fileObject.canWrite()) {
-                                    fix = new IntroduceClassConstantFix(document, staticConstantAccess, (TypeScope) type);
+                                    fixes.add(new IntroduceClassConstantFix(document, staticConstantAccess, type));
+                                    if (type instanceof EnumScope) {
+                                        fixes.add(new IntroduceEnumCaseFix(document, staticConstantAccess, (EnumScope) type));
+                                    }
                                 }
                             }
                         }
@@ -358,10 +388,12 @@ public class IntroduceSuggestion extends SuggestionRule {
         }
 
         /**
-         * @return or null
+         * Get Fixes.
+         *
+         * @return fixes
          */
-        public IntroduceFix getIntroduceFix() {
-            return fix;
+        public List<IntroduceFix> getIntroduceFixes() {
+            return Collections.unmodifiableList(fixes);
         }
 
         private ClassElement getIndexedClass(String name) {
@@ -719,6 +751,79 @@ public class IntroduceSuggestion extends SuggestionRule {
         }
     }
 
+    private static class IntroduceEnumCaseFix extends IntroduceFix {
+
+        private final EnumScope type;
+        private final String template;
+        private final String enumCaseName;
+        private final String backingType;
+
+        public IntroduceEnumCaseFix(BaseDocument doc, StaticConstantAccess node, EnumScope type) {
+            super(doc, node);
+            this.type = type;
+            this.enumCaseName = ((StaticConstantAccess) node).getConstantName().getName();
+            this.backingType = type.getBackingType() != null ? type.getBackingType().toString() : null;
+            this.template = String.format(getTemplate(backingType), enumCaseName);
+        }
+
+        private String getTemplate(String backingType) {
+            String caseTemplate = "case %s;"; // NOI18N
+            if (backingType != null) {
+                if (Type.STRING.equals(backingType)) {
+                    caseTemplate = "case %s = '';"; // NOI18N
+                } else if (Type.INT.equals(backingType)) {
+                    caseTemplate = "case %s = " + (getLastIntIndex() + 1) + ";"; // NOI18N
+                }
+            }
+            return caseTemplate;
+        }
+
+        private int getLastIntIndex() {
+            int index = 0;
+            for (CaseElement enumCase : type.getDeclaredEnumCases()) {
+                String value = enumCase.getValue();
+                try {
+                    int intValue = Integer.parseInt(value);
+                    index = Integer.max(index, intValue);
+                } catch (NumberFormatException e) {
+                    // no-op
+                }
+            }
+            return index;
+        }
+
+        @Override
+        public void implement() throws Exception {
+            int templateOffset = getOffset();
+            EditList edits = new EditList(doc);
+            edits.replace(templateOffset, 0, "\n" + template, true, 0); // NOI18N
+            edits.apply();
+            int caretPositionFromEndOftemplate = Type.STRING.equalsIgnoreCase(backingType) ? 2 : 1;
+            templateOffset = LineDocumentUtils.getLineEnd(doc, templateOffset + 1) - caretPositionFromEndOftemplate;
+            UiUtils.open(type.getFileObject(), templateOffset);
+        }
+
+        @Override
+        @Messages({
+            "# {0} - Case name",
+            "# {1} - Type kind",
+            "# {2} - Type name",
+            "# {3} - File name",
+            "IntroduceHintEnumCaseDesc=Create Enum Case \"{0}\" in {1} \"{2}\" ({3})"
+        })
+        public String getDescription() {
+            String typeName = type.getName();
+            FileObject fileObject = type.getFileObject();
+            String fileName = fileObject == null ? UNKNOWN_FILE_NAME : fileObject.getNameExt();
+            String typeKindName = getTypeKindName(type);
+            return Bundle.IntroduceHintEnumCaseDesc(enumCaseName, typeKindName, typeName, fileName);
+        }
+
+        int getOffset() throws BadLocationException {
+            return IntroduceSuggestion.getOffset(doc, type, PhpElementKind.ENUM_CASE);
+        }
+    }
+
     abstract static class IntroduceFix implements HintFix {
 
         BaseDocument doc;
@@ -781,6 +886,10 @@ public class IntroduceSuggestion extends SuggestionRule {
                     TraitScope trait = (TraitScope) typeScope;
                     elements.addAll(trait.getDeclaredFields());
                     elements.addAll(trait.getDeclaredMethods());
+                } else if (typeScope instanceof EnumScope) {
+                    EnumScope enumScope = (EnumScope) typeScope;
+                    elements.addAll(enumScope.getDeclaredEnumCases());
+                    elements.addAll(enumScope.getDeclaredMethods());
                 }
                 break;
             case FIELD:
@@ -790,6 +899,12 @@ public class IntroduceSuggestion extends SuggestionRule {
                 } else if (typeScope instanceof TraitScope) {
                     TraitScope trait = (TraitScope) typeScope;
                     elements.addAll(trait.getDeclaredFields());
+                }
+                break;
+            case ENUM_CASE:
+                if (typeScope instanceof EnumScope) {
+                    EnumScope enumScope = (EnumScope) typeScope;
+                    elements.addAll(enumScope.getDeclaredEnumCases());
                 }
                 break;
             case TYPE_CONSTANT:
@@ -893,8 +1008,12 @@ public class IntroduceSuggestion extends SuggestionRule {
      * @return The offset after the last use trait statement if traits are used,
      * otherwise the offset after the open curly for the type
      */
-    private static int getOffsetAfterUseTrait(BaseDocument document, TypeScope typeScope) {
+    private static int getOffsetAfterUseTrait(BaseDocument document, TypeScope typeScope) throws BadLocationException {
         OffsetRange blockRange = typeScope.getBlockRange();
+        if (blockRange == null) {
+            // GH-6258 Block range of ClassScope created from ClassElement is null
+            return getOffsetAfterClassOpenCurly(document, typeScope.getOffset());
+        }
         int offset = blockRange.getEnd() - 1; // before close curly "}"
         Collection<ModelElement> elements = new HashSet<>();
         elements.addAll(typeScope.getDeclaredMethods());
@@ -936,7 +1055,7 @@ public class IntroduceSuggestion extends SuggestionRule {
 
     private static PHPCompletionItem.MethodDeclarationItem createMethodDeclarationItem(final TypeScope typeScope, final MethodInvocation node) {
         final String methodName = CodeUtils.extractFunctionName(node.getMethod());
-        final MethodElement method = MethodElementImpl.createMagicMethod(typeScope,
+        final MethodElement method = MethodElementImpl.forIntroduceHint(typeScope,
                 methodName, 0, getParameters(node.getMethod().getParameters()));
         return typeScope.isInterface()
                 ? PHPCompletionItem.MethodDeclarationItem.forIntroduceInterfaceHint(method, null)
@@ -945,7 +1064,7 @@ public class IntroduceSuggestion extends SuggestionRule {
 
     private static PHPCompletionItem.MethodDeclarationItem createMethodDeclarationItem(final TypeScope typeScope, final StaticMethodInvocation node) {
         final String methodName = CodeUtils.extractFunctionName(node.getMethod());
-        final MethodElement method = MethodElementImpl.createMagicMethod(typeScope, methodName,
+        final MethodElement method = MethodElementImpl.forIntroduceHint(typeScope, methodName,
                 Modifier.STATIC, getParameters(node.getMethod().getParameters()));
         return PHPCompletionItem.MethodDeclarationItem.forIntroduceHint(method, null);
     }
@@ -953,7 +1072,8 @@ public class IntroduceSuggestion extends SuggestionRule {
     @Messages({
         "IntroduceHintClassName=Class",
         "IntroduceHintInterfaceName=Interface",
-        "IntroduceHintTraitName=Trait"
+        "IntroduceHintTraitName=Trait",
+        "IntroduceHintEnumName=Enum",
     })
     private static String getTypeKindName(TypeScope typeScope) {
         if (typeScope instanceof ClassScope) {
@@ -962,6 +1082,8 @@ public class IntroduceSuggestion extends SuggestionRule {
             return Bundle.IntroduceHintInterfaceName();
         } else if (typeScope instanceof TraitScope) {
             return Bundle.IntroduceHintTraitName();
+        } else if (typeScope instanceof EnumScope) {
+            return Bundle.IntroduceHintEnumName();
         }
         assert false;
         return "?"; // NOI18N

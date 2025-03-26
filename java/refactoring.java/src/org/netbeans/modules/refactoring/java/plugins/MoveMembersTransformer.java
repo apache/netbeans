@@ -70,7 +70,7 @@ public class MoveMembersTransformer extends RefactoringVisitor {
     public MoveMembersTransformer(MoveRefactoring refactoring) {
         allElements = refactoring.getRefactoringSource().lookupAll(TreePathHandle.class);
         JavaMoveMembersProperties properties = refactoring.getContext().lookup(JavaMoveMembersProperties.class);
-        properties = properties == null ? new JavaMoveMembersProperties(allElements.toArray(new TreePathHandle[allElements.size()])) : properties;
+        properties = properties == null ? new JavaMoveMembersProperties(allElements.toArray(new TreePathHandle[0])) : properties;
         visibility = properties.getVisibility();
         usageOutsideOfPackage = new HashMap<>();
         usageOutsideOfType = new HashMap<>();
@@ -312,7 +312,7 @@ public class MoveMembersTransformer extends RefactoringVisitor {
         TreePath enclosingClassPath = JavaRefactoringUtils.findEnclosingClass(workingCopy, currentPath, true, true, true, true, true);
         Element enclosingElement = workingCopy.getTrees().getElement(enclosingClassPath);
 
-        final LinkedList<ExpressionTree> arguments = new LinkedList(node.getArguments());
+        final LinkedList<ExpressionTree> arguments = new LinkedList<>(node.getArguments());
         ExpressionTree newMethodSelect;
 
         if (el.getModifiers().contains(Modifier.STATIC)) {
@@ -908,8 +908,8 @@ public class MoveMembersTransformer extends RefactoringVisitor {
             builder.append("\n"); // NOI18N
         }
         boolean hasReturn = false;
-        if (returnType != null && returnType.getKind().equals(Tree.Kind.PRIMITIVE_TYPE)) {
-            if (!((PrimitiveTypeTree) returnType).getPrimitiveTypeKind().equals(TypeKind.VOID)) {
+        if (returnType != null && returnType.getKind() == Tree.Kind.PRIMITIVE_TYPE) {
+            if (((PrimitiveTypeTree) returnType).getPrimitiveTypeKind() != TypeKind.VOID) {
                 hasReturn = true;
             }
         }

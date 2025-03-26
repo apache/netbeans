@@ -21,9 +21,7 @@ package org.netbeans.modules.search.ui;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.util.LinkedList;
 import java.util.List;
@@ -130,24 +128,11 @@ public abstract class AbstractSearchResultsPanel extends javax.swing.JPanel
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
         toolBar = new ToolbarWithOverflow();
         contentPanel = new javax.swing.JPanel();
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-
         setLayout(new java.awt.BorderLayout());
 
-        toolBar.setFloatable(false);
         toolBar.setOrientation(JToolBar.VERTICAL);
         toolBar.setRollover(true);
         toolBar.setPreferredSize(null);
@@ -160,7 +145,6 @@ public abstract class AbstractSearchResultsPanel extends javax.swing.JPanel
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel contentPanel;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JToolBar toolBar;
     // End of variables declaration//GEN-END:variables
 
@@ -559,7 +543,7 @@ public abstract class AbstractSearchResultsPanel extends javax.swing.JPanel
                 break;
             }
         }
-        return children.toArray(new Node[children.size()]);
+        return children.toArray(new Node[0]);
     }
 
     private static int findRowIndexInOutline(Node node, Outline outline,

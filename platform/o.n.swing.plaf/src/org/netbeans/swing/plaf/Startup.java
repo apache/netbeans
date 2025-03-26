@@ -65,7 +65,7 @@ public final class Startup {
      */
     private static final boolean NO_CUSTOMIZATIONS = Boolean.getBoolean("netbeans.plaf.disable.ui.customizations"); //NOI18N
 
-    /** Constant for Nimbus L&F name */
+    /** Constant for Nimbus L&amp;F name */
     private static final String NIMBUS="Nimbus";
 
     /** Singleton instance */
@@ -158,8 +158,8 @@ public final class Startup {
           LookAndFeel lf = UIManager.getLookAndFeel();
           if (uiClass != lf.getClass()) {
               try {
-                lf = (LookAndFeel) uiClass.newInstance();
-              } catch (IllegalAccessException | InstantiationException ex) {
+                lf = (LookAndFeel) uiClass.getDeclaredConstructor().newInstance();
+              } catch (ReflectiveOperationException ex) {
                   return new LFInstanceOrName(uiClass.getName());
               }
           }
@@ -167,7 +167,7 @@ public final class Startup {
       }
     }
 
-    /** Default NetBeans logic for finding out the right L&F.
+    /** Default NetBeans logic for finding out the right L&amp;F.
      * @return name of the LaF to instantiate
      */
     private static String defaultLaF() {
@@ -334,6 +334,9 @@ public final class Startup {
             defaults.putDefaults (customs.getLookAndFeelCustomizationKeysAndValues());
         }
 
+        if (defaults.getBoolean("windowDefaultLookAndFeelDecorated")) {
+            JFrame.setDefaultLookAndFeelDecorated(true);
+        }
     }
 
     private void runPostInstall() {
@@ -382,7 +385,7 @@ public final class Startup {
         }
         try {
             Class klazz = UIUtils.classForName( uiClassName );
-            Object inst = klazz.newInstance();
+            Object inst = klazz.getDeclaredConstructor().newInstance();
             if( inst instanceof LFCustoms )
                 return ( LFCustoms ) inst;
         } catch( ClassNotFoundException e ) {
@@ -414,7 +417,7 @@ public final class Startup {
                 return new GtkLFCustoms();
             } else {
                 try {
-                    return (LFCustoms) UIUtils.classForName(FORCED_CUSTOMS).newInstance();
+                    return (LFCustoms) UIUtils.classForName(FORCED_CUSTOMS).getDeclaredConstructor().newInstance();
                 } catch (Exception e) {
                     System.err.println("UI customizations class not found: " //NOI18N
                         + FORCED_CUSTOMS); //NOI18N
@@ -511,6 +514,13 @@ public final class Startup {
      * as setting up a custom font size and loading a theme. Basically delegates to
      * {@link #run(java.lang.Class, int, java.net.URL, java.util.ResourceBundle)} with null
      * resource bundle.
+     * @param uiClass The UI class which should be used for the look and feel
+     * @param uiFontSize A custom fontsize, or 0.  This will be retrievable via UIManager.get("customFontSize") after this method has returned
+     *          if non 0.  If non zero, all of the standard Swing font keys in UIDefaults will be customized to
+     *          provide a font with the requested size.  Results are undefined for values less than 0 or greater
+     *          than any hard limit the platform imposes on font size.
+     * @param themeURL An optional URL for a theme file, or null. Theme file format documentation can be found
+     *        <a href="https://netbeans.apache.org/projects/ui/themes/themes">here</a>.
      */
     public static void run (Class uiClass, int uiFontSize, URL themeURL) {
         run(uiClass, uiFontSize, themeURL, null);
@@ -526,7 +536,7 @@ public final class Startup {
      *          provide a font with the requested size.  Results are undefined for values less than 0 or greater
      *          than any hard limit the platform imposes on font size.
      * @param themeURL An optional URL for a theme file, or null. Theme file format documentation can be found
-     *        <a href="ui.netbeans.org/project/ui/docs/ui/themes/themes.html">here</a>.
+     *        <a href="https://netbeans.apache.org/projects/ui/themes/themes">here</a>.
      * @param rb resource bundle to use for branding or null. Allows NetBeans to provide enhanced version
      *          of bundle that knows how to deal with branding. The bundle shall have the same keys as
      *          <code>org.netbeans.swing.plaf.Bundle</code> bundle has.

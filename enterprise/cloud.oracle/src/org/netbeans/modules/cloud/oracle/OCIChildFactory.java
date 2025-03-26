@@ -19,6 +19,8 @@
 package org.netbeans.modules.cloud.oracle;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
@@ -30,11 +32,19 @@ import org.openide.util.lookup.Lookups;
  * @author Jan Horvath
  */
 public class OCIChildFactory extends ChildFactory<OCIItem> {
-
+    private static final Logger LOG = Logger.getLogger(OCIChildFactory.class.getName());
+    
     private final OCIItem parent;
-
+    private final OCISessionInitiator session;
+    
     public OCIChildFactory(OCIItem parent) {
         this.parent = parent;
+        this.session = OCIManager.getDefault().getActiveProfile(parent);
+    }
+
+    public OCIChildFactory(OCIItem parent, OCISessionInitiator session) {
+        this.parent = parent;
+        this.session = session;
     }
 
     @Override
@@ -42,9 +52,21 @@ public class OCIChildFactory extends ChildFactory<OCIItem> {
         Lookup.Result<ChildrenProvider> lkpResult = Lookups.forPath(
                 String.format("Cloud/Oracle/%s/Nodes", parent.getKey().getPath()))
                 .lookupResult(ChildrenProvider.class);
-        lkpResult.allInstances()
+        lkpResult.allItems()
                 .parallelStream()
-                .forEach(kp -> toPopulate.addAll(kp.apply(parent)));
+                .forEach(it -> {
+                    try {
+                        ChildrenProvider kp = it.getInstance();
+                        if (kp instanceof ChildrenProvider.SessionAware) {
+                            toPopulate.addAll(((ChildrenProvider.SessionAware)kp).apply(parent, session));
+                        } else {
+                            toPopulate.addAll(kp.apply(parent));
+                        }
+                    } catch (RuntimeException ex) {
+                        // log
+                        LOG.log(Level.WARNING, "Error fetching children for {0}/{1}", new Object[] { parent.getKey(), it.getId() });
+                    }
+        });
         return true;
     }
     

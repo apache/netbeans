@@ -20,14 +20,25 @@ package org.netbeans.core.network.proxy.pac.impl;
 
 import javax.script.ScriptEngine;
 import org.junit.Assert;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import org.junit.Test;
+import org.netbeans.junit.NbModuleSuite;
+import org.netbeans.junit.NbTestCase;
 
-public class NbPacScriptEvaluatorTest {
+public class NbPacScriptEvaluatorTest extends NbTestCase {
 
-    @Test
-    public void findsAnEngineByDefault() {
+    public NbPacScriptEvaluatorTest(String name) {
+        super(name);
+    }
+
+    public static final junit.framework.Test suite() {
+        NbModuleSuite.Configuration cfg = NbModuleSuite.emptyConfiguration().
+                honorAutoloadEager(true).
+                enableClasspathModules(false).
+                gui(false);
+        
+        return cfg.clusters("platform|webcommon|ide").addTest(NbPacScriptEvaluatorTest.class).suite();
+    }
+
+    public void testFindsAnEngineByDefault() {
         StringBuilder err = new StringBuilder();
         ScriptEngine eng = findDefaultEngineInTheSystem(err);
         assertNotNull(err.toString(), eng);
@@ -37,8 +48,7 @@ public class NbPacScriptEvaluatorTest {
         return NbPacScriptEvaluator.newAllowedPacEngine(null, err);
     }
 
-    @Test
-    public void reportsAnErrorForNonExistingEngine() {
+    public void testReportsAnErrorForNonExistingEngine() {
         StringBuilder err = new StringBuilder();
         ScriptEngine eng = NbPacScriptEvaluator.newAllowedPacEngine("NonExisting", err);
         assertNull("No engine should be found: " + err.toString(), eng);

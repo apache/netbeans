@@ -1,0 +1,1 @@
+const a = <table>{/* Test */ /* Test */ /* Test */}{ a = 3 }</table>;

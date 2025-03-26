@@ -28,7 +28,7 @@
             <public-packages/>
             <class-path-extension>
                 <runtime-relative-path>bcpg.jar</runtime-relative-path>
-                <binary-origin>external/bcpg-jdk15on-1.70.jar</binary-origin>
+                <binary-origin>external/bcpg-jdk18on-1.77.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

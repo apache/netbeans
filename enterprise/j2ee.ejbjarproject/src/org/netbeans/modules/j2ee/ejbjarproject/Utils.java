@@ -167,7 +167,7 @@ public class Utils {
                 filteredResults.add(allProjects[i]);
             }
         }
-        return filteredResults.toArray(new Project[filteredResults.size()]);
+        return filteredResults.toArray(new Project[0]);
     }
 
     /**

@@ -73,7 +73,7 @@ public class LocalHistoryProvider implements VCSHistoryProvider, VersioningListe
         for (VCSFileProxy f : files) {
             StoreEntry[] ses = LocalHistory.getInstance().getLocalHistoryStore().getStoreEntries(f);
             for(StoreEntry se : ses) {
-                if(!storeEntries.keySet().contains(se.getTimestamp())) { 
+                if(!storeEntries.containsKey(se.getTimestamp())) {
                     HistoryEntry e = 
                         new HistoryEntry(
                             files, 
@@ -103,7 +103,7 @@ public class LocalHistoryProvider implements VCSHistoryProvider, VersioningListe
     public void fireHistoryChange(VCSFileProxy proxy) {
         HistoryChangeListener[] la;
         synchronized(listeners) {
-            la = listeners.toArray(new HistoryChangeListener[listeners.size()]);
+            la = listeners.toArray(new HistoryChangeListener[0]);
         }
         for (HistoryChangeListener l : la) {
             l.fireHistoryChanged(new HistoryEvent(this, new VCSFileProxy[] {proxy}));

@@ -575,7 +575,7 @@ public final class AppClientProject implements Project, FileChangeListener {
                                 libs.add(FileUtil.getArchiveRoot(children[i].toURL()));
                             }
                         }
-                        cpMod.getClassPathModifier().addRoots(libs.toArray(new URL[libs.size()]), ProjectProperties.JAVAC_CLASSPATH);
+                        cpMod.getClassPathModifier().addRoots(libs.toArray(new URL[0]), ProjectProperties.JAVAC_CLASSPATH);
                         libFolder.addFileChangeListener (AppClientProject.this);
                 }
                 

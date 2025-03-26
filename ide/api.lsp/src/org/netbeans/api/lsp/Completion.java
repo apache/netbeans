@@ -43,15 +43,17 @@ public final class Completion {
     static {
         CompletionAccessor.setDefault(new CompletionAccessor() {
             @Override
-            public Completion createCompletion(String label, Kind kind, List<Tag> tags, CompletableFuture<String> detail, CompletableFuture<String> documentation,
-                    boolean preselect, String sortText, String filterText, String insertText, TextFormat insertTextFormat, TextEdit textEdit, CompletableFuture<List<TextEdit>> additionalTextEdits,
-                    List<Character> commitCharacters) {
-                return new Completion(label, kind, tags, detail, documentation, preselect, sortText, filterText, insertText, insertTextFormat, textEdit, additionalTextEdits, commitCharacters);
+            public Completion createCompletion(String label, String labelDetail, String description, Kind kind, List<Tag> tags, CompletableFuture<String> detail, CompletableFuture<String> documentation,
+                    boolean preselect, String sortText, String filterText, String insertText, TextFormat insertTextFormat, TextEdit textEdit, Command command,
+                    CompletableFuture<List<TextEdit>> additionalTextEdits, List<Character> commitCharacters) {
+                return new Completion(label, labelDetail, description, kind, tags, detail, documentation, preselect, sortText, filterText, insertText, insertTextFormat, textEdit, command, additionalTextEdits, commitCharacters);
             }
         });
     }
 
     private final String label;
+    private final String labelDetail;
+    private final String labelDescription;
     private final Kind kind;
     private final List<Tag> tags;
     private final CompletableFuture<String> detail;
@@ -62,13 +64,16 @@ public final class Completion {
     private final String insertText;
     private final TextFormat insertTextFormat;
     private final TextEdit textEdit;
+    private final Command command;
     private final CompletableFuture<List<TextEdit>> additionalTextEdits;
     private final List<Character> commitCharacters;
 
-    private Completion(String label, Kind kind, List<Tag> tags, CompletableFuture<String> detail, CompletableFuture<String> documentation,
+    private Completion(String label, String labelDetail, String labelDescription, Kind kind, List<Tag> tags, CompletableFuture<String> detail, CompletableFuture<String> documentation,
             boolean preselect, String sortText, String filterText, String insertText, TextFormat insertTextFormat,
-            TextEdit textEdit, CompletableFuture<List<TextEdit>> additionalTextEdits, List<Character> commitCharacters) {
+            TextEdit textEdit, Command command, CompletableFuture<List<TextEdit>> additionalTextEdits, List<Character> commitCharacters) {
         this.label = label;
+        this.labelDetail = labelDetail;
+        this.labelDescription = labelDescription;
         this.kind = kind;
         this.tags = tags;
         this.detail = detail;
@@ -79,6 +84,7 @@ public final class Completion {
         this.insertText = insertText;
         this.insertTextFormat = insertTextFormat;
         this.textEdit = textEdit;
+        this.command = command;
         this.additionalTextEdits = additionalTextEdits;
         this.commitCharacters = commitCharacters;
     }
@@ -92,6 +98,30 @@ public final class Completion {
     @NonNull
     public String getLabel() {
         return label;
+    }
+
+    /**
+     * An optional string which is rendered less prominently directly after
+     * {@link Completion#getLabel() label}, without any spacing. Should be
+     * used for function signatures or type annotations.
+     *
+     * @since 1.24
+     */
+    @CheckForNull
+    public String getLabelDetail() {
+        return labelDetail;
+    }
+
+    /**
+     * An optional string which is rendered less prominently after
+     * {@link Completion#getLabelDetail() label detail}. Should be used for fully qualified
+     * names or file path.
+     *
+     * @since 1.24
+     */
+    @CheckForNull
+    public String getLabelDescription() {
+        return labelDescription;
     }
 
     /**
@@ -201,6 +231,16 @@ public final class Completion {
     @CheckForNull
     public TextEdit getTextEdit() {
         return textEdit;
+    }
+
+    /**
+     * An optional command that is executed after inserting this completion.
+     *
+     * @since 1.17
+     */
+    @CheckForNull
+    public Command getCommand() {
+        return command;
     }
 
     /**

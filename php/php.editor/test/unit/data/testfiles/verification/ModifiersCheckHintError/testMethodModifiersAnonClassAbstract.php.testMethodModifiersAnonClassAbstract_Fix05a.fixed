@@ -1,0 +1,55 @@
+<?php
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+// anonymous class
+$anon = new class() {
+    // PHP Fatal error:  Class class@anonymous contains 3 abstract methods and must therefore be declared abstract or implement the remaining methods (class@anonymous::abstractImplicitPublicAnonClassMethod, class@anonymous::abstractPublicAnonClassMethod, class@anonymous::abstractProtectedAnonClassMethod)
+    abstract function abstractImplicitPublicAnonClassMethod();
+    abstract public function abstractPublicAnonClassMethod();
+    abstract protected function abstractProtectedAnonClassMethod();
+    // PHP Fatal error:  Abstract function cannot be declared private
+    abstract private function abstractPrivateAnonClassMethod(): void;
+
+    // PHP Fatal error:  Cannot use the final modifier on an abstract method
+    final abstract function finalAbstractAnonClassMethod(): void {}
+//  final function finalAbstractAnonClassMethod(): void {}
+
+    final abstract public function finalAbstractPublicAnonClassMethod(): void {}
+//  final public function finalAbstractPublicAnonClassMethod(): void {}
+
+    final abstract protected function finalAbstractProtectedAnonClassMethod(): void {}
+//  final protected function finalAbstractProtectedAnonClassMethod(): void {}
+
+    final abstract private function finalAbstractPrivateAnonClassMethod(): void {}
+//  final private function finalAbstractPrivateAnonClassMethod(): void {}
+
+    // PHP Fatal error:  Abstract function cannot contain body
+    function abstractBodyAnonClassMethod(): void {}
+//  function abstractBodyAnonClassMethod(): void {}
+
+    abstract public function abstractPublicBodyAnonClassMethod(): void {}
+//  public function abstractPublicBodyAnonClassMethod(): void {}
+
+    protected abstract function abstractProtectedBodyAnonClassMethod(): void {}
+//  protected function abstractProtectedBodyAnonClassMethod(): void {}
+
+    abstract private function abstractPrivateBodyAnonClassMethod(): void {}
+//  private function abstractPrivateBodyAnonClassMethod(): void {}
+};

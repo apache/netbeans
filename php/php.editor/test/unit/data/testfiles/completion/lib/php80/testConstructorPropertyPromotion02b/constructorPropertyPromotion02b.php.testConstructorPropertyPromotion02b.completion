@@ -3,4 +3,6 @@ pr|
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 KEYWORD    private                                    null
+KEYWORD    private(set)                               null
 KEYWORD    protected                                  null
+KEYWORD    protected(set)                             null

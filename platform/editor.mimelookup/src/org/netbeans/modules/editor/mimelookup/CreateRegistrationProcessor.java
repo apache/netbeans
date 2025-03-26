@@ -277,7 +277,7 @@ public class CreateRegistrationProcessor extends LayerGeneratingProcessor {
                     l = CreateRegistrationProcessor.class.getClassLoader();
                 }
                 try {
-                    COMPLETIONS = (Processor)Class.forName(pathCompletions, true, l).newInstance();
+                    COMPLETIONS = (Processor)Class.forName(pathCompletions, true, l).getDeclaredConstructor().newInstance();
                 } catch (Exception ex) {
                     Exceptions.printStackTrace(ex);
                     // no completions, OK

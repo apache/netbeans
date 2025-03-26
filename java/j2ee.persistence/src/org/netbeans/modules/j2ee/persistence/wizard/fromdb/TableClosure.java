@@ -38,10 +38,10 @@ public class TableClosure {
 
     private final Set<Table> tables;
 
-    private final Set<Table> availableTables = new HashSet<Table>();
-    private final Set<Table> wantedTables = new HashSet<Table>();
-    private final Set<Table> selectedTables = new HashSet<Table>();
-    private final Set<Table> referencedTables = new HashSet<Table>();
+    private final Set<Table> availableTables = new HashSet<>();
+    private final Set<Table> wantedTables = new HashSet<>();
+    private final Set<Table> selectedTables = new HashSet<>();
+    private final Set<Table> referencedTables = new HashSet<>();
 
     // just for performance reasons
     private final Set<Table> unmodifAvailableTables = Collections.unmodifiableSet(availableTables);
@@ -92,7 +92,7 @@ public class TableClosure {
         if (closureEnabled) {
             if (wantedTables.addAll(tables)) {
                 Set<Table> refTables = removeDisabledTables(getReferencedTablesTransitively(tables));
-                Set<Table> addedTables = new HashSet<Table>(tables);
+                Set<Table> addedTables = new HashSet<>(tables);
                 addedTables.addAll(refTables);
 
                 selectedTables.addAll(addedTables);
@@ -272,8 +272,8 @@ public class TableClosure {
      * it is not added to the result.
      */
     private Set<Table> getReferencedTablesTransitively(Set<Table> tables) {
-        Queue<Table> tableQueue = new Queue<Table>(tables);
-        Set<Table> referencedTables = new HashSet<Table>();
+        Queue<Table> tableQueue = new Queue<>(tables);
+        Set<Table> referencedTables = new HashSet<>();
 
         while (!tableQueue.isEmpty()) {
             Table table = tableQueue.poll();
@@ -290,8 +290,8 @@ public class TableClosure {
     }
 
     private Set<Table> getJoinTablesTransitively(Set<Table> tables) {
-        Queue<Table> tableQueue = new Queue<Table>(tables);
-        Set<Table> joinTables = new HashSet<Table>();
+        Queue<Table> tableQueue = new Queue<>(tables);
+        Set<Table> joinTables = new HashSet<>();
 
         while (!tableQueue.isEmpty()) {
             Table table = tableQueue.poll();
@@ -364,7 +364,7 @@ public class TableClosure {
             assert !initialContents.contains(null);
 
             queue = new ArrayList<>(initialContents);
-            contents = new HashSet(initialContents);
+            contents = new HashSet<>(initialContents);
         }
 
         /**

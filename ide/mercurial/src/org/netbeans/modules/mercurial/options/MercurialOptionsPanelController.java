@@ -259,7 +259,7 @@ final class MercurialOptionsPanelController extends OptionsPanelController imple
             );
             variables.add(variable);   
         }       
-        labelsPanel.labelsList.setListData(variables.toArray(new LabelVariable[variables.size()]));                
+        labelsPanel.labelsList.setListData(variables.toArray(new LabelVariable[0]));                
                 
         String title = NbBundle.getMessage(MercurialPanel.class, "MercurialPanel.labelVariables.title"); // NOI18N
         String acsd = NbBundle.getMessage(MercurialPanel.class, "MercurialPanel.labelVariables.acsd"); // NOI18N
@@ -299,7 +299,7 @@ final class MercurialOptionsPanelController extends OptionsPanelController imple
             sb.append(annotation.substring(0, pos));
             sb.append(variable);
             if(pos < annotation.length()) {
-                sb.append(annotation.substring(pos, annotation.length()));
+                sb.append(annotation.substring(pos));
             }
             panel.annotationTextField.setText(sb.toString());
             panel.annotationTextField.requestFocus();

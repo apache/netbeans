@@ -165,7 +165,7 @@ public class LogCommand extends GitCommand {
                         fullWalk.parseCommit(commit), branches, repository)
                     );
                     if (commit.getParentCount() == 0) {
-                        Ref replace = repository.getAllRefs().get("refs/replace/" + commit.getId().getName());
+                        Ref replace = repository.exactRef("refs/replace/" + commit.getId().getName());
                         if (replace != null) {
                             final RevCommit newCommit = Utils.findCommit(repository, replace.getTarget().getName());
                             if (newCommit != null) {
@@ -210,8 +210,8 @@ public class LogCommand extends GitCommand {
                     }
                 } else {
                     usedFlags.add(flagId);
-                    if (i < 25) {
-                        i = i + 1;
+                    if (i <= 23) { // leave one spare flag for the run method, see RevWalk.newFlag()
+                        i++;
                         RevFlag flag = walk.newFlag(flagId);
                         List<GitBranch> branches = new ArrayList<>(allBranches.size());
                         branches.add(e.getValue());
@@ -253,7 +253,7 @@ public class LogCommand extends GitCommand {
     }
 
     public GitRevisionInfo[] getRevisions () {
-        return revisions.toArray(new GitRevisionInfo[revisions.size()]);
+        return revisions.toArray(new GitRevisionInfo[0]);
     }
 
     private void addRevision (GitRevisionInfo info) {

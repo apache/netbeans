@@ -231,13 +231,13 @@ final class NbInstaller extends ModuleInstaller {
         List<Module> mWithDeps = new LinkedList<Module>();
         mWithDeps.add(m);
         if (mgr != null) {
-            mWithDeps.addAll(mgr.getAttachedFragments(m));
+            addEnabledFragments(m, mWithDeps);
             for (Dependency d : m.getDependencies()) {
                 if (d.getType() == Dependency.TYPE_MODULE) {
                     Module _m = mgr.get((String) Util.parseCodeName(d.getName())[0]);
                     assert _m != null : d;
                     mWithDeps.add(_m);
-                    mWithDeps.addAll(mgr.getAttachedFragments(_m));
+                    addEnabledFragments(_m, mWithDeps);
                 }
             }
         }
@@ -283,6 +283,14 @@ final class NbInstaller extends ModuleInstaller {
         }
     }
     
+    private void addEnabledFragments(Module forModule, List<Module> moduleWithDependencies) {
+        for (Module fragment : mgr.getAttachedFragments(forModule)) {
+            if (mgr.isOrWillEnable(fragment)) {
+                moduleWithDependencies.add(fragment);
+            }
+        }
+    }
+
     public void dispose(Module m) {
         Util.err.fine("dispose: " + m);
         // Events probably not needed here.
@@ -775,7 +783,7 @@ final class NbInstaller extends ModuleInstaller {
             arr.add("org.openide.modules.ModuleFormat1"); // NOI18N
             arr.add("org.openide.modules.ModuleFormat2"); // NOI18N
             
-            return arr.toArray (new String[arr.size()]);
+            return arr.toArray (new String[0]);
         }
         return null;
     }

@@ -63,7 +63,7 @@ public final class RefreshAllIndexes implements ActionListener {
             }
             LOG.log(Level.FINE, "Refreshing: {0}", sb.toString());   //NOI18N
         }
-        IndexingManager.getDefault().refreshAllIndices(roots.toArray(new FileObject[roots.size()]));
+        IndexingManager.getDefault().refreshAllIndices(roots.toArray(new FileObject[0]));
     }
 
     @SuppressWarnings("AssignmentToMethodParameter")

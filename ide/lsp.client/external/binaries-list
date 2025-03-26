@@ -18,6 +18,8 @@
 E95BD5C2A465A40A66C9DC098BF95C237B80C4EB org.eclipse.lsp4j:org.eclipse.lsp4j:0.13.0
 82848D7796D399F3E5109B7331A143D7C649B520 org.eclipse.lsp4j:org.eclipse.lsp4j.generator:0.13.0
 0B50BD2A6AF496803F72176AD066532DAE62574E org.eclipse.lsp4j:org.eclipse.lsp4j.jsonrpc:0.13.0
+A491B7AC91B35EC177DE629518D5A68A9C7878FC org.eclipse.lsp4j:org.eclipse.lsp4j.debug:0.13.0
+68AB471B1FED84FABA25D6CE9005B9369B503A74 org.eclipse.lsp4j:org.eclipse.lsp4j.jsonrpc.debug:0.13.0
 A57306D5D523A4750FA09B2708062EA4972AFEA2 org.eclipse.xtend:org.eclipse.xtend.lib:2.24.0
 D8F5566BA67748ED9E91856E077EE99F00E86653 org.eclipse.xtend:org.eclipse.xtend.lib.macro:2.24.0
 53FBD66084B08850258E61C838CC1FB94335E718 org.eclipse.xtext:org.eclipse.xtext.xbase.lib:2.24.0

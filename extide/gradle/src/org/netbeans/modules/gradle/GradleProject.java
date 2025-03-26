@@ -128,18 +128,19 @@ public final class GradleProject implements Serializable, Lookup.Provider {
         for (String s : reason) {
             reports.add(createGradleReport(scriptPath, s));
         }
-        return invalidate(reports.toArray(new GradleReport[reports.size()]));
+        return invalidate(reports.toArray(new GradleReport[0]));
     }
 
     private static void setProblems(GradleBaseProject baseProject, Set<GradleReport> problems) {
         NbGradleProjectImpl.ACCESSOR.setProblems(baseProject, problems);
     }
 
-    public static GradleReport createGradleReport(String errorClass, String location, int line, String message, GradleReport causedBy) {
-        return NbGradleProjectImpl.ACCESSOR.createReport(errorClass, location, line, message, causedBy);
+    public static GradleReport createGradleReport(GradleReport.Severity severity, String errorClass, String location, int line, String message, 
+            GradleReport causedBy, String... traceLines) {
+        return NbGradleProjectImpl.ACCESSOR.createReport(severity, errorClass, location, line, message, causedBy, traceLines);
     }
 
-    public static GradleReport createGradleReport(Path script, String message) {
-        return createGradleReport(null, Objects.toString(script), -1, message, null);
+    public static GradleReport createGradleReport(Path script, String message, String... detail) {
+        return createGradleReport(GradleReport.Severity.ERROR, null, Objects.toString(script), -1, message, null, detail);
     }
 }

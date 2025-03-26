@@ -55,10 +55,10 @@ public class TokenTypes {
     private boolean inspected;
 
     /** Map of [tokenTypeName, tokenTypeValue] */
-    protected final Map name2value = new HashMap();
+    protected final Map<String, Integer> name2value = new HashMap<>();
     
     /** Map of [tokenTypeValue, tokenTypeName] */
-    protected final Map value2name = new HashMap();
+    protected final Map<Integer, String> value2name = new HashMap<>();
     
     public TokenTypes(Class tokenTypesClass) {
         this.tokenTypesClass = tokenTypesClass;
@@ -74,8 +74,8 @@ public class TokenTypes {
     protected void updateData(LanguageData languageData) {
         inspect();
 
-        for (Iterator it = tokenTypeNamesIterator(); it.hasNext();) {
-            String tokenTypeName = (String)it.next();
+        for (Iterator<String> it = tokenTypeNamesIterator(); it.hasNext();) {
+            String tokenTypeName = it.next();
             MutableTokenId id = languageData.findIdByTokenTypeName(tokenTypeName);
             
             if (id == null) {
@@ -120,19 +120,19 @@ public class TokenTypes {
     public Integer getTokenTypeValue(String tokenTypeName) {
         inspect();
 
-        return (Integer)name2value.get(tokenTypeName);
+        return name2value.get(tokenTypeName);
     }
 
     public String getTokenTypeName(int tokenTypeValue) {
         inspect();
 
-        return (String)value2name.get(Integer.valueOf(tokenTypeValue));
+        return value2name.get(Integer.valueOf(tokenTypeValue));
     }
 
     /**
      * @return all the field names 
      */
-    public Iterator tokenTypeNamesIterator() {
+    public Iterator<String> tokenTypeNamesIterator() {
         inspect();
 
         return name2value.keySet().iterator();
@@ -143,9 +143,9 @@ public class TokenTypes {
         inspect();
 
         int maxValue = 0;
-        for (Iterator it = value2name.keySet().iterator(); it.hasNext();) {
-            Integer i = (Integer)it.next();
-            maxValue = Math.max(maxValue, i.intValue());
+        for (Iterator<Integer> it = value2name.keySet().iterator(); it.hasNext();) {
+            Integer i = it.next();
+            maxValue = Math.max(maxValue, i);
         }
         return maxValue;
     }
@@ -177,9 +177,8 @@ public class TokenTypes {
                     int value = f.getInt(null);
                     String fieldName = f.getName();
                     if (isAccepted(fieldName, value)) {
-                        Integer valueInteger = Integer.valueOf(value);
-                        name2value.put(fieldName, valueInteger);
-                        value2name.put(valueInteger, fieldName);
+                        name2value.put(fieldName, value);
+                        value2name.put(value, fieldName);
                     }
                 }
             }

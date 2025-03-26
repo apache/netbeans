@@ -22,7 +22,7 @@ import org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException;
 /**
  * Generated interface for FilterMapping element.
  *
- *<p><b><font color="red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></font></b>
+ *<p><b><span style="color:red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></span></b>
  *</p>
  */
 public interface FilterMapping extends org.netbeans.modules.j2ee.dd.api.common.CommonDDBean {
@@ -69,7 +69,6 @@ public interface FilterMapping extends org.netbeans.modules.j2ee.dd.api.common.C
          */
 	public java.lang.String getDispatcher(int index) throws VersionNotSupportedException;
         /** Setter for dispatcher property.
-         * @param index position in the array of dispatchers
          * @param value array of dispatcher properties
          */
 	public void setDispatcher(java.lang.String[] value) throws VersionNotSupportedException;

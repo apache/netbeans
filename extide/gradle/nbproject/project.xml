@@ -99,8 +99,8 @@
                     <code-name-base>org.netbeans.modules.libs.gradle</code-name-base>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>7</release-version>
-                        <specification-version>7.4.1</specification-version>
+                        <release-version>8</release-version>
+                        <specification-version>8.7</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -301,6 +301,7 @@
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.projectapi.nb</code-name-base>
                         <compile-dependency/>
+                        <test/>
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.projectui</code-name-base>

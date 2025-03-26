@@ -61,7 +61,7 @@ public class TypeScriptLSP implements LanguageServerProvider {
             }
             return null;
         }
-        File server = InstalledFileLocator.getDefault().locate("typescript-lsp/node_modules/typescript-language-server/lib/cli.js", null, false);
+        File server = InstalledFileLocator.getDefault().locate("typescript-lsp/node_modules/typescript-language-server/lib/cli.mjs", "org.netbeans.modules.typescript.editor", false);
         try {
             Process p = new ProcessBuilder(new String[] {node, server.getAbsolutePath(), "--stdio"}).directory(server.getParentFile().getParentFile()).redirectError(ProcessBuilder.Redirect.INHERIT).start();
             return LanguageServerDescription.create(p.getInputStream(), p.getOutputStream(), p);

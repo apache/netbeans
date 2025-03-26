@@ -19,20 +19,21 @@
 package org.netbeans.modules.java.hints.bugs;
 
 import com.sun.source.tree.Tree.Kind;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.lang.model.element.ElementKind;
 import org.netbeans.modules.java.editor.base.semantic.UnusedDetector;
 import org.netbeans.modules.java.editor.base.semantic.UnusedDetector.UnusedDescription;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
+import org.netbeans.spi.java.hints.BooleanOption;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
 import org.netbeans.spi.java.hints.Hint;
 import org.netbeans.spi.java.hints.HintContext;
 import org.netbeans.spi.java.hints.JavaFixUtilities;
 import org.netbeans.spi.java.hints.TriggerTreeKind;
 import org.openide.util.NbBundle.Messages;
+
+import static org.netbeans.api.java.source.CompilationInfo.CacheClearPolicy.ON_TASK_END;
 
 /**
  *
@@ -41,24 +42,57 @@ import org.openide.util.NbBundle.Messages;
 @Hint(displayName = "#DN_org.netbeans.modules.java.hints.bugs.Unused", description = "#DESC_org.netbeans.modules.java.hints.bugs.Unused", category="bugs", options=Hint.Options.QUERY, suppressWarnings="unused")
 @Messages({
     "DN_org.netbeans.modules.java.hints.bugs.Unused=Unused Element",
-    "DESC_org.netbeans.modules.java.hints.bugs.Unused=Detects and reports unused variables, methods and classes"
+    "DESC_org.netbeans.modules.java.hints.bugs.Unused=Detects and reports unused variables, methods and classes",
+    "LBL_UnusedPackagePrivate=Also detect unused package private elements",
+    "TP_UnusedPackagePrivate=Will also detect package private elements that are unused"
 })
 public class Unused {
 
-    @TriggerTreeKind(Kind.COMPILATION_UNIT)
+    private static final boolean DETECT_UNUSED_PACKAGE_PRIVATE_DEFAULT = true;
+
+    @BooleanOption(displayName="#LBL_UnusedPackagePrivate", tooltip="#TP_UnusedPackagePrivate", defaultValue=DETECT_UNUSED_PACKAGE_PRIVATE_DEFAULT)
+    public static final String DETECT_UNUSED_PACKAGE_PRIVATE = "detect.unused.package.private";
+
+    @TriggerTreeKind({
+        //class-like kinds:
+        Kind.ANNOTATION_TYPE, Kind.CLASS, Kind.ENUM, Kind.INTERFACE, Kind.RECORD,
+        Kind.VARIABLE,
+        Kind.METHOD
+    })
     public static List<ErrorDescription> unused(HintContext ctx) {
         List<UnusedDescription> unused = UnusedDetector.findUnused(ctx.getInfo(), () -> ctx.isCanceled());
-        List<ErrorDescription> result = new ArrayList<>(unused.size());
+        if (unused.isEmpty()) {
+            return null;
+        }
+        boolean detectUnusedPackagePrivate = getTaskCachedBoolean(ctx, DETECT_UNUSED_PACKAGE_PRIVATE, DETECT_UNUSED_PACKAGE_PRIVATE_DEFAULT);
         for (UnusedDescription ud : unused) {
             if (ctx.isCanceled()) {
                 break;
             }
+            if (ud.unusedElementPath.getLeaf() != ctx.getPath().getLeaf()) {
+                continue;
+            }
+            if (!detectUnusedPackagePrivate && ud.packagePrivate) {
+                continue;
+            }
             ErrorDescription err = convertUnused(ctx, ud);
             if (err != null) {
-                result.add(err);
+                return List.of(err);
             }
+            break;
         }
-        return result;
+        return null;
+    }
+
+    // reading from AuxiliaryConfigBasedPreferences in inner loops is not cheap since it needs a mutex
+    private static boolean getTaskCachedBoolean(HintContext ctx, String key, boolean defaultVal) {
+        Object cached = ctx.getInfo().getCachedValue(key);
+        if (cached instanceof Boolean val) {
+            return val;
+        }
+        boolean fromPrefs = ctx.getPreferences().getBoolean(key, defaultVal);
+        ctx.getInfo().putCachedValue(key, fromPrefs, ON_TASK_END);
+        return fromPrefs;
     }
 
     @Messages({
@@ -87,7 +121,10 @@ public class Unused {
             case NOT_WRITTEN: message = Bundle.ERR_NotWritten(name);
                 break;
             case NOT_READ: message = Bundle.ERR_NotRead(name);
-                fix = JavaFixUtilities.safelyRemoveFromParent(ctx, Bundle.FIX_RemoveUsedElement(name), ud.unusedElementPath);
+                //unclear what can be done with unused binding variables currently (before "_"):
+                if (ud.unusedElementPath.getParentPath().getLeaf().getKind() != Kind.BINDING_PATTERN) {
+                    fix = JavaFixUtilities.safelyRemoveFromParent(ctx, Bundle.FIX_RemoveUsedElement(name), ud.unusedElementPath);
+                }
                 break;
             case NOT_USED:
                 if (ud.unusedElement.getKind() == ElementKind.CONSTRUCTOR) {

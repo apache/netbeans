@@ -278,7 +278,7 @@ public class NewTemplateAction extends NodeAction {
                 if (template == null) {
                     setIcon (NewTemplateAction.this.getIcon());
                 } else {
-                    setIcon (new ImageIcon(template.getNodeDelegate().getIcon(java.beans.BeanInfo.ICON_COLOR_16x16)));
+                    setIcon (ImageUtilities.image2Icon(template.getNodeDelegate().getIcon(java.beans.BeanInfo.ICON_COLOR_16x16)));
                 }
                 
                 addActionListener(this);

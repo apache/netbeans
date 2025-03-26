@@ -60,7 +60,7 @@ public abstract class CommonServersBase extends NbTestCase {
                 providers.remove(w);
             }
         }
-        Collections.sort(providers, comparator); // ?
+        providers.sort(comparator); // ?
         LOG.info("Iterating full");
         for (ServerWizardProvider wizard : providers.toArray(new ServerWizardProvider[0])) {
            System.setProperty(propPrefix() + ++cnt, wizard.getDisplayName());
@@ -77,7 +77,7 @@ public abstract class CommonServersBase extends NbTestCase {
                 providers.remove(w);
             }
         }
-        Collections.sort(providers, comparator);
+        providers.sort(comparator);
         LOG.info("Iterating ergo");
         for (ServerWizardProvider wizard : providers) {
            String name = System.getProperty(propPrefix() + ++cnt);

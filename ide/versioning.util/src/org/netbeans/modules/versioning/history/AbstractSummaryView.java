@@ -30,7 +30,6 @@ import java.util.*;
 import java.util.List;
 import java.util.logging.Logger;
 import org.netbeans.modules.versioning.util.VCSHyperlinkSupport;
-import org.netbeans.modules.versioning.util.VCSKenaiAccessor.KenaiUser;
 import org.openide.util.Mutex;
 import org.openide.util.WeakListeners;
 import org.openide.windows.WindowManager;
@@ -50,18 +49,18 @@ public abstract class AbstractSummaryView implements MouseListener, MouseMotionL
     private final PropertyChangeListener list;
     private final ExpandCollapseGeneralAction expandCollapseAction;
     private JList<Item> resultsList;
-    private JScrollPane scrollPane;
+    private final JScrollPane scrollPane;
 
-    private VCSHyperlinkSupport linkerSupport = new VCSHyperlinkSupport();
+    private final VCSHyperlinkSupport linkerSupport = new VCSHyperlinkSupport();
     private static final int NEXT_FILES_INITIAL_PAGING = 50;
 
-    public AbstractSummaryView(SummaryViewMaster master, final List<? extends LogEntry> results, Map<String, KenaiUser> kenaiUsersMap) {
+    public AbstractSummaryView(SummaryViewMaster master, final List<? extends LogEntry> results) {
         this.master = master;
         list = WeakListeners.propertyChange(this, null);
 
-        resultsList = new JList<>(new DefaultListModel<Item>());
+        resultsList = new JList<>(new DefaultListModel<>());
         resultsList.setModel(new SummaryListModel(results, master.hasMoreResults()));
-        resultsList.setCellRenderer(new SummaryCellRenderer(this, linkerSupport, kenaiUsersMap));
+        resultsList.setCellRenderer(new SummaryCellRenderer(this, linkerSupport));
         resultsList.setFixedCellHeight(-1);
 
         resultsList.addMouseListener(this);
@@ -290,11 +289,8 @@ public abstract class AbstractSummaryView implements MouseListener, MouseMotionL
     }
 
     private void refreshEvents (final LogEntry src) {
-        Mutex.EVENT.readAccess(new Runnable() {
-            @Override
-            public void run () {
-                ((SummaryListModel) resultsList.getModel()).addEvents(src);
-            }
+        Mutex.EVENT.readAccess(() -> {
+            ((SummaryListModel) resultsList.getModel()).addEvents(src);
         });
     }
 
@@ -325,16 +321,13 @@ public abstract class AbstractSummaryView implements MouseListener, MouseMotionL
     }
     
     public void entriesChanged (final List<? extends LogEntry> entries) {
-        Mutex.EVENT.readAccess(new Runnable() {
-            @Override
-            public void run () {
-                List<Item> selection = resultsList.getSelectedValuesList();
-                if (selection.size() > 0 && selection.get(selection.size() - 1) instanceof MoreRevisionsItem) {
-                    int lastIndex = ((SummaryListModel) resultsList.getModel()).getSize() - 1;
-                    resultsList.getSelectionModel().removeIndexInterval(lastIndex, lastIndex);
-                }
-                ((SummaryListModel) resultsList.getModel()).addEntries(entries, !master.hasMoreResults());
+        Mutex.EVENT.readAccess(() -> {
+            List<Item> selection = resultsList.getSelectedValuesList();
+            if (selection.size() > 0 && selection.get(selection.size() - 1) instanceof MoreRevisionsItem) {
+                int lastIndex = ((SummaryListModel) resultsList.getModel()).getSize() - 1;
+                resultsList.getSelectionModel().removeIndexInterval(lastIndex, lastIndex);
             }
+            ((SummaryListModel) resultsList.getModel()).addEntries(entries, !master.hasMoreResults());
         });
     }
 
@@ -523,13 +516,24 @@ public abstract class AbstractSummaryView implements MouseListener, MouseMotionL
         }
     }
 
+    //TODO record
+    static final class MaxPathWidth {
+        public final int visiblePaths;
+        public final int maxPathWidth;
+        public MaxPathWidth(int visiblePaths, int maxPathWidth) {
+            this.visiblePaths = visiblePaths;
+            this.maxPathWidth = maxPathWidth;
+        }
+    }
+
     class RevisionItem extends Item<LogEntry> {
         private final LogEntry entry;
+        MaxPathWidth maxPathWidth = null;
         boolean messageExpanded;
         boolean revisionExpanded;
         private boolean viewEventsInitialized;
         private boolean initializingStarted;
-        private int showingFiles;
+        int showingFiles;
         private int nextFilesPaging = NEXT_FILES_INITIAL_PAGING;
 
         public RevisionItem (LogEntry entry) {
@@ -604,7 +608,11 @@ public abstract class AbstractSummaryView implements MouseListener, MouseMotionL
             nextFilesPaging = NEXT_FILES_INITIAL_PAGING;
         }
 
-        private boolean isEventVisible (EventItem event) {
+        boolean isEventVisible(EventItem event) {
+            return isEventVisible(event.getUserData());
+        }
+
+        boolean isEventVisible(LogEntry.Event event) {
             if (!viewEventsInitialized || isAllEventsVisible()) {
                 return true;
             } else if (showingFiles == 0) {
@@ -617,24 +625,23 @@ public abstract class AbstractSummaryView implements MouseListener, MouseMotionL
                 }
             }
             int visibleCount = 0;
-            boolean visible = false;
             // at first display visible by default
             // only then the rest
             for (boolean defaultVisible : new boolean[] { true, false }) {
                 for (LogEntry.Event e : entry.getEvents()) {
-                    if (visibleCount >= showingFiles || visible) {
+                    if (visibleCount >= showingFiles) {
                         // over the paging limit or ound as visible
                         break;
                     }
                     if (e.isVisibleByDefault() == defaultVisible) {
                         ++visibleCount;
-                        if (e == event.getUserData()) {
-                            visible = true;
+                        if (e == event) {
+                            return true;
                         }
                     }
                 }
             }
-            return visible;
+            return false;
         }
         
         private int getDefaultVisibleEventCount () {
@@ -846,9 +853,9 @@ public abstract class AbstractSummaryView implements MouseListener, MouseMotionL
         private final List<Item> dispResults;
 
         public SummaryListModel (List<? extends LogEntry> entries, boolean hasMoreResults) {
-            allResults = new ArrayList<Item>(initializeResults(entries, master.hasMoreResults()));
-            dispResults = new ArrayList<Item>(allResults.size());
-            revisions = new HashSet<String>();
+            allResults = new ArrayList<>(initializeResults(entries, master.hasMoreResults()));
+            dispResults = new ArrayList<>(allResults.size());
+            revisions = new HashSet<>();
             for (LogEntry entry : entries) {
                 revisions.add(entry.getRevision());
             }
@@ -930,13 +937,8 @@ public abstract class AbstractSummaryView implements MouseListener, MouseMotionL
         }
 
         private void addEntries (List<? extends LogEntry> entries, boolean noMoreResults) {
-            List<LogEntry> newEntries = new LinkedList<LogEntry>(entries);
-            for (ListIterator<LogEntry> it = newEntries.listIterator(); it.hasNext(); ) {
-                LogEntry entry = it.next();
-                if (!revisions.add(entry.getRevision())) {
-                    it.remove();
-                }
-            }
+            List<LogEntry> newEntries = new LinkedList<>(entries);
+            newEntries.removeIf(entry -> !revisions.add(entry.getRevision()));
             List<Item> itemsToAdd = expandResults(newEntries);
             if (!itemsToAdd.isEmpty()) {
                 int addedAtIndex;
@@ -973,15 +975,13 @@ public abstract class AbstractSummaryView implements MouseListener, MouseMotionL
                 }
                 fireIntervalAdded(this, 0, dispResults.size());
             } else {
-                ListIterator<Item> allIterator = allResults.listIterator();
                 dispResults.add(new MoreRevisionsItem());
                 ListIterator<Item> dispIterator = dispResults.listIterator();
                 Item displayed = dispIterator.next();
                 index = 0;
                 int addedStart = -1, addedLast = 0;
                 int removedStart = -1, removedLast = 0;
-                while (allIterator.hasNext()) {
-                    Item item = allIterator.next();
+                for (Item item : allResults) {
                     if (item == displayed) {
                         fireAdds(addedStart, addedLast);
                         addedStart = -1; addedLast = 0;

@@ -28,6 +28,7 @@ import java.util.concurrent.Future;
 import javax.swing.text.Document;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
@@ -43,6 +44,7 @@ import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.editor.PHPTestBase;
+import org.netbeans.modules.php.editor.options.CodeCompletionPanel;
 import org.netbeans.modules.php.project.api.PhpSourcePath;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
@@ -63,15 +65,36 @@ public abstract class PHPCodeCompletionTestBase extends PHPTestBase {
     }
 
     protected @Override Map<String, ClassPath> createClassPathsForTest() {
+        FileObject[] sourceDirectories = createSourceClassPathsForTest();
+        if (sourceDirectories == null) {
+            sourceDirectories = new FileObject[] {
+                FileUtil.toFileObject(new File(getDataDir(), "testfiles/completion/lib"))
+            };
+        }
         return Collections.singletonMap(
             PhpSourcePath.SOURCE_CP,
-            ClassPathSupport.createClassPath(new FileObject[] {
-                FileUtil.toFileObject(new File(getDataDir(), "testfiles/completion/lib"))
-            })
+            ClassPathSupport.createClassPath(sourceDirectories)
         );
     }
 
+    protected FileObject[] createSourceClassPathsForTest() {
+        return null;
+    }
+
+    protected String getTestDirName() {
+        String name = getName();
+        int indexOf = name.indexOf("_");
+        if (indexOf != -1) {
+            name = name.substring(0, indexOf);
+        }
+        return name;
+    }
+
     protected void checkCompletionCustomTemplateResult(final String file, final String caretLine, CompletionProposalFilter filter, boolean checkAllItems) throws Exception {
+        checkCompletionCustomTemplateResult(file, caretLine, filter, checkAllItems, null);
+    }
+
+    protected void checkCompletionCustomTemplateResult(final String file, final String caretLine, CompletionProposalFilter filter, boolean checkAllItems, @NullAllowed AutoImportOptions autoImportOptions) throws Exception {
         final CodeCompletionHandler.QueryType type = CodeCompletionHandler.QueryType.COMPLETION;
         final boolean caseSensitive = true;
 
@@ -113,7 +136,7 @@ public abstract class PHPCodeCompletionTestBase extends PHPTestBase {
         CodeCompletionHandler cc = getCodeCompleter();
         assertNotNull("getCodeCompleter must be implemented", cc);
 
-        Document doc = GsfUtilities.getDocument(parserResult.getSnapshot().getSource().getFileObject(), true);
+        Document doc = GsfUtilities.getADocument(parserResult.getSnapshot().getSource().getFileObject(), true);
         boolean upToOffset = type == CodeCompletionHandler.QueryType.COMPLETION;
         String prefix = cc.getPrefix(parserResult, caretOffset, upToOffset);
         if (prefix == null) {
@@ -173,6 +196,14 @@ public abstract class PHPCodeCompletionTestBase extends PHPTestBase {
         List<CompletionProposal> proposals = completionResult.getItems();
         for (CompletionProposal proposal : proposals) {
             if (completionProposalFilter.accept(proposal)) {
+                if (proposal instanceof PHPCompletionItem) {
+                    PHPCompletionItem phpCompletionItem = (PHPCompletionItem) proposal;
+                    if (autoImportOptions != null) {
+                        phpCompletionItem.setAutoImport(autoImportOptions.isAutoImport());
+                        phpCompletionItem.setCodeCompletionType(autoImportOptions.getCodeCompletionType());
+                        phpCompletionItem.setGlobalItemImportable(autoImportOptions.isGlobalItemImportable());
+                    }
+                }
                 completionProposals.add(proposal);
                 if (!checkAllItems) {
                     break;
@@ -196,22 +227,25 @@ public abstract class PHPCodeCompletionTestBase extends PHPTestBase {
     }
 
     //~ Inner class
-    public interface CompletionProposalFilter {
+    public static interface CompletionProposalFilter {
 
-        CompletionProposalFilter ACCEPT_ALL = proposal -> {
-            return true;
-        };
+        CompletionProposalFilter ACCEPT_ALL = proposal -> true;
 
         boolean accept(CompletionProposal proposal);
     }
 
-    public final class DefaultFilter implements CompletionProposalFilter {
+    public static final class DefaultFilter implements CompletionProposalFilter {
 
         private final PhpVersion phpVersion;
         private final String prefix;
 
         public DefaultFilter(PhpVersion phpVersion, String prefix) {
             this.phpVersion = phpVersion;
+            this.prefix = prefix;
+        }
+
+        public DefaultFilter(String prefix) {
+            this.phpVersion = PhpVersion.getDefault();
             this.prefix = prefix;
         }
 
@@ -225,7 +259,49 @@ public abstract class PHPCodeCompletionTestBase extends PHPTestBase {
                     return true;
                 }
             }
+            if (proposal instanceof PHPCompletionItem.KeywordItem) {
+                // ignore KeywordItem because it invokes EditorRegistry.lastFocusedComponent().getDocument() (NPE)
+                return false;
+            }
+            if (proposal != null) {
+                String name = proposal.getName();
+                return name.startsWith(prefix);
+            }
             return false;
+        }
+    }
+
+    static final class AutoImportOptions {
+
+        private CodeCompletionPanel.CodeCompletionType codeCompletionType = CodeCompletionPanel.CodeCompletionType.SMART;
+        private boolean autoImport = false;
+        private boolean globalItemImportable = false;
+
+        public CodeCompletionPanel.CodeCompletionType getCodeCompletionType() {
+            return codeCompletionType;
+        }
+
+        public boolean isAutoImport() {
+            return autoImport;
+        }
+
+        public boolean isGlobalItemImportable() {
+            return globalItemImportable;
+        }
+
+        public AutoImportOptions codeCompletionType(CodeCompletionPanel.CodeCompletionType codeCompletionType) {
+            this.codeCompletionType = codeCompletionType;
+            return this;
+        }
+
+        public AutoImportOptions autoImport(boolean autoImport) {
+            this.autoImport = autoImport;
+            return this;
+        }
+
+        public AutoImportOptions globalItemImportable(boolean globalItemImportable) {
+            this.globalItemImportable = globalItemImportable;
+            return this;
         }
     }
 }

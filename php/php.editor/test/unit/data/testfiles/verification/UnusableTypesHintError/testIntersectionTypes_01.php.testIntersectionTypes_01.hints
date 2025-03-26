@@ -43,6 +43,9 @@ HINT:"static" cannot be used as an intersection type.
 function testReturnString(): string&Iterator {}
                              ------
 HINT:"string" cannot be used as an intersection type.
+function testReturnTrue(): true&Iterator {}
+                           ----
+HINT:"true" cannot be used as an intersection type.
 function testReturnVoid(): void&Iterator {}
                            ----
 HINT:"void" cannot be used as an intersection type.
@@ -88,6 +91,9 @@ HINT:"self" cannot be used as an intersection type.
 function testParamString(Iterator&string $param): string {}
                                   ------
 HINT:"string" cannot be used as an intersection type.
+function testParamString(Iterator&true $param): true {}
+                                  ----
+HINT:"true" cannot be used as an intersection type.
 function testParamVoid(Iterator&void $param): void {}
                                 ----
 HINT:"void" cannot be used as an intersection type.
@@ -139,6 +145,9 @@ HINT:"self" cannot be used as an intersection type.
     public string&Iterator $string;
            ------
 HINT:"string" cannot be used as an intersection type.
+    public true&Iterator $true;
+           ----
+HINT:"true" cannot be used as an intersection type.
     public void&Iterator $void;
            ----
 HINT:"void" cannot be used as an intersection type.

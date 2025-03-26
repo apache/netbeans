@@ -210,7 +210,7 @@ public class BatchSearch {
                 toRegisterSet.add(cpInfo.getClassPath(PathKind.SOURCE));
             }
 
-            toRegister = !toRegisterSet.isEmpty() ? toRegisterSet.toArray(new ClassPath[0]) : null;
+            toRegister = !toRegisterSet.isEmpty() ? toRegisterSet.toArray(ClassPath[]::new) : null;
 
             if (toRegister != null) {
                 GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, toRegister);
@@ -234,8 +234,9 @@ public class BatchSearch {
                         if (cancel.get())
                             return;
                         final AtomicBoolean stop = new AtomicBoolean();
+                        List<FileObject> currentInputList = toProcess.subList(currentPointer.get(), toProcess.size());
 //                        JavaSource js = JavaSource.create(e.getKey(), f);
-                        JavaSource js = JavaSource.create(e.getKey(), toProcess.subList(currentPointer.get(), toProcess.size()));
+                        JavaSource js = JavaSource.create(e.getKey(), currentInputList);
 
                         js.runUserActionTask(new Task<CompilationController>() {
                             @Override
@@ -246,8 +247,15 @@ public class BatchSearch {
                                 boolean cont = true;
 
                                 try {
-                                    if (parameter.toPhase(Phase.RESOLVED).compareTo(Phase.RESOLVED) < 0)
+                                    if (parameter.toPhase(Phase.RESOLVED).compareTo(Phase.RESOLVED) < 0) {
+                                        if (currentInputList.size() == 1) {
+                                            //the javac crashed while processing the (single) file, we must ensure progress, otherwise infinite loop in processing would happen:
+                                            problems.add(new MessageImpl(MessageKind.WARNING, "An error occurred while processing file: " + FileUtil.getFileDisplayName(parameter.getFileObject()) + ", please see the IDE log for more information."));
+                                            currentPointer.incrementAndGet();
+                                        }
+
                                         return ;
+                                    }
 
                                     progress.setMessage("processing: " + FileUtil.getFileDisplayName(parameter.getFileObject()));
                                     Resource r = file2Resource.get(parameter.getFileObject());
@@ -351,8 +359,8 @@ public class BatchSearch {
             Folder[] result = new Folder[list.size()];
             int i=0;
             for (Object item:list) {
-                if (item instanceof FileObject)
-                    result[i] = new Folder((FileObject) item);
+                if (item instanceof FileObject fileObject)
+                    result[i] = new Folder(fileObject);
                 else 
                     result[i] = new Folder((NonRecursiveFolder) item);
                 i++;

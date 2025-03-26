@@ -25,6 +25,7 @@ import javax.swing.text.JTextComponent;
 /** @author Sandip V. Chitale (Sandip.Chitale@Sun.Com)
  * @deprecated use {@link CslActions#createCamelCasePositionAction(javax.swing.Action, boolean) } instead.
  */
+@Deprecated
 public class PreviousCamelCasePosition extends AbstractCamelCasePosition {
     public static final String previousCamelCasePosition = "previous-camel-case-position"; //NOI18N
 

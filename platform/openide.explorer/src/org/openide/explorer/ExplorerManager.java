@@ -235,7 +235,7 @@ public final class ExplorerManager extends Object implements Serializable, Clone
                     }
                 }
                 if (validNodes != null) {
-                    newValue = validNodes.toArray(new Node[validNodes.size()]);
+                    newValue = validNodes.toArray(new Node[0]);
                     if (equalNodes(newValue, selectedNodes)) {
                         return;
                     }                    
@@ -352,7 +352,7 @@ public final class ExplorerManager extends Object implements Serializable, Clone
      * @param value the new node to explore, or <code>null</code> if none should be explored.
      * @param selection the new nodes to be selected
      * @throws IllegalArgumentException if the node is not within the current root context in the node hierarchy
-     * @throws PropertyVetoExcepion if listeners attached to this explorer manager do so
+     * @throws PropertyVetoException if listeners attached to this explorer manager do so
      */
     public final void setExploredContextAndSelection(final Node value, final Node[] selection)
     throws PropertyVetoException {
@@ -776,7 +776,7 @@ bigloop:
                     }
 
                     // set the selection
-                    Node[] newSelection = selNodes.toArray(new Node[selNodes.size()]);
+                    Node[] newSelection = selNodes.toArray(new Node[0]);
 
                     if (exploredCtx != null) {
                         setExploredContext(findPath(root, exploredCtx), newSelection);
@@ -794,7 +794,7 @@ bigloop:
      * that implements {@link Provider}.  <P> This method should be used in
      * {@link Component#addNotify} of each component that works with the
      * Explorer manager, e.g.:
-     * <p><pre>
+     * <pre>
      * private transient ExplorerManager explorer;
      *
      * public void addNotify () {
@@ -1004,7 +1004,7 @@ bigloop:
                     i.remove();
             }
             
-            Node[] selNodes = newSel.toArray(new Node[newSel.size()]);
+            Node[] selNodes = newSel.toArray(new Node[0]);
             setSelectedNodes0(selNodes);
             
             

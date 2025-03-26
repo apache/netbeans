@@ -175,7 +175,7 @@ public final class RootObj<T extends FileObject> extends FileObject {
                     }
                 }
             } else if (lf.size() > 1) {
-                final File[] arr = lf.toArray(new File[lf.size()]);
+                final File[] arr = lf.toArray(new File[0]);
                 Arrays.sort(arr);
                 factory.refreshFor(slow, ignoreRecursiveListeners, arr);
             }

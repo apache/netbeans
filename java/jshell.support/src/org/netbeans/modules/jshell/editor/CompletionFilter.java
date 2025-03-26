@@ -34,8 +34,14 @@ import com.sun.source.util.DocTrees;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
 import java.io.IOException;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodHandles.Lookup;
+import java.lang.invoke.MethodType;
 import java.text.BreakIterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
@@ -54,6 +60,29 @@ import javax.tools.FileObject;
  * @author sdedic
  */
 final class CompletionFilter extends DocTrees {
+
+    private static final Logger LOG = Logger.getLogger(CompletionFilter.class.getName());
+
+    private static final MethodHandle MH_GET_TYPE;
+    private static final MethodHandle MH_GET_CHARACTERS;
+
+    static {
+        MethodHandle getTypeBuilder = null;
+        MethodHandle getCharactersBuilder = null;
+        Lookup lookup = MethodHandles.lookup();
+        try {
+            getTypeBuilder = lookup.findVirtual(DocTrees.class, "getType", MethodType.methodType(TypeMirror.class, DocTreePath.class));
+        } catch (NoSuchMethodException | IllegalAccessException ex) {
+            LOG.log(Level.WARNING, "Failed to lookup MethodHandle for DocTrees.getType", ex);
+        }
+        try {
+            getCharactersBuilder = lookup.findVirtual(DocTrees.class, "getCharacters", MethodType.methodType(String.class, EntityTree.class));
+        } catch (NoSuchMethodException | IllegalAccessException ex) {
+            LOG.log(Level.WARNING, "Failed to lookup MethodHandle for DocTrees.getCharactersBuilder", ex);
+        }
+        MH_GET_TYPE = getTypeBuilder;
+        MH_GET_CHARACTERS = getCharactersBuilder;
+    }
 
     public CompletionFilter(Trees delegate) {
         this.delegate = (DocTrees)delegate;
@@ -244,14 +273,32 @@ final class CompletionFilter extends DocTrees {
         return delegate.getLub(ct);
     }
 
-    @Override
     public TypeMirror getType(DocTreePath path) {
-        return delegate.getType(path);
+        try {
+            return (TypeMirror) MH_GET_TYPE.invoke(delegate, path);
+        } catch (Throwable ex) {
+            if(ex instanceof Error) {
+                throw (Error) ex;
+            } else if (ex instanceof RuntimeException) {
+                throw (RuntimeException) ex;
+            } else {
+                throw new IllegalStateException(ex);
+            }
+        }
     }
 
-    @Override
     public String getCharacters(EntityTree tree) {
-        return delegate.getCharacters(tree);
+        try {
+            return (String) MH_GET_CHARACTERS.invoke(delegate, tree);
+        } catch (Throwable ex) {
+            if(ex instanceof Error) {
+                throw (Error) ex;
+            } else if (ex instanceof RuntimeException) {
+                throw (RuntimeException) ex;
+            } else {
+                throw new IllegalStateException(ex);
+            }
+        }
     }
 
     private DocTrees   delegate;

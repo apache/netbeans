@@ -1,0 +1,20 @@
+    final abstract function finalAbstractTraitMethodError(): void {}
+                            -----------------------------
+HINT:Method "finalAbstractTraitMethodError" cannot be declared abstract and final
+FIX:Remove modifier: abstract
+FIX:Remove modifier: final
+    final abstract public function finalAbstractPublicTraitMethodError(): void {}
+                                   -----------------------------------
+HINT:Method "finalAbstractPublicTraitMethodError" cannot be declared abstract and final
+FIX:Remove modifier: abstract
+FIX:Remove modifier: final
+    final abstract protected function finalAbstractProtectedTraitMethodError(): void {}
+                                      --------------------------------------
+HINT:Method "finalAbstractProtectedTraitMethodError" cannot be declared abstract and final
+FIX:Remove modifier: abstract
+FIX:Remove modifier: final
+    final abstract private function finalAbstractPrivateTraitMethodError(): void {}
+                                    ------------------------------------
+HINT:Method "finalAbstractPrivateTraitMethodError" cannot be declared abstract and final
+FIX:Remove modifier: abstract
+FIX:Remove modifier: final

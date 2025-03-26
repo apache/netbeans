@@ -35,12 +35,6 @@ public class ConvertTextBlockToStringTest {
 
     @Test
     public void newLineAtEnd() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_13");
-        } catch (IllegalArgumentException ex) {
-            //OK, skip test
-            return;
-        }
         HintTest.create()
                 .input("package helloworld;\n"
                         + "public class Test {\n"
@@ -52,8 +46,7 @@ public class ConvertTextBlockToStringTest {
                         + "                  \"\"\";\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertTextBlockToString.class)
                 .findWarning("3:18-3:21:hint:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()
@@ -68,12 +61,6 @@ public class ConvertTextBlockToStringTest {
 
     @Test
     public void simpleTest() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_13");
-        } catch (IllegalArgumentException ex) {
-            //OK, skip test
-            return;
-        }
         HintTest.create()
                 .input("package helloworld;\n"
                         + "public class Test {\n"
@@ -82,8 +69,7 @@ public class ConvertTextBlockToStringTest {
                         + "                  abc\"\"\";\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertTextBlockToString.class)
                 .findWarning("3:18-3:21:hint:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()
@@ -98,12 +84,6 @@ public class ConvertTextBlockToStringTest {
 
     @Test
     public void multipleNewLine() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_13");
-        } catch (IllegalArgumentException ex) {
-            //OK, skip test
-            return;
-        }
         HintTest.create()
                 .input("package helloworld;\n"
                         + "public class Test {\n"
@@ -118,8 +98,7 @@ public class ConvertTextBlockToStringTest {
                         + "                  \"\"\";\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertTextBlockToString.class)
                 .findWarning("3:18-3:21:hint:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()
@@ -134,12 +113,6 @@ public class ConvertTextBlockToStringTest {
 
     @Test
     public void newLineAfter() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_13");
-        } catch (IllegalArgumentException ex) {
-            //OK, skip test
-            return;
-        }
         HintTest.create()
                 .input("package helloworld;\n"
                         + "public class Test {\n"
@@ -153,8 +126,7 @@ public class ConvertTextBlockToStringTest {
                         + "                 ;\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertTextBlockToString.class)
                 .findWarning("3:18-3:21:hint:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()
@@ -173,12 +145,6 @@ public class ConvertTextBlockToStringTest {
 
     @Test
     public void manyLineTextBlock() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_13");
-        } catch (IllegalArgumentException ex) {
-            //OK, skip test
-            return;
-        }
         HintTest.create()
                 .input("package helloworld;\n"
                         + "public class Test {\n"
@@ -194,8 +160,7 @@ public class ConvertTextBlockToStringTest {
                         + "                  wxyz\"\"\";\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertTextBlockToString.class)
                 .findWarning("3:18-3:21:hint:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()
@@ -210,12 +175,6 @@ public class ConvertTextBlockToStringTest {
 
     @Test
     public void twoLineTextBlock() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_13");
-        } catch (IllegalArgumentException ex) {
-            //OK, skip test
-            return;
-        }
         HintTest.create()
                 .input("package helloworld;\n"
                         + "public class Test {\n"
@@ -225,8 +184,7 @@ public class ConvertTextBlockToStringTest {
                         + "                  def\"\"\";\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertTextBlockToString.class)
                 .findWarning("3:18-3:21:hint:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()
@@ -241,12 +199,6 @@ public class ConvertTextBlockToStringTest {
 
     @Test
     public void twoNewLines() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_13");
-        } catch (IllegalArgumentException ex) {
-            //OK, skip test
-            return;
-        }
         HintTest.create()
                 .input("package helloworld;\n"
                         + "public class Test {\n"
@@ -257,8 +209,7 @@ public class ConvertTextBlockToStringTest {
                         + "                 \"\"\";\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertTextBlockToString.class)
                 .findWarning("3:18-3:21:hint:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()
@@ -273,12 +224,6 @@ public class ConvertTextBlockToStringTest {
 
     @Test
     public void slashConvert() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_13");
-        } catch (IllegalArgumentException ex) {
-            //OK, skip test
-            return;
-        }
         HintTest.create()
                 .input("package helloworld;\n"
                         + "public class Test {\n"
@@ -287,8 +232,7 @@ public class ConvertTextBlockToStringTest {
                         + "                 \\\\\"\"\";\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertTextBlockToString.class)
                 .findWarning("3:18-3:21:hint:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()
@@ -303,12 +247,6 @@ public class ConvertTextBlockToStringTest {
 
     @Test
     public void escapeCharTextBlock() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_13");
-        } catch (IllegalArgumentException ex) {
-            //OK, skip test
-            return;
-        }
         HintTest.create()
                 .input("package helloworld;\n"
                         + "public class Test {\n"
@@ -318,8 +256,7 @@ public class ConvertTextBlockToStringTest {
                         + "                  \"def\"\"\";\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertTextBlockToString.class)
                 .findWarning("3:18-3:21:hint:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()
@@ -334,12 +271,6 @@ public class ConvertTextBlockToStringTest {
 
     @Test
     public void escapeCharTextBlock2() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_13");
-        } catch (IllegalArgumentException ex) {
-            //OK, skip test
-            return;
-        }
         HintTest.create()
                 .input("package helloworld;\n"
                         + "public class Test {\n"
@@ -353,8 +284,7 @@ public class ConvertTextBlockToStringTest {
                         + "                  \"\"\";\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertTextBlockToString.class)
                 .findWarning("3:18-3:21:hint:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()
@@ -369,12 +299,6 @@ public class ConvertTextBlockToStringTest {
 
     @Test
     public void textBlockAsParameter1() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_13");
-        } catch (IllegalArgumentException ex) {
-            //OK, skip test
-            return;
-        }
         HintTest.create()
                 .input("package test;\n"
                         + "\n"
@@ -384,8 +308,7 @@ public class ConvertTextBlockToStringTest {
                         + "                           abc\"\"\");\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertTextBlockToString.class)
                 .findWarning("4:27-4:30:hint:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()
@@ -401,12 +324,6 @@ public class ConvertTextBlockToStringTest {
 
     @Test
     public void textBlockAsParameter2() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_13");
-        } catch (IllegalArgumentException ex) {
-            //OK, skip test
-            return;
-        }
         HintTest.create()
                 .input("class myClass{\n"
                         + "    public static void main(String[] args) {\n"
@@ -416,8 +333,7 @@ public class ConvertTextBlockToStringTest {
                         + "                           ghi\"\"\");\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertTextBlockToString.class)
                 .findWarning("2:27-2:30:hint:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()

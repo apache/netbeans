@@ -46,7 +46,7 @@
    <li><a href="#q-and-a">Common Problems and Solutions</a></li>
   </ul>
 
-  <h1><a name="intro">Introduction</a></h1>
+  <h1 id="intro">Introduction</h1>
 
   <p>
    NetBeans, as a large Java application with a sophisticated module system and a
@@ -79,7 +79,7 @@
    <a href="api.html">Modules API</a>.
   </p>
 
-  <h1><a name="loader-hier">The Class Loader Hierarchy</a></h1>
+  <h1 id="loader-hier">The Class Loader Hierarchy</h1>
 
   <p>
    The basic thing you need to understand about how modules control class loading
@@ -160,7 +160,7 @@ OpenIDE-Module-Module-Dependencies: org.netbeans.modules.a
    -->
   </p>
 
-  <h2><a name="class-path">Extensions using <code>Class-Path</code></a></h2>
+  <h2 id="class-path">Extensions using <code>Class-Path</code></h2>
 
   <p>
    Commonly a NetBeans module will serve as a wrapper for an independent library,
@@ -174,7 +174,7 @@ OpenIDE-Module-Module-Dependencies: org.netbeans.modules.a
    NetBeans handles this situation by letting you use the <code>Class-Path</code>
    manifest attribute defined by the
 
-   <a href="http://java.sun.com/j2se/1.5.0/docs/guide/extensions/spec.html#bundled">Java Extension Mechanism</a>.
+   <a href="https://docs.oracle.com/javase/1.5.0/docs/guide/extensions/spec.html#bundled">Java Extension Mechanism</a>.
 
    The value of the attribute consists of one or more relative paths to library
    JARs, in the same directory as the module or (normally) beneath it.
@@ -241,7 +241,7 @@ Class-Path: ext/library-a-1.0.jar ext/library-b-1.1.jar
    </p>
   </blockquote>
 
-  <h2><a name="libs">Startup Libraries</a></h2>
+  <h2 id="libs">Startup Libraries</h2>
 
   <p>
    In a given NetBeans release, there are several libraries placed in the
@@ -250,7 +250,7 @@ Class-Path: ext/library-a-1.0.jar ext/library-b-1.1.jar
    If you need to use classes from them, just declare regular module dependencies.
   </p>
 
-  <h2><a name="patches-l10n">Patches and Localizations</a></h2>
+  <h2 id="patches-l10n">Patches and Localizations</h2>
 
   <p>
    In addition to use of <code>Class-Path</code>, there are a couple of other
@@ -300,7 +300,7 @@ Class-Path: ext/library-a-1.0.jar ext/library-b-1.1.jar
    at runtime (according to the current locale and branding) will be loaded.
   </p>
 
-  <h2><a name="prov-req">Provide-Require Dependencies</a></h2>
+  <h2 id="prov-req">Provide-Require Dependencies</h2>
 
   <p>
    In addition to regular dependencies using
@@ -321,7 +321,7 @@ Class-Path: ext/library-a-1.0.jar ext/library-b-1.1.jar
    </p>
   </blockquote>
 
-  <h2><a name="public-packages">Dependencies and Package Restrictions</a></h2>
+  <h2 id="public-packages">Dependencies and Package Restrictions</h2>
 
   <p>
    By default when a module B declares a direct dependency on another module A,
@@ -420,7 +420,7 @@ OpenIDE-Module-Module-Dependencies: org.netbeans.modules.a = 1.0-alpha-2
    </p>
   </blockquote>
 
-  <h1><a name="syscl">The System Class Loader, Thread Context Class Loading, and <code>nbres:</code></a></h1>
+  <h1 id="syscl">The System Class Loader, Thread Context Class Loading, and <code>nbres:</code></h1>
 
   <p>
    There is a special class loader in NetBeans referred to as the <em>system
@@ -438,7 +438,7 @@ OpenIDE-Module-Module-Dependencies: org.netbeans.modules.a = 1.0-alpha-2
   </pre>
   <p>
    This class loader is also the
-   <a href="@JDK@/java/lang/Thread.html#getContextClassLoader--">context class loader</a>
+   <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/Thread.html#getContextClassLoader--">context class loader</a>
    for every thread in the NetBeans VM, unless that thread (or a parent)
    explicitly set some other context class loader. Since many libraries which are
    independent of NetBeans (including in the JRE) are written to assume that all
@@ -532,7 +532,7 @@ OpenIDE-Module-Module-Dependencies: org.netbeans.modules.a = 1.0-alpha-2
    <code>nbresloc</code> in place of <code>nbres</code>.
   </p>
 
-  <h1><a name="overlaps">"Parallel" Libraries</a></h1>
+  <h1 id="overlaps">"Parallel" Libraries</h1>
 
   <p>
       It is possible for two modules to include classes with the same (fully-qualified) names, so long as the modules have distinct code name bases.
@@ -571,7 +571,7 @@ OpenIDE-Module-Module-Dependencies: org.netbeans.modules.a = 1.0-alpha-2
       </li>
   </ul>
 
-  <h1><a name="q-and-a">Common Problems and Solutions</a></h1>
+  <h1 id="q-and-a">Common Problems and Solutions</h1>
 
   <p>
    This section is an attempt to gather a number of the problems, questions, and
@@ -582,11 +582,11 @@ OpenIDE-Module-Module-Dependencies: org.netbeans.modules.a = 1.0-alpha-2
    The developer's FAQ is likely to have more recent answers to your questions.
   </p>
 
-  <h2><a name="default_package">I am getting warnings when trying to access resources from the default (root, unnamed) package</a></h2>
+  <h2 id="default_package">I am getting warnings when trying to access resources from the default (root, unnamed) package</h2>
 
   <p>Loading classes from the default (root) package is disabled. You can load resources from
      that package but a warning is printed. It is strongly discouraged to use the default package.
-     Please see the <a href="http://java.sun.com/docs/books/jls/second_edition/html/packages.doc.html#40169">
+     Please see the <a href="https://docs.oracle.com/javase/specs/jls/se6/html/packages.html#40169">
      Java Language Specification </a> for more details.
      You can suppress the warning using <code>-J-Dorg.netbeans.ProxyClassLoader.level=1000</code> command
      line switch.
@@ -606,8 +606,8 @@ OpenIDE-Module-Module-Dependencies: org.netbeans.modules.a = 1.0-alpha-2
   <h2>Using <samp>lib/*.jar</samp> or <samp>-cp</samp> sounds much easier but someone told me not to do it</h2>
 
   <p>The reason is similar to why JDK documentation about setting the class path for
-     <a href="http://java.sun.com/j2se/1.5.0/docs/tooldocs/windows/classpath.html">Windows</a> or
-     <a href="http://java.sun.com/j2se/1.5.0/docs/tooldocs/solaris/classpath.html">Solaris</a>
+     <a href="https://docs.oracle.com/javase/1.5.0/docs/tooldocs/windows/classpath.html">Windows</a> or
+     <a href="https://docs.oracle.com/javase/1.5.0/docs/tooldocs/solaris/classpath.html">Solaris</a>
      states that <code>-classpath</code> is prefered over environment variables.
      Adding classes (resources) to <samp>lib/ext/</samp> affects all Java applications
      running using this Java installation. 

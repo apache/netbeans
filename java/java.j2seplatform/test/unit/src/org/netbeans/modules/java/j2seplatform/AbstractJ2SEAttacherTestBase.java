@@ -71,7 +71,7 @@ public class AbstractJ2SEAttacherTestBase extends NbTestCase {
         super.setUp();
         def = Locale.getDefault();
         List<Object> l = additionalServices();
-        MockLookup.setLayersAndInstances(l.toArray(new Object[l.size()]));
+        MockLookup.setLayersAndInstances(l.toArray(new Object[0]));
     }
 
     @Override

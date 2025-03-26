@@ -61,7 +61,7 @@
 
 <!--
         <question id="arch-quality" when="init">
-            How will the <a href="http://www.netbeans.org/community/guidelines/q-evangelism.html">quality</a>
+            How will the <a href="https://netbeans.apache.org/participate/qualityevangelism.html">quality</a>
             of your code be tested and
             how are future regressions going to be prevented?
             <hint>
@@ -116,7 +116,6 @@
         </question>
 -->
  <answer id="arch-usecases">
-  <p>
       <usecase id="createScriptEngineManager" name="Create ScriptEngineManager">
           To create new instance script engine manager ready for the NetBeans
           execution environment use
@@ -124,7 +123,7 @@
               <a href="@TOP@/org/netbeans/api/scripting/Scripting.html">Scripting</a>
               class offers static <code>createManager()</code> method that
               should be used whenever one needs an instance of
-              <a href="@JDK@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>
+              <a href="@JDK@@JDKMODULE_JAVA_SCRIPTING@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>
               inside of NetBeans based application.
           </api>
           Many client oriented use-cases are covered in the
@@ -137,9 +136,9 @@
               and register it into global lookup via
               <a href="@org-openide-util-lookup@/org/openide/util/lookup/ServiceProvider.html">ServiceProvider</a>
               to dynamically discover and offer new
-              <a href="@JDK@/javax/script/ScriptEngine.html">ScriptEngine</a>s
+              <a href="@JDK@@JDKMODULE_JAVA_SCRIPTING@/javax/script/ScriptEngine.html">ScriptEngine</a>s
               to users of
-              <a href="@JDK@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>
+              <a href="@JDK@@JDKMODULE_JAVA_SCRIPTING@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>
               obtained via
               <a href="@TOP@/org/netbeans/api/scripting/Scripting.html">Scripting</a>
               factory methods.
@@ -153,17 +152,16 @@
             <a href="@TOP@/org/netbeans/api/scripting/Scripting.html">Scripting</a>
             factory methods. Alternatively you can implement and register
             <a href="@TOP@/org/netbeans/spi/scripting/EngineProvider.html">EngineProvider</a>
-            as in the <a href="#java-org.netbeans.spi.scripting">dynamic registration use-case</a>.
+            as in the <a href="@TOP@architecture-summary.html#java-org.netbeans.spi.scripting">dynamic registration use-case</a>.
           </p>
           <p>
             In any case don't forget to advertise your engine to the
               <a href="@org-openide-modules@/overview-summary.html">runtime container</a>
             via <code>OpenIDE-Module-Providers: javax.script.ScriptEngine."engineName"</code>
-            tag as specified by <a href="#property-manifest.ScriptEngine">manifest registration</a>
+            tag as specified by <a href="@TOP@architecture-summary.html#property-manifest.ScriptEngine">manifest registration</a>
             API.
           </p>
       </usecase>
-  </p>
  </answer>
 
 
@@ -653,8 +651,6 @@
             in the application are really enabled and the dependencies are
             satisfied.
         </api>
-  <p>
-  </p>
  </answer>
 
 

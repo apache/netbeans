@@ -72,7 +72,7 @@ public class NbClassLoaderTest extends NbTestCase {
         Class c = cl.loadClass("org.openide.execution.NbClassLoaderTest$User");
         assertEquals(cl, c.getClassLoader());
         try {
-            c.newInstance();
+            c.getDeclaredConstructor().newInstance();
         } catch (ExceptionInInitializerError eiie) {
             Throwable t = eiie.getException();
             if (t instanceof IllegalStateException) {
@@ -127,6 +127,7 @@ public class NbClassLoaderTest extends NbTestCase {
     }
     
     private static final class MySecurityManager extends SecurityManager {
+        @Override
         public void checkPermission(Permission p) {
             //System.err.println("cP: " + p);
             if (ok()) {/*System.err.println("ok");*/return;}
@@ -138,10 +139,12 @@ public class NbClassLoaderTest extends NbTestCase {
                 throw se;
             }
         }
+        @Override
         public void checkPermission(Permission p, Object c) {
             if (ok()) {/*System.err.println("ok");*/return;}
             super.checkPermission(p, c);
         }
+        @Override
         public void checkRead(String file) {
             // Do not honor file read checks. TopSecurityManager actually leaves
             // this blank for performance, but in fact very little would work if

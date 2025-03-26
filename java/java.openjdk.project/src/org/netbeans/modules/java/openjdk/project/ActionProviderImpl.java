@@ -38,6 +38,7 @@ import org.netbeans.modules.java.openjdk.common.ShortcutUtils;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.SingleMethod;
 import org.netbeans.spi.project.ui.support.ProjectSensitiveActions;
 import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileObject;
@@ -151,6 +152,8 @@ public class ActionProviderImpl implements ActionProvider {
                     filteredActions.retainAll(Arrays.asList(actions));
                     filteredActions.add(COMMAND_BUILD_GENERIC_FAST);
                     filteredActions.add(COMMAND_PROFILE_TEST_SINGLE);
+                    filteredActions.add(SingleMethod.COMMAND_RUN_SINGLE_METHOD);
+                    filteredActions.add(SingleMethod.COMMAND_DEBUG_SINGLE_METHOD);
                     supported = filteredActions.toArray(new String[0]);
                     break;
                 }
@@ -174,6 +177,15 @@ public class ActionProviderImpl implements ActionProvider {
             for (ActionProvider ap : Lookup.getDefault().lookupAll(ActionProvider.class)) {
                 if (new HashSet<>(Arrays.asList(ap.getSupportedActions())).contains(COMMAND_PROFILE_TEST_SINGLE) && ap.isActionEnabled(COMMAND_PROFILE_TEST_SINGLE, context)) {
                     ap.invokeAction(COMMAND_PROFILE_TEST_SINGLE, context);
+                    return ;
+                }
+            }
+        }
+        if (SingleMethod.COMMAND_RUN_SINGLE_METHOD.equals(command) ||
+            SingleMethod.COMMAND_DEBUG_SINGLE_METHOD.equals(command)) {
+            for (ActionProvider ap : Lookup.getDefault().lookupAll(ActionProvider.class)) {
+                if (new HashSet<>(Arrays.asList(ap.getSupportedActions())).contains(command) && ap.isActionEnabled(command, context)) {
+                    ap.invokeAction(command, context);
                     return ;
                 }
             }

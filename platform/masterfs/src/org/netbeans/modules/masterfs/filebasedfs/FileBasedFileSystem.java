@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -217,7 +218,7 @@ public class FileBasedFileSystem extends FileSystem {
     @Override
     public FileObject createTempFile(FileObject parent, String prefix, String suffix, boolean deleteOnExit) throws IOException {
         if (parent.isFolder() && parent.isValid()) {
-            File tmpFile = File.createTempFile(prefix, suffix, FileUtil.toFile(parent));
+            File tmpFile = Files.createTempFile(FileUtil.toFile(parent).toPath(), prefix, suffix).toFile();
             if (deleteOnExit) {
                 tmpFile.deleteOnExit();
             }
@@ -314,7 +315,7 @@ public class FileBasedFileSystem extends FileSystem {
                     arr.add(lkp);
                 }
             }
-            return new ProxyLookup(arr.toArray(new Lookup[arr.size()]));
+            return new ProxyLookup(arr.toArray(new Lookup[0]));
         }
 
         @Override

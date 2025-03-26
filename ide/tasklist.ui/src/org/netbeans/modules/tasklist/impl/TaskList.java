@@ -409,7 +409,7 @@ public class TaskList {
     private void fireTasksAdded( List<Task> tasks ) {
         TaskList.Listener[] tmp; 
         synchronized( listeners ) {
-            tmp = listeners.toArray(new TaskList.Listener[listeners.size()]);
+            tmp = listeners.toArray(new TaskList.Listener[0]);
         }
         for ( Listener l : tmp ) {
             l.tasksAdded( tasks );
@@ -419,7 +419,7 @@ public class TaskList {
     private void fireTasksRemoved( List<Task> tasks ) {
         TaskList.Listener[] tmp; 
         synchronized( listeners ) {
-            tmp = listeners.toArray(new TaskList.Listener[listeners.size()]);
+            tmp = listeners.toArray(new TaskList.Listener[0]);
         }
         for ( Listener l : tmp ) {
             l.tasksRemoved( tasks );
@@ -429,7 +429,7 @@ public class TaskList {
     private void fireCleared() {
         TaskList.Listener[] tmp; 
         synchronized( listeners ) {
-            tmp = listeners.toArray(new TaskList.Listener[listeners.size()]);
+            tmp = listeners.toArray(new TaskList.Listener[0]);
         }
         for( Listener l : tmp) {
             l.cleared();

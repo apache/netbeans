@@ -108,7 +108,7 @@ final class ProjectClassPathImplementation implements ClassPathImplementation {
 
         // compile dependencies
         List<File> compileDeps = buildConfig.getCompileDependencies();
-        addJars(compileDeps.toArray(new File[compileDeps.size()]), result, false);
+        addJars(compileDeps.toArray(new File[0]), result, false);
 
         // FIXME move this to plugin specific support
         // http://grails.org/GWT+Plugin

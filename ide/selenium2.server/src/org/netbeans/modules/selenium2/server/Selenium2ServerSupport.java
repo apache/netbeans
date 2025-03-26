@@ -188,7 +188,7 @@ public class Selenium2ServerSupport implements Runnable {
             if (action == null) {
                 return;
             }
-            isRunning = (!action.equals(Action.STOP));
+            isRunning = action != Action.STOP;
             action = null;
         } catch (BindException bi) {
             LOGGER.log(Level.INFO, "Port already in use - the server is probably already running.", bi); //NOI18N
@@ -234,7 +234,7 @@ public class Selenium2ServerSupport implements Runnable {
         Class remoteControlConfiguration = urlClassLoader.loadClass(
                 "org.openqa.selenium.server.RemoteControlConfiguration"); //NOI18N
 
-        Object remoteControlConfigurationInstance = remoteControlConfiguration.newInstance();
+        Object remoteControlConfigurationInstance = remoteControlConfiguration.getDeclaredConstructor().newInstance();
         int port = getPrefs().getInt(PORT, PORT_DEFAULT);
         remoteControlConfiguration.getMethod("setPort", int.class).invoke(
             remoteControlConfigurationInstance, port); //NOI18N

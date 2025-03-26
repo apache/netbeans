@@ -1,16 +1,19 @@
 #Signature file v4.1
-#Version 1.66.0
+#Version 1.75.0
 
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -48,9 +51,9 @@ intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
 
 CLSS public final org.netbeans.api.java.source.ui.DialogBinding
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.netbeans.api.java.source.JavaSource bindComponentToFile(org.openide.filesystems.FileObject,int,int,javax.swing.text.JTextComponent)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 
 CLSS public final org.netbeans.api.java.source.ui.ElementHeaders
@@ -90,11 +93,13 @@ meth public java.util.concurrent.Future<java.lang.String> getTextAsync()
 meth public javax.swing.Action getGotoSourceAction()
 meth public org.netbeans.api.java.source.ui.ElementJavadoc resolveLink(java.lang.String)
 supr java.lang.Object
-hfds API,APINOTE_TAG,ASSOCIATE_JDOC,HTML_TAGS,IMPLNOTE_TAG,IMPLSPEC_TAG,LANGS,MARKUPTAG_MANDATORY_ATTRIBUTE,RP,cancel,className,content,cpInfo,docRoot,docURL,fileObject,goToSource,handle,imports,linkCounter,links,packageName
+hfds API,APINOTE_TAG,ASSOCIATE_JDOC,HTML_TAGS,IMPLNOTE_TAG,IMPLSPEC_TAG,LANGS,MARKUPTAG_MANDATORY_ATTRIBUTE,REPLACEMENT,RP,cancel,className,content,cpInfo,docRoot,docURL,fileObject,goToSource,handle,imports,linkCounter,links,packageName
 hcls JavaDocSnippetLinkTagFileObject,SourceLineCharterMapperToHtmlTag
 
 CLSS public final org.netbeans.api.java.source.ui.ElementOpen
 innr public final static Location
+meth public !varargs static boolean open(org.netbeans.api.java.source.ClasspathInfo,org.netbeans.api.java.source.ElementHandle<? extends javax.lang.model.element.Element>,java.lang.String[])
+meth public !varargs static java.util.concurrent.CompletableFuture<org.netbeans.api.java.source.ui.ElementOpen$Location> getLocation(org.netbeans.api.java.source.ClasspathInfo,org.netbeans.api.java.source.ElementHandle<? extends javax.lang.model.element.Element>,java.lang.String,java.lang.String[])
 meth public static boolean open(org.netbeans.api.java.source.ClasspathInfo,javax.lang.model.element.Element)
 meth public static boolean open(org.netbeans.api.java.source.ClasspathInfo,org.netbeans.api.java.source.ElementHandle<? extends javax.lang.model.element.Element>)
 meth public static boolean open(org.openide.filesystems.FileObject,org.netbeans.api.java.source.ElementHandle<? extends javax.lang.model.element.Element>)

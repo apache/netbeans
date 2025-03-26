@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.62
+#Version 1.71
 
 CLSS public abstract interface java.io.Serializable
 
@@ -79,6 +79,7 @@ meth public abstract void performOperation({org.netbeans.modules.maven.model.Mod
 
 CLSS public org.netbeans.modules.maven.model.Utilities
 meth public static org.netbeans.modules.xml.xam.ModelSource createModelSource(org.openide.filesystems.FileObject)
+meth public static org.netbeans.modules.xml.xam.ModelSource createModelSource(org.openide.filesystems.FileObject,javax.swing.text.Document)
 meth public static org.netbeans.modules.xml.xam.ModelSource createModelSource(org.openide.filesystems.FileObject,org.openide.loaders.DataObject,org.netbeans.editor.BaseDocument)
 meth public static org.netbeans.modules.xml.xam.ModelSource createModelSourceForMissingFile(java.io.File,boolean,java.lang.String,java.lang.String)
 meth public static void openAtPosition(org.netbeans.modules.maven.model.pom.POMModel,int)
@@ -1338,6 +1339,7 @@ meth public javax.swing.text.Document getBaseDocument()
 meth public org.netbeans.modules.xml.xam.dom.AbstractDocumentComponent findComponent(org.netbeans.modules.xml.xam.dom.AbstractDocumentComponent,java.util.List<org.w3c.dom.Element>,int)
 meth public org.netbeans.modules.xml.xam.dom.ChangeInfo prepareChangeInfo(java.util.List<? extends org.w3c.dom.Node>,java.util.List<? extends org.w3c.dom.Node>)
 meth public org.netbeans.modules.xml.xam.dom.ChangeInfo prepareChangeInfo(java.util.List<org.w3c.dom.Node>)
+ anno 0 java.lang.Deprecated()
 meth public org.netbeans.modules.xml.xam.dom.DocumentComponent findComponent(int)
 meth public org.netbeans.modules.xml.xam.dom.DocumentComponent findComponent(java.util.List<org.w3c.dom.Element>)
 meth public org.netbeans.modules.xml.xam.dom.DocumentComponent findComponent(org.w3c.dom.Element)

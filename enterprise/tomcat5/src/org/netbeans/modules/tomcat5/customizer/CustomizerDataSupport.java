@@ -21,7 +21,9 @@ package org.netbeans.modules.tomcat5.customizer;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.logging.Level;
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
 import javax.swing.DefaultComboBoxModel;
@@ -39,6 +41,7 @@ import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.java.platform.Specification;
 import org.netbeans.modules.tomcat5.deploy.TomcatManager;
+import org.netbeans.modules.tomcat5.j2ee.TomcatPlatformImpl;
 import org.netbeans.modules.tomcat5.util.TomcatProperties;
 import org.openide.util.Exceptions;
 
@@ -372,32 +375,54 @@ public class CustomizerDataSupport {
     public void loadJvmModel() {
         JavaPlatformManager jpm = JavaPlatformManager.getDefault();
         JavaPlatformAdapter curJvm = (JavaPlatformAdapter)jvmModel.getSelectedItem();
-        String curPlatformName = null;
+        final String curPlatformName;
         if (curJvm != null) {
             curPlatformName = curJvm.getName();
         } else {
             curPlatformName = (String)tp.getJavaPlatform().getProperties().get(TomcatProperties.PLAT_PROP_ANT_NAME);
         }
-
         jvmModel.removeAllElements();
         
-        // feed the combo with sorted platform list
+        // Supported jvm platforms for this version of Tomcat or TomEE
+        TomcatPlatformImpl tomcatPlatformImpl = new TomcatPlatformImpl(tm);
+        Set<String> tomcatPlatforms = tomcatPlatformImpl.getSupportedJavaPlatformVersions();
+        
+        // jvm platforms registered in NetBeans
         JavaPlatform[] j2sePlatforms = jpm.getPlatforms(null, new Specification("J2SE", null)); // NOI18N
-        JavaPlatformAdapter[] platformAdapters = new JavaPlatformAdapter[j2sePlatforms.length];
-        for (int i = 0; i < platformAdapters.length; i++) {
-            platformAdapters[i] = new JavaPlatformAdapter(j2sePlatforms[i]);
+        
+        Set<JavaPlatformAdapter> platformAdapters = new TreeSet<>();
+        
+        // Only add the jvm platforms that are supported from the registered set
+        for (JavaPlatform jp : j2sePlatforms) {
+            if (tomcatPlatforms.contains(jp.getSpecification().getVersion().toString())) {
+                platformAdapters.add(new JavaPlatformAdapter(jp));
+            }
         }
-        Arrays.sort(platformAdapters);
-        for (int i = 0; i < platformAdapters.length; i++) {
-            JavaPlatformAdapter platformAdapter = platformAdapters[i];
-            jvmModel.addElement(platformAdapter);
-            // try to set selected item
+        
+        if (platformAdapters.isEmpty()) {
+            jvmModel.setSelectedItem(null);
+            return;
+        } else {
+            for (JavaPlatformAdapter platformAdapter : platformAdapters) {
+                jvmModel.addElement(platformAdapter);
+            }
+        }
+        
+        // try to set selected item
+        for (JavaPlatformAdapter j2sePlatform : platformAdapters) {
             if (curPlatformName != null) {
-                if (curPlatformName.equals(platformAdapter.getName())) {
-                    jvmModel.setSelectedItem(platformAdapter);
+                if (curPlatformName.equals(j2sePlatform.getName())) {
+                    jvmModel.setSelectedItem(j2sePlatform);
+                    // if we do not change the flag the jvm will not change
+                    jvmModelFlag = true;
+                    break;
+                } else {
+                    jvmModel.setSelectedItem(j2sePlatform);
+                    jvmModelFlag = true;
                 }
-            }   
+            } 
         }
+   
     }
     
     // model getters ----------------------------------------------------------

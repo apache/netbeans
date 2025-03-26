@@ -105,7 +105,7 @@ public final class SpringUtilities {
                 libraries.add(library);
             }
         }
-        return libraries.toArray(new Library[libraries.size()]);
+        return libraries.toArray(new Library[0]);
     }
 
     /**
@@ -183,6 +183,6 @@ public final class SpringUtilities {
             }
             jarRootURLs.add(url);
         }
-        return ClassPathSupport.createClassPath((jarRootURLs.toArray(new URL[jarRootURLs.size()])));
+        return ClassPathSupport.createClassPath((jarRootURLs.toArray(new URL[0])));
     }
 }

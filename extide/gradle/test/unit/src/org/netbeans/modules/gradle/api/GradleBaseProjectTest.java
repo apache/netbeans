@@ -23,6 +23,7 @@ import java.util.List;
 import static junit.framework.TestCase.assertNotNull;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProjectConnection;
+import org.junit.Assume;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
@@ -244,25 +245,34 @@ public class GradleBaseProjectTest extends AbstractGradleProjectTestCase {
         OpenProjects.getDefault().openProjects().get();
         
         NbGradleProject.get(p).toQuality("Load data", NbGradleProject.Quality.FULL, false).toCompletableFuture().get();
+        gconn.disconnect();
         return p;
     }
     
     public void testOldGradle611ProjectLoads() throws Exception {
+        String s = System.getProperty("java.specification.version");
+        Assume.assumeTrue(s.startsWith("1.") || Integer.parseInt(s) < 17);
         Project p = makeProjectWithWrapper("projects/oldgradle/basic", "6.1.1");
         assertProjectLoadedWithNoProblems(p, "6.1.1");
     }
 
     public void testOldGradle683ProjectLoads() throws Exception {
+        String s = System.getProperty("java.specification.version");
+        Assume.assumeTrue(s.startsWith("1.") || Integer.parseInt(s) < 17);
         Project p = makeProjectWithWrapper("projects/oldgradle/basic", "6.8.3");
         assertProjectLoadedWithNoProblems(p, "6.8.3");
     }
 
     public void testOldGradle700ProjectLoads() throws Exception {
+        String s = System.getProperty("java.specification.version");
+        Assume.assumeTrue(s.startsWith("1.") || Integer.parseInt(s) < 17);
         Project p = makeProjectWithWrapper("projects/oldgradle/basic", "7.0");
         assertProjectLoadedWithNoProblems(p, "7.0");
     }
 
     public void testOldGradle710ProjectLoads() throws Exception {
+        String s = System.getProperty("java.specification.version");
+        Assume.assumeTrue(s.startsWith("1.") || Integer.parseInt(s) < 17);
         Project p = makeProjectWithWrapper("projects/oldgradle/basic", "7.1");
         assertProjectLoadedWithNoProblems(p, "7.1");
     }

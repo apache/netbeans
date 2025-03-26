@@ -183,7 +183,7 @@ public class RefactoringUtil {
         final String newName = buildName(prefix, rename.getNewName());
         final int oldNameIndex = fqn.lastIndexOf(oldName) + oldName.length();
 
-        return newName + fqn.substring(oldNameIndex, fqn.length());
+        return newName + fqn.substring(oldNameIndex);
         
     }
     

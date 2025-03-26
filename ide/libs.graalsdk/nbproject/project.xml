@@ -34,6 +34,14 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.openide.modules</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>7.68</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.openide.util</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -47,6 +55,14 @@
                     <compile-dependency/>
                     <run-dependency>
                         <specification-version>8.36</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.util.ui</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>9.33</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>
@@ -67,27 +83,59 @@
                         <recursive/>
                         <compile-dependency/>
                     </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.libs.graaljs</code-name-base>
+                        <recursive/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.libs.graalsdk.system</code-name-base>
+                        <recursive/>
+                    </test-dependency>
                 </test-type>
             </test-dependencies>
             <public-packages>
-                <package>org.graalvm.home</package>
-                <package>org.graalvm.options</package>
-                <package>org.graalvm.nativeimage</package>
                 <package>org.graalvm.collections</package>
+                <package>org.graalvm.home</package>
+                <package>org.graalvm.nativeimage</package>
+                <package>org.graalvm.options</package>
                 <package>org.graalvm.polyglot</package>
+                <package>org.graalvm.polyglot.impl</package>
                 <package>org.graalvm.polyglot.io</package>
                 <package>org.graalvm.polyglot.management</package>
                 <package>org.graalvm.polyglot.proxy</package>
-                <package>org.graalvm.polyglot.impl</package>
                 <package>org.netbeans.libs.graalsdk</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/graal-sdk-20.3.0.jar</runtime-relative-path>
-                <binary-origin>external/graal-sdk-20.3.0.jar</binary-origin>
+                <runtime-relative-path>ext/launcher-common-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/launcher-common-24.0.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/launcher-common-20.3.0.jar</runtime-relative-path>
-                <binary-origin>external/launcher-common-20.3.0.jar</binary-origin>
+                <runtime-relative-path>ext/jline-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/jline-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/collections-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/collections-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jniutils-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/jniutils-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/launcher-common-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/launcher-common-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/nativeimage-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/nativeimage-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/polyglot-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/polyglot-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/word-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/word-24.0.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

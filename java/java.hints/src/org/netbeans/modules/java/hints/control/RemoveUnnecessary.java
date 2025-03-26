@@ -143,18 +143,38 @@ public class RemoveUnnecessary {
                 }
                 case BLOCK: statements = ((BlockTree) tp.getLeaf()).getStatements(); break;
                 case CASE: {
-                    if (tp.getParentPath().getLeaf().getKind() == Kind.SWITCH) {
-                        List<? extends CaseTree> cases = ((SwitchTree) tp.getParentPath().getLeaf()).getCases();
-                        List<StatementTree> locStatements = new ArrayList<StatementTree>();
+                    switch (tp.getParentPath().getLeaf().getKind()) {
+                        case SWITCH -> {
+                            CaseTree ct = (CaseTree) tp.getLeaf();
+                            if (ct.getCaseKind() == CaseTree.CaseKind.RULE) {
+                                if (ExpressionTree.class.isAssignableFrom(ct.getBody().getKind().asInterface())) {
+                                    //TODO: anything that can be done here?
+                                    return null;
+                                } else {
+                                    statements = List.of((StatementTree) ct.getBody());
+                                }
+                            } else {
+                                List<? extends CaseTree> cases = ((SwitchTree) tp.getParentPath().getLeaf()).getCases();
+                                List<StatementTree> locStatements = new ArrayList<>();
 
-                        for (int i = cases.indexOf(tp.getLeaf()); i < cases.size(); i++) {
-                            locStatements.addAll(cases.get(i).getStatements());
+                                for (int i = cases.indexOf(tp.getLeaf()); i < cases.size(); i++) {
+                                    List<? extends StatementTree> list = cases.get(i).getStatements();
+                                    if (list != null) {
+                                        locStatements.addAll(list);
+                                    }
+                                }
+
+                                statements = locStatements;
+                            }
                         }
-
-                        statements = locStatements;
-                    } else {
-                        //???
-                        statements = ((CaseTree) tp.getLeaf()).getStatements();
+                        case SWITCH_EXPRESSION -> {
+                            //jumps out of switch expressions are illegal, ignore:
+                            return null;
+                        }
+                        default -> {
+                            //???
+                            statements = ((CaseTree) tp.getLeaf()).getStatements();
+                        }
                     }
                     break;
                 }

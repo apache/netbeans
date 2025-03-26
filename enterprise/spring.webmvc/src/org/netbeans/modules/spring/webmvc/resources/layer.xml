@@ -35,12 +35,6 @@
             <file name="spring-webmvc-5.0.xml" url="spring-webmvc-5.0.xml">
                 <attr name="displayName" bundlevalue="org.netbeans.modules.spring.webmvc.resources.Bundle#spring-webmvc5"/>
             </file>
-            <file name="spring-webmvc-4.0.xml" url="spring-webmvc-4.0.xml">
-                <attr name="displayName" bundlevalue="org.netbeans.modules.spring.webmvc.resources.Bundle#spring-webmvc4"/>
-            </file>
-            <file name="spring-webmvc-3.0.xml" url="spring-webmvc-3.0.xml">
-                <attr name="displayName" bundlevalue="org.netbeans.modules.spring.webmvc.resources.Bundle#spring-webmvc3"/>
-            </file>
         </folder>
     </folder>
     <folder name="Templates">

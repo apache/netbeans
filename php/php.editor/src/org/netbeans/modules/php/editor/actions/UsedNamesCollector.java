@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
+import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.api.AliasedName;
 import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.model.ModelUtils;
@@ -132,7 +133,12 @@ public class UsedNamesCollector {
                     break;
                 }
             } else {
-                if (useElement.getName().endsWith(firstSegmentName)) {
+                // GH-5330
+                // do not check the end string of the declared name
+                // check whether segment is the same name
+                // e.g. OtherSameNamePart and SameNamePart are end with "SameNamePart"
+                QualifiedName declaredName = QualifiedName.create(useElement.getName());
+                if (declaredName.getSegments().getLast().equals(firstSegmentName)) {
                     result = true;
                     break;
                 }
@@ -185,21 +191,40 @@ public class UsedNamesCollector {
 
         @Override
         public void visit(PHPDocTypeNode node) {
-            UsedNamespaceName usedName = new UsedNamespaceName(node);
-            if (isValidTypeName(usedName.getName())) {
+            UsedNamespaceName usedName = createUsedNameNamespaceName(node);
+            if (isValidTypeName(usedName.getName()) && isValidAliasTypeName(usedName.getName())) {
                 processUsedName(usedName);
             }
         }
 
+        private UsedNamespaceName createUsedNameNamespaceName(PHPDocTypeNode node) {
+            // GH-7123 ignore nullable type prefix
+            PHPDocTypeNode phpDocTypeNode = node;
+            if (CodeUtils.isNullableType(node.getValue())) {
+                phpDocTypeNode = new PHPDocTypeNode(node.getStartOffset() + CodeUtils.NULLABLE_TYPE_PREFIX.length(), node.getEndOffset(),
+                        CodeUtils.removeNullableTypePrefix(node.getValue()), node.isArray());
+            }
+            return new UsedNamespaceName(phpDocTypeNode);
+        }
+
         private boolean isValidTypeName(final String typeName) {
-            return !SPECIAL_NAMES.contains(typeName) && !Type.isPrimitive(typeName);
+            return !SPECIAL_NAMES.contains(typeName)
+                    && !Type.isPrimitive(typeName)
+                    && !typeName.contains("<") // NOI18N e.g. array<int, ClassName>
+                    && !typeName.contains("{"); // NOI18N e.g. array{'foo': int, "bar": string}
+        }
+
+        private boolean isValidAliasTypeName(final String typeName) {
+            return !SPECIAL_NAMES.contains(typeName) && !Type.isPrimitiveAlias(typeName);
         }
 
         private void processUsedName(final UsedNamespaceName usedName) {
-            List<UsedNamespaceName> usedNames = existingNames.get(usedName.getName());
+            // GH-6075
+            String sanitizedUsedName = CodeUtils.removeNullableTypePrefix(usedName.getName());
+            List<UsedNamespaceName> usedNames = existingNames.get(sanitizedUsedName);
             if (usedNames == null) {
                 usedNames = new LinkedList<>();
-                existingNames.put(usedName.getName(), usedNames);
+                existingNames.put(sanitizedUsedName, usedNames);
             }
             usedNames.add(usedName);
         }

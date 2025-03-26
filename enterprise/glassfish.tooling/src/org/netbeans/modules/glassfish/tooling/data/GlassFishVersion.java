@@ -96,7 +96,53 @@ public enum GlassFishVersion {
     /** GlassFish 6.2.4 */
     GF_6_2_4       ((short) 6, (short) 2, (short) 4, (short) 0, GlassFishVersion.GF_6_2_4_STR),
     /** GlassFish 6.2.5 */
-    GF_6_2_5       ((short) 6, (short) 2, (short) 5, (short) 0, GlassFishVersion.GF_6_2_5_STR);
+    GF_6_2_5       ((short) 6, (short) 2, (short) 5, (short) 0, GlassFishVersion.GF_6_2_5_STR),
+    /** GlassFish 7.0.0 */
+    GF_7_0_0       ((short) 7, (short) 0, (short) 0, (short) 0, GlassFishVersion.GF_7_0_0_STR),
+    /** GlassFish 7.0.1 */
+    GF_7_0_1       ((short) 7, (short) 0, (short) 1, (short) 0, GlassFishVersion.GF_7_0_1_STR),
+    /** GlassFish 7.0.2 */
+    GF_7_0_2       ((short) 7, (short) 0, (short) 2, (short) 0, GlassFishVersion.GF_7_0_2_STR),
+    /** GlassFish 7.0.3 */
+    GF_7_0_3       ((short) 7, (short) 0, (short) 3, (short) 0, GlassFishVersion.GF_7_0_3_STR),
+    /** GlassFish 7.0.4 */
+    GF_7_0_4       ((short) 7, (short) 0, (short) 4, (short) 0, GlassFishVersion.GF_7_0_4_STR),
+    /** GlassFish 7.0.5 */
+    GF_7_0_5       ((short) 7, (short) 0, (short) 5, (short) 0, GlassFishVersion.GF_7_0_5_STR),
+    /** GlassFish 7.0.6 */
+    GF_7_0_6       ((short) 7, (short) 0, (short) 6, (short) 0, GlassFishVersion.GF_7_0_6_STR),
+    /** GlassFish 7.0.7 */
+    GF_7_0_7       ((short) 7, (short) 0, (short) 7, (short) 0, GlassFishVersion.GF_7_0_7_STR),
+    /** GlassFish 7.0.8 */
+    GF_7_0_8       ((short) 7, (short) 0, (short) 8, (short) 0, GlassFishVersion.GF_7_0_8_STR),
+    /** GlassFish 7.0.9 */
+    GF_7_0_9       ((short) 7, (short) 0, (short) 9, (short) 0, GlassFishVersion.GF_7_0_9_STR),
+    /** GlassFish 7.0.10 */
+    GF_7_0_10       ((short) 7, (short) 0, (short) 10, (short) 0, GlassFishVersion.GF_7_0_10_STR),
+    /** GlassFish 7.0.11 */
+    GF_7_0_11       ((short) 7, (short) 0, (short) 11, (short) 0, GlassFishVersion.GF_7_0_11_STR),
+    /** GlassFish 7.0.12 */
+    GF_7_0_12       ((short) 7, (short) 0, (short) 12, (short) 0, GlassFishVersion.GF_7_0_12_STR),
+    /** GlassFish 7.0.13 */
+    GF_7_0_13       ((short) 7, (short) 0, (short) 13, (short) 0, GlassFishVersion.GF_7_0_13_STR),
+    /** GlassFish 7.0.14 */
+    GF_7_0_14       ((short) 7, (short) 0, (short) 14, (short) 0, GlassFishVersion.GF_7_0_14_STR),
+    /** GlassFish 7.0.15 */
+    GF_7_0_15       ((short) 7, (short) 0, (short) 15, (short) 0, GlassFishVersion.GF_7_0_15_STR),
+    /** GlassFish 7.0.16 */
+    GF_7_0_16       ((short) 7, (short) 0, (short) 16, (short) 0, GlassFishVersion.GF_7_0_16_STR),
+    /** GlassFish 7.0.17 */
+    GF_7_0_17       ((short) 7, (short) 0, (short) 17, (short) 0, GlassFishVersion.GF_7_0_17_STR),
+    /** GlassFish 7.0.18 */
+    GF_7_0_18       ((short) 7, (short) 0, (short) 18, (short) 0, GlassFishVersion.GF_7_0_18_STR),
+    /** GlassFish 7.0.19 */
+    GF_7_0_19       ((short) 7, (short) 0, (short) 19, (short) 0, GlassFishVersion.GF_7_0_19_STR),
+    /** GlassFish 7.0.20 */
+    GF_7_0_20       ((short) 7, (short) 0, (short) 20, (short) 0, GlassFishVersion.GF_7_0_20_STR),
+    /** GlassFish 7.0.21 */
+    GF_7_0_21       ((short) 7, (short) 0, (short) 21, (short) 0, GlassFishVersion.GF_7_0_21_STR),
+    /** GlassFish 8.0.0 */
+    GF_8_0_0       ((short) 8, (short) 0, (short) 0, (short) 0, GlassFishVersion.GF_8_0_0_STR);
     ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
     ////////////////////////////////////////////////////////////////////////////
@@ -247,6 +293,121 @@ public enum GlassFishVersion {
     /** Additional <code>String</code> representations of GF_6_2_5 value. */
     static final String GF_6_2_5_STR_NEXT[] = {"6.2.5", "6.2.5.0"};
 
+    /** A <code>String</code> representation of GF_7_0_0 value. */
+    static final String GF_7_0_0_STR = "7.0.0";
+    /** Additional <code>String</code> representations of GF_7_0_0 value. */
+    static final String GF_7_0_0_STR_NEXT[] = {"7.0.0", "7.0.0.0"};
+    
+    /** A <code>String</code> representation of GF_7_0_1 value. */
+    static final String GF_7_0_1_STR = "7.0.1";
+    /** Additional <code>String</code> representations of GF_7_0_1 value. */
+    static final String GF_7_0_1_STR_NEXT[] = {"7.0.1", "7.0.1.0"};
+    
+    /** A {@code String} representation of GF_7_0_2 value. */
+    static final String GF_7_0_2_STR = "7.0.2";
+    /** Additional {@code String} representations of GF_7_0_2 value. */
+    static final String GF_7_0_2_STR_NEXT[] = {"7.0.2", "7.0.2.0"};
+
+    /** A {@code String} representation of GF_7_0_3 value. */
+    static final String GF_7_0_3_STR = "7.0.3";
+    /** Additional {@code String} representations of GF_7_0_3 value. */
+    static final String GF_7_0_3_STR_NEXT[] = {"7.0.3", "7.0.3.0"};
+
+    /** A {@code String} representation of GF_7_0_4 value. */
+    static final String GF_7_0_4_STR = "7.0.4";
+    /** Additional {@code String} representations of GF_7_0_4 value. */
+    static final String GF_7_0_4_STR_NEXT[] = {"7.0.4", "7.0.4.0"};
+
+    /** A {@code String} representation of GF_7_0_5 value. */
+    static final String GF_7_0_5_STR = "7.0.5";
+    /** Additional {@code String} representations of GF_7_0_5 value. */
+    static final String GF_7_0_5_STR_NEXT[] = {"7.0.5", "7.0.5.0"};
+
+    /** A {@code String} representation of GF_7_0_6 value. */
+    static final String GF_7_0_6_STR = "7.0.6";
+    /** Additional {@code String} representations of GF_7_0_6 value. */
+    static final String GF_7_0_6_STR_NEXT[] = {"7.0.6", "7.0.6.0"};
+    
+    /** A {@code String} representation of GF_7_0_7 value. */
+    static final String GF_7_0_7_STR = "7.0.7";
+    /** Additional {@code String} representations of GF_7_0_6 value. */
+    static final String GF_7_0_7_STR_NEXT[] = {"7.0.7", "7.0.7.0"};
+    
+    /** A {@code String} representation of GF_7_0_8 value. */
+    static final String GF_7_0_8_STR = "7.0.8";
+    /** Additional {@code String} representations of GF_7_0_8 value. */
+    static final String GF_7_0_8_STR_NEXT[] = {"7.0.8", "7.0.8.0"};
+    
+    /** A {@code String} representation of GF_7_0_9 value. */
+    static final String GF_7_0_9_STR = "7.0.9";
+    /** Additional {@code String} representations of GF_7_0_9 value. */
+    static final String GF_7_0_9_STR_NEXT[] = {"7.0.9", "7.0.9.0"};
+    
+    /** A {@code String} representation of GF_7_0_10 value. */
+    static final String GF_7_0_10_STR = "7.0.10";
+    /** Additional {@code String} representations of GF_7_0_10 value. */
+    static final String GF_7_0_10_STR_NEXT[] = {"7.0.10", "7.0.10.0"};
+    
+    /** A {@code String} representation of GF_7_0_11 value. */
+    static final String GF_7_0_11_STR = "7.0.11";
+    /** Additional {@code String} representations of GF_7_0_11 value. */
+    static final String GF_7_0_11_STR_NEXT[] = {"7.0.11", "7.0.11.0"};
+
+    /** A {@code String} representation of GF_7_0_12 value. */
+    static final String GF_7_0_12_STR = "7.0.12";
+    /** Additional {@code String} representations of GF_7_0_12 value. */
+    static final String GF_7_0_12_STR_NEXT[] = {"7.0.12", "7.0.12.0"};
+
+    /** A {@code String} representation of GF_7_0_13 value. */
+    static final String GF_7_0_13_STR = "7.0.13";
+    /** Additional {@code String} representations of GF_7_0_13 value. */
+    static final String GF_7_0_13_STR_NEXT[] = {"7.0.13", "7.0.13.0"};
+
+    /** A {@code String} representation of GF_7_0_14 value. */
+    static final String GF_7_0_14_STR = "7.0.14";
+    /** Additional {@code String} representations of GF_7_0_14 value. */
+    static final String GF_7_0_14_STR_NEXT[] = {"7.0.14", "7.0.14.0"};
+
+    /** A {@code String} representation of GF_7_0_15 value. */
+    static final String GF_7_0_15_STR = "7.0.15";
+    /** Additional {@code String} representations of GF_7_0_15 value. */
+    static final String GF_7_0_15_STR_NEXT[] = {"7.0.15", "7.0.15.0"};
+
+    /** A {@code String} representation of GF_7_0_16 value. */
+    static final String GF_7_0_16_STR = "7.0.16";
+    /** Additional {@code String} representations of GF_7_0_16 value. */
+    static final String GF_7_0_16_STR_NEXT[] = {"7.0.16", "7.0.16.0"};
+
+    /** A {@code String} representation of GF_7_0_17 value. */
+    static final String GF_7_0_17_STR = "7.0.17";
+    /** Additional {@code String} representations of GF_7_0_17 value. */
+    static final String GF_7_0_17_STR_NEXT[] = {"7.0.17", "7.0.17.0"};
+
+    /** A {@code String} representation of GF_7_0_18 value. */
+    static final String GF_7_0_18_STR = "7.0.18";
+    /** Additional {@code String} representations of GF_7_0_18 value. */
+    static final String GF_7_0_18_STR_NEXT[] = {"7.0.18", "7.0.18.0"};
+
+    /** A {@code String} representation of GF_7_0_19 value. */
+    static final String GF_7_0_19_STR = "7.0.19";
+    /** Additional {@code String} representations of GF_7_0_19 value. */
+    static final String GF_7_0_19_STR_NEXT[] = {"7.0.19", "7.0.19.0"};
+
+    /** A {@code String} representation of GF_7_0_20 value. */
+    static final String GF_7_0_20_STR = "7.0.20";
+    /** Additional {@code String} representations of GF_7_0_20 value. */
+    static final String GF_7_0_20_STR_NEXT[] = {"7.0.20", "7.0.20.0"};
+
+    /** A {@code String} representation of GF_7_0_21 value. */
+    static final String GF_7_0_21_STR = "7.0.21";
+    /** Additional {@code String} representations of GF_7_0_21 value. */
+    static final String GF_7_0_21_STR_NEXT[] = {"7.0.21", "7.0.21.0"};
+
+    /** A {@code String} representation of GF_8_0_0 value. */
+    static final String GF_8_0_0_STR = "8.0.0";
+    /** Additional {@code String} representations of GF_8_0_0 value. */
+    static final String GF_8_0_0_STR_NEXT[] = {"8.0.0", "8.0.0.0"};
+
     /**
      * Stored <code>String</code> values for backward <code>String</code>
      * conversion.
@@ -283,6 +444,29 @@ public enum GlassFishVersion {
         initStringValuesMapFromArray(GF_6_2_3, GF_6_2_3_STR_NEXT);
         initStringValuesMapFromArray(GF_6_2_4, GF_6_2_4_STR_NEXT);
         initStringValuesMapFromArray(GF_6_2_5, GF_6_2_5_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_0, GF_7_0_0_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_1, GF_7_0_1_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_2, GF_7_0_2_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_3, GF_7_0_3_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_4, GF_7_0_4_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_5, GF_7_0_5_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_6, GF_7_0_6_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_7, GF_7_0_7_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_8, GF_7_0_8_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_9, GF_7_0_9_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_10, GF_7_0_10_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_11, GF_7_0_11_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_12, GF_7_0_12_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_13, GF_7_0_13_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_14, GF_7_0_14_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_15, GF_7_0_15_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_16, GF_7_0_16_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_17, GF_7_0_17_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_18, GF_7_0_18_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_19, GF_7_0_19_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_20, GF_7_0_20_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_21, GF_7_0_21_STR_NEXT);
+        initStringValuesMapFromArray(GF_8_0_0, GF_8_0_0_STR_NEXT);
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -547,6 +731,22 @@ public enum GlassFishVersion {
         sb.append(SEPARATOR);
         sb.append(Integer.toString(build));
         return sb.toString();
+    }
+    
+    /**
+     * Convert <code>GlassFishVersion</code> value to <code>int</code>
+     * containing all version numbers.
+     * <p/>
+     * @return A <code>String</code> representation of the value of this object
+     *         containing all version numbers.
+     */
+    public int toFullInteger() {
+        StringBuilder sb = new StringBuilder(8);
+        sb.append(Integer.toString(major));
+        sb.append(Integer.toString(minor));
+        sb.append(Integer.toString(update));
+        sb.append(Integer.toString(build));
+        return Integer.parseInt(sb.toString());
     }
 
 }

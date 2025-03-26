@@ -198,8 +198,8 @@ public final class Manager {
     /**
      * Notifies the result window of a search task's state change.
      *
-     * @param
-     * @param  changeType  constant describing what happened
+     * @param task
+     * @param changeType  constant describing what happened
      *                     - one of the EVENT_xxx constants
      */
     private void notifySearchTaskStateChange(final SearchTask task, final int changeType) {
@@ -399,7 +399,7 @@ public final class Manager {
         assert EventQueue.isDispatchThread();
         
         searchWindowOpen = false;
-        Runnable[] tasks = currentTasks.toArray(new Runnable[currentTasks.size()]);
+        Runnable[] tasks = currentTasks.toArray(new Runnable[0]);
         for (Runnable task : tasks) {
             if (task instanceof SearchTask) {
                 SearchTask sTask = (SearchTask) task;
@@ -416,7 +416,7 @@ public final class Manager {
     /**
      */
     private synchronized void processNextPendingTask() {
-        Runnable[] pTasks = pendingTasks.toArray(new Runnable[pendingTasks.size()]);
+        Runnable[] pTasks = pendingTasks.toArray(new Runnable[0]);
         for (Runnable pTask : pTasks) {
             boolean haveReplaceRunning = haveRunningReplaceTask();
             if (pTask instanceof SearchTask) {

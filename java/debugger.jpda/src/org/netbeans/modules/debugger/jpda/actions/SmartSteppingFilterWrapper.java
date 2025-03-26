@@ -69,7 +69,7 @@ public final class SmartSteppingFilterWrapper implements SmartSteppingFilter {
             if (addedPatterns != null) {
                 newPatterns.addAll(addedPatterns);
             }
-            return newPatterns.toArray(new String[newPatterns.size()]);
+            return newPatterns.toArray(new String[0]);
         }
     }
     

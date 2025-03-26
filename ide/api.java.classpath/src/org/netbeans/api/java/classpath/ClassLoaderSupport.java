@@ -280,6 +280,6 @@ final class ClassLoaderSupport extends URLClassLoader implements FileChangeListe
         for (ClassPath.Entry e : entries) {
             res.offer(e.getURL());
         }
-        return res.toArray(new URL[res.size()]);
+        return res.toArray(new URL[0]);
     }
 }

@@ -20,6 +20,7 @@
 package org.netbeans.modules.java.source.parsing;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -53,6 +54,17 @@ abstract class ProxyArchive implements Archive {
             final JavaFileObject jfo = delegate.getFile(name);
             if (jfo != null) {
                 return jfo;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public URI getDirectory(String dirName) throws IOException {
+        for (Archive delegate : delegates) {
+            final URI dirURI = delegate.getDirectory(dirName);
+            if (dirURI != null) {
+                return dirURI;
             }
         }
         return null;

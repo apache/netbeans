@@ -18,14 +18,11 @@
  */
 package org.netbeans.modules.editor.java;
 
-import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
@@ -35,13 +32,11 @@ import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.lexer.Language;
+import org.netbeans.api.lexer.PartType;
+import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.modules.parsing.api.ParserManager;
-import org.netbeans.modules.parsing.api.ResultIterator;
-import org.netbeans.modules.parsing.api.Source;
-import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.spi.editor.bracesmatching.BraceContext;
 import org.netbeans.spi.editor.bracesmatching.BracesMatcher;
 import org.netbeans.spi.editor.bracesmatching.BracesMatcherFactory;
@@ -93,6 +88,7 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
     // BracesMatcher implementation
     // -----------------------------------------------------
     
+    @Override
     public int[] findOrigin() throws BadLocationException, InterruptedException {
         ((AbstractDocument) context.getDocument()).readLock();
         try {
@@ -135,6 +131,7 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
         }
     }
 
+    @Override
     public int[] findMatches() throws InterruptedException, BadLocationException {
         ((AbstractDocument) context.getDocument()).readLock();
         try {
@@ -152,10 +149,17 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
 
                 seq.move(originOffset);
                 if (seq.moveNext()) {
-                    if (seq.token().id() == JavaTokenId.STRING_LITERAL) {
+                    Token<?> token = seq.token();
+
+                    if (token.id() == JavaTokenId.STRING_LITERAL ||
+                        token.id() == JavaTokenId.MULTILINE_STRING_LITERAL) {
+
                         for(TokenSequenceIterator tsi = new TokenSequenceIterator(list, backward); tsi.hasMore(); ) {
                             TokenSequence<?> sq = tsi.getSequence();
-                            if (sq.token().id() == JavaTokenId.STRING_LITERAL) {
+
+                            if (sq.token().id() == JavaTokenId.STRING_LITERAL ||
+                                sq.token().id() == JavaTokenId.MULTILINE_STRING_LITERAL) {
+
                                 CharSequence text = sq.token().text();
                                 if (backward) {
                                     // check the character at the left from the caret
@@ -188,6 +192,53 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
                                                 counter--;
                                             }
                                         }
+                                    }
+                                }
+                            }
+                        }
+                        if ((token.partType() == PartType.START || token.partType() == PartType.MIDDLE) && (seq.offset() + token.length()) == originOffset + (backward ? 0 : 1)) {
+                            while (seq.moveNext()) {
+                                Token<?> t = seq.token();
+
+                                if (t.id() == JavaTokenId.STRING_LITERAL ||
+                                    t.id() == JavaTokenId.MULTILINE_STRING_LITERAL) {
+
+                                    switch (t.partType()) {
+                                        case START: counter++; break;
+                                        case END:
+                                            if (counter > 0) {
+                                                counter--;
+                                                break;
+                                            }
+                                        case MIDDLE:
+                                            if (counter == 0) {
+                                                return new int[] {seq.offset(), seq.offset() + 1};
+                                            }
+                                            break;
+                                    }
+                                }
+                            }
+                        }
+                        if ((token.partType() == PartType.END || token.partType() == PartType.MIDDLE) && seq.offset() == originOffset - (backward ? 0 : 1)) {
+                            while (seq.movePrevious()) {
+                                Token<?> t = seq.token();
+
+                                if (t.id() == JavaTokenId.STRING_LITERAL ||
+                                    t.id() == JavaTokenId.MULTILINE_STRING_LITERAL) {
+
+                                    switch (t.partType()) {
+                                        case END: counter++; break;
+                                        case START:
+                                            if (counter > 0) {
+                                                counter--;
+                                                break;
+                                            }
+                                        case MIDDLE:
+                                            if (counter == 0) {
+                                                int endPos = seq.offset() + seq.token().length();
+                                                return new int[] {endPos - 1, endPos};
+                                            }
+                                            break;
                                     }
                                 }
                             }
@@ -282,6 +333,7 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
                             // must use lexer to iterate backwards from block start to 'else' keyword. The keyword position
                             // is not a part of the Tree
                             context.getDocument().render(new Runnable() {
+                                @Override
                                 public void run() {
                                     TokenHierarchy h = TokenHierarchy.get(context.getDocument());
                                     TokenSequence seq = h.tokenSequence();
@@ -461,6 +513,7 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
     // -----------------------------------------------------
     
     /** */
+    @Override
     public BracesMatcher createMatcher(MatcherContext context) {
         return new JavaBracesMatcher(context);
     }

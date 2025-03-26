@@ -233,7 +233,7 @@ public interface HTMLViewerSpi<HtmlView, HtmlButton> {
     /** Converts the view to a component of the requested type. This method
      * is only called if neither {@link Context#isWindow()} and {@link Context#isDialog()}
      * return {@code true}. Default implementation supports two values of {@code type}:
-     * {@link JComponent} or {@link javafx.scene.Node} class - alternative
+     * {@link JComponent} or <a href="https://openjfx.io/javadoc/11/javafx.graphics/javafx/scene/Node.html">Node</a> class - alternative
      * implementations of this interface may not support all these types
      * and may also support other types.
      * <p>

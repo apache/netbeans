@@ -455,7 +455,7 @@ OUTER:
                     list.add(new WeakReference<Node>(it.next()));
                 }
 
-                activatedNodes = list.toArray(new Reference[list.size()]);
+                activatedNodes = list.toArray(new Reference[0]);
             }
 
             update();

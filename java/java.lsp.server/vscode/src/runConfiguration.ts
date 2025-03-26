@@ -23,14 +23,7 @@ import { homedir } from 'os';
 export async function initializeRunConfiguration(): Promise<boolean> {
 	const java = await vscode.workspace.findFiles('**/*.java', '**/node_modules/**', 1);
 	if (java?.length > 0) {
-		const maven = await vscode.workspace.findFiles('pom.xml', '**/node_modules/**', 1);
-		if (maven?.length > 0) {
-			return true;
-		}
-		const gradle = await vscode.workspace.findFiles('build.gradle', '**/node_modules/**', 1);
-		if (gradle?.length > 0) {
-			return true;
-		}
+            return true;
 	}
 	return false;
 }
@@ -42,7 +35,7 @@ class RunConfigurationProvider implements vscode.DebugConfigurationProvider {
 			resolve(config);
 		});
 	}
-
+	
 	resolveDebugConfigurationWithSubstitutedVariables?(_folder: vscode.WorkspaceFolder | undefined, config: vscode.DebugConfiguration, _token?: vscode.CancellationToken): vscode.ProviderResult<vscode.DebugConfiguration> {
         return new Promise<vscode.DebugConfiguration>(resolve => {
 			const args = argumentsNode.getValue();
@@ -58,7 +51,11 @@ class RunConfigurationProvider implements vscode.DebugConfigurationProvider {
 			if (vmArgs) {
 				if (!config.vmArgs) {
 					config.vmArgs = vmArgs;
+				} else if (Array.isArray(config.vmArgs)) {
+					let cfg : string[] = config.vmArgs;
+					cfg.push(vmArgs);
 				} else {
+					// assume the config is a string
 					config.vmArgs = `${config.vmArgs} ${vmArgs}`;
 				}
 			}
@@ -171,7 +168,7 @@ class RunConfigurationNode extends vscode.TreeItem {
 	}
 
 	getConfig(): vscode.WorkspaceConfiguration {
-		return vscode.workspace.getConfiguration('java8+.runConfig');
+		return vscode.workspace.getConfiguration('java+.runConfig');
 	}
 
 }

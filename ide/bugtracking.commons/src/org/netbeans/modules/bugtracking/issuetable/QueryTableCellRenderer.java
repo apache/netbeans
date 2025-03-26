@@ -54,7 +54,7 @@ public class QueryTableCellRenderer extends DefaultTableCellRenderer {
     private final IssueTable issueTable;
 
     private static final int VISIBLE_START_CHARS = 0;
-    private static final Icon seenValueIcon = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/bugtracking/commons/resources/seen-value.png")); // NOI18N
+    private static final Icon seenValueIcon = ImageUtilities.loadIcon("org/netbeans/modules/bugtracking/commons/resources/seen-value.png"); // NOI18N
 
     private static final MessageFormat issueNewFormat       = getFormat("issueNewFormat", UIUtils.getTaskNewColor()); //NOI18N
     private static final MessageFormat issueObsoleteFormat  = getFormat("issueObsoleteFormat", UIUtils.getTaskObsoleteColor()); //NOI18N
@@ -212,7 +212,7 @@ public class QueryTableCellRenderer extends DefaultTableCellRenderer {
             idx = matcher.end();
         }
         if(sb.length() > 0) {
-            sb.append(idx < s.length() ? s.substring(idx, s.length()) : "");
+            sb.append(idx < s.length() ? s.substring(idx) : "");
             s = sb.toString();
         }
         return s;

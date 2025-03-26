@@ -71,6 +71,8 @@ import org.netbeans.libs.git.jgit.Utils;
 import org.netbeans.libs.git.progress.FileListener;
 import org.netbeans.libs.git.progress.ProgressMonitor;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  *
  * @author ondra
@@ -146,7 +148,7 @@ public class CheckoutRevisionCommand extends GitCommand {
                         + ex.getMessage());
             } catch (CheckoutConflictException ex) {
                 List<String> conflicts = dco.getConflicts();
-                throw new GitException.CheckoutConflictException(conflicts.toArray(new String[conflicts.size()]), ex);
+                throw new GitException.CheckoutConflictException(conflicts.toArray(new String[0]), ex);
             } finally {
                 cache.unlock();
             }
@@ -325,7 +327,7 @@ public class CheckoutRevisionCommand extends GitCommand {
                     DirCacheEntry e = new DirCacheEntry(path);
                     e.setCreationTime(theirs.getCreationTime());
                     e.setFileMode(theirs.getFileMode());
-                    e.setLastModified(theirs.getLastModified());
+                    e.setLastModified(theirs.getLastModifiedInstant());
                     e.setLength(theirs.getLength());
                     e.setObjectId(theirs.getObjectId());
                     builder.add(e);
@@ -360,8 +362,7 @@ public class CheckoutRevisionCommand extends GitCommand {
         try (OutputStream fos = opt.getAutoCRLF() != CoreConfig.AutoCRLF.FALSE
                 ? new AutoCRLFOutputStream(new FileOutputStream(file))
                 : new FileOutputStream(file)) {
-            format.formatMerge(fos, merge, Arrays.asList(new String[] { "BASE", "OURS", "THEIRS" }), //NOI18N
-                    Constants.CHARACTER_ENCODING);
+            format.formatMerge(fos, merge, Arrays.asList(new String[] { "BASE", "OURS", "THEIRS" }), UTF_8); //NOI18N
         }
     }
 }

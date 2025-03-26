@@ -1,4 +1,4 @@
-<?xml version="1.1" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 
 <!--
 
@@ -60,6 +60,7 @@
                   <Component id="cbAutoPopup" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="cbInsertSingleProposalsAutomatically" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="cbJavadocNextToCC" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="cbDisplayParameterTooltip" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="46" max="32767" attributes="0"/>
           </Group>
@@ -75,6 +76,8 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="cbJavadocNextToCC" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="cbDisplayParameterTooltip" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="cbInsertSingleProposalsAutomatically" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="cbCaseSensitive" min="-2" max="-2" attributes="0"/>
@@ -82,7 +85,7 @@
               <Component id="cbShowDeprecated" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="cbInsertClosingBracketsAutomatically" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="40" max="32767" attributes="0"/>
+              <EmptySpace pref="13" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -212,6 +215,16 @@
       </AccessibilityProperties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbInsertClosingBracketsAutomaticallyActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="cbDisplayParameterTooltip">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/options/editor/completion/Bundle.properties" key="GeneralCompletionOptionsPanel.cbDisplayParameterTooltip.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbDisplayParamterTooltipActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

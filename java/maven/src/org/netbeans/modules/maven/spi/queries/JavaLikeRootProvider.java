@@ -26,9 +26,9 @@ import org.netbeans.spi.project.ProjectServiceProvider;
  * Extension point for contributing source roots compilable in parallel with Java sources.
  * Necessary since the {@link ClassPath#SOURCE} for {@code src/main/java/} must include {@code src/main/KIND/} too.
  * Generally these roots (under {@code src/test/KIND/} also) will get the same classpath information as Java.
- * Creation of {@link SourceGroup}s (or their nodes) is not automatic, as this requires display labels
+ * Creation of <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/SourceGroup.html">SourceGroup</a>s (or their nodes) is not automatic, as this requires display labels
  * and might merit further customization.
- * Related/similar to {@link OtherSourcesExclude}
+ * Related/similar to {@link org.netbeans.modules.maven.spi.nodes.OtherSourcesExclude}
  * 
  * Note: the api is a bit simplistic for performance reasons, eg. if user reconfigures the src/main/groovy content to a different location in pom.xml we silently assume that
  * src/main/groovy doesn't exist then.

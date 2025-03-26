@@ -202,9 +202,9 @@
 
 =======================================================================
 
-SPRING FRAMEWORK 5.2.9.RELEASE SUBCOMPONENTS:
+SPRING FRAMEWORK 5.3.31 SUBCOMPONENTS:
 
-Spring Framework 5.2.9.RELEASE includes a number of subcomponents
+Spring Framework 5.3.31 includes a number of subcomponents
 with separate copyright notices and license terms. The product that
 includes this file does not necessarily use all the open source
 subcomponents referred to below. Your use of the source
@@ -212,7 +212,7 @@ code for these subcomponents is subject to the terms and
 conditions of the following licenses.
 
 
->>> ASM 7.1 (org.ow2.asm:asm:7.1, org.ow2.asm:asm-commons:7.1):
+>>> ASM 9.1 (org.ow2.asm:asm:9.1, org.ow2.asm:asm-commons:9.1):
 
 Copyright (c) 2000-2011 INRIA, France Telecom
 All rights reserved.
@@ -255,10 +255,10 @@ CGLIB 3.3 is licensed under the Apache License, version 2.0, the text of which
 is included above.
 
 
->>> Objenesis 3.1 (org.objenesis:objenesis:3.1):
+>>> Objenesis 3.2 (org.objenesis:objenesis:3.2):
 
 Per the LICENSE file in the Objenesis ZIP distribution downloaded from
-http://objenesis.org/download.html, Objenesis 3.1 is licensed under the
+http://objenesis.org/download.html, Objenesis 3.2 is licensed under the
 Apache License, version 2.0, the text of which is included above.
 
 Per the NOTICE file in the Objenesis ZIP distribution downloaded from

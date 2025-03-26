@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.options.export;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -110,19 +111,19 @@ public final class OptionsExportModel {
     ArrayList<String> getEnabledItemsDuringExport(File importSource) {
         ArrayList<String> enabledItems = null;
         if (importSource.isFile()) { // importing from .zip file
-            try {
-                ZipFile zipFile = new ZipFile(importSource);
+            try (ZipFile zipFile = new ZipFile(importSource)) {
                 // Enumerate each entry
                 Enumeration<? extends ZipEntry> entries = zipFile.entries();
                 while (entries.hasMoreElements()) {
-                    ZipEntry zipEntry = (ZipEntry) entries.nextElement();
+                    ZipEntry zipEntry = entries.nextElement();
                     if(zipEntry.getName().equals(OptionsExportModel.ENABLED_ITEMS_INFO)) {
-                        enabledItems = new ArrayList<String>();
-                        InputStream stream = zipFile.getInputStream(zipEntry);
-                        BufferedReader br = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
-                        String strLine;
-                        while ((strLine = br.readLine()) != null) {
-                            enabledItems.add(strLine);
+                        enabledItems = new ArrayList<>();
+                        try (InputStream stream = zipFile.getInputStream(zipEntry);
+                             BufferedReader br = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));) {
+                            String strLine;
+                            while ((strLine = br.readLine()) != null) {
+                                enabledItems.add(strLine);
+                            }
                         }
                     }
                 }
@@ -158,20 +159,20 @@ public final class OptionsExportModel {
     double getBuildNumberDuringExport(File importSource) {
         String buildNumber = null;
         if (importSource.isFile()) { // importing from .zip file
-            try {
-                ZipFile zipFile = new ZipFile(importSource);
+            try (ZipFile zipFile = new ZipFile(importSource)) {
                 // Enumerate each entry
                 Enumeration<? extends ZipEntry> entries = zipFile.entries();
                 while (entries.hasMoreElements()) {
                     ZipEntry zipEntry = (ZipEntry) entries.nextElement();
                     if (zipEntry.getName().equals(OptionsExportModel.BUILD_INFO)) {
-                        InputStream stream = zipFile.getInputStream(zipEntry);
-                        BufferedReader br = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
-                        String strLine;
-                        while ((strLine = br.readLine()) != null) {
-                            buildNumber = parseBuildNumber(strLine);
-                            if(buildNumber != null) {
-                                break; // successfully parsed build number, no need to continue
+                        try (InputStream stream = zipFile.getInputStream(zipEntry);
+                             BufferedReader br = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));)  {
+                            String strLine;
+                            while ((strLine = br.readLine()) != null) {
+                                buildNumber = parseBuildNumber(strLine);
+                                if(buildNumber != null) {
+                                    break; // successfully parsed build number, no need to continue
+                                }
                             }
                         }
                     }
@@ -274,7 +275,7 @@ public final class OptionsExportModel {
         String passwords = NbBundle.getMessage(OptionsChooserPanel.class, "OptionsChooserPanel.export.passwords.category.displayName");
         for (OptionsExportModel.Category category : getCategories()) {
             if (category.isApplicable()) {
-                if (state.equals(State.ENABLED)) {
+                if (state == State.ENABLED) {
                     if (category.getDisplayName() != null && !category.getDisplayName().equals(passwords)) {
                         category.setState(state);
                     }
@@ -304,24 +305,16 @@ public final class OptionsExportModel {
         try {
             ensureParent(targetZipFile);
             // Create the ZIP file
-            zipOutputStream = new ZipOutputStream(createOutputStream(targetZipFile));
-            copyFiles();
-            createEnabledItemsInfo(zipOutputStream, enabledItems);
-            createProductInfo(zipOutputStream);
-            // Complete the ZIP file
-            zipOutputStream.close();
+            try (ZipOutputStream out = new ZipOutputStream(createOutputStream(targetZipFile))) {
+                zipOutputStream = out;
+                copyFiles();
+                createEnabledItemsInfo(out, enabledItems);
+                createProductInfo(out);
+            }
         } catch (IOException ex) {
             Exceptions.attachLocalizedMessage(ex,
                     NbBundle.getMessage(OptionsExportModel.class, "OptionsExportModel.export.zip.error", targetZipFile));
             Exceptions.printStackTrace(ex);
-        } finally {
-            if (zipOutputStream != null) {
-                try {
-                    zipOutputStream.close();
-                } catch (IOException ex) {
-                    // ignore
-                }
-            }
         }
     }
 
@@ -621,7 +614,7 @@ public final class OptionsExportModel {
                 FileObject[] itemsFOs = categoryFO.getChildren();
                 // respect ordering defined in layers
                 List<FileObject> sortedItems = FileUtil.getOrder(Arrays.asList(itemsFOs), false);
-                itemsFOs = sortedItems.toArray(new FileObject[sortedItems.size()]);
+                itemsFOs = sortedItems.toArray(new FileObject[0]);
                 for (FileObject itemFO : itemsFOs) {
                     String dispName = (String) itemFO.getAttribute(DISPLAY_NAME);
                     assert dispName != null : "Display name of export option item not defined in layer.";  //NOI18N
@@ -748,21 +741,32 @@ public final class OptionsExportModel {
      */
     private void copyZipFile() throws IOException {
         // Open the ZIP file
-        ZipFile zipFile = new ZipFile(source);
-        try {
+        try (ZipFile zipFile = new ZipFile(source)) {
             // Enumerate each entry
             Enumeration<? extends ZipEntry> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry zipEntry = entries.nextElement();
-                if (!zipEntry.isDirectory()) {
+                if (!zipEntry.isDirectory() && checkIntegrity(zipEntry)) {
                     copyFile(zipEntry.getName());
                 }
             }
-        } finally {
-            if (zipFile != null) {
-                zipFile.close();
+        }
+    }
+
+    // true if ok
+    private boolean checkIntegrity(ZipEntry entry) throws IOException {
+        if (entry.getName().endsWith(".properties")) {
+            try (ZipFile zip = new ZipFile(source);
+                 BufferedReader reader = new BufferedReader(new InputStreamReader(zip.getInputStream(entry), StandardCharsets.UTF_8))) {
+                // invalid code point check JDK-8075156
+                boolean ok = reader.lines().noneMatch(l -> l.indexOf('\u0000') != -1);
+                if (!ok) {
+                    LOGGER.log(Level.WARNING, "ignoring corrupted properties file at {0}", entry.getName());
+                }
+                return ok;
             }
         }
+        return true;
     }
 
     /** Copy given folder to target userdir or zip file obeying include/exclude patterns.
@@ -964,18 +968,12 @@ public final class OptionsExportModel {
             // Complete the entry
             zipOutputStream.closeEntry();
         } else {  // import to userdir
-            OutputStream out = null;
             File targetFile = new File(targetUserdir, relativePath);
             LOGGER.log(Level.FINE, "Path: {0}", relativePath);  //NOI18N
             if (includeKeys.isEmpty() && excludeKeys.isEmpty()) {
                 // copy entire file
-                try {
-                    out = createOutputStream(targetFile);
+                try (OutputStream out = createOutputStream(targetFile)) {
                     copyFile(relativePath, out);
-                } finally {
-                    if (out != null) {
-                        out.close();
-                    }
                 }
             } else {
                 mergeProperties(relativePath, includeKeys, excludeKeys);
@@ -999,29 +997,17 @@ public final class OptionsExportModel {
             return;
         }
         EditableProperties targetProperties = new EditableProperties(false);
-        InputStream in = null;
         File targetFile = new File(targetUserdir, relativePath);
-        try {
-            if (targetFile.exists()) {
-                in = new FileInputStream(targetFile);
+        if (targetFile.exists()) {
+            try (InputStream in = new FileInputStream(targetFile)) {
                 targetProperties.load(in);
-            }
-        } finally {
-            if (in != null) {
-                in.close();
             }
         }
         for (Entry<String, String> entry : currentProperties.entrySet()) {
             targetProperties.put(entry.getKey(), entry.getValue());
         }
-        OutputStream out = null;
-        try {
-            out = createOutputStream(targetFile);
+        try (OutputStream out = createOutputStream(targetFile)) {
             targetProperties.store(out);
-        } finally {
-            if (out != null) {
-                out.close();
-            }
         }
     }
 
@@ -1055,14 +1041,8 @@ public final class OptionsExportModel {
      */
     private EditableProperties getProperties(String relativePath) throws IOException {
         EditableProperties properties = new EditableProperties(false);
-        InputStream in = null;
-        try {
-            in = getInputStream(relativePath);
+        try (InputStream in = getInputStream(relativePath)) {
             properties.load(in);
-        } finally {
-            if (in != null) {
-                in.close();
-            }
         }
         return properties;
     }
@@ -1075,13 +1055,25 @@ public final class OptionsExportModel {
     private InputStream getInputStream(String relativePath) throws IOException {
         if (source.isFile()) {
             //zip file
-            ZipFile zipFile = new ZipFile(source);
-            ZipEntry zipEntry = zipFile.getEntry(relativePath);
-            return zipFile.getInputStream(zipEntry);
+            return singleEntryZipStream(relativePath);
         } else {
             // userdir
             return new FileInputStream(new File(source, relativePath));
         }
+    }
+
+    private InputStream singleEntryZipStream(String relativePath) throws IOException {
+        final ZipFile zipFile = new ZipFile(source);
+        return new BufferedInputStream(zipFile.getInputStream(zipFile.getEntry(relativePath))) {
+            @Override
+            public void close() throws IOException {
+                try {
+                    super.close();
+                } finally {
+                    zipFile.close();
+                }
+            }
+        };
     }
 
     /** Copy file from relative path in zip file or userdir to target OutputStream.
@@ -1090,14 +1082,8 @@ public final class OptionsExportModel {
      * @throws java.io.IOException if copying fails
      */
     private void copyFile(String relativePath, OutputStream out) throws IOException {
-        InputStream in = null;
-        try {
-            in = getInputStream(relativePath);
+        try (InputStream in = getInputStream(relativePath)) {
             FileUtil.copy(in, out);
-        } finally {
-            if (in != null) {
-                in.close();
-            }
         }
     }
 
@@ -1117,15 +1103,16 @@ public final class OptionsExportModel {
      * @throws java.io.IOException
      */
     static List<String> listZipFile(File file) throws IOException {
-        List<String> relativePaths = new ArrayList<String>();
+        List<String> relativePaths = new ArrayList<>();
         // Open the ZIP file
-        ZipFile zipFile = new ZipFile(file);
-        // Enumerate each entry
-        Enumeration<? extends ZipEntry> entries = zipFile.entries();
-        while (entries.hasMoreElements()) {
-            ZipEntry zipEntry = (ZipEntry) entries.nextElement();
-            if (!zipEntry.isDirectory()) {
-                relativePaths.add(zipEntry.getName());
+        try (ZipFile zipFile = new ZipFile(file)) {
+            // Enumerate each entry
+            Enumeration<? extends ZipEntry> entries = zipFile.entries();
+            while (entries.hasMoreElements()) {
+                ZipEntry zipEntry = entries.nextElement();
+                if (!zipEntry.isDirectory()) {
+                    relativePaths.add(zipEntry.getName());
+                }
             }
         }
         return relativePaths;
@@ -1139,35 +1126,20 @@ public final class OptionsExportModel {
      */
     static void createZipFile(File targetFile, File sourceDir, List<String> relativePaths) throws IOException {
         ensureParent(targetFile);
-        ZipOutputStream out = null;
-        try {
-            // Create the ZIP file
-            out = new ZipOutputStream(createOutputStream(targetFile));
+        try (ZipOutputStream out = new ZipOutputStream(createOutputStream(targetFile))) {
             // Compress the files
             for (String relativePath : relativePaths) {
                 LOGGER.finest("Adding to zip: " + relativePath);  //NOI18N
                 // Add ZIP entry to output stream.
                 out.putNextEntry(new ZipEntry(relativePath));
                 // Transfer bytes from the file to the ZIP file
-                FileInputStream in = null;
-                try {
-                    in = new FileInputStream(new File(sourceDir, relativePath));
+                try (FileInputStream in = new FileInputStream(new File(sourceDir, relativePath))) {
                     FileUtil.copy(in, out);
-                } finally {
-                    if (in != null) {
-                        in.close();
-                    }
                 }
                 // Complete the entry
                 out.closeEntry();
             }
             createProductInfo(out);
-            // Complete the ZIP file
-            out.close();
-        } finally {
-            if (out != null) {
-                out.close();
-            }
         }
     }
 

@@ -43,6 +43,8 @@ import org.netbeans.modules.java.lsp.server.protocol.SetTextEditorDecorationPara
 import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
 import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
+import org.netbeans.modules.java.lsp.server.protocol.OutputMessage;
+import org.netbeans.modules.java.lsp.server.protocol.SaveDocumentRequestParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
 import org.netbeans.modules.java.lsp.server.protocol.TestProgressParams;
 import org.netbeans.modules.java.lsp.server.protocol.UpdateConfigParams;
@@ -125,7 +127,6 @@ public abstract class TestCodeLanguageClient implements NbCodeLanguageClient {
 
     @Override
     public void telemetryEvent(Object params) {
-        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -138,7 +139,7 @@ public abstract class TestCodeLanguageClient implements NbCodeLanguageClient {
 
     @Override
     public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams params) {
-        throw new UnsupportedOperationException();
+        return CompletableFuture.completedFuture(new MessageActionItem(params.getActions().get(0).getTitle()));
     }
 
     @Override
@@ -156,4 +157,29 @@ public abstract class TestCodeLanguageClient implements NbCodeLanguageClient {
         throw new UnsupportedOperationException();
     }
     
+    @Override
+    public CompletableFuture<Boolean> requestDocumentSave(SaveDocumentRequestParams documentUris) {
+        return CompletableFuture.completedFuture(false);
+    }
+    
+    @Override
+    public CompletableFuture<Void> writeOutput(OutputMessage message) {
+        System.out.println(message);
+        return CompletableFuture.completedFuture(null);
+    }
+
+    @Override
+    public CompletableFuture<Void> showOutput(String outputName) {
+        return CompletableFuture.completedFuture(null);
+    }
+
+    @Override
+    public CompletableFuture<Void> closeOutput(String outputName) {
+        return CompletableFuture.completedFuture(null);
+    }
+    
+    @Override
+    public CompletableFuture<Void> resetOutput(String outputName) {
+        return CompletableFuture.completedFuture(null);
+    }
 }

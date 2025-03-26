@@ -38,10 +38,14 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import javax.lang.model.SourceVersion;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatform;
@@ -56,6 +60,7 @@ import org.netbeans.modules.apisupport.project.universe.DestDirProvider;
 import org.netbeans.modules.apisupport.project.universe.ModuleEntry;
 import org.netbeans.modules.apisupport.project.universe.ModuleList;
 import org.netbeans.modules.apisupport.project.universe.TestModuleDependency;
+import org.netbeans.nbbuild.extlibs.SetupLimitModulesProbe;
 import org.netbeans.spi.java.project.support.ProjectPlatform;
 import org.netbeans.spi.project.support.ant.AntProjectEvent;
 import org.netbeans.spi.project.support.ant.AntProjectHelper;
@@ -68,6 +73,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.SpecificationVersion;
 import org.openide.util.ChangeSupport;
+import org.openide.util.Exceptions;
 import org.openide.util.Mutex;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
@@ -90,6 +96,7 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
     static final String NBJDK_HOME = "nbjdk.home"; // NOI18N
     public static final String RUN_CP = "run.cp";
     private static final SpecificationVersion JDK9 = new SpecificationVersion("9"); //NOI18N
+    private static final String JAVACAPI_CNB = "org.netbeans.libs.javacapi";
     
     private final NbModuleProject project;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
@@ -350,7 +357,7 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
         String codeNameBase = project.getCodeNameBase();
         PropertyEvaluator suiteEval = null;
         if (type == NbModuleType.SUITE_COMPONENT) {
-            suiteEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[providers.size()]));
+            suiteEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[0]));
         }
 
         if (type == NbModuleType.SUITE_COMPONENT) {
@@ -365,9 +372,9 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
             providers.add(project.getHelper().getPropertyProvider("nbproject/platform.properties")); // NOI18N
         }
         if (type == NbModuleType.SUITE_COMPONENT || type == NbModuleType.STANDALONE) {
-            PropertyEvaluator baseEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[providers.size()]));
+            PropertyEvaluator baseEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[0]));
             providers.add(new ApisupportAntUtils.UserPropertiesFileProvider(baseEval, dir));
-            baseEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[providers.size()]));
+            baseEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[0]));
             providers.add(new DestDirProvider(baseEval));
         }
         if (type == NbModuleType.NETBEANS_ORG) {
@@ -377,7 +384,7 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
             providers.add(PropertyUtils.propertiesFilePropertyProvider(new File(nbbuild, "site.build.properties"))); // NOI18N
             providers.add(PropertyUtils.propertiesFilePropertyProvider(new File(System.getProperty("user.home"), ".nbbuild.properties"))); // NOI18N
         }
-        PropertyEvaluator baseEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[providers.size()]));
+        PropertyEvaluator baseEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[0]));
         providers.add(new NbJdkProvider(baseEval));
         providers.add(privateProperties);
         providers.add(projectProperties);
@@ -418,19 +425,43 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
         if (ml != null) {
             providers.add(PropertyUtils.fixedPropertyProvider(Collections.singletonMap("module.classpath", computeModuleClasspath(ml)))); // NOI18N
             providers.add(PropertyUtils.fixedPropertyProvider(Collections.singletonMap("module.run.classpath", computeRuntimeModuleClasspath(ml)))); // NOI18N
+
+            baseEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[0]));
+
             Map<String,String> buildDefaults = new HashMap<String,String>();
             buildDefaults.put("cp.extra", ""); // NOI18N
             buildDefaults.put(CP, "${module.classpath}:${cp.extra}"); // NOI18N
             buildDefaults.put(RUN_CP, "${module.run.classpath}:${cp.extra}:${build.classes.dir}"); // NOI18N
             if (type == NbModuleType.NETBEANS_ORG && "true".equals(projectProperties.getProperties().get("requires.nb.javac"))) {
-                ModuleEntry javacapi = ml.getEntry("org.netbeans.libs.javacapi");
-                if (javacapi != null) {
-                    buildDefaults.put(ClassPathProviderImpl.BOOTCLASSPATH_PREPEND, javacapi.getClassPathExtensions());
+                String javacRelease = baseEval.getProperty(SingleModuleProperties.JAVAC_RELEASE);
+                if (javacRelease == null || javacRelease.isEmpty()) {
+                    javacRelease = baseEval.getProperty(SingleModuleProperties.JAVAC_SOURCE);
+                }
+                if (javacRelease.equals("1.6") ||
+                    javacRelease.equals("1.7") ||
+                    javacRelease.equals("1.8")) {
+                    ModuleEntry javacLibrary = ml.getEntry(JAVACAPI_CNB);
+                    if (javacLibrary != null) {
+                        boolean implDependencyOnJavac =
+                            projectDependencies().filter(dep -> JAVACAPI_CNB.equals(dependencyCNB(dep)))
+                                                 .map(dep -> XMLUtil.findElement(dep, "run-dependency", NbModuleProject.NAMESPACE_SHARED)) // NOI18N
+                                                 .filter(runDep -> runDep != null)
+                                                 .anyMatch(runDep -> XMLUtil.findElement(runDep, "implementation-version", NbModuleProject.NAMESPACE_SHARED) != null); // NOI18N
+                        String bootcpPrepend;
+                        if (implDependencyOnJavac) {
+                            bootcpPrepend = javacLibrary.getClassPathExtensions();
+                        } else {
+                            bootcpPrepend = Stream.of(javacLibrary.getClassPathExtensions().split(Pattern.quote(File.pathSeparator)))
+                                                  .filter(ext -> ext.endsWith("-api.jar"))
+                                                  .collect(Collectors.joining(File.pathSeparator));
+                        }
+                        buildDefaults.put(ClassPathProviderImpl.BOOTCLASSPATH_PREPEND, bootcpPrepend);
+                    }
+                } else {
+                    buildDefaults.put(SingleModuleProperties.JAVAC_COMPILERARGS_INTERNAL_EXTRA, getLimitModules(javacRelease));
                 }
             }
             
-            baseEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[providers.size()]));
-
             Map<String,TestClasspath> testsCPs = computeTestingClassPaths(ml, baseEval, testTypes);
             testTypes.addAll(testsCPs.keySet());
             for (String testType : testTypes) {
@@ -447,7 +478,7 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
             providers.add(PropertyUtils.fixedPropertyProvider(buildDefaults));
         }
         // skip a bunch of properties irrelevant here - NBM stuff, etc.
-        return PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[providers.size()]));
+        return PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[0]));
     }
     
     private static final RequestProcessor RP = new RequestProcessor(Evaluator.class.getName());
@@ -604,27 +635,16 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
         
     }
     
-    /**
-     * Should be similar to impl in ParseProjectXml.
-     */
     private String computeModuleClasspath(ModuleList ml) {
-        Element data = project.getPrimaryConfigurationData();
-        Element moduleDependencies = XMLUtil.findElement(data,
-            "module-dependencies", NbModuleProject.NAMESPACE_SHARED); // NOI18N
-        assert moduleDependencies != null : "Malformed metadata in " + project;
         StringBuilder cp = new StringBuilder();
-        for (Element dep : XMLUtil.findSubElements(moduleDependencies)) {
-            if (XMLUtil.findElement(dep, "compile-dependency", // NOI18N
-                    NbModuleProject.NAMESPACE_SHARED) == null) {
-                continue;
-            }
-            Element cnbEl = XMLUtil.findElement(dep, "code-name-base", // NOI18N
-                NbModuleProject.NAMESPACE_SHARED);
-            String cnb = XMLUtil.findText(cnbEl);
+        projectDependencies()
+                .filter(dep -> XMLUtil.findElement(dep, "compile-dependency", NbModuleProject.NAMESPACE_SHARED) != null) // NOI18N
+                .map(this::dependencyCNB)
+                .forEach(cnb -> {
             ModuleEntry module = ml.getEntry(cnb);
             if (module == null) {
                 Util.err.log(ErrorManager.WARNING, "Warning - could not find dependent module " + cnb + " for " + FileUtil.getFileDisplayName(project.getProjectDirectory()));
-                continue;
+                return ;
             }
             File moduleJar = module.getJarLocation();
             if (cp.length() > 0) {
@@ -632,11 +652,25 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
             }
             cp.append(moduleJar.getAbsolutePath());
             cp.append(module.getClassPathExtensions());
-        }
+        });
         appendMyOwnClassPathExtensions(cp);
         return cp.toString();
     }
-    
+
+    private Stream<Element> projectDependencies() {
+        Element data = project.getPrimaryConfigurationData();
+        Element moduleDependencies = XMLUtil.findElement(data,
+            "module-dependencies", NbModuleProject.NAMESPACE_SHARED); // NOI18N
+        assert moduleDependencies != null : "Malformed metadata in " + project;
+        return XMLUtil.findSubElements(moduleDependencies).stream();
+    }
+
+    private String dependencyCNB(Element dependency) {
+        Element cnbEl = XMLUtil.findElement(dependency, "code-name-base", // NOI18N
+            NbModuleProject.NAMESPACE_SHARED);
+        return XMLUtil.findText(cnbEl);
+    }
+
     /**
      * Follows transitive runtime dependencies.
      * @see "issue #70206"
@@ -855,5 +889,35 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
         }
         return cps.toString();
     }
-   
+
+    /**
+     * cache shared between Evaluator instances.
+     */
+    private static final Map<String, String> limitModulesCache = new ConcurrentHashMap<>();
+
+    private static String getLimitModules(String javacRelease) {
+        return limitModulesCache.computeIfAbsent(javacRelease, release -> {
+            int maxSupportedSourceVersion = SourceVersion.latest().ordinal();
+            try {
+                int javacReleaseValue = Integer.parseInt(release);
+                if (javacReleaseValue > maxSupportedSourceVersion) {
+                    release = String.valueOf(maxSupportedSourceVersion);
+                }
+            } catch (NumberFormatException ex) {
+                //ignore
+                release = String.valueOf(maxSupportedSourceVersion);
+            }
+
+            try {
+                String limitModules =
+                        SetupLimitModulesProbe.computeLimitModules(release,
+                                                                   "java.compiler",
+                                                                   "jdk.compiler");
+                return "--limit-modules=" + limitModules;
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+                return null;
+            }
+        });
+    }
 }

@@ -138,7 +138,7 @@ public final class SourceJavadocAttacherUtil {
                     return;
                 }
                 List<? extends URL> s = source ? d.getSources(root, this) : d.getJavadoc(root, this);
-                if (s != null || s.isEmpty()) {
+                if (!s.isEmpty()) {
                     List<URI> r = new ArrayList<>();
                     for (URL u : s) {
                         try {
@@ -358,6 +358,6 @@ public final class SourceJavadocAttacherUtil {
                 result.add(file);
             }
         }
-        return result.toArray(new File[result.size()]);
+        return result.toArray(new File[0]);
     }
 }

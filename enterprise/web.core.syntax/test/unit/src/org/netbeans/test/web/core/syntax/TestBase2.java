@@ -74,7 +74,7 @@ public class TestBase2 extends CslTestBase {
     public final void initParserJARs() throws MalformedURLException {
         String path = System.getProperty("jsp.parser.jars");
         String[] paths = PropertyUtils.tokenizePath(path);
-        List<URL> list = new ArrayList();
+        List<URL> list = new ArrayList<>();
         for (int i = 0; i< paths.length; i++) {
             String token = paths[i];
             File f = new File(token);
@@ -83,7 +83,7 @@ public class TestBase2 extends CslTestBase {
             }
             list.add(f.toURI().toURL());
         }
-        JspParserImpl.setParserJARs(list.toArray(new URL[list.size()]));
+        JspParserImpl.setParserJARs(list.toArray(new URL[0]));
     }
 
     public final ClassPath createServletAPIClassPath() throws MalformedURLException, IOException {
@@ -108,7 +108,7 @@ public class TestBase2 extends CslTestBase {
             FileObject fo = FileUtil.toFileObject(f);
             fos.add(FileUtil.getArchiveRoot(fo));
         }
-        return ClassPathSupport.createClassPath(fos.toArray(new FileObject[fos.size()]));
+        return ClassPathSupport.createClassPath(fos.toArray(new FileObject[0]));
     }
     
     protected void assertFileContentsMatches(String relFilePath, String newFileName,

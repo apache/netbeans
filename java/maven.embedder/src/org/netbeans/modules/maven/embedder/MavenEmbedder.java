@@ -20,6 +20,8 @@
 package org.netbeans.modules.maven.embedder;
 
 import java.io.File;
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,6 +47,7 @@ import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
+import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.cli.configuration.SettingsXmlConfigurationProcessor;
 import org.apache.maven.execution.DefaultMavenExecutionRequest;
 import org.apache.maven.execution.DefaultMavenExecutionResult;
@@ -61,6 +64,7 @@ import org.apache.maven.model.building.ModelBuilder;
 import org.apache.maven.model.building.ModelBuildingException;
 import org.apache.maven.model.building.ModelBuildingRequest;
 import org.apache.maven.model.building.ModelBuildingResult;
+import org.apache.maven.model.resolution.ModelResolver;
 import org.apache.maven.plugin.LegacySupport;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
@@ -70,6 +74,8 @@ import org.apache.maven.project.ProjectBuildingResult;
 import org.apache.maven.repository.RepositorySystem;
 import org.apache.maven.settings.Mirror;
 import org.apache.maven.settings.Proxy;
+import org.apache.maven.settings.Repository;
+import org.apache.maven.settings.RepositoryPolicy;
 import org.apache.maven.settings.Server;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.settings.building.DefaultSettingsBuildingRequest;
@@ -93,13 +99,16 @@ import org.openide.util.Exceptions;
 import org.openide.util.BaseUtilities;
 import org.eclipse.aether.repository.Authentication;
 import org.eclipse.aether.DefaultRepositorySystemSession;
-import org.eclipse.aether.internal.impl.SimpleLocalRepositoryManagerFactory;
+import org.eclipse.aether.RepositorySystemSession;
+import org.eclipse.aether.impl.VersionResolver;
+import org.eclipse.aether.internal.impl.EnhancedLocalRepositoryManagerFactory;
 import org.eclipse.aether.repository.LocalRepository;
 import org.eclipse.aether.repository.NoLocalRepositoryManagerException;
 import org.eclipse.aether.util.repository.AuthenticationBuilder;
 import org.eclipse.aether.util.repository.DefaultAuthenticationSelector;
 import org.eclipse.aether.util.repository.DefaultMirrorSelector;
 import org.eclipse.aether.util.repository.DefaultProxySelector;
+import org.netbeans.modules.maven.embedder.impl.NbVersionResolver2;
 
 /**
  * Handle for the embedded Maven system, used to parse POMs and more.
@@ -116,6 +125,7 @@ public final class MavenEmbedder {
     private final SettingsBuilder settingsBuilder;
     private final EmbedderConfiguration embedderConfiguration;
     private final SettingsDecrypter settingsDecrypter;
+    private final NbVersionResolver2 versionResolver;
     private long settingsTimestamp;
     private static final Object lastLocalRepositoryLock = new Object();
     private static URI lastLocalRepository;
@@ -130,6 +140,13 @@ public final class MavenEmbedder {
         this.settingsBuilder = plexus.lookup(SettingsBuilder.class);
         this.populator = plexus.lookup(MavenExecutionRequestPopulator.class);
         settingsDecrypter = plexus.lookup(SettingsDecrypter.class);
+        
+        VersionResolver vr = plexus.lookup(VersionResolver.class);
+        if (vr instanceof NbVersionResolver2 vr2) {
+            versionResolver = vr2;
+        } else {
+            versionResolver = null;
+        }
     }
     
     public PlexusContainer getPlexus() {
@@ -228,7 +245,7 @@ public final class MavenEmbedder {
     
     public MavenExecutionResult readProjectWithDependencies(MavenExecutionRequest req, boolean useWorkspaceResolution) {
         if (useWorkspaceResolution) {
-            req.setWorkspaceReader(new NbWorkspaceReader());
+            req.setWorkspaceReader(new NbWorkspaceReader(versionResolver));
         }
         File pomFile = req.getPom();
         MavenExecutionResult result = new DefaultMavenExecutionResult();
@@ -251,7 +268,7 @@ public final class MavenEmbedder {
 
     public List<MavenExecutionResult> readProjectsWithDependencies(MavenExecutionRequest req, List<File> poms, boolean useWorkspaceResolution) {
         if (useWorkspaceResolution) {
-            req.setWorkspaceReader(new NbWorkspaceReader());
+            req.setWorkspaceReader(new NbWorkspaceReader(versionResolver));
         }
 //        File pomFile = req.getPom();
         
@@ -367,7 +384,9 @@ public final class MavenEmbedder {
      * @param localRepository
      * @throws ArtifactResolutionException
      * @throws ArtifactNotFoundException 
+     * @deprecated the Maven API used swallows certain {@link ArtifactNotFoundException} and does not report properly to the caller. Use {@link #resolveArtifact} instead.
      */
+    @Deprecated
     public void resolve(Artifact sources, List<ArtifactRepository> remoteRepositories, ArtifactRepository localRepository) throws ArtifactResolutionException, ArtifactNotFoundException {
         setUpLegacySupport();
         ArtifactResolutionRequest req = new ArtifactResolutionRequest();
@@ -381,6 +400,29 @@ public final class MavenEmbedder {
         for (Exception ex : result.getExceptions()) {
             LOG.log(Level.FINE, null, ex);
         }
+    }
+    
+    /**
+     * Resolves the artifact. Attaches version info according to project's dependency management configuration, resolves to a local file. Throws an exception
+     * on missing on unresolvable artifact, trying to mimic the real build's behaviour. This method supersedes the deprecated {@link #resolve}.
+     * 
+     * @param toResolve artifact to resolve
+     * @param remoteRepositories - these instances need to be properly mirrored and proxied. Either by creating via EmbedderFactory.createRemoteRepository()
+     *              or by using instances from MavenProject
+     * @param localRepository
+     * @throws ArtifactResolutionException if the artifact is not found 
+     * @throws ArtifactNotFoundException if the artifact is not found or is not updated to satisfy the build.
+     * @since 2.76
+     */
+    public void resolveArtifact(Artifact toResolve, List<ArtifactRepository> remoteRepositories, ArtifactRepository localRepository) throws ArtifactResolutionException, ArtifactNotFoundException {
+        setUpLegacySupport();
+        
+        // must call internal Resolver API directly, as the RepositorySystem does not report an exception, 
+        // even in ArtifactResolutionResult: resolve(ArtifactResolutionRequest request) catches the exception and
+        // swallows ArtifactNotFoundException.
+        // The existing calling code that handles these exception cannot work, in fact, when using resolve(ArtifactResolutionRequest request) API.
+        lookupComponent(ArtifactResolver.class).resolveAlways(toResolve, remoteRepositories, localRepository);
+        normalizePath(toResolve);
     }
 
     //TODO possibly rename.. build sounds like something else..
@@ -412,7 +454,7 @@ public final class MavenEmbedder {
      */
     public List<Model> createModelLineage(File pom) throws ModelBuildingException {
         ModelBuildingResult res = executeModelBuilder(pom);
-        List<Model> toRet = new ArrayList<Model>();
+        List<Model> toRet = new ArrayList<>();
 
         for (String id : res.getModelIds()) {
             Model m = res.getRawModel(id);
@@ -427,6 +469,20 @@ public final class MavenEmbedder {
 //        }
         return toRet;
     }
+    
+    private ModelResolver createNBResolver() {
+        MavenExecutionRequest rq = createMavenExecutionRequest();
+        NBRepositoryModelResolver resolver = new NBRepositoryModelResolver(this);
+        rq.getRemoteRepositories().stream().map(MavenEmbedder::settingsToModel).forEach(r -> {
+            try {
+                resolver.addRepository(r);
+            } catch (org.apache.maven.model.resolution.InvalidRepositoryException ex) {
+                // do nothing for now, maybe some one shot per url/id log in the future ?
+            }
+        });
+        return resolver;
+    }
+    
     /**
      * 
      * @param pom
@@ -434,6 +490,7 @@ public final class MavenEmbedder {
      * @throws ModelBuildingException if the POM or parents could not even be parsed; warnings are not reported
      */
     public ModelBuildingResult executeModelBuilder(File pom) throws ModelBuildingException {
+        setUpLegacySupport();
         ModelBuilder mb = lookupComponent(ModelBuilder.class);
         assert mb!=null : "ModelBuilder component not found in maven";
         ModelBuildingRequest req = new DefaultModelBuildingRequest();
@@ -441,23 +498,64 @@ public final class MavenEmbedder {
         req.setProcessPlugins(false);
         req.setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL);
         req.setLocationTracking(true);
-        req.setModelResolver(new NBRepositoryModelResolver(this));
+        req.setModelResolver(createNBResolver());
         req.setSystemProperties(getSystemProperties());
         req.setUserProperties(embedderConfiguration.getUserProperties());
         return mb.build(req);
-        
+    }
+    
+    private static org.apache.maven.model.Repository settingsToModel(ArtifactRepository repo) {
+        org.apache.maven.model.Repository modelRepo = new org.apache.maven.model.Repository();
+        modelRepo.setId(repo.getId());
+        modelRepo.setLayout(repo.getLayout().getId());
+        modelRepo.setName(repo.getId());
+        modelRepo.setUrl(repo.getUrl());
+        return modelRepo;
+    }
+    
+    private static org.apache.maven.model.RepositoryPolicy settingsToModel(ArtifactRepositoryPolicy p) {
+        if (p == null) {
+            return null;
+        }
+        org.apache.maven.model.RepositoryPolicy r = new org.apache.maven.model.RepositoryPolicy();
+        r.setChecksumPolicy(p.getChecksumPolicy());
+        r.setUpdatePolicy(p.getUpdatePolicy());
+        r.setEnabled(p.isEnabled());
+        return r;
+    }
+    
+    private static org.apache.maven.model.Repository settingsToModel(Repository repo) {
+        org.apache.maven.model.Repository modelRepo = new org.apache.maven.model.Repository();
+        modelRepo.setId(repo.getId());
+        modelRepo.setLayout(repo.getLayout());
+        modelRepo.setName(repo.getName());
+        modelRepo.setUrl(repo.getUrl());
+        modelRepo.setReleases(settingsToModel(repo.getReleases()));
+        modelRepo.setSnapshots(settingsToModel(repo.getSnapshots()));
+        return modelRepo;
+    }
+    
+    private static org.apache.maven.model.RepositoryPolicy settingsToModel(RepositoryPolicy p) {
+        if (p == null) {
+            return null;
+        }
+        org.apache.maven.model.RepositoryPolicy r = new org.apache.maven.model.RepositoryPolicy();
+        r.setChecksumPolicy(p.getChecksumPolicy());
+        r.setUpdatePolicy(p.getUpdatePolicy());
+        r.setEnabled(p.isEnabled());
+        return r;
     }
     
     public List<String> getLifecyclePhases() {
 
         LifecycleMapping lifecycleMapping = lookupComponent(LifecycleMapping.class);
         if (lifecycleMapping != null) {
-            Set<String> phases = new TreeSet<String>();
+            Set<String> phases = new TreeSet<>();
             Map<String, Lifecycle> lifecycles = lifecycleMapping.getLifecycles();
             for (Lifecycle lifecycle : lifecycles.values()) {
                 phases.addAll(lifecycle.getPhases().keySet());
             }
-            return new ArrayList<String>(phases);
+            return new ArrayList<>(phases);
         }
 
         return Collections.<String>emptyList();
@@ -511,7 +609,12 @@ public final class MavenEmbedder {
 
         return req;
     }
-
+    
+    /**
+     * Do not keep the reference to the session. Plexus will hopefully keep it for us.
+     */
+    private volatile Reference<MavenSession> thisRepositorySession = new WeakReference<>(null);
+    
     /**
      * Needed to avoid an NPE in {@link org.eclipse.org.eclipse.aether.DefaultArtifactResolver#resolveArtifacts} under some conditions.
      * (Also {@link org.eclipse.org.eclipse.aether.DefaultMetadataResolver#resolve}; wherever a {@link org.eclipse.aether.RepositorySystemSession} is used.)
@@ -519,53 +622,70 @@ public final class MavenEmbedder {
      */
     public void setUpLegacySupport() {
         LegacySupport support = lookupComponent(LegacySupport.class);
-        if (support.getSession() != null) {
-            return;
-        }
-        DefaultRepositorySystemSession session = new DefaultRepositorySystemSession();
-        session.setOffline(isOffline());
-        SimpleLocalRepositoryManagerFactory f = new SimpleLocalRepositoryManagerFactory();        
-        try {
-            session.setLocalRepositoryManager(f.newInstance(session, new LocalRepository(getLocalRepository().getBasedir())));
-        } catch (NoLocalRepositoryManagerException ex) {
-            LOG.log(Level.WARNING, null, ex);
-        }
-        // Adapted from DefaultMaven.newRepositorySession, but does not look like that can be called directly:
-        DefaultMirrorSelector mirrorSelector = new DefaultMirrorSelector();
-        Settings _settings = getSettings();
-        for (Mirror m : _settings.getMirrors()) {
-            mirrorSelector.add(m.getId(), m.getUrl(), m.getLayout(), false, m.getMirrorOf(), m.getMirrorOfLayouts());
-        }
-        session.setMirrorSelector(mirrorSelector);
-        SettingsDecryptionResult decryptionResult = settingsDecrypter.decrypt(new DefaultSettingsDecryptionRequest(_settings));
-        
-        DefaultProxySelector proxySelector = new DefaultProxySelector();
-        for (Proxy p : decryptionResult.getProxies()) {
-            if (p.isActive()) {
-                AuthenticationBuilder ab = new AuthenticationBuilder();
-                ab.addUsername(p.getUsername());
-                ab.addPassword(p.getPassword());
-                Authentication a = ab.build();
-               //#null -> getProtocol() #209499
-               proxySelector.add(new org.eclipse.aether.repository.Proxy(p.getProtocol(), p.getHost(), p.getPort(), a), p.getNonProxyHosts());
+        MavenSession existing = support.getSession();
+        MavenSession initializedSession = thisRepositorySession.get();
+        if (existing != null) {
+            RepositorySystemSession existingRepo = existing.getRepositorySession();
+            if (initializedSession != null && initializedSession.getRepositorySession() == existingRepo) {
+                return;
             }
         }
-        session.setProxySelector(proxySelector);
-        DefaultAuthenticationSelector authenticationSelector = new DefaultAuthenticationSelector();
-        for (Server s : decryptionResult.getServers()) {
-            AuthenticationBuilder ab = new AuthenticationBuilder();
-            ab.addUsername(s.getUsername());
-            ab.addPassword(s.getPassword());
-            ab.addPrivateKey(s.getPrivateKey(), s.getPassphrase());
-            Authentication a = ab.build();            
-            authenticationSelector.add(s.getId(), a);
+        if (initializedSession == null) {
+            DefaultRepositorySystemSession session = new DefaultRepositorySystemSession();
+            session.setOffline(isOffline());
+            EnhancedLocalRepositoryManagerFactory f = lookupComponent(EnhancedLocalRepositoryManagerFactory.class);
+            try {
+                session.setLocalRepositoryManager(f.newInstance(session, new LocalRepository(getLocalRepository().getBasedir())));
+            } catch (NoLocalRepositoryManagerException ex) {
+                LOG.log(Level.WARNING, null, ex);
+            }
+            // Adapted from DefaultMaven.newRepositorySession, but does not look like that can be called directly:
+            DefaultMirrorSelector mirrorSelector = new DefaultMirrorSelector();
+            Settings _settings = getSettings();
+            for (Mirror m : _settings.getMirrors()) {
+                mirrorSelector.add(m.getId(), m.getUrl(), m.getLayout(), false, m.getMirrorOf(), m.getMirrorOfLayouts());
+            }
+            session.setMirrorSelector(mirrorSelector);
+            SettingsDecryptionResult decryptionResult = settingsDecrypter.decrypt(new DefaultSettingsDecryptionRequest(_settings));
+
+            DefaultProxySelector proxySelector = new DefaultProxySelector();
+            for (Proxy p : decryptionResult.getProxies()) {
+                if (p.isActive()) {
+                    AuthenticationBuilder ab = new AuthenticationBuilder();
+                    ab.addUsername(p.getUsername());
+                    ab.addPassword(p.getPassword());
+                    Authentication a = ab.build();
+                   //#null -> getProtocol() #209499
+                   proxySelector.add(new org.eclipse.aether.repository.Proxy(p.getProtocol(), p.getHost(), p.getPort(), a), p.getNonProxyHosts());
+                }
+            }
+            session.setProxySelector(proxySelector);
+            DefaultAuthenticationSelector authenticationSelector = new DefaultAuthenticationSelector();
+            for (Server s : decryptionResult.getServers()) {
+                AuthenticationBuilder ab = new AuthenticationBuilder();
+                ab.addUsername(s.getUsername());
+                ab.addPassword(s.getPassword());
+                ab.addPrivateKey(s.getPrivateKey(), s.getPassphrase());
+                Authentication a = ab.build();            
+                authenticationSelector.add(s.getId(), a);
+            }
+            session.setAuthenticationSelector(authenticationSelector);
+            DefaultMavenExecutionRequest mavenExecutionRequest = new DefaultMavenExecutionRequest();
+            mavenExecutionRequest.setSystemProperties(embedderConfiguration.getSystemProperties());
+            mavenExecutionRequest.setOffline(isOffline());
+            mavenExecutionRequest.setTransferListener(ProgressTransferListener.activeListener());
+            session.setTransferListener(ProgressTransferListener.activeListener());
+
+            MavenSession s = new MavenSession(getPlexus(), session, mavenExecutionRequest, new DefaultMavenExecutionResult());
+            synchronized (this) {
+                initializedSession = thisRepositorySession.get();
+                if (initializedSession == null) {
+                    initializedSession = s;
+                    thisRepositorySession = new WeakReference<>(s);
+                }
+            }
         }
-        session.setAuthenticationSelector(authenticationSelector);
-        DefaultMavenExecutionRequest mavenExecutionRequest = new DefaultMavenExecutionRequest();
-        mavenExecutionRequest.setOffline(isOffline());
-        mavenExecutionRequest.setTransferListener(ProgressTransferListener.activeListener());
-        session.setTransferListener(ProgressTransferListener.activeListener());
-        lookupComponent(LegacySupport.class).setSession(new MavenSession(getPlexus(), session, mavenExecutionRequest, new DefaultMavenExecutionResult()));
+        lookupComponent(LegacySupport.class).setSession(initializedSession);
     }
 
     

@@ -182,6 +182,17 @@
                 </folder>
             </folder>
             <file name="nbactions.xml" url="nbactions.xml"/>
+            <folder name="RunGoals">
+                <file name="exec">
+                    <attr name="alias" stringvalue="org.codehaus.mojo:exec-maven-plugin"/>
+                </file>
+                <file name="org.codehaus.mojo:exec-maven-plugin">
+                    <attr name="goals" stringvalue="exec"/>
+                </file>
+            </folder>
+            <folder name="configuredPlugins">
+                <!-- Placeholder -->
+            </folder>
         </folder>
     </folder>
     <folder name="OptionsExport">

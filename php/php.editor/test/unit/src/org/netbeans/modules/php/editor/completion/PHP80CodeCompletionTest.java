@@ -19,15 +19,10 @@
 package org.netbeans.modules.php.editor.completion;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.Map;
-import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.php.api.PhpVersion;
-import org.netbeans.modules.php.project.api.PhpSourcePath;
-import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-
 
 public class PHP80CodeCompletionTest extends PHPCodeCompletionTestBase {
 
@@ -42,22 +37,12 @@ public class PHP80CodeCompletionTest extends PHPCodeCompletionTestBase {
     }
 
     @Override
-    protected Map<String, ClassPath> createClassPathsForTest() {
-        return Collections.singletonMap(
-            PhpSourcePath.SOURCE_CP,
-            ClassPathSupport.createClassPath(new FileObject[]{
-                FileUtil.toFileObject(new File(getDataDir(), "/testfiles/completion/lib/php80/" + getTestDirName()))
-            })
-        );
+    protected FileObject[] createSourceClassPathsForTest() {
+        return new FileObject[]{FileUtil.toFileObject(new File(getDataDir(), "/testfiles/completion/lib/php80/" + getTestDirName()))};
     }
 
-    private String getTestDirName() {
-        String name = getName();
-        int indexOf = name.indexOf("_");
-        if (indexOf != -1) {
-            name = name.substring(0, indexOf);
-        }
-        return name;
+    private String getTestPath() {
+        return String.format("testfiles/completion/lib/php80/%s/%s.php", getTestDirName(), getTestDirName());
     }
 
     private String getTestPath(String fileName) {
@@ -1137,6 +1122,52 @@ public class PHP80CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion(getTestPath("namedArgumentsStaticMethod06"), "self::test(^)", false);
     }
 
+    public void testNamedArgumentsConstructor01() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsConstructor01"), "$instance = new NamedArguments(^);", false);
+    }
+
+    public void testNamedArgumentsConstructor02_a() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsConstructor02"), "$instance = new NamedArguments(arr^);", false);
+    }
+
+    public void testNamedArgumentsConstructor02_b() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsConstructor02"), "$instance = new NamedArguments(^)", false);
+    }
+
+    public void testNamedArgumentsConstructor03() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsConstructor03"), "$instance = new NamedArguments(1, ^);", false);
+    }
+
+    public void testNamedArgumentsConstructor04() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsConstructor04"), "$instance = new NamedArguments(1, defa^);", false);
+    }
+
+    public void testNamedArgumentsConstructor05_a() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsConstructor05"), "$instance = new NamedArguments(param1: 1,^ default: \"test\");", false);
+    }
+
+    public void testNamedArgumentsConstructor05_b() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsConstructor05"), "$instance = new NamedArguments(param1: 1, ^default: \"test\");", false);
+    }
+
+    public void testNamedArgumentsConstructor05_c() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsConstructor05"), "$instance = new NamedArguments(param1: 1, arr^default: \"test\");", false);
+    }
+
+    public void testNamedArgumentsConstructor05_Template01() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("namedArgumentsConstructor05"), "$instance = new NamedArguments(param1: 1, arr^default: \"test\");",
+                new DefaultFilter("array"), true);
+    }
+
+    public void testNamedArgumentsConstructor05_Template02() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("namedArgumentsConstructor05"), "$instance = new NamedArguments(param1: 1,^ default: \"test\");",
+                new DefaultFilter("array"), true);
+    }
+
+    public void testNamedArgumentsConstructor06() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsConstructor06"), "$instance = new NamedArguments(^);", false);
+    }
+
     public void testStaticReturnTypeOverrideMethod01() throws Exception {
         checkCompletionCustomTemplateResult(getTestPath("testStaticReturnTypeOverrideMethod01"), "    test^",
                 new DefaultFilter(PhpVersion.PHP_80, "test"), true);
@@ -1155,5 +1186,489 @@ public class PHP80CodeCompletionTest extends PHPCodeCompletionTestBase {
     public void testMixedTypeImplementMethod01() throws Exception {
         checkCompletionCustomTemplateResult(getTestPath("testMixedTypeImplementMethod01"), "    test^",
                 new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
+    public void testAttributedClass01() throws Exception {
+        checkCompletion(getTestPath(), "#[^]", false);
+    }
+
+    public void testAttributedClass02() throws Exception {
+        checkCompletion(getTestPath(), "#[Att^]", false);
+    }
+
+    public void testAttributedClass03() throws Exception {
+        checkCompletion(getTestPath(), "#[Attr1(^)]", false);
+    }
+
+    public void testAttributedClass04() throws Exception {
+        checkCompletion(getTestPath(), "#[Attr1(strin^)]", false);
+    }
+
+    public void testAttributedClass05() throws Exception {
+        checkCompletion(getTestPath(), "#[Attr1(string: ^)]", false);
+    }
+
+    public void testAttributedClass06() throws Exception {
+        checkCompletion(getTestPath(), "#[Attr1(string: Attr1::^)]", false);
+    }
+
+    public void testAttributedClass07() throws Exception {
+        checkCompletion(getTestPath(), "#[Attr1(Attr2::^)]", false);
+    }
+
+    public void testAttributedClass08() throws Exception {
+        checkCompletion(getTestPath(), "#[Attr1(Attr2::CONST_ATTRI2, ^)]", false);
+    }
+
+    public void testAttributedClass09() throws Exception {
+        checkCompletion(getTestPath(), "#[Attr1(Attr2::CONST_ATTRI2, string: ^)]", false);
+    }
+
+    public void testAttributedClass10() throws Exception {
+        checkCompletion(getTestPath(), "#[Attr1(Attr2::CONST_ATTRI2, string: Attr1::^)]", false);
+    }
+
+    public void testAttributedClass11() throws Exception {
+        checkCompletion(getTestPath(), "#[Attr1(Attr2::CONST_ATTRI2, string: Attr1::CONST_ATTRI1), ^]", false);
+    }
+
+    public void testAttributedClass12() throws Exception {
+        checkCompletion(getTestPath(), "    ^// test", false);
+    }
+
+    public void testAttributedClassWithNamespace01() throws Exception {
+        checkCompletion(getTestPath(), "#[^]", false);
+    }
+
+    public void testAttributedClassWithNamespace02() throws Exception {
+        checkCompletion(getTestPath(), "#[\\Attributes\\Test1\\Attr2(^)]", false);
+    }
+
+    public void testAttributedClassWithNamespace03() throws Exception {
+        checkCompletion(getTestPath(), "#[Attr2(^)]", false);
+    }
+
+    public void testAttributedClassParamWithNamespace_01a() throws Exception {
+        checkCompletion(getTestPath(), "    #[\\Attributes\\Test1\\Attr1(int^: \\Attributes\\Test1\\CONST_ATTRIBUTES_TEST1, string: \\Attributes\\Test1\\Attr1::CONST_ATTR1)]", false);
+    }
+
+    public void testAttributedClassParamWithNamespace_01b() throws Exception {
+        checkCompletion(getTestPath(), "    #[\\Attributes\\Test1\\Attr1(int: \\Attributes\\Test1\\CONST_ATTRIBUTES_T^EST1, string: \\Attributes\\Test1\\Attr1::CONST_ATTR1)]", false);
+    }
+
+    public void testAttributedClassParamWithNamespace_01c() throws Exception {
+        checkCompletion(getTestPath(), "    #[\\Attributes\\Test1\\Attr1(int: \\Attributes\\Test1\\CONST_ATTRIBUTES_TEST1, strin^g: \\Attributes\\Test1\\Attr1::CONST_ATTR1)]", false);
+    }
+
+    public void testAttributedClassParamWithNamespace_01d() throws Exception {
+        checkCompletion(getTestPath(), "    #[\\Attributes\\Test1\\Attr1(int: \\Attributes\\Test1\\CONST_ATTRIBUTES_TEST1, string: \\Attributes\\Test1\\Attr1::CONST_AT^TR1)]", false);
+    }
+
+    public void testAttributedClassParamWithNamespace_02a() throws Exception {
+        checkCompletion(getTestPath(), "    #[\\Attributes\\Test1\\Attr1(\\Attributes\\Test1\\CONST_ATTRIBUTES_TEST1, ^\\Attributes\\Test1\\Attr1::CONST_ATTR1)]", false);
+    }
+
+    public void testAttributedClassParamWithNamespace_02b() throws Exception {
+        checkCompletion(getTestPath(), "    #[\\Attributes\\Test1\\Attr1(\\Attributes\\Test1\\CONST_ATTRIBUTES_TE^ST1, \\Attributes\\Test1\\Attr1::CONST_ATTR1)]", false);
+    }
+
+    public void testAttributedClassParamWithNamespace_02c() throws Exception {
+        checkCompletion(getTestPath(), "    #[\\Attributes\\Test1\\Attr1(\\Attributes\\Test1\\CONST_ATTRIBUTES_TEST1, \\Attributes\\Test1\\Attr1::CONST_ATT^R1)]", false);
+    }
+
+    public void testAttributedClassParamWithNamespace_03a() throws Exception {
+        checkCompletion(getTestPath(), "    #[\\Attributes\\Test1\\Attr1(^CONST_ATTRIBUTES_TEST1, Attr1::CONST_ATTR1)]", false);
+    }
+
+    public void testAttributedClassParamWithNamespace_03b() throws Exception {
+        checkCompletion(getTestPath(), "    #[\\Attributes\\Test1\\Attr1(CONST_ATTRIBUTES_TES^T1, Attr1::CONST_ATTR1)]", false);
+    }
+
+    public void testAttributedClassParamWithNamespace_03c() throws Exception {
+        checkCompletion(getTestPath(), "    #[\\Attributes\\Test1\\Attr1(CONST_ATTRIBUTES_TEST1, Attr1::CONST_^ATTR1)]", false);
+    }
+
+    public void testAttributedClassParamWithNamespace_04a() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr1(int: CONST_ATTRIBUTES_TE^ST1, string: Attr1::CONST_ATTR1)]", false);
+    }
+
+    public void testAttributedClassParamWithNamespace_04b() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr1(int: CONST_ATTRIBUTES_TEST1, stri^ng: Attr1::CONST_ATTR1)]", false);
+    }
+
+    public void testAttributedClassParamWithNamespace_04c() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr1(int: CONST_ATTRIBUTES_TEST1, string: Attr1::CONST^_ATTR1)]", false);
+    }
+
+    public void testAttributedClassParamWithNamespace_05a() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr1(CONST_ATTRIBUTES_TEST1, ^Attr1::CONST_ATTR1)]", false);
+    }
+
+    public void testAttributedClassParamWithNamespace_05b() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr1(CONST_ATTRIBUT^ES_TEST1, Attr1::CONST_ATTR1)]", false);
+    }
+
+    public void testAttributedClassParamWithNamespace_05c() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr1(CONST_ATTRIBUTES_TEST1, Attr1::CONST^_ATTR1)]", false);
+    }
+
+    public void testAttributedConst01() throws Exception {
+        checkCompletion(getTestPath(), "#[^]", false);
+    }
+
+    public void testAttributedConst02() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr2^]", false);
+    }
+
+    public void testAttributedConstParam_01a() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr2(str^ing: Attr1::CONST_ATTR1, bool: Attr2::CONST_ATTR2)]", false);
+    }
+
+    public void testAttributedConstParam_01b() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr2(string: Attr1::CONST_ATT^R1, bool: Attr2::CONST_ATTR2)]", false);
+    }
+
+    public void testAttributedConstParam_01c() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr2(string: Attr1::CONST_ATTR1, bool: Attr2::CONS^T_ATTR2)]", false);
+    }
+
+    public void testAttributedConstParam_02a() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr2(Attr1::CONST_ATTR1, ^Attr2::CONST_ATTR2)]", false);
+    }
+
+    public void testAttributedConstParam_02b() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr2(Attr1::CONST_ATT^R1, Attr2::CONST_ATTR2)]", false);
+    }
+
+    public void testAttributedConstParam_02c() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr2(Attr1::CONST_ATTR1, Attr2::CONST_A^TTR2)]", false);
+    }
+
+    public void testAttributedConstParamWithNamespace_01a() throws Exception {
+        checkCompletion(getTestPath(), "        #[Attr^1(int: CONST_ATTRIBUTES_TEST1, bool: Attr2::CONST_ATTR2)]", false);
+    }
+
+    public void testAttributedConstParamWithNamespace_01b() throws Exception {
+        checkCompletion(getTestPath(), "        #[Attr1(in^t: CONST_ATTRIBUTES_TEST1, bool: Attr2::CONST_ATTR2)]", false);
+    }
+
+    public void testAttributedConstParamWithNamespace_01c() throws Exception {
+        checkCompletion(getTestPath(), "        #[Attr1(int: CONST_ATTRIBUT^ES_TEST1, bool: Attr2::CONST_ATTR2)]", false);
+    }
+
+    public void testAttributedConstParamWithNamespace_01d() throws Exception {
+        checkCompletion(getTestPath(), "        #[Attr1(int: CONST_ATTRIBUTES_TEST1, bool: Attr2::C^ONST_ATTR2)]", false);
+    }
+
+    public void testAttributedConstParamWithNamespace_02a() throws Exception {
+        checkCompletion(getTestPath(), "        #[Att^r1(Attr1::CONST_ATTR1, Attr2::CONST_ATTR2)]", false);
+    }
+
+    public void testAttributedConstParamWithNamespace_02b() throws Exception {
+        checkCompletion(getTestPath(), "        #[Attr1(^Attr1::CONST_ATTR1, Attr2::CONST_ATTR2)]", false);
+    }
+
+    public void testAttributedConstParamWithNamespace_02c() throws Exception {
+        checkCompletion(getTestPath(), "        #[Attr1(Attr1::CONST_ATT^R1, Attr2::CONST_ATTR2)]", false);
+    }
+
+    public void testAttributedConstParamWithNamespace_02d() throws Exception {
+        checkCompletion(getTestPath(), "        #[Attr1(Attr1::CONST_ATTR1, Attr2::CONST_^ATTR2)]", false);
+    }
+
+    public void testAttributedField01() throws Exception {
+        checkCompletion(getTestPath(), "#[^]", false);
+    }
+
+    public void testAttributedField02() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr1, At^]", false);
+    }
+
+    public void testAttributedStaticField01() throws Exception {
+        checkCompletion(getTestPath(), "#[^]", false);
+    }
+
+    public void testAttributedStaticField02() throws Exception {
+        checkCompletion(getTestPath(), "        At^ // test", false);
+    }
+
+    public void testAttributedFieldParam_01a() throws Exception {
+        checkCompletion(getTestPath(), "    #[Att^r2(string: Attr1::CONST_ATTR1, bool: Attr2::CONST_ATTR2)] #[Attr2(Attr1::CONST_ATTR1, Attr2::CONST_ATTR2)]", false);
+    }
+
+    public void testAttributedFieldParam_01b() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr2(stri^ng: Attr1::CONST_ATTR1, bool: Attr2::CONST_ATTR2)] #[Attr2(Attr1::CONST_ATTR1, Attr2::CONST_ATTR2)]", false);
+    }
+
+    public void testAttributedFieldParam_01c() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr2(string: Attr1::CONST_ATTR^1, bool: Attr2::CONST_ATTR2)] #[Attr2(Attr1::CONST_ATTR1, Attr2::CONST_ATTR2)]", false);
+    }
+
+    public void testAttributedFieldParam_01d() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr2(string: Attr1::CONST_ATTR1, bool: Attr2::CONST_ATT^R2)] #[Attr2(Attr1::CONST_ATTR1, Attr2::CONST_ATTR2)]", false);
+    }
+
+    public void testAttributedFieldParam_01e() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr2(string: Attr1::CONST_ATTR1, bool: Attr2::CONST_ATTR2)] #[At^tr2(Attr1::CONST_ATTR1, Attr2::CONST_ATTR2)]", false);
+    }
+
+    public void testAttributedFieldParam_01f() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr2(string: Attr1::CONST_ATTR1, bool: Attr2::CONST_ATTR2)] #[Attr2(Attr1::CONST_ATTR1, ^Attr2::CONST_ATTR2)]", false);
+    }
+
+    public void testAttributedFieldParam_01g() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr2(string: Attr1::CONST_ATTR1, bool: Attr2::CONST_ATTR2)] #[Attr2(Attr1::CONST_ATTR1, Attr2::CON^ST_ATTR2)]", false);
+    }
+
+    public void testAttributedStaticFieldParamWithNamespace_01a() throws Exception {
+        checkCompletion(getTestPath(), "        Att^r2(string: CONST_ATTRIBUTES_TEST1, bool: Attr2::CONST_ATTR2),", false);
+    }
+
+    public void testAttributedStaticFieldParamWithNamespace_01b() throws Exception {
+        checkCompletion(getTestPath(), "        Attr2(stri^ng: CONST_ATTRIBUTES_TEST1, bool: Attr2::CONST_ATTR2),", false);
+    }
+
+    public void testAttributedStaticFieldParamWithNamespace_01c() throws Exception {
+        checkCompletion(getTestPath(), "        Attr2(string: CONST_ATTRIBUTES_TE^ST1, bool: Attr2::CONST_ATTR2),", false);
+    }
+
+    public void testAttributedStaticFieldParamWithNamespace_01d() throws Exception {
+        checkCompletion(getTestPath(), "        Attr2(string: CONST_ATTRIBUTES_TEST1, bool: Attr2::CONST_AT^TR2),", false);
+    }
+
+    public void testAttributedStaticFieldParamWithNamespace_02a() throws Exception {
+        checkCompletion(getTestPath(), "        Att^r2(Attr1::CONST_ATTR1, Attr2::CONST_ATTR2),", false);
+    }
+
+    public void testAttributedStaticFieldParamWithNamespace_02b() throws Exception {
+        checkCompletion(getTestPath(), "        Attr2(Attr1::CONS^T_ATTR1, Attr2::CONST_ATTR2),", false);
+    }
+
+    public void testAttributedStaticFieldParamWithNamespace_02c() throws Exception {
+        checkCompletion(getTestPath(), "        Attr2(Attr1::CONST_ATTR1, ^Attr2::CONST_ATTR2),", false);
+    }
+
+    public void testAttributedStaticFieldParamWithNamespace_02d() throws Exception {
+        checkCompletion(getTestPath(), "        Attr2(Attr1::CONST_ATTR1, Attr2::CONST_AT^TR2),", false);
+    }
+
+    public void testAttributedMethod01() throws Exception {
+        checkCompletion(getTestPath(), "#[^]", false);
+    }
+
+    public void testAttributedMethod02() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr1, A^]", false);
+    }
+
+    public void testAttributedMethodParam_01() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr1, Attr1(self::^class, parent::CONST_PARENT)]", false);
+    }
+
+    public void testAttributedMethodParam_02() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr1, Attr1(self::class, parent::^CONST_PARENT)]", false);
+    }
+
+    public void testAttributedMethodParamWithNamespace_01a() throws Exception {
+        checkCompletion(getTestPath(), "            At^tr2(string: CONST_ATTRIBUTES_TEST1, bool: Attr2::CONST_ATTR2),", false);
+    }
+
+    public void testAttributedMethodParamWithNamespace_01b() throws Exception {
+        checkCompletion(getTestPath(), "            Attr2(str^ing: CONST_ATTRIBUTES_TEST1, bool: Attr2::CONST_ATTR2),", false);
+    }
+
+    public void testAttributedMethodParamWithNamespace_01c() throws Exception {
+        checkCompletion(getTestPath(), "            Attr2(string: CONST_ATTRIBUTES_TEST1, ^bool: Attr2::CONST_ATTR2),", false);
+    }
+
+    public void testAttributedMethodParamWithNamespace_01d() throws Exception {
+        checkCompletion(getTestPath(), "            Attr2(string: CONST_ATTRIBUTES_TEST1, bool: Attr2::CONST_AT^TR2),", false);
+    }
+
+    public void testAttributedMethodParamWithNamespace_02a() throws Exception {
+        checkCompletion(getTestPath(), "            Attr2(\\CONST_GLOB^AL, bool: Attr2::CONST_ATTR2),", false);
+    }
+
+    public void testAttributedMethodParamWithNamespace_02b() throws Exception {
+        checkCompletion(getTestPath(), "            Attr2(\\CONST_GLOBAL, bool: Attr2::CONST_AT^TR2),", false);
+    }
+
+    public void testAttributedParameter01() throws Exception {
+        checkCompletion(getTestPath(), "#[^]", false);
+    }
+
+    public void testAttributedParameter02() throws Exception {
+        checkCompletion(getTestPath(), "    public function method(#[Attr1] int $int, #[A^]):void {", false);
+    }
+
+    public void testAttributedParameterParamWithNamespace_01a() throws Exception {
+        checkCompletion(getTestPath(), "        public function method(#[At^tr2(string: CONST_ATTRIBUTES_TEST1, bool: Attr2::CONST_ATTR2)] int $int): void {", false);
+    }
+
+    public void testAttributedParameterParamWithNamespace_01b() throws Exception {
+        checkCompletion(getTestPath(), "        public function method(#[Attr2(^string: CONST_ATTRIBUTES_TEST1, bool: Attr2::CONST_ATTR2)] int $int): void {", false);
+    }
+
+    public void testAttributedParameterParamWithNamespace_01c() throws Exception {
+        checkCompletion(getTestPath(), "        public function method(#[Attr2(string: CONST_ATTRIBUTE^S_TEST1, bool: Attr2::CONST_ATTR2)] int $int): void {", false);
+    }
+
+    public void testAttributedParameterParamWithNamespace_01d() throws Exception {
+        checkCompletion(getTestPath(), "        public function method(#[Attr2(string: CONST_ATTRIBUTES_TEST1, bool: Attr2::CONST^_ATTR2)] int $int): void {", false);
+    }
+
+    public void testAttributedParameterParamWithNamespace_02a() throws Exception {
+        checkCompletion(getTestPath(), "                #[At^tr2(\\CONST_GLOBAL, bool: Attr2::CONST_ATTR2)] string $string,", false);
+    }
+
+    public void testAttributedParameterParamWithNamespace_02b() throws Exception {
+        checkCompletion(getTestPath(), "                #[Attr2(\\CONST_GLOB^AL, bool: Attr2::CONST_ATTR2)] string $string,", false);
+    }
+
+    public void testAttributedParameterParamWithNamespace_02c() throws Exception {
+        checkCompletion(getTestPath(), "                #[Attr2(\\CONST_GLOBAL, bool: Attr2::CONST_^ATTR2)] string $string,", false);
+    }
+
+    public void testAttributedFunctions_Function01() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr^2(string: CONST_ATTRIBUTES_TEST1, bool: Attr2::CONST_ATTR2)]", false);
+    }
+
+    public void testAttributedFunctions_Function02() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr2(string: CONST_A^TTRIBUTES_TEST1, bool: Attr2::CONST_ATTR2)]", false);
+    }
+
+    public void testAttributedFunctions_Function03() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr2(string: CONST_ATTRIBUTES_TEST1, ^bool: Attr2::CONST_ATTR2)]", false);
+    }
+
+    public void testAttributedFunctions_Function04() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr2(string: CONST_ATTRIBUTES_TEST1, bool: Attr2::CONST_^ATTR2)]", false);
+    }
+
+    public void testAttributedFunctions_FunctionParameter01() throws Exception {
+        checkCompletion(getTestPath(), "    function testFunction(#[Att^r1(int: Attr1::CONST_ATTR1, string: CONST_ATTRIBUTES_TEST1)] int $int): void {", false);
+    }
+
+    public void testAttributedFunctions_FunctionParameter02() throws Exception {
+        checkCompletion(getTestPath(), "    function testFunction(#[Attr1(int: Attr1::CONST_ATT^R1, string: CONST_ATTRIBUTES_TEST1)] int $int): void {", false);
+    }
+
+    public void testAttributedFunctions_FunctionParameter03() throws Exception {
+        checkCompletion(getTestPath(), "    function testFunction(#[Attr1(int: Attr1::CONST_ATTR1, string: CONST_ATTRIBUTES_TE^ST1)] int $int): void {", false);
+    }
+
+    public void testAttributedFunctions_Closure01() throws Exception {
+        checkCompletion(getTestPath(), "    $closure = #[Attr1^] function ($int, #[Attr2(Attr2::class)] array $array): void {", false);
+    }
+
+    public void testAttributedFunctions_ClosureParameter01() throws Exception {
+        checkCompletion(getTestPath(), "    $closure = #[Attr1] function ($int, #[Att^r2(Attr2::class)] array $array): void {", false);
+    }
+
+    public void testAttributedFunctions_ClosureParameter02() throws Exception {
+        checkCompletion(getTestPath(), "    $closure = #[Attr1] function ($int, #[Attr2(^Attr2::class)] array $array): void {", false);
+    }
+
+    public void testAttributedFunctions_ClosureParameter03() throws Exception {
+        checkCompletion(getTestPath(), "    $closure = #[Attr1] function ($int, #[Attr2(Attr2::^class)] array $array): void {", false);
+    }
+
+    public void testAttributedFunctions_ArrowFunction01() throws Exception {
+        checkCompletion(getTestPath(), "    $arrow = #[At^tr1(string: Attr1::class)] fn(#[Attr1(int: 100)] int $int) => 100;", false);
+    }
+
+    public void testAttributedFunctions_ArrowFunction02() throws Exception {
+        checkCompletion(getTestPath(), "    $arrow = #[Attr1(str^ing: Attr1::class)] fn(#[Attr1(int: 100)] int $int) => 100;", false);
+    }
+
+    public void testAttributedFunctions_ArrowFunction03() throws Exception {
+        checkCompletion(getTestPath(), "    $arrow = #[Attr1(string: Attr1::^class)] fn(#[Attr1(int: 100)] int $int) => 100;", false);
+    }
+
+    public void testAttributedFunctions_ArrowFunctionParameter01() throws Exception {
+        checkCompletion(getTestPath(), "    $arrow = #[Attr1(string: Attr1::class)] fn(#[Att^r1(int: 100)] int $int) => 100;", false);
+    }
+
+    public void testAttributedFunctions_ArrowFunctionParameter02() throws Exception {
+        checkCompletion(getTestPath(), "    $arrow = #[Attr1(string: Attr1::class)] fn(#[Attr1(in^t: 100)] int $int) => 100;", false);
+    }
+
+    public void testAttributedFunctions_ArrowFunctionParameter03() throws Exception {
+        checkCompletion(getTestPath(), "    $arrow = #[Attr1(string: Attr1::class)] fn(#[Attr1(int: ^100)] int $int) => 100;", false);
+    }
+
+    public void testAttributedAnonymousClass01() throws Exception {
+        checkCompletion(getTestPath(), "    $anon = new #[^] class () {", false);
+    }
+
+    public void testAttributedTypes_Interface01() throws Exception {
+        checkCompletion(getTestPath(), "    #[Att^r2(string: CONST_ATTRIBUTES_TEST1, bool: Attr2::CONST_ATTR2)]", false);
+    }
+
+    public void testAttributedTypes_Interface02() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr2(string: CONST_ATTRIBUTE^S_TEST1, bool: Attr2::CONST_ATTR2)]", false);
+    }
+
+    public void testAttributedTypes_Interface03() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr2(string: CONST_ATTRIBUTES_TEST1, ^bool: Attr2::CONST_ATTR2)]", false);
+    }
+
+    public void testAttributedTypes_Interface04() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr2(string: CONST_ATTRIBUTES_TEST1, bool: Attr2::CON^ST_ATTR2)]", false);
+    }
+
+    public void testAttributedTypes_InterfaceMethod01() throws Exception {
+        checkCompletion(getTestPath(), "        #[Attr^1]", false);
+    }
+
+    public void testAttributedTypes_Trait01() throws Exception {
+        checkCompletion(getTestPath(), "    #[Att^r1(string: Attr1::class)]", false);
+    }
+
+    public void testAttributedTypes_Trait02() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr1(strin^g: Attr1::class)]", false);
+    }
+
+    public void testAttributedTypes_Trait03() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr1(string: ^Attr1::class)]", false);
+    }
+
+    public void testAttributedTypes_Enum01() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr1^(int: 500)]", false);
+    }
+
+    public void testAttributedTypes_Enum02() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr1(^int: 500)]", false);
+    }
+
+    public void testAttributedTypes_Enum03() throws Exception {
+        checkCompletion(getTestPath(), "    #[Attr1(int: ^500)]", false);
+    }
+
+    public void testAttributedTypes_AnonClass01() throws Exception {
+        checkCompletion(getTestPath(), "    $annon = new #[Attr^1(int: 500, string: \"anon\")] class() {};", false);
+    }
+
+    public void testAttributedTypes_AnonClass02() throws Exception {
+        checkCompletion(getTestPath(), "    $annon = new #[Attr1(in^t: 500, string: \"anon\")] class() {};", false);
+    }
+
+    public void testAttributedTypes_AnonClass03() throws Exception {
+        checkCompletion(getTestPath(), "    $annon = new #[Attr1(int: ^500, string: \"anon\")] class() {};", false);
+    }
+
+    public void testAttributedTypes_AnonClass04() throws Exception {
+        checkCompletion(getTestPath(), "    $annon = new #[Attr1(int: 500, stri^ng: \"anon\")] class() {};", false);
+    }
+
+    public void testAttributesPredefined_01() throws Exception {
+        checkCompletion(getTestPath(), "    #[^]", false);
+    }
+
+    public void testParseException() throws Exception {
+        try {
+            checkCompletion(getTestPath(), "use function TestA\\myFunction^", false);
+        } catch (ParseException e) {
+            fail("Must not throw ParseException.");
+        }
     }
 }

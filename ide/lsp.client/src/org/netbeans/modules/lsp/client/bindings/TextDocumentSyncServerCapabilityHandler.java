@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.netbeans.modules.lsp.client.bindings;
 
 import java.util.ArrayList;
@@ -57,7 +58,6 @@ import org.openide.filesystems.FileUtil;
 import org.openide.modules.OnStart;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
-import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -65,7 +65,6 @@ import org.openide.util.RequestProcessor;
  */
 public class TextDocumentSyncServerCapabilityHandler {
 
-    private final RequestProcessor WORKER = new RequestProcessor(TextDocumentSyncServerCapabilityHandler.class.getName(), 1, false, false);
     private final Set<JTextComponent> lastOpened = Collections.newSetFromMap(new IdentityHashMap<>());
 
     private void handleChange() {
@@ -97,17 +96,14 @@ public class TextDocumentSyncServerCapabilityHandler {
             return; //ignore
 
         Document doc = opened.getDocument();
-        ensureDidOpenSent(doc);
+        ensureDidOpenSent(doc, true);
         registerBackgroundTasks(opened);
     }
 
     public static void refreshOpenedFilesInServers() {
-        SwingUtilities.invokeLater(() -> {
-            assert SwingUtilities.isEventDispatchThread();
-            for (JTextComponent c : EditorRegistry.componentList()) {
-                h.ensureOpenedInServer(c);
-            }
-        });
+        for (JTextComponent c : EditorRegistry.componentList()) {
+            h.ensureOpenedInServer(c);
+        }
     }
 
     private static final TextDocumentSyncServerCapabilityHandler h = new TextDocumentSyncServerCapabilityHandler();
@@ -132,7 +128,7 @@ public class TextDocumentSyncServerCapabilityHandler {
 
         openDocument2PanesCount.computeIfAbsent(doc, d -> {
             doc.putProperty(TextDocumentSyncServerCapabilityHandler.class, true);
-            ensureDidOpenSent(doc);
+            ensureDidOpenSent(doc, false);
             doc.addDocumentListener(new DocumentListener() { //XXX: listener
                 int version; //XXX: proper versioning!
                 @Override
@@ -160,12 +156,13 @@ public class TextDocumentSyncServerCapabilityHandler {
                         boolean typingModification = DocumentUtilities.isTypingModification(doc);
                         long documentVersion = DocumentUtilities.getDocumentVersion(doc);
 
-                        WORKER.post(() -> {
-                            LSPBindings server = LSPBindings.getBindings(file);
+                        LSPBindings server = LSPBindings.getBindings(file);
 
-                            if (server == null)
-                                return ; //ignore
+                        if(server == null) {
+                            return;
+                        }
 
+                        server.runOnBackground(() -> {
                             TextDocumentSyncKind syncKind = TextDocumentSyncKind.None;
                             Either<TextDocumentSyncKind, TextDocumentSyncOptions> sync = server.getInitResult().getCapabilities().getTextDocumentSync();
                             if (sync != null) {
@@ -243,23 +240,25 @@ public class TextDocumentSyncServerCapabilityHandler {
 
     private synchronized void editorClosed(JTextComponent c) {
         Document doc = c.getDocument();
+
         Integer count = openDocument2PanesCount.getOrDefault(doc, -1);
         if (count > 0) {
             openDocument2PanesCount.put(doc, --count);
         }
         if (count == 0) {
+            FileObject file = NbEditorUtilities.getFileObject(doc);
+
+            if (file == null)
+                return; //ignore
+
             //TODO modified!
-            WORKER.post(() -> {
-                FileObject file = NbEditorUtilities.getFileObject(doc);
+            LSPBindings server = LSPBindings.getBindings(file);
 
-                if (file == null)
-                    return; //ignore
+            if (server == null) {
+                return;
+            }
 
-                LSPBindings server = LSPBindings.getBindings(file);
-
-                if (server == null)
-                    return ; //ignore
-
+            server.runOnBackground(() -> {
                 TextDocumentIdentifier di = new TextDocumentIdentifier();
                 di.setUri(Utils.toURI(file));
                 DidCloseTextDocumentParams params = new DidCloseTextDocumentParams(di);
@@ -271,17 +270,19 @@ public class TextDocumentSyncServerCapabilityHandler {
         }
     }
 
-    private void ensureDidOpenSent(Document doc) {
-        WORKER.post(() -> {
-            FileObject file = NbEditorUtilities.getFileObject(doc);
+    @SuppressWarnings("AssignmentToMethodParameter")
+    private void ensureDidOpenSent(Document doc, boolean sync) {
+        FileObject file = NbEditorUtilities.getFileObject(doc);
 
-            if (file == null)
-                return; //ignore
+        if (file == null)
+            return; //ignore
 
-            LSPBindings server = LSPBindings.getBindings(file);
+        LSPBindings server = LSPBindings.getBindings(file);
 
-            if (server == null)
-                return ; //ignore
+        if (server == null)
+            return ; //ignore
+
+        Runnable task = () -> {
 
             if (!server.getOpenedFiles().add(file)) {
                 //already opened:
@@ -289,6 +290,7 @@ public class TextDocumentSyncServerCapabilityHandler {
             }
 
             doc.putProperty(HyperlinkProviderImpl.class, true);
+            doc.putProperty(OccurrencesMarkProvider.class, true);
 
             String uri = Utils.toURI(file);
             String[] text = new String[1];
@@ -302,6 +304,7 @@ public class TextDocumentSyncServerCapabilityHandler {
                 }
             });
 
+            // @todo: the mimetype is not the language ID
             TextDocumentItem textDocumentItem = new TextDocumentItem(uri,
                                                                      FileUtil.getMIMEType(file),
                                                                      0,
@@ -309,22 +312,28 @@ public class TextDocumentSyncServerCapabilityHandler {
 
             server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(textDocumentItem));
             LSPBindings.scheduleBackgroundTasks(file);
-        });
+        };
+
+        if (sync) {
+            task.run();
+        } else {
+            server.runOnBackground(task);
+        }
     }
 
     private void registerBackgroundTasks(JTextComponent c) {
         Document doc = c.getDocument();
-        WORKER.post(() -> {
-            FileObject file = NbEditorUtilities.getFileObject(doc);
+        FileObject file = NbEditorUtilities.getFileObject(doc);
 
-            if (file == null)
-                return; //ignore
+        if (file == null)
+            return; //ignore
 
-            LSPBindings server = LSPBindings.getBindings(file);
+        LSPBindings server = LSPBindings.getBindings(file);
 
-            if (server == null)
-                return ; //ignore
+        if (server == null)
+            return ; //ignore
 
+        server.runOnBackground(() -> {
             SwingUtilities.invokeLater(() -> {
                 if (c.getClientProperty(MarkOccurrences.class) == null) {
                     MarkOccurrences mo = new MarkOccurrences(c);

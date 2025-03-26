@@ -68,6 +68,7 @@ import org.netbeans.modules.editor.bookmarks.BookmarkInfo;
 import org.netbeans.modules.editor.bookmarks.BookmarkManager;
 import org.netbeans.modules.editor.bookmarks.BookmarkUtils;
 import org.openide.actions.GotoAction;
+import org.openide.awt.Actions;
 import org.openide.util.NbBundle;
 import org.openide.util.actions.SystemAction;
 
@@ -193,10 +194,8 @@ public class GotoLineOrBookmarkPanel extends JPanel implements ActionListener, F
                 JPanel southPanel = new JPanel();
                 southPanel.setLayout(new GridBagLayout());
                 JLabel keyChooserLabel = new JLabel();
-                String ksText = KeyEvent.getKeyModifiersText(ks.getModifiers()) + "+" + // NOI18N
-                        KeyEvent.getKeyText(ks.getKeyCode());
                 keyChooserLabel.setText(NbBundle.getMessage(GotoLineOrBookmarkPanel.class,
-                        "CTL_gotoDialogBookmarkKeyChooserLabel", ksText));
+                        "CTL_gotoDialogBookmarkKeyChooserLabel", Actions.keyStrokeToString(ks)));
                 InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
                 inputMap.put(ks, "openKeyChooser");
                 rootPane.getActionMap().put("openKeyChooser", new AbstractAction() {
@@ -334,7 +333,7 @@ public class GotoLineOrBookmarkPanel extends JPanel implements ActionListener, F
     }
 
     private void updateCombo() {
-        gotoCombo.setModel(new DefaultComboBoxModel(history.toArray(new String[history.size()])));
+        gotoCombo.setModel(new DefaultComboBoxModel(history.toArray(new String[0])));
     }
 
     private String getValue() {

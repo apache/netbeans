@@ -38,6 +38,7 @@ public class PanelFactory implements org.netbeans.modules.xml.multiview.ui.Inner
         this.editor=editor;
     }
     
+    @Override
     public SectionInnerPanel createInnerPanel(Object key) {
         if (key instanceof PersistenceUnit) {
             return new PersistenceUnitPanel((SectionView)editor.getContentView(), dObj, (PersistenceUnit)key);

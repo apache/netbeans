@@ -120,7 +120,7 @@ public class PrimefacesCustomizerPanel extends javax.swing.JPanel implements Hel
      */
     public Library getPrimefacesLibrary() {
         Object selectedItem = primefacesLibrariesComboBox.getSelectedItem();
-        if (selectedItem != null && selectedItem instanceof Library) {
+        if (selectedItem instanceof Library) {
             return (Library) selectedItem;
         }
         return null;

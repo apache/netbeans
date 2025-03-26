@@ -439,7 +439,7 @@ class PropertyMonitor<T> implements ContextAction.StatefulMonitor<T>, PropertyCh
             if (listeners == null) {
                 return;
             }
-            ll = listeners.toArray(new ChangeListener[listeners.size()]);
+            ll = listeners.toArray(new ChangeListener[0]);
         }
         ChangeEvent ev = new ChangeEvent(this);
         for (ChangeListener l : ll) {

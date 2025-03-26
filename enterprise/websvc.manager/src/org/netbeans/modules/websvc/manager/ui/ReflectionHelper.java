@@ -24,7 +24,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -169,7 +168,7 @@ public class ReflectionHelper {
             }
 
             return Array.newInstance(componentClass, length);
-        } catch (Exception ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new WebServiceReflectionException(ex.getClass().getName(), ex);
         }
     }
@@ -198,16 +197,8 @@ public class ReflectionHelper {
 
             Constructor jaxBConstr = jaxBClass.getConstructor(new Class[]{qNameClass, Class.class, Object.class});
             return jaxBConstr.newInstance(qName, declaredClass, value);
-        } catch (ClassNotFoundException cnfe) {
-            throw new WebServiceReflectionException("ClassNotFoundException", cnfe);
-        } catch (InstantiationException ie) {
-            throw new WebServiceReflectionException("InstantiationException", ie);
-        } catch (IllegalAccessException iae) {
-            throw new WebServiceReflectionException("IllegalAccessException", iae);
-        } catch (InvocationTargetException ite) {
-            throw new WebServiceReflectionException("InvocationTargetException", ite);
-        } catch (NoSuchMethodException nsme) {
-            throw new WebServiceReflectionException("NoSuchMethodException", nsme);
+        } catch (ReflectiveOperationException ex) {
+            throw new WebServiceReflectionException(ex.getClass().getName(), ex);
         } finally {
             if (savedLoader != null) {
                 Thread.currentThread().setContextClassLoader(savedLoader);
@@ -222,7 +213,7 @@ public class ReflectionHelper {
             Class enumClass = Class.forName(enumeration, true, loader);
 
             return Enum.valueOf(enumClass, enumerationValues.get(0));
-        } catch (Exception ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new WebServiceReflectionException(ex.getClass().getName(), ex);
         }
     }
@@ -232,7 +223,7 @@ public class ReflectionHelper {
         try {
             Class enumClass = Class.forName(enumeration, true, loader);
             return Enum.valueOf(enumClass, name);
-        } catch (Exception ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new WebServiceReflectionException(ex.getClass().getName(), ex);
         }
     }
@@ -251,16 +242,16 @@ public class ReflectionHelper {
             } else {
                 Class<?> cls = Class.forName(className, true, loader);
                 if (cls.isInterface()) {
-                    return new ArrayList<Object>();
+                    return new ArrayList<>();
                 } else {
                     savedLoader = Thread.currentThread().getContextClassLoader();
                     Thread.currentThread().setContextClassLoader(loader);
 
-                    Object result = cls.newInstance();
+                    Object result = cls.getDeclaredConstructor().newInstance();
                     return result;
                 }
             }
-        } catch (Exception ex) {
+        } catch (ReflectiveOperationException | SecurityException ex) {
             throw new WebServiceReflectionException(ex.getClass().getName(), ex);
         } finally {
             if (savedLoader != null) {
@@ -279,15 +270,11 @@ public class ReflectionHelper {
 
             Thread.currentThread().setContextClassLoader(loader);
             Class<?> typeClass = Class.forName(typeName, true, loader);
-            Object result = typeClass.newInstance();
+            Object result = typeClass.getDeclaredConstructor().newInstance();
 
             return result;
-        } catch (ClassNotFoundException cnfe) {
-            throw new WebServiceReflectionException("ClassNotFoundException", cnfe);
-        } catch (InstantiationException ie) {
-            throw new WebServiceReflectionException("InstantiationException", ie);
-        } catch (IllegalAccessException iae) {
-            throw new WebServiceReflectionException("IllegalAccessException", iae);
+        } catch (ReflectiveOperationException ex) {
+            throw new WebServiceReflectionException(ex.getClass().getName(), ex);
         } finally {
             if (savedLoader != null) {
                 Thread.currentThread().setContextClassLoader(savedLoader);
@@ -298,7 +285,7 @@ public class ReflectionHelper {
     public static List<String> getEnumerationValues(String enumeration, ClassLoader loader)
             throws WebServiceReflectionException {
         try {
-            List<String> enumerations = new ArrayList<String>();
+            List<String> enumerations = new ArrayList<>();
             Class<?> enumerClass = Class.forName(enumeration, true, loader);
 
             Field[] fields = enumerClass.getDeclaredFields();
@@ -310,7 +297,7 @@ public class ReflectionHelper {
             }
 
             return enumerations;
-        } catch (Exception ex) {
+        } catch (ClassNotFoundException | SecurityException ex) {
             throw new WebServiceReflectionException(ex.getClass().getName(), ex);
         }
     }
@@ -319,7 +306,7 @@ public class ReflectionHelper {
             throws WebServiceReflectionException {
         ClassLoader savedLoader = null;
         try {
-            List<String> properties = new ArrayList<String>();
+            List<String> properties = new ArrayList<>();
             savedLoader = Thread.currentThread().getContextClassLoader();
             Thread.currentThread().setContextClassLoader(loader);
 
@@ -341,12 +328,11 @@ public class ReflectionHelper {
                             properties.add(props[i]);
                         }
                     }
-                } catch (Exception ex) {
-                }
+                } catch (ReflectiveOperationException | SecurityException ex) {}
             }
 
             return properties;
-        } catch (Exception ex) {
+        } catch (ClassNotFoundException ex) {
             throw new WebServiceReflectionException(ex.getClass().getName(), ex);
         } finally {
             if (savedLoader != null) {
@@ -380,7 +366,7 @@ public class ReflectionHelper {
             }
 
             return TypeUtil.typeToString(method.getGenericReturnType());
-        } catch (Exception ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new WebServiceReflectionException(ex.getClass().getName(), ex);
         } finally {
             if (savedLoader != null) {
@@ -393,7 +379,7 @@ public class ReflectionHelper {
         try {
             Field valueField = holder.getClass().getField("value"); // NO18N
             return valueField.get(holder);
-        } catch (Exception ex) {
+        } catch (ReflectiveOperationException | SecurityException ex) {
             throw new WebServiceReflectionException(ex.getClass().getName(), ex);
         }
     }
@@ -402,7 +388,7 @@ public class ReflectionHelper {
         try {
             Field valueField = holder.getClass().getField("value"); // NO18N
             valueField.set(holder, value);
-        } catch (Exception ex) {
+        } catch (ReflectiveOperationException | SecurityException ex) {
             throw new WebServiceReflectionException(ex.getClass().getName(), ex);
         }
     }
@@ -411,7 +397,7 @@ public class ReflectionHelper {
         try {
             Method m = jaxBElement.getClass().getMethod("getValue", new Class[0]); // NOI18N
             return m.invoke(jaxBElement);
-        } catch (Exception ex) {
+        } catch (ReflectiveOperationException | SecurityException ex) {
             throw new WebServiceReflectionException(ex.getClass().getName(), ex);
         }
     }
@@ -423,7 +409,7 @@ public class ReflectionHelper {
 
             Method getLocalPart = qName.getClass().getMethod("getLocalPart", new Class[0]); // NOI18N
             return (String) getLocalPart.invoke(qName);
-        } catch (Exception ex) {
+        } catch (ReflectiveOperationException | SecurityException ex) {
             throw new WebServiceReflectionException(ex.getClass().getName(), ex);
         }
     }
@@ -432,7 +418,7 @@ public class ReflectionHelper {
         try {
             Method m = jaxBElement.getClass().getMethod("setValue", new Class[]{Object.class}); // NOI18N
             m.invoke(jaxBElement, value);
-        } catch (Exception ex) {
+        } catch (ReflectiveOperationException | SecurityException ex) {
             throw new WebServiceReflectionException(ex.getClass().getName(), ex);
         }
     }
@@ -461,7 +447,7 @@ public class ReflectionHelper {
             }
 
             return false;
-        } catch (Exception ex) {
+        } catch (ClassNotFoundException | SecurityException ex) {
             throw new WebServiceReflectionException(ex.getClass().getName(), ex);
         } finally {
             if (savedLoader != null) {
@@ -508,14 +494,8 @@ public class ReflectionHelper {
 
                 Object[] args = new Object[]{propValue};
                 method.invoke(objValue, args);
-            } catch (ClassNotFoundException cnfe) {
-                throw new WebServiceReflectionException("ClassNotFoundException", cnfe);
-            } catch (NoSuchMethodException nsme) {
-                throw new WebServiceReflectionException("NoSuchMethodException", nsme);
-            } catch (IllegalAccessException iae) {
-                throw new WebServiceReflectionException("IllegalAccessException", iae);
-            } catch (InvocationTargetException ite) {
-                throw new WebServiceReflectionException("InvocationTargetException", ite);
+            } catch (ReflectiveOperationException ex) {
+                throw new WebServiceReflectionException(ex.getClass().getName(), ex);
             }
 
         } finally {
@@ -555,7 +535,7 @@ public class ReflectionHelper {
                 }
 
                 return method.invoke(obj, new Object[0]);
-            } catch (Exception ex) {
+            } catch (ReflectiveOperationException ex) {
                 throw new WebServiceReflectionException(ex.getClass().getName(), ex);
             }
         } finally {
@@ -654,7 +634,7 @@ public class ReflectionHelper {
 
                 Object serviceObject;
                 if (isRPCEncoded) {
-                    serviceObject = serviceClass.newInstance();
+                    serviceObject = serviceClass.getDeclaredConstructor().newInstance();
                 } else {
                     Constructor constructor = serviceClass.getConstructor(java.net.URL.class, javax.xml.namespace.QName.class);
                     serviceObject = constructor.newInstance(jarWsdlUrl, name);
@@ -665,18 +645,9 @@ public class ReflectionHelper {
 
                 classInstance = getPort.invoke(serviceObject);
                 clazz = classInstance.getClass();
-            } catch (InstantiationException ia) {
-                throw new WebServiceReflectionException("InstantiationExceptoin", ia);
-            } catch (IllegalAccessException iae) {
-                throw new WebServiceReflectionException("IllegalAccessException", iae);
-            } catch (NoSuchMethodException nsme) {
-                throw new WebServiceReflectionException("NoSuchMethodException", nsme);
-            } catch (InvocationTargetException ite) {
-                throw new WebServiceReflectionException("InvocationTargetException", ite);
-            } catch (IOException ioe) {
-                throw new WebServiceReflectionException("IOException", ioe);
+            } catch (ReflectiveOperationException | IOException ex) {
+                throw new WebServiceReflectionException(ex.getClass().getName(), ex);
             }
-
 
             Method method = null;
             Object[] paramValues = inParamList.toArray();
@@ -734,14 +705,8 @@ public class ReflectionHelper {
             Object returnObject = null;
             try {
                 returnObject = method.invoke(classInstance, paramValues);
-            } catch (InvocationTargetException ite) {
-                throw new WebServiceReflectionException("InvocationTargetException", ite);
-            } catch (IllegalArgumentException ia) {
-                throw new WebServiceReflectionException("IllegalArgumentException", ia);
-            } catch (IllegalAccessException iae) {
-                throw new WebServiceReflectionException("IllegalAccessException", iae);
-            } catch (Exception e) {
-                throw new WebServiceReflectionException("Exception", e);
+            } catch (ReflectiveOperationException ex) {
+                throw new WebServiceReflectionException(ex.getClass().getName(), ex);
             }
 
             return returnObject;

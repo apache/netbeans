@@ -7,16 +7,16 @@ group = "com.example"
 repositories {
     mavenCentral()
 }
-dependencies {
+@@T@@dependencies {
     // with parenthesis
     @@A@@annotationProcessor("io.micronaut:micronaut-http-validation")@@A@@
     // without parenthesis
     @@B@@implementation "io.micronaut:micronaut-http-client"@@B@@
     // several deps in a common group
-    implementation(
+    @@P@@implementation(
         @@C@@'io.micronaut:micronaut-jackson-databind'@@C@@,
         @@D@@"jakarta.annotation:jakarta.annotation-api"@@D@@
-    )
+    )@@Q@@
     // with a closure
     @@E@@runtimeOnly("ch.qos.logback:logback-classic") {
         transitive = true
@@ -24,12 +24,12 @@ dependencies {
     // map in parenthesis
     @@F@@implementation(group : "io.micronaut", name: "micronaut-validation", version: "2.5")@@F@@
     // list of maps in parenthesis
-    runtimeOnly(
+    @@R@@runtimeOnly(
         @@G@@[group: 'org.hibernate', name: 'hibernate', version: '3.0.5', transitive: true]@@G@@,
         @@H@@[group:'org.ow2.asm', name:'asm', version:'7.1']@@H@@
-    )
+    )@@S@@
     @@I@@implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.0'@@I@@
-}
+}@@U@@
 application {
     mainClass.set("com.example.Application")
 }

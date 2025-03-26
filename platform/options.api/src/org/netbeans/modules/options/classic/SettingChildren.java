@@ -93,7 +93,7 @@ public final class SettingChildren extends FilterNode.Children {
             Action a = toDeleteActions[i];
             if (actions.contains(a)) {
                 actions.remove(a);
-                retVal = actions.toArray(new Action[actions.size()]);
+                retVal = actions.toArray(new Action[0]);
             }                
         }            
         return retVal;
@@ -278,7 +278,7 @@ public final class SettingChildren extends FilterNode.Children {
         public String getDisplayName() {
             String retVal = null;
             DataObject dobj= (DataObject) getCookie (DataObject.class);
-            if (dobj != null && dobj instanceof DataShadow) {
+            if (dobj instanceof DataShadow) {
                 DataShadow dsh = (DataShadow)dobj;
                 Node origNode = dsh.getOriginal().getNodeDelegate();
                 if (origNode != null) {

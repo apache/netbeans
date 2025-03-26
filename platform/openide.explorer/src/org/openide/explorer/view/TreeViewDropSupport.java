@@ -33,7 +33,6 @@ import java.awt.dnd.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Line2D;
-import java.awt.geom.Line2D.Double;
 import java.util.ArrayList;
 
 import java.util.Arrays;
@@ -285,7 +284,7 @@ final class TreeViewDropSupport implements DropTargetListener, Runnable {
         } else {
             // line and selection of parent if any
             if (pointAt == DragDropUtilities.NODE_UP) {
-                Line2D line = new Double(
+                Line2D line = new Line2D.Double(
                         nodeArea.x - SHIFT_LEFT, nodeArea.y + SHIFT_DOWN, endPointX, nodeArea.y + SHIFT_DOWN
                     );
                 convertBoundsAndSetDropLine(line);
@@ -296,7 +295,7 @@ final class TreeViewDropSupport implements DropTargetListener, Runnable {
                     );
                 nodeArea = (Rectangle) nodeArea.createUnion(lineArea);
             } else {
-                Line2D line = new Double(
+                Line2D line = new Line2D.Double(
                         nodeArea.x - SHIFT_LEFT, nodeArea.y + nodeArea.height + SHIFT_DOWN, endPointX,
                         nodeArea.y + nodeArea.height + SHIFT_DOWN
                     );
@@ -359,19 +358,21 @@ final class TreeViewDropSupport implements DropTargetListener, Runnable {
         tree.repaint(r.x - 5, r.y - 5, r.width + 10, r.height + 10);
     }
 
-    /** Converts line's bounds by the bounds of the root pane. Drop glass pane
-     * is over this root pane. After covert a given line is set to drop glass pane.
+    /** Converts line's bounds by the bounds of the drop glass pane.
+     * After covert a given line is set to drop glass pane.
      * @param line line for show in drop glass pane */
     private void convertBoundsAndSetDropLine(final Line2D line) {
+        if (dropPane == null)
+            return;
+
         int x1 = (int) line.getX1();
         int x2 = (int) line.getX2();
         int y1 = (int) line.getY1();
         int y2 = (int) line.getY2();
-        Point p1 = SwingUtilities.convertPoint(tree, x1, y1, tree.getRootPane());
-        Point p2 = SwingUtilities.convertPoint(tree, x2, y2, tree.getRootPane());
+        Point p1 = SwingUtilities.convertPoint(tree, x1, y1, dropPane);
+        Point p2 = SwingUtilities.convertPoint(tree, x2, y2, dropPane);
         line.setLine(p1, p2);
-        if( null != dropPane )
-            dropPane.setDropLine(line);
+        dropPane.setDropLine(line);
     }
 
     /** Removes timer and all listeners. */
@@ -796,7 +797,7 @@ final class TreeViewDropSupport implements DropTargetListener, Runnable {
             }
         }
 
-        return diff.toArray(new Node[diff.size()]);
+        return diff.toArray(new Node[0]);
     }
 
     /** Activates or deactivates Drag support on asociated JTree

@@ -47,6 +47,7 @@ import org.openide.util.NbBundle;
 import java.io.*;
 import java.net.Proxy;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Base64;
 import java.util.MissingResourceException;
 import java.util.logging.Level;
@@ -333,10 +334,10 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
             }
             StringBuilder result = new StringBuilder();
             while (st.hasMoreTokens()) {
-                result.append("/").append(URLEncoder.encode(st.nextToken(), StandardCharsets.UTF_8)); // NOI18N
+                result.append("/").append(URLEncoder.encode(st.nextToken(), StandardCharsets.UTF_8.name()));
             }
             return result.toString();
-        } catch (Exception e) {
+        } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e); // this should never happen
         }
     }
@@ -348,7 +349,7 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
      * @return properly escaped URL (<code>application/x-www-form-urlencoded</code>) in string form
      */
     private String createTempContextXml(String docBase, Context ctx) throws IOException {
-        File tmpContextXml = File.createTempFile("context", ".xml"); // NOI18N
+        File tmpContextXml = Files.createTempFile("context", ".xml").toFile(); // NOI18N
         tmpContextXml.deleteOnExit();
         if (!docBase.equals (ctx.getAttributeValue ("docBase"))) { //NOI18N
             ctx.setAttributeValue ("docBase", docBase); //NOI18N
@@ -358,7 +359,7 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
         }
         // http://www.netbeans.org/issues/show_bug.cgi?id=167139
         URL url = tmpContextXml.toURI().toURL();
-        String ret = URLEncoder.encode(url.toString(), StandardCharsets.UTF_8); // NOI18N
+        String ret = URLEncoder.encode(url.toString(), StandardCharsets.UTF_8.name());
         return ret;
     }
     

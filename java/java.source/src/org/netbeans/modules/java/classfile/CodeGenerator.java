@@ -55,7 +55,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
 import java.security.MessageDigest;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -131,9 +130,13 @@ public class CodeGenerator {
     static final String CLASSFILE_SOURCEFILE = "classfile-sourcefile";    //NOI18N
 
     public static FileObject generateCode(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> toOpenHandle) {
-	if (UNUSABLE_KINDS.contains(toOpenHandle.getKind())) {
-	    return null;
-	}
+      return generateCode(cpInfo, toOpenHandle, null);
+    }
+
+    public static FileObject generateCode(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> toOpenHandle, boolean[] trySourceAttr) {
+        if (UNUSABLE_KINDS.contains(toOpenHandle.getKind())) {
+          return null;
+        }
 
         try {
             FileObject file = FileUtil.createMemoryFileSystem().getRoot().createData(toOpenHandle.getKind() == ElementKind.MODULE ? "module-info.java" : "test.java");  //NOI18N
@@ -171,11 +174,23 @@ public class CodeGenerator {
                         }
                         root = resource.getParent();
                     } else {
+
                         final ClassPath cp = ClassPathSupport.createProxyClassPath(
                                 cpInfo.getClassPath(PathKind.BOOT),
                                 cpInfo.getClassPath(PathKind.COMPILE),
                                 cpInfo.getClassPath(PathKind.SOURCE));
                         final TypeElement te = toOpen != null ? wc.getElementUtilities().outermostTypeElement(toOpen) : null;
+                        if (trySourceAttr != null) {
+                            String name = SourceUtils.findSourceFileName(toOpen);
+                            if (name != null) {
+                                FileObject found = SourceUtils.getFile(toOpenHandle, cpInfo, name);
+                                if (found != null) {
+                                    result[0] = found;
+                                    trySourceAttr[0] = true;
+                                    return;
+                                }
+                            }
+                        }
 
                         if (te == null) {
                             LOG.info("Cannot resolve element: " + toOpenHandle.toString() + " on classpath: " + cp.toString()); //NOI18N
@@ -225,7 +240,7 @@ public class CodeGenerator {
                         result[0] = source;
 
                         String existingHash = (String) source.getAttribute(HASH_ATTRIBUTE_NAME);
-                        
+
                         if (hash.equals(existingHash)) {
                             LOG.fine(FileUtil.getFileDisplayName(source) + " is up to date, reusing from cache.");  //NOI18N
                             return;
@@ -245,7 +260,7 @@ public class CodeGenerator {
                     if (betterName[0] != null) {
                         result[0].setAttribute(CLASSFILE_SOURCEFILE, betterName[0]);
                     }
-                    
+
                     sourceGenerated[0] = true;
                 }
             });
@@ -354,7 +369,7 @@ public class CodeGenerator {
 
                     if (classfile != null && classfile.getKind() == Kind.CLASS) {
                         InputStream in = classfile.openInputStream();
-                        
+
                         try {
                             cf = ClassFile.read(in);
                             Attribute sfaRaw = cf.getAttribute(Attribute.SourceFile);
@@ -378,6 +393,9 @@ public class CodeGenerator {
                 List<Tree> members = new LinkedList<Tree>();
 
                 for (Element m : e.getEnclosedElements()) {
+                    if (m.getKind() == ElementKind.RECORD_COMPONENT) {
+                        continue; // TODO update to 'extend AbstractElementVisitor14'; visiting record components causes UnknownElementException
+                    }
                     Tree member = visit(m);
 
                     if (member != null)
@@ -393,6 +411,10 @@ public class CodeGenerator {
                         return addDeprecated(e, make.Interface(mods, e.getSimpleName(), constructTypeParams(e.getTypeParameters()), computeSuper(e.getInterfaces()), members));
                     case ENUM:
                         return addDeprecated(e, make.Enum(mods, e.getSimpleName(), computeSuper(e.getInterfaces()), members));
+                    case RECORD:
+                        // TODO generates final class atm
+                        return addDeprecated(e, make.Class(mods, e.getSimpleName(), constructTypeParams(e.getTypeParameters()), null, computeSuper(e.getInterfaces()), members));
+//                        return addDeprecated(e, make.Record(mods, e.getSimpleName(), computeSuper(e.getInterfaces()), members));
                     case ANNOTATION_TYPE:
                         return addDeprecated(e, make.AnnotationType(mods, e.getSimpleName(), members));
                     default:
@@ -607,7 +629,7 @@ public class CodeGenerator {
                         ctx.put(CodeWriter.class, new ConvenientCodeWriter(ctx));
 
                         CodeWriter codeWriter = CodeWriter.instance(ctx);
-                        
+
                         codeWriter.writeInstrs((Code_attribute) code);
                         codeWriter.writeExceptionTable((Code_attribute) code);
 
@@ -623,7 +645,7 @@ public class CodeGenerator {
                 if (!set.hasComments()) {
                     set.addComment(RelativePosition.INNER, Comment.create(Style.LINE, "compiled code"));
                 }
-                
+
                 return addDeprecated(e, method);
             }
         }
@@ -723,7 +745,7 @@ public class CodeGenerator {
                             LOG.log(Level.WARNING, "Cannot create annotation for: {0}", v);
                             continue;
                         }
-                        
+
                         values.add(val);
                     }
 
@@ -738,35 +760,37 @@ public class CodeGenerator {
         }
 
     }
-    
+
     private static final class ConvenientCodeWriter extends CodeWriter {
 
         private final ConstantWriter constantWriter;
-        
+
         public ConvenientCodeWriter(Context context) {
             super(context);
             constantWriter = ConstantWriter.instance(context);
         }
 
-        private static final Set<Opcode> INSTRUCTION_WITH_REFERENCE = 
+        private static final Set<Opcode> INSTRUCTION_WITH_REFERENCE =
                 EnumSet.of(Opcode.LDC, Opcode.LDC_W, Opcode.LDC2_W,
                            Opcode.GETSTATIC, Opcode.PUTSTATIC, Opcode.GETFIELD,
                            Opcode.PUTFIELD, Opcode.INVOKEVIRTUAL, Opcode.INVOKESPECIAL,
                            Opcode.INVOKESTATIC, Opcode.INVOKEINTERFACE, Opcode.NEW,
                            Opcode.ANEWARRAY, Opcode.CHECKCAST, Opcode.INSTANCEOF);
-        
+
         @Override
         public void writeInstr(Instruction instr) {
             super.writeInstr(instr);
         }
     }
-    
+
     private static final Map<List<ElementKind>, Set<Modifier>> IMPLICIT_MODIFIERS;
 
     static {
         IMPLICIT_MODIFIERS = new HashMap<List<ElementKind>, Set<Modifier>>();
 
         IMPLICIT_MODIFIERS.put(Arrays.asList(ElementKind.ENUM), EnumSet.of(Modifier.STATIC, Modifier.ABSTRACT, Modifier.FINAL));
+        // TODO implement record support
+//        IMPLICIT_MODIFIERS.put(Arrays.asList(ElementKind.RECORD), EnumSet.of(Modifier.STATIC, Modifier.ABSTRACT, Modifier.FINAL));
         IMPLICIT_MODIFIERS.put(Arrays.asList(ElementKind.ANNOTATION_TYPE), EnumSet.of(Modifier.STATIC, Modifier.ABSTRACT));
         IMPLICIT_MODIFIERS.put(Arrays.asList(ElementKind.METHOD, ElementKind.ANNOTATION_TYPE), EnumSet.of(Modifier.ABSTRACT));
         IMPLICIT_MODIFIERS.put(Arrays.asList(ElementKind.METHOD, ElementKind.INTERFACE), EnumSet.of(Modifier.ABSTRACT));

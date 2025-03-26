@@ -21,23 +21,35 @@ package org.netbeans.modules.netbinox;
 import java.awt.GraphicsEnvironment;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Writer;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import junit.framework.Test;
 import org.netbeans.modules.netbinox.ContextClassLoaderTest.Compile;
 import org.netbeans.Module;
 import org.netbeans.ModuleManager;
 import org.netbeans.core.netigso.NetigsoUtil;
 import org.netbeans.core.startup.Main;
-import org.netbeans.junit.MemoryFilter;
+import org.netbeans.insane.scanner.CountingVisitor;
+import org.netbeans.insane.scanner.Filter;
+import org.netbeans.insane.scanner.ScannerUtils;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.launch.Framework;
+
+import static java.util.Arrays.asList;
 
 /**
  *
@@ -57,11 +69,11 @@ public class BundleURLConnectionTest extends NbTestCase {
         assertTrue("In headless mode", GraphicsEnvironment.isHeadless());
         NbTestSuite s = new NbTestSuite();
         s.addTest(new Compile("testCompileJAR"));
-        s.addTest(NbModuleSuite.create(
-            NbModuleSuite.emptyConfiguration().addTest(
-                BundleURLConnectionTest.class
-            ).honorAutoloadEager(true).failOnException(Level.WARNING)/*.failOnMessage(Level.WARNING)*/
-            .gui(false)
+        s.addTest(NbModuleSuite
+                .createConfiguration(BundleURLConnectionTest.class)
+                .honorAutoloadEager(true).failOnException(Level.WARNING)
+                /*.failOnMessage(Level.WARNING)*/
+                .gui(false).suite(
         ));
         return s;
     }
@@ -122,24 +134,85 @@ public class BundleURLConnectionTest extends NbTestCase {
         return r.readLine();
     }
     
-    private static void assertNoByteArray(URL u, final String text) {
-        final Object[] found = { null };
-        class MF implements MemoryFilter {
+    private static void assertNoByteArray(URL u, final String text) throws Exception {
+        final Object[] found = { null, null };
+        IdentityHashMap<Object,Map<Object,Void>> parents = new IdentityHashMap<>();
+        class F implements Filter {
             @Override
-            public boolean reject(Object obj) {
+            public boolean accept(Object obj, Object referredFrom, Field reference) {
+                parents.computeIfAbsent(referredFrom, obj2 -> new IdentityHashMap<Object,Void>());
+                parents.computeIfAbsent(obj, obj2 -> new IdentityHashMap<Object,Void>()).put(referredFrom, null);
                 if (obj instanceof byte[]) {
                     String s = new String((byte[])obj, StandardCharsets.UTF_8);
                     if (s.startsWith(text)) {
                         found[0] = s;
+                        found[1] = obj;
                     }
                 }
-                return false;
+                // Stop scanning once our target was found and don't traverse
+                // into loggers. It is assumed, that loggers do sane things.
+                return found[1] == null && !(obj instanceof LogRecord);
             }
         }
-        
-        assertSize("Find the array", Collections.singleton(u), 32000000, new MF());
-        assertEquals("The array should not be referenced by the URL", null, found[0]);
+        ScannerUtils.scan(new F(), new CountingVisitor(), asList(u), false);
+
+        // Enable when necessary
+        // dumpObjectsAsGraph(parents, found, u, "/tmp/test.tgf");
+
+        assertNull("The array should not be referenced by the URL", found[0]);
     }
-    
-    
+
+    /**
+     * Dump the supplied object graph as a TGF file
+     *
+     * @param objects
+     * @param found
+     * @param u
+     * @param outputPath
+     * @throws IOException
+     */
+    private static void dumpObjectsAsGraph(IdentityHashMap<Object, Map<Object, Void>> objects, final Object[] found, URL u, String outputPath) throws IOException {
+        List<Object> allObjects = new ArrayList<>(objects.keySet());
+        try (Writer w = new FileWriter(outputPath)) {
+            for (int i = 0; i < allObjects.size(); i++) {
+                Object source = allObjects.get(i);
+                String text2 = source.getClass().getName();
+                if (source == found[1]) {
+                    text2 = "[TARGET] " + text2;
+                }
+                if (source == u) {
+                    text2 = "[SOURCE] " + text2;
+                }
+                w.write(Integer.toString(i + 1));
+                w.write(" ");
+                w.write(Integer.toString(i + 1));
+                w.write("-");
+                w.write(text2.substring(0, Math.min(text2.length(), 100)));
+                w.write("\n");
+            }
+            w.write("#\n");
+            for (int i = 0; i < allObjects.size(); i++) {
+                Object source = allObjects.get(i);
+                for (Object target : objects.get(source).keySet()) {
+                    w.write((i + 1) + " " + (identityIndex(allObjects, target) + 1) + "\n");
+                }
+            }
+        }
+    }
+
+    /**
+     * Find index of target in supplied list based on identity
+     * @param list
+     * @param target
+     * @return index of {@code target} in {@code list} or -1 if not found
+     */
+    private static int identityIndex(List<Object> list, Object target) {
+        for(int i = 0; i < list.size(); i++) {
+            if(list.get(i) == target) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
 }

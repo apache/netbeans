@@ -36,11 +36,11 @@ import org.netbeans.spi.viewmodel.ModelEvent.TreeChanged;
 public abstract class ViewModelSupport {
 
     protected static final Object[] EMPTY_CHILDREN = new Object[]{};
-    
-    private CopyOnWriteArrayList<ModelListener> myListeners;
-    
+
+    private final CopyOnWriteArrayList<ModelListener> myListeners;
+
     protected ViewModelSupport() {
-        myListeners = new CopyOnWriteArrayList<ModelListener>();
+        myListeners = new CopyOnWriteArrayList<>();
     }
 
     public final void addModelListener(ModelListener l) {
@@ -72,8 +72,7 @@ public abstract class ViewModelSupport {
             fireChangeEvent( event );
         }
     }
-   
-    
+
     public static String toHTML(String text) {
         return toHTML(text, false, false, null);
     }
@@ -84,28 +83,39 @@ public abstract class ViewModelSupport {
         if (text.length() > 6 && text.substring(0, 6).equalsIgnoreCase("<html>")) {
             return text; // Already HTML
         }
-        StringBuffer sb = new StringBuffer ();
-        sb.append ("<html>");
-        if (bold) sb.append ("<b>");
-        if (italics) sb.append ("<i>");
-        if (color == null) {
-            color = UIManager.getColor("Table.foreground");
-            if (color == null) {
-                color = new JTable().getForeground();
+        StringBuilder sb = new StringBuilder();
+        sb.append("<html>");
+        if (bold) {
+            sb.append("<b>");
+        }
+        if (italics) {
+            sb.append("<i>");
+        }
+        Color fontColor = color;
+        if (fontColor == null) {
+            fontColor = UIManager.getColor("Table.foreground");
+            if (fontColor == null) {
+                fontColor = new JTable().getForeground();
             }
         }
-        sb.append ("<font color=");
-        sb.append (Integer.toHexString ((color.getRGB () & 0xffffff)));
-        sb.append (">");
-        text = text.replace ("&", "&amp;");
-        text = text.replace ("<", "&lt;");
-        text = text.replace (">", "&gt;");
-        sb.append (text);
-        sb.append ("</font>");
-        if (italics) sb.append ("</i>");
-        if (bold) sb.append ("</b>");
-        sb.append ("</html>");
+        sb.append("<font color=\"");
+        sb.append(String.format(
+                "#%02x%02x%02x",
+                fontColor.getRed(),
+                fontColor.getGreen(),
+                fontColor.getBlue()
+        ));
+        sb.append("\">");
+        sb.append(text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"));
+        sb.append("</font>");
+        if (italics) {
+            sb.append("</i>");
+        }
+        if (bold) {
+            sb.append("</b>");
+        }
+        sb.append("</html>");
         return sb.toString ();
     }
-    
+
 }

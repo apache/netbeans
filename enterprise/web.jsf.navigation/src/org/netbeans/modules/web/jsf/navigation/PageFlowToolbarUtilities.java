@@ -28,7 +28,6 @@
 package org.netbeans.modules.web.jsf.navigation;
 
 import java.awt.Dimension;
-import java.awt.Image;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
@@ -39,11 +38,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.EnumMap;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import org.openide.util.ImageUtilities;
@@ -63,7 +63,7 @@ public class PageFlowToolbarUtilities {
 
         SCOPE_FACESCONFIG, SCOPE_PROJECT, SCOPE_ALL_FACESCONFIG
     }
-    private static Map<Scope, String> scope2String = new HashMap<Scope, String>();
+    private static Map<Scope, String> scope2String = new EnumMap<>(Scope.class);
     private static Map<String, Scope> string2Scope = new HashMap<String, Scope>();
     private static final String TT_SCOPE = NbBundle.getMessage(PageFlowToolbarUtilities.class, "TT_Scope_DropDown");
     private static final String LBL_SCOPE_FACESCONFIG = NbBundle.getMessage(PageFlowToolbarUtilities.class, "LBL_Scope_FacesConfig");
@@ -193,7 +193,7 @@ public class PageFlowToolbarUtilities {
         scopeBox = comboBox;
         return comboBox;
     }
-    private static final Image LAYOUT_ICON = ImageUtilities.loadImage("org/netbeans/modules/web/jsf/navigation/resources/navigation.gif"); // NOI18N
+    private static final Icon LAYOUT_ICON = ImageUtilities.loadIcon("org/netbeans/modules/web/jsf/navigation/resources/navigation.gif"); // NOI18N
     private JButton layoutButton = null;
 
     /**
@@ -208,7 +208,7 @@ public class PageFlowToolbarUtilities {
             return layoutButton;
         }
 
-        layoutButton = new JButton(new ImageIcon(LAYOUT_ICON));
+        layoutButton = new JButton(LAYOUT_ICON);
         //Set the appropriate size of the combo box so it doesn't take up the whole page.
         //        Dimension prefSize = layoutButton.getPreferredSize();
         //        layoutButton.setMinimumSize(prefSize);

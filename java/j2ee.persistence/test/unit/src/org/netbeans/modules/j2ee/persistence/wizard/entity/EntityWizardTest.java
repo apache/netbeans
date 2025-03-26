@@ -34,6 +34,7 @@ public class EntityWizardTest extends SourceTestSupport{
         super(testName);
     }
     
+    @Override
     protected void setUp() throws Exception{
         super.setUp();
     }
@@ -45,12 +46,12 @@ public class EntityWizardTest extends SourceTestSupport{
     }
     
     public void testGenerateEntityFieldAccess() throws Exception {
-        FileObject result = EntityWizard.generateEntity(getPkgFolder(), "MyEntity", "Long", true);
+        FileObject result = EntityWizard.generateEntity(getPkgFolder(), "MyEntity", "Long", true, "javax");
         assertFile(result);
     }
     
     public void testGenerateEntityPropertyAccess() throws Exception {
-        FileObject result = EntityWizard.generateEntity(getPkgFolder(), "MyEntity", "java.lang.Long", false);
+        FileObject result = EntityWizard.generateEntity(getPkgFolder(), "MyEntity", "java.lang.Long", false, "javax");
         assertFile(result);
     }
 }

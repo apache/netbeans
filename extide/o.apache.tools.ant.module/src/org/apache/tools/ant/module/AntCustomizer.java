@@ -77,7 +77,7 @@ public class AntCustomizer extends JPanel implements ActionListener {
         cbVerbosity.addActionListener (this);
         classpathProperty = new PropertySupport.ReadWrite<NbClassPath>("classpath", NbClassPath.class, null, null) {
             public NbClassPath getValue() throws IllegalAccessException, InvocationTargetException {
-                return new NbClassPath(classpath.toArray(new File[classpath.size()]));
+                return new NbClassPath(classpath.toArray(new File[0]));
             }
             public void setValue(NbClassPath val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
                 String cp = val.getClassPath();

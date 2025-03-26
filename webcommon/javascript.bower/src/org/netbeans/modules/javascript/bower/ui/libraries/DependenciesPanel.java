@@ -173,7 +173,7 @@ public class DependenciesPanel extends javax.swing.JPanel {
      * Sorts the list of dependencies.
      */
     private void sortDependencies() {
-        Collections.sort(dependencies, new DependencyComparator());
+        dependencies.sort(new DependencyComparator());
     }
 
     /**

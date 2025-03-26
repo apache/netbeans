@@ -468,10 +468,10 @@ public class DefaultTabbedContainerUI extends TabbedContainerUI {
      * Create the layout manager that will manage the layout of the
      * TabbedContainer.  A TabbedContainer contains two components - the tabs
      * contentDisplayer, and the component contentDisplayer.
-     * <p/>
+     * <p>
      * The layout manager determines the position of the tabs relative to the
      * contentDisplayer component which displays the tab contents.
-     * <p/>
+     * <p>
      * The default implementation uses BorderLayout.  If you override this, you
      * should probably override <code>installDisplayer()</code> as well.
      */
@@ -534,8 +534,8 @@ public class DefaultTabbedContainerUI extends TabbedContainerUI {
      * Shows the passed component. <strong>This method does not communicate with
      * the data model in any way shape or form, it just moves the passed
      * component to the front.  It should only be called in response to an event
-     * from the data model or selection model.
-     * <p/>
+     * from the data model or selection model.</strong>
+     * <p>
      * If you override <code>createContentDisplayerLayoutModel()</code> to
      * provide your own layout manager to arrange the displayed component, you
      * need to override this to tell the layout (or do whatever is needed) to
@@ -624,7 +624,7 @@ public class DefaultTabbedContainerUI extends TabbedContainerUI {
      * cases such as removing the selected component appropriately, so if such a
      * model change happens, a selection change will be immediately forthcoming
      * to handle it.
-     * <p/>
+     * <p>
      * Note that it is important that this listener be added to the data model
      * <i>after</i> the DefaultSelectionModel has added its listener. It is
      * important to create the displayer component before adding this listener.
@@ -940,13 +940,15 @@ public class DefaultTabbedContainerUI extends TabbedContainerUI {
     protected class ContainerComponentListener extends ComponentAdapter {
         public ContainerComponentListener() {
         }
-        
+
+        @Override
         public void componentMoved (ComponentEvent e) {
             if (container.getType() == TabbedContainer.TYPE_SLIDING) {
                 updateOrientation();
             }
         }
-        
+
+        @Override
         public void componentResized (ComponentEvent e) {
             if (container.getType() == TabbedContainer.TYPE_SLIDING) {
                 updateOrientation();
@@ -1542,7 +1544,8 @@ public class DefaultTabbedContainerUI extends TabbedContainerUI {
                 changed = false;
                 return rect;
             }
-            
+
+            @Override
             public void paint(Graphics g) {
                 try {
                     if (USE_SWINGPAINTING) {
@@ -1679,7 +1682,8 @@ public class DefaultTabbedContainerUI extends TabbedContainerUI {
                 }
                 doLayout();
             }
-            
+
+            @Override
             public void doLayout() {
                 Rectangle r = getImageBounds();
                 comp.setBounds (r.x, r.y, r.width, r.height);

@@ -78,7 +78,7 @@ public final class Utils {
                 if (text == null || !text.startsWith("HTTP/")) { // NOI18N
                     return false; // not an http response
                 }
-                Map<String, List<String>> headerFileds = new HashMap();
+                Map<String, List<String>> headerFileds = new HashMap<>();
                 while ((text = in.readLine()) != null && text.length() > 0) {
                     int colon = text.indexOf(":");
                     if (colon <= 0) {
@@ -88,7 +88,7 @@ public final class Utils {
                     String value = text.substring(colon + 1).trim();
                     List<String> list = headerFileds.get(name);
                     if (list == null) {
-                        list = new ArrayList();
+                        list = new ArrayList<>();
                         headerFileds.put(name, list);
                     }
                     list.add(value);

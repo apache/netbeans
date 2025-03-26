@@ -1,0 +1,2 @@
+class |>MARK_OCCURRENCES:test2<| {
+export {|>MARK_OCCURRENCES:te^st2<|};

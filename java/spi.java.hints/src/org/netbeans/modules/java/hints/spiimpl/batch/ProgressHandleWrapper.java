@@ -180,11 +180,7 @@ public final class ProgressHandleWrapper {
 
     public static int[] prepareParts(int count) {
         int[] result = new int[count];
-
-        for (int cntr = 0; cntr < count; cntr++) {
-            result[cntr] = 1;
-        }
-
+        Arrays.fill(result, 1);
         return result;
     }
 
@@ -200,12 +196,7 @@ public final class ProgressHandleWrapper {
 
     }
 
-    private static final class ProgressHandleBasedProgressHandleAbstraction implements ProgressHandleAbstraction {
-        private final ProgressHandle delegate;
-        public ProgressHandleBasedProgressHandleAbstraction(ProgressHandle delegate) {
-            this.delegate = delegate;
-        }
-
+    private record ProgressHandleBasedProgressHandleAbstraction(ProgressHandle delegate) implements ProgressHandleAbstraction {
         @Override
         public void start(int totalWork) {
             delegate.start(totalWork);
@@ -227,12 +218,7 @@ public final class ProgressHandleWrapper {
         }
     }
 
-    private static final class AnalysisContextBasedProgressHandleAbstraction implements ProgressHandleAbstraction {
-        private final Context delegate;
-        AnalysisContextBasedProgressHandleAbstraction(Context delegate) {
-            this.delegate = delegate;
-        }
-
+    private record AnalysisContextBasedProgressHandleAbstraction(Context delegate) implements ProgressHandleAbstraction {
         @Override
         public void start(int totalWork) {
             delegate.start(totalWork);
@@ -254,12 +240,7 @@ public final class ProgressHandleWrapper {
         }
     }
 
-    private static final class ProgressHandleWrapperBasedProgressHandleAbstraction implements ProgressHandleAbstraction {
-        private final ProgressHandleWrapper delegate;
-        public ProgressHandleWrapperBasedProgressHandleAbstraction(ProgressHandleWrapper delegate) {
-            this.delegate = delegate;
-        }
-
+    private record ProgressHandleWrapperBasedProgressHandleAbstraction(ProgressHandleWrapper delegate) implements ProgressHandleAbstraction {
         @Override
         public void start(int totalWork) {
             delegate.startNextPart(totalWork);

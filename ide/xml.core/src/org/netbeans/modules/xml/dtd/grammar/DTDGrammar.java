@@ -100,7 +100,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
         if ("quot".startsWith(prefix)) list.add(new MyEntityReference("quot"));
         if ("amp".startsWith(prefix)) list.add(new MyEntityReference("amp"));
         
-        Collections.sort(list, new Comparator() {
+        list.sort(new Comparator() {
             public int compare(Object o1, Object o2) {
                 return ((MyEntityReference)o1).getNodeName().compareTo(((MyEntityReference)o2).getNodeName());
             }
@@ -166,14 +166,14 @@ class DTDGrammar implements ExtendedGrammarQuery {
      *        Every list member represents one possibility.
      */
     public Enumeration queryElements(HintContext ctx) {
-        if (elementDecls == null) return org.openide.util.Enumerations.empty();;
+        if (elementDecls == null) return org.openide.util.Enumerations.empty();
         
         Node node = ((Node)ctx).getParentNode();        
         Set<String> elements = null;
         
         if (node instanceof Element) {
             Element el = (Element) node;
-            if (el == null) return org.openide.util.Enumerations.empty();;
+            if (el == null) return org.openide.util.Enumerations.empty();
 
             // lazilly parse content model
             Object model = null;
@@ -195,7 +195,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
                 String prefix = ctx.getCurrentPrefix();
                 elements = new TreeSet<>();
                 while (en.hasMoreElements()) {
-                    String next = (String) en.nextElement();
+                    String next = en.nextElement();
                     if (next.startsWith(prefix)) {
                         elements.add(next);
                     }
@@ -211,7 +211,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
             return org.openide.util.Enumerations.empty();
         }
                 
-        if (elements == null) return org.openide.util.Enumerations.empty();;
+        if (elements == null) return org.openide.util.Enumerations.empty();
         String prefix = ctx.getCurrentPrefix();
         
         List<MyElement> list = new LinkedList<>();
@@ -232,7 +232,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
      * @return list of <code>CompletionResult</code>s (NOTATION_NODEs)
      */
     public Enumeration queryNotations(String prefix) {
-        if (notations == null) return org.openide.util.Enumerations.empty();;
+        if (notations == null) return org.openide.util.Enumerations.empty();
         
         List<MyNotation> list = new LinkedList<>();
         Iterator<String> it = notations.iterator();

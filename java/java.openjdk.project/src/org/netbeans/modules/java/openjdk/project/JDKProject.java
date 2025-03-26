@@ -197,10 +197,11 @@ public class JDKProject implements Project {
                 roots.clear();
                 roots.addAll(newRoots);
             }
-            String testRoots = moduleRepository.moduleTests(currentModule.name);
 
-            if (testRoots != null) {
-                addRoots(RootKind.TEST_SOURCES, Arrays.asList(Pair.<String, String>of(testRoots, null)));
+            List<String> testRoots = moduleRepository.moduleTests(currentModule.name);
+
+            for (String testRoot : testRoots) {
+                addRoots(RootKind.TEST_SOURCES, Arrays.asList(Pair.<String, String>of(testRoot, null)));
             }
 
         }
@@ -222,6 +223,7 @@ public class JDKProject implements Project {
                                     new Settings(this),
                                     new BinaryForSourceQueryImpl(this, cpp.getSourceCP()),
                                     CProjectConfigurationProviderImpl.create(this),
+                                    new UnitTestForSourceQueryImpl(this),
                                     this);
         this.lookup = LookupProviderSupport.createCompositeLookup(base, "Projects/" + PROJECT_KEY + "/Lookup");
         } catch (Throwable t) {

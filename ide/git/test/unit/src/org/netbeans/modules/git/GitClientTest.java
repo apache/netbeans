@@ -90,6 +90,7 @@ public class GitClientTest extends AbstractGitTestCase {
                 "checkoutRevision",
                 "cherryPick",
                 "clean",
+                "close",
                 "commit",
                 "copyAfter",
                 "createBranch",
@@ -213,6 +214,7 @@ public class GitClientTest extends AbstractGitTestCase {
                 "checkoutRevision",
                 "cherryPick",
                 "clean",
+                "close",
                 "commit",
                 "copyAfter",
                 "createBranch",
@@ -324,6 +326,7 @@ public class GitClientTest extends AbstractGitTestCase {
                 "checkoutRevision",
                 "cherryPick",
                 "clean",
+                "close",
                 "commit",
                 "copyAfter",
                 "createBranch",
@@ -505,6 +508,7 @@ public class GitClientTest extends AbstractGitTestCase {
                 "checkoutRevision",
                 "cherryPick",
                 "clean",
+                "close",
                 "commit",
                 "copyAfter",
                 "createBranch",
@@ -987,7 +991,7 @@ public class GitClientTest extends AbstractGitTestCase {
     private Method[] getClientMethods () {
         Set<Method> methods = new LinkedHashSet<Method>(Arrays.asList(org.netbeans.libs.git.GitClient.class.getMethods()));
         methods.removeAll(Arrays.asList(Object.class.getMethods()));
-        return methods.toArray(new Method[methods.size()]);
+        return methods.toArray(new Method[0]);
     }
 
     private static class InhibitListener implements FileListener {

@@ -109,7 +109,7 @@ public class MoveMembersRefactoringPlugin extends JavaRefactoringPlugin {
         }
         ClasspathInfo cpInfo;
         if (!handles.isEmpty()) {
-            cpInfo = RefactoringUtils.getClasspathInfoFor(handles.toArray(new TreePathHandle[handles.size()]));
+            cpInfo = RefactoringUtils.getClasspathInfoFor(handles.toArray(new TreePathHandle[0]));
         } else {
             cpInfo = JavaRefactoringUtils.getClasspathInfoFor((FileObject)properties.getPreSelectedMembers()[0].getFileObject());
         }
@@ -396,23 +396,23 @@ public class MoveMembersRefactoringPlugin extends JavaRefactoringPlugin {
                              */
                             switch (exType.getKind()) {
                                 case DOUBLE:
-                                    if (paramType.getKind().equals(TypeKind.FLOAT)) {
+                                    if (paramType.getKind() ==TypeKind.FLOAT) {
                                         break;
                                     }
                                 case FLOAT:
-                                    if (paramType.getKind().equals(TypeKind.LONG)) {
+                                    if (paramType.getKind() == TypeKind.LONG) {
                                         break;
                                     }
                                 case LONG:
-                                    if (paramType.getKind().equals(TypeKind.INT)) {
+                                    if (paramType.getKind() == TypeKind.INT) {
                                         break;
                                     }
                                 case INT:
-                                    if (paramType.getKind().equals(TypeKind.SHORT)) {
+                                    if (paramType.getKind() == TypeKind.SHORT) {
                                         break;
                                     }
                                 case SHORT:
-                                    if (paramType.getKind().equals(TypeKind.BYTE)) {
+                                    if (paramType.getKind() == TypeKind.BYTE) {
                                         break;
                                     }
                                 case BYTE:

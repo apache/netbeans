@@ -1174,7 +1174,7 @@ final class PackageViewChildren extends Children.Keys<String> implements FileCha
                 }
                 result.add(set);
             }
-            return result.toArray(new Node.PropertySet[result.size()]);
+            return result.toArray(new Node.PropertySet[0]);
         }
         
         private DataFolder getDataFolder() {

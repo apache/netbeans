@@ -267,6 +267,12 @@ final class CloseButtonTabbedPane extends JTabbedPane implements PropertyChangeL
         }
 
         super.setTitleAt(idx, title);
+        // Force update of the special "CloseButton" UI. It was observed, that
+        // after a change to an empty title changing to a title with content
+        // only works when the surrounding component is resized, forcing a
+        // revalidation of the terminal
+        getTabComponentAt(idx).revalidate();
+        getTabComponentAt(idx).repaint();
     }
 
     private Component findTabAt(int index) {
@@ -281,9 +287,9 @@ final class CloseButtonTabbedPane extends JTabbedPane implements PropertyChangeL
     }
 
     private boolean hideCloseButton(Component c) {
-        if (c!=null && c instanceof JComponent) {
+        if (c instanceof JComponent) {
             Object prop = ((JComponent) c).getClientProperty(TabbedPaneFactory.NO_CLOSE_BUTTON);
-            if (prop!=null && prop instanceof Boolean && (Boolean) prop) {
+            if (prop instanceof Boolean && (Boolean) prop) {
                 return true;
             }
         }

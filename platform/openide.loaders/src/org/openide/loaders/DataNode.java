@@ -209,7 +209,6 @@ public class DataNode extends AbstractNode {
      }
 
     /** Get the displayed icon for this node.
-     * A filesystem may {@link org.openide.filesystems.FileSystem#getStatus specially alter} this.
      * Subclassers overriding this method should consider the recommendations
      * in {@link DataObject#createNodeDelegate}.
      * @param type the icon type from {@link java.beans.BeanInfo}
@@ -232,7 +231,6 @@ public class DataNode extends AbstractNode {
     }
 
     /** Get the displayed icon for this node.
-    * A filesystem may {@link org.openide.filesystems.FileSystem#getStatus specially alter} this.
      * Subclassers overriding this method should consider the recommendations
      * in {@link DataObject#createNodeDelegate}.
     * @param type the icon type from {@link java.beans.BeanInfo}
@@ -1078,13 +1076,13 @@ public class DataNode extends AbstractNode {
             DataNode[] _refreshNameNodes, _refreshIconNodes;
             synchronized (refreshNameIconLock) {
                 if (refreshNameNodes != null) {
-                    _refreshNameNodes = refreshNameNodes.toArray(new DataNode[refreshNameNodes.size()]);
+                    _refreshNameNodes = refreshNameNodes.toArray(new DataNode[0]);
                     refreshNameNodes.clear();
                 } else {
                     _refreshNameNodes = new DataNode[0];
                 }
                 if (refreshIconNodes != null) {
-                    _refreshIconNodes = refreshIconNodes.toArray(new DataNode[refreshIconNodes.size()]);
+                    _refreshIconNodes = refreshIconNodes.toArray(new DataNode[0]);
                     refreshIconNodes.clear();
                 } else {
                     _refreshIconNodes = new DataNode[0];
@@ -1299,6 +1297,7 @@ public class DataNode extends AbstractNode {
                 }
             }
 
+            @Override
             public void remove() {
                 getIteratorDelegate().remove();
             }

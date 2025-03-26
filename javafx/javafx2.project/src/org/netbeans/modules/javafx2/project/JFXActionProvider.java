@@ -161,15 +161,8 @@ public class JFXActionProvider implements ActionProvider {
 
                     collectStartupExtenderArgs(props, command, context);
                     final Set<String> concealedProperties = collectAdditionalBuildProperties(props, command, context);
-                    ActionUtils.runTarget(
-                            buildFo,
-                            targets.toArray(new String[targets.size()]),
-                            props,
-                            concealedProperties).addTaskListener(new TaskListener() {
-                        @Override public void taskFinished(Task task) {
-                            listener.finished(((ExecutorTask) task).result() == 0);
-                        }
-                    });
+                    ActionUtils.runTarget(buildFo, targets.toArray(new String[0]), props, concealedProperties)
+                               .addTaskListener(task -> listener.finished(((ExecutorTask) task).result() == 0));
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
                     listener.finished(false);

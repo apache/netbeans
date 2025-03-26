@@ -26,9 +26,11 @@ public class DerbyOptionsTest extends BasicTestForImport {
     public DerbyOptionsTest(String testName) {
         super(testName, "org-netbeans-modules-derby-DerbyOptions.settings");
     }    
+    @Override
     public void testPreferencesNodePath() throws Exception {
         assertPreferencesNodePath("/org/netbeans/modules/derby");
     }    
+    @Override
     public void testPropertyNames() throws Exception {
         assertPropertyNames(new String[] {
             "systemHome",

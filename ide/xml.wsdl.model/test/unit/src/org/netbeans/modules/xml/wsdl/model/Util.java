@@ -32,6 +32,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Collection;
 import javax.swing.text.Document;
 import org.netbeans.modules.xml.schema.model.GlobalSimpleType;
@@ -153,7 +154,7 @@ public class Util {
     }
     
     public static File dumpToTempFile(Document doc) throws Exception {
-        File f = File.createTempFile("xsm", "xsd");
+        File f = Files.createTempFile("xsm", "xsd").toFile();
         dumpToFile(doc, f);
         return f;
     }

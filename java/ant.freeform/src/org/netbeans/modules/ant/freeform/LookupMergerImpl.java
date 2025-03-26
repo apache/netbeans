@@ -119,7 +119,7 @@ public class LookupMergerImpl implements LookupMerger<ActionProvider> {
                 actions.addAll(Arrays.asList(ap.getSupportedActions()));
             }
             LOG.log(Level.FINE, "delegates {0} report supported actions {1}", new Object[] {aps, actions});
-            return actions.toArray(new String[actions.size()]);
+            return actions.toArray(new String[0]);
         }
         
     }

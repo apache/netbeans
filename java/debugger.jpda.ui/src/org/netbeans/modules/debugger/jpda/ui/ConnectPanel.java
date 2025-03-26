@@ -381,7 +381,7 @@ public class ConnectPanel extends JPanel implements ActionListener, HelpCtx.Prov
             arguments.delete(arguments.length() - 2, arguments.length());
         }
         params.add(arguments);
-        record.setParameters(params.toArray(new Object[params.size()]));
+        record.setParameters(params.toArray(new Object[0]));
         USG_LOGGER.log(record);
     }
     

@@ -140,7 +140,7 @@ public class Manager extends Object {
             
             // instantiate the diff class
             clazz = Class.forName(diffImplName);
-            diffImpl = clazz.newInstance();
+            diffImpl = clazz.getDeclaredConstructor().newInstance();
 
             if (diffImpl instanceof Diff) {
                 impl = (Diff) diffImpl;

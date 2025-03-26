@@ -97,7 +97,7 @@ class EditorBufferSelectorPanel extends JPanel implements ListSelectionListener,
             }
         }
 
-        elementsList.setListData(elements.toArray(new EditorListElement[elements.size()]));
+        elementsList.setListData(elements.toArray(new EditorListElement[0]));
         elementsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         elementsList.addListSelectionListener(this);
         elementsList.setCellRenderer(new DefaultListCellRenderer() {

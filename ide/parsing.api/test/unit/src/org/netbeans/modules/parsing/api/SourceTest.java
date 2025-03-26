@@ -290,12 +290,7 @@ public class SourceTest extends ParsingTestBase {
         final CountDownLatch startLatch2 = new CountDownLatch(1);
 
         //Prerender
-        ParserManager.parse(Collections.singleton(source), new UserTask() {
-            @Override
-            public void run(ResultIterator resultIterator) throws Exception {
-                
-            }
-        });
+        ParserManager.parse(Collections.singleton(source), (result) -> {});
 
         new Thread() {
             public void run () {
@@ -315,10 +310,7 @@ public class SourceTest extends ParsingTestBase {
         synchronized(TaskProcessor.INTERNAL_LOCK) {
             startLatch1.countDown();
             startLatch2.await();
-            NbDocument.runAtomic(doc, new Runnable() {
-                public void run() {
-                }
-            });
+            NbDocument.runAtomic(doc, () -> {});
         }
     }
 

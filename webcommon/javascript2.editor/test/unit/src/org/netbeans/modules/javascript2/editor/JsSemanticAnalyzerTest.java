@@ -73,6 +73,10 @@ public class JsSemanticAnalyzerTest extends JsTestBase {
         checkSemantic("testfiles/parser/asyncFunctions/asyncFunctions7.js");
     }
 
+    public void testTopLevelAwait() throws Exception {
+        checkSemantic("testfiles/parser/topLevelAwait.js");
+    }
+
     public void testObjectAsParam() throws Exception {
         // TODO arguments can not be handled as global 
         checkSemantic("testfiles/model/objectAsParameter.js");
@@ -679,5 +683,9 @@ public class JsSemanticAnalyzerTest extends JsTestBase {
     
     public void testIssue231627() throws Exception {
         checkSemantic("testfiles/markoccurences/issue231627.js");
+    }
+
+    public void testAwait() throws Exception {
+        checkSemantic("testfiles/coloring/await.js");
     }
 }

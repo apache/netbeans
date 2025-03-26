@@ -47,7 +47,10 @@ public class JoinTableImpl implements JoinTable {
                 return result;
             }
         };
-        TypeMirror joinColumnType = helper.resolveType("javax.persistence.JoinColumn"); // NOI18N
+        TypeMirror joinColumnType = helper.resolveType("jakarta.persistence.JoinColumn"); // NOI18N
+        if (joinColumnType == null) {
+            joinColumnType = helper.resolveType("javax.persistence.JoinColumn"); // NOI18N
+        }
         parser.expectAnnotationArray("joinColumn", joinColumnType, joinColumnHandler, parser.defaultValue(Collections.emptyList())); // NOI18N
         parser.expectAnnotationArray("inverseJoinColumn", joinColumnType, joinColumnHandler, parser.defaultValue(Collections.emptyList())); // NOI18N
         parseResult = parser.parse(annotation);
@@ -98,7 +101,7 @@ public class JoinTableImpl implements JoinTable {
     public JoinColumn[] getJoinColumn() {
         @SuppressWarnings("unchecked") // can this be avoided?
         List<JoinColumn> result = parseResult.get("joinColumn", List.class); // NOI18N
-        return result.toArray(new JoinColumn[result.size()]);
+        return result.toArray(new JoinColumn[0]);
     }
 
     public int addJoinColumn(JoinColumn value) {
@@ -134,7 +137,7 @@ public class JoinTableImpl implements JoinTable {
     public JoinColumn[] getInverseJoinColumn() {
         @SuppressWarnings("unchecked") // can this be avoided?
         List<JoinColumn> result = parseResult.get("inverseJoinColumn", List.class); // NOI18N
-        return result.toArray(new JoinColumn[result.size()]);
+        return result.toArray(new JoinColumn[0]);
     }
 
     public int addInverseJoinColumn(JoinColumn value) {

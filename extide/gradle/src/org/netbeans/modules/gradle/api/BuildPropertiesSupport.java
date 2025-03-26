@@ -45,11 +45,11 @@ import org.netbeans.modules.gradle.loaders.BuildPropertiesImplementation;
  * then use
  * <ul>
  * <li>{@link BuildPropertiesSupport#findExtensionProperty(java.lang.String, java.lang.String)}, or
- * <li>{@link BuildPropertiesSupport#findTaskProperty(java.lang.String, java.lang.String)
+ * <li>{@link BuildPropertiesSupport#findTaskProperty(java.lang.String, java.lang.String)}
  * </ul>
  * <p>
  * There's a limited support for maps and lists. If a {@link Property} indicates a {@link BuildPropertiesSupport.PropertyKind#MAP} type, it is
- * possible to use {@link #keys} to enumerate keys of the map. For {@link PropertyKidn#LIST}s, {@link #items} enumerate items of the list.
+ * possible to use {@link #keys} to enumerate keys of the map. For {@link PropertyKind#LIST}s, {@link #items} enumerate items of the list.
  * @author sdedic
  * @since 2.28
  */
@@ -180,10 +180,12 @@ public final class BuildPropertiesSupport {
     }
     
     /**
-     * Returns keys of map-style properties. Works only for properties of {@link PropertyKind#MAP}.
-     * @param owner
-     * @return 
+     * Returns keys of map-style properties. Works only for properties of {@link PropertyKind#MAP} or
+     * {@link PropertyKind#STRUCTURE}. May return an empty list, if keys cannot be enumerated or represented as Strings.
+     * @param owner the property
+     * @return list of keys, possibly empty. Does not return null
      */
+    @NonNull
     public Collection<String> keys(Property owner) {
         if ((owner.getKind() != PropertyKind.STRUCTURE) && (owner.getKind() != PropertyKind.MAP)) {
             return Collections.emptyList();
@@ -204,8 +206,9 @@ public final class BuildPropertiesSupport {
      * @param base the map property
      * @param key map item's key
      * @param path optional path within an item to the property.
-     * @return map item, or a property of a map item.
+     * @return map item, or a property of a map item. Null, if the item can not be found.
      */
+    @CheckForNull
     public Property get(Property base, String key, String path) {
         if ((base.getKind() != PropertyKind.MAP)) {
             return null;

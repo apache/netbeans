@@ -72,7 +72,7 @@ public class SourceGroupSupport {
                 result.add(sourceGroups[i]);
             }
         }
-        return result.toArray(new SourceGroup[result.size()]);
+        return result.toArray(new SourceGroup[0]);
     }
 
     public static boolean isValidPackageName(String packageName) {

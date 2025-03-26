@@ -581,6 +581,11 @@
                         <code-name-base>org.netbeans.modules.java.editor</code-name-base>
                     </test-dependency>
                     <test-dependency>
+                        <code-name-base>org.netbeans.modules.java.j2seplatform</code-name-base>
+                        <recursive/>
+                        <compile-dependency/>
+                    </test-dependency>
+                    <test-dependency>
                         <code-name-base>org.netbeans.modules.java.source</code-name-base>
                         <recursive/>
                         <compile-dependency/>
@@ -594,6 +599,9 @@
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
+                        <code-name-base>org.netbeans.modules.parsing.nb</code-name-base>
+                    </test-dependency>
+                    <test-dependency>
                         <code-name-base>org.netbeans.modules.projectapi.nb</code-name-base>
                     </test-dependency>
                     <test-dependency>
@@ -603,17 +611,14 @@
                         <code-name-base>org.openide.filesystems</code-name-base>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.openide.util.ui</code-name-base>
-                        <compile-dependency/>
-                        <test/>
-                    </test-dependency>
-                    <test-dependency>
                         <code-name-base>org.openide.util.lookup</code-name-base>
                         <compile-dependency/>
                         <test/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.netbeans.modules.parsing.nb</code-name-base>
+                        <code-name-base>org.openide.util.ui</code-name-base>
+                        <compile-dependency/>
+                        <test/>
                     </test-dependency>
                 </test-type>
             </test-dependencies>

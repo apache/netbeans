@@ -41,7 +41,7 @@
     <codetemplate abbreviation="rep" xml:space="preserve">
         <code><![CDATA[<repository>
     <id>${ID newVarName default="repo"}</id>
-    <url>${URL newVarName default="http://"}</url>${cursor}
+    <url>${URL newVarName default="https://"}</url>${cursor}
 </repository>]]></code>
     </codetemplate>
     <codetemplate abbreviation="exec" xml:space="preserve">

@@ -26,6 +26,13 @@
             <code-name-base>org.netbeans.modules.websvc.restlib</code-name-base>
             <module-dependencies>
                 <dependency>
+                    <code-name-base>org.netbeans.libs.jackson</code-name-base>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>2.18</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.j2ee.eclipselink</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -44,30 +51,19 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.libs.jackson</code-name-base>
+                    <code-name-base>org.netbeans.libs.javax.inject</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
                     <run-dependency>
                         <release-version>2</release-version>
-                        <specification-version>2.12.0</specification-version>
+                        <specification-version>2.61</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>
             <public-packages>
-                <package>javax.ws.rs</package>
-                <package>javax.ws.rs.client</package>
-                <package>javax.ws.rs.container</package>
-                <package>javax.ws.rs.core</package>
-                <package>javax.ws.rs.ext</package>
-                <package>javax.ws.rs.sse</package>
-                <package>org.glassfish.jersey.client</package>
-                <package>org.glassfish.jersey.client.authentication</package>
-                <package>org.glassfish.jersey.client.filter</package>
-                <package>org.glassfish.jersey.client.http</package>
-                <package>org.glassfish.jersey.client.inject</package>
-                <package>org.glassfish.jersey.client.spi</package>
-                <package>javax.annotation</package>
-                <package>javax.annotation.security</package>
-                <package>javax.annotation.sql</package>
-                <package>javax.inject</package>
+                <package>jakarta.annotation</package>
+                <package>jakarta.annotation.security</package>
+                <package>jakarta.annotation.sql</package>
                 <package>javax.persistence</package>
                 <package>javax.persistence.criteria</package>
                 <package>javax.persistence.metamodel</package>
@@ -81,6 +77,12 @@
                 <package>javax.validation.metadata</package>
                 <package>javax.validation.spi</package>
                 <package>javax.validation.valueextraction</package>
+                <package>javax.ws.rs</package>
+                <package>javax.ws.rs.client</package>
+                <package>javax.ws.rs.container</package>
+                <package>javax.ws.rs.core</package>
+                <package>javax.ws.rs.ext</package>
+                <package>javax.ws.rs.sse</package>
                 <package>org.glassfish.hk2.api</package>
                 <package>org.glassfish.hk2.api.messaging</package>
                 <package>org.glassfish.hk2.extension</package>
@@ -95,10 +97,16 @@
                 <package>org.glassfish.hk2.utilities.reflection</package>
                 <package>org.glassfish.hk2.utilities.reflection.internal</package>
                 <package>org.glassfish.jersey</package>
+                <package>org.glassfish.jersey.client</package>
+                <package>org.glassfish.jersey.client.authentication</package>
+                <package>org.glassfish.jersey.client.filter</package>
+                <package>org.glassfish.jersey.client.http</package>
+                <package>org.glassfish.jersey.client.inject</package>
                 <package>org.glassfish.jersey.client.internal</package>
                 <package>org.glassfish.jersey.client.internal.inject</package>
                 <package>org.glassfish.jersey.client.internal.jdkconnector</package>
                 <package>org.glassfish.jersey.client.internal.routing</package>
+                <package>org.glassfish.jersey.client.spi</package>
                 <package>org.glassfish.jersey.inject.hk2</package>
                 <package>org.glassfish.jersey.internal</package>
                 <package>org.glassfish.jersey.internal.config</package>
@@ -111,6 +119,14 @@
                 <package>org.glassfish.jersey.internal.spi</package>
                 <package>org.glassfish.jersey.internal.util</package>
                 <package>org.glassfish.jersey.internal.util.collection</package>
+                <package>org.glassfish.jersey.jackson</package>
+                <package>org.glassfish.jersey.jackson.internal</package>
+                <package>org.glassfish.jersey.jackson.internal.jackson.jaxrs.annotation</package>
+                <package>org.glassfish.jersey.jackson.internal.jackson.jaxrs.base</package>
+                <package>org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg</package>
+                <package>org.glassfish.jersey.jackson.internal.jackson.jaxrs.json</package>
+                <package>org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.annotation</package>
+                <package>org.glassfish.jersey.jackson.internal.jackson.jaxrs.util</package>
                 <package>org.glassfish.jersey.logging</package>
                 <package>org.glassfish.jersey.message</package>
                 <package>org.glassfish.jersey.message.internal</package>
@@ -163,8 +179,16 @@
                 <package>org.osgi.util.tracker</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/jersey2/jakarta.annotation-api-1.3.5.jar</runtime-relative-path>
-                <binary-origin>external/jakarta.annotation-api-1.3.5.jar</binary-origin>
+                <runtime-relative-path>ext/javax.annotation-api-1.3.2.jar</runtime-relative-path>
+                <binary-origin>external/javax.annotation-api-1.3.2.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jersey2/jakarta.activation-api-1.2.1.jar</runtime-relative-path>
+                <binary-origin>external/jakarta.activation-api-1.2.1.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jersey2/jakarta.annotation-api-2.1.1.jar</runtime-relative-path>
+                <binary-origin>external/jakarta.annotation-api-2.1.1.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/jersey2/hk2-locator-2.6.1.jar</runtime-relative-path>
@@ -187,40 +211,44 @@
                 <binary-origin>external/hk2-api-2.6.1.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jersey2/jersey-media-moxy-2.34.jar</runtime-relative-path>
-                <binary-origin>external/jersey-media-moxy-2.34.jar</binary-origin>
+                <runtime-relative-path>ext/jersey2/jersey-apache-connector-2.35.jar</runtime-relative-path>
+                <binary-origin>external/jersey-apache-connector-2.35.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jersey2/jersey-container-servlet-core-2.34.jar</runtime-relative-path>
-                <binary-origin>external/jersey-container-servlet-core-2.34.jar</binary-origin>
+                <runtime-relative-path>ext/jersey2/jersey-media-moxy-2.35.jar</runtime-relative-path>
+                <binary-origin>external/jersey-media-moxy-2.35.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jersey2/jersey-media-json-jackson-2.35.jar</runtime-relative-path>
+                <binary-origin>external/jersey-media-json-jackson-2.35.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jersey2/jersey-container-servlet-core-2.35.jar</runtime-relative-path>
+                <binary-origin>external/jersey-container-servlet-core-2.35.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/jersey2/jakarta.validation-api-2.0.2.jar</runtime-relative-path>
                 <binary-origin>external/jakarta.validation-api-2.0.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jersey2/jakarta.inject-2.6.1.jar</runtime-relative-path>
-                <binary-origin>external/jakarta.inject-2.6.1.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
                 <runtime-relative-path>ext/jersey2/hk2-utils-2.6.1.jar</runtime-relative-path>
                 <binary-origin>external/hk2-utils-2.6.1.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jersey2/jersey-hk2-2.34.jar</runtime-relative-path>
-                <binary-origin>external/jersey-hk2-2.34.jar</binary-origin>
+                <runtime-relative-path>ext/jersey2/jersey-hk2-2.35.jar</runtime-relative-path>
+                <binary-origin>external/jersey-hk2-2.35.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jersey2/jersey-client-2.34.jar</runtime-relative-path>
-                <binary-origin>external/jersey-client-2.34.jar</binary-origin>
+                <runtime-relative-path>ext/jersey2/jersey-client-2.35.jar</runtime-relative-path>
+                <binary-origin>external/jersey-client-2.35.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jersey2/jersey-common-2.34.jar</runtime-relative-path>
-                <binary-origin>external/jersey-common-2.34.jar</binary-origin>
+                <runtime-relative-path>ext/jersey2/jersey-common-2.35.jar</runtime-relative-path>
+                <binary-origin>external/jersey-common-2.35.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jersey2/jersey-entity-filtering-2.34.jar</runtime-relative-path>
-                <binary-origin>external/jersey-entity-filtering-2.34.jar</binary-origin>
+                <runtime-relative-path>ext/jersey2/jersey-entity-filtering-2.35.jar</runtime-relative-path>
+                <binary-origin>external/jersey-entity-filtering-2.35.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/jaxrs-2.1/jakarta.ws.rs-api-2.1.6.jar</runtime-relative-path>

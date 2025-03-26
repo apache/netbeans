@@ -899,7 +899,7 @@ public abstract class FolderInstance extends Task implements InstanceCookie { //
                 out.add (t);
             }
         }
-        waitFor = out.toArray (new Task[out.size ()]);
+        waitFor = out.toArray (new Task[0]);
     }
     
     /* ----------------------------------------------------------------------------- */

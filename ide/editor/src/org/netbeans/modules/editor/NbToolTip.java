@@ -131,7 +131,7 @@ public class NbToolTip extends FileChangeAdapter {
             if (res.contains(null)) {
                 throw new IllegalStateException("Lookup returning null instance: " + l); // NOI18N
             }
-            annos = res.toArray(new Annotation[res.size()]);
+            annos = res.toArray(new Annotation[0]);
             synchronized (NbToolTip.class) {
                 tipAnnotations = annos;
             }

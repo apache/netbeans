@@ -21,7 +21,6 @@
  */
 package org.netbeans.modules.java.hints.jdk;
 
-import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
@@ -29,7 +28,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import javax.tools.Diagnostic;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.WorkingCopy;
@@ -56,7 +54,7 @@ import org.openide.util.NbBundle;
 public class ConvertToLambda {
 
     public static final String ID = "Javac_canUseLambda"; //NOI18N
-    public static final Set<String> CODES = new HashSet<String>(Arrays.asList("compiler.warn.potential.lambda.found")); //NOI18N
+    public static final Set<String> CODES = new HashSet<>(Arrays.asList("compiler.warn.potential.lambda.found")); //NOI18N
 
     static final boolean DEF_PREFER_MEMBER_REFERENCES = true;
 
@@ -68,7 +66,6 @@ public class ConvertToLambda {
     })
     @NbBundle.Messages("MSG_AnonymousConvertibleToLambda=This anonymous inner class creation can be turned into a lambda expression.")
     public static ErrorDescription computeAnnonymousToLambda(HintContext ctx) {
-        ClassTree clazz = ((NewClassTree) ctx.getPath().getLeaf()).getClassBody();
         ConvertToLambdaPreconditionChecker preconditionChecker =
                 new ConvertToLambdaPreconditionChecker(ctx.getPath(), ctx.getInfo());
         if (!preconditionChecker.passesFatalPreconditions()) {

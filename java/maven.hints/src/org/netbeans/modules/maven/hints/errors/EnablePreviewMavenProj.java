@@ -18,27 +18,21 @@
  */
 package org.netbeans.modules.maven.hints.errors;
 
-import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import javax.lang.model.SourceVersion;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.project.FileOwnerQuery;
-import org.netbeans.modules.java.hints.spi.ErrorRule;
-import org.netbeans.spi.editor.hints.ChangeInfo;
-import org.netbeans.spi.editor.hints.Fix;
 import org.openide.filesystems.FileObject;
-import org.openide.util.NbBundle;
 import org.openide.util.Parameters;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.java.hints.spi.preview.PreviewEnabler;
 import org.netbeans.modules.maven.api.customizer.ModelHandle2;
 import org.netbeans.modules.maven.execute.model.NetbeansActionMapping;
 import org.netbeans.modules.maven.model.ModelOperation;
@@ -49,9 +43,13 @@ import org.netbeans.modules.maven.model.pom.POMExtensibilityElement;
 import org.netbeans.modules.maven.model.pom.POMModel;
 import org.netbeans.modules.maven.model.pom.POMQName;
 import org.netbeans.modules.maven.model.pom.Plugin;
+import org.netbeans.modules.maven.model.pom.PluginContainer;
+import org.netbeans.modules.maven.model.pom.Properties;
 import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.ProjectConfigurationProvider;
-import org.openide.filesystems.FileSystem;
+import org.openide.modules.SpecificationVersion;
+import org.openide.util.Pair;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Handle error rule "compiler.err.preview.feature.disabled.plural" and provide
@@ -59,136 +57,141 @@ import org.openide.filesystems.FileSystem;
  *
  * @author arusinha
  */
-public class EnablePreviewMavenProj implements ErrorRule<Void> {
+public class EnablePreviewMavenProj implements PreviewEnabler {
 
-    private static final Set<String> ERROR_CODES = new HashSet<String>(Arrays.asList(
-            "compiler.err.preview.feature.disabled",
-            "compiler.err.preview.feature.disabled.plural")); // NOI18N
     private static final String ENABLE_PREVIEW_FLAG = "--enable-preview";   // NOI18N
 
-    @Override
-    public Set<String> getCodes() {
-        return Collections.unmodifiableSet(ERROR_CODES);
+    private final Project prj;
+
+    private EnablePreviewMavenProj(@NonNull final Project prj) {
+        Parameters.notNull("prj", prj); //NOI18N
+        this.prj = prj;
     }
 
     @Override
-    @NonNull
-    public List<Fix> run(CompilationInfo compilationInfo, String diagnosticKey, int offset, TreePath treePath, Data<Void> data) {
+    public void enablePreview(String newSourceLevel) throws Exception {
+        final FileObject pom = prj.getProjectDirectory().getFileObject("pom.xml"); // NOI18N
+        pom.getFileSystem().runAtomicAction(() -> {
+            List<ModelOperation<POMModel>> operations = new ArrayList<>();
+            operations.add(new AddMvnCompilerPluginForEnablePreview(newSourceLevel));
+            org.netbeans.modules.maven.model.Utilities.performPOMModelOperations(pom, operations);
+        });
 
-        if (SourceVersion.latest() != compilationInfo.getSourceVersion()) {
-            return Collections.<Fix>emptyList();
-        }
+        ProjectConfiguration cfg = prj.getLookup().lookup(ProjectConfigurationProvider.class).getActiveConfiguration();
 
-        Fix fix = null;
-        final FileObject file = compilationInfo.getFileObject();
-        if (file != null) {
-            final Project prj = FileOwnerQuery.getOwner(file);
-            if (isMavenProject(prj)) {
-                fix = new EnablePreviewMavenProj.ResolveMvnFix(prj);
-            } else {
-                fix = null;
+        ActionConfig[] actions = new ActionConfig[] {
+            ActionConfig.runAction("run"), // NOI18N
+            ActionConfig.runAction("debug"), // NOI18N
+            ActionConfig.runAction("profile"), // NOI18N
+            ActionConfig.runAction("run.single.main"), // NOI18N
+            ActionConfig.runAction("debug.single.main"), // NOI18N
+            ActionConfig.runAction("profile.single.main"), // NOI18N
+            ActionConfig.testAction("test"), // NOI18N
+            ActionConfig.testAction("test.single"), // NOI18N
+            ActionConfig.testAction("debug.test.single"), // NOI18N
+            ActionConfig.testAction("profile.test.single"), // NOI18N
+        };
+        for (ActionConfig action : actions) {
+            NetbeansActionMapping mapp = ModelHandle2.getMapping(action.actionName, prj, cfg);
+            Map<String, String> properties = mapp.getProperties();
+            String existingValue = properties.getOrDefault(action.propertyName, "");
+
+            if (!existingValue.contains(ENABLE_PREVIEW_FLAG)) {
+                properties.put(action.propertyName, ENABLE_PREVIEW_FLAG + (existingValue .isEmpty() ? "" : " ") + existingValue);
+                ModelHandle2.putMapping(mapp, prj, cfg);
             }
 
         }
-        return (fix != null) ? Collections.<Fix>singletonList(fix) : Collections.<Fix>emptyList();
     }
 
     @Override
-    public String getId() {
-        return EnablePreviewMavenProj.class.getName();
-    }
-
-    @Override
-    public String getDisplayName() {
-        return NbBundle.getMessage(EnablePreviewMavenProj.class, "FIX_EnablePreviewFeature"); // NOI18N
-    }
-
-    public String getDescription() {
-        return NbBundle.getMessage(EnablePreviewMavenProj.class, "FIX_EnablePreviewFeature"); // NOI18N
-    }
-
-    @Override
-    public void cancel() {
-    }
-
-    private static final class ResolveMvnFix implements Fix {
-
-        private final Project prj;
-
-        ResolveMvnFix(@NonNull final Project prj) {
-            Parameters.notNull("prj", prj); //NOI18N
-            this.prj = prj;
+    public boolean canChangeSourceLevel() {
+        CheckCanChangeSourceLevel canChange = new CheckCanChangeSourceLevel();
+        try {
+            final FileObject pom = prj.getProjectDirectory().getFileObject("pom.xml"); // NOI18N
+            pom.getFileSystem().runAtomicAction(() -> {
+                List<ModelOperation<POMModel>> operations = Collections.singletonList(canChange);
+                org.netbeans.modules.maven.model.Utilities.performPOMModelOperations(pom, operations);
+            });
+        } catch (IOException ex) {
+            LOG.log(Level.FINE, null, ex);
         }
+        return canChange.canChangeSourceLevel;
+    }
+    private static final Logger LOG = Logger.getLogger(EnablePreviewMavenProj.class.getName());
 
-        @Override
-        public String getText() {
-            return NbBundle.getMessage(EnablePreviewMavenProj.class, "FIX_EnablePreviewFeature");
+    private static final class ActionConfig {
+        public final String actionName;
+        public final String propertyName;
+
+        public ActionConfig(String actionName, String propertyName) {
+            this.actionName = actionName;
+            this.propertyName = propertyName;
         }
+        public static ActionConfig runAction(String actionName) {
+            return new ActionConfig(actionName, "exec.args");
+        }
+        public static ActionConfig testAction(String actionName) {
+            return new ActionConfig(actionName, "argLine");
+        }
+    }
 
-        @Override
-        public ChangeInfo implement() throws Exception {
+    private static class BaseMvnCompilerPluginForEnablePreview {
 
-            try {
+        protected static final String MAVEN_COMPILER_GROUP_ID = "org.apache.maven.plugins"; // NOI18N
+        protected static final String MAVEN_COMPILER_ARTIFACT_ID = "maven-compiler-plugin"; // NOI18N
+        protected static final String COMPILER_ID_PROPERTY = "compilerId"; // NOI18N
+        protected static final String RELEASE = "release"; // NOI18N
+        protected static final String RELEASE_PROPERTY = "maven.compiler.release"; // NOI18N
+        protected static final String SOURCE = "source"; // NOI18N
+        protected static final String SOURCE_PROPERTY = "maven.compiler.source"; // NOI18N
+        protected static final String TARGET = "target"; // NOI18N
+        protected static final String TARGET_PROPERTY = "maven.compiler.target"; // NOI18N
+        protected static final String COMPILER_ARG = "compilerArgs"; // NOI18N
+        protected static final String MAVEN_COMPILER_VERSION = "3.11.0"; // NOI18N
+        protected static final String ARG = "arg";// NOI18N
 
-                final FileObject pom = prj.getProjectDirectory().getFileObject("pom.xml"); // NOI18N
-                pom.getFileSystem().runAtomicAction(new FileSystem.AtomicAction() {
-                    @Override
-                    public void run() throws IOException {
-                        List<ModelOperation<POMModel>> operations = new ArrayList<ModelOperation<POMModel>>();
-                        operations.add(new AddMvnCompilerPluginForEnablePreview());
-                        org.netbeans.modules.maven.model.Utilities.performPOMModelOperations(pom, operations);
+        protected Pair<PluginContainer, Plugin> searchMavenCompilerPlugin(final Build build) {
+            for (PluginContainer container : new PluginContainer[] {build.getPluginManagement(), build}) {
+                if (container == null) {
+                    continue;
+                }
+
+                List<Plugin> plugins = container.getPlugins();
+
+                if (plugins == null) {
+                    continue;
+                }
+
+                for (Plugin plugin : plugins) {
+                    if ((plugin.getGroupId() == null || MAVEN_COMPILER_GROUP_ID.equals(plugin.getGroupId()))
+                        && MAVEN_COMPILER_ARTIFACT_ID.equals(plugin.getArtifactId())) {
+                        return Pair.of(container, plugin);
                     }
-                });
-
-            } catch (IOException ex) {
+                }
             }
-            ProjectConfiguration cfg = prj.getLookup().lookup(ProjectConfigurationProvider.class).getActiveConfiguration();
+            return null;
+        }
 
-            for (String action : new String[]{"run", "debug", "profile"}) { // NOI18N
-
-                NetbeansActionMapping mapp = ModelHandle2.getMapping(action, prj, cfg);
-                Map<String, String> properties = mapp.getProperties();
-
-                for (Entry<String, String> entry : properties.entrySet()) {
-                    if (entry.getKey().equals("exec.args")) { // NOI18Nl
-                        if (!entry.getValue().contains(ENABLE_PREVIEW_FLAG + " ")) {
-                            properties.put(entry.getKey(), ENABLE_PREVIEW_FLAG + " " + entry.getValue());
-                        }
-                    }
+        protected POMExtensibilityElement findElement(Configuration configuration, String requiredName) {
+            for (POMExtensibilityElement element : configuration.getConfigurationElements()) {
+                if (element.getQName().getLocalPart().equals(requiredName)) {
+                    return element;
                 }
-                if (mapp != null) {
-                    ModelHandle2.putMapping(mapp, prj, cfg);
-                }
-
             }
 
             return null;
         }
     }
 
-    private boolean isMavenProject(Project prj) {
-        if (prj == null) {
-            return false;
-        }
-        FileObject prjDir = prj.getProjectDirectory();
-        if (prjDir == null) {
-            return false;
-        }
+    private static class AddMvnCompilerPluginForEnablePreview extends BaseMvnCompilerPluginForEnablePreview implements ModelOperation<POMModel> {
 
-        FileObject pom = prjDir.getFileObject("pom.xml");
-        return (pom != null) && pom.isValid();
-
-    }
-
-    private static class AddMvnCompilerPluginForEnablePreview implements ModelOperation<POMModel> {
-
-        private static final String MAVEN_COMPILER_GROUP_ID = "org.apache.maven.plugins"; // NOI18N
-        private static final String MAVEN_COMPILER_ARTIFACT_ID = "maven-compiler-plugin"; // NOI18N
-        private static final String COMPILER_ID_PROPERTY = "compilerId"; // NOI18N
-        private static final String COMPILER_ARG = "compilerArgs"; // NOI18N
-        private static final String MAVEN_COMPILER_VERSION = "3.3"; // NOI18N
-        private static final String ARG = "arg";// NOI18N
+        private final String newSourceLevel;
         private POMComponentFactory factory;
+
+        public AddMvnCompilerPluginForEnablePreview(String newSourceLevel) {
+            this.newSourceLevel = newSourceLevel;
+        }
 
         @Override
         public void performOperation(final POMModel model) {
@@ -199,30 +202,18 @@ public class EnablePreviewMavenProj implements ErrorRule<Void> {
                 build = factory.createBuild();
                 proj.setBuild(build);
             }
+            
+            Pair<PluginContainer, Plugin> containerAndPlugin = searchMavenCompilerPlugin(build);
 
-            Plugin oldPlugin = searchMavenCompilerPlugin(build);
-            if (oldPlugin == null) {
+            if (containerAndPlugin == null) {
                 build.addPlugin(createMavenCompilerPlugin());
             } else {
-
+                PluginContainer container = containerAndPlugin.first();
+                Plugin oldPlugin = containerAndPlugin.second();
                 Plugin newPlugin = updateMavenCompilerPlugin(oldPlugin);
-
-                build.removePlugin(oldPlugin);
-                build.addPlugin(newPlugin);
+                container.removePlugin(oldPlugin);
+                container.addPlugin(newPlugin);
             }
-        }
-
-        private Plugin searchMavenCompilerPlugin(final Build build) {
-            List<Plugin> plugins = build.getPlugins();
-            if (plugins != null) {
-                for (Plugin plugin : plugins) {
-                    if (MAVEN_COMPILER_GROUP_ID.equals(plugin.getGroupId())
-                            && MAVEN_COMPILER_ARTIFACT_ID.equals(plugin.getArtifactId())) {
-                        return plugin;
-                    }
-                }
-            }
-            return null;
         }
 
         private Plugin createMavenCompilerPlugin() {
@@ -230,12 +221,7 @@ public class EnablePreviewMavenProj implements ErrorRule<Void> {
             plugin.setGroupId(MAVEN_COMPILER_GROUP_ID);
             plugin.setArtifactId(MAVEN_COMPILER_ARTIFACT_ID);
             plugin.setVersion(MAVEN_COMPILER_VERSION);
-            plugin.setConfiguration(createConfiguration());
-            Configuration config = factory.createConfiguration();
-            POMExtensibilityElement compilerArgs = factory.createPOMExtensibilityElement(POMQName.createQName(COMPILER_ARG));
-            compilerArgs.setChildElementText(COMPILER_ID_PROPERTY, ENABLE_PREVIEW_FLAG, POMQName.createQName(ARG));
-            config.addExtensibilityElement(compilerArgs);
-            plugin.setConfiguration(config);
+            plugin.setConfiguration(updateMavenCompilerPluginConfiguration(createConfiguration(), MAVEN_COMPILER_VERSION));
             return plugin;
         }
 
@@ -245,47 +231,171 @@ public class EnablePreviewMavenProj implements ErrorRule<Void> {
         }
 
         private Plugin updateMavenCompilerPlugin(final Plugin oldPlugin) {
-
             Configuration currenConfig = oldPlugin.getConfiguration();
-            Configuration newConfiguration = createConfiguration();
-
-            boolean isCompilerArgsElementPresent = false;
-            if (currenConfig != null) {
-                for (POMExtensibilityElement element : currenConfig.getConfigurationElements()) {
-                    POMExtensibilityElement newElement = factory.createPOMExtensibilityElement(element.getQName());
-                    String elementText = element.getElementText();
-                    if (elementText.trim().length() > 0) {
-                        newElement.setElementText(element.getElementText());
-                    }
-                    if (newElement.getQName().getLocalPart().equals(COMPILER_ARG)) {
-                        isCompilerArgsElementPresent = true;
-                        POMExtensibilityElement compilerArgs = factory.createPOMExtensibilityElement(POMQName.createQName(COMPILER_ARG));
-                        newElement.setChildElementText(COMPILER_ID_PROPERTY, ENABLE_PREVIEW_FLAG, POMQName.createQName(ARG));
-                    }
-                    for (POMExtensibilityElement childElement : element.getAnyElements()) {
-
-                        POMExtensibilityElement newChildElement = factory.createPOMExtensibilityElement(childElement.getQName());
-
-                        newChildElement.setElementText(childElement.getElementText());
-                        newElement.addExtensibilityElement(newChildElement);
-                    }
-
-                    newConfiguration.addExtensibilityElement(newElement);
-
-                }
-                if (!isCompilerArgsElementPresent) {
-                    POMExtensibilityElement compilerArgs = factory.createPOMExtensibilityElement(POMQName.createQName(COMPILER_ARG));
-                    compilerArgs.setChildElementText(COMPILER_ID_PROPERTY, ENABLE_PREVIEW_FLAG, POMQName.createQName(ARG));
-                    newConfiguration.addExtensibilityElement(compilerArgs);
-                }
-            }
-
             Plugin newPlugin = factory.createPlugin();
             newPlugin.setGroupId(oldPlugin.getGroupId());
             newPlugin.setArtifactId(oldPlugin.getArtifactId());
             newPlugin.setVersion(oldPlugin.getVersion());
-            newPlugin.setConfiguration(newConfiguration);
+            newPlugin.setConfiguration(updateMavenCompilerPluginConfiguration(currenConfig, oldPlugin.getVersion()));
             return newPlugin;
+        }
+
+        private Configuration updateMavenCompilerPluginConfiguration(Configuration currenConfig, String version) {
+            Configuration newConfiguration = createConfiguration();
+
+            if (currenConfig == null) {
+                currenConfig = createConfiguration();
+            }
+
+            boolean supportsRelease = version == null
+                    || new ComparableVersion(version).compareTo(new ComparableVersion("3.6")) >= 0;
+
+            Map<POMExtensibilityElement, POMExtensibilityElement> old2New = new HashMap<>();
+
+            if (newSourceLevel != null) {
+                POMExtensibilityElement releaseConfig = findElement(currenConfig, RELEASE);
+                POMExtensibilityElement sourceConfig = findElement(currenConfig, SOURCE);
+                POMExtensibilityElement targetConfig = findElement(currenConfig, TARGET);
+                Properties properties = currenConfig.getModel().getProject().getProperties();
+
+                if (releaseConfig != null && supportsRelease) {
+                    //TODO: should check re-writability earlier
+                    try {
+                        new SpecificationVersion(releaseConfig.getElementText().trim());
+                        //OK to update
+                        POMExtensibilityElement newReleaseElement = factory.createPOMExtensibilityElement(releaseConfig.getQName());
+                        newReleaseElement.setElementText(newSourceLevel);
+                        old2New.put(releaseConfig, newReleaseElement);
+                    } catch (NumberFormatException ex) {
+                        //not safe to upgrade
+                    }
+                } else if (sourceConfig != null) {
+                    try {
+                        new SpecificationVersion(sourceConfig.getElementText().trim());
+                        new SpecificationVersion(targetConfig.getElementText().trim());
+                        //OK to update
+                        POMExtensibilityElement newSourceElement = factory.createPOMExtensibilityElement(sourceConfig.getQName());
+                        newSourceElement.setElementText(newSourceLevel);
+                        old2New.put(sourceConfig, newSourceElement);
+                        POMExtensibilityElement newTargetElement = factory.createPOMExtensibilityElement(targetConfig.getQName());
+                        newTargetElement.setElementText(newSourceLevel);
+                        old2New.put(targetConfig, newTargetElement);
+                    } catch (NumberFormatException ex) {
+                        //not safe to upgrade
+                    }
+                } else if (properties != null && properties.getProperty(RELEASE_PROPERTY) != null && supportsRelease) {
+                    properties.setProperty(RELEASE_PROPERTY, newSourceLevel);
+                } else if (properties != null && properties.getProperty(SOURCE_PROPERTY) != null) {
+                    properties.setProperty(SOURCE_PROPERTY, newSourceLevel);
+                    properties.setProperty(TARGET_PROPERTY, newSourceLevel);
+                } else {
+                    if (properties == null) {
+                        properties = factory.createProperties();
+                        currenConfig.getModel().getProject().setProperties(properties);
+                    }
+
+                    if (supportsRelease) {
+                        properties.setProperty(RELEASE_PROPERTY, newSourceLevel);
+                    } else {
+                        properties.setProperty(SOURCE_PROPERTY, newSourceLevel);
+                        properties.setProperty(TARGET_PROPERTY, newSourceLevel);
+                    }
+                }
+            }
+
+            POMExtensibilityElement compilerArgsConfig = findElement(currenConfig, COMPILER_ARG);
+            if (compilerArgsConfig != null) {
+                POMExtensibilityElement newElement = factory.createPOMExtensibilityElement(POMQName.createQName(COMPILER_ARG));
+
+                for (POMExtensibilityElement nested : compilerArgsConfig.getAnyElements()) {
+                    newElement.addExtensibilityElement((POMExtensibilityElement) nested.copy(newElement));
+                }
+
+                newElement.setChildElementText(COMPILER_ID_PROPERTY, ENABLE_PREVIEW_FLAG, POMQName.createQName(ARG));
+                old2New.put(compilerArgsConfig, newElement);
+            }
+
+            for (POMExtensibilityElement element : currenConfig.getConfigurationElements()) {
+                POMExtensibilityElement replacement = old2New.get(element);
+
+                if (replacement == null) {
+                    replacement = (POMExtensibilityElement) element.copy(newConfiguration);
+                }
+
+                newConfiguration.addExtensibilityElement(replacement);
+            }
+
+            if (compilerArgsConfig == null) {
+                POMExtensibilityElement compilerArgs = factory.createPOMExtensibilityElement(POMQName.createQName(COMPILER_ARG));
+                compilerArgs.setChildElementText(COMPILER_ID_PROPERTY, ENABLE_PREVIEW_FLAG, POMQName.createQName(ARG));
+                newConfiguration.addExtensibilityElement(compilerArgs);
+            }
+
+            return newConfiguration;
+        }
+
+    }
+
+    private static class CheckCanChangeSourceLevel extends BaseMvnCompilerPluginForEnablePreview implements ModelOperation<POMModel> {
+
+        private boolean canChangeSourceLevel;
+
+        @Override
+        public void performOperation(final POMModel model) {
+            Build build = model.getProject().getBuild();
+            Pair<PluginContainer, Plugin> containerAndPlugin = build != null ? searchMavenCompilerPlugin(build) : null;
+            Plugin plugin = containerAndPlugin != null ? containerAndPlugin.second() : null;
+            Configuration configuration = plugin != null ? plugin.getConfiguration() : null;
+
+            if (configuration != null) {
+                POMExtensibilityElement releaseConfig = findElement(configuration, RELEASE);
+                POMExtensibilityElement sourceConfig = findElement(configuration, SOURCE);
+                POMExtensibilityElement targetConfig = findElement(configuration, TARGET);
+
+                try {
+                    if (releaseConfig != null) {
+                        new SpecificationVersion(releaseConfig.getElementText().trim());
+                    } else if (sourceConfig != null) {
+                        new SpecificationVersion(sourceConfig.getElementText().trim());
+                        new SpecificationVersion(targetConfig.getElementText().trim());
+                    }
+                    //safe to upgrade:
+                    canChangeSourceLevel = true;
+                } catch (NumberFormatException ex) {
+                    //not safe to upgrade
+                }
+            } else {
+                //safe to upgrade:
+                canChangeSourceLevel = true;
+            }
+        }
+
+    }
+
+    @ServiceProvider(service=Factory.class, position=1000)
+    public static class FactoryImpl implements Factory {
+
+        @Override
+        public PreviewEnabler enablerFor(FileObject file) {
+            final Project prj = FileOwnerQuery.getOwner(file);
+            if (isMavenProject(prj)) {
+                return new EnablePreviewMavenProj(prj);
+            } else {
+                return null;
+            }
+        }
+
+        private boolean isMavenProject(Project prj) {
+            if (prj == null) {
+                return false;
+            }
+            FileObject prjDir = prj.getProjectDirectory();
+            if (prjDir == null) {
+                return false;
+            }
+
+            FileObject pom = prjDir.getFileObject("pom.xml");
+            return (pom != null) && pom.isValid();
 
         }
 

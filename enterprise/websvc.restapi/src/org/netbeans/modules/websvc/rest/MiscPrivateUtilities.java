@@ -126,7 +126,7 @@ public class MiscPrivateUtilities {
             ClassPath path = provider.findClassPath(rootFolder, type);
             classPaths.add(path);
         }
-        return ClassPathSupport.createProxyClassPath(classPaths.toArray(new ClassPath[classPaths.size()]));
+        return ClassPathSupport.createProxyClassPath(classPaths.toArray(new ClassPath[0]));
     }
 
     public static boolean hasResource(Project project, String resource) {
@@ -289,8 +289,7 @@ public class MiscPrivateUtilities {
     }
 
     public static boolean supportsTargetProfile(Project project, Profile profile){
-        J2eeModuleProvider provider = (J2eeModuleProvider) project.getLookup().
-                lookup(J2eeModuleProvider.class);
+        J2eeModuleProvider provider = project.getLookup().lookup(J2eeModuleProvider.class);
         String serverInstanceID = provider.getServerInstanceID();
         if ( serverInstanceID == null ){
             return false;

@@ -18,13 +18,20 @@
  */
 package org.netbeans.spi.java.queries;
 
+import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.URLMapper;
 
 /**
  * Permits providers to return explicit compiler options for Java source file.
@@ -47,6 +54,8 @@ public interface CompilerOptionsQueryImplementation {
      * ability to listen to it.
      */
     public abstract static class Result {
+        private static final Logger LOG = Logger.getLogger(CompilerOptionsQueryImplementation.class.getName());
+
         /**
          * Gets the explicit compiler options.
          * @return the list of the compiler options
@@ -72,9 +81,29 @@ public interface CompilerOptionsQueryImplementation {
          * @return a list of command line arguments
          */
         protected final List<String> parseLine(@NonNull final String commandLine) {
+            return doParseLine(commandLine, null);
+        }
+
+        /**
+         * Utility method the tokenize the command line into individual arguments.
+         * @param commandLine the command line to be tokenized
+         * @param workingDirectory if set to null, argument files will not be supported;
+         *                         if non-null, argument file names will be resolved relative to this directory
+         * @return a list of command line arguments
+         * @since 1.92
+         */
+        protected final List<String> parseLine(@NonNull final String commandLine,
+                                               @NullAllowed URI workingDirectory) {
+            return doParseLine(commandLine, workingDirectory);
+        }
+
+        static List<String> doParseLine(@NonNull final String commandLine,
+                                        @NullAllowed URI workingDirectory) {
             final List<String> result = new ArrayList<>();
             StringBuilder current = new StringBuilder();
             boolean escape = false, doubleQuote = false, quote = false;
+            Consumer<String> defaultHandleOption = result::add;
+            Consumer<String> handleOption = defaultHandleOption;
             for (int i = 0; i < commandLine.length(); i++) {
                 final char c = commandLine.charAt(i);
                 switch (c) {
@@ -99,7 +128,8 @@ public interface CompilerOptionsQueryImplementation {
                     case '\t':  //NOI18N
                         if (!escape && !quote && !doubleQuote) {
                             if (current.length() > 0) {
-                                result.add(current.toString());
+                                handleOption.accept(current.toString());
+                                handleOption = defaultHandleOption;
                                 current = new StringBuilder();
                             }
                         } else {
@@ -107,6 +137,27 @@ public interface CompilerOptionsQueryImplementation {
                         }
                         escape = false;
                         break;
+                    case '@':
+                        if (workingDirectory != null && i + 1 < commandLine.length() && commandLine.charAt(i + 1) != '@' && current.length() == 0) {
+                            handleOption = path -> {
+                                try {
+                                    URI resolved = workingDirectory.resolve(path);
+                                    FileObject file = URLMapper.findFileObject(resolved.toURL());
+                                    if (file == null) {
+                                        LOG.log(Level.FINE, "URI {0}, resolved to {1}, did not yield an existing file", new Object[] {path, resolved.toString()});
+                                        result.add("@" + path);
+                                        return ;
+                                    }
+                                    for (String line : file.asLines()) {
+                                        result.addAll(doParseLine(line, null));
+                                    }
+                                } catch (IOException ex) {
+                                    LOG.log(Level.FINE, null, ex);
+                                }
+                            };
+                            break;
+                        }
+                        //fall-through
                     default:
                         current.append(c);
                         escape = false;
@@ -114,7 +165,7 @@ public interface CompilerOptionsQueryImplementation {
                 }
             }
             if (current.length() > 0) {
-                result.add(current.toString());
+                handleOption.accept(current.toString());
             }
             return Collections.unmodifiableList(result);
         }

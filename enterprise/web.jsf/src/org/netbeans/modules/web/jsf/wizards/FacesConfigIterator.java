@@ -46,14 +46,17 @@ import org.netbeans.modules.web.api.webmodule.WebProjectConstants;
 import org.netbeans.modules.web.jsf.JSFCatalog;
 import org.netbeans.modules.web.jsf.JSFConfigUtilities;
 import org.netbeans.modules.web.jsf.JSFUtils;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
-import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_1_0;
-import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_1_1;
-import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_1_2;
-import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_2_0;
-import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_2_1;
-import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_2_2;
-import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_3_0;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
+import static org.netbeans.modules.web.jsfapi.api.JsfVersion.JSF_1_0;
+import static org.netbeans.modules.web.jsfapi.api.JsfVersion.JSF_1_1;
+import static org.netbeans.modules.web.jsfapi.api.JsfVersion.JSF_1_2;
+import static org.netbeans.modules.web.jsfapi.api.JsfVersion.JSF_2_0;
+import static org.netbeans.modules.web.jsfapi.api.JsfVersion.JSF_2_1;
+import static org.netbeans.modules.web.jsfapi.api.JsfVersion.JSF_2_2;
+import static org.netbeans.modules.web.jsfapi.api.JsfVersion.JSF_2_3;
+import static org.netbeans.modules.web.jsfapi.api.JsfVersion.JSF_3_0;
+import static org.netbeans.modules.web.jsfapi.api.JsfVersion.JSF_4_0;
 import org.netbeans.modules.web.wizards.Utilities;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.project.ui.templates.support.Templates;
@@ -150,7 +153,8 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
                     }
                     if (!found) {
                         InitParam contextParam = (InitParam) ddRoot.createBean(INIT_PARAM);
-                        if(WebApp.VERSION_5_0.equals(ddRoot.getVersion())) {
+                        if(WebApp.VERSION_6_1.equals(ddRoot.getVersion()) || WebApp.VERSION_6_0.equals(ddRoot.getVersion()) || 
+                                WebApp.VERSION_5_0.equals(ddRoot.getVersion())) {
                             contextParam.setParamName(JAKARTAEE_FACES_CONFIG_PARAM);
                         } else {
                             contextParam.setParamName(FACES_CONFIG_PARAM);
@@ -183,11 +187,15 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
     }
 
     private static String findFacesConfigTemplate(WebModule wm) {
-        JSFVersion jsfVersion = JSFVersion.get(wm, false);
+        JsfVersion jsfVersion = JsfVersionUtils.get(wm, false);
         // not found on project classpath (case of Maven project with JSF in deps)
         if (jsfVersion == null) {
             Profile profile = wm.getJ2eeProfile();
-            if (profile.isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
+            if (profile.isAtLeast(Profile.JAKARTA_EE_11_WEB)) {
+                return JSFCatalog.RES_FACES_CONFIG_4_1;
+            } else if (profile.isAtLeast(Profile.JAKARTA_EE_10_WEB)) {
+                return JSFCatalog.RES_FACES_CONFIG_4_0;
+            } else if (profile.isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
                 return JSFCatalog.RES_FACES_CONFIG_3_0;
             } else if (profile.isAtLeast(Profile.JAVA_EE_8_WEB)) {
                 return JSFCatalog.RES_FACES_CONFIG_2_3;
@@ -207,8 +215,8 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
                     for (ClassPath.Entry entry : compileClasspath.entries()) {
                         cpUrls.add(entry.getURL());
                     }
-                    jsfVersion = JSFVersion.forClasspath(cpUrls);
-                    jsfVersion = jsfVersion == null ? JSFVersion.JSF_2_3 : jsfVersion;
+                    jsfVersion = JsfVersionUtils.forClasspath(cpUrls);
+                    jsfVersion = jsfVersion == null ? JsfVersion.JSF_2_3 : jsfVersion;
                     return facesConfigForVersion(jsfVersion);
                 }
             }
@@ -217,8 +225,12 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
         return facesConfigForVersion(jsfVersion);
     }
 
-    private static String facesConfigForVersion(JSFVersion jsfVersion) {
+    private static String facesConfigForVersion(JsfVersion jsfVersion) {
         switch (jsfVersion) {
+            case JSF_4_1:
+                return JSFCatalog.RES_FACES_CONFIG_4_1;
+            case JSF_4_0:
+                return JSFCatalog.RES_FACES_CONFIG_4_0;
             case JSF_3_0:
                 return JSFCatalog.RES_FACES_CONFIG_3_0;
             case JSF_2_3:
@@ -260,7 +272,7 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
         // Creating steps.
         Object prop = wizard.getProperty (WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
         String[] beforeSteps = null;
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[])prop;
         }
         String[] steps = Utilities.createSteps(beforeSteps, panels);

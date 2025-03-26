@@ -165,6 +165,8 @@ public abstract class CoreBridge {
         if (isJavaFX(new File(System.getProperty("java.home")))) {
             provides.add("org.openide.modules.jre.JavaFX"); // NOI18N
         }
+
+        provides.add("org.openide.modules.arch." + System.getProperty("os.arch"));
     }
 
     static boolean isJavaFX(File javaHome) {

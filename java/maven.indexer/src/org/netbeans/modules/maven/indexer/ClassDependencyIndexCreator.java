@@ -27,7 +27,6 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,6 +42,7 @@ import java.util.stream.Stream;
 import java.util.zip.CRC32;
 import org.apache.commons.codec.binary.Base32;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.StoredFields;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -168,15 +168,16 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
     static void search(String className, Indexer indexer, Collection<IndexingContext> contexts, List<? super ClassUsage> results) throws IOException {
         String searchString = crc32base32(className.replace('.', '/'));
         Query refClassQuery = indexer.constructQuery(FLD_NB_DEPENDENCY_CLASS.getOntology(), new StringSearchExpression(searchString));
-        TopScoreDocCollector collector = TopScoreDocCollector.create(NexusRepositoryIndexerImpl.MAX_RESULT_COUNT, Integer.MAX_VALUE);
+        TopScoreDocCollector collector = TopScoreDocCollector.create(NexusRepositoryIndexManager.MAX_RESULT_COUNT, Integer.MAX_VALUE);
         for (IndexingContext context : contexts) {
             IndexSearcher searcher = context.acquireIndexSearcher();
             try {
+                StoredFields storedFields = searcher.storedFields();
                 searcher.search(refClassQuery, collector);
                 ScoreDoc[] hits = collector.topDocs().scoreDocs;
                 LOG.log(Level.FINER, "for {0} ~ {1} found {2} hits", new Object[] {className, searchString, hits.length});
                 for (ScoreDoc hit : hits) {
-                    Document d = searcher.doc(hit.doc);
+                    Document d = storedFields.document(hit.doc);
                     String fldValue = d.get(NB_DEPENDENCY_CLASSES);
                     LOG.log(Level.FINER, "{0} uses: {1}", new Object[] {className, fldValue});
                     Set<String> refClasses = parseField(searchString, fldValue, d.get(ArtifactInfo.NAMES));
@@ -184,7 +185,7 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
                         ArtifactInfo ai = IndexUtils.constructArtifactInfo(d, context);
                         if (ai != null) {
                             ai.setRepository(context.getRepositoryId());
-                            List<NBVersionInfo> version = NexusRepositoryIndexerImpl.convertToNBVersionInfo(Collections.singleton(ai));
+                            List<NBVersionInfo> version = NexusRepositoryQueries.convertToNBVersionInfo(List.of(ai));
                             if (!version.isEmpty()) {
                                 results.add(new ClassUsage(version.get(0), refClasses));
                             }
@@ -196,7 +197,9 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
             }
         }
     }
+
     private static Set<String> parseField(String refereeCRC, String field, String referrersNL) {
+        assert refereeCRC.length() == 7;
         Set<String> referrers = new TreeSet<>();
         int p = 0;
         for (String referrer : referrersNL.split("\n")) {
@@ -205,7 +208,7 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
                     p++;
                     break;
                 }
-                if (field.substring(p, p + 7).equals(refereeCRC)) {
+                if (field.regionMatches(p, refereeCRC, 0, refereeCRC.length())) {
                     referrers.add(referrer.substring(1).replace('/', '.'));
                 }
                 p += 8;
@@ -269,12 +272,7 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
         int shell = referrer.indexOf('$', referrer.lastIndexOf('/') + 1);
         String referrerTopLevel = shell == -1 ? referrer : referrer.substring(0, shell);
 
-        Set<String> tmp = depsMap.get(referrerTopLevel);
-        if (tmp == null) {
-            tmp = new HashSet<>();
-            depsMap.put(referrerTopLevel, tmp);
-        }
-        Set<String> referees = tmp;
+        Set<String> referees = depsMap.computeIfAbsent(referrerTopLevel, k -> new HashSet<>());
 
         dependenciesOf(classData)
             .filter((referee) -> !referrer.equals(referee))
@@ -366,7 +364,7 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
                 .stream().unordered().map(ClassName::getInternalName).distinct();
     }
 
-    static final List<IndexerField> INDEXER_FIELDS = Collections.singletonList(FLD_NB_DEPENDENCY_CLASS);
+    static final List<IndexerField> INDEXER_FIELDS = List.of(FLD_NB_DEPENDENCY_CLASS);
     @Override
     public Collection<IndexerField> getIndexerFields() {
         return INDEXER_FIELDS;
@@ -377,7 +375,7 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
      * @return the CRC-32 of its UTF-8 representation, as big-endian Base-32 without padding (so seven chars), lower case (to not confuse maven-indexer)
      */
     static String crc32base32(String s) {
-        crc.reset();
+        CRC32 crc = new CRC32();
         crc.update(s.getBytes(StandardCharsets.UTF_8));
         long v = crc.getValue();
         byte[] b32 = base32.encode(new byte[] {(byte) (v >> 24 & 0xFF), (byte) (v >> 16 & 0xFF), (byte) (v >> 8 & 0xFF), (byte) (v & 0xFF)});
@@ -386,7 +384,6 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
         return new String(b32, 0, 7, StandardCharsets.ISO_8859_1).toLowerCase();
     }
 
-    private static final CRC32 crc = new CRC32();
     private static final Base32 base32 = new Base32();
 
 }

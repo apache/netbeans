@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,18 +19,21 @@
     under the License.
 
 -->
-<!-- Generator: Adobe Illustrator 24.2.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Vector_Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-	 y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#E8513D;}
-	.st1{opacity:0.33;}
-	.st2{fill:#EAEAEA;}
-</style>
-<g>
-	<rect x="2" y="2" class="st2" width="12" height="12"/>
-	<g class="st1">
-		<path d="M13,3v10H3V3H13 M14,2H2v12h12V2L14,2z"/>
-	</g>
-</g>
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        opacity: .33;
+      }
+
+      .st1 {
+        fill: #d3d3d3;
+      }
+    </style>
+  </defs>
+  <rect class="st1" x="2" y="2" width="12" height="12"/>
+  <g class="st0">
+    <path d="M13,3v10H3V3h10M14,2H2v12h12V2h0Z"/>
+  </g>
 </svg>

@@ -158,6 +158,8 @@ export interface TestProgressParams {
 
 export interface TestSuite {
     name: string;
+    moduleName?: string;
+    modulePath?: string;
     file?: string;
     range?: Range;
     state: 'loaded' | 'started' | 'passed' | 'failed' | 'skipped' | 'errored';
@@ -204,9 +206,19 @@ export namespace TextEditorDecorationDisposeNotification {
     export const type = new ProtocolNotificationType<string, void>('window/disposeTextEditorDecoration');
 }
 
+export interface SaveDocumentRequestParams {
+    documents: string[];
+}
+
+export namespace SaveDocumentsRequest {
+    export const type = new ProtocolRequestType<SaveDocumentRequestParams, boolean, never, void, void>('window/documentSave');
+}
+
 export interface NodeChangedParams {
     rootId : number;
     nodeId : number | null;
+    types? : NodeChangeType[];
+    properties? : String[];
 }
 
 export interface CreateExplorerParams {
@@ -242,6 +254,20 @@ export interface FindPathParams {
     selectData? : any;
 }
 
+export enum NodeChangeType {
+    SELF = 0,
+    PROPERTY,
+    CHILDEN,
+    DESTROY
+};
+
+export interface NodeChangesParams {
+    rootId: number;
+    nodeId?: number;
+    deactivateListeners?: number[];
+    types?: NodeChangeType[];
+}
+
 export namespace NodeInfoNotification {
     export const type = new ProtocolNotificationType<NodeChangedParams, void>('nodes/nodeChanged');
 }
@@ -254,6 +280,7 @@ export namespace NodeInfoRequest {
     export const collapsed = new ProtocolNotificationType<NodeOperationParams, void>('nodes/collapsed');
     export const getresource = new ProtocolRequestType<GetResourceParams, ResourceData, never, void, void>('nodes/getresource');
     export const findparams = new ProtocolRequestType<FindPathParams, number[], never, void, void>('nodes/findpath');
+    export const changes = new ProtocolRequestType<NodeChangesParams, number, never, void, void>('nodes/changes');
     
     export interface IconDescriptor {
         baseUri : vscode.Uri;
@@ -297,4 +324,26 @@ export function asRange(value: Range | undefined | null): vscode.Range | undefin
 
 export function asRanges(value: Range[]): vscode.Range[] {
     return value.map(value => asRange(value));
+}
+
+export interface OutputMessage {
+    outputName: string;
+    message: string;
+    stdIO: boolean;
+}
+
+export namespace WriteOutputRequest {
+    export const type = new ProtocolRequestType<OutputMessage, void, void, void, void>('output/write');
+}
+
+export namespace ShowOutputRequest {
+    export const type = new ProtocolRequestType<string, void, void, void, void>('output/show');
+}
+
+export namespace CloseOutputRequest {
+    export const type = new ProtocolRequestType<string, void, void, void, void>('output/close');
+}
+
+export namespace ResetOutputRequest {
+    export const type = new ProtocolRequestType<string, void, void, void, void>('output/reset');
 }

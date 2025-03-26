@@ -425,7 +425,7 @@ public class SwingLayoutBuilder {
                     }
                 }
             }
-            Component[] compArray = components.toArray(new Component[components.size()]);
+            Component[] compArray = components.toArray(new Component[0]);
             if (compArray != null) {
                 if (dimension == LayoutConstants.HORIZONTAL) {
                     layout.linkSize(SwingConstants.HORIZONTAL, compArray);

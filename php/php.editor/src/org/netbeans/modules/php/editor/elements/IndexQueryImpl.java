@@ -42,6 +42,7 @@ import org.netbeans.modules.php.api.editor.PhpBaseElement;
 import org.netbeans.modules.php.api.editor.PhpClass;
 import org.netbeans.modules.php.api.editor.PhpType;
 import org.netbeans.modules.php.api.editor.PhpVariable;
+import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.editor.api.AbstractElementQuery;
 import org.netbeans.modules.php.editor.api.AliasedName;
 import org.netbeans.modules.php.editor.api.ElementQuery;
@@ -176,11 +177,16 @@ public final class IndexQueryImpl implements ElementQuery.Index {
     }
 
     private Set<ClassElement> getClassesImpl(final NameKind query) {
+        return getClassesImpl(query, false);
+    }
+
+    private Set<ClassElement> getClassesImpl(final NameKind query, boolean isAttributeClass) {
         final long start = (LOG.isLoggable(Level.FINE)) ? System.currentTimeMillis() : 0;
         final Set<ClassElement> classes = new HashSet<>();
-        final Collection<? extends IndexResult> result = results(ClassElementImpl.IDX_FIELD, query);
+        final String indexField = ClassElementImpl.getIndexField(isAttributeClass);
+        final Collection<? extends IndexResult> result = results(indexField, query);
         for (final IndexResult indexResult : result) {
-            Set<ClassElement> allClasses = ClassElementImpl.fromSignature(query, this, indexResult);
+            Set<ClassElement> allClasses = ClassElementImpl.fromSignature(query, this, indexResult, isAttributeClass);
             if (query.isPrefix() || query.isCaseInsensitivePrefix()) {
                 classes.addAll(allClasses);
             } else {
@@ -416,16 +422,16 @@ public final class IndexQueryImpl implements ElementQuery.Index {
     @Override
     public Set<MethodElement> getConstructors(final ClassElement classElement) {
         final long start = (LOG.isLoggable(Level.FINE)) ? System.currentTimeMillis() : 0;
-        final Set<MethodElement> retval = getConstructorsImpl(classElement, classElement, new LinkedHashSet<ClassElement>());
+        final Set<MethodElement> retval = getConstructorsImpl(classElement, classElement, new LinkedHashSet<>());
         if (LOG.isLoggable(Level.FINE)) {
             logQueryTime("Set<MethodElement> getConstructors", NameKind.exact(classElement.getFullyQualifiedName()), start); //NOI18N
         }
         return retval.isEmpty() ? getDefaultConstructors(classElement) : retval;
     }
 
-    private Set<MethodElement> getConstructorsImpl(NameKind typeQuery) {
+    private Set<MethodElement> getConstructorsImpl(NameKind typeQuery, boolean isAttributeClass) {
         final Set<MethodElement> retval = new HashSet<>();
-        final Set<ClassElement> classes = getClassesImpl(typeQuery);
+        final Set<ClassElement> classes = getClassesImpl(typeQuery, isAttributeClass);
         for (ClassElement classElement : classes) {
             retval.addAll(getConstructors(classElement));
         }
@@ -433,12 +439,18 @@ public final class IndexQueryImpl implements ElementQuery.Index {
     }
 
     private Set<MethodElement> getConstructorsImpl(final ClassElement originalClass, final ClassElement inheritedClass, final Set<ClassElement> check) {
+        return getConstructorsImpl(originalClass, inheritedClass, check, false);
+    }
+
+    private Set<MethodElement> getConstructorsImpl(final ClassElement originalClass, final ClassElement inheritedClass, final Set<ClassElement> check, boolean isAttributeClass) {
         final Set<MethodElement> methods = new HashSet<>();
         if (!check.contains(inheritedClass)) {
             check.add(inheritedClass);
             final Exact typeQuery = NameKind.exact(inheritedClass.getFullyQualifiedName());
-            final Collection<? extends IndexResult> constructorResults = results(ClassElementImpl.IDX_FIELD, typeQuery,
-                    new String[]{ClassElementImpl.IDX_FIELD, MethodElementImpl.IDX_CONSTRUCTOR_FIELD, MethodElementImpl.IDX_FIELD});
+            final Collection<? extends IndexResult> constructorResults;
+            String indexField = ClassElementImpl.getIndexField(isAttributeClass);
+            constructorResults = results(indexField, typeQuery,
+                    new String[]{indexField, MethodElementImpl.IDX_CONSTRUCTOR_FIELD, MethodElementImpl.IDX_FIELD});
             final Set<MethodElement> methodsForResult = new HashSet<>();
             final ElementFilter forEqualTypes = ElementFilter.forEqualTypes(inheritedClass);
             for (final IndexResult indexResult : constructorResults) {
@@ -544,12 +556,14 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                         new String[]{
                             TraitElementImpl.IDX_FIELD,
                             FieldElementImpl.IDX_FIELD,
+                            TypeConstantElementImpl.IDX_FIELD,
                             MethodElementImpl.IDX_FIELD
                         });
                 for (final IndexResult indexResult : traitResults) {
                     for (final TypeElement traitElement : TraitElementImpl.fromSignature(typeQuery, this, indexResult)) {
                         members.addAll(MethodElementImpl.fromSignature(traitElement, memberQuery, this, indexResult));
                         members.addAll(FieldElementImpl.fromSignature(traitElement, memberQuery, this, indexResult));
+                        members.addAll(TypeConstantElementImpl.fromSignature(traitElement, memberQuery, this, indexResult));
                     }
                 }
                 break;
@@ -683,12 +697,14 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                 new String[] {
                     TraitElementImpl.IDX_FIELD,
                     MethodElementImpl.IDX_FIELD,
-                    FieldElementImpl.IDX_FIELD
+                    FieldElementImpl.IDX_FIELD,
+                    TypeConstantElementImpl.IDX_FIELD
                 });
         for (IndexResult indexResult : traitResults) {
             for (final TypeElement typeElement : TraitElementImpl.fromSignature(typeQuery, this, indexResult)) {
                 members.addAll(MethodElementImpl.fromSignature(typeElement, memberQuery, this, indexResult));
                 members.addAll(FieldElementImpl.fromSignature(typeElement, memberQuery, this, indexResult));
+                members.addAll(TypeConstantElementImpl.fromSignature(typeElement, memberQuery, this, indexResult));
             }
         }
         final Collection<? extends IndexResult> enumResults = results(EnumElementImpl.IDX_FIELD, typeQuery,
@@ -870,6 +886,16 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                     }
                 }
                 break;
+            case TRAIT:
+                // [GH-4725] PHP 8.2 Support: Constants in Traits
+                final Collection<? extends IndexResult> traitResults = results(TraitElementImpl.IDX_FIELD, typeQuery,
+                        new String[]{TraitElementImpl.IDX_FIELD, TypeConstantElementImpl.IDX_FIELD});
+                for (final IndexResult indexResult : traitResults) {
+                    for (final TypeElement traitElement : TraitElementImpl.fromSignature(typeQuery, this, indexResult)) {
+                        constants.addAll(TypeConstantElementImpl.fromSignature(traitElement, constantQuery, this, indexResult));
+                    }
+                }
+                break;
             case ENUM:
                 final Collection<? extends IndexResult> enumResults = results(EnumElementImpl.IDX_FIELD, typeQuery,
                         new String[]{EnumElementImpl.IDX_FIELD, TypeConstantElementImpl.IDX_FIELD});
@@ -893,7 +919,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
         final long start = (LOG.isLoggable(Level.FINE)) ? System.currentTimeMillis() : 0;
         final Set<TypeConstantElement> constants = new HashSet<>();
         final Collection<? extends IndexResult> constantResults = results(TypeConstantElementImpl.IDX_FIELD, constantQuery,
-                new String[]{ClassElementImpl.IDX_FIELD, InterfaceElementImpl.IDX_FIELD, EnumElementImpl.IDX_FIELD, TypeConstantElementImpl.IDX_FIELD});
+                new String[]{ClassElementImpl.IDX_FIELD, TraitElementImpl.IDX_FIELD, InterfaceElementImpl.IDX_FIELD, EnumElementImpl.IDX_FIELD, TypeConstantElementImpl.IDX_FIELD});
         for (final IndexResult indexResult : constantResults) {
             final Set<TypeElement> types = new HashSet<>();
             types.addAll(ClassElementImpl.fromSignature(this, indexResult));
@@ -910,7 +936,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
 
     @Override
     public Set<TypeConstantElement> getTypeConstants(NameKind.Exact typeQuery, NameKind constantQuery) {
-        return getTypeConstantsImpl(typeQuery, constantQuery, EnumSet.of(PhpElementKind.CLASS, PhpElementKind.IFACE, PhpElementKind.ENUM));
+        return getTypeConstantsImpl(typeQuery, constantQuery, EnumSet.of(PhpElementKind.CLASS, PhpElementKind.TRAIT, PhpElementKind.IFACE, PhpElementKind.ENUM));
     }
 
     private Set<TypeConstantElement> getTypeConstantsImpl(NameKind.Exact typeQuery, NameKind constantQuery, EnumSet<PhpElementKind> typeKinds) {
@@ -931,6 +957,16 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                     new String[]{InterfaceElementImpl.IDX_FIELD, TypeConstantElementImpl.IDX_FIELD});
             for (final IndexResult indexResult : ifaceResults) {
                 for (final TypeElement typeElement : InterfaceElementImpl.fromSignature(typeQuery, this, indexResult)) {
+                    constants.addAll(TypeConstantElementImpl.fromSignature(typeElement, constantQuery, this, indexResult));
+                }
+            }
+        }
+        // [GH-4725] PHP 8.2 Support: Constatns in Traits
+        if (typeKinds.contains(PhpElementKind.TRAIT)) {
+            final Collection<? extends IndexResult> traitResults = results(TraitElementImpl.IDX_FIELD, typeQuery,
+                    new String[]{TraitElementImpl.IDX_FIELD, TypeConstantElementImpl.IDX_FIELD});
+            for (final IndexResult indexResult : traitResults) {
+                for (final TypeElement typeElement : TraitElementImpl.fromSignature(typeQuery, this, indexResult)) {
                     constants.addAll(TypeConstantElementImpl.fromSignature(typeElement, constantQuery, this, indexResult));
                 }
             }
@@ -1106,7 +1142,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                         }
                     }
                 }
-                return filters.toArray(new ElementFilter[filters.size()]);
+                return filters.toArray(new ElementFilter[0]);
             }
         };
     }
@@ -1149,8 +1185,11 @@ public final class IndexQueryImpl implements ElementQuery.Index {
         final long start = (LOG.isLoggable(Level.FINE)) ? System.currentTimeMillis() : 0;
         final Set<MethodElement> allMethods = getAllMethods(typeElement);
         Collection<TypeElement> subTypes = Collections.emptySet();
-        if (calledFromEnclosingType != null && ElementFilter.forEqualTypes(typeElement).isAccepted(calledFromEnclosingType)) {
-            subTypes = toTypes(allMethods);
+        if (calledFromEnclosingType != null) {
+            if (typeElement instanceof TraitElement
+                    || ElementFilter.forEqualTypes(typeElement).isAccepted(calledFromEnclosingType)) {
+                subTypes = toTypes(allMethods);
+            }
         }
         final ElementFilter filterForAccessible = forAccessibleTypeMembers(calledFromEnclosingType, subTypes);
         Set<MethodElement> retval  = filterForAccessible.filter(allMethods);
@@ -1230,6 +1269,9 @@ public final class IndexQueryImpl implements ElementQuery.Index {
             TraitedElement traitedElement = (TraitedElement) typeElement;
             Collection<QualifiedName> usedTraits = traitedElement.getUsedTraits();
             for (QualifiedName trait : usedTraits) {
+                if (StringUtils.isEmpty(trait.getName())) {
+                    continue;
+                }
                 final Set<TypeMemberElement> traitTypes = new LinkedHashSet<>();
                 if (memberKinds.size() != 1) {
                     traitTypes.addAll(ElementFilter.forFiles(typeElement.getFileObject()).prefer(getTypeMembers(NameKind.exact(trait), NameKind.empty())));
@@ -1241,6 +1283,10 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                             break;
                         case FIELD:
                             traitTypes.addAll(ElementFilter.forFiles(typeElement.getFileObject()).prefer(getFields(NameKind.exact(trait), NameKind.empty())));
+                            break;
+                        case TYPE_CONSTANT:
+                            // [GH-4725] PHP 8.2 Support: Constatns in Traits
+                            traitTypes.addAll(ElementFilter.forFiles(typeElement.getFileObject()).prefer(getTypeConstantsImpl(NameKind.exact(trait), NameKind.empty(), EnumSet.of(PhpElementKind.TRAIT))));
                             break;
                         default:
                             //no-op
@@ -1270,7 +1316,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
 
     private Set<TypeMemberElement> getDirectInheritedClassTypes(QualifiedName superClassName, EnumSet<PhpElementKind> memberKinds, final TypeElement typeElement) {
         final Set<TypeMemberElement> classTypes = new LinkedHashSet<>();
-        if (superClassName != null) {
+        if (superClassName != null && !StringUtils.isEmpty(superClassName.getName())) {
             classTypes.addAll(extendedQuery.getFields(NameKind.exact(superClassName), NameKind.empty()));
             classTypes.addAll(extendedQuery.getMethods(NameKind.exact(superClassName), NameKind.empty()));
             classTypes.addAll(extendedQuery.getTypeConstants(NameKind.exact(superClassName), NameKind.empty()));
@@ -1311,8 +1357,8 @@ public final class IndexQueryImpl implements ElementQuery.Index {
     public Set<MethodElement> getInheritedMethods(final TypeElement typeElement) {
         final long start = (LOG.isLoggable(Level.FINE)) ? System.currentTimeMillis() : 0;
         final Set<TypeMemberElement> typeMembers =
-                getInheritedTypeMembers(typeElement, new LinkedHashSet<TypeElement>(),
-                new LinkedHashSet<TypeMemberElement>(),
+                getInheritedTypeMembers(typeElement, new LinkedHashSet<>(),
+                new LinkedHashSet<>(),
                 EnumSet.of(PhpElementKind.CLASS, PhpElementKind.IFACE, PhpElementKind.TRAIT),
                 EnumSet.of(PhpElementKind.METHOD));
         final Set<MethodElement> retval = new HashSet<>();
@@ -1351,8 +1397,8 @@ public final class IndexQueryImpl implements ElementQuery.Index {
     public Set<FieldElement> getAlllFields(TypeElement typeElement) {
         final long start = (LOG.isLoggable(Level.FINE)) ? System.currentTimeMillis() : 0;
         final Set<TypeMemberElement> typeMembers =
-                getInheritedTypeMembers(typeElement, new LinkedHashSet<TypeElement>(),
-                new LinkedHashSet<TypeMemberElement>(getDeclaredFields(typeElement)),
+                getInheritedTypeMembers(typeElement, new LinkedHashSet<>(),
+                new LinkedHashSet<>(getDeclaredFields(typeElement)),
                 EnumSet.of(PhpElementKind.CLASS, PhpElementKind.TRAIT),
                 EnumSet.of(PhpElementKind.FIELD));
         final Set<FieldElement> retval = new HashSet<>();
@@ -1374,7 +1420,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                 typeElement,
                 new LinkedHashSet<>(),
                 new LinkedHashSet<>(getDeclaredTypeConstants(typeElement)),
-                EnumSet.of(PhpElementKind.CLASS, PhpElementKind.IFACE, PhpElementKind.ENUM),
+                EnumSet.of(PhpElementKind.CLASS, PhpElementKind.TRAIT, PhpElementKind.IFACE, PhpElementKind.ENUM),
                 EnumSet.of(PhpElementKind.TYPE_CONSTANT)
         );
         final Set<TypeConstantElement> retval = new HashSet<>();
@@ -1537,6 +1583,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
         Set<TypeElement> types = new HashSet<>();
         types.addAll(getClassesImpl(typeQuery));
         types.addAll(getInterfacesImpl(typeQuery));
+        types.addAll(getTraitsImpl(typeQuery)); // GH-4725 PHP 8.2 Constants In Traits
         types.addAll(getEnumsImpl(typeQuery));
         for (TypeElement typeElement : types) {
             retval.addAll(ElementFilter.forName(constantQuery).filter(getAllTypeConstants(typeElement)));
@@ -1828,7 +1875,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
             }
         } else if (typeElement.isInterface()) {
             final Collection<? extends IndexResult> result = results(PHPIndexer.FIELD_SUPER_IFACE, query,
-                    new String[] {PHPIndexer.FIELD_SUPER_IFACE, InterfaceElementImpl.IDX_FIELD, ClassElementImpl.IDX_FIELD});
+                    new String[] {PHPIndexer.FIELD_SUPER_IFACE, InterfaceElementImpl.IDX_FIELD, ClassElementImpl.IDX_FIELD, EnumElementImpl.IDX_FIELD});
             for (final IndexResult indexResult : result) {
                 String[] values = indexResult.getValues(PHPIndexer.FIELD_SUPER_IFACE);
                 for (String value : values) {
@@ -1837,6 +1884,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                     if (query.matchesName(PhpElementKind.IFACE, fqnForValue)) {
                         directTypes.addAll(InterfaceElementImpl.fromSignature(NameKind.empty(), this, indexResult));
                         directTypes.addAll(ClassElementImpl.fromSignature(NameKind.empty(), this, indexResult));
+                        directTypes.addAll(EnumElementImpl.fromSignature(NameKind.empty(), this, indexResult));
                     }
                 }
             }
@@ -2025,6 +2073,24 @@ public final class IndexQueryImpl implements ElementQuery.Index {
     }
 
     @Override
+    public Set<ClassElement> getAttributeClasses(NameKind query, Set<AliasedName> aliasedNames, Trait trait) {
+        final Set<ClassElement> retval = new HashSet<>();
+        for (final AliasedName aliasedName : aliasedNames) {
+            for (final NameKind nextQuery : queriesForAlias(query, aliasedName, PhpElementKind.CLASS)) {
+                for (final ClassElement nextClass : getClassesImpl(nextQuery, true)) {
+                    final AliasedClass aliasedClass = new AliasedClass(aliasedName, nextClass);
+                    if (trait != null) {
+                        aliasedClass.setTrait(trait);
+                    }
+                    retval.add(aliasedClass);
+                }
+            }
+        }
+        retval.addAll(getClassesImpl(query, true));
+        return retval;
+    }
+
+    @Override
     public Set<EnumElement> getEnums(final NameKind query, final Set<AliasedName> aliasedNames, final Trait trait) {
         final Set<EnumElement> retval = new HashSet<>();
         for (final AliasedName aliasedName : aliasedNames) {
@@ -2099,23 +2165,31 @@ public final class IndexQueryImpl implements ElementQuery.Index {
 
     @Override
     public Set<MethodElement> getConstructors(final NameKind typeQuery, final Set<AliasedName> aliasedNames, final Trait trait) {
+        return getConstructors(typeQuery, aliasedNames, trait, false);
+    }
+
+    @Override
+    public Set<MethodElement> getAttributeClassConstructors(NameKind typeQuery, Set<AliasedName> aliasedNames, Trait trait) {
+        return getConstructors(typeQuery, aliasedNames, trait, true);
+    }
+
+    private Set<MethodElement> getConstructors(NameKind typeQuery, Set<AliasedName> aliasedNames, Trait trait, boolean isAttributeClass) {
         final Set<MethodElement> retval = new HashSet<>();
         for (final AliasedName aliasedName : aliasedNames) {
             for (final NameKind nextQuery : queriesForAlias(typeQuery, aliasedName, PhpElementKind.CLASS)) {
-                for (ClassElement classElement : getClassesImpl(nextQuery)) {
+                for (ClassElement classElement : getClassesImpl(nextQuery, isAttributeClass)) {
                     final AliasedClass aliasedClass = new AliasedClass(aliasedName, classElement);
                     if (trait != null) {
                         aliasedClass.setTrait(trait);
                     }
-                    final Set<MethodElement> constructorsImpl = getConstructorsImpl(aliasedClass, classElement, new LinkedHashSet<ClassElement>());
+                    final Set<MethodElement> constructorsImpl = getConstructorsImpl(aliasedClass, classElement, new LinkedHashSet<>(), isAttributeClass);
                     retval.addAll(constructorsImpl.isEmpty() ? getDefaultConstructors(aliasedClass) : constructorsImpl);
                 }
             }
         }
-        retval.addAll(getConstructorsImpl(typeQuery));
+        retval.addAll(getConstructorsImpl(typeQuery, isAttributeClass));
         return retval;
     }
-
 
     @Override
     public Set<PhpElement> getTopLevelElements(final NameKind query, final Set<AliasedName> aliasedNames, final Trait trait) {
@@ -2134,6 +2208,8 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                         aliasedElement = new AliasedInterface(aliasedName, (InterfaceElement) nextElement);
                     } else if (nextElement instanceof TraitElement) {
                         aliasedElement = new AliasedTrait(aliasedName, (TraitElement) nextElement);
+                    } else if (nextElement instanceof EnumElement) {
+                        aliasedElement = new AliasedEnum(aliasedName, (EnumElement) nextElement);
                     }
                     if (aliasedElement != null) {
                         if (trait != null) {
@@ -2168,6 +2244,24 @@ public final class IndexQueryImpl implements ElementQuery.Index {
 
     public Set<TraitElement> getTraits() {
         return getTraits(NameKind.empty());
+    }
+
+    @Override
+    public Set<TraitElement> getTraits(NameKind query, Set<AliasedName> aliasedNames, Trait trait) {
+        final Set<TraitElement> retval = new HashSet<>();
+        for (final AliasedName aliasedName : aliasedNames) {
+            for (final NameKind nextQuery : queriesForAlias(query, aliasedName, PhpElementKind.TRAIT)) {
+                for (final TraitElement nextTrait : getTraitsImpl(nextQuery)) {
+                    final AliasedTrait aliasedTrait = new AliasedTrait(aliasedName, nextTrait);
+                    if (trait != null) {
+                        aliasedTrait.setTrait(trait);
+                    }
+                    retval.add(aliasedTrait);
+                }
+            }
+        }
+        retval.addAll(getTraitsImpl(query));
+        return retval;
     }
 
     @Override

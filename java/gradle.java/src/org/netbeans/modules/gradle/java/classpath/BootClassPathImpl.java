@@ -19,57 +19,44 @@
 
 package org.netbeans.modules.gradle.java.classpath;
 
-import org.netbeans.modules.gradle.api.NbGradleProject;
-import org.netbeans.modules.gradle.api.execute.RunUtils;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import org.netbeans.modules.gradle.java.spi.support.JavaToolchainSupport;
+import java.io.File;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.prefs.PreferenceChangeEvent;
-import java.util.prefs.PreferenceChangeListener;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatform;
-import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.gradle.java.api.GradleJavaSourceSet;
+import static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType.JAVA;
 import org.netbeans.modules.gradle.java.execute.JavaRunUtils;
-import org.openide.util.WeakListeners;
 
 /**
  *
  * @author Laszlo Kishalmi
  */
-public final class BootClassPathImpl extends AbstractGradleClassPathImpl implements PropertyChangeListener {
+public final class BootClassPathImpl extends AbstractSourceSetClassPathImpl {
     private static final String PROTOCOL_NBJRT = "nbjrt";   //NOI18N
 
-    JavaPlatformManager platformManager;
     final boolean modulesOnly;
 
-    public BootClassPathImpl(Project proj) {
-        this(proj, false);
+    public BootClassPathImpl(Project proj, String group) {
+        this(proj, group, false);
     }
 
     @SuppressWarnings("LeakingThisInConstructor")
-    public BootClassPathImpl(Project proj, boolean modulesOnly) {
-        super(proj);
+    public BootClassPathImpl(Project proj, String group, boolean modulesOnly) {
+        super(proj, group);
         this.modulesOnly = modulesOnly;
-        platformManager = JavaPlatformManager.getDefault();
-        platformManager.addPropertyChangeListener(WeakListeners.propertyChange(this, platformManager));
-        NbGradleProject.getPreferences(project, false).addPreferenceChangeListener((PreferenceChangeEvent evt) -> {
-            if (RunUtils.PROP_JDK_PLATFORM.equals(evt.getKey())) {
-                clearResourceCache();
-            }
-        });
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        clearResourceCache();
     }
 
     @Override
     protected List<URL> createPath() {
-        JavaPlatform platform = JavaRunUtils.getActivePlatform(project).second();
+        JavaToolchainSupport toolchain = JavaToolchainSupport.getDefault();
+        GradleJavaSourceSet ss = getSourceSet();
+        File jh = ss != null ? ss.getCompilerJavaHome(JAVA) : null;
+        
+        JavaPlatform platform = jh != null ? toolchain.platformByHome(jh) : JavaRunUtils.getActivePlatform(project).second();
         List<URL> ret = new LinkedList<>();
         if (platform != null) {
             for (ClassPath.Entry entry : platform.getBootstrapLibraries().entries()) {
@@ -81,6 +68,4 @@ public final class BootClassPathImpl extends AbstractGradleClassPathImpl impleme
         }
         return ret;
     }
-
-
 }

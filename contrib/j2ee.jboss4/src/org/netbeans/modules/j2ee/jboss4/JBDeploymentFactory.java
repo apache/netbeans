@@ -413,9 +413,9 @@ public class JBDeploymentFactory implements DeploymentFactory {
                     if(version!= null && "7".equals(version.getMajorNumber())) {
                         Class<?> c = loader.loadClass("org.jboss.as.ee.deployment.spi.factories.DeploymentFactoryImpl");
                         c.getMethod("register").invoke(null);
-                        jbossFactory = (DeploymentFactory) c.newInstance();//NOI18N
+                        jbossFactory = (DeploymentFactory) c.getDeclaredConstructor().newInstance();//NOI18N
                     } else {
-                        jbossFactory = (DeploymentFactory) loader.loadClass("org.jboss.deployment.spi.factories.DeploymentFactoryImpl").newInstance();//NOI18N
+                        jbossFactory = (DeploymentFactory) loader.loadClass("org.jboss.deployment.spi.factories.DeploymentFactoryImpl").getDeclaredConstructor().newInstance();//NOI18N
                     }
 
 

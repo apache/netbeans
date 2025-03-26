@@ -55,12 +55,12 @@ import javax.swing.text.JTextComponent;
  */
 public class FileCompletionPopup extends JPopupMenu implements KeyListener {
     
-    private JList list;
-    private JTextField textField;
-    private JFileChooser chooser;
+    private final JList<File> list;
+    private final JTextField textField;
+    private final JFileChooser chooser;
     
     public FileCompletionPopup(JFileChooser chooser, JTextField textField, Vector<File> files) {
-        this.list = new JList(files);
+        this.list = new JList<>(files);
         this.textField = textField;
         this.chooser = chooser;
         list.setVisibleRowCount(4);
@@ -80,7 +80,7 @@ public class FileCompletionPopup extends JPopupMenu implements KeyListener {
         textField.addKeyListener(this);
     }
      
-    public void setDataList(Vector files) {
+    public void setDataList(Vector<File> files) {
         list.setListData(files);
         ensureSelection();
     }
@@ -111,8 +111,8 @@ public class FileCompletionPopup extends JPopupMenu implements KeyListener {
         if(list.getModel().getSize() == 0) {
             return;
         }
-        setPreferredSize(new Dimension(source.getWidth(), source.getHeight() * 4));
-        show(source,  x, y);
+        setPreferredSize(new Dimension(source.getWidth(), source.getHeight() * 6));
+        show(source, x, y);
         ensureSelection();
     }
     
@@ -134,6 +134,7 @@ public class FileCompletionPopup extends JPopupMenu implements KeyListener {
     }
     
     private class MouseHandler extends MouseAdapter implements MouseMotionListener{
+        @Override
         public void mouseMoved(MouseEvent e) {
             if (e.getSource() == list) {
                 Point location = e.getPoint();
@@ -146,6 +147,7 @@ public class FileCompletionPopup extends JPopupMenu implements KeyListener {
             }
         }
         
+        @Override
         public void mouseDragged(MouseEvent e) {
             if (e.getSource() == list) {
                 return;
@@ -168,7 +170,7 @@ public class FileCompletionPopup extends JPopupMenu implements KeyListener {
             int index = list.locationToIndex(p);
             list.setSelectedIndex(index);
             setVisible(false);
-            File file = (File)list.getSelectedValue();
+            File file = list.getSelectedValue();
             if (file == null) {
                 return;
             }
@@ -186,7 +188,7 @@ public class FileCompletionPopup extends JPopupMenu implements KeyListener {
             MouseEvent newEvent = new MouseEvent( (Component)e.getSource(),
                     e.getID(),
                     e.getWhen(),
-                    e.getModifiers(),
+                    e.getModifiersEx(),
                     convertedPoint.x,
                     convertedPoint.y,
                     e.getClickCount(),
@@ -197,6 +199,7 @@ public class FileCompletionPopup extends JPopupMenu implements KeyListener {
 
     /****** implementation of KeyListener of fileNameTextField ******/
     
+    @Override
     public void keyPressed(KeyEvent e) {
         if (!isVisible()) {
             return;
@@ -220,7 +223,7 @@ public class FileCompletionPopup extends JPopupMenu implements KeyListener {
         }
         
         if (isCompletionKey(code, textField) && !e.isConsumed()) {
-            File file = (File)list.getSelectedValue();
+            File file = list.getSelectedValue();
             if(file != null) { 
                 if(file.equals(chooser.getCurrentDirectory())) {
                     chooser.firePropertyChange(JFileChooser.DIRECTORY_CHANGED_PROPERTY, false, true);
@@ -244,10 +247,12 @@ public class FileCompletionPopup extends JPopupMenu implements KeyListener {
         }
     }
 
+    @Override
     public void keyReleased(KeyEvent e) {
         // no operation
     }
     
+    @Override
     public void keyTyped(KeyEvent e) {
         // no operation
     }

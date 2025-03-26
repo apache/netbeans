@@ -18,124 +18,61 @@
  */
 package org.netbeans.modules.lsp.client.bindings;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import org.eclipse.lsp4j.DocumentSymbol;
+import org.eclipse.lsp4j.DocumentSymbolOptions;
 import org.eclipse.lsp4j.DocumentSymbolParams;
+import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.Range;
+import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.LSPBindings.BackgroundTask;
 import org.netbeans.modules.lsp.client.Utils;
-import org.netbeans.spi.navigator.NavigatorPanel;
-import org.openide.explorer.ExplorerManager;
-import org.openide.explorer.view.BeanTreeView;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.URLMapper;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
-import org.openide.util.Lookup;
-import org.openide.util.LookupEvent;
-import org.openide.util.LookupListener;
-import org.openide.util.NbBundle.Messages;
-import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author lahvac
  */
-public class NavigatorPanelImpl extends Children.Keys<Either<SymbolInformation, DocumentSymbol>> implements NavigatorPanel, BackgroundTask, LookupListener {
+public class NavigatorPanelImpl extends AbstractNavigatorPanel<Either<SymbolInformation, DocumentSymbol>> implements BackgroundTask {
 
-    private static final Logger LOG = Logger.getLogger(NavigatorPanelImpl.class.getName());
-    private static final NavigatorPanelImpl INSTANCE = new NavigatorPanelImpl();
-
-    private final ExplorerManager manager;
-    private View view;
-    private Lookup.Result<FileObject> result;
-    private FileObject file;
-
-    public NavigatorPanelImpl() {
-        manager = new ExplorerManager();
-        manager.setRootContext(new AbstractNode(this));
+    public NavigatorPanelImpl(LSPBindings bindings) {
+        setDisplayName(bindings);
     }
 
     @Override
-    @Messages("DN_Symbols=Symbols")
-    public String getDisplayName() {
-        return Bundle.DN_Symbols();
+    void addBackgroundTask(FileObject fo) {
+        LSPBindings.addBackgroundTask(fo, this);
     }
 
     @Override
-    public String getDisplayHint() {
-        return "symbols";
-    }
-
-    @Override
-    public JComponent getComponent() {
-        if (view == null) {
-            view = new View();
-        }
-        return view;
-    }
-
-    @Override
-    public void panelActivated(Lookup context) {
-        result = context.lookupResult(FileObject.class);
-        result.addLookupListener(this);
-        updateFile();
-    }
-
-    @Override
-    public void panelDeactivated() {
-        result.removeLookupListener(this);
-        result = null;
-        updateFile();
-    }
-
-    private void updateFile() {
-        if (file != null) {
-            LSPBindings.removeBackgroundTask(file, this);
-            setKeys(Collections.emptyList());
-            file = null;
-        }
-        Collection<? extends FileObject> files = result != null ? result.allInstances() : Collections.emptyList();
-        file = files.isEmpty() ? null : files.iterator().next();
-        if (file != null) {
-            LSPBindings.addBackgroundTask(file, this);
-        }
-    }
-
-    @Override
-    public Lookup getLookup() {
-        return Lookup.EMPTY;
+    void removeBackgroundTask(FileObject fo) {
+        LSPBindings.removeBackgroundTask(fo, this);
     }
 
     @Override
     public void run(LSPBindings bindings, FileObject file) {
-        if (file.equals(this.file)) {
+        if (isCurrentFile(file)) {
+            setDisplayName(bindings);
+
             try {
                 String uri = Utils.toURI(file);
                 List<Either<SymbolInformation, DocumentSymbol>> symbols = bindings.getTextDocumentService().documentSymbol(new DocumentSymbolParams(new TextDocumentIdentifier(uri))).get();
 
                 setKeys(symbols);
-                
-                SwingUtilities.invokeLater(() -> view.expandAll());
+                expandAll();
             } catch (ExecutionException ex) {
                 LOG.log(Level.FINE, null, ex);
                 setKeys(Collections.emptyList());
@@ -149,13 +86,17 @@ public class NavigatorPanelImpl extends Children.Keys<Either<SymbolInformation, 
     }
 
     @Override
-    protected Node[] createNodes(Either<SymbolInformation, DocumentSymbol> sym) {
-        return new Node[] {new NodeImpl(Utils.toURI(file), sym)};
+    protected Node[] createNodes(FileObject currentFile, Either<SymbolInformation, DocumentSymbol> sym) {
+        return new Node[] {new NodeImpl(Utils.toURI(currentFile), sym)};
     }
 
-    @Override
-    public void resultChanged(LookupEvent arg0) {
-        updateFile();
+    private void setDisplayName(LSPBindings bindings) {
+        InitializeResult initResult = bindings.getInitResult();
+        ServerCapabilities capa = initResult.getCapabilities();
+        Either<Boolean, DocumentSymbolOptions> symbolProvider = capa != null ? capa.getDocumentSymbolProvider() : null;
+        String displayName = symbolProvider != null && symbolProvider.isRight() ? symbolProvider.getRight().getLabel() : null;
+
+        setDisplayName(displayName);
     }
 
     private static final class NodeImpl extends AbstractNode {
@@ -211,6 +152,7 @@ public class NavigatorPanelImpl extends Children.Keys<Either<SymbolInformation, 
                 this.open = createOpenAction(symbol.getLeft().getLocation().getUri(), symbol.getLeft().getLocation().getRange());
             } else {
                 setDisplayName(symbol.getRight().getName());
+                setShortDescription(symbol.getRight().getDetail());
                 setIconBaseWithExtension(Icons.getSymbolIconBase(symbol.getRight().getKind()));
                 this.open = createOpenAction(currentFileUri, symbol.getRight().getRange());
             }
@@ -219,6 +161,7 @@ public class NavigatorPanelImpl extends Children.Keys<Either<SymbolInformation, 
         public NodeImpl(String currentFileUri, DocumentSymbol symbol) {
             super(createChildren(currentFileUri, symbol));
             setDisplayName(symbol.getName());
+            setShortDescription(symbol.getDetail());
             setIconBaseWithExtension(Icons.getSymbolIconBase(symbol.getKind()));
             this.open = createOpenAction(currentFileUri, symbol.getRange());
         }
@@ -226,51 +169,6 @@ public class NavigatorPanelImpl extends Children.Keys<Either<SymbolInformation, 
         @Override
         public Action getPreferredAction() {
             return open;
-        }
-
-    }
-
-    private class View extends JPanel implements ExplorerManager.Provider {
-
-        private final BeanTreeView internalView;
-
-        public View() {
-            setLayout(new BorderLayout());
-            this.internalView = new BeanTreeView();
-            add(internalView, BorderLayout.CENTER);
-
-            internalView.setRootVisible(false);
-        }
-
-        @Override
-        public ExplorerManager getExplorerManager() {
-            return manager;
-        }
-
-        public void expandAll() {
-            boolean scrollsOnExpand = internalView.getScrollsOnExpand();
-            internalView.setScrollsOnExpand(false);
-            internalView.expandAll();
-            internalView.setScrollsOnExpand(scrollsOnExpand);
-        }
-    }
-
-    @ServiceProvider(service=DynamicRegistration.class)
-    public static final class DynamicRegistrationImpl implements DynamicRegistration {
-
-        @Override
-        public Collection<? extends NavigatorPanel> panelsFor(URI uri) {
-            try {
-                FileObject file = URLMapper.findFileObject(uri.toURL());
-                if (file != null) {
-                    return LSPBindings.getBindings(file) != null ? Collections.singletonList(INSTANCE) : Collections.emptyList();
-                } else {
-                    return Collections.emptyList();
-                }
-            } catch (MalformedURLException ex) {
-                //ignore
-                return Collections.emptyList();
-            }
         }
 
     }

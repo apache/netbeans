@@ -211,7 +211,7 @@ public abstract class AXIComponent extends AbstractComponent<AXIComponent>
             return null;
         Set<AXIComponent> keySet = listenerMap.keySet();
         return Collections.unmodifiableList(
-                Arrays.asList(keySet.toArray(new AXIComponent[keySet.size()])));
+                Arrays.asList(keySet.toArray(new AXIComponent[0])));
     }
         
     private PropertyChangeListener getWeakListener(AXIComponent proxy, boolean remove) {

@@ -20,10 +20,13 @@
 package org.netbeans;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.openide.util.*;
 import org.openide.modules.*;
 
@@ -57,7 +60,7 @@ public final class Util {
         if (prefix.length() < 3) prefix += '.';
         if (prefix.length() < 3) prefix += '.';
         String suffix = "-test.jar"; // NOI18N
-        File physicalModuleFile = File.createTempFile(prefix, suffix);
+        File physicalModuleFile = Files.createTempFile(prefix, suffix).toFile();
         physicalModuleFile.deleteOnExit();
         InputStream is = new FileInputStream(moduleFile);
         try {
@@ -218,6 +221,12 @@ public final class Util {
         }
     }
 
+    static List<Class<?>> getStack() {
+        return StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(
+                stream -> stream.map(frame -> frame.getDeclaringClass())
+                                .collect(Collectors.toList()));
+    }
+
     /** 
      * Interface for a classloader to declare that it comes from a module. 
      * @since 2.1
@@ -232,7 +241,7 @@ public final class Util {
      * list of modules (suitable for disabling; reverse for enabling).
      * @param modules some modules
      * @param modulesByName map from module cnbs to modules (may contain unrelated modules)
-     * @param providersOf map from tokens to sets of modules providing them (may mention unrelated modules)
+     * @param _providersOf map from tokens to sets of modules providing them (may mention unrelated modules)
      * @return a map from modules to lists of modules they depend on
      * @see Utilities#topologicalSort
      * JST-PENDING needed from tests
@@ -520,7 +529,7 @@ public final class Util {
                     if (listeners.isEmpty()) {
                         return;
                     }
-                    _listeners = listeners.toArray(new LookupListener[listeners.size()]);
+                    _listeners = listeners.toArray(new LookupListener[0]);
                 }
                 LookupEvent ev = new LookupEvent(this);
                 for (int i = 0; i < _listeners.length; i++) {

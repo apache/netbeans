@@ -89,6 +89,7 @@ public final class GradleJavaSourceSet implements Serializable {
 
     Map<SourceType, String> sourcesCompatibility = Collections.emptyMap();
     Map<SourceType, String> targetCompatibility = Collections.emptyMap();
+    Map<SourceType, File> compilerJavaHomes = Collections.emptyMap();
     Map<SourceType, List<String>> compilerArgs = Collections.emptyMap();
     boolean testSourceSet;
     Set<File> outputClassDirs;
@@ -600,6 +601,22 @@ public final class GradleJavaSourceSet implements Serializable {
         return null;
     }
 
+    /**
+     * Returns the JDK Home directory of the JVM what would be used during the
+     * compilation. Currently the {@linkplain SourceType#JAVA JAVA}, {@linkplain SourceType#GROOVY GROOVY}, and {@linkplain SourceType#SCALA SCALA}
+     * are expected to return a non {@code null} value. The home directory
+     * is determined by using the sourceSet default compile task. In Gradle 
+     * it is possible to define additional compile tasks with different Java Toolchain.
+     * NetBeans would ignore those.
+     * 
+     * @param type The source type of the compiler.
+     * @return The home directory of the JDK used for the default compile task.
+     * @since 1.26
+     */
+    public File getCompilerJavaHome(SourceType type) {
+        return compilerJavaHomes.get(type);
+    }
+    
     /**
      * Returns the compiler arguments for this source set defined for the given
      * language.

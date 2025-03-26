@@ -30,6 +30,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
+import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
@@ -38,6 +39,14 @@ import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.j2ee.core.api.support.java.GenerationUtils;
+import org.openide.filesystems.FileObject;
+
+import static org.netbeans.modules.web.wizards.ListenerPanel.HTTP_SESSION_ATTRIBUTE_LISTENER;
+import static org.netbeans.modules.web.wizards.ListenerPanel.HTTP_SESSION_LISTENER;
+import static org.netbeans.modules.web.wizards.ListenerPanel.SERVLET_CONTEXT_ATTRIBUTE_LISTENER;
+import static org.netbeans.modules.web.wizards.ListenerPanel.SERVLET_CONTEXT_LISTENER;
+import static org.netbeans.modules.web.wizards.ListenerPanel.SERVLET_REQUEST_ATTRIBUTE_LISTENER;
+import static org.netbeans.modules.web.wizards.ListenerPanel.SERVLET_REQUEST_LISTENER;
 
 /**
  * Generator for servlet listener class
@@ -47,16 +56,25 @@ import org.netbeans.modules.j2ee.core.api.support.java.GenerationUtils;
  */
 public class ListenerGenerator {
 
-    boolean isContext;
-    boolean isContextAttr;
-    boolean isSession;
-    boolean isSessionAttr;
-    boolean isRequest;
-    boolean isRequestAttr;
+    private final boolean isContext;
+    private final boolean isContextAttr;
+    private final boolean isSession;
+    private final boolean isSessionAttr;
+    private final boolean isRequest;
+    private final boolean isRequestAttr;
 
     private GenerationUtils gu;
 
-    /** Creates a new instance of ListenerGenerator */
+    /**
+     * Creates a new instance of ListenerGenerator
+     *
+     * @param isContext
+     * @param isContextAttr
+     * @param isSession
+     * @param isSessionAttr
+     * @param isRequest
+     * @param isRequestAttr
+     */
     public ListenerGenerator(boolean isContext, boolean isContextAttr, boolean isSession, boolean isSessionAttr, boolean isRequest, boolean isRequestAttr) {
         this.isContext = isContext;
         this.isContextAttr = isContextAttr;
@@ -67,20 +85,18 @@ public class ListenerGenerator {
     }
 
     public void generate(JavaSource clazz) throws IOException {
-        Task<WorkingCopy> task = new Task<WorkingCopy>() {
-            public void run(WorkingCopy workingCopy) throws Exception {
-                workingCopy.toPhase(Phase.RESOLVED);
-                CompilationUnitTree cut = workingCopy.getCompilationUnit();
+        Task<WorkingCopy> task = (WorkingCopy workingCopy) -> {
+            workingCopy.toPhase(Phase.RESOLVED);
+            CompilationUnitTree cut = workingCopy.getCompilationUnit();
 
-                gu = GenerationUtils.newInstance(workingCopy);
-                for (Tree typeDecl : cut.getTypeDecls()) {
-                    if (TreeUtilities.CLASS_TREE_KINDS.contains(typeDecl.getKind())) {
-                        Element e = workingCopy.getTrees().getElement(new TreePath(new TreePath(workingCopy.getCompilationUnit()), typeDecl));
-                        if (e != null && e.getKind().isClass()) {
-                            TypeElement te = (TypeElement) e;
-                            ClassTree ct = (ClassTree) typeDecl;
-                            workingCopy.rewrite(ct, generateInterfaces(workingCopy, te, ct, gu));
-                        }
+            gu = GenerationUtils.newInstance(workingCopy);
+            for (Tree typeDecl : cut.getTypeDecls()) {
+                if (TreeUtilities.CLASS_TREE_KINDS.contains(typeDecl.getKind())) {
+                    Element e = workingCopy.getTrees().getElement(new TreePath(new TreePath(workingCopy.getCompilationUnit()), typeDecl));
+                    if (e != null && e.getKind().isClass()) {
+                        TypeElement te = (TypeElement) e;
+                        ClassTree ct = (ClassTree) typeDecl;
+                        workingCopy.rewrite(ct, generateInterfaces(workingCopy, te, ct, gu, clazz));
                     }
                 }
             }
@@ -96,29 +112,35 @@ public class ListenerGenerator {
 //        if (isRequestAttr) addRequestAttrListenerMethods();
     }
 
-    private ClassTree generateInterfaces(WorkingCopy wc, TypeElement te, ClassTree ct, GenerationUtils gu) {
+    private ClassTree generateInterfaces(WorkingCopy wc, TypeElement te, ClassTree ct, GenerationUtils gu, JavaSource clazz) {
         ClassTree newClassTree = ct;
 
-        List<String> ifList = new ArrayList<String>();
-        List<ExecutableElement> methods = new ArrayList<ExecutableElement>();
-        
+        List<String> ifList = new ArrayList<>();
+        List<ExecutableElement> methods = new ArrayList<>();
+
+        FileObject jakartaServletRequestListenerFo = clazz.getClasspathInfo()
+                .getClassPath(ClasspathInfo.PathKind.COMPILE)
+                .findResource("jakarta" + SERVLET_REQUEST_LISTENER.replace('.', '/') + ".class");
+
+        String prefix = jakartaServletRequestListenerFo == null ? "javax" : "jakarta";
+
         if (isContext) {
-            ifList.add("javax.servlet.ServletContextListener");
+            ifList.add(prefix + SERVLET_CONTEXT_LISTENER);
         }
         if (isContextAttr) {
-            ifList.add("javax.servlet.ServletContextAttributeListener");
+            ifList.add(prefix + SERVLET_CONTEXT_ATTRIBUTE_LISTENER);
         }
         if (isSession) {
-            ifList.add("javax.servlet.http.HttpSessionListener");
+            ifList.add(prefix + HTTP_SESSION_LISTENER);
         }
         if (isSessionAttr) {
-            ifList.add("javax.servlet.http.HttpSessionAttributeListener");
+            ifList.add(prefix + HTTP_SESSION_ATTRIBUTE_LISTENER);
         }
         if (isRequest) {
-            ifList.add("javax.servlet.ServletRequestListener");
+            ifList.add(prefix + SERVLET_REQUEST_LISTENER);
         }
         if (isRequestAttr) {
-            ifList.add("javax.servlet.ServletRequestAttributeListener");
+            ifList.add(prefix + SERVLET_REQUEST_ATTRIBUTE_LISTENER);
         }
         for (String ifName : ifList) {
             newClassTree = gu.addImplementsClause(newClassTree, ifName);

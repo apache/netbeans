@@ -166,7 +166,7 @@ public class WorkingCopy extends CompilationController {
 
     /**
      * Returns an instance of the {@link WorkingCopy} for
-     * given {@link Parser.Result} if it is a result
+     * given {@link org.netbeans.modules.parsing.spi.Parser.Result} if it is a result
      * of a java parser.
      * @param result for which the {@link WorkingCopy} should be
      * returned.
@@ -310,7 +310,7 @@ public class WorkingCopy extends CompilationController {
      * <p>
      * <code>tree</code> and <code>newTree</code> cannot be <code>null</code>.
      * If <code>oldTree</code> is null, <code>newTree</code> must be of kind
-     * {@link DocTree.Kind#DOC_COMMENT DOC_COMMENT}.
+     * {@link com.sun.source.doctree.DocTree.Kind#DOC_COMMENT DOC_COMMENT}.
      * 
      * @param tree     the tree to which the doctrees belong.
      * @param oldTree  tree to be replaced, use tree already represented in
@@ -950,8 +950,8 @@ public class WorkingCopy extends CompilationController {
         if (textChanges.isEmpty()) {
             return;
         }
-        List<Diff> orderedDiffs = new ArrayList(textChanges);
-        Collections.sort(orderedDiffs, new Comparator<Diff>() {
+        List<Diff> orderedDiffs = new ArrayList<>(textChanges);
+        orderedDiffs.sort(new Comparator<Diff>() {
             @Override
             public int compare(Diff o1, Diff o2) {
                 return o1.getPos() - o2.getPos();
@@ -959,7 +959,7 @@ public class WorkingCopy extends CompilationController {
         });
         
         List<int[]> spans = new ArrayList<>(tag2Span.values());
-        Collections.sort(spans, new Comparator<int[]>() {
+        spans.sort(new Comparator<int[]>() {
             @Override
             public int compare(int[] o1, int[] o2) {
                 return o1[0] - o2[0];

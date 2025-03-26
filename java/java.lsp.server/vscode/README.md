@@ -20,14 +20,23 @@
     under the License.
 
 -->
+[![Visual Studio Marketplace](https://img.shields.io/visual-studio-marketplace/v/ASF.apache-netbeans-java)](https://marketplace.visualstudio.com/items?itemName=ASF.apache-netbeans-java)
+[![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/ASF.apache-netbeans-java)](https://marketplace.visualstudio.com/items?itemName=ASF.apache-netbeans-java)
+[![Build Status](https://ci-builds.apache.org/job/Netbeans/view/vscode/job/netbeans-vscode/badge/icon)](https://ci-builds.apache.org/job/Netbeans/view/vscode/job/netbeans-vscode/)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/apache/netbeans/blob/master/LICENSE)
 
-This is a technology preview of [Apache NetBeans](http://netbeans.org)
-based extension for VS Code. Use it to get all the _goodies of NetBeans_
-via the VS Code user interface! Runs on __JDK8__[*] and all newer versions.
+
+This is [Apache NetBeans](http://netbeans.org) Language Server extension for VS Code. Use it to get all the _goodies of NetBeans_ via the VS Code user interface! Runs on __JDK11__ and all newer versions.
 
 Apache NetBeans Language Server brings full featured Java development (edit-compile-debug & test cycle) for Maven and Gradle projects to VSCode. As well as other features.
 ## Getting Started
-1. Set JDK in `VSCode | Preferences | Settings ...` __Netbeans: Jdkhome__ setting to point to JDK which Language Server will run on and projects will be compiled with. More below in section [Selecting the JDK](#selecting-the-jdk)
+1. Use command __Java: JDK Configuration__ to set same JDK in Apache NetBeans Language Server and all other Java settings in VSCode like Integrated terminal `JAVA_HOME` and `PATH`, Maven Runtime and JDK for MS Java as well if installed:
+![JDK Configuration](images/java_jdk_configuration.png)
+
+   2. Select installed JDK to use for these settings in step 2/3
+   3. In step 3/3 select if settings will be applied at User level for all Workspaces (Folders open) or for current Workspace (Folder) only.
+   4. NetBeans Language Server JDK Home setting `netbeans.jdkhome` is __also__ available in `VSCode | Preferences | Settings ...` `Netbeans: Jdkhome` . More below in section [Selecting the JDK](#selecting-the-jdk)
+   5. Setting `netbeans.project.jdkhome` holds a path to a JDK that is used as a default platform for opened folder/workspace (e.g. Java project). To avoid possible issues with default platform changing (i.e. changes from JDK21 to JDK8), NBLS is restarted when `netbeans.project.jdhome` changes.
 
 2. Use __Java: New Project...__ " command to start creating new project, or
 3. Open the folder with existing __pom.xml__ for Maven or ___Gradle___ project files (_build.gradle, gradle.properties_).
@@ -35,16 +44,18 @@ Apache NetBeans Language Server brings full featured Java development (edit-comp
     subprojects etc.
 4. Or simply create a new Java class file with `public static void main(String[] args)` method in opened folder and start coding, compiling, debugging. Works on JDK 8 and newer.
 
+## Proxy Issues
+When running this extension on GraalVM, as its runtime JDK, behind proxy it requires GraalVM JavaScript (Graal.JS) component installed to perform automatic proxy resolution. Either install Graal.JS using GraalVM VSCode extension available on Marketplace or invoke `gu install js` for GraalVM used by VSCode.
 
 ## Supported Actions
 * __Java: New Project...__ allows creation of new Maven or Gradle project 
 * __Java: New from Template...__ add various files to currently selected open project. Files are:
     * Java - broad selection of various predefined Java classes
-    * Unit tests - JUnit and TestNB templates for test suites and test cases
+    * Unit tests - JUnit and TestNG templates for test suites and test cases
     * HTML5/JavaScript - Templates for JS, HTML, CSS,... files
     * Other - various templates for JSON, YAML, properties, ... files
 * __Java: Compile Workspace__ - invoke Maven or Gradle build
-* Debugger __Java 8+...__ - start main class or test on JDK8+. More in [Debugger section](#debugger-and-launch-configurations)
+* Debugger __Java+...__ - start main class or test on selected JDK. More in [Debugger section](#debugger-and-launch-configurations)
 * Progress shown for long running operations with cancel support for selected types
 * __Native Image Debugger__ is a new Run configuration added which allows Java style debugging of Ahead of Time compiled native-images, produced by GraalVM. It is experimental feature which works with GDB on Linux. GDB 7.11 or GDB 10.1+ is required due to known issue [#26139](https://sourceware.org/bugzilla/show_bug.cgi?id=26139) in GDB 8 and 9.
   * It is also possible to attach to running native image process using __Attach to Native Image__ launch configuation.
@@ -58,14 +69,14 @@ Project Explorer provides an overview of logical project structure, groups sourc
 ![Project Explorer](images/project-explorer.png)
 
 ## Debugger and Launch Configurations
-Language Server __Java 8+ ...__ launch configuration supports debugging and running Java applications using JDK8 or newer. 
+Language Server __Java+ ...__ launch configuration supports debugging and running Java applications using JDK11 or newer. 
 1. The launch configuration (debugger) is invoked when `Run main | Debug main` code lense is selected in the code.
-2. Or __Java 8+...__ is selected in __Run and Debug__ activity panel.
+2. Or __Java+...__ is selected in __Run and Debug__ activity panel.
 ![Debug configurations](images/debuggers.png)
 ### Launch Configurations
-* __Launch Java 8+ App__ - Debug or Run current Java project
+* __Launch Java App__ - Debug or Run current Java project
 * __Launch Java: Continuous Mode__ - Runs Micronaut project and reloads it when source code has been changed.
-* __Attach to Port__ & __Attach to Process__ - Attach debugger actions. Available when __Java 8+ ...__ at the bottom of drop down list is selected.
+* __Attach to Port__ & __Attach to Process__ - Attach debugger actions. Available when __Java+ ...__ at the bottom of drop down list is selected.
     * Select this configuration, then click the ![Run](images/run.png) 
     * Select either from available process or enter the port to connect to JVM running with JDWP.
     * __Attach to Shared Memory__ is available on Windows in addtion to above mentioned _Attach..._
@@ -138,8 +149,8 @@ When adding JavaDoc to code NetBeans assists by suggesting to insert preformatte
 ![JavaDoc Completion](images/javadoc.png)
 
 ## Source Code formatting
-Formatting source code is possible using also other styles than NetBeans. Eclipse, Google and Spring formatters can be used. For Eclipse formatter simply export settings from Eclipse IDE into standard file and then set `Netbeans > Format: Settings Path:` in VSCode Settings.
-![Source Code formatter](images/SourceCodeFormatter.png) 
+Formatting source code is possible using the NetBeans code style. For using non default formatter options, simply export desired settings from NetBeans IDE into standard file and then set `Netbeans > Format: Settings Path:` in VSCode Settings.
+
 ## Test Explorer
 NetBeans Language Server provides Test Explorer view which allows to run all tests in a project, examine the results, go to source code and  run particular test.
 ![Test Explorer](images/Test_explorer.png)
@@ -178,6 +189,14 @@ Oracle Cloud Infrastructure Explorer supports viewing compartments and resources
 ![Cloud Explorer](images/cloud-explorer.png)
 
 It is possible to add JDBC connection to Oracle Autonomous DB running in OCI using __Add DB Connection__ menu. It downloads DB Wallet automatically.
+
+## Cloud Assets Panel
+Cloud Assets panel shows Micronaut OCI Properties to be set. These are read from project artefacts currently provided in project pom.xml or build.gradle. When user OCI configuration file `.oci/config` is present it allows to set various OCI assets (resources) needed for project runtime using user OCI tenancy. 
+
+![Cloud Assets](images/cloud_assets.png)
+
+It is also possible to generate suggested OCI Policies needed by project to run in OCI and copy & paste these policies into OCI Cloud Console.
+
 ## Supported Options
 
 * __netbeans.jdkhome__ - path to the JDK, see dedicated section below
@@ -197,6 +216,15 @@ following locations:
 - current system path
 
 As soon as one of the settings is changed, the Language Server is restarted.
+
+## Checking JDK compatibility
+
+The extension will check if source level Java (defined in the project) is compatible
+with the one used by extension. It checks if the source level Java version is lower or equal 
+to the Java version used by extension, and if this condition is not fulfilled, it will show
+warning message.
+
+It will not perform the check if the RedHat extension is installed.
 
 ## Running Language Server per VSCode workspace or for user
 It is possible to run Apache NetBeans Language Server per workspace (VSCode window). This allows separation of Language Server for given project as Language Server JVM is not shared for more VSCode open workspaces (projects).

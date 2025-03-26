@@ -38,7 +38,7 @@ import org.netbeans.modules.editor.lib2.EditorImplementationProvider;
  * @since 10/2001
  * @deprecated See org.netbeans.spi.editor.lib2.EditorImplementationProvider
  */
-
+@Deprecated
 public abstract class ImplementationProvider {
 
     private static final ImplementationProvider PROVIDER = new ProviderBridge();

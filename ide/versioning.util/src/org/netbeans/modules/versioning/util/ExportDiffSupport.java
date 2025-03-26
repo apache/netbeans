@@ -27,6 +27,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.prefs.Preferences;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -203,7 +204,7 @@ public abstract class ExportDiffSupport {
     }
 
     protected File createTempFile () throws IOException {
-        return File.createTempFile("vcs-diff", ".patch"); // NOI18N
+        return Files.createTempFile("vcs-diff", ".patch").toFile(); // NOI18N
     }
 
     protected String getMessage (String resourceName) {

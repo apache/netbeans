@@ -27,7 +27,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Set;
 import javax.swing.Action;
@@ -143,7 +142,7 @@ public class TasksPanel extends javax.swing.JPanel implements ExplorerManager.Pr
             final Children taskGroups = new Children.Array();
             ArrayList<String> glist = new ArrayList<>(prj.getTaskGroups());
             glist.remove(GradleBaseProject.PRIVATE_TASK_GROUP);
-            Collections.sort(glist, String.CASE_INSENSITIVE_ORDER);
+            glist.sort(String.CASE_INSENSITIVE_ORDER);
 
             for (String group : glist) {
                 taskGroups.add(new Node[]{new TaskGroupNode(group, prj, updateP)});
@@ -253,7 +252,7 @@ public class TasksPanel extends javax.swing.JPanel implements ExplorerManager.Pr
         public TaskGroupChildren(String group, GradleBaseProject project, Project genericProject) {
             this.genericProject = genericProject;
             ArrayList<GradleTask> keys = new ArrayList<>(project.getTasks(group));
-            Collections.sort(keys, Comparator.comparing(GradleTask::getName, String.CASE_INSENSITIVE_ORDER));
+            keys.sort(Comparator.comparing(GradleTask::getName, String.CASE_INSENSITIVE_ORDER));
             setKeys(keys);
         }
 

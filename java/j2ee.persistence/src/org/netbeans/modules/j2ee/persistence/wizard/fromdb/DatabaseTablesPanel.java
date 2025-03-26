@@ -28,7 +28,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
@@ -46,7 +48,6 @@ import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.db.explorer.JDBCDriver;
 import org.netbeans.api.db.explorer.JDBCDriverManager;
 import org.netbeans.api.db.explorer.support.DatabaseExplorerUIs;
-import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -64,11 +65,11 @@ import org.netbeans.modules.j2ee.persistence.spi.server.ServerStatusProvider2;
 import org.netbeans.modules.j2ee.persistence.unit.PUDataObject;
 import org.netbeans.modules.j2ee.persistence.util.SourceLevelChecker;
 import org.netbeans.modules.j2ee.persistence.wizard.Util;
-import org.netbeans.modules.j2ee.persistence.wizard.entity.EntityWizardDescriptor;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.WizardDescriptor;
+import org.openide.awt.Mnemonics;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
@@ -115,12 +116,7 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
     public DatabaseTablesPanel() {
         initComponents();
         initInitial();
-        ListSelectionListener selectionListener = new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                updateButtons();
-            }
-        };
+        ListSelectionListener selectionListener = ( (ListSelectionEvent e) -> updateButtons() );
         availableTablesList.getSelectionModel().addListSelectionListener(selectionListener);
         selectedTablesList.getSelectionModel().addListSelectionListener(selectionListener);
     }
@@ -140,31 +136,22 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
     
     private void initSubComponents(){
 
-        changeListener = new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                    if (project != null && ProviderUtil.isValidServerInstanceOrNone(project)) {
-                        // stop listening once a server was set
-                        serverStatusProvider.removeChangeListener(changeListener);
-                        if (!Util.isContainerManaged(project)) {
-                            // if selected server does not support DataSource then
-                            // swap the combo to DB Connection selection
-                            datasourceComboBox.setModel(new DefaultComboBoxModel());
-                            initializeWithDbConnections();
-                            // notify user about result of server selection:
-                            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(DatabaseTablesPanel.class, "WRN_Server_Does_Not_Support_DS")));
-                        } else {
-                            // #190671 - because of hacks around server set in maven
-                            // listen and update data sources after server was set here again.
-                            // In theory this should not be necessary and
-                            // j2ee.common.DatasourceUIHelper.performServerSelection should have done
-                            // everything necessary but often at that time
-                            // PersistenceProviderSupplier.supportsDefaultProvider() is still false
-                            // (server change was not propagated there yet). In worst case combo model will be set twice:
-                            datasourceComboBox.setModel(new DefaultComboBoxModel());
-                            initializeWithDatasources();
-                        }
-                    }
+        changeListener = (ChangeEvent e) -> {
+            if (project != null && ProviderUtil.isValidServerInstanceOrNone(project)) {
+                // stop listening once a server was set
+                serverStatusProvider.removeChangeListener(changeListener);
+                datasourceLocalComboBox.setModel(new DefaultComboBoxModel());
+                initializeWithDbConnections();
+                // #190671 - because of hacks around server set in maven
+                // listen and update data sources after server was set here again.
+                // In theory this should not be necessary and
+                // j2ee.common.DatasourceUIHelper.performServerSelection should have done
+                // everything necessary but often at that time
+                // PersistenceProviderSupplier.supportsDefaultProvider() is still false
+                // (server change was not propagated there yet). In worst case combo model will be set twice:
+                datasourceServerComboBox.setModel(new DefaultComboBoxModel());
+                initializeWithDatasources();
+                Mnemonics.setLocalizedText(datasourceLabel, org.openide.util.NbBundle.getMessage(DatabaseTablesPanel.class, "LBL_Datasource"));
             }
         };
 
@@ -176,29 +163,26 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
             }
         }
 
-
-        boolean serverIsSelected = ProviderUtil.isValidServerInstanceOrNone(project);
-        boolean canServerBeSelected = ProviderUtil.canServerBeSelected(project);
-
         {
-            boolean withDatasources = Util.isContainerManaged(project) || Util.isEjb21Module(project);
-            if ((withDatasources && serverIsSelected) || (canServerBeSelected && !serverIsSelected)) {
-                initializeWithDatasources();
-            } else {
-                initializeWithDbConnections();
-            }
+            boolean hasJPADataSourcePopulator = project.getLookup().lookup(JPADataSourcePopulator.class) != null;
+            initializeWithDatasources();
+            initializeWithDbConnections();
+            Mnemonics.setLocalizedText(datasourceLabel, org.openide.util.NbBundle.getMessage(DatabaseTablesPanel.class, "LBL_Datasource"));
 
             DBSchemaUISupport.connect(dbschemaComboBox, dbschemaFileList);
             boolean hasDBSchemas = (dbschemaComboBox.getItemCount() > 0 && dbschemaComboBox.getItemAt(0) instanceof FileObject);
 
             dbschemaRadioButton.setEnabled(hasDBSchemas);
-            dbschemaComboBox.setEnabled(hasDBSchemas);
             dbschemaRadioButton.setVisible(hasDBSchemas);
+            dbschemaComboBox.setEnabled(hasDBSchemas);
             dbschemaComboBox.setVisible(hasDBSchemas);
-            datasourceLabel.setVisible(!hasDBSchemas);
-            datasourceRadioButton.setVisible(hasDBSchemas);
-            
-            selectDefaultTableSource(tableSource, withDatasources, project, targetFolder);
+            datasourceLocalRadioButton.setVisible(hasDBSchemas || hasJPADataSourcePopulator);
+            datasourceServerRadioButton.setVisible(hasJPADataSourcePopulator);
+            datasourceServerRadioButton.setEnabled(hasJPADataSourcePopulator);
+            datasourceServerComboBox.setEnabled(hasJPADataSourcePopulator);
+            datasourceServerComboBox.setVisible(hasJPADataSourcePopulator);
+
+            selectDefaultTableSource(tableSource, hasJPADataSourcePopulator, project, targetFolder);
         } 
 
         // hack to ensure the progress dialog displayed by updateSourceSchema()
@@ -206,12 +190,7 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         // is called wizard dialog might be non-visible, so the progress dialog
         // would be displayed before the wizard dialog.
         sourceSchemaUpdateEnabled = true;
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                updateSourceSchema();
-            }
-        });        
+        SwingUtilities.invokeLater( () -> updateSourceSchema() );
     }
     
     private void initInitial(){
@@ -220,21 +199,21 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         dbschemaComboBox.setEnabled(false);
         dbschemaRadioButton.setVisible(false);
         dbschemaComboBox.setVisible(false);   
-        datasourceRadioButton.setVisible(false);
+        datasourceServerRadioButton.setVisible(false);
         org.openide.awt.Mnemonics.setLocalizedText(datasourceLabel, org.openide.util.NbBundle.getMessage(DatabaseTablesPanel.class, "LBL_Wait"));
     }
 
     private void initializeWithDatasources() {
-        org.openide.awt.Mnemonics.setLocalizedText(datasourceRadioButton, org.openide.util.NbBundle.getMessage(DatabaseTablesPanel.class, "LBL_Datasource"));
-        org.openide.awt.Mnemonics.setLocalizedText(datasourceLabel, org.openide.util.NbBundle.getMessage(DatabaseTablesPanel.class, "LBL_Datasource"));
         JPADataSourcePopulator dsPopulator = project.getLookup().lookup(JPADataSourcePopulator.class);
-        dsPopulator.connect(datasourceComboBox);
+        if(dsPopulator != null) {
+            dsPopulator.connect(datasourceServerComboBox);
+        } else {
+            datasourceServerComboBox.removeAllItems();
+        }
     }
 
     private void initializeWithDbConnections() {
-        org.openide.awt.Mnemonics.setLocalizedText(datasourceRadioButton, org.openide.util.NbBundle.getMessage(DatabaseTablesPanel.class, "LBL_JDBCConnection"));
-        org.openide.awt.Mnemonics.setLocalizedText(datasourceLabel, org.openide.util.NbBundle.getMessage(DatabaseTablesPanel.class, "LBL_JDBCConnection"));
-        DatabaseExplorerUIs.connect(datasourceComboBox, ConnectionManager.getDefault());
+        DatabaseExplorerUIs.connect(datasourceLocalComboBox, ConnectionManager.getDefault());
     }
 
     /**
@@ -276,20 +255,16 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
                 // if the previous source was a data source, it should be selected
                 // only if a database connection can be found for it and we can
                 // connect to that connection without displaying a dialog
-                if (withDatasources) {
-                    if (selectDatasource(tableSourceName, false)) {
-                        return;
-                    }
+                if (withDatasources && selectDatasource(tableSourceName, false)) {
+                    return;
                 }
                 break;
 
             case CONNECTION:
                 // if the previous source was a database connection, it should be selected
                 // only if we can connect to it without displaying a dialog
-                if (!withDatasources) {
-                    if (selectDbConnection(tableSourceName)) {
-                        return;
-                    }
+                if (selectDbConnection(tableSourceName)) {
+                    return;
                 }
                 break;
 
@@ -307,8 +282,7 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         boolean puExists = false;
         try {
             puExists = ProviderUtil.persistenceExists(project, targetFolder);
-        } catch (InvalidPersistenceXmlException ex) {
-        } catch (RuntimeException ex) {
+        } catch (InvalidPersistenceXmlException | RuntimeException ex) {
         }
 
         if(puExists){
@@ -338,7 +312,7 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
                     //try to find jdbc connection
                     DatabaseConnection cn = ProviderUtil.getConnection(pu);
                     if(cn != null){
-                        datasourceComboBox.setSelectedItem(cn);
+                        datasourceServerComboBox.setSelectedItem(cn);
                     }
                 }
             }
@@ -347,7 +321,11 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         // nothing got selected so far, so select the data source / connection
         // radio button, but don't select an actual data source or connection
         // (since this would cause the connect dialog to be displayed)
-        datasourceRadioButton.setSelected(true);
+        if(datasourceServerComboBox.isVisible()) {
+            datasourceServerRadioButton.setSelected(true);
+        } else {
+            datasourceLocalRadioButton.setSelected(true);
+        }
     }
 
     /**
@@ -365,21 +343,26 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         if (datasource == null) {
             throw new NullPointerException("The datasource parameter cannot be null."); // NOI18N
         }
+
+        List<DatabaseConnection> result = new ArrayList<>();
+
         String databaseUrl = datasource.getUrl();
         String user = datasource.getUsername();
-        if (databaseUrl == null || user == null) {
-            return Collections.emptyList();
-        }
-        List<DatabaseConnection> result = new ArrayList<DatabaseConnection>();
         for (DatabaseConnection dbconn : ConnectionManager.getDefault().getConnections()) {
-            if (databaseUrl.equals(dbconn.getDatabaseURL()) && user.equals(dbconn.getUser())) {
+            if (Objects.equals(databaseUrl, dbconn.getDatabaseURL())) {
                 result.add(dbconn);
             }
         }
-        if (result.size() > 0) {
-            return Collections.unmodifiableList(result);
+
+        List<DatabaseConnection> resultUserMatched = result
+                .stream()
+                .filter(dc -> Objects.equals(user, dc.getUser()))
+                .collect(Collectors.toList());
+
+        if(! resultUserMatched.isEmpty()) {
+            return resultUserMatched;
         } else {
-            return Collections.emptyList();
+            return Collections.unmodifiableList(result);
         }
     }
 
@@ -419,12 +402,14 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
             }
         }
         boolean selected = false;
-        for(int i=0; i<datasourceComboBox.getItemCount(); i++){
-            Object item = datasourceComboBox.getItemAt(i);
+        for(int i=0; i<datasourceServerComboBox.getItemCount(); i++){
+            Object item = datasourceServerComboBox.getItemAt(i);
             JPADataSource jpaDS = dsProvider.toJPADataSource(item);
             if(jpaDS!=null){
-                if(datasource.getJndiName().equals(jpaDS.getJndiName()) && datasource.getUrl().equals(jpaDS.getUrl()) && datasource.getUsername().equals(jpaDS.getUsername())){
-                    datasourceComboBox.setSelectedIndex(i);
+                if( Objects.equals(datasource.getJndiName(), jpaDS.getJndiName())
+                        && Objects.equals(datasource.getUrl(), jpaDS.getUrl())
+                        && Objects.equals(datasource.getUsername(), jpaDS.getUsername())) {
+                    datasourceServerComboBox.setSelectedIndex(i);
                     selected = true;
                     break;
                 }
@@ -433,7 +418,7 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         if (!selected) {
             return false;
         }
-        datasourceRadioButton.setSelected(true);
+        datasourceServerRadioButton.setSelected(true);
         return true;
     }
 
@@ -445,11 +430,11 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         if (dbcon == null || dbcon.getJDBCConnection() == null) {
             return false;
         }
-        datasourceComboBox.setSelectedItem(dbcon);
-        if (!dbcon.equals(datasourceComboBox.getSelectedItem())) {
+        datasourceLocalComboBox.setSelectedItem(dbcon);
+        if (!dbcon.equals(datasourceLocalComboBox.getSelectedItem())) {
             return false;
         }
-        datasourceRadioButton.setSelected(true);
+        datasourceLocalRadioButton.setSelected(true);
         return true;
     }
 
@@ -501,13 +486,26 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         dbschemaFile = null;
 
 
-        if (datasourceRadioButton.isSelected()) {
-            Object item = datasourceComboBox.getSelectedItem();
+        if (datasourceLocalRadioButton.isSelected()) {
+            dbconn = (DatabaseConnection) datasourceLocalComboBox.getSelectedItem();
+            try {
+                if(dbconn != null) {
+                    sourceSchemaElement = dbschemaManager.getSchemaElement(dbconn);
+                }
+            } catch (SQLException e) {
+                notify(NbBundle.getMessage(DatabaseTablesPanel.class, "ERR_DatabaseError"));
+            } finally {
+                if(sourceSchemaElement == null){
+                    datasourceServerComboBox.setSelectedIndex(-1);//drop to default selection instead of keep not loaded
+                }
+            }
+        } else if (datasourceServerRadioButton.isSelected()) {
+            Object item = datasourceServerComboBox.getSelectedItem();
             JPADataSourceProvider dsProvider = project.getLookup().lookup(JPADataSourceProvider.class);
             JPADataSource jpaDS = dsProvider != null ? dsProvider.toJPADataSource(item) : null;
             if (jpaDS != null) {
                 List<DatabaseConnection> dbconns = findDatabaseConnections(jpaDS);
-                if (dbconns.size() > 0) {
+                if (!dbconns.isEmpty()) {
                     dbconn = dbconns.get(0);
                 } else {
                     String drvClass = jpaDS.getDriverClassName();
@@ -530,17 +528,6 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
                         datasourceName = jpaDS.getJndiName();
                     } catch (SQLException e) {
                         notify(NbBundle.getMessage(DatabaseTablesPanel.class, "ERR_DatabaseError"));
-                    }
-                }
-            } else if (item instanceof DatabaseConnection) {
-                dbconn = (DatabaseConnection)item;
-                try {
-                    sourceSchemaElement = dbschemaManager.getSchemaElement(dbconn);
-                } catch (SQLException e) {
-                    notify(NbBundle.getMessage(DatabaseTablesPanel.class, "ERR_DatabaseError"));
-                } finally {
-                    if(sourceSchemaElement == null){
-                        datasourceComboBox.setSelectedIndex(-1);//drop to default selection instead of keep not loaded
                     }
                 }
             }
@@ -577,7 +564,8 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
     }
 
     private void updateSourceSchemaComboBoxes() {
-        datasourceComboBox.setEnabled(datasourceRadioButton.isSelected());
+        datasourceLocalComboBox.setEnabled(datasourceLocalRadioButton.isSelected());
+        datasourceServerComboBox.setEnabled(datasourceServerRadioButton.isSelected());
         dbschemaComboBox.setEnabled(dbschemaRadioButton.isSelected());
     }
 
@@ -586,12 +574,12 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         Set<Table> allSelectedTables = TableUISupport.getSelectedTables(availableTablesList, false);
         addButton.setEnabled(tableClosure.canAddAllTables(addTables));
 
-        addAllButton.setEnabled(TableUISupport.getEnabledTables(availableTablesList).size()>0);
+        addAllButton.setEnabled(!TableUISupport.getEnabledTables(availableTablesList).isEmpty());
 
         Set<Table> tables = TableUISupport.getSelectedTables(selectedTablesList);
         removeButton.setEnabled(tableClosure.canRemoveAllTables(tables));
 
-        removeAllButton.setEnabled(tableClosure.getSelectedTables().size() > 0);
+        removeAllButton.setEnabled(!tableClosure.getSelectedTables().isEmpty());
         String problems = "";
         for (Table t : allSelectedTables) {
             if (t.isDisabled()) {
@@ -610,7 +598,9 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
                 }
             }
         }
-        tableError.setText(problems);tableError.setCaretPosition(0);
+        tableErrorScroll.setVisible(! problems.trim().isEmpty());
+        tableError.setText(problems);
+        tableError.setCaretPosition(0);
     }
 
     /** This method is called from within the constructor to
@@ -625,8 +615,10 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         schemaSource = new javax.swing.ButtonGroup();
         comboPanel = new javax.swing.JPanel();
         datasourceLabel = new javax.swing.JLabel();
-        datasourceRadioButton = new javax.swing.JRadioButton();
-        datasourceComboBox = new javax.swing.JComboBox();
+        datasourceLocalRadioButton = new javax.swing.JRadioButton();
+        datasourceLocalComboBox = new javax.swing.JComboBox();
+        datasourceServerRadioButton = new javax.swing.JRadioButton();
+        datasourceServerComboBox = new javax.swing.JComboBox();
         dbschemaRadioButton = new javax.swing.JRadioButton();
         dbschemaComboBox = new javax.swing.JComboBox();
         tablesPanel = new TablesPanel();
@@ -653,45 +645,76 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
 
         comboPanel.setLayout(new java.awt.GridBagLayout());
 
-        datasourceLabel.setLabelFor(datasourceComboBox);
+        datasourceLabel.setLabelFor(datasourceServerComboBox);
         org.openide.awt.Mnemonics.setLocalizedText(datasourceLabel, org.openide.util.NbBundle.getMessage(DatabaseTablesPanel.class, "LBL_Datasource")); // NOI18N
         datasourceLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 0, 4, 4));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 0, 2, 0);
         comboPanel.add(datasourceLabel, gridBagConstraints);
 
-        schemaSource.add(datasourceRadioButton);
-        org.openide.awt.Mnemonics.setLocalizedText(datasourceRadioButton, org.openide.util.NbBundle.getMessage(DatabaseTablesPanel.class, "LBL_Datasource")); // NOI18N
-        datasourceRadioButton.addItemListener(new java.awt.event.ItemListener() {
+        schemaSource.add(datasourceLocalRadioButton);
+        org.openide.awt.Mnemonics.setLocalizedText(datasourceLocalRadioButton, org.openide.util.NbBundle.getMessage(DatabaseTablesPanel.class, "LBL_LocalDatasource")); // NOI18N
+        datasourceLocalRadioButton.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                datasourceRadioButtonItemStateChanged(evt);
+                datasourceLocalRadioButtonItemStateChanged(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        comboPanel.add(datasourceRadioButton, gridBagConstraints);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(2, 0, 2, 0);
+        comboPanel.add(datasourceLocalRadioButton, gridBagConstraints);
 
-        datasourceComboBox.setEnabled(false);
-        datasourceComboBox.addActionListener(new java.awt.event.ActionListener() {
+        datasourceLocalComboBox.setEnabled(false);
+        datasourceLocalComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                datasourceComboBoxActionPerformed(evt);
+                datasourceLocalComboBoxActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(1, 2, 0, 0);
-        comboPanel.add(datasourceComboBox, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 0);
+        comboPanel.add(datasourceLocalComboBox, gridBagConstraints);
+
+        schemaSource.add(datasourceServerRadioButton);
+        org.openide.awt.Mnemonics.setLocalizedText(datasourceServerRadioButton, org.openide.util.NbBundle.getMessage(DatabaseTablesPanel.class, "LBL_RemoteDatasource")); // NOI18N
+        datasourceServerRadioButton.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                datasourceServerRadioButtonItemStateChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(2, 0, 2, 0);
+        comboPanel.add(datasourceServerRadioButton, gridBagConstraints);
+
+        datasourceServerComboBox.setEnabled(false);
+        datasourceServerComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                datasourceServerComboBoxActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 0);
+        comboPanel.add(datasourceServerComboBox, gridBagConstraints);
 
         schemaSource.add(dbschemaRadioButton);
-        org.openide.awt.Mnemonics.setLocalizedText(dbschemaRadioButton, org.openide.util.NbBundle.getMessage(DatabaseTablesPanel.class, "LBL_DbSchema")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(dbschemaRadioButton, org.openide.util.NbBundle.getMessage(DatabaseTablesPanel.class, "LBL_SchemaDatasource")); // NOI18N
         dbschemaRadioButton.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 dbschemaRadioButtonItemStateChanged(evt);
@@ -699,9 +722,9 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(4, 0, 0, 0);
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(2, 0, 2, 0);
         comboPanel.add(dbschemaRadioButton, gridBagConstraints);
 
         dbschemaComboBox.setEnabled(false);
@@ -713,11 +736,11 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 0);
         comboPanel.add(dbschemaComboBox, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -946,15 +969,15 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         updateSourceSchema();
     }//GEN-LAST:event_dbschemaRadioButtonItemStateChanged
 
-    private void datasourceComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_datasourceComboBoxActionPerformed
-        datasourceComboBox.hidePopup();
+    private void datasourceServerComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_datasourceServerComboBoxActionPerformed
+        datasourceServerComboBox.hidePopup();
         updateSourceSchema();
-    }//GEN-LAST:event_datasourceComboBoxActionPerformed
+    }//GEN-LAST:event_datasourceServerComboBoxActionPerformed
 
-    private void datasourceRadioButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_datasourceRadioButtonItemStateChanged
+    private void datasourceServerRadioButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_datasourceServerRadioButtonItemStateChanged
         updateSourceSchemaComboBoxes();
         updateSourceSchema();
-    }//GEN-LAST:event_datasourceRadioButtonItemStateChanged
+    }//GEN-LAST:event_datasourceServerRadioButtonItemStateChanged
 
     private void addAllTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAllTypeComboActionPerformed
         if(filterComboTxts[0].equals(addAllTypeCombo.getSelectedItem().toString())){
@@ -967,6 +990,16 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         TableUISupport.connectAvailable(availableTablesList, tableClosure, filterAvailable);
     }//GEN-LAST:event_addAllTypeComboActionPerformed
 
+    private void datasourceLocalRadioButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_datasourceLocalRadioButtonItemStateChanged
+        updateSourceSchemaComboBoxes();
+        updateSourceSchema();
+    }//GEN-LAST:event_datasourceLocalRadioButtonItemStateChanged
+
+    private void datasourceLocalComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_datasourceLocalComboBoxActionPerformed
+        datasourceLocalComboBox.hidePopup();
+        updateSourceSchema();
+    }//GEN-LAST:event_datasourceLocalComboBoxActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addAllButton;
@@ -977,9 +1010,11 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
     private javax.swing.JScrollPane availableTablesScrollPane;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JPanel comboPanel;
-    private javax.swing.JComboBox datasourceComboBox;
     private javax.swing.JLabel datasourceLabel;
-    private javax.swing.JRadioButton datasourceRadioButton;
+    private javax.swing.JComboBox datasourceLocalComboBox;
+    private javax.swing.JRadioButton datasourceLocalRadioButton;
+    private javax.swing.JComboBox datasourceServerComboBox;
+    private javax.swing.JRadioButton datasourceServerRadioButton;
     private javax.swing.JComboBox dbschemaComboBox;
     private javax.swing.JRadioButton dbschemaRadioButton;
     private javax.swing.JButton removeAllButton;
@@ -1120,20 +1155,16 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         @Override
         public boolean isValid() {
 
-
             // TODO: RETOUCHE
             //            if (JavaMetamodel.getManager().isScanInProgress()) {
             if (false){
                 if (!waitingForScan) {
                     waitingForScan = true;
-                    RequestProcessor.Task task = RequestProcessor.getDefault().create(new Runnable() {
-                        @Override
-                        public void run() {
-                            // TODO: RETOUCHE
-                            //                            JavaMetamodel.getManager().waitScanFinished();
-                            waitingForScan = false;
-                            changeSupport.fireChange();
-                        }
+                    RequestProcessor.Task task = RequestProcessor.getDefault().create( () -> {
+                        // TODO: RETOUCHE
+                        // JavaMetamodel.getManager().waitScanFinished();
+                        waitingForScan = false;
+                        changeSupport.fireChange();
                     });
                     setErrorMessage(NbBundle.getMessage(DatabaseTablesPanel.class, "scanning-in-progress"));
                     task.schedule(0);
@@ -1144,7 +1175,8 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
             SourceGroup groups[]=sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
             if(groups == null || groups.length == 0) {
                 setErrorMessage(NbBundle.getMessage(DatabaseTablesPanel.class,"ERR_JavaSourceGroup")); //NOI18N
-                getComponent().datasourceComboBox.setEnabled(false);
+                getComponent().datasourceLocalComboBox.setEnabled(false);
+                getComponent().datasourceServerComboBox.setEnabled(false);
                 getComponent().dbschemaComboBox.setEnabled(false);
                 return false;
             }
@@ -1215,6 +1247,7 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
     }
     private static class ItemListCellRenderer extends DefaultListCellRenderer {
 
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 
             Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);

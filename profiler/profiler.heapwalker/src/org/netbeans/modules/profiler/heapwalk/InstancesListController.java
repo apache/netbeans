@@ -30,7 +30,6 @@ import org.netbeans.modules.profiler.heapwalk.model.HeapWalkerNodeFactory;
 import org.netbeans.modules.profiler.heapwalk.ui.InstancesListControllerUI;
 import org.openide.util.NbBundle;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javax.swing.AbstractButton;
@@ -832,7 +831,7 @@ public class InstancesListController extends AbstractController {
     }
 
     private List getSortedInstances(List filteredInstances, int sortingColumn, boolean sortingOrder) {
-        Collections.sort(filteredInstances, new InstancesComparator(sortingColumn, sortingOrder));
+        filteredInstances.sort(new InstancesComparator(sortingColumn, sortingOrder));
 
         return filteredInstances;
     }

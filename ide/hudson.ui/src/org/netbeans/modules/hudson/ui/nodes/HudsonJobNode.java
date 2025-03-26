@@ -116,7 +116,7 @@ public class HudsonJobNode extends AbstractNode {
         }
         actions.add(new ViewConfigAction(job));
         actions.add(SystemAction.get(PropertiesAction.class));
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
     
     @Override
@@ -132,9 +132,9 @@ public class HudsonJobNode extends AbstractNode {
     
     @Messages({
         "TXT_Job_Prop_Name=Name",
-        "DESC_Job_Prop_Name=Hudson's job name",
+        "DESC_Job_Prop_Name=Jenkins's job name",
         "TXT_Job_Prop_Url=URL",
-        "DESC_Job_Prop_Url=Hudson's job URL",
+        "DESC_Job_Prop_Url=Jenkins's job URL",
         "HudsonJobImpl.watched=Watched",
         "HudsonJobImpl.watched_desc=Whether you wish to be notified of failures in this job."
     })

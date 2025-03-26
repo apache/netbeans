@@ -1,0 +1,2 @@
+    public const string |>MARK_OCCURRENCES:PUBLIC_CO^NSTANT<| = 'public constant'; // anon8
+}->publicMethod()::publicStaticMethod()::|>MARK_OCCURRENCES:PUBLIC_CONSTANT<|;

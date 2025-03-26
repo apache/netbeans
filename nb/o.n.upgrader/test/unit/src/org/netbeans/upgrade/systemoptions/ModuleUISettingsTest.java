@@ -25,10 +25,12 @@ public class ModuleUISettingsTest extends BasicTestForImport {
         super(name, "org-netbeans-modules-apisupport-project-ui-ModuleUI.settings");
     }
 
+    @Override
     public void testPreferencesNodePath() throws Exception {
         assertPreferencesNodePath("/org/netbeans/modules/apisupport/project");
     }
 
+    @Override
     public void testPropertyNames() throws Exception {
         assertPropertyNames(new String[] {
             "lastChosenLibraryLocation",

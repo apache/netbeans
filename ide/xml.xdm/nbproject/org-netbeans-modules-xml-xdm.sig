@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.52.0
+#Version 1.61.0
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -1064,6 +1064,7 @@ hfds oldtree,pathVisitor,target,xmlModel
 
 CLSS public org.netbeans.modules.xml.xdm.visitor.NamespaceRefactorVisitor
 cons public init()
+ anno 0 java.lang.Deprecated()
 cons public init(org.netbeans.modules.xml.xdm.XDMModel)
 innr public static NamespaceCheck
 meth public static boolean isDefaultPrefix(java.lang.String)
@@ -1241,6 +1242,7 @@ CLSS public org.netbeans.modules.xml.xdm.xam.XDMListener
 cons public init(org.netbeans.modules.xml.xam.dom.AbstractDocumentModel)
 intf java.beans.PropertyChangeListener
 meth protected org.netbeans.modules.xml.xam.dom.ChangeInfo prepareChangeInfo(java.util.List<? extends org.netbeans.modules.xml.xdm.nodes.Node>,java.util.List<? extends org.netbeans.modules.xml.xdm.nodes.Node>)
+ anno 0 java.lang.Deprecated()
 meth protected void processChange(org.netbeans.modules.xml.xam.dom.ChangeInfo)
 meth protected void processEvent(org.netbeans.modules.xml.xdm.nodes.Node,org.netbeans.modules.xml.xdm.diff.NodeInfo,boolean)
 meth protected void processRootRelatedEvent(org.netbeans.modules.xml.xdm.nodes.Node,java.util.List<org.netbeans.modules.xml.xdm.nodes.Node>,boolean)

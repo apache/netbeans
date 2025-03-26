@@ -26,8 +26,10 @@ import java.util.Set;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.php.editor.api.PhpModifiers;
 import org.netbeans.modules.php.editor.api.QualifiedName;
+import org.netbeans.modules.php.editor.parser.astnodes.Attribute;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
+import org.netbeans.modules.php.editor.parser.astnodes.ClassName;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
@@ -54,7 +56,13 @@ public class ClassInstanceCreationInfo extends ASTNodeInfo<ClassInstanceCreation
     @Override
     public OffsetRange getRange() {
         ClassInstanceCreation originalNode = getOriginalNode();
-        return new OffsetRange(originalNode.getStartOffset(), originalNode.getEndOffset());
+        // class name range is used in ClassDeclarationInfo
+        // anonymous class doesn't have a class name
+        // so, just use the range of "class" instead of range of the original node
+        ClassName className = originalNode.getClassName();
+        int start = className.getStartOffset();
+        int end = start + "class".length(); // NOI18N
+        return new OffsetRange(start, end);
     }
 
     public Expression getSuperClass() {
@@ -94,8 +102,11 @@ public class ClassInstanceCreationInfo extends ASTNodeInfo<ClassInstanceCreation
         return visitor.getUsedTraits();
     }
 
-    //~ Inner classes
+    public List<Attribute> getAttributes() {
+        return getOriginalNode().getAttributes();
+    }
 
+    //~ Inner classes
     private static final class UsedTraitsVisitor extends DefaultVisitor {
 
         private final List<UseTraitStatementPart> useParts = new LinkedList<>();

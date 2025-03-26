@@ -194,7 +194,7 @@ public class CachingFileManager implements JavaFileManager, PropertyChangeListen
        for (ClassPath.Entry entry : entries) {
            result.add (entry.getURL());
        }
-       return result.toArray(new URL[result.size()]);
+       return result.toArray(new URL[0]);
     }            
 
     @Override

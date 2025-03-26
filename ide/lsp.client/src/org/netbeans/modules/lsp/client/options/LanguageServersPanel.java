@@ -38,7 +38,7 @@ import org.openide.util.NbBundle.Messages;
 
 final class LanguageServersPanel extends javax.swing.JPanel {
 
-    private static final LanguageDescription PROTOTYPE = new LanguageDescription(null, null, null, null, "MMMMMMMMMMMMMMMMM", null);
+    private static final LanguageDescription PROTOTYPE = new LanguageDescription(null, null, null, null, "MMMMMMMMMMMMMMMMM", null, false);
     private final LanguageServersOptionsPanelController controller;
     private final DefaultListModel<LanguageDescription> languages;
     private final Set<String> usedIds;
@@ -73,6 +73,7 @@ final class LanguageServersPanel extends javax.swing.JPanel {
         edit = new javax.swing.JButton();
         remove = new javax.swing.JButton();
 
+        setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         setLayout(new java.awt.GridBagLayout());
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(LanguageServersPanel.class, "LanguageServersPanel.jLabel1.text")); // NOI18N

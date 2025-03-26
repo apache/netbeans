@@ -79,7 +79,7 @@ public class VariablesModelFilter extends ViewModelSupport
         }
         int end = Math.min( list.size(), to);
         list = list.subList(from, end);
-        return list.toArray( new Object[list.size()] );
+        return list.toArray(new Object[0] );
     }
 
     /* (non-Javadoc)
@@ -154,6 +154,7 @@ public class VariablesModelFilter extends ViewModelSupport
                 FilterType.SCALARS,
                 FilterType.SUPERGLOBALS,
                 FilterType.RESOURCE,
+                FilterType.NULL,
         };
         myShowFilters.set( filters );
     }

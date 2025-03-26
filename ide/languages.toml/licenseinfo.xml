@@ -23,6 +23,8 @@
     <fileset>
         <file>src/org/netbeans/modules/languages/toml/toml-icon.png</file>
         <file>src/org/netbeans/modules/languages/toml/toml-icon_dark.png</file>
+        <file>src/org/netbeans/modules/languages/toml/structure/resources/toml-array.png</file>
+        <file>src/org/netbeans/modules/languages/toml/structure/resources/toml-table.png</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>

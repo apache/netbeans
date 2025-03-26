@@ -1,0 +1,44 @@
+    abstract function abstractImplicitPublicAnonClassMethod();
+                      -------------------------------------
+HINT:Anonymous class cannot declare abstract methods
+    abstract public function abstractPublicAnonClassMethod();
+                             -----------------------------
+HINT:Anonymous class cannot declare abstract methods
+    abstract protected function abstractProtectedAnonClassMethod();
+                                --------------------------------
+HINT:Anonymous class cannot declare abstract methods
+    abstract private function abstractPrivateAnonClassMethod(): void;
+                              ------------------------------
+HINT:Anonymous class cannot declare abstract methods
+    final abstract function finalAbstractAnonClassMethod(): void {}
+                            ----------------------------
+HINT:Anonymous class cannot declare abstract methods
+FIX:Remove modifier: abstract
+    final abstract public function finalAbstractPublicAnonClassMethod(): void {}
+                                   ----------------------------------
+HINT:Anonymous class cannot declare abstract methods
+FIX:Remove modifier: abstract
+    final abstract protected function finalAbstractProtectedAnonClassMethod(): void {}
+                                      -------------------------------------
+HINT:Anonymous class cannot declare abstract methods
+FIX:Remove modifier: abstract
+    final abstract private function finalAbstractPrivateAnonClassMethod(): void {}
+                                    -----------------------------------
+HINT:Anonymous class cannot declare abstract methods
+FIX:Remove modifier: abstract
+    abstract function abstractBodyAnonClassMethod(): void {}
+                      ---------------------------
+HINT:Anonymous class cannot declare abstract methods
+FIX:Remove modifier: abstract
+    abstract public function abstractPublicBodyAnonClassMethod(): void {}
+                             ---------------------------------
+HINT:Anonymous class cannot declare abstract methods
+FIX:Remove modifier: abstract
+    protected abstract function abstractProtectedBodyAnonClassMethod(): void {}
+                                ------------------------------------
+HINT:Anonymous class cannot declare abstract methods
+FIX:Remove modifier: abstract
+    abstract private function abstractPrivateBodyAnonClassMethod(): void {}
+                              ----------------------------------
+HINT:Anonymous class cannot declare abstract methods
+FIX:Remove modifier: abstract

@@ -157,7 +157,7 @@ public class Annotator extends VCSAnnotator implements PropertyChangeListener {
 
                 actions.add(new RepositoryMenu(ActionDestination.MainMenu, null));
             }
-            Utils.setAcceleratorBindings(ACTIONS_PATH_PREFIX, actions.toArray(new Action[actions.size()]));
+            Utils.setAcceleratorBindings(ACTIONS_PATH_PREFIX, actions.toArray(new Action[0]));
         } else {
             Lookup lkp = context.getElements();
             if (noneVersioned) {                    
@@ -193,7 +193,7 @@ public class Annotator extends VCSAnnotator implements PropertyChangeListener {
             }
         }
 
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     public void refreshFormat () {
@@ -202,7 +202,7 @@ public class Annotator extends VCSAnnotator implements PropertyChangeListener {
     }
 
     public LabelVariable[] getProjectVariables () {
-        return PROJECT_ANNOTATION_VARIABLES.toArray(new LabelVariable[PROJECT_ANNOTATION_VARIABLES.size()]);
+        return PROJECT_ANNOTATION_VARIABLES.toArray(new LabelVariable[0]);
     }
 
     private void addAction(String name, VCSContext context, List<Action> actions) {
@@ -229,7 +229,6 @@ public class Annotator extends VCSAnnotator implements PropertyChangeListener {
         for (File file : context.getRootFiles()) {
             if (file.isDirectory()) {
                 folderAnnotation = true;
-                Utils.addFolderToLog(file);
                 break;
             }
         }
@@ -395,7 +394,7 @@ public class Annotator extends VCSAnnotator implements PropertyChangeListener {
     private final Map<RepositoryInfo, Set<File>> filesWithRepositoryAnnotations = new WeakHashMap<RepositoryInfo, Set<File>>(3);
     
     private String annotateFolderNameHtml (String name, VCSContext context, FileInformation mostImportantInfo, File mostImportantFile) {
-        boolean annotationsVisible = VersioningSupport.getPreferences().getBoolean(VersioningSupport.PREF_BOOLEAN_TEXT_ANNOTATIONS_VISIBLE, false);
+        boolean annotationsVisible = VersioningSupport.isTextAnnotationVisible();
         String nameHtml = htmlEncode(name);
         File repository = Git.getInstance().getRepositoryRoot(mostImportantFile);
         if (!mostImportantFile.equals(repository) && mostImportantInfo.containsStatus(Status.NOTVERSIONED_EXCLUDED)) {
@@ -512,7 +511,7 @@ public class Annotator extends VCSAnnotator implements PropertyChangeListener {
         name = htmlEncode(name);
 
         String textAnnotation;
-        boolean annotationsVisible = VersioningSupport.getPreferences().getBoolean(VersioningSupport.PREF_BOOLEAN_TEXT_ANNOTATIONS_VISIBLE, false);
+        boolean annotationsVisible = VersioningSupport.isTextAnnotationVisible();
 
         if (annotationsVisible && mostImportantFile != null && mostImportantInfo.containsStatus(STATUS_IS_IMPORTANT)) {
             String statusText = mostImportantInfo.getShortStatusText();
@@ -688,7 +687,7 @@ public class Annotator extends VCSAnnotator implements PropertyChangeListener {
             for (LabelVariable var : this) {
                 patterns.add(var.getPattern());
             }
-            return patterns.toArray(new String[patterns.size()]);
+            return patterns.toArray(new String[0]);
         }
     }
 }

@@ -1,0 +1,67 @@
+<testresult testFile='issueGH4345_01.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='815' end='820'>
+            <text>$test</text>
+        </token>
+        <token id='T_EQUAL' start='821' end='822'>
+            <text>=</text>
+        </token>
+        <token id='T_START_NOWDOC' start='823' end='833'>
+            <text>&lt;&lt;&lt; &apos;EOF&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='833' end='843'>
+            <text>        \n\n</text>
+        </token>
+        <token id='T_END_NOWDOC' start='843' end='854'>
+            <text>        EOF</text>
+        </token>
+        <token id='T_SEMICOLON' start='854' end='855'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='857' end='862'>
+            <text>$test</text>
+        </token>
+        <token id='T_EQUAL' start='863' end='864'>
+            <text>=</text>
+        </token>
+        <token id='T_START_NOWDOC' start='865' end='875'>
+            <text>&lt;&lt;&lt; &apos;EOF&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='875' end='901'>
+            <text>        test\n        \n\n\n\n\n</text>
+        </token>
+        <token id='T_END_NOWDOC' start='901' end='912'>
+            <text>        EOF</text>
+        </token>
+        <token id='T_SEMICOLON' start='912' end='913'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='914' end='914'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='914'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='815' end='855'>
+                <Assignment start='815' end='854' operator='EQUAL'>
+                    <Variable start='815' end='820' isDollared='true'>
+                        <Identifier start='816' end='820' name='test'/>
+                    </Variable>
+                    <Scalar start='823' end='854' type='STRING' value='        \n\n'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='857' end='913'>
+                <Assignment start='857' end='912' operator='EQUAL'>
+                    <Variable start='857' end='862' isDollared='true'>
+                        <Identifier start='858' end='862' name='test'/>
+                    </Variable>
+                    <Scalar start='865' end='912' type='STRING' value='        test\n        \n\n\n\n\n'/>
+                </Assignment>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

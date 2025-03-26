@@ -1,0 +1,58 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='15'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='15'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='a' start='4' end='15'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isLet/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='4' end='5'>
+        <name>a</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <ArrayLiteralNode start='6' end='15'>
+        <BinaryNode type='ASSIGN' start='7' end='14'>
+          <isAssignment/>
+          <!-- BinaryNode lhs -->
+          <IdentNode start='7' end='8'>
+            <name>x</name>
+          </IdentNode>
+          <!-- BinaryNode rhs -->
+          <IdentNode start='11' end='14'>
+            <name>let</name>
+            <isFutureStrictName/>
+          </IdentNode>
+        </BinaryNode>
+      </ArrayLiteralNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

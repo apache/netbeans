@@ -41,6 +41,8 @@ public class Hk2DeploymentFactory implements DeploymentFactory {
     private static Hk2DeploymentFactory jakartaee8Instance;
     private static Hk2DeploymentFactory jakartaee9Instance;
     private static Hk2DeploymentFactory jakartaee91Instance;
+    private static Hk2DeploymentFactory jakartaee10Instance;
+    private static Hk2DeploymentFactory jakartaee11Instance;
     private String[] uriFragments;
     private String version;
     private String displayName;
@@ -150,6 +152,38 @@ public class Hk2DeploymentFactory implements DeploymentFactory {
             jakartaee91Instance.setServerUtilities(tmp);
         }
         return jakartaee91Instance;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public static synchronized DeploymentFactory createJakartaEe10() {
+        // FIXME -- these strings should come from some constant place
+        if (jakartaee10Instance == null) {
+            ServerUtilities tmp = ServerUtilities.getJakartaEe10Utilities();
+            jakartaee10Instance = new Hk2DeploymentFactory(new String[]{"deployer:gfv700ee10:", "deployer:gfv7"}, "0.8", // NOI18N
+                    NbBundle.getMessage(Hk2DeploymentFactory.class, "TXT_FactoryDisplayName"));  // NOI18N
+            DeploymentFactoryManager.getInstance().registerDeploymentFactory(jakartaee10Instance);
+            jakartaee10Instance.setServerUtilities(tmp);
+        }
+        return jakartaee10Instance;
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    public static synchronized DeploymentFactory createJakartaEe11() {
+        // FIXME -- these strings should come from some constant place
+        if (jakartaee11Instance == null) {
+            ServerUtilities tmp = ServerUtilities.getJakartaEe11Utilities();
+            jakartaee11Instance = new Hk2DeploymentFactory(new String[]{"deployer:gfv800ee11:", "deployer:gfv8"}, "0.9", // NOI18N
+                    NbBundle.getMessage(Hk2DeploymentFactory.class, "TXT_FactoryDisplayName"));  // NOI18N
+            DeploymentFactoryManager.getInstance().registerDeploymentFactory(jakartaee11Instance);
+            jakartaee11Instance.setServerUtilities(tmp);
+        }
+        return jakartaee11Instance;
     }
 
     /**

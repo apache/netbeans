@@ -27,4 +27,13 @@ public interface EnumCaseElement extends TypeMemberElement {
 
     @CheckForNull
     String getValue();
+
+    /**
+     * Check whether it is a case of a backed enum.
+     *
+     * @return {@code true} if it is a case of a backed enum, otherwise,
+     * {@code false}
+     * @since 2.32.0
+     */
+    boolean isBacked();
 }

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.63
+#Version 1.72
 
 CLSS public java.lang.Object
 cons public init()
@@ -70,6 +70,7 @@ meth public abstract java.lang.String getCategoryName()
 meth public abstract java.lang.String getTitle()
 meth public abstract org.netbeans.spi.options.OptionsPanelController create()
 meth public java.lang.String getIconBase()
+ anno 0 java.lang.Deprecated()
 meth public javax.swing.Icon getIcon()
 supr java.lang.Object
 hfds ADVANCED_OPTIONS_FOLDER,CATEGORY_NAME,CONTROLLER,ICON,KEYWORDS,KEYWORDS_CATEGORY,TITLE

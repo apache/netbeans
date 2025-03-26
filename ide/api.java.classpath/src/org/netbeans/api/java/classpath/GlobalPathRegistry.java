@@ -72,7 +72,7 @@ import org.openide.util.Parameters;
  * </p>
  * <ol>
  * <li><p>When a project is opened using
- * {@link org.netbeans.spi.project.ui.ProjectOpenedHook} it should add any paths
+ * <a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/spi/project/ui/ProjectOpenedHook.html">ProjectOpenedHook</a> it should add any paths
  * it defines, i.e. paths it might return from a
  * {@link org.netbeans.spi.java.classpath.ClassPathProvider}.
  * When closed it should remove them.</p></li>
@@ -82,7 +82,7 @@ import org.openide.util.Parameters;
  * <li><p>The <b>Javadoc&nbsp;Index&nbsp;Search</b> feature and <b>View&nbsp;&#8594;
  * Documentation&nbsp;Indices</b> submenu should operate on open Javadoc paths,
  * meaning that Javadoc corresponding to registered compile and boot classpaths
- * (according to {@link org.netbeans.api.java.queries.JavadocForBinaryQuery}).</p></li>
+ * (according to <a href="@org-netbeans-api-java@/org/netbeans/api/java/queries/JavadocForBinaryQuery.html">JavadocForBinaryQuery</a>).</p></li>
  * <li><p>Stack trace hyperlinking can use the global list of source paths
  * to find sources, in case no more specific information about their origin is
  * available. The same would be true of debugging: if the debugger cannot find
@@ -198,7 +198,7 @@ public final class GlobalPathRegistry {
                 LOG.log(Level.FINER, "now have {0} paths of type {1}", new Object[] {l.size(), id});
             }
             if (!listeners.isEmpty() && !added.isEmpty()) {
-                _listeners = listeners.toArray(new GlobalPathRegistryListener[listeners.size()]);
+                _listeners = listeners.toArray(new GlobalPathRegistryListener[0]);
             }
         }
         if (_listeners != null) {
@@ -231,7 +231,7 @@ public final class GlobalPathRegistry {
                 LOG.log(Level.FINER, "now have {0} paths of type {1}", new Object[] {l.size(), id});
             }
             if (!listeners.isEmpty() && !removed.isEmpty()) {
-                _listeners = listeners.toArray(new GlobalPathRegistryListener[listeners.size()]);
+                _listeners = listeners.toArray(new GlobalPathRegistryListener[0]);
             }
         }
         if (_listeners != null) {
@@ -353,7 +353,7 @@ public final class GlobalPathRegistry {
      * In case more than one source root contains the resource, one is chosen
      * arbitrarily.
      * As with {@link ClassPath#findResource}, include/exclude lists can affect the result.
-     * @param resource a resource path, e.g. <samp>somepkg/Foo.java</samp>
+     * @param resource a resource path, e.g. <code>somepkg/Foo.java</code>
      * @return some file found with that path, or null
      */
     public FileObject findResource(String resource) {

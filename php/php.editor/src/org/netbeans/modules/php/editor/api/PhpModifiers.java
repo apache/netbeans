@@ -37,6 +37,14 @@ public final class PhpModifiers extends Modifier {
     public static final String VISIBILITY_PUBLIC = "public"; // NOI18N
     public static final String VISIBILITY_PRIVATE = "private"; // NOI18N
     public static final String VISIBILITY_PROTECTED = "protected"; // NOI18N
+    public static final String VISIBILITY_PUBLIC_SET = "public(set)"; // NOI18N
+    public static final String VISIBILITY_PRIVATE_SET = "private(set)"; // NOI18N
+    public static final String VISIBILITY_PROTECTED_SET = "protected(set)"; // NOI18N
+
+    public static final String STATIC_MODIFIER = "static"; // NOI18N
+    public static final String FINAL_MODIFIER = "final"; // NOI18N
+    public static final String ABSTRACT_MODIFIER = "abstract"; // NOI18N
+    public static final String READONLY_MODIFIER = "readonly"; // NOI18N
 
     public static PhpModifiers noModifiers() {
         return fromBitMask(new int[]{});
@@ -64,6 +72,39 @@ public final class PhpModifiers extends Modifier {
 
     public PhpModifiers setProtected() {
         mod |= Modifier.PROTECTED;
+        return this;
+    }
+
+    /**
+     * Set public(set) to a modifier.
+     *
+     * @return {@link PhpModifiers}
+     * @since 2.44.0
+     */
+    public PhpModifiers setPublicSet() {
+        mod |= Modifier.PUBLIC_SET;
+        return this;
+    }
+
+    /**
+     * Set private(set) to a modifier.
+     *
+     * @return {@link PhpModifiers}
+     * @since 2.44.0
+     */
+    public PhpModifiers setPrivateSet() {
+        mod |= Modifier.PRIVATE_SET;
+        return this;
+    }
+
+    /**
+     * Set protected(set) to a modifier.
+     *
+     * @return {@link PhpModifiers}
+     * @since 2.44.0
+     */
+    public PhpModifiers setProtectedSet() {
+        mod |= Modifier.PROTECTED_SET;
         return this;
     }
 
@@ -135,6 +176,42 @@ public final class PhpModifiers extends Modifier {
 
     public boolean isProtected() {
         return Modifier.isProtected(mod);
+    }
+
+    /**
+     * Check whether a modifier is public(set).
+     *
+     * @return {@code true} if a modifier is public(set), {@code false}
+     * otherwise
+     * @since 2.44.0
+     */
+    public boolean isPublicSet() {
+        // public(set)
+        return Modifier.isPublicSet(mod);
+    }
+
+    /**
+     * Check whether a modifier is private(set).
+     *
+     * @return {@code true} if a modifier is private(set), {@code false}
+     * otherwise
+     * @since 2.44.0
+     */
+    public boolean isPrivateSet() {
+        // private(set)
+        return Modifier.isPrivateSet(mod);
+    }
+
+    /**
+     * Check whether a modifier is protected(set).
+     *
+     * @return {@code true} if a modifier is protected(set), {@code false}
+     * otherwise
+     * @since 2.44.0
+     */
+    public boolean isProtectedSet() {
+        // protected(set)
+        return Modifier.isProtectedSet(mod);
     }
 
     public boolean isStatic() {

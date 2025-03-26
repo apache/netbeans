@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,59 +19,43 @@
     under the License.
 
 -->
-<!-- Generator: Adobe Illustrator 25.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Vector_Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-	 y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#E9F7FF;}
-	.st1{fill:#527C99;}
-	.st2{fill:#FFC36D;}
-	.st3{opacity:0.33;}
-	.st4{fill:#E79B00;}
-	.st5{fill:#CAE3FF;}
-	.st6{fill:#3883CE;}
-	.st7{fill:#FBDC7C;}
-	.st8{fill:#FFDB43;}
-	.st9{fill:none;stroke:#003399;stroke-width:1.375;stroke-miterlimit:10;}
-	.st10{fill:#E8513D;}
-	.st11{fill:#9FCBFF;}
-	.st12{fill:#62707C;}
-	.st13{fill:#7A8896;}
-	.st14{fill:#57BFFF;}
-	.st15{fill:#E69D35;}
-	.st16{fill:#9CFF73;}
-	.st17{fill:none;stroke:#000000;stroke-miterlimit:10;}
-	.st18{fill:#EAEAEA;}
-	.st19{fill:#E57067;}
-	.st20{fill:#94E0EF;}
-	.st21{fill:#4A4A4A;}
-	.st22{fill:#727272;}
-	.st23{fill:#EDEDED;}
-	.st24{fill:#5B5B5B;}
-	.st25{fill:#E9E9E9;}
-	.st26{opacity:0.4;}
-	.st27{opacity:0.15;}
-	.st28{fill:#C3E3FF;}
-	.st29{fill:#0084D3;}
-	.st30{opacity:0.5;fill:#E9F7FF;}
-	.st31{opacity:0.66;}
-</style>
-<g>
-	<rect class="st2" width="12" height="7"/>
-	<g class="st3">
-		<path d="M11,1v5H1V1H11 M12,0H0v7h12V0L12,0z"/>
-	</g>
-</g>
-<g>
-	<path class="st4" d="M15.561,12.439L9.197,6.075L7.075,8.197l6.364,6.364c0.586,0.586,1.536,0.586,2.121,0
-		C16.146,13.975,16.146,13.025,15.561,12.439z"/>
-	<g class="st3">
-		<path d="M9.197,7.136l5.834,5.834c0.292,0.292,0.292,0.768,0,1.061c-0.142,0.142-0.33,0.22-0.53,0.22s-0.389-0.078-0.53-0.22
-			L8.136,8.197L9.197,7.136 M9.197,6.075L7.075,8.197l6.364,6.364C13.732,14.854,14.116,15,14.5,15s0.768-0.146,1.061-0.439
-			c0.586-0.586,0.586-1.536,0-2.121L9.197,6.075L9.197,6.075z"/>
-	</g>
-</g>
-<circle class="st5" cx="8" cy="7" r="5"/>
-<path class="st6" d="M8,3c2.206,0,4,1.794,4,4s-1.794,4-4,4S4,9.206,4,7S5.794,3,8,3 M8,2C5.239,2,3,4.239,3,7s2.239,5,5,5
-	s5-2.239,5-5S10.761,2,8,2L8,2z"/>
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #cee1fb;
+      }
+
+      .st1 {
+        fill: #db9d36;
+      }
+
+      .st2 {
+        opacity: .33;
+      }
+
+      .st3 {
+        fill: #4c80c7;
+      }
+
+      .st4 {
+        fill: #f5c47a;
+      }
+    </style>
+  </defs>
+  <g>
+    <rect class="st4" width="12" height="7"/>
+    <g class="st2">
+      <path d="M11,1v5H1V1h10M12,0H0v7h12V0h0Z"/>
+    </g>
+  </g>
+  <g>
+    <path class="st1" d="M15.561,12.439l-6.364-6.364-2.121,2.121,6.364,6.364c.586.586,1.536.586,2.121,0,.586-.586.586-1.536,0-2.121Z"/>
+    <g class="st2">
+      <path d="M9.197,7.136l5.834,5.834c.292.292.292.768,0,1.061-.142.142-.33.22-.53.22s-.389-.078-.53-.22l-5.834-5.834,1.061-1.061M9.197,6.075l-2.121,2.121,6.364,6.364c.293.293.677.439,1.061.439s.768-.146,1.061-.439c.586-.586.586-1.536,0-2.121l-6.364-6.364h0Z"/>
+    </g>
+  </g>
+  <circle class="st0" cx="8" cy="7" r="5"/>
+  <path class="st3" d="M8,3c2.206,0,4,1.794,4,4s-1.794,4-4,4-4-1.794-4-4,1.794-4,4-4M8,2c-2.761,0-5,2.239-5,5s2.239,5,5,5,5-2.239,5-5-2.239-5-5-5h0Z"/>
 </svg>

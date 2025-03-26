@@ -360,11 +360,11 @@ class IndexedPropertyEditor extends Object implements ExPropertyEditor {
             }
 
             if (getConvertedType().equals(Double.class)) {
-                value = new Double(0d);
+                value = 0D;
             }
 
             if (getConvertedType().equals(Float.class)) {
-                value = 0f;
+                value = 0F;
             }
 
             if (getConvertedType().equals(Long.class)) {
@@ -376,7 +376,7 @@ class IndexedPropertyEditor extends Object implements ExPropertyEditor {
             }
         } else {
             try {
-                value = getConvertedType().newInstance();
+                value = getConvertedType().getDeclaredConstructor().newInstance();
             } catch (Exception x) {
                 // ignore any exception - if this fails just
                 // leave null as the value

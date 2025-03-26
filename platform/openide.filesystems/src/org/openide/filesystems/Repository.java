@@ -119,7 +119,7 @@ public class Repository implements Serializable {
          */
         protected abstract void registerLayers(Collection<? super URL> context);
         
-        /** Method to call when set of URLs returned from the {@link #layers()}
+        /** Method to call when set of URLs returned from the {@link #registerLayers(java.util.Collection)}
          * method changed and there is a need to refresh it. Refresh is very likely 
          * a time consuming task - consider invoking it on a background thread and
          * don't hold any locks while calling the method
@@ -213,7 +213,7 @@ public class Repository implements Serializable {
             List<URL> layerUrls = new ArrayList<URL>();
             try {
                 provideLayers(Thread.currentThread().getContextClassLoader(), layerUrls);
-                layers.setXmlUrls(layerUrls.toArray(new URL[layerUrls.size()]));
+                layers.setXmlUrls(layerUrls.toArray(new URL[0]));
                 LOG.log(Level.FINE, "Loading classpath layers: {0}", layerUrls);
             } catch (Exception x) {
                 LOG.log(Level.WARNING, "Setting layer URLs: " + layerUrls, x);
@@ -334,13 +334,12 @@ public class Repository implements Serializable {
      * The instance is either taken as a result of
      * <CODE>org.openide.util.Lookup.getDefault ().lookup (Repository.class)</CODE>
      * or (if the lookup query returns null) a default instance is created.
-     * <p/>
+     * <p>
      * In a contextual environment, the method remembers the result of the default Lookup
      * query, and will return the same instance as a system-wide Repository instance.
      * Instances provided by <code>Lookup.getDefault().lookup(Repository.class)</code> may vary
      * depending on the Lookup's implementation and context - be aware that multiple Repository
-     * instances may exist, possibly one for each contextual Lookup craeted.
-     * <p/>
+     * instances may exist, possibly one for each contextual Lookup created.
      * 
      * @return default repository for the system
      * @since 9.5 support for multiple contexts
@@ -396,7 +395,7 @@ public class Repository implements Serializable {
      * existing ADD_FS value. In fact, the Repository instance <b>is usually instantiated twice</b>,
      * because ctor initialization indirectly invokes Repository.getDefault(), resulting in another
      * initialization.
-     * <p/>
+     * <p>
      * <b>Performance note:</b> during startup, the default Lookup changes frequently because of modules
      * activations. The <code>lkp.lookup(LocalProvider.class)</code> query blocks on Lookup computation
      * locks, adding up to 20% to startup time. The last discovered value of LocalProvider is therefore cached
@@ -404,7 +403,7 @@ public class Repository implements Serializable {
      * If {@code getLocalRepository} is called again with the default Lookup instance unchanged (= the same execution context),
      * no {@code lookup()} query will be executed and the cached {@code LocalProvider} instance will be
      * used to return the repository instance.
-     * <p/>
+     * <p>
      * In multi-user/execution environment, this cache is beneficial during system startup; after that, the
      * default Lookup changes with the execution context frequently, but contents of individual Lookups are rather
      * stable, so performance should be acceptable.
@@ -1025,12 +1024,11 @@ public class Repository implements Serializable {
     
     /**
      * Provides local repositories, depending on the current execution environment.
-     * The caller may use {@link Lookup#executeWith} to temporarily modify the default
+     * The caller may use {@link org.openide.util.lookup.Lookups#executeWith(org.openide.util.Lookup, java.lang.Runnable)} to temporarily modify the default
      * Lookup contents and route Repository requests to a Repository private to some task. The
      * {@code LocalProvider} is responsible for caching and lifecycle of the Repository instance;
      * it can expire the Repository if the Provider's execution context terminates. Implementations
      * must be prepared to handle requests for Repository already shutdown etc.
-     * <p/>
      * @since 9.5
      */
     public abstract static class LocalProvider {
@@ -1040,8 +1038,8 @@ public class Repository implements Serializable {
          * of Repository for the whole duration of the execution context. It must return the same 
          * Repository instance even after the execution context shuts down; the contents of Repository and
          * its FileSystems may be limited in that case.
-         * <p/>
-         * Implementations must be reentrant (a call to {@link #getLocalRepository} can be made during 
+         * <p>
+         * Implementations must be reentrant (a call to {@code getLocalRepository} can be made during 
          * construction of the Repository instance) and must not recurse infinitely.
          * 
          * @return local repository instance.
@@ -1052,8 +1050,8 @@ public class Repository implements Serializable {
          * Allows to delay attaching filesystems to the Repository. For backwards compatibility, the Repository
          * constructor still takes the default FileSystem instance. However it is better to actually publish the
          * FileSystem in the repository only after it is registered, and can be obtained using {@link #getDefault()} or
-         * {@link #getLocalRepository()}.
-         * <p/>
+         * {@code getLocalRepository()}.
+         * <p>
          * This method wraps the Repository creation so that the default FileSystem is attached after the repository
          * is fully constructed. The `init' callable must create a new Repository instance.
          * This method will then add the default FS for newly created repository instances.

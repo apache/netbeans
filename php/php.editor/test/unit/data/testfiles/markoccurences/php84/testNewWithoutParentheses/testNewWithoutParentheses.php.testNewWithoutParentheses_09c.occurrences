@@ -1,0 +1,3 @@
+    private const string |>MARK_OCCURRENCES:PRIVATE_CONST<| = "private const";
+        $example = new Example()::|>MARK_OCCURRENCES:PRIVATE_CONST<|;
+        $example = new Example()?->returnThis()::|>MARK_OCCURRENCES:PRIV^ATE_CONST<|;

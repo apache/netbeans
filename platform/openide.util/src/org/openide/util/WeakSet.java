@@ -41,8 +41,8 @@ import java.util.Set;
 
 /**
  * This class provides storage functionality with Weak-referenced entries and
- * new method <tt>putIfAbsent</tt>. Set implementation is backed by a hash table.
- * It also provides method <tt>resize</tt> for changing capacity of internal hash table
+ * new method <code>putIfAbsent</code>. Set implementation is backed by a hash table.
+ * It also provides method <code>resize</code> for changing capacity of internal hash table
  * (can be used for reducing memory occupied by empty set which previously had big number of objects, but they were GCed)
  * Access to set is not thread safe.
  *
@@ -63,11 +63,11 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
     private final float loadFactor;
 
     /**
-     * Constructs a new, empty <tt>WeakSet</tt> with the given initial
+     * Constructs a new, empty <code>WeakSet</code> with the given initial
      * capacity and the given load factor.
      *
-     * @param  initialCapacity The initial capacity of the <tt>WeakSet</tt>
-     * @param  loadFactor      The load factor of the <tt>WeakSet</tt>
+     * @param  initialCapacity The initial capacity of the <code>WeakSet</code>
+     * @param  loadFactor      The load factor of the <code>WeakSet</code>
      * @throws IllegalArgumentException if the initial capacity is negative,
      *         or if the load factor is nonpositive.
      */
@@ -78,10 +78,10 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
     }
 
     /**
-     * Constructs a new, empty <tt>WeakSet</tt> with the given initial
+     * Constructs a new, empty <code>WeakSet</code> with the given initial
      * capacity and the default load factor (0.75).
      *
-     * @param  initialCapacity The initial capacity of the <tt>WeakSet</tt>
+     * @param  initialCapacity The initial capacity of the <code>WeakSet</code>
      * @throws IllegalArgumentException if the initial capacity is negative
      */
     public WeakSet(int initialCapacity) {
@@ -89,7 +89,7 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
     }
 
     /**
-     * Constructs a new, empty <tt>WeakSet</tt> with the default initial
+     * Constructs a new, empty <code>WeakSet</code> with the default initial
      * capacity (16) and load factor (0.75).
      */
     public WeakSet() {
@@ -97,8 +97,8 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
     }
 
     /**
-     * Constructs a new <tt>WeakSet</tt> with the same mappings as the
-     * specified map.  The <tt>WeakSet</tt> is created with the default
+     * Constructs a new <code>WeakSet</code> with the same mappings as the
+     * specified map.  The <code>WeakSet</code> is created with the default
      * load factor (0.75) and an initial capacity sufficient to hold the
      * mappings in the specified map.
      *
@@ -178,8 +178,8 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
      * </pre>
      *
      * @param e object to put in set.
-     * @return the previous set entry equals with <tt>e</tt>, or
-     *         passed object <tt>e</tt> if there were not entry in set.
+     * @return the previous set entry equals with <code>e</code>, or
+     *         passed object <code>e</code> if there were not entry in set.
      * @since 8.11
      */
     public E putIfAbsent(E e) { return m.putIfAbsent(e, (boolean[]) null); }
@@ -278,11 +278,11 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
         private volatile int modCount;
 
         /**
-         * Constructs a new, empty <tt>SharedKeyWeakHashMap</tt> with the given initial
+         * Constructs a new, empty <code>SharedKeyWeakHashMap</code> with the given initial
          * capacity and the given load factor.
          *
-         * @param  initialCapacity The initial capacity of the <tt>SharedKeyWeakHashMap</tt>
-         * @param  loadFactor      The load factor of the <tt>SharedKeyWeakHashMap</tt>
+         * @param  initialCapacity The initial capacity of the <code>SharedKeyWeakHashMap</code>
+         * @param  loadFactor      The load factor of the <code>SharedKeyWeakHashMap</code>
          * @throws IllegalArgumentException if the initial capacity is negative,
          *         or if the load factor is nonpositive.
          */
@@ -309,10 +309,10 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
         }
 
         /**
-         * Constructs a new, empty <tt>SharedKeyWeakHashMap</tt> with the given initial
+         * Constructs a new, empty <code>SharedKeyWeakHashMap</code> with the given initial
          * capacity and the default load factor (0.75).
          *
-         * @param  initialCapacity The initial capacity of the <tt>SharedKeyWeakHashMap</tt>
+         * @param  initialCapacity The initial capacity of the <code>SharedKeyWeakHashMap</code>
          * @throws IllegalArgumentException if the initial capacity is negative
          */
         public SharedKeyWeakHashMap(int initialCapacity) {
@@ -320,7 +320,7 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
         }
 
         /**
-         * Constructs a new, empty <tt>SharedKeyWeakHashMap</tt> with the default initial
+         * Constructs a new, empty <code>SharedKeyWeakHashMap</code> with the default initial
          * capacity (16) and load factor (0.75).
          */
         public SharedKeyWeakHashMap() {
@@ -330,8 +330,8 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
         }
 
         /**
-         * Constructs a new <tt>SharedKeyWeakHashMap</tt> with the same mappings as the
-         * specified map.  The <tt>SharedKeyWeakHashMap</tt> is created with the default
+         * Constructs a new <code>SharedKeyWeakHashMap</code> with the same mappings as the
+         * specified map.  The <code>SharedKeyWeakHashMap</code> is created with the default
          * load factor (0.75) and an initial capacity sufficient to hold the
          * mappings in the specified map.
          *
@@ -437,7 +437,7 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
         }
 
         /**
-         * Returns <tt>true</tt> if this map contains no key-value mappings.
+         * Returns <code>true</code> if this map contains no key-value mappings.
          * This result is a snapshot, and may not reflect unprocessed
          * entries that will be removed before next attempted access
          * because they are no longer referenced.
@@ -470,12 +470,12 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
         }
 
         /**
-         * Returns <tt>true</tt> if this map contains a mapping for the
+         * Returns <code>true</code> if this map contains a mapping for the
          * specified key.
          *
          * @param  key   The key whose presence in this map is to be tested
-         * @return <tt>true</tt> if there is a mapping for <tt>key</tt>;
-         *         <tt>false</tt> otherwise
+         * @return <code>true</code> if there is a mapping for <code>key</code>;
+         *         <code>false</code> otherwise
          */
         @Override
         public boolean containsKey(Object key) {
@@ -505,10 +505,10 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
          *
          * @param key key with which the specified value is to be associated.
          * @param value value to be associated with the specified key.
-         * @return the previous value associated with <tt>key</tt>, or
-         *         <tt>null</tt> if there was no mapping for <tt>key</tt>.
-         *         (A <tt>null</tt> return can also indicate that the map
-         *         previously associated <tt>null</tt> with <tt>key</tt>.)
+         * @return the previous value associated with <code>key</code>, or
+         *         <code>null</code> if there was no mapping for <code>key</code>.
+         *         (A <code>null</code> return can also indicate that the map
+         *         previously associated <code>null</code> with <code>key</code>.)
          */
         @Override
         public V put(K key, V value) {
@@ -621,23 +621,23 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
 
         /**
          * Removes the mapping for a key from this weak hash map if it is present.
-         * More formally, if this map contains a mapping from key <tt>k</tt> to
-         * value <tt>v</tt> such that <code>(key==null ?  k==null :
+         * More formally, if this map contains a mapping from key <code>k</code> to
+         * value <code>v</code> such that <code>(key==null ?  k==null :
          * key.equals(k))</code>, that mapping is removed.  (The map can contain
          * at most one such mapping.)
          *
          * <p>Returns the value to which this map previously associated the key,
-         * or <tt>null</tt> if the map contained no mapping for the key.  A
-         * return value of <tt>null</tt> does not <i>necessarily</i> indicate
+         * or <code>null</code> if the map contained no mapping for the key.  A
+         * return value of <code>null</code> does not <i>necessarily</i> indicate
          * that the map contained no mapping for the key; it's also possible
-         * that the map explicitly mapped the key to <tt>null</tt>.
+         * that the map explicitly mapped the key to <code>null</code>.
          *
          * <p>The map will not contain a mapping for the specified key once the
          * call returns.
          *
          * @param key key whose mapping is to be removed from the map
-         * @return the previous value associated with <tt>key</tt>, or
-         *         <tt>null</tt> if there was no mapping for <tt>key</tt>
+         * @return the previous value associated with <code>key</code>, or
+         *         <code>null</code> if there was no mapping for <code>key</code>
          */
         @Override
         public V remove(Object key) {
@@ -725,11 +725,11 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
         }
 
         /**
-         * Returns <tt>true</tt> if this map maps one or more keys to the
+         * Returns <code>true</code> if this map maps one or more keys to the
          * specified value.
          *
          * @param value value whose presence in this map is to be tested
-         * @return <tt>true</tt> if this map maps one or more keys to the
+         * @return <code>true</code> if this map maps one or more keys to the
          *         specified value
          */
         @Override
@@ -827,7 +827,6 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
              * key to the specified value.
              *
              * @param key the key represented by this entry
-             * @param value the value represented by this entry
              */
             public SimpleEntry(K key) {
                 this.key   = key;
@@ -921,7 +920,7 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
             /**
              * Returns a String representation of this map entry.  This
              * implementation returns the string representation of this
-             * entry's key followed by the equals character ("<tt>=</tt>")
+             * entry's key followed by the equals character ("<code>=</code>")
              * followed by the string representation of this entry's value.
              *
              * @return a String representation of this map entry
@@ -1044,12 +1043,12 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
          * The set is backed by the map, so changes to the map are
          * reflected in the set, and vice-versa.  If the map is modified
          * while an iteration over the set is in progress (except through
-         * the iterator's own <tt>remove</tt> operation), the results of
+         * the iterator's own <code>remove</code> operation), the results of
          * the iteration are undefined.  The set supports element removal,
          * which removes the corresponding mapping from the map, via the
-         * <tt>Iterator.remove</tt>, <tt>Set.remove</tt>,
-         * <tt>removeAll</tt>, <tt>retainAll</tt>, and <tt>clear</tt>
-         * operations.  It does not support the <tt>add</tt> or <tt>addAll</tt>
+         * <code>Iterator.remove</code>, <code>Set.remove</code>,
+         * <code>removeAll</code>, <code>retainAll</code>, and <code>clear</code>
+         * operations.  It does not support the <code>add</code> or <code>addAll</code>
          * operations.
          */
         @Override
@@ -1097,13 +1096,13 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
          * The collection is backed by the map, so changes to the map are
          * reflected in the collection, and vice-versa.  If the map is
          * modified while an iteration over the collection is in progress
-         * (except through the iterator's own <tt>remove</tt> operation),
+         * (except through the iterator's own <code>remove</code> operation),
          * the results of the iteration are undefined.  The collection
          * supports element removal, which removes the corresponding
-         * mapping from the map, via the <tt>Iterator.remove</tt>,
-         * <tt>Collection.remove</tt>, <tt>removeAll</tt>,
-         * <tt>retainAll</tt> and <tt>clear</tt> operations.  It does not
-         * support the <tt>add</tt> or <tt>addAll</tt> operations.
+         * mapping from the map, via the <code>Iterator.remove</code>,
+         * <code>Collection.remove</code>, <code>removeAll</code>,
+         * <code>retainAll</code> and <code>clear</code> operations.  It does not
+         * support the <code>add</code> or <code>addAll</code> operations.
          */
         @Override
         public Collection<V> values() {
@@ -1139,14 +1138,14 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
          * The set is backed by the map, so changes to the map are
          * reflected in the set, and vice-versa.  If the map is modified
          * while an iteration over the set is in progress (except through
-         * the iterator's own <tt>remove</tt> operation, or through the
-         * <tt>setValue</tt> operation on a map entry returned by the
+         * the iterator's own <code>remove</code> operation, or through the
+         * <code>setValue</code> operation on a map entry returned by the
          * iterator) the results of the iteration are undefined.  The set
          * supports element removal, which removes the corresponding
-         * mapping from the map, via the <tt>Iterator.remove</tt>,
-         * <tt>Set.remove</tt>, <tt>removeAll</tt>, <tt>retainAll</tt> and
-         * <tt>clear</tt> operations.  It does not support the
-         * <tt>add</tt> or <tt>addAll</tt> operations.
+         * mapping from the map, via the <code>Iterator.remove</code>,
+         * <code>Set.remove</code>, <code>removeAll</code>, <code>retainAll</code> and
+         * <code>clear</code> operations.  It does not support the
+         * <code>add</code> or <code>addAll</code> operations.
          */
         @Override
         public Set<Map.Entry<K,V>> entrySet() {
@@ -1238,8 +1237,8 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
          *
          * @param key key to put in set.
          * @param modified array of size one that shall be set if the map is modified or null
-         * @return the previous set entry equals with <tt>key</tt>, or
-         *         new <tt>key</tt> if there were not entry in set.
+         * @return the previous set entry equals with <code>key</code>, or
+         *         new <code>key</code> if there were not entry in set.
          */
         private K putIfAbsent(K key, boolean[] modified) {
             K k = (K) maskNull(key);

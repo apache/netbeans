@@ -80,18 +80,7 @@ public final class UI {
      * @return component was successfuly set
      */ 
     public static boolean setComponentForRefactoringPreview(Component component) {
-        TopComponent activated = TopComponent.getRegistry().getActivated();
-        RefactoringPanel refactoringPanel = null;
-        if (activated instanceof RefactoringPanelContainer) {
-            RefactoringPanelContainer panel = (RefactoringPanelContainer) activated;
-            refactoringPanel = panel.getCurrentPanel();
-        }
-        if (refactoringPanel == null) {
-            refactoringPanel = RefactoringPanelContainer.getRefactoringComponent().getCurrentPanel();
-        }
-        if (refactoringPanel == null) {
-            refactoringPanel = RefactoringPanelContainer.getUsagesComponent().getCurrentPanel();
-        }
+        RefactoringPanel refactoringPanel = RefactoringPanel.getCurrentRefactoringPanel();
         if (refactoringPanel == null) 
             return false;
         if (component == null) {

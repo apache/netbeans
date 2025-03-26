@@ -268,7 +268,7 @@ public final class SuiteProperties extends ModuleProperties {
                         disabledClusters.add(entry.getClusterDirectory().getName());
                     }
                     disabledClusters.removeAll(Arrays.asList(enabledClusters));
-                    separated = disabledClusters.toArray(new String[disabledClusters.size()]);
+                    separated = disabledClusters.toArray(new String[0]);
                     for (int i = 0; i < separated.length - 1; i++) {
                         separated[i] = separated[i] + ',';
                     }

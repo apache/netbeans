@@ -116,7 +116,7 @@ public class PushDownPanel extends JPanel implements CustomRefactoringPanel {
             }
         }
         // return the array of selected members
-        return (MemberInfo[]) list.toArray(new MemberInfo[list.size()]);
+        return (MemberInfo[]) list.toArray(new MemberInfo[0]);
     }
     
     /** This method is called from within the constructor to
@@ -224,7 +224,7 @@ public class PushDownPanel extends JPanel implements CustomRefactoringPanel {
         @Override
         public void run(CompilationController controller) throws Exception {
             controller.toPhase(JavaSource.Phase.RESOLVED);
-            List<MemberInfo<? extends ElementHandle<? extends Element>>> l = new ArrayList();
+            List<MemberInfo<? extends ElementHandle<? extends Element>>> l = new ArrayList<>();
             TypeElement sourceTypeElement = (TypeElement) handle.resolveElement(controller);
             for (TypeMirror tm:sourceTypeElement.getInterfaces()) {
                 l.add(MemberInfo.create(RefactoringUtils.typeToElement(tm, controller), controller, MemberInfo.Group.IMPLEMENTS));

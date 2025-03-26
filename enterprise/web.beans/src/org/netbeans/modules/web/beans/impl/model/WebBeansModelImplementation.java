@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -38,7 +39,6 @@ import org.netbeans.modules.web.beans.api.model.BeansModel;
 import org.netbeans.modules.web.beans.api.model.ModelUnit;
 import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 
-
 /**
  * @author ads
  *
@@ -49,7 +49,7 @@ public class WebBeansModelImplementation extends AbstractModelImplementation
 
     protected WebBeansModelImplementation( ModelUnit unit ){
         super( unit );
-        myManagers = new HashMap<String, PersistentObjectManager<BindingQualifier>>();
+        myManagers = new HashMap<List<String>, PersistentObjectManager<BindingQualifier>>();
         myStereotypedManagers = new HashMap<String, PersistentObjectManager<StereotypedObject>>();
         myHelper = AnnotationModelHelper.create( getModelUnit().getClassPathInfo() );
     }
@@ -119,23 +119,17 @@ public class WebBeansModelImplementation extends AbstractModelImplementation
         return super.getModel();
     }
     
-    Map<String,PersistentObjectManager<BindingQualifier>> getManagers(){
-        return myManagers;
-    }
-    
-    PersistentObjectManager<BindingQualifier> getManager( String annotationFQN ){
-        PersistentObjectManager<BindingQualifier> result = getManagers().get(
-                annotationFQN);
-        if ( result == null ) {
-            result  = getHelper().createPersistentObjectManager( 
-                    new AnnotationObjectProvider( getHelper(), annotationFQN));
-            getManagers().put(  annotationFQN , result);
-        }
+    PersistentObjectManager<BindingQualifier> getManager( String... annotationFQN ){
+        PersistentObjectManager<BindingQualifier> result = myManagers.computeIfAbsent(
+                List.of(annotationFQN),
+                fqn -> getHelper().createPersistentObjectManager(
+                        new AnnotationObjectProvider(getHelper(), fqn))
+        );
         return result;
     }
     
     PersistentObjectManager<BindingQualifier> getNamedManager(){
-        return getManager( FieldInjectionPointLogic.NAMED_QUALIFIER_ANNOTATION );
+        return getManager( FieldInjectionPointLogic.NAMED_QUALIFIER_ANNOTATION_JAKARTA, FieldInjectionPointLogic.NAMED_QUALIFIER_ANNOTATION );
     }
     
     PersistentObjectManager<NamedStereotype> getNamedStereotypesManager(){
@@ -149,12 +143,12 @@ public class WebBeansModelImplementation extends AbstractModelImplementation
     PersistentObjectManager<StereotypedObject> getStereotypedManager( 
             String stereotype )
     {
-        PersistentObjectManager<StereotypedObject> result = 
-            getStereotypedManagers().get(stereotype);
-        if ( result == null ) {
-            result  = getHelper().createPersistentObjectManager( 
-                    new StereotypedObjectProvider( stereotype, getHelper()));
-            getStereotypedManagers().put(  stereotype , result);
+        PersistentObjectManager<StereotypedObject> result
+                = getStereotypedManagers().get(stereotype);
+        if (result == null) {
+            result = getHelper().createPersistentObjectManager(
+                    new StereotypedObjectProvider(stereotype, getHelper()));
+            getStereotypedManagers().put(stereotype, result);
         }
         return result;
     }
@@ -208,7 +202,7 @@ public class WebBeansModelImplementation extends AbstractModelImplementation
         return existingStereotypes;
     }
     
-    private Map<String,PersistentObjectManager<BindingQualifier>> myManagers;
+    private Map<List<String>,PersistentObjectManager<BindingQualifier>> myManagers;
     private PersistentObjectManager<NamedStereotype> myStereotypesManager;
     private PersistentObjectManager<DecoratorObject> myDecoratorsManager;
     private PersistentObjectManager<InterceptorObject> myInterceptorsManager;

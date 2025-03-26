@@ -201,7 +201,7 @@ public class ErrorControlOperatorHint extends HintRule {
             boolean result = false;
             String functionInvocationName = CodeUtils.extractFunctionName(functionInvocation);
             if (functionInvocationName != null) {
-                result = functionName.equals(functionInvocationName.toLowerCase());
+                result = functionName.equalsIgnoreCase(functionInvocationName);
             }
             return result;
         }

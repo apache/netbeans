@@ -1,0 +1,5 @@
+    public const string |>MARK_OCCURRENCES:CONST_EXAMPLE<| = "example";
+    public static function staticInterfaceMethod(#[AttributeClass2(4, "interface static method param" . Example::|>MARK_OCCURRENCES:CONST_EXAMPLE<|)] $param1): int|string;
+function func2(#[AttributeClass2(1 + \Attributes\CONST_1 + 1, Example::|>MARK_OCCURRENCES:CONST_EXAMPLE<| . "function param")] int|string $param): void {}
+$labmda2 = #[AttributeClass2(2, "closure")] #[AttributeClass3(2, "closurr")] function(#[AttributeClass2(int: 2 * \Attributes\CONST_1, string: "closure param" . Example::|>MARK_OCCURRENCES:CO^NST_EXAMPLE<|)] $test): void {};
+$arrow3 = #[AttributeClass1(3, string: Example::|>MARK_OCCURRENCES:CONST_EXAMPLE<| . "arrow")] static fn(): int|string => 100;

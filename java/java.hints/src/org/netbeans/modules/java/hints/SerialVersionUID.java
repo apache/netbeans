@@ -106,7 +106,7 @@ public class SerialVersionUID implements ErrorRule<Void>, OverrideErrorMessage<V
         fixes.add(new FixImpl(TreePathHandle.create(treePath, info), false).toEditorFix());
         // fixes.add(new FixImpl(TreePathHandle.create(treePath, info), true));
 
-        if (!type.getNestingKind().equals(NestingKind.ANONYMOUS)) {
+        if (type.getNestingKind() != NestingKind.ANONYMOUS) {
             // add SuppressWarning only to non-anonymous class
             fixes.addAll(FixFactory.createSuppressWarnings(info, treePath, SERIAL));
         }

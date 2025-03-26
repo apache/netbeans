@@ -304,7 +304,7 @@ public final class EjbJarProvider extends J2eeModuleProvider
         // return a version based on the Java EE version
         Profile platformVersion = getJ2eeProfile();
         if (platformVersion == null) {
-            platformVersion = Profile.JAVA_EE_7_FULL;
+            platformVersion = Profile.JAKARTA_EE_8_FULL;
         }
 
         if (platformVersion.isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
@@ -509,7 +509,7 @@ public final class EjbJarProvider extends J2eeModuleProvider
             }
             files.add(FileUtil.toFile(FileUtil.getArchiveFile(fo)));
         }
-        return files.toArray(new File[files.size()]);
+        return files.toArray(new File[0]);
     }
 
     private class EjbJarResourceChangeReporter implements ResourceChangeReporterImplementation {

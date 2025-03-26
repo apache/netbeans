@@ -38,7 +38,6 @@ import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
 import javax.swing.JScrollPane;
@@ -67,6 +66,7 @@ import org.netbeans.spi.editor.errorstripe.UpToDateStatus;
 import org.openide.ErrorManager;
 import org.netbeans.modules.editor.errorstripe.privatespi.Status;
 import org.openide.text.NbDocument;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
@@ -110,7 +110,7 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
     private DocumentListener weakDocL;
 
     static {
-        busyIcon = new ImageIcon(AnnotationView.class.getResource("resources/hodiny.gif"));
+        busyIcon = ImageUtilities.loadIcon("org/netbeans/modules/editor/errorstripe/resources/hodiny.gif");
     }
     
 //    public AnnotationView(JTextComponent pane) {
@@ -500,7 +500,7 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
             scrollPaneCandidade = scrollPaneCandidade.getParent();
         }
         
-        if (scrollPaneCandidade == null || !(scrollPaneCandidade instanceof JScrollPane) || scrollBar == null) {
+        if (!(scrollPaneCandidade instanceof JScrollPane) || scrollBar == null) {
             //no help for #54080:
             return getHeight() - HEIGHT_OFFSET;
         }

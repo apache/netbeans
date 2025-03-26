@@ -194,7 +194,7 @@ public class ClassPathProviderImpl implements ClassPathProvider {
         this.repository = repository;
     }
 
-    private static final String[] TEST_LIBRARIES = new String[] {"testng", "junit_4"};
+    private static final String[] TEST_LIBRARIES = new String[] {"testng", "junit_4", "junit_5"};
 
     private static URL projectDir2FakeTarget(FileObject projectDir) throws MalformedURLException {
         return FileUtil.getArchiveRoot(projectDir.toURI().resolve("fake-target.jar").toURL());
@@ -203,7 +203,7 @@ public class ClassPathProviderImpl implements ClassPathProvider {
     @Override
     public ClassPath findClassPath(FileObject file, String type) {
         if (sourceCP.findOwnerRoot(file) != null) {
-            if (!repository.isAnyProjectOpened()) {
+            if (repository != null && !repository.isAnyProjectOpened()) {
                 //if no project is open, java.base may not be indexed. Fallback on default queries:
                 return null;
             }

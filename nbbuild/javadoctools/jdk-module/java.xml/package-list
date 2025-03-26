@@ -1,0 +1,5 @@
+javax.xml.parsers
+javax.xml.transform
+javax.xml.validation
+org.w3c.dom
+org.xml.sax

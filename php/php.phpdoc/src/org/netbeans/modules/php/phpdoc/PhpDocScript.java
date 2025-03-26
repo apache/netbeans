@@ -287,16 +287,8 @@ public final class PhpDocScript {
         }
 
         @Override
-        public void outputLineSelected(OutputEvent ev) {
-        }
-
-        @Override
         public void outputLineAction(OutputEvent ev) {
             HtmlBrowser.URLDisplayer.getDefault().showURL(url);
-        }
-
-        @Override
-        public void outputLineCleared(OutputEvent ev) {
         }
 
     }

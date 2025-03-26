@@ -177,7 +177,7 @@ public final class PersistentClassIndex extends ClassIndexImpl {
                 res.offer(fo);
             }
         }
-        return res.toArray(new FileObject[res.size()]);
+        return res.toArray(new FileObject[0]);
     }
 
     @Override

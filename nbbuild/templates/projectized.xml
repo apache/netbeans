@@ -95,9 +95,43 @@
             </path>
         </pathconvert>
     </target>
-    <target name="-init-bootclasspath-prepend-compile" depends="-init-compile-bootclasspath-nb">
+
+    <target name="-check-source-over-8" depends="basic-init">
+        <condition property="limitmodules.release" value="${javac.target}" else="${javac.release}">
+            <equals arg1="${javac.release}" arg2=""/>
+        </condition>
+        <condition property="javac.source.is.8" value="true">
+            <or>
+                <equals arg1="${limitmodules.release}" arg2="1.6" />
+                <equals arg1="${limitmodules.release}" arg2="1.7" />
+                <equals arg1="${limitmodules.release}" arg2="1.8" />
+            </or>
+        </condition>
+    </target>
+
+    <target name="-init-compile-limit-modules-nb" depends="basic-init,jdk-8-check,set-buildnumber,-define-custom-javac-task,-check-source-over-8" unless="javac.source.is.8">
+        <taskdef name="setuplimitmodules" classname="org.netbeans.nbbuild.extlibs.SetupLimitModules" classpath="${nbantext.jar}"/>
+        <setuplimitmodules limitModulesProperty="nb.javac.limit.modules.nb"
+                           releaseVersion="${limitmodules.release}"
+                           excludedModules="java.compiler,jdk.compiler"
+                           nbjdkHome="${nbjdk.home}"
+                           cacheFile="${nb_all}/nbbuild/build/limit-modules-cache.properties" />
+    </target>
+
+    <target name="-init-bootclasspath-prepend-compile" depends="-init-compile-bootclasspath-nb,-init-compile-limit-modules-nb,-check-source-over-8">
         <condition property="bootclasspath.prepend" value="${bootclasspath.prepend.nb}">
-            <istrue value="${requires.nb.javac}"/>
+            <and>
+                <istrue value="${requires.nb.javac}"/>
+                <istrue value="${javac.source.is.8}"/>
+            </and>
+        </condition>
+        <condition property="limit.modules.option.list" value="${nb.javac.limit.modules.nb}">
+            <and>
+                <istrue value="${requires.nb.javac}"/>
+                <not>
+                    <istrue value="${javac.source.is.8}"/>
+                </not>
+            </and>
         </condition>
     </target>
     <target name="-init-bootclasspath-prepend-run" depends="-init-bootclasspath-prepend-compile,-init-bootclasspath-prepend-run8,-init-bootclasspath-prepend-run9"/>
@@ -123,7 +157,13 @@
         </condition>
     </target>
     <target name="-init-bootclasspath-prepend-run9" depends="-init-bootclasspath-prepend-compile" if="have-jdk-1.9">
-        <condition property="test.bootclasspath.prepend.args" value="--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument,jdk.zipfs,java.scripting,java.naming,jdk.jdi,jdk.unsupported">
+        <taskdef name="setuplimitmodules" classname="org.netbeans.nbbuild.extlibs.SetupLimitModules" classpath="${nbantext.jar}"/>
+        <setuplimitmodules limitModulesProperty="run.nb.javac.limit.modules.nb"
+                           releaseVersion="last"
+                           excludedModules="java.compiler,jdk.compiler"
+                           nbjdkHome="${test.nbjdk.home}"
+                           cacheFile="${nb_all}/nbbuild/build/limit-modules-cache.properties" />
+        <condition property="test.bootclasspath.prepend.args" value="--limit-modules=${run.nb.javac.limit.modules.nb}">
             <and>
                 <istrue value="${requires.nb.javac}"/>
                 <not>
@@ -706,7 +746,7 @@
         <property name="sigtest.public.packages" value="${public.packages}"/>
         <property name="sigtest.fail.on.error" value="true"/>
         <taskdef name="sigtest" classname="org.netbeans.nbbuild.Sigtest" classpath="${nbantext.jar}"/>
-        <property name="sigtest.jar" location="${nb_all}/nbbuild/external/sigtest-maven-plugin-1.4.jar"/>
+        <property name="sigtest.jar" location="${nb_all}/nbbuild/external/sigtest-maven-plugin-2.3.jar"/>
         <loadproperties srcFile="${manifest.mf}" prefix="mf.">
             <filterchain>
                 <replaceregex pattern="[\n\r]+ ([^ ][^\n\r]*)"
@@ -747,10 +787,14 @@
         </condition>
         <property name="sigtest.mail" value="${commit.mail}"/>
 
-        <echo>sigtest check: ${module.name}; cnb: ${code.name.base.dashes}; email: ${sigtest.mail}; type: ${sigtest.check.type}</echo>
+        <condition property="sigtest.release" value="${javac.target}" else="${javac.release}">
+            <equals arg1="${javac.release}" arg2=""/>
+        </condition>
+
+        <echo>sigtest check: ${module.name}; cnb: ${code.name.base.dashes}; release: ${sigtest.release}; email: ${sigtest.mail}; type: ${sigtest.check.type}</echo>
     </target>
 
-    <target name="gen-sigtest" depends="-sigtest-init">
+    <target name="gen-sigtest" depends="-sigtest-init" unless="${sigtest.skip.gen}">
         <property name="sigtest.gen.fail.on.error" value="${sigtest.fail.on.error}"/>
         <mkdir dir="${sigtest.output.dir}"/>
         <sigtest fileName="${sigtest.file}"
@@ -758,7 +802,7 @@
                  classpath="${sigtest.class.path}"
                  version="${mf.OpenIDE-Module-Specification-Version}"
                  action="generate"
-                 release="${javac.target}"
+                 release="${sigtest.release}"
                  packages="${sigtest.public.packages}"
                  report="${sigtest.output.dir}/generate-${code.name.base.dashes}.xml"
                  failonerror="${sigtest.gen.fail.on.error}"
@@ -771,7 +815,7 @@
                  sigtestJar="${sigtest.jar}"
                  classpath="${sigtest.class.path}"
                  version="${mf.OpenIDE-Module-Specification-Version}"
-                 release="${javac.target}"
+                 release="${sigtest.release}"
                  action="${sigtest.check.type}"
                  packages="${sigtest.public.packages}"
                  report="${sigtest.output.dir}/${code.name.base.dashes}.xml"

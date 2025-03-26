@@ -84,6 +84,7 @@ class JavaCodeGenerator extends CodeGenerator {
     static final String PROP_DECLARATION_PRE = "declarationPre"; // NOI18N
     static final String PROP_DECLARATION_POST = "declarationPost"; // NOI18N
     static final String PROP_GENERATE_MNEMONICS = "generateMnemonicsCode"; // Mnemonics support // NOI18N
+    static final String PROP_GENERATE_LAMBDA_LISTENERS = "generateLambdaListeners"; // Mnemonics support // NOI18N
     static final String PROP_LISTENER_GENERATION_STYLE = "listenerGenerationStyle"; // NOI18N
 
     static final String AUX_VARIABLE_MODIFIER =
@@ -130,6 +131,7 @@ class JavaCodeGenerator extends CodeGenerator {
     static final int ANONYMOUS_INNERCLASSES = 0;
     static final int CEDL_INNERCLASS = 1;
     static final int CEDL_MAINCLASS = 2;
+    static final int LAMBDAS = 3;
 
     // types of code generation of layout code
     static final int LAYOUT_CODE_AUTO = 0;
@@ -2308,10 +2310,9 @@ class JavaCodeGenerator extends CodeGenerator {
             }
         }
 
-	String propertyInitializationString = creator.getJavaCreationCode(
-	        creatorProperties.toArray(new FormProperty[creatorProperties.size()]),
-                subBeanPropNames != null ? subBeanPropNames.toArray(new String[subBeanPropNames.size()]) : null,
-                subBeanPropCodes != null ? subBeanPropCodes.toArray(new String[subBeanPropCodes.size()]) : null,
+	String propertyInitializationString = creator.getJavaCreationCode(creatorProperties.toArray(new FormProperty[0]),
+                subBeanPropNames != null ? subBeanPropNames.toArray(new String[0]) : null,
+                subBeanPropCodes != null ? subBeanPropCodes.toArray(new String[0]) : null,
                 prop.getValueType(),
                 null);
         if (codeData != null) {
@@ -2432,15 +2433,16 @@ class JavaCodeGenerator extends CodeGenerator {
                 lastEventSetDesc = eventSetDesc;
             }
 
-            if (defaultMode != ANONYMOUS_INNERCLASSES)
+            if (defaultMode != ANONYMOUS_INNERCLASSES && defaultMode != LAMBDAS) {
                 if (mode == defaultMode) {
                     if (!event.isInCEDL())
                         mode = ANONYMOUS_INNERCLASSES;
-                }
-                else if (event.isInCEDL())
+                } else if (event.isInCEDL()) {
                     mixedMode = true;
+                }
+            }
 
-            if (defaultMode == ANONYMOUS_INNERCLASSES || !event.isInCEDL()) {
+            if (defaultMode == ANONYMOUS_INNERCLASSES || defaultMode == LAMBDAS || !event.isInCEDL()) {
                 if (listenerEvents == null)
                     listenerEvents = new ArrayList<Event>();
                 listenerEvents.add(event);
@@ -2497,46 +2499,8 @@ class JavaCodeGenerator extends CodeGenerator {
 
         switch (mode) {
             case ANONYMOUS_INNERCLASSES:
-                codeWriter.write("new "); // NOI18N
-
-                // try to find adpater to use instead of full listener impl
-                Class listenerType = eventSetDesc.getListenerType();
-                Class adapterClass = BeanSupport.getAdapterForListener(
-                                                           listenerType);
-                if (adapterClass != null) { // use listener adapter class
-                    codeWriter.write(getSourceClassName(adapterClass) + "() {\n"); // NOI18N
-
-                    for (int i=0; i < eventList.size(); i++) {
-                        Event event = eventList.get(i);
-                        String[] paramNames = generateListenerMethodHeader(
-                                   null, event.getListenerMethod(), codeWriter);
-                        generateEventHandlerCalls(event, paramNames, codeWriter, true);
-                        codeWriter.write("}\n"); // NOI18N
-                    }
-                }
-                else { // generate full listener implementation (all methods)
-                    codeWriter.write(getSourceClassName(listenerType) + "() {\n"); // NOI18N
-
-                    Method[] methods = eventSetDesc.getListenerMethods();
-                    for (int i=0; i < methods.length; i++) {
-                        Method m = methods[i];
-                        Event event = null;
-                        for (int j=0; j < eventList.size(); j++) {
-                            Event e = eventList.get(j);
-                            if (m.equals(e.getListenerMethod())) {
-                                event = e;
-                                break;
-                            }
-                        }
-                        String[] paramNames =
-                            generateListenerMethodHeader(null, m, codeWriter);
-                        if (event != null)
-                            generateEventHandlerCalls(event, paramNames, codeWriter, true);
-                        codeWriter.write("}\n"); // NOI18N
-                    }
-                }
-
-                codeWriter.write("}"); // NOI18N
+            case LAMBDAS:
+                generateInnerClasses(codeWriter, eventSetDesc, eventList, mode == LAMBDAS);
                 break;
 
             case CEDL_INNERCLASS:
@@ -2552,6 +2516,84 @@ class JavaCodeGenerator extends CodeGenerator {
 
         if (exceptions != null)
             generateCatchCode(exceptions, codeWriter);
+    }
+
+    private void generateInnerClasses(Writer codeWriter, EventSetDescriptor eventSetDesc, List<Event> eventList, boolean useLambdas) throws IOException {
+
+        if (useLambdas && eventSetDesc.getListenerMethods().length == 1) {
+            generateWithReferenceOrLambda(codeWriter, eventList);
+        } else {
+            codeWriter.write("new "); // NOI18N
+            // try to find adpater to use instead of full listener impl
+            Class listenerType = eventSetDesc.getListenerType();
+            Class adapterClass = BeanSupport.getAdapterForListener(
+                    listenerType);
+            if (adapterClass != null) { // use listener adapter class
+                codeWriter.write(getSourceClassName(adapterClass) + "() {\n"); // NOI18N
+
+                for (int i = 0; i < eventList.size(); i++) {
+                    Event event = eventList.get(i);
+                    String[] paramNames = generateListenerMethodHeader(
+                            null, event.getListenerMethod(), codeWriter);
+                    generateEventHandlerCalls(event, paramNames, codeWriter, true);
+                    codeWriter.write("}\n"); // NOI18N
+                }
+            } else { // generate full listener implementation (all methods)
+                codeWriter.write(getSourceClassName(listenerType) + "() {\n"); // NOI18N
+
+                Method[] methods = eventSetDesc.getListenerMethods();
+                for (int i = 0; i < methods.length; i++) {
+                    Method m = methods[i];
+                    Event event = null;
+                    for (int j = 0; j < eventList.size(); j++) {
+                        Event e = eventList.get(j);
+                        if (m.equals(e.getListenerMethod())) {
+                            event = e;
+                            break;
+                        }
+                    }
+                    String[] paramNames =
+                            generateListenerMethodHeader(null, m, codeWriter);
+                    if (event != null)
+                        generateEventHandlerCalls(event, paramNames, codeWriter, true);
+                    codeWriter.write("}\n"); // NOI18N
+                }
+            }
+            codeWriter.write("}"); // NOI18N
+        }
+    }
+
+    private void generateWithReferenceOrLambda(Writer codeWriter, List<Event> eventList) throws IOException {
+        if (eventList.get(0).getEventHandlers().length == 1) {
+            codeWriter.append("this::" + eventList.get(0).getEventHandlers()[0]);
+        } else if (eventList.get(0).getEventHandlers().length > 1) {
+            Class[] paramTypes = eventList.get(0).getListenerMethod().getParameterTypes();
+            String[] paramNames = generateParamNames(paramTypes);
+            String paramsString = generateParamsString(paramNames);
+
+            codeWriter.append("(");
+            codeWriter.append(paramsString);
+            codeWriter.append(") -> { \n");
+
+            for (String event : eventList.get(0).getEventHandlers()) {
+                codeWriter.append(event);
+                codeWriter.append("(");
+                codeWriter.append(paramsString);
+                codeWriter.append(");\n");
+            }
+            codeWriter.append("}");
+        }
+    }
+
+
+    private String generateParamsString(String[] paramNames) {
+        StringBuilder params = new StringBuilder();
+        for (int i = 0; i < paramNames.length; i++) {
+            params.append(paramNames[i]);
+            if (i + 1 < paramNames.length)
+                params.append(", "); // NOI18N
+        }
+        return params.toString();
     }
 
     private RADComponent codeVariableToRADComponent(CodeVariable var) {
@@ -2713,7 +2755,7 @@ class JavaCodeGenerator extends CodeGenerator {
             if ((var.getType() &  typeMask) == (type & typeMask))
                 variables.add(var);
         }
-        Collections.sort(variables, new Comparator<CodeVariable>() {
+        variables.sort(new Comparator<CodeVariable>() {
             @Override
             public int compare(CodeVariable o1, CodeVariable o2) {
                 return o1.getName().compareTo(o2.getName());
@@ -3375,18 +3417,7 @@ class JavaCodeGenerator extends CodeGenerator {
         throws IOException
     {
         Class[] paramTypes = originalMethod.getParameterTypes();
-        String[] paramNames;
-
-        if (paramTypes.length == 1
-            && EventObject.class.isAssignableFrom(paramTypes[0]))
-        {
-            paramNames = new String[] { EVT_VARIABLE_NAME };
-        }
-        else {
-            paramNames = new String[paramTypes.length];
-            for (int i=0; i < paramTypes.length; i++)
-                paramNames[i] = "param" + i; // NOI18N
-        }
+        String[] paramNames = generateParamNames(paramTypes);
 
         // generate the method
         writer.write(methodName != null ? "private " : "public "); // NOI18N
@@ -3416,6 +3447,21 @@ class JavaCodeGenerator extends CodeGenerator {
 
         writer.write(" {\n"); // NOI18N
 
+        return paramNames;
+    }
+
+    private String[] generateParamNames(Class[] paramTypes){
+        String[] paramNames;
+        if (paramTypes.length == 1
+                && EventObject.class.isAssignableFrom(paramTypes[0]))
+        {
+            paramNames = new String[] { EVT_VARIABLE_NAME };
+        }
+        else {
+            paramNames = new String[paramTypes.length];
+            for (int i=0; i < paramTypes.length; i++)
+                paramNames[i] = "param" + i; // NOI18N
+        }
         return paramNames;
     }
 
@@ -3499,7 +3545,7 @@ class JavaCodeGenerator extends CodeGenerator {
     }
 
     private void importFQNs(boolean handleInitComponents, boolean handleVariables, String... eventHandlers) {
-        List<int[]> list = new ArrayList();
+        List<int[]> list = new ArrayList<>();
         if (handleInitComponents) {
             SimpleSection initComponentsSection = formEditor.getInitComponentSection();
             int[] span = formEditor.getFormJavaSource().getMethodSpan("initComponents"); // NOI18N
@@ -3522,7 +3568,7 @@ class JavaCodeGenerator extends CodeGenerator {
                 }
             }
         }
-        int [][] ranges = list.toArray(new int[list.size()][]);
+        int [][] ranges = list.toArray(new int[0][]);
         formEditor.getFormJavaSource().importFQNs(ranges);
     }
 
@@ -4421,7 +4467,7 @@ class JavaCodeGenerator extends CodeGenerator {
     }
 
     private class ListenerGenerationStyleProperty extends PropertySupport.ReadWrite {
-        
+
         private ListenerGenerationStyleProperty() {
             super(PROP_LISTENER_GENERATION_STYLE,
                 Integer.class,
@@ -4618,6 +4664,9 @@ class JavaCodeGenerator extends CodeGenerator {
     {
         public ListenerGenerationStyleEditor() {
             super(new Object[] {
+                FormUtils.getBundleString("CTL_LISTENER_LAMBDAS"), // NOI18N
+                Integer.valueOf(JavaCodeGenerator.LAMBDAS),
+                "" ,// NOI18N
                 FormUtils.getBundleString("CTL_LISTENER_ANONYMOUS_CLASSES"), // NOI18N
                 Integer.valueOf(JavaCodeGenerator.ANONYMOUS_INNERCLASSES),
                 "", // NOI18N

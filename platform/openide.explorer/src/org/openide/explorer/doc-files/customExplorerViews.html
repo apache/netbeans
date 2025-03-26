@@ -26,7 +26,7 @@
 </head>
 <body>
 
-<h1><a name="cust-view">Creating a new Explorer view</a></h1>
+<h1 id="cust-view">Creating a new Explorer view</h1>
 
 Anyone may create a new Explorer view and use it for special purposes
 with a custom UI, to provide an alternate representation of nodes
@@ -42,7 +42,7 @@ it need not implement any particular interface, etc. However, the
 convention is that it keep track of the Explorer manager that controls
 it; this manager should be located when it is
 
-<a href="@JDK@/java/awt/Component.html#addNotify--">added</a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/awt/Component.html#addNotify--">added</a>
 
 to a parent component, by calling
 
@@ -51,7 +51,7 @@ to a parent component, by calling
 and then use that manager's properties to control it; the view should
 also stop consulting the manager when the component is
 
-<a href="@JDK@/java/awt/Component.html#removeNotify--">removed</a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/awt/Component.html#removeNotify--">removed</a>
 
 from its parent.
 
@@ -70,7 +70,7 @@ certain changes.
 <p>Other than these requirements, nearly any visual representation is
 possible, and so the API does not specify any more than this.
 
-<h3><a name="cust-treeview">Subclassing the tree views</a></h3>
+<h2 id="cust-treeview">Subclassing the tree views</h2>
 
 The abstract base class
 

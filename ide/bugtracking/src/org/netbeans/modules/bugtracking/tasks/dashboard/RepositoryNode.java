@@ -193,9 +193,8 @@ public class RepositoryNode extends AsynchronousNode<Collection<QueryImpl>> impl
                     filteredQueryNodes.add(queryNode);
                 }
             }
-            for (String key : keys) {
-                queryNodesMap.remove(key);
-            }
+
+            queryNodesMap.keySet().removeAll(keys);
         }
     }
 
@@ -231,8 +230,8 @@ public class RepositoryNode extends AsynchronousNode<Collection<QueryImpl>> impl
             }
         }
         actions.add(null);
-        actions.addAll(Actions.getDefaultActions(selectedNodes.toArray(new TreeListNode[selectedNodes.size()])));
-        return actions.toArray(new Action[actions.size()]);
+        actions.addAll(Actions.getDefaultActions(selectedNodes.toArray(new TreeListNode[0])));
+        return actions.toArray(new Action[0]);
     }
 
     private Action getRepositoryAction(RepositoryNode... repositoryNodes) {
@@ -325,15 +324,13 @@ public class RepositoryNode extends AsynchronousNode<Collection<QueryImpl>> impl
         return repository.getQueries();
     }
 
-    ImageIcon getIcon() {
+    Icon getIcon() {
         Image icon = repository.getIcon();
-        ImageIcon imageIcon;
         if (icon == null) {
-            imageIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/bugtracking/tasks/resources/remote_repo.png", true);
+            return ImageUtilities.loadImageIcon("org/netbeans/modules/bugtracking/tasks/resources/remote_repo.png", true);
         } else {
-            imageIcon = new ImageIcon(icon);
+            return ImageUtilities.image2Icon(icon);
         }
-        return imageIcon;
     }
 
     @Override

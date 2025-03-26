@@ -83,6 +83,90 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="RunConfig-options">
+            <api name="general"/>
+            <summary>RunConfig provides access to Maven options</summary>
+            <version major="2" minor="167"/>
+            <date day="5" month="11" year="2024"/>
+            <author login="petrovic-d"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                <p>
+                    RunConfig now provides access to Maven options / flags. Client can decide which
+                    options / flags will be passed to command line.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.maven.api.execute" name="RunConfig"/>
+        </change>
+        <change id="pluginconfigpathparams-pathitem-name-null">
+            <api name="general"/>
+            <summary>Enable using PluginConfigPathParams with null valued pathItemName</summary>
+            <version major="2" minor="164"/>
+            <date day="10" month="8" year="2024"/>
+            <author login="matthiasblaesing"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                Maven <a href="https://maven.apache.org/guides/mini/guide-configuring-plugins.html#mapping-collections-and-arrays"
+                >documentation for plugin configuration</a> declares, that for
+                list and array typed configuration plugins, the name of the
+                single entry element does not matter, only the name of the
+                wrapping element is relevant. This change modifies
+                <pre>PluginPropertyUtils.PluginConfigPathParams</pre> to always
+                report <pre>null</pre> for <pre>pathItemName</pre> and adds a
+                constructor without that parameter, deprecating the original
+                constructor.
+            </description>
+            <class package="org.netbeans.modules.maven.api" name="PluginPropertyUtils"/>
+            <issue number="GITHUB-7658" />
+        </change>
+        <change id="partial-maven-project">
+            <api name="general"/>
+            <summary>Support for partially loaded projects</summary>
+            <version major="2" minor="162"/>
+            <date day="3" month="10" year="2023"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                Added a <a href="@TOP@/org/netbeans/modules/maven/api/NbMavenProject.html#getPartialProject-org.apache.maven.project.MavenProject-">
+                getPartialProject</a> that returns potentially incompletely loaded project instead of a mocked-up fallback (see <a href="@TOP@/org/netbeans/modules/maven/api/NbMavenProject.html#isErrorPlaceholder-org.apache.maven.project.MavenProject-">isErrorPlaceholder()</a>.
+                Also added a <a href="@TOP@/org/netbeans/modules/maven/api/NbMavenProject.html#isIncomplete-org.apache.maven.project.MavenProject-">isIncomplete()</a> check that checks project's status.
+            </description>
+            <class package="org.netbeans.modules.maven.api" name="NbMavenProject"/>
+        </change>
+        <change id="declare-run-goals">
+            <api name="general"/>
+            <summary>Allow extensions to declare run-like goals</summary>
+            <version major="2" minor="161"/>
+            <date day="6" month="12" year="2023"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                <p>
+                    The GUI recognizes user modifications to actions and refuses to configure
+                    a modified "run" action with vm and app arguments. It is now possible for a plugin
+                    to register an alternative goal, which is recognized as "exec"-like one and does
+                    not disable the GUI.
+                </p>
+                <p>
+                    For an example, see <a href="@TOP@/org/netbeans/modules/maven/spi/actions/MavenActionsProvider.html#declare-run-goals">MavenActionProvider</a>.
+                </p>
+            </description>
+        </change>
+        <change id="runutils-createconfig-action">
+            <api name="general"/>
+            <summary></summary>
+            <version major="2" minor="157"/>
+            <date day="23" month="1" year="2023"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                Added a <a href="@TOP@/org/netbeans/modules/maven/api/execute/RunUtils.html#createRunConfig-java.lang.String-org.netbeans.api.project.Project-org.netbeans.spi.project.ProjectConfiguration-org.openide.util.Lookup-">
+                RunUtils.createRunConfig()</a> variant that allows to create a <a href="@TOP@/org/netbeans/modules/maven/api/execute/RunConfig.html">RunConfig</a> for a project-defined action. 
+                Clients can use this function to use all user customizations that may have been configured for the project action before executing it using 
+                <a href="@TOP@/org/netbeans/modules/maven/api/execute/RunUtils.html#run-org.netbeans.modules.maven.api.execute.RunConfig-">RunUtils.run</a>.
+            </description>
+            <class package="org.netbeans.modules.maven.api.execute" name="RunUtils"/>
+        </change>
         <change id="lifecycle-white-list">
             <api name="general"/>
             <summary>LifecycleParticipants can be ignored</summary>

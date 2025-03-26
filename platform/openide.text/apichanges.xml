@@ -25,6 +25,20 @@
 <apidef name="text">Text API</apidef>
 </apidefs>
 <changes>
+    <change id="DocumentOpenClose.ReloadAutomaticUserAnswers">
+        <api name="text"/>
+        <summary>DocumentFilter can block a reload, UserQuestionExceptions can be branded to true or false.</summary>
+        <version major="6" minor="96"/>
+        <date day="24" month="10" year="2024"/>
+        <author login="sdedic"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"
+                       semantic="compatible" deletion="no"
+                       modification="no"/>
+        <description>
+            The implementation handles <code>UserQuestionException</code> during reload, which means a DocumentFilter
+            may block document reload. Support for automatic UserQuestionException handling was added as branding API
+        </description>
+    </change>
     <change id="EditorCookie.Observable.PROP_RELOADING">
         <api name="text"/>
         <summary>Added EditorCookie.Observable.PROP_RELOADING and associated begin/end events</summary>
@@ -532,7 +546,7 @@
         <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
         <description>
             <p>An <code>ActiveEditorDrop</code> interface has been added due to 
-                drag and drop callback support described at <a href="http://www.netbeans.org/issues/show_bug.cgi?id=61367">issue #61367</a>
+                drag and drop callback support described at <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=61367">issue #61367</a>
             </p>
         </description>
         <class package="org.openide.text" name="ActiveEditorDrop"/>

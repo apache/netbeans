@@ -3145,7 +3145,7 @@ final class Central implements ControllerHandler {
             return inSplitLeftNeighbor;
         if( null != inSplitRightNeighbor )
             return inSplitRightNeighbor;
-        Collections.sort( modes, new Comparator<ModeImpl>() {
+        modes.sort(new Comparator<ModeImpl>() {
             @Override
             public int compare( ModeImpl o1, ModeImpl o2 ) {
                 SplitConstraint[] sc1 = o1.getConstraints();

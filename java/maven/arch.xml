@@ -118,7 +118,7 @@
     <api group="layer" name="MavenPackagingLookup" type="export" category="devel">
         <p>
             <code>Projects/org-netbeans-modules-maven/&lt;packaging-type>/Lookup</code> is added to the project's additional Lookup. The content is expected
-            to contain packaing-specific services and processors, for example, <a href="@TOP@/org/netbans/modules/maven/api/execute/PrerequisitesChecker.html">PrerequisitesCheckers</a>.
+            to contain packaing-specific services and processors, for example, <a href="@TOP@/org/netbeans/modules/maven/api/execute/PrerequisitesChecker.html">PrerequisitesCheckers</a>.
             In addition, <code>Projects/org-netbeans-modules-maven/_any/Lookup</code> defines services that act after the packaging-specific ones.
         </p>
         For the details and examples, see description in <a href="@TOP@/org/netbeans/modules/maven/api/execute/PrerequisitesChecker.html">PrerequisitesChecker javadoc</a>.
@@ -155,6 +155,7 @@
        that represent archetypes. The archetypes are defined by the following file attributes:
      </p>
        <table>
+           <caption>Archetype attributes</caption>
            <tbody>
                <tr><td>groupId</td><td>mandatory</td><td></td></tr>
                <tr><td>artifactId</td><td>mandatory</td><td></td></tr>
@@ -169,8 +170,8 @@
     <api group="lookup" name="ActionConfiguration" type="import" category="official">
         <p>
             Project API clients may place <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ProjectConfiguration.html">ProjectConfiguration</a> 
-            instance in the <b>context Lookup</b> passed to <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ActionProvider.html##isActionEnabled-java.lang.String-org.openide.util.Lookup-">ActionProvider.isActionEnabled()</a> or 
-            <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ActionProvider.html##invokeAction-java.lang.String-org.openide.util.Lookup-">ActionProvider.invokeAction()</a>. If such instance is present, the action is configured according to settings in the selected configuration.
+            instance in the <b>context Lookup</b> passed to <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ActionProvider.html#isActionEnabled-java.lang.String-org.openide.util.Lookup-">ActionProvider.isActionEnabled()</a> or 
+            <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ActionProvider.html#invokeAction-java.lang.String-org.openide.util.Lookup-">ActionProvider.invokeAction()</a>. If such instance is present, the action is configured according to settings in the selected configuration.
             If not present, the active configuration is used. See example in <a href="@TOP@/org/netbeans/modules/maven/api/NbMavenProject.html">NbMavenProject</a> documentation.
         </p>
     </api>
@@ -257,6 +258,11 @@
           to control (usually to disable with <code>DEFAULT_UPDATE_FREQ=3</code>)
           the default behavior automatic maven index downloading.
       </api> 
+      <api category="devel" group="layer" name="Project.org-netbeans-modules-maven.RunGoals" type="export">
+          A executable-like plugin goals, that may serve in place of exec:exec may be registered here. The core implementation
+          will recognize such goals as exec's and will not disable app amd VM parameter configuration UI.
+          For an example, see <a href="@TOP@/org/netbeans/modules/maven/spi/actions/MavenActionsProvider.html#declare-run-goals">MavenActionProvider</a>.
+      </api>
   </p>
   
  </answer>

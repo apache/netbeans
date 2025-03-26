@@ -29,6 +29,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -51,11 +52,14 @@ import org.netbeans.modules.java.api.common.project.ui.ProjectUISupport;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.customizer.ModelHandle2;
 import org.netbeans.modules.maven.classpath.MavenSourcesImpl;
+import org.netbeans.modules.maven.configurations.M2ConfigProvider;
+import org.netbeans.modules.maven.configurations.M2Configuration;
 import org.netbeans.modules.maven.runjar.MavenExecuteUtils;
 import org.netbeans.modules.maven.execute.model.ActionToGoalMapping;
 import org.netbeans.modules.maven.execute.model.NetbeansActionMapping;
 import org.netbeans.modules.maven.options.MavenSettings;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -129,7 +133,7 @@ public class RunJarPanel extends javax.swing.JPanel implements HelpCtx.Provider 
             roots.add(sourceGroup.getRootFolder());
         }
 
-        btnMainClass.addActionListener(new MainClassListener(roots.toArray(new FileObject[roots.size()]), txtMainClass));
+        btnMainClass.addActionListener(new MainClassListener(roots.toArray(new FileObject[0]), txtMainClass));
         docListener = new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent arg0) {
@@ -174,11 +178,23 @@ public class RunJarPanel extends javax.swing.JPanel implements HelpCtx.Provider 
     
     private MavenExecuteUtils.ExecutionEnvHelper execEnvHelper;
     
+    private NetbeansActionMapping getMapping(String action, ProjectConfiguration c) {
+        NetbeansActionMapping r = null;
+        
+        if (c != null) {
+            r = ModelHandle2.getMapping(action, project, c);
+        } else {
+            r = ModelHandle2.getDefaultMapping(action, project);
+        }
+        return r;
+    }
+    
     @NbBundle.Messages({"MsgModifiedAction=One of Run/Debug/Profile Project actions has been modified and the Run panel cannot be safely edited"})
     private void initValues() {
         run = null;
         debug = null;
         profile = null;
+        ModelHandle2.Configuration sel = (ModelHandle2.Configuration) comConfiguration.getSelectedItem();
         ActionToGoalMapping mapp = handle.getActionMappings((ModelHandle2.Configuration) comConfiguration.getSelectedItem());
         @SuppressWarnings("unchecked")
         List<NetbeansActionMapping> lst = mapp.getActions();
@@ -193,14 +209,22 @@ public class RunJarPanel extends javax.swing.JPanel implements HelpCtx.Provider 
                 profile = m;
             }
         }
+        M2ConfigProvider prov = project.getLookup().lookup(M2ConfigProvider.class);
+        M2Configuration config = null;
+        if (prov != null) {
+            config = prov.getConfigurations().stream().filter(c -> c.getId().equals(sel.getId())).findAny().orElse(null);
+            if (M2Configuration.DEFAULT.equals(config.getId())) {
+                config = null;
+            }
+        }
         if (run == null) {
-            run = ModelHandle2.getDefaultMapping(ActionProvider.COMMAND_RUN, project);
+            run = getMapping(ActionProvider.COMMAND_RUN, config);
         }
         if (debug == null) {
-            debug = ModelHandle2.getDefaultMapping(ActionProvider.COMMAND_DEBUG, project);
+            debug = getMapping(ActionProvider.COMMAND_DEBUG, config);
         }
         if (profile == null) {
-            profile = ModelHandle2.getDefaultMapping(PROFILE_CMD, project);
+            profile = getMapping(PROFILE_CMD, config);
         }
         execEnvHelper = MavenExecuteUtils.createExecutionEnvHelper(project, run, debug, profile, mapp);
         execEnvHelper.loadFromProject();

@@ -34,6 +34,20 @@
         </file>
         
         <folder name="Oracle">
+            <folder name="Assets">
+                <file name="Assets.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.cloud.oracle.assets.RootNode.instance"/>
+                    <attr name="instanceClass" stringvalue="org.openide.nodes.Node"/>
+                     <attr name="instanceOf" stringvalue="org.openide.nodes.Node"/>
+                </file>
+            </folder>
+            <folder name="Suggested">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-SuggestedNode-createNode.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.assets.SuggestedNode.createNode" name="instanceCreate"/>
+                    </file>
+                </folder>
+            </folder>
             <folder name="Compartment">
                 <folder name="Nodes">
                     <file name="org-netbeans-modules-cloud-oracle-adm-KnowledgeBaseNode-listKnowledgeBases.instance">
@@ -48,6 +62,9 @@
                         <!--org.netbeans.modules.cloud.oracle.database.DatabaseNode.getDatabases()-->
                         <attr methodvalue="org.netbeans.modules.cloud.oracle.database.DatabaseNode.getDatabases" name="instanceCreate"/>
                     </file>
+                    <file name="org-netbeans-modules-cloud-oracle-vault-VaultNode-getVaults.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.vault.VaultNode.getVaults" name="instanceCreate"/>
+                    </file>
                     <file name="org-netbeans-modules-cloud-oracle-devops-DevopsProjectNode-listDevopsProjects.instance">
                         <!--org.netbeans.modules.cloud.oracle.devops.DevopsProjectNode.listDevopsProjects()-->
                         <attr methodvalue="org.netbeans.modules.cloud.oracle.devops.DevopsProjectNode.listDevopsProjects" name="instanceCreate"/>
@@ -55,6 +72,21 @@
                     <file name="org-netbeans-modules-cloud-oracle-compartment-CompartmentNode-createNode.instance">
                         <!--org.netbeans.modules.cloud.oracle.compartment.CompartmentNode.createNode()-->
                         <attr methodvalue="org.netbeans.modules.cloud.oracle.compartment.CompartmentNode.createNode" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-bucket-BucketNode-getBuckets.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.bucket.BucketNode.getBuckets" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-compute-ComputeInstanceNode-getComputeInstances.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.compute.ComputeInstanceNode.getComputeInstances" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-developer-ContainerRepositoryNode-getContainerRepositories.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.developer.ContainerRepositoryNode.getContainerRepositories" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-developer-MetricsNamespaceNode-getMetrics.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.developer.MetricsNamespaceNode.getMetricNamespaces" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-compute-ClusterNode-getClusters.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.compute.ClusterNode.getClusters" name="instanceCreate"/>
                     </file>
                 </folder>
             </folder>
@@ -162,6 +194,89 @@
                     </file>
                 </folder>
             </folder>
+            <folder name="Bucket">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-bucket-BucketNode-createNode.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.bucket.BucketNode.createNode" name="instanceCreate"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="ComputeInstance">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-compute-ComputeInstanceNode-createNode.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.compute.ComputeInstanceNode.createNode" name="instanceCreate"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="ContainerRepository">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-developer-ContainerRepositoryNode-getContainerRepositories-createNode.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.developer.ContainerRepositoryNode.createNode" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-developer-ContainerTagNode-getContainerTags.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.developer.ContainerTagNode.getContainerTags" name="instanceCreate"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="MetricsNamespace">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-developer-MetricsNamespaceNode-createNode.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.developer.MetricsNamespaceNode.createNode" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-developer-MetricsNode-getMetrics.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.developer.MetricsNode.getMetrics" name="instanceCreate"/>
+                    </file>
+                </folder>
+                <folder name="Metrics">
+                    <folder name="Nodes">
+                        <file name="org-netbeans-modules-cloud-oracle-developer-MetricsNode-createNode.instance">
+                            <attr methodvalue="org.netbeans.modules.cloud.oracle.developer.MetricsNode.createNode" name="instanceCreate"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+            <folder name="ContainerTag">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-cdeveloper-ContainerTagNode-createNode.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.developer.ContainerTagNode.createNode" name="instanceCreate"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="Cluster">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-compute-ClusterNode-createNode.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.compute.ClusterNode.createNode" name="instanceCreate"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="Vault">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-vault-VaultNode-createNode.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.vault.VaultNode.createNode" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-vault-SecretNode-getSecrets.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.vault.SecretNode.getSecrets" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-vault-KeyNode-getKeys.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.vault.KeyNode.getKeys" name="instanceCreate"/>
+                    </file>
+                </folder>
+                <folder name="Key">
+                    <folder name="Nodes">
+                        <file name="org-netbeans-modules-cloud-oracle-vault-KeyNode-createNode.instance">
+                            <attr methodvalue="org.netbeans.modules.cloud.oracle.vault.KeyNode.createNode" name="instanceCreate"/>
+                        </file>
+                    </folder>
+                </folder>
+                <folder name="Secret">
+                    <folder name="Nodes">
+                        <file name="org-netbeans-modules-cloud-oracle-vault-SecretNode-createNode.instance">
+                            <attr methodvalue="org.netbeans.modules.cloud.oracle.vault.SecretNode.createNode" name="instanceCreate"/>
+                        </file>
+                    </folder>
+                </folder>
+                
+            </folder>
             <folder name="BuildRun">
                 <folder name="Nodes">
                     <file name="org-netbeans-modules-cloud-oracle-devops-BuildRunNode-createNode.instance">
@@ -184,6 +299,15 @@
                         <!--org.netbeans.modules.cloud.oracle.devops.RepositoryNode.createNode()-->
                         <attr methodvalue="org.netbeans.modules.cloud.oracle.devops.RepositoryNode.createNode" name="instanceCreate"/>
                     </file>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="x-java">
+                <folder name="AnnotationProcessors">
+                    <file name="org-netbeans-modules-cloud-oracle-assets-CloudAssetsJavaCompletion.instance"/>
                 </folder>
             </folder>
         </folder>

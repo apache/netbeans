@@ -175,7 +175,7 @@ public abstract class ManifestSection<T> {
             if (SharedClassObject.class.isAssignableFrom(clazz)) {
                 return SharedClassObject.findObject(clazz.asSubclass(SharedClassObject.class), true);
             } else {
-                return clazz.newInstance();
+                return clazz.getDeclaredConstructor().newInstance();
             }
         }
     }
@@ -320,7 +320,7 @@ public abstract class ManifestSection<T> {
                     if (! clazz.equals("")) // NOI18N
                         res.add(clazz);
                 }
-                installAfter = res.toArray(new String[res.size()]);
+                installAfter = res.toArray(new String[0]);
             } else {
                 installAfter = null;
             }
@@ -333,7 +333,7 @@ public abstract class ManifestSection<T> {
                     if (! clazz.equals("")) // NOI18N
                         res.add(clazz);
                 }
-                installBefore = res.toArray(new String[res.size()]);
+                installBefore = res.toArray(new String[0]);
             } else {
                 installBefore = null;
             }

@@ -57,6 +57,12 @@ public class TemplatesMimeTypeTest extends NbTestCase {
 
     @Override
     public void setUp() throws Exception {
+        // Ensure polyglot can be loaded cleanly and executed. Normally set by
+        // org.netbeans.libs.graalsdk.impl.Installer, when loaded as a netbeans
+        // module
+        System.setProperty("polyglot.engine.WarnInterpreterOnly", "false");
+        System.setProperty("truffle.UseFallbackRuntime", "true");
+
         clearWorkDir();
         
         super.setUp();

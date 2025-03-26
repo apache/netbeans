@@ -180,6 +180,7 @@ class NbClassPathCustomEditor extends javax.swing.JPanel {
         innerPanel.add(removeButton, gridBagConstraints);
 
         pathList.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 pathListMouseClicked(evt);
             }
@@ -477,7 +478,7 @@ class NbClassPathCustomEditor extends javax.swing.JPanel {
      */
     public Object getPropertyValue() throws IllegalStateException {
         List<String> list = Collections.list(NbCollections.checkedEnumerationByFilter(listModel.elements(), String.class, true));
-        String []arr = list.toArray(new String[list.size()]);
+        String []arr = list.toArray(new String[0]);
         return new NbClassPath(arr);
     }
 

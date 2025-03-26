@@ -210,7 +210,7 @@ public class TestMethodNode extends AbstractNode {
 		});
 	    }
 	}
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
     
     @Override

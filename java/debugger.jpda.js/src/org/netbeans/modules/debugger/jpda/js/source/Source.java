@@ -50,7 +50,8 @@ public final class Source {
     
     private static final Logger LOG = Logger.getLogger(Source.class.getName());
     
-    private static final String SOURCE_CLASS = "jdk.nashorn.internal.runtime.Source";   // NOI18N
+    private static final String SOURCE_CLASS_JDK = "jdk.nashorn.internal.runtime.Source";   // NOI18N
+    private static final String SOURCE_CLASS_EXT = "org.openjdk.nashorn.internal.runtime.Source";   // NOI18N
     private static final String SOURCE_FIELD = "source";    // NOI18N
     
     private static final String SOURCE_VAR_NAME = "name";   // NOI18N
@@ -166,7 +167,7 @@ public final class Source {
         if (fieldContent == null && fieldURL == null) {
             // There is a Data inner class instead:
             Field fieldData = sourceVar.getField(SOURCE_VAR_DATA);
-            if (fieldData != null && fieldData instanceof ObjectVariable) {
+            if (fieldData instanceof ObjectVariable) {
                 fieldURL = ((ObjectVariable) fieldData).getField(SOURCE_VAR_URL);
                 fieldContent = ((ObjectVariable) fieldData).getField(SOURCE_VAR_DATA_ARRAY);
             }
@@ -199,7 +200,7 @@ public final class Source {
             name = name.substring(1, name.length() - 1);
         }
         int nl = name.length();
-        if (nl < 4 || !name.substring(nl - 3, nl).toLowerCase().equals(".js")) {
+        if (nl < 4 || !name.substring(nl - 3, nl).equalsIgnoreCase(".js")) {
             name = name + ".js";
         }
         // Check whether the file happens to exist
@@ -227,7 +228,7 @@ public final class Source {
         for (Field sf : staticFields) {
             if (sf instanceof ObjectVariable &&
                 SOURCE_FIELD.equals(sf.getName()) &&
-                SOURCE_CLASS.equals(sf.getType())) {
+                (SOURCE_CLASS_JDK.equals(sf.getType()) || SOURCE_CLASS_EXT.equals(sf.getType()))) {
                 
                 return (ObjectVariable) sf;
             }

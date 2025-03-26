@@ -358,7 +358,7 @@ public class PhpLogicalViewProvider implements LogicalViewProvider {
             addCodeCoverageAction(actions);
             // XXX similarly for frameworks - they are directly in the context menu, not in any submenu
             addFrameworks(actions);
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
 
         private void addBuildActions(List<Action> actions) {

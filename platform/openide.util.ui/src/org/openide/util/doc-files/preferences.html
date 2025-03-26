@@ -18,15 +18,15 @@
     under the License.
 
 -->
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE html>
 <html>
   <head>
     <title>Preferences API in NetBeans</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   </head>
   <body>
-    <h1 align="left">Preferences API in NetBeans</h1>
-    NetBeans adopts <a href="http://java.sun.com/j2se/1.5.0/docs/guide/preferences/">Java Preferences API</a>
+    <h1>Preferences API in NetBeans</h1>
+    NetBeans adopts <a href="https://docs.oracle.com/javase/1.5.0/docs/guide/preferences/index.html">Java Preferences API</a>
     standard to be used in NetBeans to
     store preference and configuration data to be able to adapt to the needs
     of different users. NetBeans keeps this standard and enhances it slightly
@@ -43,8 +43,8 @@
     defaults.<P>
     The decision whether to use standard or  enhanced NetBeans preference tree is left
     up to the developer.
-    <h3 align="left">Usage Notes</h3>
-    <h4 align="left">How to obtain NetBeans Preferences?</h4>
+    <h2>Usage Notes</h2>
+    <h3>How to obtain NetBeans Preferences?</h3>
     To get preference node there are two <A
       HREF="@org-openide-util@/org/openide/util/NbPreferences.html">factory
     methods in Utilities API (org.openide.util)</A>:
@@ -52,15 +52,14 @@
       <li><code>NbPreferences.root()</code> returns root preference node. </li>
       <li><code>NbPreferences.forModule(class cls)</code> returns
       preference node which <a
-        href="@JDK@/java/util/prefs/Preferences.html#absolutePath%28%29">absolute path</a> 
+        href="@JDK@@JDKMODULE_JAVA_PREFS@/java/util/prefs/Preferences.html#absolutePath%28%29">absolute path</a> 
       depends whether class provided as a parameter was loaded as a
       part of any module or not. If so, then absolute path corresponds to
       slashified code name base of module. If not, then absolute path
       corresponds to class's package </li>
     </ul>
-    <h4 align="left">How to verify that preferences work properly?</h4>
+    <h3>How to verify that preferences work properly?</h3>
     Layout of files on disk:<br>
-    <p> </p>
     <pre>
     config/Preferences/
     `-- org
@@ -74,9 +73,8 @@
     </pre>
 
     <p> prefs.properties is regular properties file. See: </p>
-    <p> </p>
 <pre>#Thu Sep 28 18:15:22 CEST 2006<br>location=/tmp/location<br>systemHome=/tmp/systemHome<br>  </pre>
-    <H4 ALIGN=LEFT>How to migrate from SystemOptions into Preferences API?</H4>
+    <h3>How to migrate from SystemOptions into Preferences API?</h3>
     <OL>
       <LI>Remove registration from layer: 
 <PRE>
@@ -109,7 +107,7 @@
       <LI>Run tests to verify
       that code after migration is working
     </OL>
-    <H4 ALIGN=LEFT>Hints how to replace SystemOption </H4>
+    <h3>Hints how to replace SystemOption </h3>
     It is recommended to delete the whole settings class extending SystemOption
     and call directly Preferences API. This approach isn't convenient when
     except reading, writing from storage is necessary additional logic. Then
@@ -147,7 +145,7 @@
 +    }
       </PRE>
     </OL>
-    <H4 ALIGN=LEFT>How to ensure visualization in Tools/Options?</H4>
+    <h3>How to ensure visualization in Tools/Options?</h3>
     If you need keep UI backward compatibility then the way is very easy:
     provide a node representing your settings class. See:
     <PRE>
@@ -167,9 +165,9 @@
     <A HREF="@org-netbeans-modules-options-api@/overview-summary.html">Options Dialog API</A>.
     The module development support in NetBeans can help by generating boilerplate code and
     registering the option into your layer.
-    <H4 ALIGN=LEFT>How to document usage of Preferences API?</H4>
+    <h3>How to document usage of Preferences API?</h3>
     Answer properly arch questions like any other <A
-      HREF="http://openide.netbeans.org/tutorial/api-design.html">APIs</A>. There was added new arch question related to
+      HREF="https://netbeans.apache.org/wiki/API_Design">APIs</A>. There was added new arch question related to
     preferences (resources-preferences). See example:
     <PRE>
 &lt;answer id="resources-preferences"&gt;
@@ -199,7 +197,7 @@
   &lt;/api&gt;
  &lt;/answer&gt;
     </PRE>
-    <H4 ALIGN=LEFT>How to ensure import from previous version?</H4>
+    <h3>How to ensure import from previous version?</h3>
 There is support for importing old serialized instances of SystemOptions into
 preferences storage in ide/launcher/upgrade module in package
 org.netbeans.upgrade.systemoptions. This infrastructure reads configuration file
@@ -244,10 +242,9 @@ public class DerbyOptionsTest extends BasicTestForImport {
 If the tests  didn't pass then probably there is more complicated object graph
 serialized then you must subclass <CODE>PropertyProcessor</CODE> and put your
 own code in.
-(See as an example: <A HREF="http://www.netbeans.org/source/browse/ide/launcher/upgrade/src/org/netbeans/upgrade/systemoptions/TaskTagsProcessor.java?view=markup">TaskTagsProcessor</A>
- and here is a <A
-   HREF="http://www.netbeans.org/source/browse/ide/launcher/upgrade/test/unit/src/org/netbeans/upgrade/systemoptions/ExampleSettingsTest.java?view=markup">test</A>).
- <H4 ALIGN=LEFT>How to write tests that needs Preferences API?</H4>
+(See as an example: <A HREF="https://github.com/apache/netbeans/tree/master/nb/o.n.upgrader/src/org/netbeans/upgrade/systemoptions/TaskTagsProcessor.java">TaskTagsProcessor</A>
+ ).
+ <h3>How to write tests that needs Preferences API?</h3>
  Not persistent implementation of <code>java.util.prefs.Preferences</code> 
  is installed in place of the platform-specific default implementation for
  running tests which is in spirit of unit testing because individual tests

@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.WeakHashMap;
@@ -43,6 +44,7 @@ import org.openide.filesystems.Repository;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.ProxyLookup;
+import org.openide.util.test.TestFileUtils;
 
 /**
  * Help set up org.netbeans.api.project.*Test.
@@ -92,18 +94,7 @@ public final class TestUtil extends ProxyLookup {
      * Delete a file and all subfiles.
      */
     public static void deleteRec(File f) throws IOException {
-        if (f.isDirectory()) {
-            File[] kids = f.listFiles();
-            if (kids == null) {
-                throw new IOException("List " + f);
-            }
-            for (int i = 0; i < kids.length; i++) {
-                deleteRec(kids[i]);
-            }
-        }
-        if (!f.delete()) {
-            throw new IOException("Delete " + f);
-        }
+        TestFileUtils.deleteFile(f);
     }
     
     /**

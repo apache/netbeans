@@ -905,7 +905,7 @@ public final class NavigatorController implements LookupListener, PropertyChange
                         l.add(n.getLookup());
                     }
                 }
-                Lookup[] lookups = l.toArray(new Lookup[l.size()]);
+                Lookup[] lookups = l.toArray(new Lookup[0]);
                 setLookups(lookups);
             } else {
                 setLookups(panelLookup);

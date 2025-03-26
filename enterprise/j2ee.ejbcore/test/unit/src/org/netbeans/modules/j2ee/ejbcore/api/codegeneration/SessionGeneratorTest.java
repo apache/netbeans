@@ -20,6 +20,7 @@
 package org.netbeans.modules.j2ee.ejbcore.api.codegeneration;
 
 import java.io.IOException;
+import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.modules.j2ee.dd.api.ejb.DDProvider;
 import org.netbeans.modules.j2ee.dd.api.ejb.EjbJar;
 import org.netbeans.modules.j2ee.dd.api.ejb.EnterpriseBeans;
@@ -49,7 +50,7 @@ public class SessionGeneratorTest extends TestBase {
 
         // Stateless EJB in Java EE 1.4
         
-        SessionGenerator sessionGenerator = new SessionGenerator("TestStatelessLR", packageFileObject, true, true, Session.SESSION_TYPE_STATELESS, false, false, true, null, false, false, true);
+        SessionGenerator sessionGenerator = new SessionGenerator("TestStatelessLR", packageFileObject, true, true, Session.SESSION_TYPE_STATELESS, Profile.J2EE_14, false, true, null, false, false, true);
         sessionGenerator.generate();
         EjbJar ejbJar = DDProvider.getDefault().getDDRoot(testModule.getDeploymentDescriptor());
         EnterpriseBeans enterpriseBeans = ejbJar.getEnterpriseBeans();
@@ -93,7 +94,7 @@ public class SessionGeneratorTest extends TestBase {
 
         // Stateful EJB in Java EE 1.4
         
-        sessionGenerator = new SessionGenerator("TestStatefulLR", packageFileObject, false, true, Session.SESSION_TYPE_STATEFUL, false, false, true, null, false, false, true);
+        sessionGenerator = new SessionGenerator("TestStatefulLR", packageFileObject, false, true, Session.SESSION_TYPE_STATEFUL, Profile.J2EE_14, false, true, null, false, false, true);
         sessionGenerator.generate();
         session = (Session) enterpriseBeans.findBeanByName(EnterpriseBeans.SESSION, Session.EJB_NAME, "TestStatefulLR");
 
@@ -137,7 +138,7 @@ public class SessionGeneratorTest extends TestBase {
 
         // Stateless EJB in Java EE 5.0 defined in annotations
         
-        SessionGenerator sessionGenerator = new SessionGenerator("TestStateless", packageFileObject, true, true, Session.SESSION_TYPE_STATELESS, true, false, false, null, false, false, true);
+        SessionGenerator sessionGenerator = new SessionGenerator("TestStateless", packageFileObject, true, true, Session.SESSION_TYPE_STATELESS, Profile.JAVA_EE_5, false, false, null, false, false, true);
         sessionGenerator.generate();
 
         assertFile(
@@ -158,7 +159,7 @@ public class SessionGeneratorTest extends TestBase {
 
         // Stateful EJB in Java EE 5.0 defined in annotations
         
-        sessionGenerator = new SessionGenerator("TestStateful", packageFileObject, true, false, Session.SESSION_TYPE_STATEFUL, true, false, false, null, false, false, true);
+        sessionGenerator = new SessionGenerator("TestStateful", packageFileObject, true, false, Session.SESSION_TYPE_STATEFUL, Profile.JAVA_EE_5, false, false, null, false, false, true);
         sessionGenerator.generate();
 
         assertFile(
@@ -185,7 +186,7 @@ public class SessionGeneratorTest extends TestBase {
 
         // Stateless EJB in Java EE 6.0 defined in annotations
 
-        SessionGenerator sessionGenerator = new SessionGenerator("TestStateless", packageFileObject, true, true, Session.SESSION_TYPE_STATELESS, true, false, false, null, false, false, true);
+        SessionGenerator sessionGenerator = new SessionGenerator("TestStateless", packageFileObject, true, true, Session.SESSION_TYPE_STATELESS, Profile.JAVA_EE_6_FULL, false, false, null, false, false, true);
         sessionGenerator.generate();
 
         assertFile(
@@ -206,7 +207,7 @@ public class SessionGeneratorTest extends TestBase {
 
         // Stateful EJB in Java EE 6.0 defined in annotations
 
-        sessionGenerator = new SessionGenerator("TestStateful", packageFileObject, true, false, Session.SESSION_TYPE_STATEFUL, true, false, false, null, false, false, true);
+        sessionGenerator = new SessionGenerator("TestStateful", packageFileObject, true, false, Session.SESSION_TYPE_STATEFUL, Profile.JAVA_EE_6_FULL, false, false, null, false, false, true);
         sessionGenerator.generate();
 
         assertFile(
@@ -224,7 +225,7 @@ public class SessionGeneratorTest extends TestBase {
 
         // Singleton EJB in Java EE 6.0 defined in annotations
 
-        sessionGenerator = new SessionGenerator("TestSingleton", packageFileObject, false, false, Session.SESSION_TYPE_SINGLETON, true, false, false, null, false, false, true);
+        sessionGenerator = new SessionGenerator("TestSingleton", packageFileObject, false, false, Session.SESSION_TYPE_SINGLETON, Profile.JAVA_EE_6_FULL, false, false, null, false, false, true);
         sessionGenerator.generate();
 
         assertFile(

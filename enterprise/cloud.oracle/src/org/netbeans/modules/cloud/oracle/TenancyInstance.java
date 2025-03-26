@@ -22,27 +22,60 @@ import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import javax.swing.JComponent;
 import org.netbeans.spi.server.ServerInstanceImplementation;
 import org.openide.nodes.Node;
+import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
  * @author Jan Horvath
  */
-public class TenancyInstance implements ServerInstanceImplementation {
+public class TenancyInstance implements ServerInstanceImplementation, Lookup.Provider {
 
     private final OCIItem tenancy;
-
-    public TenancyInstance(OCIItem tenancy) {
+    private final Lookup lkp;
+    final OCIProfile profile;
+    
+    public TenancyInstance(OCIItem tenancy, OCIProfile profile) {
         this.tenancy = tenancy;
+        this.profile = profile;
+        lkp = tenancy != null ? Lookups.fixed(profile, tenancy) : Lookups.fixed(profile);
     }
     
+    @NbBundle.Messages({
+        "# {0} - tenancy ID",
+        "# {1} - profile ID",
+        "MSG_TenancyDesc={0} ({1})",
+        "# {0} - tenancy ID",
+        "# {1} - profile ID",
+        "MSG_BrokenTenancy=Unavailable tenancy {0}",
+        "# {0} - profile ID",
+        "MSG_BrokenProfile=Broken profile {0}",
+    })
     @Override
     public String getDisplayName() {
-        return tenancy.getName();
+        if (tenancy != null) {
+            return Bundle.MSG_TenancyDesc(tenancy.getName(), profile.getId());
+        } else if (profile.getTenancy().isPresent()) {
+            return Bundle.MSG_BrokenTenancy(profile.getTenancy().get().getKey().getValue(), profile.getId());
+        } else {
+            return Bundle.MSG_BrokenProfile(profile.getId());
+        }
+    }
+
+    @Override
+    public Lookup getLookup() {
+        return lkp;
     }
 
     @Override
     public String getServerDisplayName() {
-        return tenancy.getKey().getValue();
+        return profile.getTenancy().isPresent() ? profile.getTenancy().get().getKey().getValue() 
+                : Bundle.MSG_BrokenProfile(profile);
+    }
+    
+    public OCIProfile getProfile() {
+        return profile;
     }
 
     @Override
@@ -52,7 +85,7 @@ public class TenancyInstance implements ServerInstanceImplementation {
 
     @Override
     public Node getBasicNode() {
-        return new TenancyNode(tenancy);
+        return tenancy == null ? new BrokenProfileNode(this) : new TenancyNode(tenancy, getDisplayName(), profile);
     }
 
     @Override

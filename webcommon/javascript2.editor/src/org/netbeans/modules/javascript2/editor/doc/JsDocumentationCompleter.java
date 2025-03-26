@@ -20,6 +20,7 @@ package org.netbeans.modules.javascript2.editor.doc;
 
 import com.oracle.js.parser.ir.AccessNode;
 import com.oracle.js.parser.ir.BinaryNode;
+import com.oracle.js.parser.ir.ClassElement;
 import com.oracle.js.parser.ir.FunctionNode;
 import com.oracle.js.parser.ir.IdentNode;
 import com.oracle.js.parser.ir.Node;
@@ -92,7 +93,7 @@ public class JsDocumentationCompleter {
                     @Override
                     public void run(ResultIterator resultIterator) throws Exception {
                         ParserResult parserResult = (ParserResult) resultIterator.getParserResult(offset);
-                        if (parserResult != null && parserResult instanceof JsParserResult) {
+                        if (parserResult instanceof JsParserResult) {
                             final JsParserResult jsParserResult = (JsParserResult) parserResult;
                             if (jsParserResult.getRoot() == null) {
                                 // broken source
@@ -342,8 +343,11 @@ public class JsDocumentationCompleter {
             for (JsObject property : jsObject.getProperties().values()) {
                 JsElement.Kind kind = property.getJSKind();
                 if (kind == JsElement.Kind.OBJECT
-                        || kind == JsElement.Kind.FUNCTION || kind == JsElement.Kind.METHOD || kind == JsElement.Kind.CONSTRUCTOR
-                        || kind == JsElement.Kind.VARIABLE) {
+                        || kind == JsElement.Kind.FUNCTION
+                        || kind == JsElement.Kind.METHOD
+                        || kind == JsElement.Kind.CONSTRUCTOR
+                        || kind == JsElement.Kind.VARIABLE
+                        || kind == JsElement.Kind.ARROW_FUNCTION) {
                     tmpObject = findJsObjectFunctionVariable(property, offset);
                 }
                 if (tmpObject != null) {
@@ -397,6 +401,12 @@ public class JsDocumentationCompleter {
         public boolean enterPropertyNode(PropertyNode propertyNode) {
             processNode(propertyNode);
             return super.enterPropertyNode(propertyNode);
+        }
+
+        @Override
+        public boolean enterClassElement(ClassElement classElement) {
+            processNode(classElement);
+            return super.enterClassElement(classElement);
         }
 
         @Override

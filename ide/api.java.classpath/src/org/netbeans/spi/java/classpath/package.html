@@ -29,6 +29,7 @@ For example, a Java-oriented project type would normally indicate that its Java
 sources have a certain classpath associated with them.<br>
 For a source file the ClassPathProvider has to return a
 {@link org.netbeans.api.java.classpath.ClassPath} of the following ClassPath types:
+</p>
 <ul>
 <li>ClassPath.SOURCE - the classpath contains the source roots of the project</li>
 <li>ClassPath.BOOT - the classpath contains the jdk runtime libraries</li>
@@ -43,7 +44,6 @@ types:
 <li>ClassPath.COMPILE - the classpath contains the project compile libraries (compile classpath)</li>
 <li>ClassPath.EXEC - the classpath contains the build output folder</li>
 </ul>
-</p>
 
 <p>{@link org.netbeans.spi.java.classpath.ClassPathFactory} may be used to
 create new {@link org.netbeans.api.java.classpath.ClassPath} instances.</p>

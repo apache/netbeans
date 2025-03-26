@@ -32,7 +32,7 @@ import org.netbeans.editor.ext.plain.PlainTokenContext;
 * @author Miloslav Metelka
 * @deprecated Use JSP Lexer instead
 */
-
+@Deprecated
 public class JspMultiTokenContext extends TokenContext {
 
     // Jsp token numericIDs

@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.lang.model.element.Modifier;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.WorkingCopy;
@@ -64,6 +65,7 @@ public class GenericResourceGenerator extends AbstractGenerator {
     
     private final FileObject destDir;
     private final GenericResourceBean bean;
+    private final boolean jakartaNamespace;
     private String template;
     
     public GenericResourceGenerator(FileObject destDir, GenericResourceBean bean) {
@@ -74,6 +76,11 @@ public class GenericResourceGenerator extends AbstractGenerator {
         } else {
             this.template = RESOURCE_ITEM_TEMPLATE;
         }
+
+        ClassPath cp = ClassPath.getClassPath(destDir, ClassPath.COMPILE);
+        boolean jakartaRSPresent = cp.findResource("jakarta/ws/rs/GET.class") != null;
+        boolean javaxRSPresent = cp.findResource("javax/ws/rs/GET.class") != null;
+        jakartaNamespace = jakartaRSPresent || (! javaxRSPresent);
     }
     
     public FileObject getDestDir() {
@@ -95,15 +102,14 @@ public class GenericResourceGenerator extends AbstractGenerator {
     @Override
     public Set<FileObject> generate(ProgressHandle pHandle) throws IOException {
         initProgressReporting(pHandle, false);
-        
+
         reportProgress(NbBundle.getMessage(GenericResourceGenerator.class,
                 "MSG_GeneratingClass", bean.getPackageName() + "." + bean.getName()));  //NOI18N
         JavaSource source;
+        Map<String,Object> params = new HashMap<>();
         if (bean.isRootResource()) {
-            source = JavaSourceHelper.createJavaSource(
-                    getTemplate(), getDestDir(), bean.getPackageName(), bean.getName());
+            params.put("jakartaNamespace", jakartaNamespace);
         } else {
-            Map<String,String> params = new HashMap<String,String>();
             String[] uriParams = bean.getUriParams();
             StringBuilder fieldList = new StringBuilder();
             StringBuilder paramList = new StringBuilder();
@@ -131,9 +137,9 @@ public class GenericResourceGenerator extends AbstractGenerator {
             params.put(PARAM_LIST, paramList.toString());
             params.put(ASSIGNMENT_LIST, assignmentList.toString());
             params.put(ARGUMENT_LIST, argumentList.toString());
-            source = JavaSourceHelper.createJavaSource(
-                    getTemplate(), params, getDestDir(), bean.getPackageName(), bean.getName());
         }
+        source = JavaSourceHelper.createJavaSource(
+                getTemplate(), params, getDestDir(), bean.getPackageName(), bean.getName());
         if (bean.getInputParameters().size() > 0) {
             addInputParamFields(source);
             addConstructorWithInputParams(source);
@@ -195,13 +201,17 @@ public class GenericResourceGenerator extends AbstractGenerator {
                 @Override
                 public void run(WorkingCopy copy) throws IOException {
                     copy.toPhase(JavaSource.Phase.RESOLVED);
-                    String jsr311Imports[] = getJsr311AnnotationImports(bean);
+                    String jsr311Imports[] = getJsr311AnnotationImports(bean, jakartaNamespace);
                     String imports[] = jsr311Imports; 
                     boolean cdiEnabled = Util.isCDIEnabled(getDestDir());
                     if ( cdiEnabled ){
                         imports  = new String[jsr311Imports.length+1];
                         System.arraycopy(jsr311Imports, 0, imports, 0, jsr311Imports.length);
-                        imports[jsr311Imports.length] = Constants.FQN_REQUESTED_SCOPE;
+                        if (jakartaNamespace) {
+                            imports[jsr311Imports.length] = Constants.FQN_REQUESTED_SCOPE_JAKARTA;
+                        } else {
+                            imports[jsr311Imports.length] = Constants.FQN_REQUESTED_SCOPE;
+                        }
                     }
                     JavaSourceHelper.addImports(copy, imports);
                     List<String> annotations= new ArrayList<String>(2);
@@ -210,15 +220,15 @@ public class GenericResourceGenerator extends AbstractGenerator {
                         annotations.add(RestConstants.PATH_ANNOTATION);
                         annotationAttributes.add(bean.getUriTemplate());
                     }
-                    if ( cdiEnabled){
+                    if (cdiEnabled) {
                         annotations.add( Constants.REQUESTED_SCOPE);
                         annotationAttributes.add(null);
                     }
-                    if ( annotations.size() >0 ){
-                        JavaSourceHelper.addClassAnnotation(copy,
-                                annotations.toArray( new String[annotations.size()]) ,
-                                annotationAttributes.toArray( 
-                                        new Object[annotationAttributes.size()]));
+                    if (annotations.size() > 0){
+                        JavaSourceHelper.addClassAnnotation(
+                                copy,
+                                annotations.toArray(new String[0]),
+                                annotationAttributes.toArray(new Object[0]));
                     }
                     ClassTree initial = JavaSourceHelper.getTopLevelClassTree(copy);
                     ClassTree tree = addMethods(copy, initial);
@@ -236,27 +246,27 @@ public class GenericResourceGenerator extends AbstractGenerator {
         }
     }
     
-    public static String[] getJsr311AnnotationImports(GenericResourceBean rbean) {
+    public static String[] getJsr311AnnotationImports(GenericResourceBean rbean, boolean jakartaNamespace) {
         HashSet<String> result = new HashSet<String>();
         if (rbean.isGenerateUriTemplate()) {
-            result.add(RestConstants.PATH);
+            result.add(jakartaNamespace ? RestConstants.PATH_JAKARTA : RestConstants.PATH);
         }
         if (rbean.isRootResource() && !rbean.getSubResources().isEmpty()) {
-            result.add(RestConstants.PATH_PARAM);
+            result.add(jakartaNamespace ? RestConstants.PATH_PARAM_JAKARTA : RestConstants.PATH_PARAM);
         }
         for (HttpMethodType m : rbean.getMethodTypes()) {
-            result.add(m.getAnnotationType());
+            result.add(m.getAnnotationType(jakartaNamespace));
             if (m == HttpMethodType.GET) {
-                result.add(RestConstants.PRODUCE_MIME);
+                result.add(jakartaNamespace ? RestConstants.PRODUCE_MIME_JAKARTA : RestConstants.PRODUCE_MIME);
             }
             if (m == HttpMethodType.POST || m == HttpMethodType.PUT) {
-                result.add(RestConstants.CONSUME_MIME);
+                result.add(jakartaNamespace ? RestConstants.CONSUME_MIME_JAKARTA : RestConstants.CONSUME_MIME);
             }
         }
         if (rbean.getQueryParameters().size() > 0) {
-            result.add(RestConstants.QUERY_PARAM);
+            result.add(jakartaNamespace ? RestConstants.QUERY_PARAM_JAKARTA : RestConstants.QUERY_PARAM);
         }
-        return result.toArray(new String[result.size()]);
+        return result.toArray(new String[0]);
     }
     
     protected ClassTree addMethods(WorkingCopy copy, ClassTree tree) {
@@ -302,7 +312,7 @@ public class GenericResourceGenerator extends AbstractGenerator {
         
         Object[] annotationAttrs = new Object[] {
             null,
-            mime.expressionTree(copy.getTreeMaker())
+            mime.expressionTree(copy.getTreeMaker(), jakartaNamespace)
         };
         
         if (type == null) {
@@ -344,7 +354,7 @@ public class GenericResourceGenerator extends AbstractGenerator {
             RestConstants.PRODUCE_MIME_ANNOTATION
         };
 
-        ExpressionTree mimeTree = mime.expressionTree(copy.getTreeMaker());
+        ExpressionTree mimeTree = mime.expressionTree(copy.getTreeMaker(), jakartaNamespace);
         Object[] annotationAttrs = new Object[] {
             null,
             mimeTree,
@@ -389,7 +399,7 @@ public class GenericResourceGenerator extends AbstractGenerator {
             RestConstants.CONSUME_MIME_ANNOTATION
         };
 
-        ExpressionTree mimeTree = mime.expressionTree(copy.getTreeMaker());
+        ExpressionTree mimeTree = mime.expressionTree(copy.getTreeMaker(), jakartaNamespace);
         Object[] annotationAttrs = new Object[] {
             null,
             mimeTree,
@@ -520,7 +530,7 @@ public class GenericResourceGenerator extends AbstractGenerator {
             params.addAll(Arrays.asList(bean.getUriParams()));
         }
         params.addAll(Arrays.asList(getParamNames(queryParams)));
-        return params.toArray(new String[params.size()]);
+        return params.toArray(new String[0]);
     }
     
     private String[] getGetParamTypes(List<ParameterInfo> queryParams) {
@@ -529,7 +539,7 @@ public class GenericResourceGenerator extends AbstractGenerator {
             types.addAll(Arrays.asList(getUriParamTypes()));
         }
         types.addAll(Arrays.asList(getParamTypeNames(queryParams)));
-        return types.toArray(new String[types.size()]);
+        return types.toArray(new String[0]);
     }
     
     private Object[] getParamAnnotationAttributes(int allParamCount) {
@@ -581,7 +591,7 @@ public class GenericResourceGenerator extends AbstractGenerator {
             annos.add(annotations);
         }
     
-        return annos.toArray(new String[annos.size()][]);
+        return annos.toArray(new String[0][]);
     }
     
     private Object[][] getGetParamAnnotationAttrs(List<ParameterInfo> queryParams) {
@@ -604,14 +614,14 @@ public class GenericResourceGenerator extends AbstractGenerator {
             attrs.add(annotationAttrs);
         }
     
-        return attrs.toArray(new Object[attrs.size()][]);
+        return attrs.toArray(new Object[0][]);
     }
     
     private String[] getPostPutParams() {
         if (bean.isRootResource()) {
             List<String> params = new ArrayList<String>(Arrays.asList(bean.getUriParams()));
             params.add("content");  // NOI18N
-            return params.toArray(new String[params.size()]);
+            return params.toArray(new String[0]);
         } else {
             return new String[] {"content"}; //NOI18N
         }
@@ -650,7 +660,7 @@ public class GenericResourceGenerator extends AbstractGenerator {
             results.add(param.getName());
         }
         
-        return results.toArray(new String[results.size()]);
+        return results.toArray(new String[0]);
     }
     
     private String[] getParamTypeNames(List<ParameterInfo> params) {
@@ -660,7 +670,7 @@ public class GenericResourceGenerator extends AbstractGenerator {
             results.add(param.getTypeName());
         }
         
-        return results.toArray(new String[results.size()]);
+        return results.toArray(new String[0]);
     }
     
     private Object[] getParamValues(List<ParameterInfo> params) {
@@ -676,7 +686,7 @@ public class GenericResourceGenerator extends AbstractGenerator {
             results.add(defaultValue);
         }
         
-        return results.toArray(new Object[results.size()]);
+        return results.toArray(new Object[0]);
     }
 
     private GenericResourceBean getSubresourceBean() {

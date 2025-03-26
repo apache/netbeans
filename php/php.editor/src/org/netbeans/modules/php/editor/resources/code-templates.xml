@@ -29,7 +29,16 @@
     <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.cls" abbreviation="cls" contexts="php-code">
         <code>
 <![CDATA[class ${ClassName} {
-    function ${__construct}() {
+    public function ${__construct}() {
+        ${selection}${cursor}
+    }
+}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.rcls" abbreviation="rcls" contexts="php-code">
+        <code>
+<![CDATA[readonly class ${ClassName} {
+    public function ${__construct}() {
         ${selection}${cursor}
     }
 }]]>
@@ -74,6 +83,18 @@
         <code>
 <![CDATA[$$${NEW_VAR newVarName default="newObj"} = clone ${VARIABLE variableFromPreviousAssignment default="$variable"};
 ${cursor}]]>
+        </code>
+    </codetemplate>
+
+    <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.const" abbreviation="con" contexts="php-code">
+        <code>
+<![CDATA[const ${CONST_NAME} = ${ConstValue};${cursor}]]>
+        </code>
+    </codetemplate>
+
+    <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.typed.const" abbreviation="cons" contexts="php-code">
+        <code>
+<![CDATA[const ${TypeName} ${CONST_NAME} = ${ConstValue};${cursor}]]>
         </code>
     </codetemplate>
 

@@ -185,7 +185,7 @@ implements FileChangeListener {
         if (customFSClass != null) {
             try {
                 Class<?> clazz = Class.forName(customFSClass);
-                Object instance = clazz.newInstance();
+                Object instance = clazz.getDeclaredConstructor().newInstance();
                 user = (FileSystem)instance;
             } catch (Exception x) {
                 ModuleLayeredFileSystem.err.log(

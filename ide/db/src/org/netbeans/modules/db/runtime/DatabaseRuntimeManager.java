@@ -71,7 +71,7 @@ public final class DatabaseRuntimeManager {
     
     public DatabaseRuntime[] getRuntimes() {
         Collection<? extends DatabaseRuntime> runtimes = result.allInstances();
-        return runtimes.toArray(new DatabaseRuntime[runtimes.size()]);
+        return runtimes.toArray(new DatabaseRuntime[0]);
     }
     
     public static synchronized boolean isInstantiated() {
@@ -102,7 +102,7 @@ public final class DatabaseRuntimeManager {
                 runtimeList.add(runtime);
             }
         }
-        return runtimeList.toArray(new DatabaseRuntime[runtimeList.size()]);
+        return runtimeList.toArray(new DatabaseRuntime[0]);
     }
     
     private synchronized Lookup.Result<DatabaseRuntime> getLookupResult() {

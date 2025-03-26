@@ -175,7 +175,7 @@ public class NbJShellAgent implements Runnable, ClassFileTransformer {
             }
         }
         ClassLoader agentClassLoader = new URLClassLoader(
-                urls.toArray(new URL[urls.size()]), 
+                urls.toArray(new URL[0]), 
                 getClass().getClassLoader());
         try {
             agentClassLoader.loadClass("org.netbeans.lib.jshell.agent.AgentWorker"); // NOI18N

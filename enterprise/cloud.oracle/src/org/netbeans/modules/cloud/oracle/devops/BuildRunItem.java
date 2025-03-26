@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.cloud.oracle.devops;
 
-import java.util.List;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 
@@ -30,8 +29,8 @@ public class BuildRunItem extends OCIItem {
     
     private final String lifecycleState;
 
-    public BuildRunItem(OCID id, String name, String lifecycleState) {
-        super(id, name);
+    public BuildRunItem(OCID id, String compartmentId, String name, String lifecycleState, String tenancyId, String regionCode) {
+        super(id, compartmentId, name, tenancyId, regionCode);
         
         this.lifecycleState = lifecycleState;
     }

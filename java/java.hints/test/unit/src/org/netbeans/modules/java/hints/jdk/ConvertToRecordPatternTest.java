@@ -21,6 +21,7 @@ package org.netbeans.modules.java.hints.jdk;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.hints.test.api.HintTest;
 import javax.lang.model.SourceVersion;
+import static org.junit.Assume.assumeTrue;
 
 /**
  *
@@ -33,9 +34,8 @@ public class ConvertToRecordPatternTest extends NbTestCase {
     }
 
     public void testSimple() throws Exception {
-        if (!isRecordClassPresent()) {
-            return;
-        }
+        assumeTrue(isRecordClassPresent());
+        assumeTrue(SourceVersion.latest().ordinal() >= 21);
         HintTest.create()
                 .input("package test;\n"
                         + "record Person(String name, String place){}\n"
@@ -48,8 +48,7 @@ public class ConvertToRecordPatternTest extends NbTestCase {
                         + "        return -1;\n"
                         + "    }\n"
                         + "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertToRecordPattern.class)
                 .findWarning("4:8-4:10:verifier:" + Bundle.ERR_ConvertToRecordPattern())
                 .applyFix()
@@ -58,7 +57,7 @@ public class ConvertToRecordPatternTest extends NbTestCase {
                         + "record Person(String name, String place){}\n"
                         + "public class Test {\n"
                         + "    private int test(Object o) {\n"
-                        + "        if (o instanceof Person(String name, String place) p) {\n"
+                        + "        if (o instanceof Person(String name, String place)) {\n"
                         + "            return name.length();\n"
                         + "        }\n"
                         + "        return -1;\n"
@@ -67,9 +66,8 @@ public class ConvertToRecordPatternTest extends NbTestCase {
     }
 
     public void testDuplicateVarName() throws Exception {
-        if (!isRecordClassPresent()) {
-            return;
-        }
+        assumeTrue(isRecordClassPresent());
+        assumeTrue(SourceVersion.latest().ordinal() >= 21);
         HintTest.create()
                 .input("package test;\n"
                         + "record Person(String name, int s){}\n"
@@ -82,8 +80,7 @@ public class ConvertToRecordPatternTest extends NbTestCase {
                         + "        return -1;\n"
                         + "    }\n"
                         + "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertToRecordPattern.class)
                 .findWarning("4:8-4:10:verifier:" + Bundle.ERR_ConvertToRecordPattern())
                 .applyFix()
@@ -92,7 +89,7 @@ public class ConvertToRecordPatternTest extends NbTestCase {
                         + "record Person(String name, int s){}\n"
                         + "public class Test {\n"
                         + "    private int test(Object s) {\n"
-                        + "        if (s instanceof Person(String name, int s1) p) {\n"
+                        + "        if (s instanceof Person(String name, int s1)) {\n"
                         + "            return name.length();\n"
                         + "        }\n"
                         + "        return -1;\n"
@@ -101,9 +98,8 @@ public class ConvertToRecordPatternTest extends NbTestCase {
     }
 
     public void testUsingUserVar() throws Exception {
-        if (!isRecordClassPresent()) {
-            return;
-        }
+        assumeTrue(isRecordClassPresent());
+        assumeTrue(SourceVersion.latest().ordinal() >= 21);
         HintTest.create()
                 .input("package test;\n"
                         + "record Person(String name, int s){}\n"
@@ -116,8 +112,7 @@ public class ConvertToRecordPatternTest extends NbTestCase {
                         + "        return -1;\n"
                         + "    }\n"
                         + "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertToRecordPattern.class)
                 .findWarning("4:8-4:10:verifier:" + Bundle.ERR_ConvertToRecordPattern())
                 .applyFix()
@@ -126,7 +121,7 @@ public class ConvertToRecordPatternTest extends NbTestCase {
                         + "record Person(String name, int s){}\n"
                         + "public class Test {\n"
                         + "    private int test(Object s) {\n"
-                        + "        if (s instanceof Person(String userName, int s1) p) {\n"
+                        + "        if (s instanceof Person(String userName, int s1)) {\n"
                         + "            return userName.length();\n"
                         + "        }\n"
                         + "        return -1;\n"

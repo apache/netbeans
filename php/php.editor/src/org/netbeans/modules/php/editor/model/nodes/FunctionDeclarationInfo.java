@@ -41,8 +41,7 @@ import org.openide.util.Pair;
  */
 public class FunctionDeclarationInfo extends ASTNodeInfo<FunctionDeclaration> {
 
-    private final Map<String, List<Pair<QualifiedName, Boolean>>> paramDocTypes;
-
+    private final Map<String, Pair<String /*declared type*/, List<Pair<QualifiedName, Boolean>>>> paramDocTypes;
 
     protected FunctionDeclarationInfo(Program program, FunctionDeclaration node) {
         super(node);

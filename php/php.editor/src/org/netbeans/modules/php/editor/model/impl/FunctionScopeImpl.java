@@ -30,7 +30,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.spi.GsfUtilities;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexDocument;
@@ -81,9 +83,12 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
     private static final String TYPE_SEPARATOR_REGEXP = "\\|"; //NOI18N
     private static final String TYPE_SEPARATOR_INTERSECTION_REGEXP = "\\&"; //NOI18N
     private List<? extends ParameterElement> paremeters;
-    private final boolean declaredReturnType;
+    private final boolean hasDeclaredReturnType;
     //@GuardedBy("this")
+    @NullAllowed
     private String returnType;
+    @NullAllowed
+    private final String declaredReturnType;
     private final boolean isReturnUnionType;
     private final boolean isReturnIntersectionType;
 
@@ -92,7 +97,8 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         super(inScope, info, PhpModifiers.fromBitMask(PhpModifiers.PUBLIC), info.getOriginalNode().getBody(), isDeprecated);
         this.paremeters = info.getParameters();
         this.returnType = returnType;
-        declaredReturnType = !info.getReturnTypes().isEmpty();
+        hasDeclaredReturnType = !info.getReturnTypes().isEmpty();
+        this.declaredReturnType = hasDeclaredReturnType ? CodeUtils.extractQualifiedName(info.getOriginalNode().getReturnType()) : null;
         isReturnUnionType = info.getOriginalNode().getReturnType() instanceof UnionType;
         isReturnIntersectionType = info.getOriginalNode().getReturnType() instanceof IntersectionType;
     }
@@ -102,11 +108,14 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         this.paremeters = info.getParameters();
         isReturnUnionType = info.getOriginalNode().getReturnType() instanceof UnionType;
         isReturnIntersectionType = info.getOriginalNode().getReturnType() instanceof IntersectionType;
-        List<QualifiedName> retTypes = info.getReturnTypes();
-        if (!retTypes.isEmpty()) {
-           this.returnType = isReturnIntersectionType ? asIntersectionType(retTypes) : asUnionType(retTypes);
-         }
-        declaredReturnType = !retTypes.isEmpty();
+        this.hasDeclaredReturnType = info.getOriginalNode().getReturnType() != null;
+        if (this.hasDeclaredReturnType) {
+            this.returnType = CodeUtils.extractQualifiedName(info.getOriginalNode().getReturnType());
+            this.declaredReturnType = returnType;
+        } else {
+            this.returnType = null;
+            this.declaredReturnType = null;
+        }
     }
 
     FunctionScopeImpl(Scope inScope, ArrowFunctionDeclarationInfo info, Block block) {
@@ -114,18 +123,22 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         this.paremeters = info.getParameters();
         isReturnUnionType = info.getOriginalNode().getReturnType() instanceof UnionType;
         isReturnIntersectionType = info.getOriginalNode().getReturnType() instanceof IntersectionType;
-        List<QualifiedName> retTypes = info.getReturnTypes();
-        if (!retTypes.isEmpty()) {
-            this.returnType = isReturnIntersectionType ? asIntersectionType(retTypes) : asUnionType(retTypes);
+        this.hasDeclaredReturnType = info.getOriginalNode().getReturnType() != null;
+        if (this.hasDeclaredReturnType) {
+            this.returnType = CodeUtils.extractQualifiedName(info.getOriginalNode().getReturnType());
+            this.declaredReturnType = returnType;
+        } else {
+            this.returnType = null;
+            this.declaredReturnType = null;
         }
-        declaredReturnType = !retTypes.isEmpty();
     }
 
     protected FunctionScopeImpl(Scope inScope, MethodDeclarationInfo info, String returnType, boolean isDeprecated) {
         super(inScope, info, info.getAccessModifiers(), info.getOriginalNode().getFunction().getBody(), isDeprecated);
         this.paremeters = info.getParameters();
         this.returnType = returnType;
-        declaredReturnType = info.getOriginalNode().getFunction().getReturnType() != null;
+        hasDeclaredReturnType = info.getOriginalNode().getFunction().getReturnType() != null;
+        this.declaredReturnType = hasDeclaredReturnType ? CodeUtils.extractQualifiedName(info.getOriginalNode().getFunction().getReturnType()) : null;
         isReturnUnionType = info.getOriginalNode().getFunction().getReturnType() instanceof UnionType;
         isReturnIntersectionType = info.getOriginalNode().getFunction().getReturnType() instanceof IntersectionType;
     }
@@ -134,7 +147,8 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         super(inScope, info, info.getAccessModifiers(), null, isDeprecated);
         this.paremeters = info.getParameters();
         this.returnType = returnType;
-        declaredReturnType = false;
+        this.declaredReturnType = null;
+        hasDeclaredReturnType = false;
         isReturnUnionType = false;
         isReturnIntersectionType = false;
     }
@@ -147,8 +161,8 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         super(inScope, element, kind);
         this.paremeters = element.getParameters();
         this.returnType =  element.asString(PrintAs.ReturnSemiTypes);
-        // XXX ???
-        declaredReturnType = false;
+        this.declaredReturnType = element.getDeclaredReturnType();
+        this.hasDeclaredReturnType = StringUtils.hasText(declaredReturnType);
         isReturnUnionType = element.isReturnUnionType();
         isReturnIntersectionType = element.isReturnIntersectionType();
     }
@@ -211,7 +225,7 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
      * @param type return type to be added
      */
     public void addReturnType(String type) {
-        if (declaredReturnType) {
+        if (hasDeclaredReturnType) {
             return;
         }
         synchronized (this) {
@@ -228,6 +242,12 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
 
     protected synchronized String getReturnType() {
         return returnType;
+    }
+
+    @CheckForNull
+    @Override
+    public String getDeclaredReturnType() {
+        return declaredReturnType;
     }
 
     @Override
@@ -258,12 +278,13 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         // NETBEANS-5062
         Scope inScope = getInScope();
         Set<TypeScope> cTypes = new HashSet<>();
-        List<String> typeNames = StringUtils.explode(types, Type.getTypeSeparator(isReturnIntersectionType));
+        List<String> typeNames = Arrays.asList(Type.splitTypes(types));
         if (typeNames.contains(Type.STATIC)
                 && inScope instanceof TypeScope) {
             TypeScope typeScope = (TypeScope) inScope;
             for (TypeScope callerType : callerTypes) {
-                if (callerType.isSubTypeOf(typeScope)) {
+                if (callerType.isSubTypeOf(typeScope)
+                        || (typeScope.isTrait() && callerType != typeScope)) { // GH-7192
                     cTypes.add(callerType);
                 } else {
                     cTypes.add(typeScope);
@@ -273,7 +294,7 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
             cTypes.addAll(callerTypes);
         }
         Collection<? extends TypeScope> result = getReturnTypesDescriptor(types, resolveSemiTypes, cTypes).getModifiedResult(cTypes);
-        if (!declaredReturnType) {
+        if (!hasDeclaredReturnType) {
             updateReturnTypes(types, result);
         }
         return result;
@@ -298,7 +319,7 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
     private ReturnTypesDescriptor getReturnTypesDescriptor(String types, boolean resolveSemiTypes, Collection<? extends TypeScope> callerTypes) {
         ReturnTypesDescriptor result = ReturnTypesDescriptor.NONE;
         if (StringUtils.hasText(types)) {
-            final String[] typeNames = types.split(isReturnIntersectionType ? TYPE_SEPARATOR_INTERSECTION_REGEXP : TYPE_SEPARATOR_REGEXP);
+            final String[] typeNames = Type.splitTypes(types);
             Collection<TypeScope> retval = new HashSet<>();
             for (int i = 0; i < typeNames.length; i++) {
                 String typeName = typeNames[i];
@@ -390,22 +411,10 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         int result = getOffset();
         List<? extends ModelElement> elements = ModelUtils.getElements(this, true);
         if (elements != null && !elements.isEmpty()) {
-            Collections.sort(elements, new ModelElementsPositionComparator());
+            elements.sort(new ModelElementsPositionComparator());
             result = elements.get(0).getNameRange().getEnd();
         }
         return result;
-    }
-
-    private String asUnionType(List<QualifiedName> qualifiedNames) {
-        List<String> types = new ArrayList<>();
-        qualifiedNames.forEach(type -> types.add(type.toString()));
-        return Type.asUnionType(types);
-    }
-
-    private String asIntersectionType(List<QualifiedName> qualifiedNames) {
-        List<String> types = new ArrayList<>();
-        qualifiedNames.forEach(type -> types.add(type.toString()));
-        return Type.asIntersectionType(types);
     }
 
     @org.netbeans.api.annotations.common.SuppressWarnings("SE_COMPARATOR_SHOULD_BE_SERIALIZABLE")
@@ -483,7 +492,7 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
     @NonNull
     @Override
     public List<? extends ParameterElement> getParameters() {
-        return paremeters;
+        return Collections.unmodifiableList(paremeters);
     }
 
     @Override
@@ -499,17 +508,21 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
             sb.append(param);
         }
         sb.append(')'); // NOI18N
-        Collection<? extends TypeScope> returnTypes = getReturnTypes();
         sb.append(':'); // NOI18N
         boolean first = true;
-        for (TypeScope typeScope : returnTypes) {
-            if (first) {
-                first = false;
-                sb.append(' '); // NOI18N
-            } else {
-                sb.append(Type.getTypeSeparator(isReturnIntersectionType));
+        if (hasDeclaredReturnType) {
+            sb.append(' ').append(getDeclaredReturnType());
+        } else {
+            Collection<? extends TypeScope> returnTypes = getReturnTypes();
+            for (TypeScope typeScope : returnTypes) {
+                if (first) {
+                    first = false;
+                    sb.append(' '); // NOI18N
+                } else {
+                    sb.append(Type.getTypeSeparator(isReturnIntersectionType));
+                }
+                sb.append(typeScope.getName());
             }
-            sb.append(typeScope.getName());
         }
         return sb.toString();
     }
@@ -565,6 +578,7 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         sb.append(getFilenameUrl()).append(Signature.ITEM_DELIMITER);
         sb.append(isReturnUnionType() ? 1 : 0).append(Signature.ITEM_DELIMITER);
         sb.append(isReturnIntersectionType()? 1 : 0).append(Signature.ITEM_DELIMITER);
+        sb.append((getDeclaredReturnType() != null) ? getDeclaredReturnType() : "").append(Signature.ITEM_DELIMITER); // NOI18N
         return sb.toString();
     }
 

@@ -46,7 +46,7 @@ public class UpdateRefCommand extends GitCommand {
     }
 
     @Override
-    protected void run () throws GitException {
+    protected void run() throws GitException {
         Repository repository = getRepository();
         try {
             
@@ -68,7 +68,7 @@ public class UpdateRefCommand extends GitCommand {
             }
             
             RefUpdate u = repository.updateRef(ref.getName());
-            newRef = repository.peel(newRef);
+            newRef = repository.getRefDatabase().peel(newRef);
             ObjectId srcObjectId = newRef.getPeeledObjectId();
             if (srcObjectId == null) {
                 srcObjectId = newRef.getObjectId();
@@ -85,11 +85,11 @@ public class UpdateRefCommand extends GitCommand {
     }
 
     @Override
-    protected String getCommandDescription () {
-        return new StringBuilder("git update-ref ").append(refName).append(" ").append(revision).toString(); //NOI18N
+    protected String getCommandDescription() {
+        return "git update-ref "+ refName + " " + revision; //NOI18N
     }
 
-    public GitRefUpdateResult getResult () {
+    public GitRefUpdateResult getResult() {
         return result;
     }
     

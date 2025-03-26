@@ -41,7 +41,7 @@ import org.openide.util.lookup.ProxyLookup;
 
 /** Utility class for operations on nodes.
  * <p>
- * Since version 7.9 this class supports creation of a <q>lazy node</q> -
+ * Since version 7.9 this class supports creation of a <em>lazy node</em> -
  * a node that displays basic information
  * about the original node behind it, without touching the original. As soon as
  * the node is expanded, or a pop up menu is invoked on it, it switches
@@ -114,7 +114,7 @@ public final class NodeOp extends Object {
             allLookups.add(n.getLookup());
         }
 
-        Lookup lookup = new ProxyLookup(allLookups.toArray(new Lookup[allLookups.size()]));
+        Lookup lookup = new ProxyLookup(allLookups.toArray(new Lookup[0]));
 
         return Utilities.actionsToPopup(arr, lookup);
     }
@@ -189,7 +189,7 @@ public final class NodeOp extends Object {
                 }
             }
 
-            return result.toArray(new Action[result.size()]);
+            return result.toArray(new Action[0]);
         } else {
             // no available actions
             return new Action[0];
@@ -404,7 +404,7 @@ public final class NodeOp extends Object {
             }
         }
 
-        return ll.toArray(new Node.Handle[ll.size()]);
+        return ll.toArray(new Node.Handle[0]);
     }
 
     /** Takes array of handles and creates array of nodes.
@@ -489,7 +489,7 @@ public final class NodeOp extends Object {
             }
         }
 
-        return ll.toArray(new SystemAction[ll.size()]);
+        return ll.toArray(new SystemAction[0]);
     }
 
     /** Notifies an exception to error manager or prints its it to stderr.

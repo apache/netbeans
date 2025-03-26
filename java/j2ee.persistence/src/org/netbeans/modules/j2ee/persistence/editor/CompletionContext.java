@@ -77,8 +77,9 @@ public class CompletionContext {
     
     private void initContext() throws BadLocationException {
         Token<XMLTokenId> token = documentContext.getCurrentToken();
-        if(token == null)
+        if(token == null) {
             return;
+        }
         
         boolean tokenBoundary = (documentContext.getCurrentTokenOffset() == caretOffset) 
                 || ((documentContext.getCurrentTokenOffset() + token.length()) == caretOffset);
@@ -97,12 +98,12 @@ public class CompletionContext {
                     break;
                 }
                 String previousTokenText = previousTokenItem.text().toString().trim();
-                if (chars != null && chars.equals("") &&
+                if (chars != null && chars.isEmpty() &&
                         previousTokenText.equals("/>")) { // NOI18N
                     completionType = CompletionType.NONE;
                     break;
                 }
-                if (chars != null && chars.equals("") &&
+                if (chars != null && chars.isEmpty() &&
                         previousTokenText.equals(">")) { // NOI18N
                     completionType = CompletionType.VALUE;
                     break;
@@ -192,7 +193,7 @@ public class CompletionContext {
             //user enters an attribute name
             case ARGUMENT:
                 completionType = CompletionType.ATTRIBUTE;
-                typedChars = token.text().toString().substring(0, caretOffset - tOffset);;
+                typedChars = token.text().toString().substring(0, caretOffset - tOffset);
                 break;
 
             //some random character
@@ -288,7 +289,7 @@ public class CompletionContext {
     }
     
     private List<String> getExistingAttributesLocked(TokenSequence ts) {
-        List<String> existingAttributes = new ArrayList<String>();
+        List<String> existingAttributes = new ArrayList<>();
         while (ts.movePrevious()) {
             Token<XMLTokenId> item = ts.token();
             XMLTokenId tokenId = item.id();

@@ -159,6 +159,7 @@ final class FileSelector extends JPanel implements PropertyChangeListener, Explo
 
     /** Gets preferred size. Overrides superclass method. Height is adjusted
      * to 1/2 screen. */
+    @Override
     public Dimension getPreferredSize() {
         Dimension dim = super.getPreferredSize();
         dim.height = Math.max(dim.height, org.openide.util.Utilities.getUsableScreenBounds().height / 2);

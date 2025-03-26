@@ -1,0 +1,2 @@
+decode(String nm) : Integer
+divideUnsigned(int dividend, int divisor) : int

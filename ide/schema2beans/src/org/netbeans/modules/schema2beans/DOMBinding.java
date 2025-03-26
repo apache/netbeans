@@ -386,7 +386,7 @@ public class DOMBinding {
 		    try {
                 //  If cls implements Wrapper, use it first
                 if ((Wrapper.class).isAssignableFrom(cls)) {
-                    Wrapper w = (Wrapper)cls.newInstance();
+                    Wrapper w = (Wrapper)cls.getDeclaredConstructor().newInstance();
                     w.setWrapperValue(ret);
                     return w;
                 }
@@ -419,7 +419,7 @@ public class DOMBinding {
                         localPart = ret;
                     } else {
                         prefix = ret.substring(0, colonPos);
-                        localPart = ret.substring(colonPos+1, ret.length());
+                        localPart = ret.substring(colonPos+1);
                         ns = findNamespace(prefix);
                     }
                     //System.out.println("localPart="+localPart+" ns="+ns+" prefix="+prefix);

@@ -54,6 +54,14 @@
                     <run-dependency/>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.apache.commons.commons_io</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>2.13.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.apache.commons.lang3</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -128,25 +136,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.11</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.modules.csl.api</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>2</release-version>
-                        <specification-version>2.74</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.modules.csl.types</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>1.17</specification-version>
+                        <specification-version>1.28</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -188,6 +178,24 @@
                     <compile-dependency/>
                     <run-dependency>
                         <specification-version>8.30</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.csl.api</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>2.74</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.csl.types</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.17</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -298,6 +306,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.gototest</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.57</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.gsf.testrunner</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -340,12 +357,29 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.java.file.launcher</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.java.hints</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
                         <implementation-version/>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.java.hints.legacy.spi</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.36</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -364,6 +398,15 @@
                     <run-dependency>
                         <release-version>0</release-version>
                         <specification-version>0.3</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.java.platform</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.66</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -450,7 +493,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>9.10</specification-version>
+                        <implementation-version/>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -476,7 +519,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.85</specification-version>
+                        <specification-version>1.99</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -521,6 +564,14 @@
                     <run-dependency>
                         <release-version>1</release-version>
                         <implementation-version/>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.sampler</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.40</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -714,10 +765,6 @@
                         <recursive/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.netbeans.modules.extexecution.process.jdk9</code-name-base>
-                        <recursive/>
-                    </test-dependency>
-                    <test-dependency>
                         <code-name-base>org.netbeans.modules.java.hints.declarative</code-name-base>
                         <compile-dependency/>
                     </test-dependency>
@@ -825,10 +872,6 @@
             <class-path-extension>
                 <runtime-relative-path>ext/org.eclipse.lsp4j-0.13.0.jar</runtime-relative-path>
                 <binary-origin>external/org.eclipse.lsp4j-0.13.0.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/commons-io-2.5.jar</runtime-relative-path>
-                <binary-origin>external/commons-io-2.5.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

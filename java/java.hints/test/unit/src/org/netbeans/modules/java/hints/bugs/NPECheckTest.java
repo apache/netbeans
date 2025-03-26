@@ -1798,6 +1798,178 @@ public class NPECheckTest extends NbTestCase {
                                 "9:7-9:15:verifier:Possibly Dereferencing null");
     }
 
+    public void testObjectsRequireNonNull() throws Exception {
+        HintTest.create()
+                .input("package test;\n"
+                     + "import java.util.Objects;\n"
+                     + "public class Test {\n"
+                     + "  public String test(Object obj) {\n"
+                     + "    Objects.requireNonNull(obj);\n"
+                     + "    if (obj instanceof Number)\n"
+                     + "        return \"\";\n"
+                     + "    return obj.toString();\n"
+                     + "  }\n"
+                     + "}")
+                .run(NPECheck.class)
+                .assertNotContainsWarnings("Possibly Dereferencing null");
+    }
+
+    public void testObjectsRequireNonNullElse() throws Exception {
+        HintTest.create()
+                .input("package test;\n"
+                     + "import java.util.Objects;\n"
+                     + "public class Test {\n"
+                     + "  public String test(Object obj) {\n"
+                     + "    Objects.requireNonNullElse(obj, \"\");\n"
+                     + "    if (obj instanceof Number)\n"
+                     + "        return \"\";\n"
+                     + "    return obj.toString();\n"
+                     + "  }\n"
+                     + "}")
+                .run(NPECheck.class)
+                .assertNotContainsWarnings("Possibly Dereferencing null");
+    }
+
+    public void testSwitchCaseNull() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .input("""
+                       package test;
+                       public class Test {
+                           private void test(@NullAllowed E e) {
+                               switch (e) {
+                                   case null:
+                                       System.err.println(e.name());
+                                       break;
+                                   default:
+                                       if (e == null) {}
+                                       System.err.println(e.name());
+                                       break;
+                               }
+                           }
+                           @interface NullAllowed {}
+                           enum E {A}
+                       }
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings("5:37-5:41:verifier:DN",
+                                "8:20-8:29:verifier:ERR_NotNull");
+    }
+
+    public void testCaseNullIsANullTest1() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .input("""
+                       package test;
+                       public class Test {
+                           private void test(E e) {
+                               switch (e) {
+                                   case null:
+                                       break;
+                                   default:
+                                       break;
+                               }
+                               e.name();
+                           }
+                           enum E {A}
+                       }
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings("9:10-9:14:verifier:Possibly Dereferencing null");
+    }
+
+    public void testCaseNullIsANullTest2() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .input("""
+                       package test;
+                       public class Test {
+                           private void test(E e) {
+                               switch (e) {
+                                   case null:
+                                       return ;
+                                   default:
+                                       break;
+                               }
+                               if (e != null) {
+                                   e.name();
+                               }
+                           }
+                           enum E {A}
+                       }
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings("9:12-9:21:verifier:ERR_NotNull");
+    }
+
+    public void testSwitchExpressionCaseNull() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .input("""
+                       package test;
+                       public class Test {
+                           private String test(@NullAllowed E e) {
+                               return switch (e) {
+                                   case null:
+                                       System.err.println(e.name());
+                                       yield "";
+                                   default:
+                                       if (e == null) {}
+                                       System.err.println(e.name());
+                                       yield "";
+                               };
+                           }
+                           @interface NullAllowed {}
+                           enum E {A}
+                       }
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings("5:37-5:41:verifier:DN",
+                                "8:20-8:29:verifier:ERR_NotNull");
+    }
+
+    public void testSwitchExpressionNullSelector() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .input("""
+                       package test;
+                       public class Test {
+                           private String test(@NullAllowed E e) {
+                               return switch (e) {
+                                   default:
+                                       yield "";
+                               };
+                           }
+                           @interface NullAllowed {}
+                           enum E {A}
+                       }
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings("3:15-3:27:verifier:Possibly Dereferencing null");
+    }
+
+    public void testSwitchExpressionYieldedNonNull() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .input("""
+                       package test;
+                       public class Test {
+                           private void test(int i) {
+                               String y = switch (i) {
+                                   case 0 -> "";
+                                   default -> {
+                                       yield "";
+                                   }
+                               };
+                               if (y != null) {}
+                           }
+                           enum E {A}
+                       }
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings("9:12-9:21:verifier:ERR_NotNull");
+    }
+
     private void performAnalysisTest(String fileName, String code, String... golden) throws Exception {
         HintTest.create()
                 .input(fileName, code)

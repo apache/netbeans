@@ -61,6 +61,8 @@ public class WildflyPluginUtils {
 
     public static final Version EAP_7_0 = new Version("7.0.0", false); // NOI18N
 
+    public static final Version EAP_8_0 = new Version("8.0.0", false); // NOI18N
+
     public static final Version WILDFLY_8_0_0 = new Version("8.0.0", true); // NOI18N
 
     public static final Version WILDFLY_8_1_0 = new Version("8.1.0", true); // NOI18N
@@ -88,6 +90,30 @@ public class WildflyPluginUtils {
     public static final Version WILDFLY_18_0_0 = new Version("18.0.0", true); // NOI18N
 
     public static final Version WILDFLY_19_0_0 = new Version("19.0.0", true); // NOI18N
+
+    public static final Version WILDFLY_20_0_0 = new Version("20.0.0", true); // NOI18N
+
+    public static final Version WILDFLY_21_0_0 = new Version("21.0.0", true); // NOI18N
+
+    public static final Version WILDFLY_22_0_0 = new Version("22.0.0", true); // NOI18N
+
+    public static final Version WILDFLY_23_0_0 = new Version("23.0.0", true); // NOI18N
+
+    public static final Version WILDFLY_24_0_0 = new Version("24.0.0", true); // NOI18N
+
+    public static final Version WILDFLY_25_0_0 = new Version("25.0.0", true); // NOI18N
+
+    public static final Version WILDFLY_26_0_0 = new Version("26.0.0", true); // NOI18N
+
+    public static final Version WILDFLY_27_0_0 = new Version("27.0.0", true); // NOI18N
+    
+    public static final Version WILDFLY_28_0_0 = new Version("28.0.0", true); // NOI18N
+    
+    public static final Version WILDFLY_29_0_0 = new Version("29.0.0", true); // NOI18N
+    
+    public static final Version WILDFLY_30_0_0 = new Version("30.0.0", true); // NOI18N
+
+    public static final Version WILDFLY_31_0_0 = new Version("31.0.0", true); // NOI18N
 
     private static final Logger LOGGER = Logger.getLogger(WildflyPluginUtils.class.getName());
 
@@ -228,7 +254,7 @@ public class WildflyPluginUtils {
         return defaultPort;
     }
 
-     public static String getManagementConnectorPort(String configFile) {
+    public static String getManagementConnectorPort(String configFile) {
         String defaultPort = "9990"; // NOI18N
         return defaultPort;
     }
@@ -303,15 +329,13 @@ public class WildflyPluginUtils {
                 props.load(reader);
                 String slot = props.getProperty("slot");
                 if (slot != null) {
-                    File manifestFile = new File(serverPath, getModulesBase(serverPath.getAbsolutePath()) + "org.jboss.as.product".replace('.', separatorChar) + separatorChar + slot + separatorChar + "dir" + separatorChar + "META-INF" + separatorChar + "MANIFEST.MF");
-                    InputStream stream = new FileInputStream(manifestFile);
-                    Manifest manifest = new Manifest(stream);
-                    String productName = manifest.getMainAttributes().getValue("JBoss-Product-Release-Name");
+                    Attributes manifestAttributes = findManifestAttributes(serverPath, slot);
+                    String productName = manifestAttributes.getValue("JBoss-Product-Release-Name");
                     if(productName == null || productName.isEmpty()) {
-                        productName = manifest.getMainAttributes().getValue("JBoss-Project-Release-Name");
+                        productName = manifestAttributes.getValue("JBoss-Project-Release-Name");
                     }
                     boolean wildfly =  productName == null || !productName.toLowerCase().contains("eap");
-                    return new Version(manifest.getMainAttributes().getValue("JBoss-Product-Release-Version"), wildfly);
+                    return new Version(manifestAttributes.getValue("JBoss-Product-Release-Version"), wildfly);
                 }
             } catch (Exception e) {
                 // Don't care
@@ -346,12 +370,10 @@ public class WildflyPluginUtils {
                 props.load(reader);
                 String slot = props.getProperty("slot");
                 if (slot != null) {
-                    File manifestFile = new File(serverPath, getModulesBase(serverPath.getAbsolutePath()) + "org.jboss.as.product".replace('.', separatorChar) + separatorChar + slot + separatorChar + "dir" + separatorChar + "META-INF" + separatorChar + "MANIFEST.MF");
-                    InputStream stream = new FileInputStream(manifestFile);
-                    Manifest manifest = new Manifest(stream);
-                    String productName = manifest.getMainAttributes().getValue("JBoss-Product-Release-Name");
+                    Attributes manifestAttributes = findManifestAttributes(serverPath, slot);
+                    String productName = manifestAttributes.getValue("JBoss-Product-Release-Name");
                     if(productName == null || productName.isEmpty()) {
-                        productName = manifest.getMainAttributes().getValue("JBoss-Project-Release-Name");
+                        productName = manifestAttributes.getValue("JBoss-Project-Release-Name");
                     }
                     return productName == null || !productName.toLowerCase().contains("eap");
                 }
@@ -381,12 +403,10 @@ public class WildflyPluginUtils {
                     props.load(reader);
                     String slot = props.getProperty("slot");
                     if (slot != null) {
-                        File manifestFile = new File(serverPath, getModulesBase(serverPath.getAbsolutePath()) + "org.jboss.as.product".replace('.', separatorChar) + separatorChar + slot + separatorChar + "dir" + separatorChar + "META-INF" + separatorChar + "MANIFEST.MF");
-                        InputStream stream = new FileInputStream(manifestFile);
-                        Manifest manifest = new Manifest(stream);
-                        String productName = manifest.getMainAttributes().getValue("JBoss-Product-Release-Name");
+                        Attributes manifestAttributes = findManifestAttributes(serverPath, slot);
+                        String productName = manifestAttributes.getValue("JBoss-Product-Release-Name");
                         if(productName == null || productName.isEmpty()) {
-                            productName = manifest.getMainAttributes().getValue("JBoss-Project-Release-Name");
+                            productName = manifestAttributes.getValue("JBoss-Project-Release-Name");
                         }
                         return productName != null && (productName.contains("WildFly Web Lite") || productName.contains("WildFly Servlet"));
                     }
@@ -396,6 +416,48 @@ public class WildflyPluginUtils {
             }
         }
         return false;
+    }
+    
+    /**
+     * Check if the jakarta directory exists in the module base. If the
+     * directory exists then WildFly support Jakarta EE.
+     *
+     * @param serverPath path to the server directory
+     * @return true if the jakarta directory exists, {@code false} otherwise
+     */
+    @CheckForNull
+    public static boolean isWildFlyJakartaEE(File serverPath) {
+        assert serverPath != null : "Can't determine jakarta directory with null server path"; // NOI18N
+
+        File jakartaDir = new File(serverPath, getModulesBase(serverPath.getAbsolutePath()) + "jakarta");
+        return jakartaDir.exists();
+    }
+
+    private static Attributes findManifestAttributes(File serverPath, String slot) {
+        File productDir = new File(serverPath, getModulesBase(serverPath.getAbsolutePath()) + "org.jboss.as.product".replace('.', separatorChar) + separatorChar + slot);
+        File[] files = productDir.listFiles();
+        for (File file : files) {
+            try {
+                if (file.getName().startsWith("wildfly-feature-pack-product-conf") && file.getName().endsWith(".jar")) {
+                    JarFileSystem featurePackProductConfJar = new JarFileSystem(file);
+                    return featurePackProductConfJar.getManifest().getMainAttributes();
+                }
+                if (file.getName().startsWith("wildfly-ee-feature-pack-product-conf") && file.getName().endsWith(".jar")) {
+                    JarFileSystem featurePackProductConfJar = new JarFileSystem(file);
+                    return featurePackProductConfJar.getManifest().getMainAttributes();
+                }
+            } catch (Exception ignore) {
+            }
+        }
+        File manifestFile = new File(productDir, "dir" + separatorChar + "META-INF" + separatorChar + "MANIFEST.MF");
+        if (manifestFile.exists()) {
+            try (InputStream stream = new FileInputStream(manifestFile)) {
+                Manifest manifest = new Manifest(stream);
+                return manifest.getMainAttributes();
+            } catch (Exception ignore) {
+            }
+        }
+        return null;
     }
 
     private static class VersionJarFileFilter implements FilenameFilter {
@@ -605,6 +667,9 @@ public class WildflyPluginUtils {
 
         private Version convertEAP(Version version) {
             if (!version.isWidlfy()) {
+                if (version.compareToIgnoreUpdate(EAP_8_0) >= 0) {
+                    return WILDFLY_28_0_0;
+                }
                 if (version.compareToIgnoreUpdate(EAP_7_0) >= 0) {
                     return WILDFLY_10_0_0;
                 }

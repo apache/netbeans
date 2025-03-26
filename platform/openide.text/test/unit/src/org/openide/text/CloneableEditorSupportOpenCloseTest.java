@@ -73,7 +73,7 @@ implements CloneableEditorSupport.Env {
             includeTests.add(new Filter.IncludeExclude(testName, ""));
         }
         Filter filter = new Filter();
-        filter.setIncludes(includeTests.toArray(new Filter.IncludeExclude[includeTests.size()]));
+        filter.setIncludes(includeTests.toArray(new Filter.IncludeExclude[0]));
         setFilter(filter);
     }
 
@@ -232,6 +232,7 @@ implements CloneableEditorSupport.Env {
         if (cannotBeModified != null) {
             final String notify = cannotBeModified;
             IOException e = new IOException () {
+                @Override
                 public String getLocalizedMessage () {
                     return notify;
                 }

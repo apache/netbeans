@@ -434,7 +434,7 @@ public class ProfilingPointsWindowUI extends JPanel implements ActionListener, L
             return;
         }
 
-        List<ProfilingPoint> pointsToRemove = new ArrayList();
+        List<ProfilingPoint> pointsToRemove = new ArrayList<>();
 
         for (int selectedRow : selectedRows) {
             ProfilingPoint selectedProfilingPoint = getProfilingPointAt(selectedRow);

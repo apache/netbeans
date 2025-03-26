@@ -91,7 +91,7 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
     
     private static final String ATTR_PATH = "path"; // NOI18N
     
-    private static final Logger LOGGER = Logger.getLogger("org.netbeans.modules.tomcat5"); // NOI18N
+    private static final Logger LOGGER = Logger.getLogger(TomcatModuleConfiguration.class.getName()); // NOI18N
     
     /** Creates a new instance of TomcatModuleConfiguration */
     public TomcatModuleConfiguration(J2eeModule j2eeModule, TomcatVersion tomcatVersion, TomEEVersion tomeeVersion) {
@@ -224,7 +224,7 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
         Context context = getContext();
         Set<Datasource> result = new HashSet<>();
         int length = context.getResource().length;
-        if (tomcatVersion != TomcatVersion.TOMCAT_50) {
+        if (tomcatVersion.isAtLeast(TomcatVersion.TOMCAT_55)) {
             // Tomcat 5.5.x or Tomcat 6.0.x
             for (int i = 0; i < length; i++) {
                 String type = context.getResourceType(i);
@@ -292,7 +292,7 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
         if (conflictingDS.size() > 0) {
             throw new DatasourceAlreadyExistsException(conflictingDS);
         }
-        if (tomcatVersion != TomcatVersion.TOMCAT_50) {
+        if (tomcatVersion.isAtLeast(TomcatVersion.TOMCAT_55)) {
             if (tomeeVersion != null) {
                 // we need to store it to resources.xml
                 TomeeResources resources = getResources(true);
@@ -744,7 +744,7 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
 
         // create a resource link to the global resource
         modifyContext( (Context ctx) -> {
-            int idx = context.addResourceLink(true);
+            int idx = ctx.addResourceLink(true);
             ctx.setResourceLinkName(idx, referenceName);
             ctx.setResourceLinkGlobal(idx, jndiName);
             ctx.setResourceLinkType(idx, "javax.sql.DataSource"); // NOI18N

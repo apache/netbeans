@@ -1188,7 +1188,7 @@ public final class PersistenceManager implements PropertyChangeListener {
                     l.add(wmc.tcIdViewList[i]);
                 }
             }
-            wmc.tcIdViewList = l.toArray(new String[l.size()]);
+            wmc.tcIdViewList = l.toArray(new String[0]);
         }
         for (int i = 0; i < wmc.modes.length; i++) {
             ModeConfig mc = wmc.modes[i];
@@ -1212,7 +1212,7 @@ public final class PersistenceManager implements PropertyChangeListener {
                         l.add(mc.tcRefConfigs[j]);
                     }
                 }
-                mc.tcRefConfigs = l.toArray(new TCRefConfig[l.size()]);
+                mc.tcRefConfigs = l.toArray(new TCRefConfig[0]);
             }
         }
         for (int i = 0; i < wmc.groups.length; i++) {
@@ -1231,7 +1231,7 @@ public final class PersistenceManager implements PropertyChangeListener {
                         l.add(gc.tcGroupConfigs[j]);
                     }
                 }
-                gc.tcGroupConfigs = l.toArray(new TCGroupConfig[l.size()]);
+                gc.tcGroupConfigs = l.toArray(new TCGroupConfig[0]);
             }
         }
     }

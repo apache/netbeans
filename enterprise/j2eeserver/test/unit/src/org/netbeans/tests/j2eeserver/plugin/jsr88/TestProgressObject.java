@@ -142,6 +142,6 @@ public class TestProgressObject extends ServerProgress {
                 ret.addAll(Arrays.asList(tmIDs[i].getChildTargetModuleID()));
             ret.add(tmIDs[i]);
         }
-        return (TargetModuleID[]) ret.toArray(new TargetModuleID[ret.size()]);
+        return (TargetModuleID[]) ret.toArray(new TargetModuleID[0]);
     }
 }

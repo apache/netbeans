@@ -68,7 +68,7 @@ public final class ModificationResult implements org.netbeans.modules.refactorin
 
         // Sort the diffs, if applicable
         if (fileDiffs.size() > 0) {
-            Collections.sort(fileDiffs, COMPARATOR);
+            fileDiffs.sort(COMPARATOR);
         }
     }
 

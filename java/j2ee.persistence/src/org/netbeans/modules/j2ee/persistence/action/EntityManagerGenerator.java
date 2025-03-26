@@ -125,20 +125,16 @@ public final class EntityManagerGenerator {
         Parameters.notNull("options", options); //NOI18N
         Parameters.notNull("strategyClass", strategyClass); //NOI18N
         
-        Task task = new Task<WorkingCopy>() {
+        Task task = (Task<WorkingCopy>) (WorkingCopy workingCopy) -> {
+            workingCopy.toPhase(Phase.RESOLVED);
+            CompilationUnitTree cut = workingCopy.getCompilationUnit();
+            TreeMaker make = workingCopy.getTreeMaker();
             
-            public void run(WorkingCopy workingCopy) throws Exception {
-                
-                workingCopy.toPhase(Phase.RESOLVED);
-                CompilationUnitTree cut = workingCopy.getCompilationUnit();
-                TreeMaker make = workingCopy.getTreeMaker();
-                
-                for (Tree typeDeclaration : cut.getTypeDecls()){
-                    if (TreeUtilities.CLASS_TREE_KINDS.contains(typeDeclaration.getKind())){
-                        ClassTree clazz = (ClassTree) typeDeclaration;
-                        EntityManagerGenerationStrategy strategy = instantiateStrategy(strategyClass, workingCopy, make, clazz, options);
-                        workingCopy.rewrite(clazz, strategy.generate());
-                    }
+            for (Tree typeDeclaration : cut.getTypeDecls()){
+                if (TreeUtilities.CLASS_TREE_KINDS.contains(typeDeclaration.getKind())){
+                    ClassTree clazz = (ClassTree) typeDeclaration;
+                    EntityManagerGenerationStrategy strategy = instantiateStrategy(strategyClass, workingCopy, make, clazz, options);
+                    workingCopy.rewrite(clazz, strategy.generate());
                 }
             }
         };
@@ -165,16 +161,14 @@ public final class EntityManagerGenerator {
         EntityManagerGenerationStrategy result = null;
         
         try{
-            result = strategy.newInstance();
+            result = strategy.getDeclaredConstructor().newInstance();
             result.setClassTree(clazz);
             result.setWorkingCopy(workingCopy);
             result.setGenerationOptions(options);
             result.setTreeMaker(make);
             result.setPersistenceUnit(getPersistenceUnit());
-        } catch (IllegalAccessException iae){
-            throw new RuntimeException(iae); //TODO
-        } catch (InstantiationException ie){
-            throw new RuntimeException(ie); //TODO
+        } catch (ReflectiveOperationException ex){
+            throw new RuntimeException(ex); //TODO
         }
         
         return result;
@@ -197,7 +191,9 @@ public final class EntityManagerGenerator {
                     PersistenceUnit forOne=null;
                     for(int i=0;i<pus.length && forOne==null;i++) {
                         PersistenceUnit tmp=pus[i];
-                        if(forAll ==null && !tmp.isExcludeUnlistedClasses()) forAll=tmp;//first match sutable for all entities in the project
+                        if(forAll ==null && !tmp.isExcludeUnlistedClasses()) {
+                            forAll=tmp;//first match sutable for all entities in the project
+                        }
                         if(tmp.isExcludeUnlistedClasses()) {
                             String []classes = tmp.getClass2();
                             for(String clas:classes){

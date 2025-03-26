@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.156
+#Version 2.167.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -17,6 +17,7 @@ intf java.awt.MenuContainer
 intf java.awt.image.ImageObserver
 intf java.io.Serializable
 meth protected boolean requestFocus(boolean)
+meth protected boolean requestFocus(boolean,java.awt.event.FocusEvent$Cause)
 meth protected boolean requestFocusInWindow(boolean)
 meth protected final void disableEvents(long)
 meth protected final void enableEvents(long)
@@ -37,20 +38,20 @@ meth protected void processMouseMotionEvent(java.awt.event.MouseEvent)
 meth protected void processMouseWheelEvent(java.awt.event.MouseWheelEvent)
 meth public <%0 extends java.util.EventListener> {%%0}[] getListeners(java.lang.Class<{%%0}>)
 meth public boolean action(java.awt.Event,java.lang.Object)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean areFocusTraversalKeysSet(int)
 meth public boolean contains(int,int)
 meth public boolean contains(java.awt.Point)
 meth public boolean getFocusTraversalKeysEnabled()
 meth public boolean getIgnoreRepaint()
 meth public boolean gotFocus(java.awt.Event,java.lang.Object)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean handleEvent(java.awt.Event)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean hasFocus()
 meth public boolean imageUpdate(java.awt.Image,int,int,int,int,int)
 meth public boolean inside(int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isBackgroundSet()
 meth public boolean isCursorSet()
 meth public boolean isDisplayable()
@@ -59,7 +60,7 @@ meth public boolean isEnabled()
 meth public boolean isFocusCycleRoot(java.awt.Container)
 meth public boolean isFocusOwner()
 meth public boolean isFocusTraversable()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isFocusable()
 meth public boolean isFontSet()
 meth public boolean isForegroundSet()
@@ -72,28 +73,29 @@ meth public boolean isShowing()
 meth public boolean isValid()
 meth public boolean isVisible()
 meth public boolean keyDown(java.awt.Event,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean keyUp(java.awt.Event,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean lostFocus(java.awt.Event,java.lang.Object)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean mouseDown(java.awt.Event,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean mouseDrag(java.awt.Event,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean mouseEnter(java.awt.Event,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean mouseExit(java.awt.Event,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean mouseMove(java.awt.Event,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean mouseUp(java.awt.Event,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean postEvent(java.awt.Event)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean prepareImage(java.awt.Image,int,int,java.awt.image.ImageObserver)
 meth public boolean prepareImage(java.awt.Image,java.awt.image.ImageObserver)
 meth public boolean requestFocusInWindow()
+meth public boolean requestFocusInWindow(java.awt.event.FocusEvent$Cause)
 meth public final java.lang.Object getTreeLock()
 meth public final void dispatchEvent(java.awt.AWTEvent)
 meth public float getAlignmentX()
@@ -110,7 +112,7 @@ meth public java.awt.Color getForeground()
 meth public java.awt.Component getComponentAt(int,int)
 meth public java.awt.Component getComponentAt(java.awt.Point)
 meth public java.awt.Component locate(int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Component$BaselineResizeBehavior getBaselineResizeBehavior()
 meth public java.awt.ComponentOrientation getComponentOrientation()
 meth public java.awt.Container getFocusCycleRootAncestor()
@@ -122,11 +124,11 @@ meth public java.awt.Dimension getPreferredSize()
 meth public java.awt.Dimension getSize()
 meth public java.awt.Dimension getSize(java.awt.Dimension)
 meth public java.awt.Dimension minimumSize()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Dimension preferredSize()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Dimension size()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Font getFont()
 meth public java.awt.FontMetrics getFontMetrics(java.awt.Font)
 meth public java.awt.Graphics getGraphics()
@@ -138,9 +140,9 @@ meth public java.awt.Point getLocation(java.awt.Point)
 meth public java.awt.Point getLocationOnScreen()
 meth public java.awt.Point getMousePosition()
 meth public java.awt.Point location()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Rectangle bounds()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Rectangle getBounds()
 meth public java.awt.Rectangle getBounds(java.awt.Rectangle)
 meth public java.awt.Toolkit getToolkit()
@@ -181,14 +183,14 @@ meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void addPropertyChangeListener(java.lang.String,java.beans.PropertyChangeListener)
 meth public void applyComponentOrientation(java.awt.ComponentOrientation)
 meth public void deliverEvent(java.awt.Event)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void disable()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void doLayout()
 meth public void enable()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void enable(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void enableInputMethods(boolean)
 meth public void firePropertyChange(java.lang.String,byte,byte)
 meth public void firePropertyChange(java.lang.String,char,char)
@@ -197,19 +199,19 @@ meth public void firePropertyChange(java.lang.String,float,float)
 meth public void firePropertyChange(java.lang.String,long,long)
 meth public void firePropertyChange(java.lang.String,short,short)
 meth public void hide()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void invalidate()
 meth public void layout()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void list()
 meth public void list(java.io.PrintStream)
 meth public void list(java.io.PrintStream,int)
 meth public void list(java.io.PrintWriter)
 meth public void list(java.io.PrintWriter,int)
 meth public void move(int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void nextFocus()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void paint(java.awt.Graphics)
 meth public void paintAll(java.awt.Graphics)
 meth public void print(java.awt.Graphics)
@@ -232,12 +234,13 @@ meth public void repaint(int,int,int,int)
 meth public void repaint(long)
 meth public void repaint(long,int,int,int,int)
 meth public void requestFocus()
+meth public void requestFocus(java.awt.event.FocusEvent$Cause)
 meth public void reshape(int,int,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void resize(int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void resize(java.awt.Dimension)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void revalidate()
 meth public void setBackground(java.awt.Color)
 meth public void setBounds(int,int,int,int)
@@ -257,15 +260,16 @@ meth public void setLocation(int,int)
 meth public void setLocation(java.awt.Point)
 meth public void setMaximumSize(java.awt.Dimension)
 meth public void setMinimumSize(java.awt.Dimension)
+meth public void setMixingCutoutShape(java.awt.Shape)
 meth public void setName(java.lang.String)
 meth public void setPreferredSize(java.awt.Dimension)
 meth public void setSize(int,int)
 meth public void setSize(java.awt.Dimension)
 meth public void setVisible(boolean)
 meth public void show()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void show(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void transferFocus()
 meth public void transferFocusBackward()
 meth public void transferFocusUpCycle()
@@ -293,7 +297,7 @@ meth public final void setFocusTraversalPolicyProvider(boolean)
 meth public float getAlignmentX()
 meth public float getAlignmentY()
 meth public int countComponents()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public int getComponentCount()
 meth public int getComponentZOrder(java.awt.Component)
 meth public java.awt.Component add(java.awt.Component)
@@ -305,19 +309,19 @@ meth public java.awt.Component getComponent(int)
 meth public java.awt.Component getComponentAt(int,int)
 meth public java.awt.Component getComponentAt(java.awt.Point)
 meth public java.awt.Component locate(int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Component[] getComponents()
 meth public java.awt.Dimension getMaximumSize()
 meth public java.awt.Dimension getMinimumSize()
 meth public java.awt.Dimension getPreferredSize()
 meth public java.awt.Dimension minimumSize()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Dimension preferredSize()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.FocusTraversalPolicy getFocusTraversalPolicy()
 meth public java.awt.Insets getInsets()
 meth public java.awt.Insets insets()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.LayoutManager getLayout()
 meth public java.awt.Point getMousePosition(boolean)
 meth public java.awt.event.ContainerListener[] getContainerListeners()
@@ -330,11 +334,11 @@ meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void addPropertyChangeListener(java.lang.String,java.beans.PropertyChangeListener)
 meth public void applyComponentOrientation(java.awt.ComponentOrientation)
 meth public void deliverEvent(java.awt.Event)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void doLayout()
 meth public void invalidate()
 meth public void layout()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void list(java.io.PrintStream,int)
 meth public void list(java.io.PrintWriter,int)
 meth public void paint(java.awt.Graphics)
@@ -359,7 +363,7 @@ supr java.awt.Component
 
 CLSS public abstract interface java.awt.MenuContainer
 meth public abstract boolean postEvent(java.awt.Event)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.awt.Font getFont()
 meth public abstract void remove(java.awt.MenuComponent)
 
@@ -402,6 +406,15 @@ meth public void setShortDescription(java.lang.String)
 meth public void setValue(java.lang.String,java.lang.Object)
 supr java.lang.Object
 
+CLSS public abstract interface !annotation java.beans.JavaBean
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String defaultEventSet()
+meth public abstract !hasdefault java.lang.String defaultProperty()
+meth public abstract !hasdefault java.lang.String description()
+
 CLSS public abstract interface java.io.Serializable
 
 CLSS public abstract interface java.lang.Cloneable
@@ -412,13 +425,17 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -427,6 +444,7 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
@@ -441,6 +459,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -480,6 +499,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public abstract interface java.util.EventListener
 
@@ -526,8 +548,10 @@ meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeLis
 meth public abstract void putValue(java.lang.String,java.lang.Object)
 meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public abstract void setEnabled(boolean)
+meth public boolean accept(java.lang.Object)
 
 CLSS public abstract javax.swing.JComponent
+ anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="UIClassID", java.lang.String description="")
 cons public init()
 fld protected javax.swing.event.EventListenerList listenerList
 fld protected javax.swing.plaf.ComponentUI ui
@@ -555,6 +579,7 @@ meth protected void processKeyEvent(java.awt.event.KeyEvent)
 meth protected void processMouseEvent(java.awt.event.MouseEvent)
 meth protected void processMouseMotionEvent(java.awt.event.MouseEvent)
 meth protected void setUI(javax.swing.plaf.ComponentUI)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The component's look and feel delegate.", java.lang.String[] enumerationValues=[])
 meth public <%0 extends java.util.EventListener> {%%0}[] getListeners(java.lang.Class<{%%0}>)
 meth public boolean contains(int,int)
 meth public boolean getAutoscrolls()
@@ -562,17 +587,21 @@ meth public boolean getInheritsPopupMenu()
 meth public boolean getVerifyInputWhenFocusTarget()
 meth public boolean isDoubleBuffered()
 meth public boolean isManagingFocus()
- anno 0 java.lang.Deprecated()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isOpaque()
 meth public boolean isOptimizedDrawingEnabled()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public boolean isPaintingTile()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public boolean isRequestFocusEnabled()
 meth public boolean isValidateRoot()
 meth public boolean requestDefaultFocus()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean requestFocus(boolean)
 meth public boolean requestFocusInWindow()
 meth public final boolean isPaintingForPrint()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public final java.lang.Object getClientProperty(java.lang.Object)
 meth public final javax.swing.ActionMap getActionMap()
 meth public final javax.swing.InputMap getInputMap()
@@ -586,39 +615,54 @@ meth public int getBaseline(int,int)
 meth public int getConditionForKeyStroke(javax.swing.KeyStroke)
 meth public int getDebugGraphicsOptions()
 meth public int getHeight()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public int getWidth()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public int getX()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public int getY()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.awt.Component getNextFocusableComponent()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Component$BaselineResizeBehavior getBaselineResizeBehavior()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.awt.Container getTopLevelAncestor()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.awt.Dimension getMaximumSize()
 meth public java.awt.Dimension getMinimumSize()
 meth public java.awt.Dimension getPreferredSize()
 meth public java.awt.Dimension getSize(java.awt.Dimension)
 meth public java.awt.FontMetrics getFontMetrics(java.awt.Font)
 meth public java.awt.Graphics getGraphics()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.awt.Insets getInsets()
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.awt.Insets getInsets(java.awt.Insets)
 meth public java.awt.Point getLocation(java.awt.Point)
 meth public java.awt.Point getPopupLocation(java.awt.event.MouseEvent)
 meth public java.awt.Point getToolTipLocation(java.awt.event.MouseEvent)
 meth public java.awt.Rectangle getBounds(java.awt.Rectangle)
 meth public java.awt.Rectangle getVisibleRect()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.awt.event.ActionListener getActionForKeyStroke(javax.swing.KeyStroke)
 meth public java.beans.VetoableChangeListener[] getVetoableChangeListeners()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.lang.String getToolTipText()
 meth public java.lang.String getToolTipText(java.awt.event.MouseEvent)
 meth public java.lang.String getUIClassID()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="UIClassID", java.lang.String[] enumerationValues=[])
 meth public javax.swing.InputVerifier getInputVerifier()
 meth public javax.swing.JPopupMenu getComponentPopupMenu()
 meth public javax.swing.JRootPane getRootPane()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.JToolTip createToolTip()
 meth public javax.swing.KeyStroke[] getRegisteredKeyStrokes()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.TransferHandler getTransferHandler()
 meth public javax.swing.border.Border getBorder()
 meth public javax.swing.event.AncestorListener[] getAncestorListeners()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
+meth public javax.swing.plaf.ComponentUI getUI()
 meth public static boolean isLightweightComponent(java.awt.Component)
 meth public static java.util.Locale getDefaultLocale()
 meth public static void setDefaultLocale(java.util.Locale)
@@ -627,15 +671,15 @@ meth public void addNotify()
 meth public void addVetoableChangeListener(java.beans.VetoableChangeListener)
 meth public void computeVisibleRect(java.awt.Rectangle)
 meth public void disable()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void enable()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void firePropertyChange(java.lang.String,boolean,boolean)
 meth public void firePropertyChange(java.lang.String,char,char)
 meth public void firePropertyChange(java.lang.String,int,int)
 meth public void grabFocus()
 meth public void hide()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void paint(java.awt.Graphics)
 meth public void paintImmediately(int,int,int,int)
 meth public void paintImmediately(java.awt.Rectangle)
@@ -651,44 +695,84 @@ meth public void repaint(long,int,int,int,int)
 meth public void requestFocus()
 meth public void resetKeyboardActions()
 meth public void reshape(int,int,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void revalidate()
 meth public void scrollRectToVisible(java.awt.Rectangle)
 meth public void setAlignmentX(float)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The preferred horizontal alignment of the component.", java.lang.String[] enumerationValues=[])
 meth public void setAlignmentY(float)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The preferred vertical alignment of the component.", java.lang.String[] enumerationValues=[])
 meth public void setAutoscrolls(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Determines if this component automatically scrolls its contents when dragged.", java.lang.String[] enumerationValues=[])
 meth public void setBackground(java.awt.Color)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=true, java.lang.String description="The background color of the component.", java.lang.String[] enumerationValues=[])
 meth public void setBorder(javax.swing.border.Border)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=true, java.lang.String description="The component's border.", java.lang.String[] enumerationValues=[])
 meth public void setComponentPopupMenu(javax.swing.JPopupMenu)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=false, java.lang.String description="Popup to show", java.lang.String[] enumerationValues=[])
 meth public void setDebugGraphicsOptions(int)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=false, java.lang.String description="Diagnostic options for graphics operations.", java.lang.String[] enumerationValues=["DebugGraphics.NONE_OPTION", "DebugGraphics.LOG_OPTION", "DebugGraphics.FLASH_OPTION", "DebugGraphics.BUFFERED_OPTION"])
 meth public void setDoubleBuffered(boolean)
 meth public void setEnabled(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=true, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=true, java.lang.String description="The enabled state of the component.", java.lang.String[] enumerationValues=[])
 meth public void setFocusTraversalKeys(int,java.util.Set<? extends java.awt.AWTKeyStroke>)
 meth public void setFont(java.awt.Font)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=true, java.lang.String description="The font for the component.", java.lang.String[] enumerationValues=[])
 meth public void setForeground(java.awt.Color)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=true, java.lang.String description="The foreground color of the component.", java.lang.String[] enumerationValues=[])
 meth public void setInheritsPopupMenu(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Whether or not the JPopupMenu is inherited", java.lang.String[] enumerationValues=[])
 meth public void setInputVerifier(javax.swing.InputVerifier)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The component's input verifier.", java.lang.String[] enumerationValues=[])
 meth public void setMaximumSize(java.awt.Dimension)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The maximum size of the component.", java.lang.String[] enumerationValues=[])
 meth public void setMinimumSize(java.awt.Dimension)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The minimum size of the component.", java.lang.String[] enumerationValues=[])
 meth public void setNextFocusableComponent(java.awt.Component)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setOpaque(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The component's opacity", java.lang.String[] enumerationValues=[])
 meth public void setPreferredSize(java.awt.Dimension)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=false, java.lang.String description="The preferred size of the component.", java.lang.String[] enumerationValues=[])
 meth public void setRequestFocusEnabled(boolean)
 meth public void setToolTipText(java.lang.String)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=false, java.lang.String description="The text to display in a tool tip.", java.lang.String[] enumerationValues=[])
 meth public void setTransferHandler(javax.swing.TransferHandler)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Mechanism for transfer of data to and from the component", java.lang.String[] enumerationValues=[])
 meth public void setVerifyInputWhenFocusTarget(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Whether the Component verifies input before accepting focus.", java.lang.String[] enumerationValues=[])
 meth public void setVisible(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public void unregisterKeyboardAction(javax.swing.KeyStroke)
 meth public void update(java.awt.Graphics)
 meth public void updateUI()
 supr java.awt.Container
 
+CLSS public javax.swing.JPanel
+ anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="UI", java.lang.String description="A generic lightweight container.")
+cons public init()
+cons public init(boolean)
+cons public init(java.awt.LayoutManager)
+cons public init(java.awt.LayoutManager,boolean)
+innr protected AccessibleJPanel
+intf javax.accessibility.Accessible
+meth protected java.lang.String paramString()
+meth public java.lang.String getUIClassID()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="A string that specifies the name of the L&F class.", java.lang.String[] enumerationValues=[])
+meth public javax.accessibility.AccessibleContext getAccessibleContext()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
+meth public javax.swing.plaf.PanelUI getUI()
+meth public void setUI(javax.swing.plaf.PanelUI)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The UI object that implements the Component's LookAndFeel.", java.lang.String[] enumerationValues=[])
+meth public void updateUI()
+supr javax.swing.JComponent
+
 CLSS public javax.swing.JTable
+ anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="UI", java.lang.String description="A component which displays data in a two dimensional grid.")
 cons public init()
 cons public init(int,int)
 cons public init(java.lang.Object[][],java.lang.Object[])
-cons public init(java.util.Vector,java.util.Vector)
+cons public init(java.util.Vector<? extends java.util.Vector>,java.util.Vector<?>)
 cons public init(javax.swing.table.TableModel)
 cons public init(javax.swing.table.TableModel,javax.swing.table.TableColumnModel)
 cons public init(javax.swing.table.TableModel,javax.swing.table.TableColumnModel,javax.swing.ListSelectionModel)
@@ -707,8 +791,8 @@ fld protected java.awt.Color selectionBackground
 fld protected java.awt.Color selectionForeground
 fld protected java.awt.Component editorComp
 fld protected java.awt.Dimension preferredViewportSize
-fld protected java.util.Hashtable defaultEditorsByColumnClass
-fld protected java.util.Hashtable defaultRenderersByColumnClass
+fld protected java.util.Hashtable<java.lang.Object,java.lang.Object> defaultEditorsByColumnClass
+fld protected java.util.Hashtable<java.lang.Object,java.lang.Object> defaultRenderersByColumnClass
 fld protected javax.swing.ListSelectionModel selectionModel
 fld protected javax.swing.table.JTableHeader tableHeader
 fld protected javax.swing.table.TableCellEditor cellEditor
@@ -751,7 +835,9 @@ meth public boolean getDragEnabled()
 meth public boolean getFillsViewportHeight()
 meth public boolean getRowSelectionAllowed()
 meth public boolean getScrollableTracksViewportHeight()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public boolean getScrollableTracksViewportWidth()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public boolean getShowHorizontalLines()
 meth public boolean getShowVerticalLines()
 meth public boolean getSurrendersFocusOnKeystroke()
@@ -760,6 +846,7 @@ meth public boolean isCellEditable(int,int)
 meth public boolean isCellSelected(int,int)
 meth public boolean isColumnSelected(int)
 meth public boolean isEditing()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public boolean isRowSelected(int)
 meth public boolean print() throws java.awt.print.PrinterException
 meth public boolean print(javax.swing.JTable$PrintMode) throws java.awt.print.PrinterException
@@ -768,6 +855,7 @@ meth public boolean print(javax.swing.JTable$PrintMode,java.text.MessageFormat,j
 meth public boolean print(javax.swing.JTable$PrintMode,java.text.MessageFormat,java.text.MessageFormat,boolean,javax.print.attribute.PrintRequestAttributeSet,boolean,javax.print.PrintService) throws java.awt.print.PrinterException
 meth public final javax.swing.DropMode getDropMode()
 meth public final javax.swing.JTable$DropLocation getDropLocation()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public final void setDropMode(javax.swing.DropMode)
 meth public int columnAtPoint(java.awt.Point)
 meth public int convertColumnIndexToModel(int)
@@ -776,25 +864,34 @@ meth public int convertRowIndexToModel(int)
 meth public int convertRowIndexToView(int)
 meth public int getAutoResizeMode()
 meth public int getColumnCount()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public int getEditingColumn()
 meth public int getEditingRow()
 meth public int getRowCount()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public int getRowHeight()
 meth public int getRowHeight(int)
 meth public int getRowMargin()
 meth public int getScrollableBlockIncrement(java.awt.Rectangle,int,int)
 meth public int getScrollableUnitIncrement(java.awt.Rectangle,int,int)
 meth public int getSelectedColumn()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public int getSelectedColumnCount()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public int getSelectedRow()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public int getSelectedRowCount()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public int rowAtPoint(java.awt.Point)
 meth public int[] getSelectedColumns()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public int[] getSelectedRows()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.awt.Color getGridColor()
 meth public java.awt.Color getSelectionBackground()
 meth public java.awt.Color getSelectionForeground()
 meth public java.awt.Component getEditorComponent()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.awt.Component prepareEditor(javax.swing.table.TableCellEditor,int,int)
 meth public java.awt.Component prepareRenderer(javax.swing.table.TableCellRenderer,int,int)
 meth public java.awt.Dimension getIntercellSpacing()
@@ -806,7 +903,9 @@ meth public java.lang.Object getValueAt(int,int)
 meth public java.lang.String getColumnName(int)
 meth public java.lang.String getToolTipText(java.awt.event.MouseEvent)
 meth public java.lang.String getUIClassID()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.accessibility.AccessibleContext getAccessibleContext()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.ListSelectionModel getSelectionModel()
 meth public javax.swing.RowSorter<? extends javax.swing.table.TableModel> getRowSorter()
 meth public javax.swing.plaf.TableUI getUI()
@@ -820,7 +919,7 @@ meth public javax.swing.table.TableColumn getColumn(java.lang.Object)
 meth public javax.swing.table.TableColumnModel getColumnModel()
 meth public javax.swing.table.TableModel getModel()
 meth public static javax.swing.JScrollPane createScrollPaneForTable(javax.swing.JTable)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void addColumn(javax.swing.table.TableColumn)
 meth public void addColumnSelectionInterval(int,int)
 meth public void addNotify()
@@ -844,43 +943,71 @@ meth public void removeNotify()
 meth public void removeRowSelectionInterval(int,int)
 meth public void selectAll()
 meth public void setAutoCreateColumnsFromModel(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Automatically populates the columnModel when a new TableModel is submitted.", java.lang.String[] enumerationValues=[])
 meth public void setAutoCreateRowSorter(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=false, java.lang.String description="Whether or not to turn on sorting by default.", java.lang.String[] enumerationValues=[])
 meth public void setAutoResizeMode(int)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Whether the columns should adjust themselves automatically.", java.lang.String[] enumerationValues=["JTable.AUTO_RESIZE_OFF", "JTable.AUTO_RESIZE_NEXT_COLUMN", "JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS", "JTable.AUTO_RESIZE_LAST_COLUMN", "JTable.AUTO_RESIZE_ALL_COLUMNS"])
 meth public void setCellEditor(javax.swing.table.TableCellEditor)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The table's active cell editor.", java.lang.String[] enumerationValues=[])
 meth public void setCellSelectionEnabled(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="Select a rectangular region of cells rather than rows or columns.", java.lang.String[] enumerationValues=[])
 meth public void setColumnModel(javax.swing.table.TableColumnModel)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The object governing the way columns appear in the view.", java.lang.String[] enumerationValues=[])
 meth public void setColumnSelectionAllowed(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="If true, an entire column is selected for each selected cell.", java.lang.String[] enumerationValues=[])
 meth public void setColumnSelectionInterval(int,int)
 meth public void setDefaultEditor(java.lang.Class<?>,javax.swing.table.TableCellEditor)
 meth public void setDefaultRenderer(java.lang.Class<?>,javax.swing.table.TableCellRenderer)
 meth public void setDragEnabled(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="determines whether automatic drag handling is enabled", java.lang.String[] enumerationValues=[])
 meth public void setEditingColumn(int)
 meth public void setEditingRow(int)
 meth public void setFillsViewportHeight(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Whether or not this table is always made large enough to fill the height of an enclosing viewport", java.lang.String[] enumerationValues=[])
 meth public void setGridColor(java.awt.Color)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The grid color.", java.lang.String[] enumerationValues=[])
 meth public void setIntercellSpacing(java.awt.Dimension)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The spacing between the cells, drawn in the background color of the JTable.", java.lang.String[] enumerationValues=[])
 meth public void setModel(javax.swing.table.TableModel)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The model that is the source of the data for this view.", java.lang.String[] enumerationValues=[])
 meth public void setPreferredScrollableViewportSize(java.awt.Dimension)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The preferred size of the viewport.", java.lang.String[] enumerationValues=[])
 meth public void setRowHeight(int)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The height of the specified row.", java.lang.String[] enumerationValues=[])
 meth public void setRowHeight(int,int)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The height in pixels of the cells in <code>row</code>", java.lang.String[] enumerationValues=[])
 meth public void setRowMargin(int)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The amount of space between cells.", java.lang.String[] enumerationValues=[])
 meth public void setRowSelectionAllowed(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="If true, an entire row is selected for each selected cell.", java.lang.String[] enumerationValues=[])
 meth public void setRowSelectionInterval(int,int)
 meth public void setRowSorter(javax.swing.RowSorter<? extends javax.swing.table.TableModel>)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The table's RowSorter", java.lang.String[] enumerationValues=[])
 meth public void setSelectionBackground(java.awt.Color)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="A default background color for selected cells.", java.lang.String[] enumerationValues=[])
 meth public void setSelectionForeground(java.awt.Color)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="A default foreground color for selected cells.", java.lang.String[] enumerationValues=[])
 meth public void setSelectionMode(int)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The selection mode used by the row and column selection models.", java.lang.String[] enumerationValues=["ListSelectionModel.SINGLE_SELECTION", "ListSelectionModel.SINGLE_INTERVAL_SELECTION", "ListSelectionModel.MULTIPLE_INTERVAL_SELECTION"])
 meth public void setSelectionModel(javax.swing.ListSelectionModel)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The selection model for rows.", java.lang.String[] enumerationValues=[])
 meth public void setShowGrid(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The color used to draw the grid lines.", java.lang.String[] enumerationValues=[])
 meth public void setShowHorizontalLines(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Whether horizontal lines should be drawn in between the cells.", java.lang.String[] enumerationValues=[])
 meth public void setShowVerticalLines(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Whether vertical lines should be drawn in between the cells.", java.lang.String[] enumerationValues=[])
 meth public void setSurrendersFocusOnKeystroke(boolean)
 meth public void setTableHeader(javax.swing.table.JTableHeader)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The JTableHeader instance which renders the column headers.", java.lang.String[] enumerationValues=[])
 meth public void setUI(javax.swing.plaf.TableUI)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The UI object that implements the Component's LookAndFeel.", java.lang.String[] enumerationValues=[])
 meth public void setUpdateSelectionOnSort(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Whether or not to update the selection on sorting", java.lang.String[] enumerationValues=[])
 meth public void setValueAt(java.lang.Object,int,int)
 meth public void sizeColumnsToFit(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void sizeColumnsToFit(int)
 meth public void sorterChanged(javax.swing.event.RowSorterEvent)
 meth public void tableChanged(javax.swing.event.TableModelEvent)
@@ -894,6 +1021,13 @@ meth public abstract boolean getScrollableTracksViewportWidth()
 meth public abstract int getScrollableBlockIncrement(java.awt.Rectangle,int,int)
 meth public abstract int getScrollableUnitIncrement(java.awt.Rectangle,int,int)
 meth public abstract java.awt.Dimension getPreferredScrollableViewportSize()
+
+CLSS public abstract interface !annotation javax.swing.SwingContainer
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean value()
+meth public abstract !hasdefault java.lang.String delegate()
 
 CLSS public abstract interface javax.swing.event.AncestorListener
 intf java.util.EventListener
@@ -933,7 +1067,7 @@ intf java.util.EventListener
 meth public abstract void tableChanged(javax.swing.event.TableModelEvent)
 
 CLSS public abstract javax.swing.table.AbstractTableModel
-cons public init()
+cons protected init()
 fld protected javax.swing.event.EventListenerList listenerList
 intf java.io.Serializable
 intf javax.swing.table.TableModel
@@ -1061,7 +1195,7 @@ meth public static boolean checkByCLIMavenValidationLevel(org.apache.maven.model
 meth public static boolean hasModelDependency(org.netbeans.modules.maven.model.pom.POMModel,java.lang.String,java.lang.String)
 meth public static org.netbeans.modules.maven.api.ModelUtils$Descriptor checkLibraries(org.netbeans.api.project.libraries.Library)
 meth public static org.netbeans.modules.maven.api.ModelUtils$LibraryDescriptor checkLibrary(java.net.URL)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.netbeans.modules.maven.model.pom.Dependency checkModelDependency(org.netbeans.modules.maven.model.pom.POMModel,java.lang.String,java.lang.String,boolean)
 meth public static org.netbeans.modules.maven.model.pom.POMExtensibilityElement getOrCreateChild(org.netbeans.modules.maven.model.pom.POMComponent,java.lang.String,org.netbeans.modules.maven.model.pom.POMModel)
 meth public static org.netbeans.modules.maven.model.pom.Repository addModelRepository(org.apache.maven.project.MavenProject,org.netbeans.modules.maven.model.pom.POMModel,java.lang.String)
@@ -1086,9 +1220,9 @@ meth public java.lang.String getArtifactId()
 meth public java.lang.String getClassifier()
 meth public java.lang.String getGroupId()
 meth public java.lang.String getRepoRoot()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.String getRepoType()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.String getType()
 meth public java.lang.String getVersion()
 meth public java.lang.String toString()
@@ -1107,6 +1241,7 @@ hfds repoRoot,repoType
 CLSS public final org.netbeans.modules.maven.api.ModuleInfoUtils
 cons public init()
 meth public static boolean checkModuleInfoAndCompilerFit(org.netbeans.api.project.Project)
+meth public static boolean hasModuleInfo(org.netbeans.modules.maven.api.NbMavenProject)
 meth public static void addRequires(org.netbeans.modules.maven.api.NbMavenProject,java.util.Collection<? extends org.apache.maven.artifact.Artifact>)
 supr java.lang.Object
 hfds MODULE_INFO
@@ -1132,6 +1267,9 @@ meth public java.lang.String toString()
 meth public java.net.URI getEarAppDirectory()
 meth public java.net.URI getWebAppDirectory()
 meth public java.net.URI[] getResources(boolean)
+meth public java.util.concurrent.CompletableFuture<org.apache.maven.project.MavenProject> getFreshProject()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public long getLoadTimestamp()
 meth public org.apache.maven.model.Model getRawModel() throws org.apache.maven.model.building.ModelBuildingException
 meth public org.apache.maven.project.MavenProject getEvaluatedProject(org.netbeans.api.project.ProjectActionContext)
  anno 0 org.netbeans.api.annotations.common.NonNull()
@@ -1141,6 +1279,9 @@ meth public org.apache.maven.project.MavenProject loadAlternateMavenProject(org.
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public static boolean isErrorPlaceholder(org.apache.maven.project.MavenProject)
  anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public static boolean isIncomplete(org.apache.maven.project.MavenProject)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public static org.apache.maven.project.MavenProject getPartialProject(org.apache.maven.project.MavenProject)
 meth public static void addPropertyChangeListener(org.netbeans.api.project.Project,java.beans.PropertyChangeListener)
 meth public static void fireMavenProjectReload(org.netbeans.api.project.Project)
 meth public static void removePropertyChangeListener(org.netbeans.api.project.Project,java.beans.PropertyChangeListener)
@@ -1148,7 +1289,7 @@ meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void addWatchedPath(java.lang.String)
 meth public void addWatchedPath(java.net.URI)
 meth public void downloadDependencyAndJavadocSource()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void downloadDependencyAndJavadocSource(boolean)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void removeWatchedPath(java.lang.String)
@@ -1176,7 +1317,7 @@ meth public static <%0 extends java.lang.Object> {%%0} getPluginPropertyBuildabl
  anno 4 org.netbeans.api.annotations.common.NullAllowed()
  anno 5 org.netbeans.api.annotations.common.NonNull()
 meth public static java.lang.String getPluginProperty(org.apache.maven.project.MavenProject,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
@@ -1192,7 +1333,7 @@ meth public static java.lang.String getPluginProperty(org.apache.maven.project.M
  anno 5 org.netbeans.api.annotations.common.NullAllowed()
  anno 6 org.netbeans.api.annotations.common.NullAllowed()
 meth public static java.lang.String getPluginProperty(org.netbeans.api.project.Project,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
@@ -1298,11 +1439,14 @@ meth public abstract {org.netbeans.modules.maven.api.PluginPropertyUtils$Configu
 
 CLSS public final static org.netbeans.modules.maven.api.PluginPropertyUtils$PluginConfigPathParams
  outer org.netbeans.modules.maven.api.PluginPropertyUtils
+cons public init(java.lang.String,java.lang.String,java.lang.String)
 cons public init(java.lang.String,java.lang.String,java.lang.String,java.lang.String)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.String getArtifactType()
 meth public java.lang.String getDefaultScope()
 meth public java.lang.String getGoal()
 meth public java.lang.String getPathItemName()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.String getPathProperty()
 meth public java.lang.String getPluginArtifactId()
 meth public java.lang.String getPluginGroupId()
@@ -1354,7 +1498,7 @@ fld public final static java.lang.String TEMPLATE_FOLDER = "Project/Maven2"
 meth public static java.util.Set<org.openide.filesystems.FileObject> openProjects(java.io.File,java.io.File) throws java.io.IOException
 meth public static org.netbeans.modules.maven.model.ModelOperation<org.netbeans.modules.maven.model.pom.POMModel> addDependencyOperation(org.netbeans.modules.maven.api.archetype.ProjectInfo,java.lang.String)
 meth public static org.openide.WizardDescriptor$InstantiatingIterator<?> definedArchetype(java.lang.String,java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
  anno 4 org.netbeans.api.annotations.common.NullAllowed()
 meth public static org.openide.WizardDescriptor$InstantiatingIterator<?> definedArchetype(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
  anno 4 org.netbeans.api.annotations.common.NullAllowed()
@@ -1620,6 +1764,8 @@ meth public abstract java.lang.String getExecutionName()
 meth public abstract java.lang.String getTaskDisplayName()
 meth public abstract java.util.List<java.lang.String> getActivatedProfiles()
 meth public abstract java.util.List<java.lang.String> getGoals()
+meth public abstract java.util.Map<? extends java.lang.String,? extends java.lang.String> getOptions()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public abstract java.util.Map<? extends java.lang.String,? extends java.lang.String> getProperties()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public abstract java.util.Map<? extends java.lang.String,?> getInternalProperties()
@@ -1629,6 +1775,8 @@ meth public abstract org.netbeans.api.project.Project getProject()
 meth public abstract org.netbeans.modules.maven.api.execute.RunConfig getPreExecution()
 meth public abstract org.netbeans.modules.maven.api.execute.RunConfig$ReactorStyle getReactorStyle()
 meth public abstract org.openide.filesystems.FileObject getSelectedFileObject()
+meth public abstract void addOptions(java.util.Map<java.lang.String,java.lang.String>)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public abstract void addProperties(java.util.Map<java.lang.String,java.lang.String>)
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public abstract void setActivatedProfiles(java.util.List<java.lang.String>)
@@ -1637,6 +1785,9 @@ meth public abstract void setInternalProperty(java.lang.String,java.lang.Object)
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NullAllowed()
 meth public abstract void setOffline(java.lang.Boolean)
+meth public abstract void setOption(java.lang.String,java.lang.String)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NullAllowed()
 meth public abstract void setPreExecution(org.netbeans.modules.maven.api.execute.RunConfig)
 meth public abstract void setProperty(java.lang.String,java.lang.String)
  anno 1 org.netbeans.api.annotations.common.NonNull()
@@ -1654,17 +1805,18 @@ supr java.lang.Enum<org.netbeans.modules.maven.api.execute.RunConfig$ReactorStyl
 
 CLSS public final org.netbeans.modules.maven.api.execute.RunUtils
 meth public static boolean hasApplicationCompileOnSaveEnabled(org.netbeans.api.project.Project)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static boolean hasApplicationCompileOnSaveEnabled(org.netbeans.modules.maven.api.execute.RunConfig)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static boolean hasTestCompileOnSaveEnabled(org.netbeans.api.project.Project)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static boolean hasTestCompileOnSaveEnabled(org.netbeans.modules.maven.api.execute.RunConfig)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static boolean isCompileOnSaveEnabled(org.netbeans.api.project.Project)
 meth public static boolean isCompileOnSaveEnabled(org.netbeans.modules.maven.api.execute.RunConfig)
 meth public static org.netbeans.modules.maven.api.execute.RunConfig cloneRunConfig(org.netbeans.modules.maven.api.execute.RunConfig)
 meth public static org.netbeans.modules.maven.api.execute.RunConfig createRunConfig(java.io.File,org.netbeans.api.project.Project,java.lang.String,java.util.List<java.lang.String>)
+meth public static org.netbeans.modules.maven.api.execute.RunConfig createRunConfig(java.lang.String,org.netbeans.api.project.Project,org.netbeans.spi.project.ProjectConfiguration,org.openide.util.Lookup)
 meth public static org.openide.execution.ExecutorTask executeMaven(org.netbeans.modules.maven.api.execute.RunConfig)
 meth public static org.openide.execution.ExecutorTask run(org.netbeans.modules.maven.api.execute.RunConfig)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
@@ -1691,7 +1843,7 @@ meth public abstract java.util.Set<? extends org.netbeans.modules.maven.api.outp
 CLSS public final org.netbeans.modules.maven.api.output.OutputUtils
 fld public final static java.util.regex.Pattern linePattern
 meth public static org.openide.windows.OutputListener matchStackTraceLine(java.lang.String,org.netbeans.api.java.classpath.ClassPath)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.openide.windows.OutputListener matchStackTraceLine(java.lang.String,org.netbeans.api.project.Project)
 meth public static org.openide.windows.OutputListener matchStackTraceLine(java.lang.String,org.openide.filesystems.FileObject)
 supr java.lang.Object
@@ -1733,7 +1885,7 @@ CLSS public abstract interface org.netbeans.modules.maven.api.output.TestOutputO
 meth public abstract void processLine(java.lang.String,org.netbeans.api.project.Project)
 
 CLSS public final org.netbeans.modules.maven.api.problem.ProblemReport
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(int,java.lang.String,java.lang.String,javax.swing.Action)
 fld public final static int SEVERITY_HIGH = 0
 fld public final static int SEVERITY_LOW = 10
@@ -1748,7 +1900,7 @@ supr java.lang.Object
 hfds action,id,level,longDesc,shortDesc
 
 CLSS public abstract interface org.netbeans.modules.maven.api.problem.ProblemReporter
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.util.Collection<org.netbeans.modules.maven.api.problem.ProblemReport> getReports()
 meth public abstract void addReport(org.netbeans.modules.maven.api.problem.ProblemReport)
 meth public abstract void addReports(org.netbeans.modules.maven.api.problem.ProblemReport[])
@@ -1819,6 +1971,7 @@ cons protected init(org.netbeans.api.project.Project,org.netbeans.api.progress.P
 fld protected final static java.lang.String PRJ_EXECUTE = "project-execute"
 fld protected final static java.lang.String SESSION_EXECUTE = "session-execute"
 fld protected java.util.HashMap<java.lang.String,java.util.Set<org.netbeans.modules.maven.api.output.OutputProcessor>> processors
+fld protected java.util.HashMap<java.lang.String,java.util.concurrent.atomic.AtomicInteger> id2count
 fld protected java.util.Set<org.netbeans.modules.maven.api.output.NotifyFinishOutputProcessor> toFinishProcessors
 fld protected java.util.Set<org.netbeans.modules.maven.api.output.OutputProcessor> currentProcessors
 fld protected org.netbeans.modules.maven.api.output.OutputVisitor visitor
@@ -1921,16 +2074,19 @@ meth public final void setShowError(boolean)
 meth public final void setTaskDisplayName(java.lang.String)
 meth public final void setUpdateSnapshots(boolean)
 meth public java.lang.String getActionName()
+meth public java.util.Map<? extends java.lang.String,? extends java.lang.String> getOptions()
 meth public org.netbeans.modules.maven.api.execute.RunConfig getPreExecution()
 meth public org.openide.filesystems.FileObject getSelectedFileObject()
 meth public org.openide.util.Lookup getActionContext()
+meth public void addOptions(java.util.Map<java.lang.String,java.lang.String>)
 meth public void reassignMavenProjectFromParent()
 meth public void setActionContext(org.openide.util.Lookup)
 meth public void setActionName(java.lang.String)
 meth public void setFileObject(org.openide.filesystems.FileObject)
+meth public void setOption(java.lang.String,java.lang.String)
 meth public void setPreExecution(org.netbeans.modules.maven.api.execute.RunConfig)
 supr java.lang.Object
-hfds actionContext,actionName,activate,executionDirectory,executionName,goals,interactive,internalProperties,mp,offline,parent,preexecution,project,projectDirectory,properties,reactor,recursive,selectedFO,showDebug,showError,taskName,updateSnapshots
+hfds actionContext,actionName,activate,executionDirectory,executionName,goals,interactive,internalProperties,mp,offline,options,parent,preexecution,project,projectDirectory,properties,reactor,recursive,selectedFO,showDebug,showError,taskName,updateSnapshots
 
 CLSS public org.netbeans.modules.maven.execute.CommandLineOutputHandler
 cons public init(org.openide.windows.InputOutput,org.netbeans.api.project.Project,org.netbeans.api.progress.ProgressHandle,org.netbeans.modules.maven.api.execute.RunConfig,boolean)
@@ -1943,7 +2099,7 @@ meth protected org.openide.windows.InputOutput getIO()
 meth public org.netbeans.modules.maven.execute.cmd.ExecutionEventObject$Tree getExecutionTree()
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
 supr org.netbeans.modules.maven.execute.AbstractOutputHandler
-hfds DOWNLOAD,END_TO_START_Mappings,LOG,PROCESSOR,SEC_MOJO_EXEC,addMojoFold,addProjectFold,contextImpl,currentProject,currentTag,currentTreeNode,executionTree,firstFailure,forkCount,handle,inStackTrace,inp,inputOutput,linePattern,mavenSomethingPlugin,mavencoreurls,outTask,parser,projectCount,reactorFailure,reactorSize,somethingMavenPlugin,stackTraceElement,state,stdOut
+hfds END_TO_START_Mappings,LOG,PROCESSOR,SEC_MOJO_EXEC,addMojoFold,addProjectFold,contextImpl,currentProject,currentTag,currentTreeNode,executionTree,firstFailure,foldsBroken,forkCount,handle,inStackTrace,inp,inputOutput,linePattern,mavenSomethingPlugin,mavencoreurls,outTask,parser,projectCount,reactorFailure,reactorSize,somethingMavenPlugin,stackTraceElement,state,stdOut
 hcls FindByEvents,FindByName,Input,Output,ProgressState
 
 CLSS public static org.netbeans.modules.maven.execute.CommandLineOutputHandler$ContextImpl
@@ -1974,7 +2130,7 @@ meth public java.lang.String convert(java.lang.String,org.openide.util.Lookup)
 meth public java.util.Map<java.lang.String,java.lang.String> createReplacements(java.lang.String,org.openide.util.Lookup)
 meth public static java.util.Map<java.lang.String,java.lang.String> readVariables()
 supr java.lang.Object
-hfds ABSOLUTE_PATH,ARTIFACTID,CLASSNAME,CLASSNAME_EXT,CLASSPATHSCOPE,GROUPID,PACK_CLASSNAME,VARIABLE_PREFIX,project
+hfds ABSOLUTE_PATH,ARTIFACTID,CLASSNAME,CLASSNAME_EXT,CLASSPATHSCOPE,GROUPID,PACK_CLASSNAME,PROJECTS,VARIABLE_PREFIX,project
 
 CLSS public org.netbeans.modules.maven.execute.MavenCommandLineExecutor
 cons public init(org.netbeans.modules.maven.api.execute.RunConfig,org.openide.windows.InputOutput,org.netbeans.modules.maven.execute.AbstractMavenExecutor$TabContext)
@@ -1983,7 +2139,7 @@ meth public boolean cancel()
 meth public static org.openide.execution.ExecutorTask executeMaven(org.netbeans.modules.maven.api.execute.RunConfig,org.openide.windows.InputOutput,org.netbeans.modules.maven.execute.AbstractMavenExecutor$TabContext)
 meth public void run()
 supr org.netbeans.modules.maven.execute.AbstractMavenExecutor
-hfds ENV_JAVAHOME,ENV_PREFIX,INTERNAL_PREFIX,KEY_UUID,LOGGER,NETBEANS_MAVEN_COMMAND_LINE,RP,UPDATE_INDEX_RP,VER17,preProcess,preProcessUUID,process,processUUID
+hfds ENV_JAVAHOME,ENV_PREFIX,ICON_MAVEN_PROJECT,INTERNAL_PREFIX,KEY_UUID,LOGGER,NETBEANS_MAVEN_COMMAND_LINE,RP,UPDATE_INDEX_RP,VER18,preProcess,preProcessUUID,process,processUUID
 hcls WrapperShellConstructor
 
 CLSS public static org.netbeans.modules.maven.execute.MavenCommandLineExecutor$ExecuteMaven
@@ -1992,11 +2148,50 @@ cons public init()
 meth public org.openide.execution.ExecutorTask execute(org.netbeans.modules.maven.api.execute.RunConfig,org.openide.windows.InputOutput,org.netbeans.modules.maven.execute.AbstractMavenExecutor$TabContext)
 supr java.lang.Object
 
+CLSS public org.netbeans.modules.maven.execute.MavenCommandLineOptions
+cons public init()
+meth public static boolean optionRequiresValue(java.lang.String)
+supr java.lang.Object
+hfds OPTIONS_WITH_VALUES
+
 CLSS public abstract interface org.netbeans.modules.maven.execute.MavenExecutor
 intf java.lang.Runnable
 meth public abstract org.openide.windows.InputOutput getInputOutput()
 meth public abstract void addInitialMessage(java.lang.String,org.openide.windows.OutputListener)
 meth public abstract void setTask(org.openide.execution.ExecutorTask)
+
+CLSS public org.netbeans.modules.maven.execute.MavenProxySupport
+cons public init(org.netbeans.api.project.Project)
+innr public final static !enum Status
+innr public final static ProxyResult
+meth public java.util.concurrent.CompletableFuture<org.netbeans.modules.maven.execute.MavenProxySupport$ProxyResult> checkProxySettings()
+supr java.lang.Object
+hfds FILENAME_BASE_SETTINGS,FILENAME_SETTINGS,FILENAME_SETTINGS_EXT,FILENAME_SUFFIX_OLD,ICON_MAVEN_PROJECT,LOG,PORT_DEFAULT_HTTP,PORT_DEFAULT_HTTPS,PROBE_URI_STRING,PROXY_PROBE_TIMEOUT,SUFFIX_NEW_PROXY,SUFFIX_NONE_PROXY,TAG_ACTIVE_END,TAG_ACTIVE_START,TAG_NAME_ACTIVE,TAG_PROXIES,TAG_PROXY,TAG_SETTINGS,acknowledgedResults
+hcls LineAndColumn,Processor,ProxyInfo,TagInfo,TextInfo,XppDelegate
+
+CLSS public final static org.netbeans.modules.maven.execute.MavenProxySupport$ProxyResult
+ outer org.netbeans.modules.maven.execute.MavenProxySupport
+cons public init(org.netbeans.modules.maven.execute.MavenProxySupport$Status,java.net.Proxy)
+cons public init(org.netbeans.modules.maven.execute.MavenProxySupport$Status,java.net.Proxy,java.lang.String,java.lang.String,java.lang.String,int,boolean,org.apache.maven.settings.Settings)
+meth public java.io.IOException getException()
+meth public java.lang.String getProxySpec()
+meth public java.lang.String getToolProxy()
+meth public java.net.Proxy getProxy()
+meth public org.netbeans.modules.maven.execute.BeanRunConfig configure(org.netbeans.modules.maven.execute.BeanRunConfig) throws java.io.IOException
+meth public org.netbeans.modules.maven.execute.MavenProxySupport$Status getStatus()
+supr java.lang.Object
+hfds FMT_PROXY_HOST,FMT_PROXY_PORT,adoc,exception,fileLookup,mavenSettings,nonDefaultPort,proxy,proxyHost,proxyPort,proxySpec,settingsDir,settingsEditor,settingsFileName,settingsLineDoc,status,textInfo,toolProxy
+
+CLSS public final static !enum org.netbeans.modules.maven.execute.MavenProxySupport$Status
+ outer org.netbeans.modules.maven.execute.MavenProxySupport
+fld public final static org.netbeans.modules.maven.execute.MavenProxySupport$Status ABORT
+fld public final static org.netbeans.modules.maven.execute.MavenProxySupport$Status CONTINUE
+fld public final static org.netbeans.modules.maven.execute.MavenProxySupport$Status OVERRIDE
+fld public final static org.netbeans.modules.maven.execute.MavenProxySupport$Status RECONFIGURED
+fld public final static org.netbeans.modules.maven.execute.MavenProxySupport$Status UNKNOWN
+meth public static org.netbeans.modules.maven.execute.MavenProxySupport$Status valueOf(java.lang.String)
+meth public static org.netbeans.modules.maven.execute.MavenProxySupport$Status[] values()
+supr java.lang.Enum<org.netbeans.modules.maven.execute.MavenProxySupport$Status>
 
 CLSS public final org.netbeans.modules.maven.execute.ModelRunConfig
 cons public init(org.netbeans.api.project.Project,org.netbeans.modules.maven.execute.model.NetbeansActionMapping,java.lang.String,org.openide.filesystems.FileObject,org.openide.util.Lookup,boolean)
@@ -2070,7 +2265,7 @@ cons public init()
 intf java.io.Serializable
 meth public java.lang.String getModelEncoding()
 meth public java.lang.String getPackaging()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.List<org.netbeans.modules.maven.execute.model.NetbeansActionMapping> getActions()
 meth public java.util.List<org.netbeans.modules.maven.execute.model.NetbeansActionProfile> getProfiles()
 meth public void addAction(org.netbeans.modules.maven.execute.model.NetbeansActionMapping)
@@ -2080,7 +2275,7 @@ meth public void removeProfile(org.netbeans.modules.maven.execute.model.Netbeans
 meth public void setActions(java.util.List<org.netbeans.modules.maven.execute.model.NetbeansActionMapping>)
 meth public void setModelEncoding(java.lang.String)
 meth public void setPackaging(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setProfiles(java.util.List<org.netbeans.modules.maven.execute.model.NetbeansActionProfile>)
 supr java.lang.Object
 hfds actions,modelEncoding,packaging,profiles
@@ -2098,13 +2293,16 @@ meth public java.lang.String getReactor()
 meth public java.util.List<java.lang.String> getActivatedProfiles()
 meth public java.util.List<java.lang.String> getGoals()
 meth public java.util.List<java.lang.String> getPackagings()
+meth public java.util.Map<java.lang.String,java.lang.String> getOptions()
 meth public java.util.Map<java.lang.String,java.lang.String> getProperties()
 meth public void addActivatedProfile(java.lang.String)
 meth public void addGoal(java.lang.String)
+meth public void addOption(java.lang.String,java.lang.String)
 meth public void addPackaging(java.lang.String)
 meth public void addProperty(java.lang.String,java.lang.String)
 meth public void removeActivatedProfile(java.lang.String)
 meth public void removeGoal(java.lang.String)
+meth public void removeOption(java.lang.String)
 meth public void removePackaging(java.lang.String)
 meth public void setActionName(java.lang.String)
 meth public void setActivatedProfiles(java.util.List<java.lang.String>)
@@ -2112,13 +2310,14 @@ meth public void setBasedir(java.lang.String)
 meth public void setDisplayName(java.lang.String)
 meth public void setGoals(java.util.List<java.lang.String>)
 meth public void setModelEncoding(java.lang.String)
+meth public void setOptions(java.util.Map<java.lang.String,java.lang.String>)
 meth public void setPackagings(java.util.List<java.lang.String>)
 meth public void setPreAction(java.lang.String)
 meth public void setProperties(java.util.Map<java.lang.String,java.lang.String>)
 meth public void setReactor(java.lang.String)
 meth public void setRecursive(boolean)
 supr java.lang.Object
-hfds actionName,activatedProfiles,basedir,displayName,goals,modelEncoding,packagings,preAction,properties,reactor,recursive
+hfds actionName,activatedProfiles,basedir,displayName,goals,modelEncoding,options,packagings,preAction,properties,reactor,recursive
 
 CLSS public org.netbeans.modules.maven.execute.model.NetbeansActionProfile
 cons public init()
@@ -2143,18 +2342,18 @@ supr java.lang.Object
 CLSS public org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter
 cons public init()
 innr public Counter
-meth protected org.jdom.Element findAndReplaceProperties(org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom.Element,java.lang.String,java.util.Map)
-meth protected org.jdom.Element findAndReplaceSimpleElement(org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom.Element,java.lang.String,java.lang.String,java.lang.String)
-meth protected org.jdom.Element findAndReplaceSimpleLists(org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom.Element,java.util.Collection,java.lang.String,java.lang.String)
-meth protected org.jdom.Element findAndReplaceXpp3DOM(org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom.Element,java.lang.String,org.codehaus.plexus.util.xml.Xpp3Dom)
-meth protected org.jdom.Element updateElement(org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom.Element,java.lang.String,boolean)
-meth protected void insertAtPreferredLocation(org.jdom.Element,org.jdom.Element,org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter)
-meth protected void iterate2NetbeansActionMapping(org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom.Element,java.util.Collection,java.lang.String)
-meth protected void replaceXpp3DOM(org.jdom.Element,org.codehaus.plexus.util.xml.Xpp3Dom,org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter)
-meth protected void updateActionToGoalMapping(org.netbeans.modules.maven.execute.model.ActionToGoalMapping,java.lang.String,org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom.Element)
-meth protected void updateNetbeansActionMapping(org.netbeans.modules.maven.execute.model.NetbeansActionMapping,java.lang.String,org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom.Element)
-meth public void write(org.netbeans.modules.maven.execute.model.ActionToGoalMapping,org.jdom.Document,java.io.OutputStreamWriter) throws java.io.IOException
-meth public void write(org.netbeans.modules.maven.execute.model.ActionToGoalMapping,org.jdom.Document,java.io.Writer,org.jdom.output.Format) throws java.io.IOException
+meth protected org.jdom2.Element findAndReplaceProperties(org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom2.Element,java.lang.String,java.util.Map)
+meth protected org.jdom2.Element findAndReplaceSimpleElement(org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom2.Element,java.lang.String,java.lang.String,java.lang.String)
+meth protected org.jdom2.Element findAndReplaceSimpleLists(org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom2.Element,java.util.Collection,java.lang.String,java.lang.String)
+meth protected org.jdom2.Element findAndReplaceXpp3DOM(org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom2.Element,java.lang.String,org.codehaus.plexus.util.xml.Xpp3Dom)
+meth protected org.jdom2.Element updateElement(org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom2.Element,java.lang.String,boolean)
+meth protected void insertAtPreferredLocation(org.jdom2.Element,org.jdom2.Element,org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter)
+meth protected void iterate2NetbeansActionMapping(org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom2.Element,java.util.Collection,java.lang.String)
+meth protected void replaceXpp3DOM(org.jdom2.Element,org.codehaus.plexus.util.xml.Xpp3Dom,org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter)
+meth protected void updateActionToGoalMapping(org.netbeans.modules.maven.execute.model.ActionToGoalMapping,java.lang.String,org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom2.Element)
+meth protected void updateNetbeansActionMapping(org.netbeans.modules.maven.execute.model.NetbeansActionMapping,java.lang.String,org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom2.Element)
+meth public void write(org.netbeans.modules.maven.execute.model.ActionToGoalMapping,org.jdom2.Document,java.io.OutputStreamWriter) throws java.io.IOException
+meth public void write(org.netbeans.modules.maven.execute.model.ActionToGoalMapping,org.jdom2.Document,java.io.Writer,org.jdom2.output.Format) throws java.io.IOException
 supr java.lang.Object
 hfds factory,lineSeparator
 
@@ -2191,6 +2390,193 @@ hfds NAMESPACE
 
 CLSS public abstract interface org.netbeans.modules.maven.model.ModelOperation<%0 extends org.netbeans.modules.xml.xam.dom.AbstractDocumentModel<? extends org.netbeans.modules.xml.xam.dom.DocumentComponent<?>>>
 meth public abstract void performOperation({org.netbeans.modules.maven.model.ModelOperation%0})
+
+CLSS public final org.netbeans.modules.maven.options.DontShowAgainSettings
+meth protected final java.util.prefs.Preferences getPreferences()
+meth public boolean showWarningAboutApplicationCoS()
+meth public boolean showWarningAboutBuildWithDependencies()
+meth public static org.netbeans.modules.maven.options.DontShowAgainSettings getDefault()
+meth public void dontShowWarningAboutBuildWithDependenciesAnymore()
+meth public void dontshowWarningAboutApplicationCoSAnymore()
+supr java.lang.Object
+hfds INSTANCE
+
+CLSS public org.netbeans.modules.maven.options.GlobalOptionsPanel
+cons public init()
+supr javax.swing.JPanel
+hfds descMap,jList1,jScrollPane1,jScrollPane2,jTextArea1,lblOptions
+
+CLSS public final org.netbeans.modules.maven.options.MavenCommandSettings
+fld public final static java.lang.String COMMAND_CREATE_ARCHETYPENG = "createArchetypeNG"
+fld public final static java.lang.String COMMAND_INSTALL_FILE = "installFile"
+fld public final static java.lang.String COMMAND_SCM_CHECKOUT = "scmCheckout"
+meth protected final java.lang.String getProperty(java.lang.String)
+meth protected final java.lang.String putProperty(java.lang.String,java.lang.String)
+meth protected final java.util.prefs.Preferences getPreferences()
+meth public java.lang.String getCommand(java.lang.String)
+meth public static org.netbeans.modules.maven.options.MavenCommandSettings getDefault()
+supr java.lang.Object
+hfds INSTANCE
+
+CLSS public org.netbeans.modules.maven.options.MavenGroupCategory
+cons public init()
+intf org.netbeans.spi.project.ui.support.ProjectCustomizer$CompositeCategoryProvider
+meth public javax.swing.JComponent createComponent(org.netbeans.spi.project.ui.support.ProjectCustomizer$Category,org.openide.util.Lookup)
+meth public org.netbeans.spi.project.ui.support.ProjectCustomizer$Category createCategory(org.openide.util.Lookup)
+supr java.lang.Object
+
+CLSS public org.netbeans.modules.maven.options.MavenGroupPanel
+meth public void applyValues(org.netbeans.api.project.ui.ProjectGroup)
+supr javax.swing.JPanel
+hfds SEPARATOR,category,comMavenHome,globalMavenValue,lastSelected,lblCommandLine,lblExternalVersion,listItemChangedListener,mavenHomeDataModel,mavenRuntimeHome,predefinedRuntimes,userDefinedMavenRuntimes
+hcls ComboBoxRenderer
+
+CLSS public org.netbeans.modules.maven.options.MavenOptionController
+cons public init()
+fld public final static java.lang.String OPTIONS_SUBPATH = "Maven"
+fld public final static java.lang.String TEMPLATE = "<?xml version=\u00221.0\u0022 encoding=\u0022UTF-8\u0022?><settings xmlns=\u0022http://maven.apache.org/POM/4.0.0\u0022 xmlns:xsi=\u0022http://www.w3.org/2001/XMLSchema-instance\u0022  xsi:schemaLocation=\u0022http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd\u0022></settings>"
+meth public boolean isChanged()
+meth public boolean isValid()
+meth public javax.swing.JComponent getComponent(org.openide.util.Lookup)
+meth public org.openide.util.HelpCtx getHelpCtx()
+meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
+meth public void applyChanges()
+meth public void cancel()
+meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
+meth public void update()
+supr org.netbeans.spi.options.OptionsPanelController
+hfds listeners,panel,setts
+
+CLSS public final org.netbeans.modules.maven.options.MavenSettings
+fld public final static java.lang.String PROP_NETWORK_PROXY = "networkProxy"
+fld public final static java.lang.String PROP_PROJECTNODE_NAME_PATTERN = "project.displayName"
+innr public final static !enum DownloadStrategy
+innr public final static !enum OutputTabName
+meth public boolean isAlwaysShowOutput()
+meth public boolean isCollapseSuccessFolds()
+meth public boolean isInteractive()
+meth public boolean isOutputTabShowConfig()
+meth public boolean isPreferMavenWrapper()
+meth public boolean isReuseOutputTabs()
+meth public boolean isShowDebug()
+meth public boolean isShowErrors()
+meth public boolean isShowLoggingLevel()
+meth public boolean isSkipTests()
+meth public boolean isUpdateSnapshots()
+meth public boolean isUseBestMaven()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public boolean isUseBestMavenAltLocation()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public boolean isVMOptionsWrap()
+meth public java.lang.Boolean isOffline()
+meth public java.lang.String getBestMavenAltLocation()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public java.lang.String getDefaultJdk()
+meth public java.lang.String getDefaultOptions()
+meth public java.lang.String getLastArchetypeGroupId()
+meth public java.lang.String getLastArchetypeVersion()
+meth public java.lang.String getProjectNodeNamePattern()
+meth public java.util.List<java.lang.String> getUserDefinedMavenRuntimes()
+meth public org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy getBinaryDownloadStrategy()
+meth public org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy getJavadocDownloadStrategy()
+meth public org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy getSourceDownloadStrategy()
+meth public org.netbeans.modules.maven.options.MavenSettings$OutputTabName getOutputTabName()
+meth public org.netbeans.modules.maven.options.NetworkProxySettings getNetworkProxy()
+meth public static boolean isMavenDaemon(java.nio.file.Path)
+meth public static java.lang.String getCommandLineMavenVersion()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public static java.lang.String getCommandLineMavenVersion(java.io.File)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public static java.lang.String getDefaultExternalMavenRuntime()
+meth public static org.netbeans.modules.maven.options.MavenSettings getDefault()
+meth public void addWeakPropertyChangeListener(java.beans.PropertyChangeListener)
+meth public void setAlwaysShowOutput(boolean)
+meth public void setBestMavenAltLocation(java.lang.String)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public void setBinaryDownloadStrategy(org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy)
+meth public void setCollapseSuccessFolds(boolean)
+meth public void setDefaultJdk(java.lang.String)
+meth public void setDefaultOptions(java.lang.String)
+meth public void setJavadocDownloadStrategy(org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy)
+meth public void setLastArchetypeGroupId(java.lang.String)
+meth public void setLastArchetypeVersion(java.lang.String)
+meth public void setMavenRuntimes(java.util.List<java.lang.String>)
+meth public void setNetworkProxy(org.netbeans.modules.maven.options.NetworkProxySettings)
+meth public void setOutputTabName(org.netbeans.modules.maven.options.MavenSettings$OutputTabName)
+meth public void setOutputTabShowConfig(boolean)
+meth public void setPreferMavenWrapper(boolean)
+meth public void setProjectNodeNamePattern(java.lang.String)
+meth public void setReuseOutputTabs(boolean)
+meth public void setShowLoggingLevel(boolean)
+meth public void setSkipTests(boolean)
+meth public void setSourceDownloadStrategy(org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy)
+meth public void setUseBestMaven(boolean)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public void setUseBestMavenAltLocation(boolean)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public void setVMOptionsWrap(boolean)
+supr java.lang.Object
+hfds DEFAULT_PROXY_BEHAVIOUR,INSTANCE,MAVEN_CORE_JAR_PATTERN,PROP_ALWAYS_OUTPUT,PROP_BINARY_DOWNLOAD,PROP_CHECKSUM_POLICY,PROP_COLLAPSE_FOLDS,PROP_DEBUG,PROP_DEFAULT_JDK,PROP_DEFAULT_OPTIONS,PROP_ERRORS,PROP_FAILURE_BEHAVIOUR,PROP_JAVADOC_DOWNLOAD,PROP_LAST_ARCHETYPE_GROUPID,PROP_LAST_ARCHETYPE_VERSION,PROP_MAVEN_RUNTIMES,PROP_OUTPUT_TAB_CONFIG,PROP_OUTPUT_TAB_NAME,PROP_PLUGIN_POLICY,PROP_PREFER_WRAPPER,PROP_REUSE_OUTPUT,PROP_SHOW_LOGGING_LEVEL,PROP_SKIP_TESTS,PROP_SOURCE_DOWNLOAD,PROP_USE_REGISTRY,PROP_VM_OPTIONS_WRAP,SYSPROP_DEFAULT_PROXY_BEHAVIOUR,listeners
+
+CLSS public final static !enum org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy
+ outer org.netbeans.modules.maven.options.MavenSettings
+fld public final static org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy EVERY_OPEN
+fld public final static org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy FIRST_OPEN
+fld public final static org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy NEVER
+meth public static org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy valueOf(java.lang.String)
+meth public static org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy[] values()
+supr java.lang.Enum<org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy>
+
+CLSS public final static !enum org.netbeans.modules.maven.options.MavenSettings$OutputTabName
+ outer org.netbeans.modules.maven.options.MavenSettings
+fld public final static org.netbeans.modules.maven.options.MavenSettings$OutputTabName PROJECT_ID
+fld public final static org.netbeans.modules.maven.options.MavenSettings$OutputTabName PROJECT_NAME
+meth public static org.netbeans.modules.maven.options.MavenSettings$OutputTabName valueOf(java.lang.String)
+meth public static org.netbeans.modules.maven.options.MavenSettings$OutputTabName[] values()
+supr java.lang.Enum<org.netbeans.modules.maven.options.MavenSettings$OutputTabName>
+
+CLSS public final org.netbeans.modules.maven.options.MavenVersionSettings
+fld public final static java.lang.String VERSION_COMPILER = "maven-compiler-plugin"
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+fld public final static java.lang.String VERSION_RESOURCES = "maven-resources-plugin"
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public java.lang.String getNBVersion()
+meth public java.lang.String getVersion(java.lang.String)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public java.lang.String getVersion(java.lang.String,java.lang.String)
+meth public static org.netbeans.modules.maven.options.MavenVersionSettings getDefault()
+supr java.lang.Object
+hfds INSTANCE,fallback
+
+CLSS public final !enum org.netbeans.modules.maven.options.NetworkProxySettings
+fld public final static org.netbeans.modules.maven.options.NetworkProxySettings ASK
+fld public final static org.netbeans.modules.maven.options.NetworkProxySettings IGNORE
+fld public final static org.netbeans.modules.maven.options.NetworkProxySettings NOTICE
+fld public final static org.netbeans.modules.maven.options.NetworkProxySettings OVERRIDE
+fld public final static org.netbeans.modules.maven.options.NetworkProxySettings UPDATE
+meth public java.lang.String toString()
+meth public static boolean allowProxyOverride()
+meth public static org.netbeans.modules.maven.options.NetworkProxySettings valueOf(java.lang.String)
+meth public static org.netbeans.modules.maven.options.NetworkProxySettings[] values()
+supr java.lang.Enum<org.netbeans.modules.maven.options.NetworkProxySettings>
+hfds BRANDING_API_OVERRIDE_ENABLED,displayName
+
+CLSS public org.netbeans.modules.maven.options.SettingsPanel
+fld public final static int RUNTIME_COUNT_LIMIT = 5
+fld public final static java.lang.String BUNDLED_RUNTIME_VERSION
+meth public static void showGlobalMavenGoalCustomizer()
+meth public void applyValues()
+meth public void setValues()
+supr javax.swing.JPanel
+hfds AVAILABLE_OPTIONS,RP,SEPARATOR,bgIndexFilter,btnGoals,btnIndex,btnOptions,buttonGroup1,cbAlwaysShow,cbCollapseSuccessFolds,cbEnableIndexDownload,cbEnableIndexing,cbEnableMultiThreading,cbNetworkProxy,cbOutputTabShowConfig,cbPreferWrapper,cbProjectNodeNameMode,cbReuse,cbShowInfoLevel,cbSkipTests,changed,comBinaries,comIndex,comJavadoc,comJdkHome,comManageJdks,comMavenHome,comSource,completer,controller,jLabel3,jLabel4,jScrollPane1,jdkHomeDataModel,lastSelected,lbNetworkSettings,lblBinaries,lblCategory,lblCommandLine,lblExternalVersion,lblIndex,lblIndexFilter,lblJavadoc,lblJdkHome,lblOptions,lblOutputTab,lblSource,listItemChangedListener,listener,lstCategory,mavenHomeDataModel,mavenRuntimeHome,permissionsTable,pnlAppearance,pnlCards,pnlDependencies,pnlExecution,pnlIndex,predefinedRuntimes,rb2Years,rb5Years,rbFullIndex,rbOutputTabId,rbOutputTabName,txtOptions,txtProjectNodeNameCustomPattern,userDefinedMavenRuntimes,userDefinedMavenRuntimesStored,valid
+hcls ActionListenerImpl,ComboBoxRenderer,DocumentListenerImpl,IndexDownloadPermissionTableModel
+
+CLSS public org.netbeans.modules.maven.options.UnsetProxyChecker
+cons public init()
+intf org.netbeans.modules.maven.api.execute.ExecutionResultChecker
+meth public void executionResult(org.netbeans.modules.maven.api.execute.RunConfig,org.netbeans.modules.maven.api.execute.ExecutionContext,int)
+supr java.lang.Object
+hfds USE_SYSTEM_PROXIES
 
 CLSS public org.netbeans.modules.maven.spi.IconResources
 fld public final static java.lang.String ARTIFACT_ICON = "org/netbeans/modules/maven/ArtifactIcon.png"
@@ -2373,7 +2759,7 @@ hfds fromDepMng,nbvi
 
 CLSS public org.netbeans.modules.maven.spi.nodes.NodeUtils
 fld public final static java.lang.String ICON_DEPENDENCY_JAR = "org/netbeans/modules/maven/spi/nodes/DependencyJar.gif"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.awt.Image getTreeFolderIcon(boolean)
 meth public static org.openide.filesystems.FileObject readOnlyLocalRepositoryFile(org.openide.filesystems.FileObject)
 meth public static void openPomFile(org.openide.filesystems.FileObject)
@@ -2393,6 +2779,33 @@ meth public abstract void resetCachedValue()
 
 CLSS public abstract interface org.netbeans.modules.maven.spi.queries.JavaLikeRootProvider
 meth public abstract java.lang.String kind()
+
+CLSS public abstract org.netbeans.spi.options.OptionsPanelController
+cons public init()
+fld public final static java.lang.String PROP_CHANGED = "changed"
+fld public final static java.lang.String PROP_HELP_CTX = "helpCtx"
+fld public final static java.lang.String PROP_VALID = "valid"
+innr public abstract interface static !annotation ContainerRegistration
+innr public abstract interface static !annotation Keywords
+innr public abstract interface static !annotation KeywordsRegistration
+innr public abstract interface static !annotation SubRegistration
+innr public abstract interface static !annotation TopLevelRegistration
+meth protected void setCurrentSubcategory(java.lang.String)
+meth public abstract boolean isChanged()
+meth public abstract boolean isValid()
+meth public abstract javax.swing.JComponent getComponent(org.openide.util.Lookup)
+meth public abstract org.openide.util.HelpCtx getHelpCtx()
+meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeListener)
+meth public abstract void applyChanges()
+meth public abstract void cancel()
+meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
+meth public abstract void update()
+meth public final static org.netbeans.spi.options.OptionsPanelController createAdvanced(java.lang.String)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public final void setSubcategory(java.lang.String)
+meth public org.openide.util.Lookup getLookup()
+meth public void handleSuccessfulSearch(java.lang.String,java.util.List<java.lang.String>)
+supr java.lang.Object
 
 CLSS public abstract interface org.netbeans.spi.project.LookupMerger<%0 extends java.lang.Object>
 innr public abstract interface static !annotation Registration
@@ -2433,20 +2846,47 @@ meth public abstract void addNotify()
 meth public abstract void removeChangeListener(javax.swing.event.ChangeListener)
 meth public abstract void removeNotify()
 
+CLSS public final org.netbeans.spi.project.ui.support.ProjectCustomizer
+innr public abstract interface static CategoryComponentProvider
+innr public abstract interface static CompositeCategoryProvider
+innr public final static Category
+meth public static java.awt.Dialog createCustomizerDialog(java.lang.String,org.openide.util.Lookup,java.lang.String,java.awt.event.ActionListener,java.awt.event.ActionListener,org.openide.util.HelpCtx)
+ anno 4 org.netbeans.api.annotations.common.NonNull()
+ anno 5 org.netbeans.api.annotations.common.NullAllowed()
+meth public static java.awt.Dialog createCustomizerDialog(java.lang.String,org.openide.util.Lookup,java.lang.String,java.awt.event.ActionListener,org.openide.util.HelpCtx)
+ anno 4 org.netbeans.api.annotations.common.NonNull()
+meth public static java.awt.Dialog createCustomizerDialog(org.netbeans.spi.project.ui.support.ProjectCustomizer$Category[],org.netbeans.spi.project.ui.support.ProjectCustomizer$CategoryComponentProvider,java.lang.String,java.awt.event.ActionListener,java.awt.event.ActionListener,org.openide.util.HelpCtx)
+ anno 4 org.netbeans.api.annotations.common.NonNull()
+ anno 5 org.netbeans.api.annotations.common.NullAllowed()
+meth public static java.awt.Dialog createCustomizerDialog(org.netbeans.spi.project.ui.support.ProjectCustomizer$Category[],org.netbeans.spi.project.ui.support.ProjectCustomizer$CategoryComponentProvider,java.lang.String,java.awt.event.ActionListener,org.openide.util.HelpCtx)
+ anno 4 org.netbeans.api.annotations.common.NonNull()
+meth public static javax.swing.ComboBoxModel encodingModel(java.lang.String)
+meth public static javax.swing.ListCellRenderer encodingRenderer()
+supr java.lang.Object
+hfds LOG
+hcls DelegateCategoryProvider,EncodingModel,EncodingRenderer
+
+CLSS public abstract interface static org.netbeans.spi.project.ui.support.ProjectCustomizer$CompositeCategoryProvider
+ outer org.netbeans.spi.project.ui.support.ProjectCustomizer
+innr public abstract interface static !annotation Registration
+innr public abstract interface static !annotation Registrations
+meth public abstract javax.swing.JComponent createComponent(org.netbeans.spi.project.ui.support.ProjectCustomizer$Category,org.openide.util.Lookup)
+meth public abstract org.netbeans.spi.project.ui.support.ProjectCustomizer$Category createCategory(org.openide.util.Lookup)
+
 CLSS public org.openide.nodes.AbstractNode
 cons public init(org.openide.nodes.Children)
 cons public init(org.openide.nodes.Children,org.openide.util.Lookup)
 fld protected java.text.MessageFormat displayFormat
 fld protected org.openide.util.actions.SystemAction[] systemActions
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected final org.openide.nodes.CookieSet getCookieSet()
 meth protected final org.openide.nodes.Sheet getSheet()
 meth protected final void setCookieSet(org.openide.nodes.CookieSet)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected final void setSheet(org.openide.nodes.Sheet)
 meth protected org.openide.nodes.Sheet createSheet()
 meth protected org.openide.util.actions.SystemAction[] createActions()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected void createPasteTypes(java.awt.datatransfer.Transferable,java.util.List<org.openide.util.datatransfer.PasteType>)
 meth public <%0 extends org.openide.nodes.Node$Cookie> {%%0} getCookie(java.lang.Class<{%%0}>)
 meth public boolean canCopy()
@@ -2468,15 +2908,15 @@ meth public org.openide.nodes.Node$Handle getHandle()
 meth public org.openide.nodes.Node$PropertySet[] getPropertySets()
 meth public org.openide.util.HelpCtx getHelpCtx()
 meth public org.openide.util.actions.SystemAction getDefaultAction()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.util.actions.SystemAction[] getActions()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.util.datatransfer.NewType[] getNewTypes()
 meth public org.openide.util.datatransfer.PasteType getDropType(java.awt.datatransfer.Transferable,int,int)
 meth public void setDefaultAction(org.openide.util.actions.SystemAction)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setIconBase(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setName(java.lang.String)
 supr org.openide.nodes.Node
 hfds DEFAULT_ICON,DEFAULT_ICON_BASE,DEFAULT_ICON_EXTENSION,ICON_BASE,NO_NEW_TYPES,NO_PASTE_TYPES,OPENED_ICON_BASE,iconBase,iconExtension,icons,lookup,overridesGetDefaultAction,preferredAction,sheet,sheetCookieL
@@ -2549,15 +2989,15 @@ meth public java.lang.String toString()
 meth public javax.swing.Action getPreferredAction()
 meth public javax.swing.Action[] getActions(boolean)
 meth public org.openide.util.actions.SystemAction getDefaultAction()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.util.actions.SystemAction[] getActions()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.util.actions.SystemAction[] getContextActions()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void destroy() throws java.io.IOException
 meth public void setDisplayName(java.lang.String)
 meth public void setHidden(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setName(java.lang.String)
 meth public void setShortDescription(java.lang.String)
 supr java.beans.FeatureDescriptor
@@ -2569,10 +3009,10 @@ meth public abstract boolean cancel()
 
 CLSS public final org.openide.util.HelpCtx
 cons public init(java.lang.Class<?>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String)
 cons public init(java.net.URL)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.openide.util.HelpCtx DEFAULT_HELP
 innr public abstract interface static Displayer
 innr public abstract interface static Provider
@@ -2615,15 +3055,15 @@ meth public abstract org.openide.util.Lookup getLookup()
 
 CLSS public abstract interface org.openide.windows.InputOutput
 fld public final static java.io.Reader nullReader
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.openide.windows.InputOutput NULL
 fld public final static org.openide.windows.OutputWriter nullWriter
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract boolean isClosed()
 meth public abstract boolean isErrSeparated()
 meth public abstract boolean isFocusTaken()
 meth public abstract java.io.Reader flushReader()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.io.Reader getIn()
 meth public abstract org.openide.windows.OutputWriter getErr()
 meth public abstract org.openide.windows.OutputWriter getOut()

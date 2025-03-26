@@ -19,7 +19,6 @@
 package org.netbeans.core.ui.options.filetypes;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.prefs.Preferences;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -353,7 +352,7 @@ private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             cbType.setEnabled(true);
         }
         newItems.add(newExtensionPanel.getExtension());
-        Collections.sort(newItems, String.CASE_INSENSITIVE_ORDER);
+        newItems.sort(String.CASE_INSENSITIVE_ORDER);
         cbExtension.removeAllItems();
         for (String item : newItems) {
             cbExtension.addItem(item);

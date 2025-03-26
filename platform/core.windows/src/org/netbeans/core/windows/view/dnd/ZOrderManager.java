@@ -197,12 +197,15 @@ public final class ZOrderManager extends WindowAdapter {
 
     /*** Implementation of WindowListener ******/
 
+    @Override
     public void windowOpened(WindowEvent e) {
     }
 
+    @Override
     public void windowClosed(WindowEvent e) {
     }
 
+    @Override
     public void windowActivated(WindowEvent e) {
         logger.entering(getClass().getName(), "windowActivated");
 
@@ -216,6 +219,7 @@ public final class ZOrderManager extends WindowAdapter {
         }
     }
 
+    @Override
     public void windowDeactivated(WindowEvent e) {
     }
 

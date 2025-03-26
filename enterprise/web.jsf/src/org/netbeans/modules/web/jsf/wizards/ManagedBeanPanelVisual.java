@@ -34,14 +34,14 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.web.api.webmodule.WebModule;
-import org.netbeans.modules.web.beans.CdiUtil;
 import org.netbeans.modules.web.jsf.JSFConfigUtilities;
 import org.netbeans.modules.web.jsf.JSFUtils;
 import org.netbeans.modules.web.jsf.api.ConfigurationUtils;
 import org.netbeans.modules.web.jsf.api.facesmodel.FacesConfig;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
 import org.netbeans.modules.web.jsf.api.facesmodel.ManagedBean;
 import org.netbeans.modules.web.jsf.wizards.ManagedBeanIterator.NamedScope;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.wizards.Utilities;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
@@ -66,6 +66,7 @@ public class ManagedBeanPanelVisual extends javax.swing.JPanel implements HelpCt
         boolean addToFacesConfig = false;
 
         WebModule wm = WebModule.getWebModule(proj.getProjectDirectory());
+        Profile profile = null;
         if (wm != null){
             String[] configFiles = JSFConfigUtilities.getConfigFiles(wm);
             if (configFiles.length > 0){
@@ -75,7 +76,7 @@ public class ManagedBeanPanelVisual extends javax.swing.JPanel implements HelpCt
                     if (documentBase.getFileObject(configFiles[i]) != null)
                         files.add(configFiles[i]);
                 }
-                configFiles = (String[])files.toArray(new String[files.size()]);
+                configFiles = (String[])files.toArray(new String[0]);
             }
             jComboBoxConfigFile.setModel(new javax.swing.DefaultComboBoxModel(configFiles));
             //No config files found
@@ -83,7 +84,7 @@ public class ManagedBeanPanelVisual extends javax.swing.JPanel implements HelpCt
                 addToConfigCheckBox.setEnabled(false);
                 jComboBoxConfigFile.setEnabled(false);
             } else {
-                Profile profile = wm.getJ2eeProfile();
+                profile = wm.getJ2eeProfile();
                 if (profile != null && !profile.isAtLeast(Profile.JAVA_EE_6_WEB)) {
                     addToFacesConfig = true;
                     addToConfigCheckBox.setSelected(true);
@@ -93,7 +94,7 @@ public class ManagedBeanPanelVisual extends javax.swing.JPanel implements HelpCt
             }
         }
         Object[] scopes;
-        CdiUtil cdiUtil = proj.getLookup().lookup(CdiUtil.class);
+        org.netbeans.modules.web.beans.CdiUtil cdiUtil = proj.getLookup().lookup(org.netbeans.modules.web.beans.CdiUtil.class);
         isCDIEnabled = cdiUtil != null && cdiUtil.isCdiEnabled();
         if (isCDIEnabled && !addToFacesConfig) {
             scopes = ManagedBeanIterator.NamedScope.values();
@@ -301,8 +302,8 @@ public class ManagedBeanPanelVisual extends javax.swing.JPanel implements HelpCt
 
         Object scope = jComboBoxScope.getSelectedItem();
         if (scope instanceof NamedScope && scope == NamedScope.FLOW) {
-            JSFVersion jsfVersion = JSFVersion.forWebModule(wm);
-            if (jsfVersion != null && !jsfVersion.isAtLeast(JSFVersion.JSF_2_2)) {
+            JsfVersion jsfVersion = JsfVersionUtils.forWebModule(wm);
+            if (jsfVersion != null && !jsfVersion.isAtLeast(JsfVersion.JSF_2_2)) {
                 wizardDescriptor.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE,
                         Bundle.ManagedBeanPanelVisual_warn_flowScoped_low_version());
                 return false;
@@ -341,7 +342,7 @@ public class ManagedBeanPanelVisual extends javax.swing.JPanel implements HelpCt
         return new HelpCtx("org.netbeans.modules.web.jsf.wizards.ManagedBeanPanelVisual");
     }
 
-    private final Set<ChangeListener> listeners = new HashSet(1);
+    private final Set<ChangeListener> listeners = new HashSet<>(1);
 
     public final void addChangeListener(ChangeListener l) {
         synchronized (listeners) {

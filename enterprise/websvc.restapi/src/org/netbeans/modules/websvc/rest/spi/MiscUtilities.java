@@ -225,8 +225,7 @@ public class MiscUtilities {
     }
 
     public static FileObject getApplicationContextXml(Project project) {
-        J2eeModuleProvider provider = (J2eeModuleProvider) project.getLookup().
-            lookup(J2eeModuleProvider.class);
+        J2eeModuleProvider provider = project.getLookup().lookup(J2eeModuleProvider.class);
         FileObject[] fobjs = provider.getSourceRoots();
 
         if (fobjs.length > 0) {
@@ -423,7 +422,7 @@ public class MiscUtilities {
 
 
     public static Datasource getDatasource(Project p, String jndiName) {
-        J2eeModuleProvider provider = (J2eeModuleProvider) p.getLookup().lookup(J2eeModuleProvider.class);
+        J2eeModuleProvider provider = p.getLookup().lookup(J2eeModuleProvider.class);
 
         try {
             return provider.getConfigSupport().findDatasource(jndiName);

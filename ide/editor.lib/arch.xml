@@ -128,7 +128,7 @@ that they operate without loading other openide classes
 (if they need an implementation class they get it from Lookup).
 </p>
 
-<h4>Hyperlink SPI</h4>
+<h2>Hyperlink SPI</h2>
 <api group="java" name="EditorHyperlinkSPI" type="export" category="devel">
     Hyperlink SPI in <code>org.netbeans.lib.editor.hyperlink.spi</code>
     allows the editors for a particular mime-type to respond to the situation
@@ -286,7 +286,7 @@ mime-type (mentioned in the layer section here as well).
         </question>
 -->
 <answer id="dep-non-nb">
-    <api group="java" name="JAXP" type="import" category="standard" url="http://java.sun.com/xml/jaxp/dist/1.1/docs/api/"> 
+    <api group="java" name="JAXP" type="import" category="standard" url="https://www.oracle.com/java/technologies/jaxp-introduction.html"> 
     Standard XML APIs (DOM, SAX) - distributed with the IDE (in lib/ext/xml-apis*.jar),
     already part of JDK 1.4 and newer).
     </api>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,58 +19,40 @@
     under the License.
 
 -->
-<!-- Generator: Adobe Illustrator 25.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Vector_Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-	 y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#E9F7FF;}
-	.st1{fill:#527C99;}
-	.st2{fill:#FFC36D;}
-	.st3{opacity:0.33;}
-	.st4{fill:#E79B00;}
-	.st5{fill:#CAE3FF;}
-	.st6{fill:#3883CE;}
-	.st7{fill:#FBDC7C;}
-	.st8{fill:#FFDB43;}
-	.st9{fill:none;stroke:#003399;stroke-width:1.375;stroke-miterlimit:10;}
-	.st10{fill:#E8513D;}
-	.st11{fill:#9FCBFF;}
-	.st12{fill:#62707C;}
-	.st13{fill:#7A8896;}
-	.st14{fill:#57BFFF;}
-	.st15{fill:#E69D35;}
-	.st16{fill:#9CFF73;}
-	.st17{fill:none;stroke:#000000;stroke-miterlimit:10;}
-	.st18{fill:#EAEAEA;}
-	.st19{fill:#E57067;}
-	.st20{fill:#94E0EF;}
-	.st21{fill:#4A4A4A;}
-	.st22{fill:#727272;}
-	.st23{fill:#EDEDED;}
-	.st24{fill:#5B5B5B;}
-	.st25{fill:#E9E9E9;}
-	.st26{opacity:0.4;}
-	.st27{opacity:0.15;}
-	.st28{fill:#C3E3FF;}
-	.st29{fill:#0084D3;}
-	.st30{opacity:0.5;fill:#E9F7FF;}
-	.st31{opacity:0.66;}
-</style>
-<g>
-	<polygon class="st0" points="1.25,13.75 1.25,0.25 14.75,0.25 14.75,10.25 10.25,10.25 10.25,13.75 	"/>
-	<g>
-		<path class="st1" d="M14.5,0.5V10h-4H10v0.5v3H1.5v-13H14.5 M15,0H1v14h9.5v-3.5H15V0L15,0z"/>
-	</g>
-</g>
-<g class="st3">
-	<rect x="4" y="3" transform="matrix(-1 -4.469548e-11 4.469548e-11 -1 15 7)" width="7" height="1"/>
-	<rect x="4" y="5" transform="matrix(-1 -4.486867e-11 4.486867e-11 -1 11 11)" width="3" height="1"/>
-	<rect x="4" y="7" transform="matrix(-1 -4.456536e-11 4.456536e-11 -1 10 15)" width="2" height="1"/>
-</g>
-<g>
-	<polygon class="st2" points="16,13 16,8 12,8 12,6 10,6 6,10.5 10,15 12,15 12,13 	"/>
-	<g class="st3">
-		<path d="M11,7v1v1h1h3v3h-3h-1v1v1h-0.551l-3.111-3.5L10.449,7H11 M12,6h-2l-4,4.5l4,4.5h2v-2h4V8h-4V6L12,6z"/>
-	</g>
-</g>
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #5b7b95;
+      }
+
+      .st1 {
+        opacity: .33;
+      }
+
+      .st2 {
+        fill: #ebf6fd;
+      }
+
+      .st3 {
+        fill: #f5c47a;
+      }
+    </style>
+  </defs>
+  <g>
+    <polygon class="st2" points="1.5 13.5 1.5 .5 14.5 .5 14.5 10 10 10 10 13.5 1.5 13.5"/>
+    <path class="st0" d="M14,1v8.5h-4.5v3.5H2V1h12M15,0H1v14h9.5v-3.5h4.5V0h0Z"/>
+  </g>
+  <g class="st1">
+    <rect x="4" y="3" width="7" height="1" transform="translate(15 7) rotate(-180)"/>
+    <rect x="4" y="5" width="3" height="1" transform="translate(11 11) rotate(-180)"/>
+    <rect x="4" y="7" width="2" height="1" transform="translate(10 15) rotate(-180)"/>
+  </g>
+  <g>
+    <polygon class="st3" points="16 13 16 8 12 8 12 6 10 6 6 10.5 10 15 12 15 12 13 16 13"/>
+    <g class="st1">
+      <path d="M11,7v2h4v3h-4v2h-.551l-3.111-3.5,3.111-3.5h.551M12,6h-2l-4,4.5,4,4.5h2v-2h4v-5h-4v-2h0Z"/>
+    </g>
+  </g>
 </svg>

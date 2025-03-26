@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.maven.runjar;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -34,6 +36,9 @@ import org.netbeans.modules.maven.execute.ActionToGoalUtils;
 import org.netbeans.modules.maven.execute.model.ActionToGoalMapping;
 import org.netbeans.modules.maven.execute.model.NetbeansActionMapping;
 import org.netbeans.spi.project.ActionProvider;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.filesystems.URLMapper;
 
 /**
  *
@@ -92,6 +97,11 @@ public final class MavenExecuteUtils {
      */
     public static final String PROFILE_CMD = "profile"; // NOI18N
     
+    /**
+     * Folder on config filesystem that contains "run" goal aliases. 
+     */
+    private static final String RUN_GOALS_CONFIG_ROOT = "Projects/org-netbeans-modules-maven/RunGoals";
+
     /**
      * A helper that can update action mappings based on changes
      * made on the helper instance. Use {@link #createExecutionEnvHelper}
@@ -321,11 +331,47 @@ public final class MavenExecuteUtils {
             if (map == null || map.getGoals() == null) {
                 return false; //#164323
             }
+            if (map.getGoals().isEmpty()) {
+                return true;
+            }
             Iterator it = map.getGoals().iterator();
+            FileObject goalRoot = FileUtil.getConfigFile(RUN_GOALS_CONFIG_ROOT); // NOI18N
             while (it.hasNext()) {
                 String goal = (String) it.next();
-                if (goal.matches("org\\.codehaus\\.mojo\\:exec-maven-plugin\\:(.)+\\:exec") //NOI18N
-                        || goal.indexOf("exec:exec") > -1) { //NOI18N
+                boolean goalFound = (goal.matches("org\\.codehaus\\.mojo\\:exec-maven-plugin\\:(.)+\\:exec") //NOI18N
+                    || goal.contains("exec:exec")); // NOI18N
+                if (!goalFound && goalRoot != null) {
+                    int colon = goal.lastIndexOf(':');
+                    if (colon != -1) {
+                        String pluginId = goal.substring(0, colon);
+                        String goalName = goal.substring(colon + 1);
+                        String[] gav = pluginId.split(":");
+                        
+                        FileObject g = goalRoot.getFileObject(pluginId);
+                        if (g == null && gav.length > 2) {
+                            String justId = gav[0] + ":" + gav[1];
+                            g = goalRoot.getFileObject(justId);
+                        }
+                        if (g != null) {
+                            Object alias = g.getAttribute("alias");
+                            if (alias instanceof String) {
+                                try {
+                                    URL u = new URL(URLMapper.findURL(g, URLMapper.INTERNAL), alias.toString());
+                                    g = URLMapper.findFileObject(u);
+                                } catch (MalformedURLException ex) {
+                                    // expected
+                                }
+                            }
+                        }
+                        if (g != null) {
+                            Object s = g.getAttribute("goals");
+                            if (s instanceof String) {
+                                goalFound = Arrays.asList(s.toString().split(" ")).contains(goalName);
+                            }
+                        }
+                    }
+                }
+                if (goalFound) { //NOI18N
                     if (map.getProperties() != null) {
                         if (map.getProperties().containsKey("exec.args")) {
                             String execArgs = map.getProperties().get("exec.args");
@@ -363,6 +409,10 @@ public final class MavenExecuteUtils {
         
         private void updateAction(NetbeansActionMapping mapping, String debuVMArgs) {
             boolean changed = false;
+            // do not update for actiosn that have empty goals = are disabled.
+            if (mapping.getGoals() == null || mapping.getGoals().isEmpty()) {
+                return;
+            }
             
             if (!oldWorkDir.equals(workDir)) {
                 mapping.addProperty(RUN_WORKDIR, workDir);
@@ -432,7 +482,7 @@ public final class MavenExecuteUtils {
         for (String part : propertySplitter(l, true)) {
             result.add(part);
         }
-        return result.toArray(new String[result.size()]);
+        return result.toArray(new String[0]);
     }
 
     private static boolean isNullOrEmpty(String s) {

@@ -24,8 +24,6 @@ import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
@@ -33,6 +31,7 @@ import javax.swing.JPanel;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.modules.editor.settings.storage.api.EditorSettings;
 import org.netbeans.modules.options.editor.spi.PreferencesCustomizer;
+import org.netbeans.modules.options.util.LanguagesComparator;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.WeakListeners;
 
@@ -80,9 +79,8 @@ public class CodeCompletionOptionsPanel extends JPanel implements PropertyChange
 
             // Languages combobox model
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-            ArrayList<String> mimeTypes = new ArrayList<String>();
-            mimeTypes.addAll(selector.getMimeTypes());
-            Collections.sort(mimeTypes, new LanguagesComparator());
+            ArrayList<String> mimeTypes = new ArrayList<>(selector.getMimeTypes());
+            mimeTypes.sort(LanguagesComparator.INSTANCE);
 
             for (String mimeType : mimeTypes) {
                 model.addElement(mimeType);
@@ -169,17 +167,4 @@ public class CodeCompletionOptionsPanel extends JPanel implements PropertyChange
     private javax.swing.JPanel panel;
     // End of variables declaration//GEN-END:variables
 
-    private static final class LanguagesComparator implements Comparator<String> {
-        public int compare(String mimeType1, String mimeType2) {
-            if (mimeType1.length() == 0)
-                return mimeType2.length() == 0 ? 0 : -1;
-            if (mimeType2.length() == 0)
-                return 1;
-
-            String langName1 = EditorSettings.getDefault().getLanguageName(mimeType1);
-            String langName2 = EditorSettings.getDefault().getLanguageName(mimeType2);
-
-            return langName1.compareTo(langName2);
-        }
-    }
 }

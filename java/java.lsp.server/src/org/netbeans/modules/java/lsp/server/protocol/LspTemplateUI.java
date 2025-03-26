@@ -50,6 +50,7 @@ import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.SourceGroupModifier;
 import org.netbeans.api.templates.CreateDescriptor;
 import org.netbeans.api.templates.FileBuilder;
+import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
 import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
@@ -105,7 +106,7 @@ final class LspTemplateUI {
     }
 
     private CompletableFuture<Object> templateUI(DataFolder templates, NbCodeLanguageClient client, ExecuteCommandParams params) {
-        CompletionStage<DataObject> findTemplate = findTemplate(templates, client);
+        CompletionStage<DataObject> findTemplate = findTemplate(templates, client, params);
         CompletionStage<DataFolder> findTargetFolder = findTargetForTemplate(findTemplate, client, params);
         return findTargetFolder.thenCombine(findTemplate, (target, source) -> {
             final FileObject templateFileObject = source.getPrimaryFile();
@@ -137,8 +138,8 @@ final class LspTemplateUI {
     }
 
     private CompletableFuture<Object> projectUI(DataFolder templates, NbCodeLanguageClient client, ExecuteCommandParams params) {
-        CompletionStage<DataObject> findTemplate = findTemplate(templates, client);
-        CompletionStage<Pair<DataFolder, String>> findTargetFolderAndName = findTargetAndNameForProject(findTemplate, client, params);
+        CompletionStage<DataObject> findTemplate = findTemplate(templates, client, params);
+        CompletionStage<Pair<DataFolder, String>> findTargetFolderAndName = findTargetAndNameForProject(findTemplate, client);
         CompletionStage<Pair<DataObject, String>> findTemplateAndPackage = findTemplate.thenCombine(findPackage(findTargetFolderAndName, client), Pair::of);
         return findTargetFolderAndName.thenCombineAsync(findTemplateAndPackage, (targetAndName, templateAndPackage) -> {
             try {
@@ -199,7 +200,7 @@ final class LspTemplateUI {
         });
     }
 
-    private static CompletionStage<Pair<DataFolder, String>> findTargetAndNameForProject(CompletionStage<DataObject> findTemplate, NbCodeLanguageClient client, ExecuteCommandParams params) {
+    private static CompletionStage<Pair<DataFolder, String>> findTargetAndNameForProject(CompletionStage<DataObject> findTemplate, NbCodeLanguageClient client) {
         return findTemplate.thenCompose(__ -> client.workspaceFolders()).thenCompose(folders -> {
             class VerifyNonExistingFolder implements Function<String, CompletionStage<Pair<DataFolder,String>>> {
                 @Override
@@ -244,7 +245,22 @@ final class LspTemplateUI {
         return suggestion;
     }
 
-    private static CompletionStage<DataObject> findTemplate(DataFolder templates, NbCodeLanguageClient client) {
+    private static CompletionStage<DataObject> findTemplate(DataFolder templates, NbCodeLanguageClient client, ExecuteCommandParams params) {
+        List<Object> args = params.getArguments();
+        if (!args.isEmpty()) {
+            Object arg = args.get(0);
+            String path = arg instanceof JsonPrimitive ? ((JsonPrimitive) arg).getAsString() : arg != null ? arg.toString() : null;
+            if (path != null) {
+                FileObject fo = templates.getPrimaryFile().getFileObject(path);
+                if (fo != null) {
+                    try {
+                        return CompletableFuture.completedStage(DataObject.find(fo));
+                    } catch (DataObjectNotFoundException ex) {
+                        throw raise(RuntimeException.class, ex);
+                    }
+                }
+            }
+        }
         final List<QuickPickItem> categories = quickPickTemplates(templates);
         final CompletionStage<List<QuickPickItem>> pickGroup = client.showQuickPick(new ShowQuickPickParams(Bundle.CTL_TemplateUI_SelectGroup(), categories));
         final CompletionStage<DataFolder> group = pickGroup.thenApply((selectedGroups) -> {
@@ -459,23 +475,7 @@ final class LspTemplateUI {
     }
 
     static String stripHtml(String s) {
-        boolean inTag = false;
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < s.length(); i++) {
-            char ch = s.charAt(i);
-            if (inTag) {
-                if (ch == '>') {
-                    inTag = false;
-                }
-            } else {
-                if (ch == '<') {
-                    inTag = true;
-                    continue;
-                }
-                sb.append(ch);
-            }
-        }
-        return sb.toString();
+        return Utils.html2plain(s, true);
     }
 
     private static <T extends Exception> T raise(Class<T> clazz, Exception ex) throws T {

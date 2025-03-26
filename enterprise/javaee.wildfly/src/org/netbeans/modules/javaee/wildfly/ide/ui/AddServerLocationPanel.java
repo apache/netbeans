@@ -20,9 +20,9 @@ package org.netbeans.modules.javaee.wildfly.ide.ui;
 
 import java.awt.Component;
 import java.io.File;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.platform.JavaPlatformManager;
@@ -43,7 +43,7 @@ public class AddServerLocationPanel implements WizardDescriptor.FinishablePanel,
 
     private AddServerLocationVisualPanel component;
     private WizardDescriptor wizard;
-    private final transient Set listeners = new HashSet(1);
+    private final transient Set<ChangeListener> listeners = ConcurrentHashMap.newKeySet(2);
 
     public AddServerLocationPanel(WildflyInstantiatingIterator instantiatingIterator) {
         this.instantiatingIterator = instantiatingIterator;
@@ -51,17 +51,7 @@ public class AddServerLocationPanel implements WizardDescriptor.FinishablePanel,
 
     @Override
     public void stateChanged(ChangeEvent ev) {
-        fireChangeEvent(ev);
-    }
-
-    private void fireChangeEvent(ChangeEvent ev) {
-        Iterator it;
-        synchronized (listeners) {
-            it = new HashSet(listeners).iterator();
-        }
-        while (it.hasNext()) {
-            ((ChangeListener) it.next()).stateChanged(ev);
-        }
+        new ArrayList<>(listeners).forEach(l -> l.stateChanged(ev));
     }
 
     @Override
@@ -113,16 +103,12 @@ public class AddServerLocationPanel implements WizardDescriptor.FinishablePanel,
 
     @Override
     public void removeChangeListener(ChangeListener l) {
-        synchronized (listeners) {
-            listeners.remove(l);
-        }
+        listeners.remove(l);
     }
 
     @Override
     public void addChangeListener(ChangeListener l) {
-        synchronized (listeners) {
-            listeners.add(l);
-        }
+        listeners.add(l);
     }
 
     @Override
@@ -148,6 +134,7 @@ public class AddServerLocationPanel implements WizardDescriptor.FinishablePanel,
         instantiatingIterator.setAdminPort("" + WildflyPluginProperties.getInstance().getAdminPort());
         instantiatingIterator.setHost("localhost");
         instantiatingIterator.setPort("8080");
+        instantiatingIterator.setPortOffset("0");
     }
 
     @Override

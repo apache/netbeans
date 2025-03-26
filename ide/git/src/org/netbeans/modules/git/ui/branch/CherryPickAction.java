@@ -291,7 +291,7 @@ public class CherryPickAction extends SingleRepositoryAction {
             if (o == review) {
                 openInVersioningView(conflicts);
             } else if (o == resolve) {
-                GitProgressSupport executor = new ResolveConflictsExecutor(conflicts.toArray(new File[conflicts.size()]));
+                GitProgressSupport executor = new ResolveConflictsExecutor(conflicts.toArray(new File[0]));
                 executor.start(Git.getInstance().getRequestProcessor(repository), repository, Bundle.MSG_CherryPick_resolving());
             } else if (o == abort) {
                 action = CherryPickOperation.ABORT;

@@ -1,3 +1,0 @@
-[submodule ".github/actions/delete-artifact"]
-	path = .github/actions/delete-artifact
-	url = https://github.com/GeekyEggo/delete-artifact

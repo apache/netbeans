@@ -118,7 +118,7 @@ public class SynchronizeQueryCommand extends BugtrackingCommand {
                             toSync.addAll(tasksToSynchronize);
                             toSync.addAll(pendingToRefreshTasks);
                             Collection<NbTask> nbTasks = accessor.toNbTasks(toSync);
-                            for (CommandProgressListener cmdList : listeners.toArray(new CommandProgressListener[listeners.size()])) {
+                            for (CommandProgressListener cmdList : listeners.toArray(new CommandProgressListener[0])) {
                                 cmdList.tasksRefreshStarted(nbTasks);
                             }
                         }
@@ -130,17 +130,17 @@ public class SynchronizeQueryCommand extends BugtrackingCommand {
                             tasksToSynchronize.remove(task);
                             if (toSync.remove(task) && !monitor.isCanceled()) {
                                 // task finished synchronize
-                                for (CommandProgressListener cmdList : listeners.toArray(new CommandProgressListener[listeners.size()])) {
+                                for (CommandProgressListener cmdList : listeners.toArray(new CommandProgressListener[0])) {
                                     cmdList.taskSynchronized(accessor.toNbTask(task));
                                 }
                             }
                         } else if (!delta.isTransient() && delta.getParent() == query) {
                             if (delta.getKind() == TaskContainerDelta.Kind.REMOVED) {
-                                for (CommandProgressListener cmdList : listeners.toArray(new CommandProgressListener[listeners.size()])) {
+                                for (CommandProgressListener cmdList : listeners.toArray(new CommandProgressListener[0])) {
                                     cmdList.taskRemoved(accessor.toNbTask(task));
                                 }
                             } else if (delta.getKind() == TaskContainerDelta.Kind.ADDED) {
-                                for (CommandProgressListener cmdList : listeners.toArray(new CommandProgressListener[listeners.size()])) {
+                                for (CommandProgressListener cmdList : listeners.toArray(new CommandProgressListener[0])) {
                                     cmdList.taskAdded(accessor.toNbTask(task));
                                 }
                             }
@@ -153,7 +153,7 @@ public class SynchronizeQueryCommand extends BugtrackingCommand {
         try {
             query.setSynchronizing(true);
             pendingToRefreshTasks.addAll(query.getChildren());
-            for (CommandProgressListener cmdList : listeners.toArray(new CommandProgressListener[listeners.size()])) {
+            for (CommandProgressListener cmdList : listeners.toArray(new CommandProgressListener[0])) {
                 cmdList.queryRefreshStarted(accessor.toNbTasks(pendingToRefreshTasks));
             }
             job.run(monitor);
@@ -171,7 +171,7 @@ public class SynchronizeQueryCommand extends BugtrackingCommand {
             // at this point caller was notified about modified tasks
             // but not about unchanged tasks
             for (ITask task : new ArrayList<ITask>(tasksToSynchronize)) {
-                for (CommandProgressListener cmdList : listeners.toArray(new CommandProgressListener[listeners.size()])) {
+                for (CommandProgressListener cmdList : listeners.toArray(new CommandProgressListener[0])) {
                     cmdList.taskSynchronized(accessor.toNbTask(task));
                 }
             }

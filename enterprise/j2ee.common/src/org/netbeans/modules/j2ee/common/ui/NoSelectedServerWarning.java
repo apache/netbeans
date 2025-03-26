@@ -98,7 +98,7 @@ final class NoSelectedServerWarning extends JPanel {
                 types.add(type);
             }
         }
-        return selectServerDialog(types.toArray(new J2eeModule.Type[types.size()]),
+        return selectServerDialog(types.toArray(new J2eeModule.Type[0]),
                 Profile.fromPropertiesString(j2eeSpec), title, description);
     }
 
@@ -119,7 +119,7 @@ final class NoSelectedServerWarning extends JPanel {
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (evt.getPropertyName().equals(NoSelectedServerWarning.OK_ENABLED)) {
                         Object newvalue = evt.getNewValue();
-                        if ((newvalue != null) && (newvalue instanceof Boolean)) {
+                        if (newvalue instanceof Boolean) {
                             desc.setValid(((Boolean)newvalue));
                         }
                     }

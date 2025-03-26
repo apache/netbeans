@@ -449,13 +449,8 @@ public class RADComponentNode extends FormNode
         
         Object customizerObject;
         try {
-            customizerObject = customizerClass.newInstance();
-        }
-        catch (InstantiationException e) {
-            ErrorManager.getDefault().notify(ErrorManager.WARNING, e);
-            return null;
-        }
-        catch (IllegalAccessException e) {
+            customizerObject = customizerClass.getDeclaredConstructor().newInstance();
+        } catch (ReflectiveOperationException e) {
             ErrorManager.getDefault().notify(ErrorManager.WARNING, e);
             return null;
         }

@@ -56,7 +56,6 @@ import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.SourceUtilsTest;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.api.java.source.SourceUtilsTestUtil2;
 import org.netbeans.api.java.source.Task;
@@ -88,12 +87,12 @@ import static java.nio.file.StandardCopyOption.*;
  * @author Jan Lahoda
  */
 public class GoToSupportTest extends NbTestCase {
-    
+
     /** Creates a new instance of GoToSupportTest */
     public GoToSupportTest(String name) {
         super(name);
     }
-    
+
     @Override
     protected void setUp() throws Exception {
         SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/java/editor/resources/layer.xml"}, new MimeDataProviderImpl());
@@ -101,7 +100,7 @@ public class GoToSupportTest extends NbTestCase {
         SourceUtilsTestUtil2.disableArtificalParameterNames();
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = false;
     }
-    
+
     public void testGoToMethod() throws Exception {
         final boolean[] wasCalled = new boolean[1];
 
@@ -480,7 +479,7 @@ public class GoToSupportTest extends NbTestCase {
             public void beep(boolean goToSource, boolean goToJavadoc) {
                 fail("Should not be called.");
             }
-            public boolean open(ClasspathInfo info, final ElementHandle<?> el) {
+            public boolean open(ClasspathInfo info, final ElementHandle<?> el, String fileName) {
                 try {
                     JavaSource.create(info).runUserActionTask(new Task<CompilationController>() {
                         public void run(CompilationController parameter) throws Exception {
@@ -875,7 +874,7 @@ public class GoToSupportTest extends NbTestCase {
             @Override public void beep(boolean goToSource, boolean goToJavadoc) {
                 fail("Should not be called.");
             }
-            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el, String fileName) {
                 fail("Should not be called.");
                 return true;
             }
@@ -897,7 +896,7 @@ public class GoToSupportTest extends NbTestCase {
             public void beep(boolean goToSource, boolean goToJavadoc) {
                 fail("Should not be called.");
             }
-            public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+            public boolean open(ClasspathInfo info, ElementHandle<?> el, String fileName) {
                 fail("Should not be called.");
                 return true;
             }
@@ -921,7 +920,7 @@ public class GoToSupportTest extends NbTestCase {
             public void beep(boolean goToSource, boolean goToJavadoc) {
                 fail("Should not be called.");
             }
-            public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+            public boolean open(ClasspathInfo info, ElementHandle<?> el, String fileName) {
                 return false;
             }
             public void warnCannotOpen(String displayName) {
@@ -969,7 +968,7 @@ public class GoToSupportTest extends NbTestCase {
             public void beep(boolean goToSource, boolean goToJavadoc) {
                 fail("Should not be called.");
             }
-            public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+            public boolean open(ClasspathInfo info, ElementHandle<?> el, String fileName) {
                 assertEquals(ElementKind.CLASS, el.getKind());
                 assertEquals("java.lang.String", el.getQualifiedName());
                 wasCalled[0] = true;
@@ -989,7 +988,7 @@ public class GoToSupportTest extends NbTestCase {
 
         assertTrue(wasCalled[0]);
     }
-    
+
     public void testTooltipForConciseConstructorCall1() throws Exception {
         String code = "package test; public class Test {java.util.List<String> l = new java.util.Arr|ayList<>();}";
         int offset = code.indexOf('|');
@@ -1041,7 +1040,7 @@ public class GoToSupportTest extends NbTestCase {
             @Override public void beep(boolean goToSource, boolean goToJavadoc) {
                 fail("Should not be called.");
             }
-            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el, String fileName) {
                 fail("Should not be called.");
                 return true;
             }
@@ -1077,7 +1076,7 @@ public class GoToSupportTest extends NbTestCase {
             @Override public void beep(boolean goToSource, boolean goToJavadoc) {
                 fail("Should not be called.");
             }
-            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el, String fileName) {
                 fail("Should not be called.");
                 return true;
             }
@@ -1110,7 +1109,7 @@ public class GoToSupportTest extends NbTestCase {
             @Override public void beep(boolean goToSource, boolean goToJavadoc) {
                 wasCalled[0] = true;
             }
-            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el, String fileName) {
                 fail("Should not be called.");
                 return true;
             }
@@ -1143,7 +1142,7 @@ public class GoToSupportTest extends NbTestCase {
             @Override public void beep(boolean goToSource, boolean goToJavadoc) {
                 wasCalled[0] = true;
             }
-            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el, String fileName) {
                 fail("Should not be called.");
                 return true;
             }
@@ -1155,9 +1154,74 @@ public class GoToSupportTest extends NbTestCase {
         assertEquals("<html><body>java.lang.String <b>str</b>", tooltip);
     }
 
+    public void testJavadoc() throws Exception {
+        final boolean[] wasCalled = new boolean[1];
+        final String code = """
+                            package test;
+                            /**
+                             * @see Obj|ect
+                             */
+                            public class Test {
+                            }
+                            """;
+
+        performTest(code, new UiUtilsCaller() {
+            @Override public boolean open(FileObject fo, int pos) {
+                fail("Should not be called.");
+                return true;
+            }
+
+            @Override public void beep(boolean goToSource, boolean goToJavadoc) {
+                fail("Should not be called.");
+            }
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el, String fileName) {
+                assertEquals("java.lang.Object", el.getBinaryName());
+                wasCalled[0] = true;
+                return true;
+            }
+            @Override public void warnCannotOpen(String displayName) {
+                fail("Should not be called.");
+            }
+        }, false, false);
+
+        assertTrue(wasCalled[0]);
+    }
+
+    public void testMarkdownJavadoc() throws Exception {
+        final boolean[] wasCalled = new boolean[1];
+        this.sourceLevel = "23";
+        final String code = """
+                            package test;
+                            ///@see Obj|ect
+                            public class Test {
+                            }
+                            """;
+
+        performTest(code, new UiUtilsCaller() {
+            @Override public boolean open(FileObject fo, int pos) {
+                fail("Should not be called.");
+                return true;
+            }
+
+            @Override public void beep(boolean goToSource, boolean goToJavadoc) {
+                fail("Should not be called.");
+            }
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el, String fileName) {
+                assertEquals("java.lang.Object", el.getBinaryName());
+                wasCalled[0] = true;
+                return true;
+            }
+            @Override public void warnCannotOpen(String displayName) {
+                fail("Should not be called.");
+            }
+        }, false, false);
+
+        assertTrue(wasCalled[0]);
+    }
+
     private String sourceLevel = "1.5";
     private FileObject source;
-    
+
     private String performTest(String sourceCode, final int offset, final OrigUiUtilsCaller validator, boolean tooltip) throws Exception {
         return performTest(sourceCode, offset, new UiUtilsCaller() {
             public boolean open(FileObject fo, int pos) {
@@ -1167,7 +1231,7 @@ public class GoToSupportTest extends NbTestCase {
             public void beep(boolean goToSource, boolean goToJavadoc) {
                 validator.beep();
             }
-            public boolean open(final ClasspathInfo info, final ElementHandle<?> el) {
+            public boolean open(final ClasspathInfo info, final ElementHandle<?> el, String fileName) {
                 try {
                     JavaSource.create(info).runUserActionTask(new Task<CompilationController>() {
                         public void run(CompilationController parameter) throws Exception {
@@ -1186,7 +1250,7 @@ public class GoToSupportTest extends NbTestCase {
             }
         }, tooltip);
     }
-    
+
     private String performTest(String sourceCode, final int offset, final UiUtilsCaller validator, boolean tooltip) throws Exception {
         return performTest(sourceCode, offset, validator, tooltip, false);
     }
@@ -1209,7 +1273,7 @@ public class GoToSupportTest extends NbTestCase {
     private String performTest(String sourceCode, String auxiliaryCode, int offset, final UiUtilsCaller validator, boolean tooltip, boolean doCompileRecursively) throws Exception {
 
         GoToSupport.CALLER = validator;
-        
+
         if (offset == (-1)) {
             offset = sourceCode.indexOf('|');
 
@@ -1225,9 +1289,9 @@ public class GoToSupportTest extends NbTestCase {
         FileObject sourceDir = FileUtil.createFolder(wd, "src");
         FileObject buildDir = FileUtil.createFolder(wd, "build");
         FileObject cacheDir = FileUtil.createFolder(wd, "cache");
-        
+
         source = FileUtil.createData(sourceDir, "test/Test.java");
-        
+
         FileObject auxiliarySource = FileUtil.createData(sourceDir, "test/Auxiliary.java");
 
         TestUtilities.copyStringToFile(source, sourceCode);
@@ -1235,28 +1299,28 @@ public class GoToSupportTest extends NbTestCase {
 
         SourceUtilsTestUtil.setSourceLevel(source, sourceLevel);
         SourceUtilsTestUtil.setSourceLevel(auxiliarySource, sourceLevel);
-        
+
         SourceUtilsTestUtil.prepareTest(sourceDir, buildDir, cacheDir, new FileObject[0]);
 
         if (doCompileRecursively) {
             SourceUtilsTestUtil.compileRecursively(sourceDir);
         }
-        
+
         DataObject od = DataObject.find(source);
         EditorCookie ec = od.getCookie(EditorCookie.class);
         Document doc = ec.openDocument();
 
         doc.putProperty(Language.class, JavaTokenId.language());
         doc.putProperty("mimeType", "text/x-java");
-        
+
         if (tooltip)
             return GoToSupport.getGoToElementTooltip(doc, offset, false, null);
         else
             GoToSupport.goTo(doc, offset, false);
-        
+
         return null;
     }
-    
+
     protected void performTest(String source, int caretPos, String textToInsert, String goldenFileName, String sourceLevel, boolean external) throws Exception {
         clearWorkDir();
         FileUtil.refreshFor(getWorkDir());
@@ -1265,12 +1329,11 @@ public class GoToSupportTest extends NbTestCase {
         FileObject sourceDir = FileUtil.createFolder(wd, "src");
         FileObject buildDir = FileUtil.createFolder(wd, "build");
         FileObject cacheDir = FileUtil.createFolder(wd, "cache");
-        
+
         File testSource = new File(getWorkDir(), "test/Test.java");
         testSource.getParentFile().mkdirs();
         copyToWorkDir(new File(getDataDir(), "org/netbeans/modules/java/editor/javadocsnippet/data/" + source + ".java"), testSource);
         FileObject testSourceFO = FileUtil.toFileObject(testSource);
-        
         if (external) {
             FileUtil.createFolder(sourceDir, "test");
             copyFolder((new File(getDataDir(),"org/netbeans/modules/java/editor/javadocsnippet/data/snippet-files").toPath()),
@@ -1291,21 +1354,21 @@ public class GoToSupportTest extends NbTestCase {
         int textToInsertLength = textToInsert != null ? textToInsert.length() : 0;
         if (textToInsertLength > 0)
             doc.insertString(caretPos, textToInsert, null);
-        
+
         String docText = GoToSupport.getGoToElementTooltip(doc, caretPos, false, null);
-        assertNotNull(goldenFileName);            
+        assertNotNull(goldenFileName);
 
         File output = new File(getWorkDir(), getName() + ".out2");
-        Writer out = new FileWriter(output);            
+        Writer out = new FileWriter(output);
         out.write(docText);
         out.close();
 
-        
+
         File goldenFile = getGoldenFile(goldenFileName);
         File diffFile = new File(getWorkDir(), getName() + ".diff");
 
         assertFile(output, goldenFile, diffFile, new WhitespaceIgnoringDiff());
-        
+
         LifecycleManager.getDefault().saveAll();
     }
 
@@ -1358,15 +1421,15 @@ public class GoToSupportTest extends NbTestCase {
             return lfs.getRoot();
         }
     }
-    
+
     interface OrigUiUtilsCaller {
-        
+
         public void open(FileObject fo, int pos);
         public void beep();
         public void open(ClasspathInfo info, Element el);
-        
+
     }
-    
+
     public void testRecords1() throws Exception {
         final boolean[] wasCalled = new boolean[1];
         this.sourceLevel = getLatestSourceVersion();
@@ -1391,7 +1454,7 @@ public class GoToSupportTest extends NbTestCase {
             @Override public void beep(boolean goToSource, boolean goToJavadoc) {
                 fail("Should not be called.");
             }
-            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el, String fileName) {
                 fail("Should not be called.");
                 return true;
             }
@@ -1424,7 +1487,7 @@ public class GoToSupportTest extends NbTestCase {
             @Override public void beep(boolean goToSource, boolean goToJavadoc) {
                 fail("Should not be called.");
             }
-            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el, String fileName) {
                 fail("Should not be called.");
                 return true;
             }
@@ -1434,7 +1497,7 @@ public class GoToSupportTest extends NbTestCase {
         }, true, false);
 
         toolTip = toolTip.replace(source.toURI().toString(), "FILE");
-        assertEquals("<html><body><base href=\"FILE\"></base><font size='+0'><b><a href='*0'>test.&#x200B;Test.&#x200B;R</a></b></font>", toolTip);
+        assertEquals("<html><body><base href=\"FILE\"></base><font size='+0'><b><a href='*0'>test.&#x200B;Test.&#x200B;R</a></b></font><pre>int <b>ff</b></pre>", toolTip);
     }
 
     public void testRecords3() throws Exception {
@@ -1458,7 +1521,7 @@ public class GoToSupportTest extends NbTestCase {
             @Override public void beep(boolean goToSource, boolean goToJavadoc) {
                 fail("Should not be called.");
             }
-            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el, String fileName) {
                 fail("Should not be called.");
                 return true;
             }
@@ -1468,7 +1531,7 @@ public class GoToSupportTest extends NbTestCase {
         }, true, false);
 
         toolTip = toolTip.replace(source.toURI().toString(), "FILE");
-        assertEquals("<html><body><base href=\"FILE\"></base><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font>", toolTip);
+        assertEquals("<html><body><base href=\"FILE\"></base><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public record <b>RR</b></pre>", toolTip);
     }
 
     public void testRecords4() throws Exception {
@@ -1494,7 +1557,7 @@ public class GoToSupportTest extends NbTestCase {
             @Override public void beep(boolean goToSource, boolean goToJavadoc) {
                 fail("Should not be called.");
             }
-            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el, String fileName) {
                 try {
                     JavaSource.create(info).runUserActionTask(new Task<CompilationController>() {
                         public void run(CompilationController parameter) throws Exception {
@@ -1541,7 +1604,7 @@ public class GoToSupportTest extends NbTestCase {
             @Override public void beep(boolean goToSource, boolean goToJavadoc) {
                 fail("Should not be called.");
             }
-            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el, String fileName) {
                 try {
                     JavaSource.create(info).runUserActionTask(new Task<CompilationController>() {
                         public void run(CompilationController parameter) throws Exception {
@@ -1625,34 +1688,34 @@ public class GoToSupportTest extends NbTestCase {
         
         performTest("HighlightTag", 1196, null, "javadocsnippet_highlightRecord.pass", this.sourceLevel, false);
     }
-    
+
     public void testHighlightUsingSubstring() throws Exception {
         this.sourceLevel = getLatestSourceVersion();
-        EXTRA_OPTIONS.add("--enable-preview");      
+        EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        
+
         performTest("HighlightTag", 1667, null, "javadocsnippet_highlightUsingSubstring.pass", this.sourceLevel, false);
     }
-    
+
     public void testHesthighlightUsingRegex() throws Exception {
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        
+
         performTest("HighlightTag",2092, null, "javadocsnippet_highlightUsingRegex.pass", this.sourceLevel, false);
     }
- 
+
     public void testHighlightUsingSubstringAndRegex() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
 
         performTest("HighlightTag", 2604, null, "javadocsnippet_highlightUsingSubstringAndRegex.pass", this.sourceLevel, false);
     }
-    
+
     public void testHighlightUsingSubstringRegexAndType() throws Exception {
-        
+
 
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
@@ -1660,9 +1723,9 @@ public class GoToSupportTest extends NbTestCase {
 
         performTest("HighlightTag", 4551, null, "javadocsnippet_highlightUsingSubstringRegexAndType.pass", this.sourceLevel, false);
     }
-        
+
     public void testHighlightUsingMultipleSnippetTagInOneJavaDocWithRegion() throws Exception {
-        
+
 
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
@@ -1670,9 +1733,9 @@ public class GoToSupportTest extends NbTestCase {
 
         performTest("HighlightTag", 5333, null, "javadocsnippet_highlightUsingMultipleSnippetTagInOneJavaDocWithRegion.pass", this.sourceLevel, false);
     }
-        
+
     public void testHighlightUsingNestedRegions() throws Exception {
-        
+
 
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
@@ -1680,9 +1743,9 @@ public class GoToSupportTest extends NbTestCase {
 
         performTest("HighlightTag", 6148, null, "javadocsnippet_highlightUsingNestedRegions.pass", this.sourceLevel, false);
     }
-    
+
     public void testHighlightUsingRegionsEndedWithDoubleColon() throws Exception {
-        
+
 
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
@@ -1690,9 +1753,9 @@ public class GoToSupportTest extends NbTestCase {
 
         performTest("HighlightTag", 6840, null, "javadocsnippet_highlightUsingRegionsEndedWithDoubleColon.pass", this.sourceLevel, false);
     }
-    
+
     public void testNoMarkupTagPresent() throws Exception {
-        
+
 
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
@@ -1700,9 +1763,9 @@ public class GoToSupportTest extends NbTestCase {
 
         performTest("HighlightTag", 7083, null, "javadocsnippet_noMarkupTagPresent.pass", this.sourceLevel, false);
     }
- 
+
     public void testHighlightTagSubstringApplyToNextLine() throws Exception {
-        
+
 
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
@@ -1710,9 +1773,9 @@ public class GoToSupportTest extends NbTestCase {
 
         performTest("HighlightTag", 7333, null, "javadocsnippet_highlightTagSubstringApplyToNextLine.pass", this.sourceLevel, false);
     }
- 
+
     public void testHighlightTagRegexWithAllCharacterChange() throws Exception {
-        
+
 
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
@@ -1720,9 +1783,9 @@ public class GoToSupportTest extends NbTestCase {
 
         performTest("HighlightTag", 7598, null, "javadocsnippet_highlightTagRegexWithAllCharacterChange.pass", this.sourceLevel, false);
     }
-       
+
     public void testHighlightTagRegexWithAllCharacterChangeUsingDot() throws Exception {
-        
+
 
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
@@ -1730,9 +1793,9 @@ public class GoToSupportTest extends NbTestCase {
 
         performTest("HighlightTag", 7860, null, "javadocsnippet_highlightTagRegexWithAllCharacterChangeUsingDot.pass", this.sourceLevel, false);
     }
-    
+
     public void testSingleLine_Replace_Regex() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1740,7 +1803,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testSingleLine_Replace_RegexDotStar() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1748,7 +1811,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testSingleLine_Replace_RegexDot() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1756,7 +1819,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testSingleLine_Replace_Substring() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1764,7 +1827,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testSingleLine_MultipleReplaceAnnotation_Regex() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1772,7 +1835,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testSingleLine_MultipleReplaceAnnotation_Substring() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1780,7 +1843,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testSingleLine_ReplaceAnnotation_Regex_DoubleQuote() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1788,7 +1851,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testRegion_ReplaceAnnotation_Regex() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1796,7 +1859,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testRegion_ReplaceAnnotation_RegexInnComment() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1804,7 +1867,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testNestedRegion_ReplaceAnnotation_Substring() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1812,7 +1875,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testNestedRegion_ReplaceAnnotation_Regex() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1820,7 +1883,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testNestedRegion_Highlight_And_replace() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1828,7 +1891,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testHighlightAndReplace_cornercase() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1836,7 +1899,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testLinkTag() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1845,7 +1908,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testLinkTag_With_RegexAndRegion() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1854,7 +1917,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testLinkTag_AppliesToNextLine() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1863,7 +1926,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testLink_MultipleTag_OnSameLine() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1871,7 +1934,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testLinkTag_With_RegionAttribute() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1879,7 +1942,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testLinkTag_Ref_ToThisClass_UsingHash() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1887,7 +1950,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testLinkTag_FieldRef_ToThisClass_UsingHash() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1895,7 +1958,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testLinkTag_AlongWith_HighlightTag() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1903,7 +1966,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testLinkTag_AlongWith_ReplaceTag() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1911,7 +1974,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testLinkTag_AlongWith_SubStringAndReplaceTag() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1919,7 +1982,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testLinkTag_EmptyReplacementValue() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
@@ -1927,39 +1990,39 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testError_HighlightTag() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         performTest("Errors", 2140, null, "javadocsnippet_TestError_HighlightTag.pass", this.sourceLevel, false);
     }
-    
+
     public void testError_ReplaceTag() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         performTest("Errors", 3422, null, "javadocsnippet_TestError_ReplaceTag.pass", this.sourceLevel, false);
     }
-    
+
     public void testError_LinkTag() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         performTest("Errors", 4877, null, "javadocsnippet_TestError_LinkTag.pass", this.sourceLevel, false);
     }
-    
+
     public void testError_UnpairedRegion() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         performTest("Errors", 5548, null, "javadocsnippet_TestError_UnpairedRegion.pass", this.sourceLevel, false);
     }
-    
+
     public void testError_NoRegionToEnd() throws Exception {
-        
+
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;

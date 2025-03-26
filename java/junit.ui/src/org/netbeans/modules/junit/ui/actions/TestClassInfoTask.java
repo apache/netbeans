@@ -25,7 +25,6 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
-import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,6 +38,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.swing.text.BadLocationException;
@@ -56,8 +56,8 @@ import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController.TestMetho
 import org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods;
 import org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods.Factory;
 import org.netbeans.modules.parsing.spi.Parser;
+import org.netbeans.spi.java.hints.unused.UsedDetector;
 import org.netbeans.spi.project.SingleMethod;
-import org.openide.ErrorManager;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
@@ -255,8 +255,33 @@ public final class TestClassInfoTask implements Task<CompilationController> {
         }
     }
 
+    @ServiceProvider(service=UsedDetector.Factory.class)
+    public static final class UsedDetectorImpl implements UsedDetector.Factory {
+
+        @Override
+        public UsedDetector create(CompilationInfo info) {
+            if (isTestSource(info.getFileObject())) {
+                List<TestMethod> testMethods = TestClassInfoTask.doComputeTestMethods(info, new AtomicBoolean(), -1);
+                SourcePositions sp = info.getTrees().getSourcePositions();
+                return (el, path) -> {
+                    if (el.getKind() == ElementKind.METHOD) {
+                        for (TestMethod tm : testMethods) {
+                            if (tm.method().getMethodName().contentEquals(el.getSimpleName())
+                                    && tm.start().getOffset() == sp.getStartPosition(path.getCompilationUnit(), path.getLeaf())
+                                    && tm.end().getOffset() == sp.getEndPosition(path.getCompilationUnit(), path.getLeaf())) {
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                };
+            }
+            return null;
+        }
+    }
+
     @MimeRegistration(mimeType="text/x-java", service=org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods.class)
-    public static final class GenericComputeTestMethodsImpl implements org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods {
+    public static final class JUnitComputeTestMethodsImpl implements org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods {
 
         @Override
         public List<TestMethod> computeTestMethods(Parser.Result parserResult, AtomicBoolean cancel) {

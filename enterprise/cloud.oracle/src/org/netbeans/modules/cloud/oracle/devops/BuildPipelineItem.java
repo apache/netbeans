@@ -28,16 +28,16 @@ import org.netbeans.modules.cloud.oracle.items.OCIItem;
  */
 public class BuildPipelineItem extends OCIItem {
 
-    public BuildPipelineItem(OCID id, String name) {
-        super(id, name);
+    public BuildPipelineItem(OCID id, String compartmentId, String name, String tenancyId, String regionCode) {
+        super(id, compartmentId, name, tenancyId, regionCode);
     }
 
     public static class BuildPipelineFolder extends OCIItem {
 
         private final List<BuildPipelineItem> pipelines;
 
-        public BuildPipelineFolder(OCID project, String name, List<BuildPipelineItem> pipelines) {
-            super(project, name);
+        public BuildPipelineFolder(OCID project, String compartmentId, String name, List<BuildPipelineItem> pipelines, String tenancyId, String regionCode) {
+            super(project, compartmentId, name, tenancyId, regionCode);
             this.pipelines = pipelines;
         }
     

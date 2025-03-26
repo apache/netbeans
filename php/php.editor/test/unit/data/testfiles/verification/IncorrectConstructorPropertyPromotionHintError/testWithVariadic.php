@@ -20,7 +20,7 @@
 
 class ClassExample1 {
     public function __construct(
-            private ...$incorrect1,
+            private ...$incorrect1, // error1
     ) {
     }
 }
@@ -28,14 +28,36 @@ class ClassExample1 {
 class ClassExample2 {
     public function __construct(
             int $test1,
-            private string ...$incorrect1,
+            private string ...$incorrect1, // error2
     ) {
     }
 }
 
 $anon1 = new class(1) {
     public function __construct(
-            protected string ...$incorrect1,
+            protected(set) string ...$incorrect1, // error3
+    ) {
+    }
+};
+
+class ClassSetVisibilityExample1 {
+    public function __construct(
+            private(set) ...$incorrect1, // error4
+    ) {
+    }
+}
+
+class ClassSetVisibilityExample2 {
+    public function __construct(
+            int $test1,
+            private(set) string ...$incorrect1, // error5
+    ) {
+    }
+}
+
+$anon1 = new class(1) {
+    public function __construct(
+            protected(set) string ...$incorrect1, // error6
     ) {
     }
 };

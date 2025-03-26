@@ -28,7 +28,6 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
-import java.net.PasswordAuthentication;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -59,7 +58,6 @@ import javax.net.ssl.X509TrustManager;
 import javax.swing.JButton;
 import org.netbeans.modules.subversion.Subversion;
 import org.netbeans.modules.subversion.client.SvnClientFactory.ConnectionType;
-import org.netbeans.modules.subversion.kenai.SvnKenaiAccessor;
 import org.netbeans.modules.subversion.SvnModuleConfig;
 import org.netbeans.modules.subversion.WorkingCopyAttributesCache;
 import org.netbeans.modules.subversion.client.cli.CommandlineClient;
@@ -172,23 +170,6 @@ public class SvnClientExceptionHandler {
         }
         throw getException();
     }
-       
-    private boolean handleKenaiAuthorization(SvnKenaiAccessor support, String url) {
-        PasswordAuthentication pa = support.getPasswordAuthentication(url, true);
-        if(pa == null) {
-            return false;
-        }
-
-        String user = pa.getUserName();
-        char[] password = pa.getPassword();
-        
-        adapter.setUsername(user != null ? user : "");
-        if (connectionType != ConnectionType.javahl) {
-            adapter.setPassword(password != null ? new String(password) : "");
-        }
-
-        return true;
-    }
     
     void setMethod (String methodName) {
         this.methodName = methodName;
@@ -201,73 +182,54 @@ public class SvnClientExceptionHandler {
             return false;
         }
 
-        SvnKenaiAccessor support = SvnKenaiAccessor.getInstance();
-        String sUrl = url.toString();
-        if(support.isKenai(sUrl)) {
-            if ("commit".equals(methodName)) { //NOI18N
-                if (!support.canWrite(sUrl)) {
-                    throw new SVNClientException(NbBundle.getMessage(Repository.class, "MSG_Repository.kenai.insufficientRights.write"));//NOI18N
-                }
-            } else if (!support.canRead(sUrl)) {
-                throw new SVNClientException(NbBundle.getMessage(Repository.class, "MSG_Repository.kenai.insufficientRights.read"));//NOI18N
-            }
-            return support.showLogin() && handleKenaiAuthorization(support, sUrl);
-        } else {
-            if (Thread.interrupted()) {
-                Subversion.LOG.log(Level.FINE, "SvnClientExceptionHandler.handleRepositoryConnectError(): canceled"); //NOI18N
-                return false;
-            }
-            Repository repository = new Repository(Repository.FLAG_SHOW_PROXY, org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "MSG_Error_ConnectionParameters"));  // NOI18N
-            repository.selectUrl(url, true);
-
-            JButton retryButton = new JButton(org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "CTL_Action_Retry"));           // NOI18N
-            String title = ((exceptionMask & EX_NO_HOST_CONNECTION) == exceptionMask) ?
-                                org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "MSG_Error_CouldNotConnect") :
-                                org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "MSG_Error_AuthFailed");
-            Object option = repository.show(title, new HelpCtx(this.getClass()), new Object[] {retryButton, org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "CTL_Action_Cancel")},    // NOI18N
-                    retryButton);
-
-            boolean ret = (option == retryButton);
-            if(ret) {
-                RepositoryConnection rc = repository.getSelectedRC();
-                String username = rc.getUsername();
-                char[] password = rc.getPassword();
-
-                adapter.setUsername(username);
-                if (connectionType != ConnectionType.javahl) {
-                    adapter.setPassword(password != null ? new String(password) : ""); //NOI18N
-                }
-                SvnModuleConfig.getDefault().insertRecentUrl(rc);
-            }
-            return ret;
+        if (Thread.interrupted()) {
+            Subversion.LOG.log(Level.FINE, "SvnClientExceptionHandler.handleRepositoryConnectError(): canceled"); //NOI18N
+            return false;
         }
+        Repository repository = new Repository(Repository.FLAG_SHOW_PROXY, org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "MSG_Error_ConnectionParameters"));  // NOI18N
+        repository.selectUrl(url, true);
+
+        JButton retryButton = new JButton(org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "CTL_Action_Retry"));           // NOI18N
+        String title = ((exceptionMask & EX_NO_HOST_CONNECTION) == exceptionMask) ?
+                            org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "MSG_Error_CouldNotConnect") :
+                            org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "MSG_Error_AuthFailed");
+        Object option = repository.show(title, new HelpCtx(this.getClass()), new Object[] {retryButton, org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "CTL_Action_Cancel")},    // NOI18N
+                retryButton);
+
+        boolean ret = (option == retryButton);
+        if(ret) {
+            RepositoryConnection rc = repository.getSelectedRC();
+            String username = rc.getUsername();
+            char[] password = rc.getPassword();
+
+            adapter.setUsername(username);
+            if (connectionType != ConnectionType.javahl) {
+                adapter.setPassword(password != null ? new String(password) : ""); //NOI18N
+            }
+            SvnModuleConfig.getDefault().insertRecentUrl(rc);
+        }
+        return ret;
     }
 
     @NbBundle.Messages("CTL_Action_Cancel=Cancel")
     public static boolean handleAuth (SVNUrl url) {
-        SvnKenaiAccessor support = SvnKenaiAccessor.getInstance();
-        String sUrl = url.toString();
-        if(support.isKenai(sUrl)) {
-            return support.showLogin() && support.getPasswordAuthentication(sUrl, true) != null;
-        } else {
-            Repository repository = new Repository(Repository.FLAG_SHOW_PROXY, org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "MSG_Error_ConnectionParameters"));  // NOI18N
-            repository.selectUrl(url, true);
+        Repository repository = new Repository(Repository.FLAG_SHOW_PROXY, org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "MSG_Error_ConnectionParameters"));  // NOI18N
+        repository.selectUrl(url, true);
 
-            JButton retryButton = new JButton(org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "CTL_Action_Retry"));           // NOI18N
-            String title = org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "MSG_Error_AuthFailed");
-            Object option = repository.show(
-                    title, 
-                    new HelpCtx("org.netbeans.modules.subversion.client.SvnClientExceptionHandler"), //NOI18N
-                    new Object[] { retryButton,
-                        Bundle.CTL_Action_Cancel()
-                    }, retryButton);
+        JButton retryButton = new JButton(org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "CTL_Action_Retry"));           // NOI18N
+        String title = org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "MSG_Error_AuthFailed");
+        Object option = repository.show(
+                title, 
+                new HelpCtx("org.netbeans.modules.subversion.client.SvnClientExceptionHandler"), //NOI18N
+                new Object[] { retryButton,
+                    Bundle.CTL_Action_Cancel()
+                }, retryButton);
 
-            boolean ret = (option == retryButton);
-            if(ret) {
-                SvnModuleConfig.getDefault().insertRecentUrl(repository.getSelectedRC());
-            }
-            return ret;
+        boolean ret = (option == retryButton);
+        if(ret) {
+            SvnModuleConfig.getDefault().insertRecentUrl(repository.getSelectedRC());
         }
+        return ret;
     }
 
     private boolean handleNoCertificateError() throws SVNClientException {
@@ -591,7 +553,7 @@ public class SvnClientExceptionHandler {
                 ret.add(failure);
             }
         }
-        return ret.toArray(new CertificateFailure[ret.size()]);
+        return ret.toArray(new CertificateFailure[0]);
     }
    
     private int getFailuresMask() {

@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
@@ -72,11 +73,11 @@ import org.openide.util.Utilities;
 /**
  * an instance resides in project lookup, allows to get notified on project and 
  * relative path changes.
- * <p/>
+ * <p>
  * <b>From version 2.148</b> plugin-specific services can be registered using {@link ProjectServiceProvider} 
  * annotation in subfolders of the project Lookup registration area whose names follow a Plugin group and 
  * artifact ID. 
- * <p/>
+ * </p>
  * <div class="nonnormative">
  * {@snippet file="org/netbeans/modules/maven/NbMavenProjectImplTest.java" region="ProjectServiceProvider.pluginSpecific"}
  * Shows a service, that will become available from project Lookup whenever the project uses {@code org.netbeans.modules.maven:test.plugin}
@@ -194,14 +195,22 @@ public final class NbMavenProject {
     }
     
     /**
-     * 
-     * @return 
-     * @since 
+     * Checks if the project is completely broken. Also see {@link #getPartialProject}.
+     * @return true, if the project is broken and could not be loaded
+     * @see #getPartialProject
      */
     public boolean isUnloadable() {
         return MavenProjectCache.isFallbackproject(getMavenProject());
     }
     
+    /**
+     * Returns timestamp of project (metadata) load. Returns negative number,
+     * if the timestamp is not known or project is not loaded.
+     * @return timestamp.
+     */
+    public long getLoadTimestamp() {
+        return project.getLoadTimestamp();
+    }
 
     @Messages({
         "Progress_Download=Downloading Maven dependencies", 
@@ -303,6 +312,15 @@ public final class NbMavenProject {
      */
     public @NonNull MavenProject getEvaluatedProject(ProjectActionContext context) {
         return project.getEvaluatedProject(context);
+    }
+    
+    /**
+     * Returns the original project, or waits for reload task if already pending. Use with care, as
+     * the method blocks until the project reload eventually finishes in the reload thread / RP.
+     * @return possibly reloaded Maven project.
+     */
+    public @NonNull CompletableFuture<MavenProject> getFreshProject() {
+        return project.getFreshOriginalMavenProject();
     }
     
     /**
@@ -443,7 +461,7 @@ public final class NbMavenProject {
     }
 
     /**
-     * @deprecated Use {@link #downloadDependencyAndJavadocSource(boolean) with {@code true}.
+     * @deprecated Use {@link #downloadDependencyAndJavadocSource(boolean)} with {@code true}.
      */
     @Deprecated
     public void downloadDependencyAndJavadocSource() {
@@ -528,7 +546,7 @@ public final class NbMavenProject {
                     art.getType(),
                     "javadoc"); //NOI18N
                 progress.progress(MSG_Checking_Javadoc(art.getId()), 1);
-                online.resolve(javadoc, project.getOriginalMavenProject().getRemoteArtifactRepositories(), project.getEmbedder().getLocalRepository());
+                online.resolveArtifact(javadoc, project.getOriginalMavenProject().getRemoteArtifactRepositories(), project.getEmbedder().getLocalRepository());
             } else {
                 Artifact sources = project.getEmbedder().createArtifactWithClassifier(
                     art.getGroupId(),
@@ -537,7 +555,7 @@ public final class NbMavenProject {
                     art.getType(),
                     "sources"); //NOI18N
                 progress.progress(MSG_Checking_Sources(art.getId()), 1);
-                online.resolve(sources, project.getOriginalMavenProject().getRemoteArtifactRepositories(), project.getEmbedder().getLocalRepository());
+                online.resolveArtifact(sources, project.getOriginalMavenProject().getRemoteArtifactRepositories(), project.getEmbedder().getLocalRepository());
             }
         } catch (ThreadDeath td) {
         } catch (IllegalStateException ise) { //download interrupted in dependent thread. #213812
@@ -586,10 +604,12 @@ public final class NbMavenProject {
      * 
      */ 
     private RequestProcessor.Task fireProjectReload() {
-        return project.fireProjectReload();
+        return project.fireProjectReload(true);
     }
     
     private void doFireReload() {
+        MavenProject p = project.getOriginalMavenProjectOrNull();
+        LOG.log(Level.FINE, "Firing PROJECT change for maven project {0}, mavenprj {1}", new Object[] { this, System.identityHashCode(p == null ? this : p) });
         FileUtil.refreshFor(FileUtil.toFile(project.getProjectDirectory()));
         NbMavenProjectImpl.refreshLocalRepository(project);
         support.firePropertyChange(PROP_PROJECT, null, null);
@@ -612,7 +632,7 @@ public final class NbMavenProject {
     }
 
     public static void addPropertyChangeListener(Project prj, PropertyChangeListener listener) {
-        if (prj != null && prj instanceof NbMavenProjectImpl) {
+        if (prj instanceof NbMavenProjectImpl) {
             // cannot call getLookup() -> stackoverflow when called from NbMavenProjectImpl.createBasicLookup()..
             NbMavenProject watcher = ((NbMavenProjectImpl)prj).getProjectWatcher();
             watcher.addPropertyChangeListener(listener);
@@ -622,7 +642,7 @@ public final class NbMavenProject {
     }
     
     public static void removePropertyChangeListener(Project prj, PropertyChangeListener listener) {
-        if (prj != null && prj instanceof NbMavenProjectImpl) {
+        if (prj instanceof NbMavenProjectImpl) {
             // cannot call getLookup() -> stackoverflow when called from NbMavenProjectImpl.createBasicLookup()..
             NbMavenProject watcher = ((NbMavenProjectImpl)prj).getProjectWatcher();
             watcher.removePropertyChangeListener(listener);
@@ -630,15 +650,57 @@ public final class NbMavenProject {
             assert false : "Attempted to remove PropertyChangeListener from project " + prj; //NOI18N
         }
     }
+    
+    /**
+     * Retrieves at least partial project information. A MavenProject instance may be a <b>fallback</b> in case the reading
+     * fails because of locally missing artifacts and/or referenced parents. However partial model may be available. The function
+     * returns the passed project, if it read correctly. Otherwise, it attempts to locate a partially load project and returns that one.
+     * If a partial project is not available, it will return the passed (fallback) project.
+     * <p>
+     * The result can be checked to be {@link #isErrorPlaceholder} to determine if the result was a returned partial project or not.
+     * Note that partial projects may not resolve all references properly, be prepared for unresolved artifacts and/or plugins. Do not pass
+     * partial projects blindly around.
+     * <p>
+     * Returns {@code null} if the passed project is {@code null}
+     * @param project the project to check
+     * @return partial project if the passed project did not load properly and the partial project is available.
+     * @since 2.161
+     */
+    public static MavenProject getPartialProject(MavenProject project) {
+        if (project == null) {
+            return null;
+        }
+        if (isIncomplete(project)) {
+            MavenProject pp = MavenProjectCache.getPartialProject(project);
+            if (pp != null) {
+                return pp;
+            }
+        }
+        return project;
+    }
 
     /**
-     * Checks whether a given project is just an error placeholder.
+     * Checks whether a given project is just an error placeholder. Such project may be fundamentally broken, i.e. missing
+     * declarations from the parent, unresolved dependencies or versions. Also see {@link #isIncomplete}
      * @param project a project loaded by e.g. {@link #getMavenProject}
      * @return true if it was loaded as an error fallback, false for a normal project
      * @since 2.24
+     * @see #isIncomplete
+     * @see #getPartialProject
      */
     public static boolean isErrorPlaceholder(@NonNull MavenProject project) {
         return MavenProjectCache.isFallbackproject(project); // see NbMavenProjectImpl.getFallbackProject
+    }
+    
+    /**
+     * Checks if the project resolved using incomplete or missing information. Each {@link #isErrorPlaceholder} is an incomplete project.
+     * If the project is just missing proper referenced artifacts, it will not be reported as a {@link #isErrorPlaceholder}, but as {@link #isIncomplete}.
+     * @param project
+     * @return true, if the project is not completely resolved
+     * @since 2.161
+     */
+    public static boolean isIncomplete(@NonNull MavenProject project) {
+        return MavenProjectCache.isIncompleteProject(project); 
     }
 
     @Override public String toString() {

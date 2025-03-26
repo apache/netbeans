@@ -54,14 +54,14 @@ import org.openide.util.Exceptions;
 
 /**
  * Static utility classes for processing jackpot patterns.
- * <a href="https://bitbucket.org/jlahoda/jackpot30/wiki/RulesLanguage">Rules Language</a>
+ * <a href="https://github.com/apache/netbeans-jackpot30/tree/master/cmdline">Rules Language</a>
  * @author Jan Becicka
  * @since 1.1
  */
 public final class TransformationSupport {
 
-    private String jackpotPattern;
-    private Transformer transformer;
+    private final String jackpotPattern;
+    private final Transformer transformer;
     private AtomicBoolean cancel = new AtomicBoolean();
 
     private TransformationSupport(String jackpotPattern, Transformer transformer) {
@@ -130,7 +130,7 @@ public final class TransformationSupport {
 
     /**
      * Transformer callback which is called for each occurrence during processing 
-     * of {@link #performTransformation(java.lang.String, org.netbeans.spi.java.hints.support.JackpotSupport.Transformer, java.util.concurrent.atomic.AtomicBoolean)    
+     * of {@link #performTransformation(java.lang.String, org.netbeans.spi.java.hints.support.JackpotSupport.Transformer, java.util.concurrent.atomic.AtomicBoolean) }
      */
     public interface Transformer {
 
@@ -202,9 +202,12 @@ public final class TransformationSupport {
 
         for (HintDescription hd : PatternConvertor.create(inputJackpotPattern)) {
             final String triggerPattern = ((Trigger.PatternDescription) hd.getTrigger()).getPattern();
-            descriptions.add(HintDescriptionFactory.create().setTrigger(hd.getTrigger()).
-                    setTriggerOptions(hd.getTrigger().getOptions()).
-                setWorker((HintContext ctx) -> {
+            descriptions.add(
+                HintDescriptionFactory.create()
+                        .setTrigger(hd.getTrigger())
+                        .setTriggerOptions(hd.getTrigger()
+                        .getOptions())
+                        .setWorker((HintContext ctx) -> {
                     final Map<String, TypeMirrorHandle<?>> constraintsHandles = new HashMap<>();
 
                     for (Map.Entry<String, TypeMirror> c : ctx.getConstraints().entrySet()) {
@@ -232,8 +235,9 @@ public final class TransformationSupport {
                         }
                     }.toEditorFix();
                     
-                    return Collections.singletonList(ErrorDescriptionFactory.createErrorDescription(Severity.WARNING, "", Collections.singletonList(fix), ctx.getInfo().getFileObject(), 0, 0));
-            }).produce());
+                    return List.of(ErrorDescriptionFactory.createErrorDescription(Severity.WARNING, "", List.of(fix), ctx.getInfo().getFileObject(), 0, 0));
+                }).produce()
+            );
 
         }
         

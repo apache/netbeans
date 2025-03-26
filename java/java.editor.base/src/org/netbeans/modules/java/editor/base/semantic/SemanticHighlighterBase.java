@@ -770,7 +770,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             tl.moveToOffset(sourcePositions.getStartPosition(info.getCompilationUnit(), node));
             List<? extends CaseLabelTree> labels = node.getLabels();
             for (CaseLabelTree labelTree : labels) {
-                if (labelTree.getKind().equals(Tree.Kind.PATTERN_CASE_LABEL)) {
+                if (labelTree.getKind() == Tree.Kind.PATTERN_CASE_LABEL) {
                     PatternCaseLabelTree patternLabel = (PatternCaseLabelTree) labelTree;
                     tl.moveToOffset(sourcePositions.getEndPosition(info.getCompilationUnit(), patternLabel.getPattern()));
                     tl.moveNext();
@@ -1179,7 +1179,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 if (t != null) {
                     contextKeywords.add(t);
                 }
-            } else if (tree != null && tree.getKind().equals(Kind.MODIFIERS)) {
+            } else if (tree != null && tree.getKind() == Kind.MODIFIERS) {
                visitModifier(tree);
             }
             return super.scan(tree, p);

@@ -36,6 +36,7 @@ public @interface SuppressWarnings {
 
     /**
      * The names of the warnings to suppress.
+     * @return list of warning to supress
      */
     String[] value() default {};
 

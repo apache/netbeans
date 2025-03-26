@@ -172,7 +172,7 @@ public final class SnapshotsWindowUI extends ProfilerTopComponent {
     private ChangeListener openProjectsListener;
     
     private FileObject currentFolder;
-    private final List<Snapshot> snapshots = new ArrayList();
+    private final List<Snapshot> snapshots = new ArrayList<>();
     
     private Action openA;
     private Action exportA;
@@ -228,7 +228,7 @@ public final class SnapshotsWindowUI extends ProfilerTopComponent {
         SnapshotsWindowHelper.PROCESSOR.post(new Runnable() {
             public void run() {
                 ResultsManager rm = ResultsManager.getDefault();
-                final List<Snapshot> _snapshots = new ArrayList();
+                final List<Snapshot> _snapshots = new ArrayList<>();
                 for (FileObject fo : rm.listSavedSnapshots(project, null))
                     _snapshots.add(new Snapshot(fo) {
                         boolean alternativeSorting() {

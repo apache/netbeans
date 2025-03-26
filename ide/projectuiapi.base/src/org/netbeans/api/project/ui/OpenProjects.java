@@ -46,8 +46,8 @@ import org.openide.util.Parameters;
  * For many cases, however, this API is not the correct approach, so use it as
  * a last resort. Consider <a href="@org-netbeans-api-java-classpath@/org/netbeans/api/java/classpath/GlobalPathRegistry.html"><code>GlobalPathRegistry</code></a>,
  * {@link org.netbeans.spi.project.ui.ProjectOpenedHook},
- * and {@link org.netbeans.spi.project.ui.support.ProjectSensitiveActions}
- * (or {@link org.netbeans.spi.project.ui.support.MainProjectSensitiveActions})
+ * and <a href="@org-netbeans-modules-projectuiapi@/org/netbeans/spi/project/ui/support/ProjectSensitiveActions.html">ProjectSensitiveActions</a>
+ * (or <a href="@org-netbeans-modules-projectuiapi@/org/netbeans/spi/project/ui/support/MainProjectSensitiveActions.html">MainProjectSensitiveActions</a>)
  * first. Only certain operations should actually be aware of which projects
  * are "open"; by default, all project functionality should be available whether
  * it is open or not.
@@ -108,7 +108,7 @@ public final class OpenProjects {
      * and opened on background. As soon as and no sooner before 
      * all opened projects are opened, the
      * return value of this method changes and appropriate property change
-     * event with <q>PROPERTY_OPEN_PROJECTS</q> is delivered.
+     * event with {@link #PROPERTY_OPEN_PROJECTS} is delivered.
      * </span>
      * 
      * @return list of projects currently opened in the IDE's GUI; order not specified
@@ -122,7 +122,7 @@ public final class OpenProjects {
      * opening of a project may take long time, and as there can be multiple
      * projects open at once, it may be necessary to be notified that the process
      * of open project list modification started or that it has
-     * finished. This method provides a <q>future</q> that can do that.
+     * finished. This method provides a <em>future</em> that can do that.
      * To find out that the list of open projects is currently modified use:
      * <pre>
      * assert openProjects().isDone() == false;
@@ -134,7 +134,7 @@ public final class OpenProjects {
      * </pre>
      * This result is different that a plain call to {@link #getOpenProjects} as
      * that methods returns the current state, whatever it is. While the call through
-     * the <q>future</q> awaits for current modifications to finish. As such wait
+     * the <em>future</em> awaits for current modifications to finish. As such wait
      * can take a long time one can also wait for just a limited amount of time.
      * However this waiting methods should very likely only be used from dedicated threads,
      * where the wait does not block other essencial operations (read: do not
@@ -158,7 +158,7 @@ public final class OpenProjects {
      * {@link org.openide.WizardDescriptor.InstantiatingIterator#instantiate}
      * should return the project directory.
      * This should also not be used to provide a GUI to open subprojects;
-     * {@link CommonProjectActions#openSubprojectsAction} should be used instead.
+     * <a href="@org-netbeans-modules-projectuiapi@/org/netbeans/spi/project/ui/support/CommonProjectActions.html#openSubprojectsAction--">CommonProjectActions#openSubprojectsAction</a> should be used instead.
      * </p>
      * @param projects to be opened. If some of the projects are already opened
      * these projects are ignored. If the list contain duplicates, the duplicated
@@ -184,7 +184,7 @@ public final class OpenProjects {
      * {@link org.openide.WizardDescriptor.InstantiatingIterator#instantiate}
      * should return the project directory.
      * This should also not be used to provide a GUI to open subprojects;
-     * {@link CommonProjectActions#openSubprojectsAction} should be used instead.
+     * <a href="@org-netbeans-modules-projectuiapi@/org/netbeans/spi/project/ui/support/CommonProjectActions.html#openSubprojectsAction--">CommonProjectActions#openSubprojectsAction</a> should be used instead.
      * </p>
      * @param projects to be opened. If some of the projects are already opened
      * these projects are ignored. If the list contain duplicates, the duplicated
@@ -235,7 +235,7 @@ public final class OpenProjects {
      *
      * <div class="nonnormative">
      * <p><strong>Warning:</strong> the set of usecases that require invoking this method is
-     * limited. {@link org.netbeans.spi.project.ui.support.MainProjectSensitiveActions} should
+     * limited. <a href="@org-netbeans-modules-projectuiapi@/org/netbeans/spi/project/ui/support/MainProjectSensitiveActions.html">MainProjectSensitiveActions</a> should
      * be used in favour of this method if possible. In particular, this method should <em>not</em>
      * be used to let the user choose if an action should be run on the main vs. the currently selected project.</p>
      * <p>As a rule of thumb, any code outside of the project system infrastructure which behaves differently

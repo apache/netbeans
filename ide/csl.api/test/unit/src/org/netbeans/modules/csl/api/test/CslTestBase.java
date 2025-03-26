@@ -1647,16 +1647,18 @@ public abstract class CslTestBase extends NbTestCase {
 
     protected void checkNoOverlaps(Set<OffsetRange> ranges, Document doc) throws BadLocationException {
         // Make sure there are no overlapping ranges
-        List<OffsetRange> sortedRanges = new ArrayList<OffsetRange>(ranges);
+        List<OffsetRange> sortedRanges = new ArrayList<>(ranges);
         Collections.sort(sortedRanges);
-        OffsetRange prevRange = OffsetRange.NONE;
-        for (OffsetRange range : sortedRanges) {
-            if (range.getStart() < prevRange.getEnd() && range.getEnd() > prevRange.getEnd()) {
-                fail("OffsetRanges should be non-overlapping! " + prevRange +
-                        "(" + doc.getText(prevRange.getStart(), prevRange.getLength()) + ") and " + range +
-                        "(" + doc.getText(range.getStart(), range.getLength()) + ")");
+        for (int i = 0; i < sortedRanges.size(); i++) {
+            OffsetRange prevRange = sortedRanges.get(i);
+            for (int j = i + 1; j < sortedRanges.size(); j++) {
+                OffsetRange targetRange = sortedRanges.get(j);
+                if (prevRange.overlaps(targetRange)) {
+                    fail("OffsetRanges should be non-overlapping! " + prevRange
+                            + "(" + doc.getText(prevRange.getStart(), prevRange.getLength()) + ") and " + targetRange
+                            + "(" + doc.getText(targetRange.getStart(), targetRange.getLength()) + ")");
+                }
             }
-            prevRange = range;
         }
     }
 
@@ -2143,6 +2145,7 @@ public abstract class CslTestBase extends NbTestCase {
 
         ParserManager.parse(Collections.singleton(testSource), new UserTask() {
             public @Override void run(ResultIterator resultIterator) throws Exception {
+
                 StructureScanner analyzer = getStructureScanner();
                 assertNotNull("getStructureScanner must be implemented", analyzer);
 
@@ -2247,7 +2250,7 @@ public abstract class CslTestBase extends NbTestCase {
             if (children != null && children.size() > 0) {
                 List<? extends StructureItem> c = new ArrayList<StructureItem>(children);
                 // Sort children to make tests more stable
-                Collections.sort(c, new Comparator<StructureItem>() {
+                c.sort(new Comparator<StructureItem>() {
                     public int compare(StructureItem s1, StructureItem s2) {
                         String s1Name = s1.getName();
                         String s2Name = s2.getName();
@@ -2653,7 +2656,7 @@ public abstract class CslTestBase extends NbTestCase {
         sb.append("\n");
 
         // Sort to make test more stable
-        Collections.sort(proposals, new Comparator<CompletionProposal>() {
+        proposals.sort(new Comparator<CompletionProposal>() {
 
             public int compare(CompletionProposal p1, CompletionProposal p2) {
                 // Smart items first
@@ -3045,15 +3048,19 @@ public abstract class CslTestBase extends NbTestCase {
                 completionResult.insert(proposal);
                 completionResult.afterInsert(proposal);
 
-                String fileContent = doc.getText(0, doc.getLength());;
+                String fileContent = doc.getText(0, doc.getLength());
                 assertFileContentsMatches(file, fileContent, false, ".ccresult");
             }
         });
     }
 
     public void checkCompletionDocumentation(final String file, final String caretLine, final boolean includeModifiers, final String itemPrefix) throws Exception {
+        checkCompletionDocumentation(file, caretLine, includeModifiers, itemPrefix, QueryType.COMPLETION);
+    }
+
+    public void checkCompletionDocumentation(final String file, final String caretLine, final boolean includeModifiers, final String itemPrefix, QueryType queryType) throws Exception {
         // TODO call TestCompilationInfo.setCaretOffset!
-        final QueryType type = QueryType.COMPLETION;
+        final QueryType type = queryType;
         final boolean caseSensitive = true;
 
         Source testSource = getTestSource(getTestFile(file));
@@ -3557,10 +3564,10 @@ public abstract class CslTestBase extends NbTestCase {
 
         // Sort nodes
         for (List<Object> list : starts.values()) {
-            Collections.sort(list, FORWARDS_COMPARATOR);
+            list.sort(FORWARDS_COMPARATOR);
         }
         for (List<Object> list : ends.values()) {
-            Collections.sort(list, BACKWARDS_COMPARATOR);
+            list.sort(BACKWARDS_COMPARATOR);
         }
 
         // Include 0-0 nodes first
@@ -4010,10 +4017,10 @@ public abstract class CslTestBase extends NbTestCase {
 
         // Sort nodes
         for (List<Object> list : starts.values()) {
-            Collections.sort(list, FORWARDS_COMPARATOR);
+            list.sort(FORWARDS_COMPARATOR);
         }
         for (List<Object> list : ends.values()) {
-            Collections.sort(list, BACKWARDS_COMPARATOR);
+            list.sort(BACKWARDS_COMPARATOR);
         }
 
         // TODO - include information here about nodes without correct positions
@@ -4138,7 +4145,7 @@ public abstract class CslTestBase extends NbTestCase {
                     sb.append("\n");
                 }
                 if (descsOnLine != null) {
-                    Collections.sort(descsOnLine, new Comparator<Hint>() {
+                    descsOnLine.sort(new Comparator<Hint>() {
                         public int compare(Hint arg0, Hint arg1) {
                             return arg0.getDescription().compareTo(arg1.getDescription());
                         }

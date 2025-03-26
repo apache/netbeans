@@ -68,25 +68,25 @@ public interface VCSHistoryProvider {
      * The <code>usernameShort</code> and <code>revisionShort</code> will be displayed 
      * in places with limited space, but should be descriptive enough to identify the 
      * particular user or revision - e.g in case of Mercurial it would be something like:
-     * 
-     * <table border="0" cellpadding="1" cellspacing="1">
-     *   <tr align="left">
-     *     <th bgcolor="#CCCCFF"></th>
-     *     <th bgcolor="#CCCCFF">short</th>
-     *     <th bgcolor="#CCCCFF">long</th>
+     * e border="0"
+     * <table>
+     *   <caption>example of output for Mercurial</caption>
+     *   <tr>
+     *     <th style="background-color:#CCCCFF"></th>
+     *     <th style="background-color:#CCCCFF">short</th>
+     *     <th style="background-color:#CCCCFF">long</th>
      *   </tr>
-     *   <tr align="left">
+     *   <tr>
      *     <td>revision</td>
      *     <td>210767</td>
      *     <td>210767:2dd617e260fc</td>
      *   </tr>
-     *   <tr align="left">
+     *   <tr>
      *     <td>user</td>
      *     <td>john.doe@netbeans.org</td>
      *     <td>John Doe &lt;john.doe@netbeans.org&gt;</td>
      *   </tr>
      * </table>
-     * </p> 
      * 
      * @since 1.29
      */
@@ -253,7 +253,7 @@ public interface VCSHistoryProvider {
          * 
          * @throws IOException if it wasn't possible to set the message
          * 
-         * @throws IllegalStateException if no {@link #MessageEditProvider} was passed to this HistoryEntry instance
+         * @throws IllegalStateException if no {@link MessageEditProvider} was passed to this HistoryEntry instance
          *
          * @since 1.29
          */

@@ -71,7 +71,7 @@ public final class BridgingInputOutputProvider
     private static final Logger LOG
             = Logger.getLogger(BridgingInputOutputProvider.class.getName());
 
-    private final Deque<FoldHandle> foldStack = new ArrayDeque<FoldHandle>();
+    private final Deque<FoldHandle> foldStack = new ArrayDeque<>();
 
     @Override
     public String getId() {
@@ -284,7 +284,7 @@ public final class BridgingInputOutputProvider
         if (link == null) {
             return null;
         }
-        return new OutputListenerAdapter() {
+        return new OutputListener() {
             @Override
             public void outputLineAction(OutputEvent ev) {
                 Hyperlinks.invoke(link);
@@ -324,18 +324,4 @@ public final class BridgingInputOutputProvider
         }
     }
 
-    private static class OutputListenerAdapter implements OutputListener {
-
-        @Override
-        public void outputLineSelected(OutputEvent ev) {
-        }
-
-        @Override
-        public void outputLineAction(OutputEvent ev) {
-        }
-
-        @Override
-        public void outputLineCleared(OutputEvent ev) {
-        }
-    }
 }

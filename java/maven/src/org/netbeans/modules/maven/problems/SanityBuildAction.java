@@ -20,26 +20,40 @@
 package org.netbeans.modules.maven.problems;
 
 import java.util.Arrays;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.maven.project.MavenProject;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.TestChecker;
 import org.netbeans.modules.maven.api.NbMavenProject;
+import org.netbeans.modules.maven.api.execute.ExecutionContext;
+import org.netbeans.modules.maven.api.execute.ExecutionResultChecker;
+import org.netbeans.modules.maven.api.execute.RunConfig;
 import org.netbeans.modules.maven.api.execute.RunConfig.ReactorStyle;
 import org.netbeans.modules.maven.api.execute.RunUtils;
 import org.netbeans.modules.maven.execute.BeanRunConfig;
 import org.netbeans.modules.maven.execute.MavenProxySupport;
 import org.netbeans.modules.maven.execute.MavenProxySupport.ProxyResult;
+import org.netbeans.modules.maven.options.MavenSettings;
 import static org.netbeans.modules.maven.problems.Bundle.*;
+import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.ui.ProjectProblemResolver;
 import org.netbeans.spi.project.ui.ProjectProblemsProvider;
 import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.NbPreferences;
 
 /**
  * Corrective action to run some target which can download plugins or parent POMs.
@@ -47,11 +61,14 @@ import org.openide.util.NbBundle.Messages;
  * to believe that there really is a problem with their project, not NetBeans.
  */
 @Messages({"ACT_validate=Priming Build",
+            "ACT_PrimingComplete=Priming build was completed.",
+            "ACT_PrimingFailed=Priming build failed. Please check project build output and resolve problems manually.",
             "ACT_start_validate=Priming build was started."})
 public class SanityBuildAction implements ProjectProblemResolver {
     private static final Logger LOG = Logger.getLogger(SanityBuildAction.class.getName());
     
     private final Project nbproject;
+    private final Supplier<Boolean> checkSupplier;
     
     /**
      * The priming build, which is currently pending or recently completed.
@@ -59,12 +76,14 @@ public class SanityBuildAction implements ProjectProblemResolver {
      */
     private volatile CompletableFuture<ProjectProblemsProvider.Result> pendingResult;
 
-    public SanityBuildAction(Project nbproject) {
+    public SanityBuildAction(Project nbproject, Supplier<Boolean> checkSupplier) {
         this.nbproject = nbproject;
+        this.checkSupplier = checkSupplier;
     }
 
-    public SanityBuildAction(Project nbproject, Future<ProjectProblemsProvider.Result> otherResult) {
+    public SanityBuildAction(Project nbproject, Supplier<Boolean> checkSupplier, Future<ProjectProblemsProvider.Result> otherResult) {
         this.nbproject = nbproject;
+        this.checkSupplier = checkSupplier;
     }
     
     public Future<ProjectProblemsProvider.Result> getPendingResult() {
@@ -78,34 +97,58 @@ public class SanityBuildAction implements ProjectProblemResolver {
     })
     @Override
     public CompletableFuture<ProjectProblemsProvider.Result> resolve() {
+        return resolve(null);
+    }
+    
+    public CompletableFuture<ProjectProblemsProvider.Result> resolve(Lookup context) {
         CompletableFuture<ProjectProblemsProvider.Result> pr = pendingResult;
         if (pr != null && !pr.isDone()) {
             LOG.log(Level.FINE, "SanityBuild.resolve returns: {0}", pendingResult);
             return pendingResult;
         }
         final CompletableFuture<ProjectProblemsProvider.Result> publicResult = new CompletableFuture<>();
-        
+        AtomicReference<ProjectProblemsProvider.Result> primingResult = new AtomicReference<>();
+        AtomicReference<Throwable> primingException = new AtomicReference<>();
         Runnable toRet = new Runnable() {
             @Override
             public void run() {
+                /**
+                 * From the appearance of the Sanity action, the project's state may have changed. In that case the sanity build should not run maven again.
+                 */
+                if (!checkSupplier.get()) {
+                    ProjectProblemsProvider.Result r = ProjectProblemsProvider.Result.create(ProjectProblemsProvider.Status.RESOLVED, ACT_start_validate());
+                    if (r != null) {
+                        LOG.log(Level.FINE, "Project {0} is OK before sanity build action.", nbproject);
+                        publicResult.complete(r);
+                        return;
+                    }
+                }
                 try {
                     LOG.log(Level.FINE, "Configuring sanity build");
+                    AtomicInteger result = new AtomicInteger();
                     BeanRunConfig config = new BeanRunConfig();
+                    if (context != null) {
+                        config.setActionContext(context);
+                    }
                     config.setExecutionDirectory(FileUtil.toFile(nbproject.getProjectDirectory()));
                     NbMavenProject mavenPrj = nbproject.getLookup().lookup(NbMavenProject.class);
+                    MavenProject loaded = NbMavenProject.getPartialProject(mavenPrj.getMavenProject());
+                    String goals;
                     if (mavenPrj != null
                             && mavenPrj.getMavenProject().getVersion() != null 
                             && mavenPrj.getMavenProject().getVersion().endsWith("SNAPSHOT")) {
-                        config.setGoals(Arrays.asList("--fail-at-end", "install")); // NOI18N
+                        goals = NbPreferences.forModule(MavenSettings.class).get("primingBuild.snapshot.goals", "install");
                     } else {
-                        config.setGoals(Arrays.asList("--fail-at-end", "package")); // NOI18N
+                        goals = NbPreferences.forModule(MavenSettings.class).get("primingBuild.regular.goals", "package");
                     }
+                    config.setGoals(Arrays.asList("--fail-at-end", goals)); // NOI18N
                     config.setReactorStyle(ReactorStyle.ALSO_MAKE);
                     config.setProperty(TestChecker.PROP_SKIP_TEST, "true"); //priming doesn't need test execution, just compilation
                     config.setProject(nbproject);
                     String label = build_label(nbproject.getProjectDirectory().getNameExt());
                     config.setExecutionName(label);
                     config.setTaskDisplayName(label);
+                    config.setInternalProperty(SanityBuildAction.class.getName(), result);
                     
                     MavenProxySupport mps = nbproject.getLookup().lookup(MavenProxySupport.class);
                     if (mps != null) {
@@ -114,30 +157,48 @@ public class SanityBuildAction implements ProjectProblemResolver {
                             res = mps.checkProxySettings().get();
                             if (res.getStatus() == MavenProxySupport.Status.ABORT) {
                                 ProjectProblemsProvider.Result r = ProjectProblemsProvider.Result.create(ProjectProblemsProvider.Status.UNRESOLVED, ERR_SanityBuildCancalled());
-                                publicResult.complete(r);
+                                primingResult.set(r);
                                 return;
                             }
                         } catch (ExecutionException ex) {
                             ProjectProblemsProvider.Result r = ProjectProblemsProvider.Result.create(ProjectProblemsProvider.Status.UNRESOLVED, ERR_ProxyUpdateFailed(ex.getLocalizedMessage()));
-                            publicResult.complete(r);
+                            primingResult.set(r);
                             return;
                         } catch (InterruptedException ex) {
                             ProjectProblemsProvider.Result r = ProjectProblemsProvider.Result.create(ProjectProblemsProvider.Status.UNRESOLVED, ERR_SanityBuildCancalled());
-                            publicResult.complete(r);
+                            primingResult.set(r);
                             return;
                         }
                     }
+                    long t = System.currentTimeMillis();
                     LOG.log(Level.FINE, "Executing sanity build: goals = {0}, properties = {1}", new Object[] { config.getGoals(), config.getProperties() });
                     ExecutorTask et = RunUtils.run(config);
-                    et.addTaskListener(t -> {
-                        ProjectProblemsProvider.Result r = ProjectProblemsProvider.Result.create(ProjectProblemsProvider.Status.RESOLVED, ACT_start_validate());
-                        LOG.log(Level.FINE, "Sanity build finished.");
-                        publicResult.complete(r);
-                    });
+                    AtomicBoolean stopped = new AtomicBoolean();
+                    if (et != null) {
+                        publicResult.exceptionally(x -> {
+                            if (x instanceof CancellationException) {
+                                stopped.set(true);
+                                et.stop();
+                            }
+                            return null;
+                        });
+                        et.waitFinished();
+                        ProjectProblemsProvider.Result r;
+                        if (!stopped.get() && (result.get() == 0 ||
+                            // if the build failed, the problem may be in user's sources, rather than in
+                            // missing artifacts. Check if sanity build is still needed:
+                            !nbproject.getLookup().lookup(SanityBuildNeededChecker.class).isSanityBuildNeeded())) {
+                            r = ProjectProblemsProvider.Result.create(ProjectProblemsProvider.Status.RESOLVED, ACT_PrimingComplete());
+                        } else {
+                            r = ProjectProblemsProvider.Result.create(ProjectProblemsProvider.Status.UNRESOLVED, ACT_PrimingFailed());
+                        }
+                        LOG.log(Level.FINE, "Sanity build of {0} finished, took {1} ms.", new Object[] { nbproject, System.currentTimeMillis() - t});
+                        primingResult.set(r);
+                    }
                 } catch (RuntimeException | Error e) {
                     // always report completness, otherwise tasks that wait on priming build could block indefinitely.
                     LOG.log(Level.FINE, "Sanity build failed", e);
-                    publicResult.completeExceptionally(e);
+                    primingException.set(e);
                     throw e;
                 }
             }
@@ -150,10 +211,17 @@ public class SanityBuildAction implements ProjectProblemResolver {
             }
             pendingResult = publicResult;
         }
-        MavenModelProblemsProvider.RP.submit(toRet);
+        // completing the exception ONLY after the Task completes ensures that all events were delivered.
+        ((NbMavenProjectImpl)this.nbproject).scheduleProjectOperation(MavenModelProblemsProvider.RP, toRet, 0, true).addTaskListener((l) -> {
+            if (primingException.get() != null) {
+                publicResult.completeExceptionally(primingException.get());
+            } else {
+                publicResult.complete(primingResult.get());
+            }
+        });
         return publicResult;
     }
-
+    
     @Override
     public int hashCode() {
         int hash = SanityBuildAction.class.hashCode();
@@ -176,5 +244,22 @@ public class SanityBuildAction implements ProjectProblemResolver {
         return true;
     }
 
-    
+
+    @ProjectServiceProvider(service=ExecutionResultChecker.class, projectType="org-netbeans-modules-maven")
+    public static class ResultChecker implements ExecutionResultChecker {
+
+        @Override
+        public void executionResult(RunConfig config, ExecutionContext res, int resultCode) {
+            Object resultObj = config.getInternalProperties().get(SanityBuildAction.class.getName());
+            if (!(resultObj instanceof AtomicInteger)) {
+                return ;
+            }
+            AtomicInteger result = (AtomicInteger) resultObj;
+            result.set(resultCode);
+        }
+    }
+
+    public interface SanityBuildNeededChecker {
+        public boolean isSanityBuildNeeded();
+    }
 }

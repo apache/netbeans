@@ -104,8 +104,6 @@ public final class TestUtil extends ProxyLookup {
     static void setup(NbTestCase test) throws Exception {
         test.clearWorkDir();
         Logger.getLogger("org.netbeans.modules.web.jspparser_ext").setLevel(Level.FINE);
-        // unzip test project
-        TestUtil.getProject(test, "project3");
         TestUtil.initParserJARs();
     }
 
@@ -212,13 +210,13 @@ public final class TestUtil extends ProxyLookup {
     
     public static void initParserJARs() throws MalformedURLException {
         List<URL> list = getJARs("jsp.parser.jars");
-        JspParserImpl.setParserJARs(list.toArray(new URL[list.size()]));
+        JspParserImpl.setParserJARs(list.toArray(new URL[0]));
     }
 
     public static List<URL> getJARs(String propertyName) throws MalformedURLException {
         String path = System.getProperty(propertyName);
         String[] paths = PropertyUtils.tokenizePath(path);
-        List<URL> list = new ArrayList();
+        List<URL> list = new ArrayList<>();
         for (int i = 0; i< paths.length; i++) {
             String token = paths[i];
             File f = new File(token);

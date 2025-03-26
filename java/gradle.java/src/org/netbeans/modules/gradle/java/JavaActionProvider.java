@@ -72,6 +72,7 @@ public class JavaActionProvider extends DefaultGradleActionsProvider {
         COMMAND_RUN,
         COMMAND_DEBUG,
         COMMAND_TEST,
+        COMMAND_TEST_PARALLEL,
         COMMAND_TEST_SINGLE,
         COMMAND_DEBUG_TEST_SINGLE,
         COMMAND_RUN_SINGLE_METHOD,

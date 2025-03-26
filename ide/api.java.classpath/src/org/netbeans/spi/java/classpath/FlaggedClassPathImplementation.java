@@ -24,7 +24,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
 
 /**
- * The ClassPathImplementation with {@link ClassPath.Flag}s.
+ * The ClassPathImplementation with {@link org.netbeans.api.java.classpath.ClassPath.Flag}s.
  * @author Tomas Zezula
  * @since 1.44
  */
@@ -37,7 +37,7 @@ public interface FlaggedClassPathImplementation extends ClassPathImplementation 
 
     /**
      * Returns the {@link ClassPath}'s flags.
-     * @return the {@link Flag}s
+     * @return the {@link org.netbeans.api.java.classpath.ClassPath.Flag}s
      */
     @NonNull
     Set<ClassPath.Flag> getFlags();

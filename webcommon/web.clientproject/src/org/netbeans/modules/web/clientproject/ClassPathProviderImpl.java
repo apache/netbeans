@@ -140,7 +140,7 @@ public class ClassPathProviderImpl implements ClassPathProvider {
             for (PlatformProvider provider : project.getPlatformProviders()) {
                 roots.addAll(provider.getSourceRoots(project));
             }
-            return roots.toArray(new URL[roots.size()]);
+            return roots.toArray(new URL[0]);
         }
 
         @Override

@@ -65,7 +65,7 @@
                                 </Variable>
                                 <Block start='188' end='280' isCurly='true'>
                                     <SwitchCase start='206' end='230' default='false'>
-                                        <StaticConstantAccess start='211' end='229'>
+                                        <StaticConstantAccess start='211' end='229' isDynamicName='false'>
                                             <NamespaceName start='211' end='215' isCurrent='false' isGlobal='false'>
                                                 <Identifier start='211' end='215' name='self'/>
                                             </NamespaceName>
@@ -78,7 +78,7 @@
                                         </StaticConstantAccess>
                                     </SwitchCase>
                                     <SwitchCase start='237' end='274' default='false'>
-                                        <StaticConstantAccess start='242' end='259'>
+                                        <StaticConstantAccess start='242' end='259' isDynamicName='false'>
                                             <NamespaceName start='242' end='246' isCurrent='false' isGlobal='false'>
                                                 <Identifier start='242' end='246' name='self'/>
                                             </NamespaceName>

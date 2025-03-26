@@ -34,11 +34,16 @@ import java.util.stream.Collectors;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.QualifiedNameable;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Position;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.queries.UnitTestForSourceQuery;
 import org.netbeans.api.java.source.CancellableTask;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -46,8 +51,10 @@ import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController.TestMethod;
 import org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods;
 import org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods.Factory;
+import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -66,6 +73,7 @@ public final class TestClassInfoTask implements CancellableTask<CompilationContr
      * <b>DO NOT USE!</b> Package private due to use in tests
      */
     static String ANNOTATION = "org.testng.annotations.Test"; //NOI18N
+    static String TESTNG_ANNOTATION_PACKAGE = "org.testng.annotations"; //NOI18N
 
     TestClassInfoTask(int caretPosition) {
         this.caretPosition = caretPosition;
@@ -139,37 +147,50 @@ public final class TestClassInfoTask implements CancellableTask<CompilationContr
         }
         TypeElement typeElement = (TypeElement) info.getTrees().getElement(new TreePath(new TreePath(info.getCompilationUnit()), clazz));
         Elements elements = info.getElements();
+        boolean hasClassLevelAnnotation = hasTestNGTestAnnotation(elements, typeElement);
         List<TestMethod> result = new ArrayList<>();
         for (TreePath tp : methods) {
             if (cancel.get()) {
                 return null;
             }
             Element element = info.getTrees().getElement(tp);
-            if (element != null) {
-                List<? extends AnnotationMirror> allAnnotationMirrors = elements.getAllAnnotationMirrors(element);
-                for (Iterator<? extends AnnotationMirror> it = allAnnotationMirrors.iterator(); it.hasNext();) {
-                    AnnotationMirror annotationMirror = it.next();
-                    TypeElement annTypeElement = (TypeElement) annotationMirror.getAnnotationType().asElement();
-                    if (annTypeElement.getQualifiedName().contentEquals(ANNOTATION)) {
-                        String mn = element.getSimpleName().toString();
-                        SourcePositions sp = info.getTrees().getSourcePositions();
-                        int start = (int) sp.getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
-                        int preferred = info.getTreeUtilities().findNameSpan((MethodTree) tp.getLeaf())[0];
-                        int end = (int) sp.getEndPosition(tp.getCompilationUnit(), tp.getLeaf());
-                        Document doc = info.getSnapshot().getSource().getDocument(false);
-                        try {
-                            result.add(new TestMethod(typeElement.getQualifiedName().toString(), new SingleMethod(fileObject, mn),
-                                    doc != null ? doc.createPosition(start) : new SimplePosition(start),
-                                    doc != null ? doc.createPosition(preferred) : new SimplePosition(preferred),
-                                    doc != null ? doc.createPosition(end) : new SimplePosition(end)));
-                        } catch (BadLocationException ex) {
-                            //ignore
+            if (element != null && element.getKind() == ElementKind.METHOD) {
+                if (hasTestNGTestAnnotation(elements, element) ||
+                    (hasClassLevelAnnotation && element.getModifiers().contains(Modifier.PUBLIC) &&
+                     !hasTestNGAnnotation(elements, element))) {
+                    String mn = element.getSimpleName().toString();
+                    SourcePositions sp = info.getTrees().getSourcePositions();
+                    int start = (int) sp.getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
+                    int preferred = info.getTreeUtilities().findNameSpan((MethodTree) tp.getLeaf())[0];
+                    int end = (int) sp.getEndPosition(tp.getCompilationUnit(), tp.getLeaf());
+                    Document doc = info.getSnapshot().getSource().getDocument(false);
+                    try {
+                        result.add(new TestMethod(typeElement.getQualifiedName().toString(), new SingleMethod(fileObject, mn),
+                                doc != null ? doc.createPosition(start) : new SimplePosition(start),
+                                doc != null ? doc.createPosition(preferred) : new SimplePosition(preferred),
+                                doc != null ? doc.createPosition(end) : new SimplePosition(end)));
+                    } catch (BadLocationException ex) {
+                        //ignore
                     }
                 }
             }
         }
-        }
         return result;
+    }
+
+    private static boolean hasTestNGTestAnnotation(Elements elements, Element element) {
+        return elements.getAllAnnotationMirrors(element)
+                       .stream()
+                       .map(am -> (TypeElement) am.getAnnotationType().asElement())
+                       .anyMatch(annTypeElement -> annTypeElement.getQualifiedName().contentEquals(ANNOTATION));
+    }
+
+    private static boolean hasTestNGAnnotation(Elements elements, Element element) {
+        return elements.getAllAnnotationMirrors(element)
+                       .stream()
+                       .map(am -> (TypeElement) am.getAnnotationType().asElement())
+                       .map(te -> (QualifiedNameable) te.getEnclosingElement())
+                       .anyMatch(annTypeElement -> annTypeElement.getQualifiedName().contentEquals(TESTNG_ANNOTATION_PACKAGE));
     }
 
     @ServiceProvider(service=Factory.class)
@@ -193,6 +214,35 @@ public final class TestClassInfoTask implements CancellableTask<CompilationContr
             public List<TestMethod> computeTestMethods(CompilationInfo info) {
                 return TestClassInfoTask.computeTestMethods(info, cancel, -1);
             }
+        }
+
+    }
+
+    @MimeRegistration(mimeType="text/x-java", service=org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods.class)
+    public static final class TestNGComputeTestMethodsImpl implements org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods {
+
+        @Override
+        public List<TestMethod> computeTestMethods(Parser.Result parserResult, AtomicBoolean cancel) {
+            try {
+                CompilationController cc = CompilationController.get(parserResult);
+                if (isTestSource(cc.getFileObject()) && cc.toPhase(Phase.ELEMENTS_RESOLVED).compareTo(Phase.ELEMENTS_RESOLVED) >= 0) {
+                    return TestClassInfoTask.computeTestMethods(cc, cancel, -1);
+                }
+            } catch (Exception ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            return Collections.emptyList();
+        }
+
+        private static boolean isTestSource(FileObject fo) {
+            ClassPath cp = ClassPath.getClassPath(fo, ClassPath.SOURCE);
+            if (cp != null) {
+                FileObject root = cp.findOwnerRoot(fo);
+                if (root != null) {
+                    return UnitTestForSourceQuery.findSources(root).length > 0;
+                }
+            }
+            return false;
         }
 
     }

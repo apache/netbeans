@@ -62,7 +62,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import org.codehaus.plexus.util.StringUtils;
-import org.jdom.Verifier;
+import org.jdom2.Verifier;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
@@ -108,7 +108,7 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
     private static final RequestProcessor RP = new RequestProcessor(ActionMappings.class);
     private NbMavenProjectImpl project;
     private ModelHandle2 handle;
-    private final HashMap<String, String> titles = new HashMap<String, String>();
+    private final HashMap<String, String> titles = new HashMap<>();
     
     private final GoalsListener goalsListener;
     private final TextValueCompleter goalcompleter;
@@ -222,12 +222,10 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         
         loadMappings();
         clearFields();
-        comboListener = new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
-                clearFields();
-                loadMappings();
-                addListeners();
-            }
+        comboListener = (ActionEvent e) -> {
+            clearFields();
+            loadMappings();
+            addListeners();
         };
     }
     
@@ -269,7 +267,7 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         addListeners();
         RP.post(new Runnable() {
             @Override public void run() {
-                final Set<String> strs = new HashSet<String>();
+                final Set<String> strs = new HashSet<>();
                 final GoalsProvider provider = Lookup.getDefault().lookup(GoalsProvider.class);
                 if (provider != null) {
                     strs.addAll(provider.getAvailableGoals());
@@ -288,12 +286,10 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
                 }
                 final List<String> profiles = allProfiles;
 
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override public void run() {
-                        goalcompleter.setValueList(strs, false); //do not bother about partial results, too many intermediate apis..
-                        if (profiles != null) {
-                            profilecompleter.setValueList(profiles, false);
-                        }
+                SwingUtilities.invokeLater(() -> {
+                    goalcompleter.setValueList(strs, false); //do not bother about partial results, too many intermediate apis..
+                    if (profiles != null) {
+                        profilecompleter.setValueList(profiles, false);
                     }
                 });
             }
@@ -348,6 +344,7 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.gridheight = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipadx = 427;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 18, 0, 12);
@@ -426,6 +423,7 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         gridBagConstraints.gridy = 7;
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.gridheight = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipadx = 455;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(18, 18, 0, 12);
@@ -446,6 +444,7 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         gridBagConstraints.gridy = 9;
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.gridheight = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipadx = 455;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(6, 18, 0, 12);
@@ -494,8 +493,6 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         gridBagConstraints.ipadx = 436;
         gridBagConstraints.ipady = 120;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 18, 0, 12);
         add(jScrollPane2, gridBagConstraints);
 
@@ -557,6 +554,7 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         gridBagConstraints.gridy = 11;
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.gridheight = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipadx = 455;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(6, 18, 0, 12);
@@ -735,11 +733,11 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                     }
                 }
 
-                DefaultComboBoxModel<String> cbModel = new DefaultComboBoxModel<String>(allIcons.toArray(new String[0]));
+                DefaultComboBoxModel<String> cbModel = new DefaultComboBoxModel<>(allIcons.toArray(String[]::new));
                 boolean hasAvailable;
                 if (cbModel.getSize() != 0) {
                     hasAvailable = true;
-                    JComboBox<String> cb = new JComboBox<String>();
+                    JComboBox<String> cb = new JComboBox<>();
                     cb.setModel(cbModel);
                     pnl.add(cb);
                     cb.setRenderer(new DefaultListCellRenderer() {
@@ -983,7 +981,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
     public static Map<String, String> convertStringToActionProperties(String text) {
         PropertySplitter split = new PropertySplitter(text);
         String tok = split.nextPair();
-        Map<String,String> props = new LinkedHashMap<String,String>();
+        Map<String,String> props = new LinkedHashMap<>();
         while (tok != null) {
             String[] prp = StringUtils.split(tok, "=", 2); //NOI18N
             if (prp.length >= 1 ) {
@@ -998,7 +996,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                 if (key.endsWith("=")) {
                     key = key.substring(0, key.length() - 1);
                 }
-                if (key.trim().length() > 0 && Verifier.checkElementName(key.trim()) == null) {
+                if (!key.isBlank() && Verifier.checkElementName(key.trim()) == null) {
                     props.put(key.trim(), prp.length > 1 ? prp[1] : "");
                 }
             }
@@ -1203,7 +1201,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                 String text = txtGoals.getText();
                 StringTokenizer tok = new StringTokenizer(text, " "); //NOI18N
                 NetbeansActionMapping mapp = wr.getMapping();
-                List<String> goals = new ArrayList<String>();
+                List<String> goals = new ArrayList<>();
                 while (tok.hasMoreTokens()) {
                     String token = tok.nextToken();
                     goals.add(token);
@@ -1228,7 +1226,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                 String text = txtProfiles.getText();
                 StringTokenizer tok = new StringTokenizer(text, " ,"); //NOI18N
                 NetbeansActionMapping mapp = wr.getMapping();
-                List<String> profs = new ArrayList<String>();
+                List<String> profs = new ArrayList<>();
                 while (tok.hasMoreTokens()) {
                     String token = tok.nextToken();
                     profs.add(token);
@@ -1250,7 +1248,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                 String text = txtPackagings.getText().trim();
                 StringTokenizer tok = new StringTokenizer(text, " ,"); //NOI18N
                 NetbeansActionMapping mapp = wr.getMapping();
-                List<String> packs = new ArrayList<String>();
+                List<String> packs = new ArrayList<>();
                 while (tok.hasMoreTokens()) {
                     String token = tok.nextToken();
                     packs.add(token.trim());
@@ -1415,7 +1413,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                     if (expr != null) {
                         String props = area.getText();
                         String sep = "\n";//NOI18N
-                        if (props.endsWith("\n") || props.trim().length() == 0) {//NOI18N
+                        if (props.endsWith("\n") || props.isBlank()) {//NOI18N
                             sep = "";//NOI18N
                         }
                         props = props + sep + expr + "="; //NOI18N
@@ -1441,7 +1439,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         @Override public void actionPerformed(ActionEvent e) {
             String props = area.getText();
             String sep = "\n";//NOI18N
-            if (props.endsWith("\n") || props.trim().length() == 0) {//NOI18N
+            if (props.endsWith("\n") || props.isBlank()) {//NOI18N
                 sep = "";//NOI18N
             }
             props = props + sep + "Env.FOO=bar"; //NOI18N
@@ -1498,7 +1496,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         @Override public void actionPerformed(ActionEvent e) {
             String props = area.getText();
             String sep = "\n";//NOI18N
-            if (props.endsWith("\n") || props.trim().length() == 0) {//NOI18N
+            if (props.endsWith("\n") || props.isBlank()) {//NOI18N
                 sep = "";//NOI18N
             }
             String val = "Env.JAVA_HOME=" + value;
@@ -1584,7 +1582,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
             }
         } else {
             String sep = "\n";//NOI18N
-            if (props.endsWith("\n") || props.trim().length() == 0) {//NOI18N
+            if (props.endsWith("\n") || props.isBlank()) {//NOI18N
                 sep = "";//NOI18N
             }
             props = props + sep + replace; //NOI18N
@@ -1620,7 +1618,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         }
 
         private void checkValid () {
-            setValid(textField.getText() != null && textField.getText().trim().length() > 0);
+            setValid(textField.getText() != null && !textField.getText().isBlank());
         }
 
     }

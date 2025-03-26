@@ -30,4 +30,5 @@ public interface FieldElement extends TypedInstanceElement, TypeMemberElement {
     boolean isAnnotation();
     boolean isUnionType();
     boolean isIntersectionType();
+    String getDeclaredType();
 }

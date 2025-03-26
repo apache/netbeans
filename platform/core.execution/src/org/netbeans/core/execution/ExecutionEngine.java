@@ -70,13 +70,13 @@ public final class
     private static final IOTable taskIOs = new IOTable(base, systemIO);
 
     /* table of window:threadgrp */
-    private static WindowTable wtable = new WindowTable();
+    private static final WindowTable wtable = new WindowTable();
 
     /** list of ExecutionListeners */
-    private HashSet<ExecutionListener> executionListeners = new HashSet<ExecutionListener>();
+    private final HashSet<ExecutionListener> executionListeners = new HashSet<>();
 
     /** List of running executions */
-    private List<ExecutorTask> runningTasks = Collections.synchronizedList(new ArrayList<ExecutorTask>( 5 ));
+    private final List<ExecutorTask> runningTasks = Collections.synchronizedList(new ArrayList<>(5));
 
     static {
         systemIO.out = new OutputStreamWriter(System.out);
@@ -131,13 +131,14 @@ public final class
     * @param executor to start
     * @param info about class to start
     */
+    @Override
     public ExecutorTask execute(String name, Runnable run, final InputOutput inout) {
         TaskThreadGroup g = new TaskThreadGroup(base, "exec_" + name + "_" + number); // NOI18N
         g.setDaemon(true);
         ExecutorTaskImpl task = new ExecutorTaskImpl();
         synchronized (task.lock) {
             try {
-                new RunClassThread(g, name, number++, inout, this, task, Lookup.getDefault(), run);
+                new RunClassThread(g, name, number++, inout, this, task, Lookup.getDefault(), run).start();
                 task.lock.wait();
             } catch (InterruptedException e) { // #171795
                 inout.closeInputOutput();
@@ -157,9 +158,10 @@ public final class
     *
     * @return class path to libraries
     */
+    @Override
     protected NbClassPath createLibraryPath() {
         List<File> l = Main.getModuleSystem().getModuleJars();
-        return new NbClassPath (l.toArray (new File[l.size ()]));
+        return new NbClassPath (l.toArray (new File[0]));
     }
 
     /** adds a listener */
@@ -181,6 +183,7 @@ public final class
      * @param io an InputOutput
      * @return PermissionCollection for given CodeSource and InputOutput
      */
+    @Override
     protected final PermissionCollection createPermissions(CodeSource cs, InputOutput io) {
         PermissionCollection pc = Policy.getPolicy().getPermissions(cs);
         ThreadGroup grp = Thread.currentThread().getThreadGroup();
@@ -252,6 +255,7 @@ public final class
             this.std = std;
         }
 
+        @Override
         public void write(int b) throws IOException {
             if (std) {
                 getTaskIOs().getOut().write(b);

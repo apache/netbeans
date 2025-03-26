@@ -144,7 +144,7 @@ public class CheckLinks extends MatchingTask {
         JUnitReportWriter.writeReport(this, null, report, Collections.singletonMap("testBrokenLinks", testMessage));
     }
     
-    private static Pattern hrefOrAnchor = Pattern.compile("<(a|img|link|h3)(\\s+shape=\"rect\")?(?:\\s+rel=\"stylesheet\")?\\s+(href|name|id|src)=\"([^\"#]*)(#[^\"$]+)?\"(\\s+shape=\"rect\")?(?:\\s+type=\"text/css\")?\\s*/?>", Pattern.CASE_INSENSITIVE);
+    private static Pattern hrefOrAnchor = Pattern.compile("<(a|img|link|h1|h2|h3|h4|li|span)(\\s+shape=\"rect\")?(?:\\s+rel=\"stylesheet\")?\\s+(href|name|id|src)=\"([^\"#]*)(#[^\"$]+)?\"(\\s+shape=\"rect\")?(?:\\s+type=\"text/css\")?\\s*/?>", Pattern.CASE_INSENSITIVE);
     private static Pattern lineBreak = Pattern.compile("^", Pattern.MULTILINE);
     
     /**
@@ -201,7 +201,7 @@ public class CheckLinks extends MatchingTask {
                 int pos = referrer.indexOf("!");
                 if (pos != -1) {
                     String base = referrer.substring(0,pos+1);
-                    String path1 = referrer.substring(pos+1,referrer.length());
+                    String path1 = referrer.substring(pos+1);
                     //System.out.println("base:" + base);
                     //System.out.println("path1:" + path1);
                     File f1 = new File(path1);
@@ -307,7 +307,7 @@ public class CheckLinks extends MatchingTask {
                 String name = u.getPath();
                 //Strip leading "/" as findResource does not work when leading slash is present
                 if (name.startsWith("/")) {
-                    name = name.substring(1,name.length());
+                    name = name.substring(1);
                     //System.out.println("name:" + name);
                 }
                 URL res;
@@ -344,7 +344,7 @@ public class CheckLinks extends MatchingTask {
                 String name = u.getPath();
                 //Strip leading "/" as findResource does not work when leading slash is present
                 if (name.startsWith("/")) {
-                    name = name.substring(1,name.length());
+                    name = name.substring(1);
                     //System.out.println("name:" + name);
                 }
                 URL res = null;

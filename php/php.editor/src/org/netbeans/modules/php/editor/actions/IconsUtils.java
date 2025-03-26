@@ -41,19 +41,27 @@ public final class IconsUtils {
     public static ImageIcon getElementIcon(PhpElementKind elementKind, Collection<Modifier> modifiers) {
         ImageIcon imageIcon;
         switch (elementKind) {
-            case CLASS: imageIcon = ImageUtilities.loadImageIcon(ICON_BASE + "class" + PNG_EXTENSION, false); //NOI18N
+            case CLASS:
+                imageIcon = loadClassIcon();
                 break;
-            case IFACE: imageIcon = ImageUtilities.loadImageIcon(ICON_BASE + "interface" + PNG_EXTENSION, false); //NOI18N
+            case IFACE:
+                imageIcon = loadInterfaceIcon();
                 break;
-            case TRAIT: imageIcon = ImageUtilities.loadImageIcon(ICON_BASE + "trait" + PNG_EXTENSION, false); //NOI18N
+            case TRAIT:
+                imageIcon = loadTraitIcon();
                 break;
-            case ENUM: imageIcon = ImageUtilities.loadImageIcon(ICON_BASE + "enum" + PNG_EXTENSION, false); //NOI18N
+            case ENUM:
+                imageIcon = loadEnumIcon();
                 break;
-            case CONSTANT: imageIcon = ImageUtilities.loadImageIcon(ICON_BASE + "constant" + PNG_EXTENSION, false); //NOI18N
+            case CONSTANT:
+                imageIcon = loadConstantIcon();
                 break;
-            case FUNCTION: imageIcon = ImageUtilities.loadImageIcon(ICON_BASE + "function" + PNG_EXTENSION, false); //NOI18N
+            case FUNCTION:
+                imageIcon = loadFunctionIcon();
                 break;
-            default: imageIcon = ImageUtilities.loadImageIcon(EMPTY_FILE_ICON_BASE + PNG_EXTENSION, false);
+            default:
+                imageIcon = ImageUtilities.loadImageIcon(EMPTY_FILE_ICON_BASE + PNG_EXTENSION, false);
+                break;
         }
         return imageIcon;
     }
@@ -66,4 +74,35 @@ public final class IconsUtils {
         return ImageUtilities.loadImageIcon(ICON_BASE + "error-glyph" + GIF_EXTENSION, false); //NOI18N
     }
 
+    public static ImageIcon loadClassIcon() {
+        return ImageUtilities.loadImageIcon(ICON_BASE + "class" + PNG_EXTENSION, false); // NOI18N
+    }
+
+    public static ImageIcon loadInterfaceIcon() {
+        return ImageUtilities.loadImageIcon(ICON_BASE + "interface" + PNG_EXTENSION, false); // NOI18N
+    }
+
+    public static ImageIcon loadTraitIcon() {
+        return ImageUtilities.loadImageIcon(ICON_BASE + "trait" + PNG_EXTENSION, false); // NOI18N
+    }
+
+    public static ImageIcon loadEnumIcon() {
+        return ImageUtilities.loadImageIcon(ICON_BASE + "enum" + PNG_EXTENSION, false); // NOI18N
+    }
+
+    public static ImageIcon loadFunctionIcon() {
+        return ImageUtilities.loadImageIcon(ICON_BASE + "function" + PNG_EXTENSION, false); // NOI18N
+    }
+
+    public static ImageIcon loadConstantIcon() {
+        return ImageUtilities.loadImageIcon(ICON_BASE + "constant" + PNG_EXTENSION, false); // NOI18N
+    }
+
+    public static ImageIcon loadEnumCaseIcon() {
+        return ImageUtilities.loadImageIcon(ICON_BASE + "enumCase" + PNG_EXTENSION, false); // NOI18N
+    }
+
+    public static ImageIcon loadKeywordIcon() {
+        return ImageUtilities.loadImageIcon(ICON_BASE + "php16Key" + PNG_EXTENSION, false); // NOI18N
+    }
 }

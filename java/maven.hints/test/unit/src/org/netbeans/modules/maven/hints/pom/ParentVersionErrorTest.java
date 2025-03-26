@@ -86,5 +86,28 @@ public class ParentVersionErrorTest extends NbTestCase {
         Project prj = ProjectManager.getDefault().findProject(pom.getParent());
         assertEquals(Collections.<ErrorDescription>emptyList(), new ParentVersionError().getErrorsForDocument(model, prj));
     }
-
+    
+    public void testVariablePresentInVersion() throws Exception { // #194281
+        TestFileUtils.writeFile(work, "pom.xml", "<project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd'>\n" +
+                "    <modelVersion>4.0.0</modelVersion>\n" +
+                "    <groupId>grp</groupId>\n" +
+                "    <artifactId>common</artifactId>\n" +
+                "    <version>${revision}</version>\n" +
+                "    <properties>\n" +
+                "       <revision>1.1</revision>\n" +
+                "    </properties>\n" +
+                "</project>\n");
+        FileObject pom = TestFileUtils.writeFile(work, "prj/pom.xml", "<project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd'>\n" +
+                "    <modelVersion>4.0.0</modelVersion>\n" +
+                "    <parent>\n" +
+                "        <groupId>grp</groupId>\n" +
+                "        <artifactId>common</artifactId>\n" +
+                "        <version>${revision}</version>\n" +
+                "    </parent>\n" +
+                "    <artifactId>prj</artifactId>\n" +
+                "</project>\n");
+        POMModel model = POMModelFactory.getDefault().getModel(Utilities.createModelSource(pom));
+        Project prj = ProjectManager.getDefault().findProject(pom.getParent());
+        assertEquals(Collections.<ErrorDescription>emptyList(), new ParentVersionError().getErrorsForDocument(model, prj));
+    }
 }

@@ -115,7 +115,7 @@ public abstract class Roots {
      * @param displayNames the display names of the roots
      * @param supportIncludes when true the roots list supports includes/excludes
      * @param type of the roots, when null the roots are registered as principal roots only
-     * @param hint optional hint for {@link SourceGroupModifier}
+     * @param hint optional hint for {@link org.netbeans.api.project.SourceGroupModifier}
      * @return the Roots
      */
     public static Roots propertyBased(
@@ -149,7 +149,7 @@ public abstract class Roots {
 
         @Override
         public String[] getRootProperties() {
-            return rootPropNames.toArray(new String[rootPropNames.size()]);
+            return rootPropNames.toArray(new String[0]);
         }
     }
 

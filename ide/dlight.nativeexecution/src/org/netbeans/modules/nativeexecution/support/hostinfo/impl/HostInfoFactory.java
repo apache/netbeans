@@ -89,7 +89,7 @@ public final class HostInfoFactory {
         try {
             return CpuFamily.valueOf(cpuFamilyStr.toUpperCase()); // NOI18N
         } catch (IllegalArgumentException ex) {
-            if (cpuFamilyStr.startsWith("armv")) { //NOI18N
+            if (cpuFamilyStr.startsWith("arm")) { //NOI18N
                 return CpuFamily.ARM;
             }
             return CpuFamily.UNKNOWN;
@@ -141,7 +141,7 @@ public final class HostInfoFactory {
                     for (int i = 0; i < gids.size(); i++) {
                         info.gids[i] = gids.get(i).intValue();                                                        
                     }
-                    info.groups = groups.toArray(new String[groups.size()]);
+                    info.groups = groups.toArray(new String[0]);
                 }
             } else {
                 error = true;

@@ -193,7 +193,7 @@ public final class InheritedPreferences extends AbstractPreferences implements P
         Collection<String> names = new HashSet<String>();
         names.addAll(Arrays.asList(stored.keys()));
         names.addAll(Arrays.asList(inherited.keys()));
-        return names.toArray(new String[names.size()]);
+        return names.toArray(new String[0]);
     }
 
     @Override

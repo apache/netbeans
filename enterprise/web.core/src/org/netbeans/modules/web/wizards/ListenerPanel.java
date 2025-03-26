@@ -44,7 +44,7 @@ import org.netbeans.modules.web.api.webmodule.WebModule;
  * @author  Milan Kuchtiak
  */
 public class ListenerPanel implements WizardDescriptor.Panel {
-    
+
     /** The visual component that displays this panel.
      * If you need to access the component from this class,
      * just use getComponent().
@@ -52,22 +52,27 @@ public class ListenerPanel implements WizardDescriptor.Panel {
     private ListenerVisualPanel component;
     private transient TemplateWizard wizard;
 
-    private static final String SERVLET_CONTEXT_LISTENER = "javax.servlet.ServletContextListener";    //NOI18N
-    private static final String SERVLET_CONTEXT_ATTRIBUTE_LISTENER = "javax.servlet.ServletContextAttributeListener";    //NOI18N
-    private static final String HTTP_SESSION_LISTENER = "javax.servlet.http.HttpSessionListener";    //NOI18N
-    private static final String HTTP_SESSION_ATTRIBUTE_LISTENER = "javax.servlet.http.HttpSessionAttributeListener";    //NOI18N
-    private static final String SERVLET_REQUEST_LISTENER = "javax.servlet.ServletRequestListener";    //NOI18N
-    private static final String SERVLET_REQUEST_ATTRIBUTE_LISTENER = "javax.servlet.ServletRequestAttributeListener";    //NOI18N
+    static final String SERVLET_CONTEXT_LISTENER = ".servlet.ServletContextListener";    //NOI18N
+    static final String SERVLET_CONTEXT_ATTRIBUTE_LISTENER = ".servlet.ServletContextAttributeListener";    //NOI18N
+    static final String HTTP_SESSION_LISTENER = ".servlet.http.HttpSessionListener";    //NOI18N
+    static final String HTTP_SESSION_ATTRIBUTE_LISTENER = ".servlet.http.HttpSessionAttributeListener";    //NOI18N
+    static final String SERVLET_REQUEST_LISTENER = ".servlet.ServletRequestListener";    //NOI18N
+    static final String SERVLET_REQUEST_ATTRIBUTE_LISTENER = ".servlet.ServletRequestAttributeListener";    //NOI18N
 
-    /** Create the wizard panel descriptor. */
+    /**
+     * Create the wizard panel descriptor.
+     *
+     * @param wizard
+     */
     public ListenerPanel(TemplateWizard wizard) {
         this.wizard=wizard;
     }
-    
+
     // Get the visual component for the panel. In this template, the component
     // is kept separate. This can be more efficient: if the wizard is created
     // but never displayed, or not all panels are displayed, it is better to
     // create only those which really need to be visible.
+    @Override
     public Component getComponent() {
         if (component == null) {
             Project project = Templates.getProject( wizard );
@@ -85,12 +90,14 @@ public class ListenerPanel implements WizardDescriptor.Panel {
         }
         return component;
     }
-    
+
+    @Override
     public HelpCtx getHelp() {
         //return new HelpCtx(ListenerPanel.class);
         return HelpCtx.DEFAULT_HELP;
     }
-    
+
+    @Override
     public boolean isValid() {
 	if(!isListenerSelected()) {
             wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, //NOI18N
@@ -118,30 +125,36 @@ public class ListenerPanel implements WizardDescriptor.Panel {
                 resource = SERVLET_REQUEST_ATTRIBUTE_LISTENER;
             }
         }
-        if (cp != null && resource != null && cp.findResource(resource.replace('.', '/')+".class")==null) {  //NOI18N
-            wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE,org.openide.util.NbBundle.getMessage(ListenerPanel.class, "MSG_noResourceInClassPath", resource));
+
+        if (cp != null && resource != null
+                && cp.findResource("jakarta" + resource.replace('.', '/') + ".class") == null //NOI18N
+                && cp.findResource("javax" + resource.replace('.', '/') + ".class") == null //NOI18N
+        ) {
+            wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE,org.openide.util.NbBundle.getMessage(ListenerPanel.class, "MSG_noResourceInClassPath", "jakarta." + resource,  "javax." + resource));
             return false;
         }
 
         WebModule module = WebModule.getWebModule(project.getProjectDirectory());
         if (createElementInDD() && (module == null || module.getWebInf() == null)) {
-            wizard.putProperty(WizardDescriptor.PROP_WARNING_MESSAGE,org.openide.util.NbBundle.getMessage(ListenerPanel.class, "MSG_noWebInfDirectory", resource)); //NOI18N
+            wizard.putProperty(WizardDescriptor.PROP_WARNING_MESSAGE,org.openide.util.NbBundle.getMessage(ListenerPanel.class, "MSG_noWebInfDirectory")); //NOI18N
             return true;
         }
 
         wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, ""); //NOI18N
         wizard.putProperty(WizardDescriptor.PROP_WARNING_MESSAGE, ""); //NOI18N
         return true;
-    } 
-    
+    }
+
     // FIXME: use org.openide.util.ChangeSupport for ChangeListeners
-    private final Set<ChangeListener> listeners = new HashSet<ChangeListener>(1);
-    
+    private final Set<ChangeListener> listeners = new HashSet<>(1);
+
+    @Override
     public final void addChangeListener (ChangeListener l) {
         synchronized (listeners) {
             listeners.add (l);
         }
     }
+    @Override
     public final void removeChangeListener (ChangeListener l) {
         synchronized (listeners) {
             listeners.remove (l);
@@ -150,7 +163,7 @@ public class ListenerPanel implements WizardDescriptor.Panel {
     protected final void fireChangeEvent () {
         Iterator<ChangeListener> it;
         synchronized (listeners) {
-            it = new HashSet<ChangeListener>(listeners).iterator ();
+            it = new HashSet<>(listeners).iterator ();
         }
         ChangeEvent ev = new ChangeEvent (this);
         while (it.hasNext ()) {
@@ -158,34 +171,36 @@ public class ListenerPanel implements WizardDescriptor.Panel {
         }
     }
 
-    
+
     // You can use a settings object to keep track of state.
     // Normally the settings object will be the WizardDescriptor,
     // so you can use WizardDescriptor.getProperty & putProperty
     // to store information entered by the user.
+    @Override
     public void readSettings(Object settings) {
     }
+    @Override
     public void storeSettings(Object settings) {
     }
     boolean createElementInDD (){
         return component.createElementInDD();
     }
-    
+
     boolean isContextListener() {return component.isContextListener();}
-    
+
     boolean isContextAttrListener() {return component.isContextAttrListener();}
-    
+
     boolean isSessionListener() {return component.isSessionListener();}
-    
+
     boolean isSessionAttrListener() {return component.isSessionAttrListener();}
-    
+
     boolean isRequestListener() {return component.isRequestListener();}
-    
+
     boolean isRequestAttrListener() {return component.isRequestAttrListener();}
 
     boolean isListenerSelected() {
         return isContextListener() || isContextAttrListener() ||
-            isSessionListener() || isSessionAttrListener() || 
+            isSessionListener() || isSessionAttrListener() ||
             isRequestListener() || isRequestAttrListener();
     }
 }

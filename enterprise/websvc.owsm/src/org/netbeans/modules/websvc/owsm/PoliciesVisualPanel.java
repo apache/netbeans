@@ -274,7 +274,7 @@ public class PoliciesVisualPanel extends javax.swing.JPanel {
         removeAll();
         initComponents();
         DefaultComboBoxModel model = new DefaultComboBoxModel( 
-                policyIds.toArray( new String[policyIds.size()]));
+                policyIds.toArray(new String[0]));
         myPoliciesList.setModel( model );
         
         myRenderer = new PoliciesListCellRenderer( selectedIds );

@@ -766,8 +766,9 @@ public class IndentationCounter {
             }
         }
         if (result) {
-            // check whether there is tokens other than whitespace for parameters, anonymous function/class
-            int lineStart = LineDocumentUtils.getLineStart(doc, LineDocumentUtils.getLineStart(doc, ts.offset()) - 1);
+            // check for non-whitespace tokens before an attribute of parameters, anonymous function/class
+            // not `ts.offset() - 1` but `ts.offset()` to avoid getting the start position of the previous line
+            int lineStart = LineDocumentUtils.getLineStart(doc, LineDocumentUtils.getLineStart(doc, ts.offset()));
             while (ts.movePrevious() && ts.offset() >= lineStart) {
                 if (ts.token().id() != PHPTokenId.WHITESPACE) {
                     result = false;

@@ -20,11 +20,9 @@ package org.netbeans.modules.maven.j2ee.web;
 
 import java.io.IOException;
 import org.netbeans.api.j2ee.core.Profile;
-import org.netbeans.modules.javaee.project.api.JavaEEProjectSettings;
 import org.netbeans.modules.maven.j2ee.JavaEEMavenTestBase;
 import org.netbeans.modules.maven.j2ee.PomBuilder;
 import org.netbeans.modules.maven.j2ee.PomBuilder.PomPlugin;
-import org.netbeans.modules.maven.j2ee.utils.MavenProjectSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
@@ -144,6 +142,22 @@ public class WebModuleImplTest extends JavaEEMavenTestBase {
         checkJ2eeProfile(Profile.JAKARTA_EE_9_1_WEB, "jakarta.platform", "jakarta.jakartaee-web-api", "9.1.0"); //NOI18N
     }
 
+    public void testGetJ2eeProfile_warProject_jakartaEE10FullSpecification() throws IOException {
+        checkJ2eeProfile(Profile.JAKARTA_EE_10_WEB, "jakarta.platform", "jakarta.jakartaee-api", "10.0.0"); //NOI18N
+    }
+
+    public void testGetJ2eeProfile_jakartaEE10WebSpecification() throws IOException {
+        checkJ2eeProfile(Profile.JAKARTA_EE_10_WEB, "jakarta.platform", "jakarta.jakartaee-web-api", "10.0.0"); //NOI18N
+    }
+    
+    public void testGetJ2eeProfile_warProject_jakartaEE11FullSpecification() throws IOException {
+        checkJ2eeProfile(Profile.JAKARTA_EE_11_WEB, "jakarta.platform", "jakarta.jakartaee-api", "11.0.0-M1"); //NOI18N
+    }
+
+    public void testGetJ2eeProfile_jakartaEE11WebSpecification() throws IOException {
+        checkJ2eeProfile(Profile.JAKARTA_EE_11_WEB, "jakarta.platform", "jakarta.jakartaee-web-api", "11.0.0-M1"); //NOI18N
+    }
+
     public void testGetJ2eeProfile_javaEE5Full_glassfish() throws IOException {
         checkJ2eeProfile(Profile.JAVA_EE_5, "org.glassfish.main.extras", "glassfish-embedded-all", "2"); //NOI18N
     }
@@ -198,6 +212,22 @@ public class WebModuleImplTest extends JavaEEMavenTestBase {
 
     public void testGetJ2eeProfile_jakartaEE91Web_glassfish() throws IOException {
         checkJ2eeProfile(Profile.JAKARTA_EE_9_1_WEB, "org.glassfish.main.extras", "glassfish-embedded-web", "6.2.5"); //NOI18N
+    }
+    
+    public void testGetJ2eeProfile_warProject_jakartaEE10Full_glassfish() throws IOException {
+        checkJ2eeProfile(Profile.JAKARTA_EE_10_WEB, "org.glassfish.main.extras", "glassfish-embedded-all", "7.0.11"); //NOI18N
+    }
+
+    public void testGetJ2eeProfile_jakartaEE10Web_glassfish() throws IOException {
+        checkJ2eeProfile(Profile.JAKARTA_EE_10_WEB, "org.glassfish.main.extras", "glassfish-embedded-web", "7.0.11"); //NOI18N
+    }
+    
+    public void testGetJ2eeProfile_warProject_jakartaEE11Full_glassfish() throws IOException {
+        checkJ2eeProfile(Profile.JAKARTA_EE_11_WEB, "org.glassfish.main.extras", "glassfish-embedded-all", "8.0.0-M1"); //NOI18N
+    }
+
+    public void testGetJ2eeProfile_jakartaEE11Web_glassfish() throws IOException {
+        checkJ2eeProfile(Profile.JAKARTA_EE_11_WEB, "org.glassfish.main.extras", "glassfish-embedded-web", "8.0.0-M1"); //NOI18N
     }
 
     public void testGetJ2eeProfile_javaEE5_weblogic() throws IOException {

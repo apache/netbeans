@@ -20,6 +20,7 @@
 package org.netbeans.modules.gradle.tooling.internal;
 
 import org.netbeans.modules.gradle.tooling.Model;
+import org.gradle.tooling.BuildAction;
 import java.util.Map;
 import java.util.Set;
 
@@ -53,10 +54,23 @@ public interface NbProjectInfo extends Model, org.gradle.tooling.model.Model {
      * @since 2.23
      */
     interface Report {
+        /**
+         * Severity of the report.
+         */
+        enum Severity {
+            EXCEPTION, ERROR, WARNING, INFO
+        }
+        
+        public Severity getSeverity();
         public String getErrorClass();
         public String getScriptLocation();
         public int getLineNumber();
         public String getMessage();
+        public String getDetail();
         public Report getCause();
+    }
+
+    public static BuildAction<NbProjectInfo> createAction() {
+        return new NbProjectInfoAction();
     }
 }

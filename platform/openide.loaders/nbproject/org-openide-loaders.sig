@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.88
+#Version 7.97
 
 CLSS public java.awt.Canvas
 cons public init()
@@ -2450,6 +2450,7 @@ innr public static ToolbarButton
 innr public static ToolbarToggleButton
 meth public static java.lang.String cutAmpersand(java.lang.String)
 meth public static java.lang.String findKey(org.openide.util.actions.SystemAction)
+meth public static java.lang.String keyStrokeToString(javax.swing.KeyStroke)
 meth public static javax.swing.Action alwaysEnabled(java.awt.event.ActionListener,java.lang.String,java.lang.String,boolean)
 meth public static javax.swing.Action checkbox(java.lang.String,java.lang.String,java.lang.String,java.lang.String,boolean)
 meth public static javax.swing.Action forID(java.lang.String,java.lang.String)
@@ -3170,14 +3171,15 @@ cons public init(java.lang.String,int)
 meth public boolean isDisplayOverflowOnHover()
 meth public java.awt.Dimension getPreferredSize()
 meth public void addNotify()
+meth public void doLayout()
+meth public void invalidate()
 meth public void removeAll()
 meth public void removeNotify()
 meth public void setDisplayOverflowOnHover(boolean)
 meth public void setOrientation(int)
 meth public void updateUI()
-meth public void validate()
 supr javax.swing.JToolBar
-hfds PROP_DRAGGER,PROP_JDEV_DISABLE_OVERFLOW,PROP_PREF_ICON_SIZE,awtEventListener,componentAdapter,displayOverflowOnHover,overflowButton,overflowToolbar,popup,showingPopup
+hfds PROP_DRAGGER,PROP_JDEV_DISABLE_OVERFLOW,PROP_PREF_ICON_SIZE,awtEventListener,componentAdapter,displayOverflowOnHover,overflowButton,overflowToolbar,popup,showingPopup,updateOverflow
 hcls SafePopupMenu,SafeToolBar,ToolbarArrowIcon
 
 CLSS public abstract interface org.openide.awt.UndoRedo
@@ -3334,6 +3336,7 @@ CLSS public abstract interface org.openide.loaders.CreateFromTemplateAttributesP
 meth public abstract java.util.Map<java.lang.String,?> attributesFor(org.openide.loaders.DataObject,org.openide.loaders.DataFolder,java.lang.String)
 
 CLSS public abstract org.openide.loaders.CreateFromTemplateHandler
+ anno 0 java.lang.Deprecated()
 cons public init()
 fld public final static java.lang.String FREE_FILE_EXTENSION = "freeFileExtension"
 meth protected abstract boolean accept(org.openide.filesystems.FileObject)
@@ -4653,7 +4656,7 @@ meth public void removeChangeListener(javax.swing.event.ChangeListener)
 meth public void saveDocument() throws java.io.IOException
 meth public void setMIMEType(java.lang.String)
 supr org.openide.windows.CloneableOpenSupport
-hfds ERR,LOCAL_CLOSE_DOCUMENT,LOCK_PRINTING,PROP_PANE,alreadyModified,annotationsLoaded,checkModificationLock,docFilter,inUserQuestionExceptionHandler,isSaving,kit,lastReusable,lastSaveTime,lastSelected,lineSet,lineSetLineVector,listener,listeners,listeningOnEnv,lookup,mimeType,openClose,positionManager,preventModification,printing,propertyChangeSupport,reloadDialogOpened,undoRedo,warnedClasses
+hfds ERR,LOCAL_CLOSE_DOCUMENT,LOCK_PRINTING,PROP_PANE,alreadyModified,annotationsLoaded,checkModificationLock,docFilter,filteredDocRef,inUserQuestionExceptionHandler,isSaving,kit,lastReusable,lastSaveTime,lastSelected,lineSet,lineSetLineVector,listener,listeners,listeningOnEnv,lookup,mimeType,openClose,positionManager,preventModification,printing,propertyChangeSupport,reloadDialogOpened,undoRedo,warnedClasses
 hcls DocFilter,Listener,PlainEditorKit
 
 CLSS public abstract interface static org.openide.text.CloneableEditorSupport$Env

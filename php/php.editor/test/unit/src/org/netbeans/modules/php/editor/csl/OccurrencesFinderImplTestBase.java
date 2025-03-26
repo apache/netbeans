@@ -19,6 +19,7 @@
 package org.netbeans.modules.php.editor.csl;
 
 import java.io.File;
+import java.io.IOException;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
@@ -33,6 +34,12 @@ public abstract class OccurrencesFinderImplTestBase extends PHPNavTestBase {
     @Override
     protected FileObject[] createSourceClassPathsForTest() {
         return new FileObject[]{FileUtil.toFileObject(new File(getDataDir(), getTestFolderPath()))};
+    }
+
+    @Override
+    protected void assertDescriptionMatches(FileObject fileObject, String description, boolean includeTestName, String ext) throws IOException {
+        // put each golden file to each test file directory
+        assertDescriptionMatches(fileObject, description, includeTestName, ext, true);
     }
 
     protected String getBaseTestFolderPath() {
@@ -56,4 +63,11 @@ public abstract class OccurrencesFinderImplTestBase extends PHPNavTestBase {
         return name;
     }
 
+    protected void checkOccurrences(String caretLine) throws Exception {
+        checkOccurrences(caretLine, true);
+    }
+
+    protected void checkOccurrences(String caretLine, boolean symmetric) throws Exception {
+        checkOccurrences(getTestPath(), caretLine, symmetric);
+    }
 }

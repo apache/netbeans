@@ -34,10 +34,12 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.eclipse.jgit.api.errors.InvalidRefNameException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.RawText;
 import org.eclipse.jgit.diff.RenameDetector;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
+import org.eclipse.jgit.errors.ConfigInvalidException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.errors.RevisionSyntaxException;
@@ -59,6 +61,7 @@ import org.eclipse.jgit.treewalk.filter.NotTreeFilter;
 import org.eclipse.jgit.treewalk.filter.OrTreeFilter;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.eclipse.jgit.treewalk.filter.TreeFilter;
+import org.eclipse.jgit.util.SystemReader;
 import org.netbeans.libs.git.GitBranch;
 import org.netbeans.libs.git.GitException;
 import org.netbeans.libs.git.GitObjectType;
@@ -76,9 +79,28 @@ public final class Utils {
     }
 
     public static Repository getRepositoryForWorkingDir (File workDir) throws IOException, IllegalArgumentException {
-         Repository repo = new FileRepositoryBuilder().setWorkTree(workDir).build();
-         repo.getConfig().setBoolean("pack", null, "buildbitmaps", false);
-         return repo;
+        FileRepositoryBuilder builder = new FileRepositoryBuilder().setWorkTree(workDir);
+        // Sets the initial ref name (in .git/HEAD), this is only written when repo.create() is called
+        // and doesn't affect existing repos. Initial ref is essentially the branch name after first commit.
+        try {
+            builder.setInitialBranch(getInitBranchName());
+        } catch (InvalidRefNameException | ConfigInvalidException | IOException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.INFO, "can not set initial branch name", ex);
+        }
+        Repository repo = builder.build();
+        repo.getConfig().setBoolean("pack", null, "buildbitmaps", false);
+        return repo;
+    }
+
+    private static String getInitBranchName() throws IOException, ConfigInvalidException {
+        return getGitSettingString(ConfigConstants.CONFIG_INIT_SECTION, null, ConfigConstants.CONFIG_KEY_DEFAULT_BRANCH);
+    }
+
+    private static String getGitSettingString(String section, String subsection, String name) throws IOException, ConfigInvalidException {
+        SystemReader reader = SystemReader.getInstance();
+        String value = reader.getUserConfig().getString(section, subsection, name);
+        return value != null && !value.isEmpty() ? value
+                : reader.getSystemConfig().getString(section, subsection, name);
     }
 
     public static File getMetadataFolder (File workDir) {
@@ -99,7 +121,7 @@ public final class Utils {
         TreeFilter filter = null;
         if (relativePaths.size() > 0) {
             Collection<PathFilter> filters = getPathFilters(relativePaths);
-            List<TreeFilter> exactPathFilters = new LinkedList<TreeFilter>();
+            List<TreeFilter> exactPathFilters = new LinkedList<>();
             for (PathFilter f : filters) {
                 exactPathFilters.add(ExactPathFilter.create(f));
             }
@@ -109,7 +131,7 @@ public final class Utils {
     }
 
     public static List<GitFileInfo> getDiffEntries (Repository repository, TreeWalk walk, GitClassFactory fac) throws IOException {
-        List<GitFileInfo> result = new ArrayList<GitFileInfo>();
+        List<GitFileInfo> result = new ArrayList<>();
         List<DiffEntry> entries = DiffEntry.scan(walk);
         RenameDetector rd = new RenameDetector(repository);
         rd.addAll(entries);
@@ -167,7 +189,7 @@ public final class Utils {
     }
 
     public static List<String> getRelativePaths(File workDir, File[] roots) {
-        List<String> paths = new ArrayList<String>(roots.length);
+        List<String> paths = new ArrayList<>(roots.length);
         for (File root : roots) {
             if (workDir.equals(root)) {
                 paths.clear();
@@ -228,7 +250,7 @@ public final class Utils {
     }
 
     public static Collection<byte[]> getPaths (Collection<PathFilter> pathFilters) {
-        Collection<byte[]> paths = new LinkedList<byte[]>();
+        Collection<byte[]> paths = new LinkedList<>();
         for (PathFilter filter : pathFilters) {
             paths.add(Constants.encode(filter.getPath()));
         }
@@ -301,7 +323,7 @@ public final class Utils {
     }
     
     /**
-     * Eliminates part of the ref's name that equals knon prefixes such as refs/heads/, refs/remotes/ etc.
+     * Eliminates part of the ref's name that equals known prefixes such as refs/heads/, refs/remotes/ etc.
      * @param ref
      * @return 
      */
@@ -322,7 +344,7 @@ public final class Utils {
      * @return 
      */
     public static Map<String, GitBranch> refsToBranches (Collection<Ref> allRefs, String prefix, GitClassFactory factory) {
-        Map<String, GitBranch> branches = new LinkedHashMap<String, GitBranch>();
+        Map<String, GitBranch> branches = new LinkedHashMap<>();
         
         // try to find the head first - it usually is the active remote branch
         Ref head = null;
@@ -363,7 +385,7 @@ public final class Utils {
      * @return 
      */
     public static Map<String, String> refsToTags (Collection<Ref> allRefs) {
-        Map<String, String> tags = new LinkedHashMap<String, String>();
+        Map<String, String> tags = new LinkedHashMap<>();
         
         // get all refs/tags
         for (final Ref ref : RefComparator.sort(allRefs)) {
@@ -420,7 +442,7 @@ public final class Utils {
         }
     }
 
-    public static Map getAllBranches (Repository repository, GitClassFactory fac, ProgressMonitor monitor) throws GitException {
+    public static Map<String, GitBranch> getAllBranches(Repository repository, GitClassFactory fac, ProgressMonitor monitor) throws GitException {
         ListBranchCommand cmd = new ListBranchCommand(repository, fac, true, monitor);
         cmd.execute();
         return cmd.getBranches();

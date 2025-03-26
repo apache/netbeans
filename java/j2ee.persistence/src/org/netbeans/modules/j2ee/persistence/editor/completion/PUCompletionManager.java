@@ -40,7 +40,7 @@ import org.w3c.dom.Node;
  */
 public final class PUCompletionManager {
     
-    private static Map<String, PUCompletor> completors = new HashMap<String, PUCompletor>();
+    private static Map<String, PUCompletor> completors = new HashMap<>();
 
     private PUCompletionManager() {
         setupCompletors();

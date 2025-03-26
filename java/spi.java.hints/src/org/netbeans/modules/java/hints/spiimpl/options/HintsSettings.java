@@ -85,11 +85,12 @@ public abstract class HintsSettings {
 
             if (s == null) return overrideSeverity != null ? overrideSeverity : hint != null ? hint.severity : null;
 
-            if ("ERROR".equals(s)) return Severity.ERROR;
-            else if ("WARNING".equals(s)) return Severity.VERIFIER;
-            else if ("CURRENT_LINE_WARNING".equals(s)) return Severity.HINT;
-
-            return overrideSeverity != null ? overrideSeverity : hint != null ? hint.severity : null;
+            return switch (s) {
+                case "ERROR" -> Severity.ERROR;
+                case "WARNING" -> Severity.VERIFIER;
+                case "CURRENT_LINE_WARNING" -> Severity.HINT;
+                default -> overrideSeverity != null ? overrideSeverity : hint != null ? hint.severity : null;
+            };
         }
         
         @Override

@@ -174,14 +174,14 @@
    <li>
     <p>
      J2SE-specific portion of <a
-     href="http://projects.netbeans.org/buildsys/j2se-project-ui-spec.html#Dialog_Java_Platform_Manager">Java
+     href="https://netbeans.apache.org/projects/buildsys/j2se-project-ui-spec#Dialog_Library_Manager">Java
      Platform Manager</a>.
     </p>
    </li>
    <li>
     <p>
      Class-library-specific portion of <a
-     href="http://projects.netbeans.org/buildsys/j2se-project-ui-spec.html#Dialog_Library_Manager">Library
+     href="https://netbeans.apache.org/projects/buildsys/j2se-project-ui-spec#Dialog_Java_Platform_Manager">Library
      Manager</a>.
     </p>
    </li>
@@ -364,7 +364,7 @@
               <b>no</b> will disable the attachers. No source/javadoc will be attached, and no user interaction will be started.
           </li>
           <li>
-              <b>yes</b> will permit the registered <a href="@org-netbeans-api-java@/org/netbeans/spi/java/queries/SourceJavadocAttacherImplementation#Definer.html">
+              <b>yes</b> will permit the registered <a href="@org-netbeans-api-java@/org/netbeans/spi/java/queries/SourceJavadocAttacherImplementation.Definer.html">
                   SourceJavadocAttacherImplementation.Definer</a> to attach an appropriate resource(s). <b>User interaction will be skipped</b>
           </li>
           <li>
@@ -387,7 +387,7 @@
               <b>no</b> will disable the attachers. No source/javadoc will be attached, and no user interaction will be started.
           </li>
           <li>
-              <b>yes</b> will permit the registered <a href="@org-netbeans-api-java@/org/netbeans/spi/java/queries/SourceJavadocAttacherImplementation#Definer.html">
+              <b>yes</b> will permit the registered <a href="@org-netbeans-api-java@/org/netbeans/spi/java/queries/SourceJavadocAttacherImplementation.Definer.html">
                   SourceJavadocAttacherImplementation.Definer</a> to attach an appropriate resource(s). <b>User interaction will be skipped</b>
           </li>
           <li>

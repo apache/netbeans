@@ -292,8 +292,8 @@ public final class ProfilingPointsManager extends ProfilingPointsProcessor
     //~ Instance fields ----------------------------------------------------------------------------------------------------------
 
     private CustomizerButton customizerButton;
-    private List<GlobalProfilingPoint> activeGlobalProfilingPoints = new ArrayList();
-    private Map<Integer, RuntimeProfilingPointMapper> activeCodeProfilingPoints = new HashMap();
+    private List<GlobalProfilingPoint> activeGlobalProfilingPoints = new ArrayList<>();
+    private Map<Integer, RuntimeProfilingPointMapper> activeCodeProfilingPoints = new HashMap<>();
     private PropertyChangeListener pcl = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getPropertyName().equals(ProfilingPointFactory.AVAILABILITY_PROPERTY)) {
@@ -304,10 +304,10 @@ public final class ProfilingPointsManager extends ProfilingPointsProcessor
     };
 
     private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
-    private Set<ProfilingPoint> dirtyProfilingPoints = Collections.synchronizedSet(new HashSet());
-    private List<ValidityAwarePanel> customizers = new ArrayList();
-    private final Collection<Lookup.Provider> openedProjects = new ArrayList();
-    private List<ProfilingPoint> profilingPoints = new ArrayList();
+    private Set<ProfilingPoint> dirtyProfilingPoints = Collections.synchronizedSet(new HashSet<>());
+    private List<ValidityAwarePanel> customizers = new ArrayList<>();
+    private final Collection<Lookup.Provider> openedProjects = new ArrayList<>();
+    private List<ProfilingPoint> profilingPoints = new ArrayList<>();
     private ProfilingPointFactory[] profilingPointFactories = new ProfilingPointFactory[0];
     private boolean profilingInProgress = false; // collecting data
     private boolean profilingSessionInProgress = false; // session started and not yet finished
@@ -396,7 +396,7 @@ public final class ProfilingPointsManager extends ProfilingPointsProcessor
         List<ProfilingPoint> projectProfilingPoints = sorted ? getSortedProfilingPoints(project, 1, false)
                                                              : getProfilingPoints(project, ProfilerIDESettings.
                                                                getInstance().getIncludeProfilingPointsDependencies(), false); // TODO: define default sorting (current sorting of Profiling Points window?)
-        List<ProfilingPoint> compatibleProfilingPoints = new ArrayList();
+        List<ProfilingPoint> compatibleProfilingPoints = new ArrayList<>();
 
         for (ProfilingPoint profilingPoint : projectProfilingPoints) {
             if (profilingPoint.supportsProfilingSettings(profilingSettings)) {
@@ -435,7 +435,7 @@ public final class ProfilingPointsManager extends ProfilingPointsProcessor
                                                                  Lookup.Provider project,
                                                                  boolean inclSubprojects,
                                                                  boolean inclUnavailable) {
-        Set<Lookup.Provider> projects = new HashSet();
+        Set<Lookup.Provider> projects = new HashSet<>();
 
         if (project == null) {
             synchronized (openedProjects) { projects.addAll(openedProjects); }
@@ -444,7 +444,7 @@ public final class ProfilingPointsManager extends ProfilingPointsProcessor
             if (inclSubprojects) projects.addAll(getOpenSubprojects(project));
         }        
 
-        ArrayList<T> filteredProfilingPoints = new ArrayList();
+        ArrayList<T> filteredProfilingPoints = new ArrayList<>();
         Iterator<ProfilingPoint> iterator = profilingPoints.iterator();
         
         Set<FileObject> projectsLoc = locations(projects);
@@ -478,7 +478,7 @@ public final class ProfilingPointsManager extends ProfilingPointsProcessor
     public List<ProfilingPoint> getSortedProfilingPoints(Lookup.Provider project, int sortBy, boolean sortOrder) {
         List<ProfilingPoint> sortedProfilingPoints = getProfilingPoints(project, ProfilerIDESettings.getInstance().
                                                                         getIncludeProfilingPointsDependencies(), false);
-        Collections.sort(sortedProfilingPoints, new ProfilingPointsComparator(sortBy, sortOrder));
+        sortedProfilingPoints.sort(new ProfilingPointsComparator(sortBy, sortOrder));
 
         return sortedProfilingPoints;
     }
@@ -506,7 +506,7 @@ public final class ProfilingPointsManager extends ProfilingPointsProcessor
         
         nextUniqueRPPIdentificator = 0;
 
-        List<RuntimeProfilingPoint> runtimeProfilingPoints = new ArrayList();
+        List<RuntimeProfilingPoint> runtimeProfilingPoints = new ArrayList<>();
         List<ProfilingPoint> compatibleProfilingPoints = getCompatibleProfilingPoints(project, profilingSettings, false);
 
         for (ProfilingPoint compatibleProfilingPoint : compatibleProfilingPoints) {
@@ -723,7 +723,7 @@ public final class ProfilingPointsManager extends ProfilingPointsProcessor
 
     public void reset() {
         // TODO: currently only last used profiling points are reset, check if all profiling points need to be reset
-        List<ProfilingPoint> profilingPointsToReset = new ArrayList();
+        List<ProfilingPoint> profilingPointsToReset = new ArrayList<>();
 
         // reset CodeProfilingPoints
         Collection<RuntimeProfilingPointMapper> mappersToReset = activeCodeProfilingPoints.values();
@@ -908,7 +908,7 @@ public final class ProfilingPointsManager extends ProfilingPointsProcessor
     
     private static Set<FileObject> locations(Collection<Lookup.Provider> projects) {
         if (projects == null || projects.isEmpty()) return Collections.EMPTY_SET;
-        Set<FileObject> locations = new HashSet();
+        Set<FileObject> locations = new HashSet<>();
         for (Lookup.Provider project : projects)
             locations.add(ProjectUtilities.getProjectDirectory(project));
         return locations;
@@ -923,12 +923,12 @@ public final class ProfilingPointsManager extends ProfilingPointsProcessor
     }
 
     private Set<Lookup.Provider> getOpenSubprojects(Lookup.Provider project) {
-        Set<Lookup.Provider> subprojects = new HashSet();
+        Set<Lookup.Provider> subprojects = new HashSet<>();
         ProjectUtilities.fetchSubprojects(project, subprojects);
 
         if (subprojects.isEmpty()) return subprojects;
 
-        Set<Lookup.Provider> openSubprojects = new HashSet();
+        Set<Lookup.Provider> openSubprojects = new HashSet<>();
         Set<FileObject> subprojectsLoc = locations(subprojects);
         synchronized(openedProjects) {
             for (Lookup.Provider openProject : openedProjects)
@@ -1097,8 +1097,8 @@ public final class ProfilingPointsManager extends ProfilingPointsProcessor
         }
     }
     
-    private final List<ProfilingPointScopeProvider> scopeProviders = new ArrayList();
-    private final List<Lookup.Provider> providedScopes = new ArrayList();
+    private final List<ProfilingPointScopeProvider> scopeProviders = new ArrayList<>();
+    private final List<Lookup.Provider> providedScopes = new ArrayList<>();
     
     private void cacheProvidedScopes() {
         scopeProviders.clear();
@@ -1132,8 +1132,8 @@ public final class ProfilingPointsManager extends ProfilingPointsProcessor
     }
 
     private void processOpenedProjectsChanged() {
-        Collection<Lookup.Provider> lastOpenedProjects = new ArrayList();
-        List<Lookup.Provider> lastProvidedScopes = new ArrayList();
+        Collection<Lookup.Provider> lastOpenedProjects = new ArrayList<>();
+        List<Lookup.Provider> lastProvidedScopes = new ArrayList<>();
         synchronized (openedProjects) {
             lastOpenedProjects.addAll(openedProjects);
             openedProjects.clear();
@@ -1229,8 +1229,8 @@ public final class ProfilingPointsManager extends ProfilingPointsProcessor
     private synchronized void storeProfilingPoints(ProfilingPoint[] profilingPointsArr) {
         if (ignoreStoreProfilingPoints) return;
         
-        final Set<Lookup.Provider> projects = new HashSet();
-        final Set<ProfilingPointFactory> factories = new HashSet();
+        final Set<Lookup.Provider> projects = new HashSet<>();
+        final Set<ProfilingPointFactory> factories = new HashSet<>();
 
         for (ProfilingPoint profilingPoint : profilingPointsArr) {
             projects.add(profilingPoint.getProject());
@@ -1259,7 +1259,7 @@ public final class ProfilingPointsManager extends ProfilingPointsProcessor
 
     private void unloadProfilingPoints(Lookup.Provider project) {
         List<ProfilingPoint> closedProfilingPoints = getProfilingPoints(project, false, true);
-        List<ProfilingPoint> dirtyClosedProfilingPoints = new ArrayList();
+        List<ProfilingPoint> dirtyClosedProfilingPoints = new ArrayList<>();
 
         for (ProfilingPoint profilingPoint : closedProfilingPoints) {
             if (dirtyProfilingPoints.contains(profilingPoint)) {

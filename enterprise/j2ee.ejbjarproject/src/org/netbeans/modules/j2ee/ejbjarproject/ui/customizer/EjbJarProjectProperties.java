@@ -322,17 +322,20 @@ public final class EjbJarProjectProperties {
         PLATFORM_LIST_RENDERER = PlatformUiSupport.createPlatformListCellRenderer();
         SpecificationVersion minimalSourceLevel = null;
         Profile profile = Profile.fromPropertiesString(evaluator.getProperty(J2EE_PLATFORM));
-
-        if (Profile.JAKARTA_EE_9_1_FULL.equals(profile)) {
-            minimalSourceLevel = new SpecificationVersion("11");
-        } else if (Profile.JAKARTA_EE_9_FULL.equals(profile) || Profile.JAKARTA_EE_8_FULL.equals(profile) || Profile.JAVA_EE_8_FULL.equals(profile)) {
-            minimalSourceLevel = new SpecificationVersion("1.8");
-        } else if (Profile.JAVA_EE_7_FULL.equals(profile)) {
-            minimalSourceLevel = new SpecificationVersion("1.7");
-        } else if (Profile.JAVA_EE_6_FULL.equals(profile)) {
-            minimalSourceLevel = new SpecificationVersion("1.6");
-        } else if (Profile.JAVA_EE_5.equals(profile)) {
-            minimalSourceLevel = new SpecificationVersion("1.5");
+        if (profile != null && profile.isFullProfile()) {
+            if (profile.isAtLeast(Profile.JAKARTA_EE_11_FULL)) {
+                minimalSourceLevel = new SpecificationVersion("17");
+            } else if (profile.isAtLeast(Profile.JAKARTA_EE_9_1_FULL)) {
+                minimalSourceLevel = new SpecificationVersion("11");
+            } else if (profile.isAtLeast(Profile.JAVA_EE_8_FULL)) {
+                minimalSourceLevel = new SpecificationVersion("1.8");
+            } else if (Profile.JAVA_EE_7_FULL.equals(profile)) {
+                minimalSourceLevel = new SpecificationVersion("1.7");
+            } else if (Profile.JAVA_EE_6_FULL.equals(profile)) {
+                minimalSourceLevel = new SpecificationVersion("1.6");
+            } else if (Profile.JAVA_EE_5.equals(profile)) {
+                minimalSourceLevel = new SpecificationVersion("1.5");
+            }
         }
         JAVAC_SOURCE_MODEL = PlatformUiSupport.createSourceLevelComboBoxModel (PLATFORM_MODEL, evaluator.getProperty(JAVAC_SOURCE), evaluator.getProperty(JAVAC_TARGET), minimalSourceLevel);
         JAVAC_SOURCE_RENDERER = PlatformUiSupport.createSourceLevelListCellRenderer ();
@@ -703,7 +706,7 @@ public final class EjbJarProjectProperties {
                 }
             }
         }
-        v.setRoots(roots.toArray(new File[roots.size()]));
+        v.setRoots(roots.toArray(new File[0]));
         v.setIncludePattern(includes);
         v.setExcludePattern(excludes);
     }

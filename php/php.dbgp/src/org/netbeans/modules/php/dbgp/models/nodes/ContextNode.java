@@ -61,7 +61,7 @@ public abstract class ContextNode extends AbstractModelNode implements ModelNode
     @Override
     public ModelNode[] getChildren(int from, int to) {
         List<AbstractVariableNode> subList = getVariables().subList(from, to);
-        return subList.toArray(new ModelNode[subList.size()]);
+        return subList.toArray(new ModelNode[0]);
     }
 
     @Override

@@ -27,6 +27,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.netbeans.modules.gradle.api.BuildPropertiesSupport;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.spi.ProjectInfoExtractor;
@@ -43,8 +44,8 @@ public class ExtensionPropertiesExtractor implements ProjectInfoExtractor {
     public Result fallback(GradleFiles files) {
         return new Result() {
             @Override
-            public Set getExtract() {
-                return Collections.emptySet();
+            public Set<?> getExtract() {
+                return Set.of();
             }
 
             @Override
@@ -58,18 +59,18 @@ public class ExtensionPropertiesExtractor implements ProjectInfoExtractor {
     public Result extract(Map<String, Object> props, Map<Class, Object> otherInfo) {
         return new Result() {
             @Override
-            public Set getExtract() {
+            public Set<?> getExtract() {
                 Map<String, String> values = (Map<String, String>)props.getOrDefault("extensions.propertyValues", Collections.emptyMap()); // NOI18N
                 Map<String, String> types = (Map<String, String>)props.getOrDefault("extensions.propertyTypes", Collections.emptyMap()); // NOI18N
                 Map<String, String> taskValues = (Map<String, String>)props.getOrDefault("tasks.propertyValues", Collections.emptyMap()); // NOI18N
                 Map<String, String> taskTypes = (Map<String, String>)props.getOrDefault("tasks.propertyTypes", Collections.emptyMap()); // NOI18N
                 PropertyEvaluator a = new PropertyEvaluator(values, types, taskValues, taskTypes);
-                return Collections.singleton(a);
+                return Set.of(a);
             }
 
             @Override
             public Set<String> getProblems() {
-                return Collections.emptySet();
+                return Set.of();
             }
         };
     }
@@ -121,15 +122,16 @@ public class ExtensionPropertiesExtractor implements ProjectInfoExtractor {
                 default:
                     return null;
             }
-            if (base.getName()== null || propertyPath == null) {
+            if (base.getName()== null) {
                 return null;
             }
             Object id = base.getId();
             String path;
+            String suffix = propertyPath == null ? "" : "." + propertyPath; // NOI18N
             if (id == null) {
-                path = base.getName() + "." + propertyPath; // NOI18N
+                path = base.getName() + suffix; // NOI18N
             } else if (id instanceof String) {
-                path = id.toString() + "." + propertyPath; // NOI18N
+                path = id.toString() + suffix; // NOI18N
             } else {
                 return null;
             }
@@ -170,7 +172,7 @@ public class ExtensionPropertiesExtractor implements ProjectInfoExtractor {
             if (c == null) {
                 return null;
             }
-            return Arrays.asList(c.split(";;")).stream().map(s -> s.replaceAll("\\;", ";")).collect(Collectors.toList());
+            return Stream.of(c.split(";;")).map(s -> s.replace("\\;", ";")).collect(Collectors.toList());
         }
 
         @Override

@@ -26,6 +26,7 @@ import javax.swing.text.Caret;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.document.LineDocumentUtils;
+import org.netbeans.api.editor.settings.SimpleValueNames;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
@@ -37,6 +38,7 @@ import org.netbeans.modules.csl.api.KeystrokeHandler;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.StructureItem;
 import org.netbeans.modules.csl.spi.ParserResult;
+import org.netbeans.modules.editor.indent.spi.CodeStylePreferences;
 import org.openide.util.Exceptions;
 
 /**
@@ -115,6 +117,13 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
             return true;
         }
 
+        if (((c == '}') || (c == ']')) && dotPos < doc.getLength()) {
+            if (String.valueOf(c).equals(doc.getText(dotPos, 1))) {
+                caret.setDot(dotPos + 1);
+                return true;
+            }
+        }
+        
         if ((c == '\'') || (c == '"')) {
             int sstart = target.getSelectionStart();
             int send = target.getSelectionEnd();
@@ -219,7 +228,6 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
 
     @Override
     public boolean charBackspaced(Document doc, int dotPos, JTextComponent target, char ch) throws BadLocationException {
-        Caret caret = target.getCaret();
         if (ch == '%' && dotPos > 0 && dotPos <= doc.getLength() - 2) {
             String s = doc.getText(dotPos - 1, 3);
             if ("<%>".equals(s)) { // NOI18N
@@ -282,9 +290,9 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
         int indent = getLineIndent(doc, offset);
         String linePrefix = doc.getText(lineBegin, offset - lineBegin);
         String lineSuffix = doc.getText(offset, lineEnd + 1 - offset);
-        if (linePrefix.trim().endsWith(":") && lineSuffix.trim().length() == 0) {
+        if (linePrefix.stripTrailing().endsWith(":") && lineSuffix.isBlank()) {
             // Yes, new key: increase indent
-            indent += IndentUtils.getIndentSize(doc);
+            indent += getIndentSize(doc);
         } else {
             // No, just use same indent as parent
         }
@@ -303,7 +311,7 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
         if (remove > 0) {
             doc.remove(offset, remove);
         }
-        String str = IndentUtils.getIndentString(indent);
+        String str = " ".repeat(indent);
         int newPos = offset + str.length();
         doc.insertString(offset, str, null);
         caret.setDot(offset);
@@ -377,6 +385,11 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
 
             return 0;
         }
+    }
+
+    private static int getIndentSize(Document doc) {
+        return CodeStylePreferences.get(doc).getPreferences()
+                .getInt(SimpleValueNames.INDENT_SHIFT_WIDTH, 2);
     }
 
 }

@@ -18,19 +18,36 @@
  */
 package org.netbeans.libs.graalsdk.impl;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceConfigurationError;
+import java.util.function.BiFunction;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.script.Bindings;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import org.graalvm.polyglot.Engine;
 import org.graalvm.polyglot.Language;
 import org.netbeans.spi.scripting.EngineProvider;
+import org.openide.modules.Dependency;
+import org.openide.modules.ModuleInfo;
+import org.openide.modules.Modules;
+import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 
-@ServiceProvider(service = EngineProvider.class)
+// The module libs.graalsdk.system defines another provider that assumes the last
+// position and is able to override languages provided by this module by the system-provided 
+// libraries.
+@ServiceProvider(service = EngineProvider.class, position = 100000)
 public final class GraalEnginesProvider implements EngineProvider {
+    private static final Logger LOG = Logger.getLogger(GraalEnginesProvider.class.getName());
+    
     private Throwable disable;
 
     public GraalEnginesProvider() {
@@ -48,18 +65,106 @@ public final class GraalEnginesProvider implements EngineProvider {
             if (disable == null) {
                 enumerateLanguages(arr, m == null ? null : m.getBindings());
             }
-        } catch (IllegalStateException | LinkageError err) {
+        } catch (IllegalStateException | LinkageError | ServiceConfigurationError err) {
+            // See NETBEANS #7245: First-time initialization with broken implementation may produce ServiceConfigurationError, As this
+            // happens in class-initializer, subsequent attempts will throw LinkageErrors.
+            LOG.log(Level.WARNING, "Not enabling bundled GraalVM/polyglot infrastructure, unable to initialize languages: {0}", err.getMessage());
+            LOG.log(Level.WARNING, "Stacktrace: ", err);
             disable = err;
         }
         return arr;
     }
-
-    private void enumerateLanguages(List<ScriptEngineFactory> arr, Bindings globals) {
-        final GraalContext ctx = new GraalContext(globals);
-        try (Engine engine = Engine.newBuilder().build()) {
-            for (Map.Entry<String, Language> entry : engine.getLanguages().entrySet()) {
-                arr.add(new GraalEngineFactory(ctx, entry.getKey(), entry.getValue()));
+    
+    // @GuardedBy(this)
+    private ClassLoader currentAllLoader;
+    
+    // @GuardedBy(this)
+    private ClassLoader languagesLoader;
+    
+    private ClassLoader createGraalDependentClassLoader() {
+        ClassLoader allLoader = Lookup.getDefault().lookup(ClassLoader.class);
+        synchronized (this) {
+            if (languagesLoader != null && currentAllLoader == allLoader) {
+                return languagesLoader;
+            }
+            languagesLoader = null;
+        }
+        Collection<? extends ModuleInfo> modules = new ArrayList<>(Lookup.getDefault().lookupAll(ModuleInfo.class));
+        ModuleInfo thisModule = Modules.getDefault().ownerOf(getClass());
+        Map<String, ModuleInfo> dependentsOfSDK = new LinkedHashMap<>();
+        if (thisModule == null) {
+            // this happens only when mod system is not active, i.e. in tests.
+            return allLoader;
+        }
+        dependentsOfSDK.put(thisModule.getCodeName(), thisModule);
+        
+        boolean added;
+        do {
+            added = false;
+            for (Iterator<? extends ModuleInfo> it = modules.iterator(); it.hasNext(); ) {
+                ModuleInfo m = it.next();
+                if (!m.isEnabled()) {
+                    continue;
+                }
+                for (Dependency d : m.getDependencies()) {
+                    if (d.getType() == Dependency.TYPE_MODULE) {
+                        if (dependentsOfSDK.keySet().contains(d.getName())) {
+                            dependentsOfSDK.put(m.getCodeName(), m);
+                            it.remove();
+                            added = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        } while (added);
+        
+        ClassLoader created;
+        try {
+            BiFunction<String, ClassLoader, Boolean> decideDelegation = (n, c) -> c == null ? false : true;
+            
+            // this is a hack that allows to use good implementation of a classloader ...
+            // there should have to be an API for this in the module system.
+            Class pcl = Class.forName("org.netbeans.ProxyClassLoader", true, allLoader);
+            Constructor ctor = pcl.getConstructor(ClassLoader[].class, Boolean.TYPE, BiFunction.class);
+            ClassLoader[] delegates = new ClassLoader[dependentsOfSDK.size()];
+            int index = delegates.length -1;
+            // reverse the order: in the LinkedHashMap, the 1st entry is GraalSDK, following by direct dependents
+            // if some of module deeper in the hierarchy masks JDK packages, it should be consulted first, so the
+            for (ModuleInfo mi : dependentsOfSDK.values()) {
+                delegates[index--] = mi.getClassLoader();
+            }
+            created = (ClassLoader)ctor.newInstance(delegates, true, decideDelegation);
+        } catch (ReflectiveOperationException ex) {
+            created = allLoader;
+        }
+        synchronized (this) {
+            if ((currentAllLoader == null || currentAllLoader == allLoader) && languagesLoader == null) {
+                languagesLoader = created;
             }
         }
+        return created;
+    }
+    
+    private void enumerateLanguages(List<ScriptEngineFactory> arr, Bindings globals) {
+        ClassLoader langLoader = createGraalDependentClassLoader();
+        final GraalContext ctx = new GraalContext(globals, langLoader);
+        String specVersion = System.getProperty("java.specification.version"); //NOI18N
+        String vmVersion = System.getProperty("java.vm.version"); //NOI18N
+        if ("1.8".equals(specVersion) && vmVersion.contains("jvmci-")) { //NOI18N
+            // this is GraalVM 8, whose JVMCI support returns a PolyglotImpl from the system classloader
+            // incompatible with PolyglotImpl bundled in this module's libraries.
+            // GraalVM 8 always contains (mandatory) JS implementation, so the JS is loaded by libs.graalsdk.system module.
+            // No need to offer a bundled GraalVM implementation and in fact, it is not even possible.
+            return;
+        }
+        GraalContext.executeWithClassLoader(() -> {
+            try (Engine engine = Engine.newBuilder().build()) {
+                for (Map.Entry<String, Language> entry : engine.getLanguages().entrySet()) {
+                    arr.add(new GraalEngineFactory(ctx, entry.getKey(), entry.getValue()));
+                }
+            }
+            return null;
+        }, langLoader);
     }
 }

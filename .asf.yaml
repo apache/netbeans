@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# doc: https://cwiki.apache.org/confluence/display/INFRA/Git+-+.asf.yaml+features
+# doc: https://github.com/apache/infrastructure-asfyaml/blob/main/README.md
 
 github:
   description: "Apache NetBeans"
@@ -29,16 +29,29 @@ github:
     wiki: false
     issues: true
     projects: true
+    discussions: true
+  dependabot_alerts: false
+  dependabot_updates: true
   enabled_merge_buttons:
-    squash:  true
-    merge:   true
-    rebase:  true
+    squash: false
+    merge: true
+    rebase: false
   protected_branches:
     # no force push to master
-    master: {}
+    master:
+      required_linear_history: false
+
+  collaborators:
+    # Max 10 collaborators allowed
+    # https://github.com/apache/infrastructure-asfyaml/blob/main/README.md#assigning-the-github-triage-role-to-external-collaborators
+    - petrovic-d
+    - Achal1607
+    - asbachb
+    - troizet
 
 notifications:
     commits:      commits@netbeans.apache.org
     issues:       notifications@netbeans.apache.org
     pullrequests: notifications@netbeans.apache.org
+    discussions:  notifications@netbeans.apache.org
     jira_options: link label worklog

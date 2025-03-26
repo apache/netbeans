@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.27.0
+#Version 9.38.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -163,6 +163,7 @@ innr public final static !enum ErrorKind
 meth public static <%0 extends java.lang.Object> void setErrors(java.net.URL,org.netbeans.modules.parsing.spi.indexing.Indexable,java.lang.Iterable<? extends {%%0}>,org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Convertor<{%%0}>)
 meth public static boolean isInError(org.openide.filesystems.FileObject,boolean)
 meth public static java.util.Collection<? extends java.net.URL> getAllFilesInError(java.net.URL) throws java.io.IOException
+meth public static java.util.Collection<? extends java.net.URL> getAllFilesWithRecord(java.net.URL) throws java.io.IOException
 supr java.lang.Object
 
 CLSS public abstract interface static org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Convertor<%0 extends java.lang.Object>

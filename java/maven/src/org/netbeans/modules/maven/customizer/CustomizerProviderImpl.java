@@ -34,14 +34,13 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-import org.jdom.DefaultJDOMFactory;
-import org.jdom.Document;
-import org.jdom.JDOMException;
-import org.jdom.JDOMFactory;
-import org.jdom.input.SAXBuilder;
-import org.jdom.output.Format;
+import org.jdom2.DefaultJDOMFactory;
+import org.jdom2.Document;
+import org.jdom2.JDOMException;
+import org.jdom2.JDOMFactory;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.ui.ProjectProblems;
@@ -415,10 +414,6 @@ public class CustomizerProviderImpl implements CustomizerProvider2 {
             @Override
             public void run() throws IOException {
                 JDOMFactory factory = new DefaultJDOMFactory();
-                
-                InputStream inStr = null;
-                FileLock lock = null;
-                OutputStreamWriter outStr = null;
                 try {
                     Document doc;
                     if (mapping.getActions().isEmpty()) { //#224450 don't write empty nbactions.xml files
@@ -434,19 +429,19 @@ public class CustomizerProviderImpl implements CustomizerProvider2 {
                         doc = factory.document(factory.element("actions")); //NOI18N
                     } else {
                         //TODO..
-                        inStr = fo.getInputStream();
-                        SAXBuilder builder = new SAXBuilder();
-                        doc = builder.build(inStr);
-                        inStr.close();
-                        inStr = null;
+                        try (InputStream inStr = fo.getInputStream()) {
+                            SAXBuilder builder = new SAXBuilder();
+                            doc = builder.build(inStr);
+                        }
                     }
-                    lock = fo.lock();
-                    NetbeansBuildActionJDOMWriter writer = new NetbeansBuildActionJDOMWriter();
                     String encoding = mapping.getModelEncoding() != null ? mapping.getModelEncoding() : "UTF-8"; //NOI18N
-                    outStr = new OutputStreamWriter(fo.getOutputStream(lock), encoding);
-                    Format form = Format.getRawFormat().setEncoding(encoding);
-                    form = form.setLineSeparator(System.getProperty("line.separator")); //NOI18N
-                    writer.write(mapping, doc, outStr, form);
+                    try (FileLock lock = fo.lock();
+                            OutputStreamWriter outStr = new OutputStreamWriter(fo.getOutputStream(lock), encoding);) {
+                        NetbeansBuildActionJDOMWriter writer = new NetbeansBuildActionJDOMWriter();
+                        Format form = Format.getRawFormat().setEncoding(encoding);
+                        form = form.setLineSeparator(System.getProperty("line.separator")); //NOI18N
+                        writer.write(mapping, doc, outStr, form);
+                    }
                 } catch (JDOMException exc){
                     //throw (IOException) new IOException("Cannot parse the nbactions.xml by JDOM.").initCause(exc); //NOI18N
                     //TODO this would need it's own problem provider, but how to access it in project lookup if all are merged into one?
@@ -461,13 +456,6 @@ public class CustomizerProviderImpl implements CustomizerProvider2 {
                         impl.addReport(rep);
                     }
                     Logger.getLogger(CustomizerProviderImpl.class.getName()).log(Level.INFO, exc.getMessage(), exc);
-                } finally {
-                    IOUtil.close(inStr);
-                    IOUtil.close(outStr);
-                    if (lock != null) {
-                        lock.releaseLock();
-                    }
-                    
                 }
             }
         });

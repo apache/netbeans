@@ -44,27 +44,36 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
+          <Component id="advPanel" alignment="0" max="32767" attributes="0"/>
           <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="useWindowDecorationsCheckBox" min="-2" max="-2" attributes="0"/>
-                          <Component id="unifiedTitleBarCheckBox" min="-2" max="-2" attributes="0"/>
-                          <Component id="menuBarEmbeddedCheckBox" min="-2" max="-2" attributes="0"/>
-                          <Component id="underlineMenuSelectionCheckBox" min="-2" max="-2" attributes="0"/>
-                          <Component id="alwaysShowMnemonicsCheckBox" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  <Component id="useWindowDecorationsCheckBox" min="-2" max="-2" attributes="0"/>
+                  <Component id="unifiedTitleBarCheckBox" min="-2" max="-2" attributes="0"/>
+                  <Component id="menuBarEmbeddedCheckBox" min="-2" max="-2" attributes="0"/>
+                  <Component id="underlineMenuSelectionCheckBox" min="-2" max="-2" attributes="0"/>
+                  <Component id="alwaysShowMnemonicsCheckBox" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="accentColorLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="accentColorField" min="-2" pref="130" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="needsRestartLabel" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="advPanel" alignment="1" max="32767" attributes="0"/>
+                  <Component id="showFileChooserFavoritesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="accentColorField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="needsRestartLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="accentColorLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="useWindowDecorationsCheckBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="unifiedTitleBarCheckBox" min="-2" max="-2" attributes="0"/>
@@ -74,14 +83,35 @@
               <Component id="underlineMenuSelectionCheckBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="alwaysShowMnemonicsCheckBox" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="advPanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="showFileChooserFavoritesCheckBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="advPanel" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="42" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
+    <Component class="javax.swing.JLabel" name="accentColorLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/swing/laf/flatlaf/Bundle.properties" key="FlatLafOptionsPanel.accentColorLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="org.openide.awt.ColorComboBox" name="accentColorField">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="accentColorFieldActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="needsRestartLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/swing/laf/flatlaf/Bundle.properties" key="FlatLafOptionsPanel.needsRestartLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
     <Component class="javax.swing.JCheckBox" name="useWindowDecorationsCheckBox">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
@@ -149,20 +179,24 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="customPropertiesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="customPropertiesButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="customPropertiesLabel" pref="368" max="32767" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Component id="customPropertiesButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      </Group>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="customPropertiesLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
+                  <Component id="customPropertiesLabel" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="customPropertiesButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="54" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -187,5 +221,15 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JCheckBox" name="showFileChooserFavoritesCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/swing/laf/flatlaf/Bundle.properties" key="FlatLafOptionsPanel.showFileChooserFavoritesCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showFileChooserFavoritesCheckBoxActionPerformed"/>
+      </Events>
+    </Component>
   </SubComponents>
 </Form>

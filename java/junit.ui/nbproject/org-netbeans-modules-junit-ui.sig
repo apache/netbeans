@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.25
+#Version 1.34
 
 CLSS public java.beans.FeatureDescriptor
 cons public init()
@@ -85,6 +85,7 @@ hfds DISPLAY_TOOLTIPS,MAX_MSG_LINE_LENGTH,MAX_TOOLTIP_LINES,MAX_TOOLTIP_LINE_LEN
 
 CLSS public org.netbeans.modules.junit.ui.api.JUnitCallstackFrameNode
 cons public init(java.lang.String,java.lang.String,java.lang.String,java.lang.String)
+meth public java.lang.String getDisplayName()
 meth public javax.swing.Action getPreferredAction()
 meth public javax.swing.Action[] getActions(boolean)
 supr org.netbeans.modules.gsf.testrunner.ui.api.CallstackFrameNode

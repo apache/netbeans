@@ -570,30 +570,25 @@ public final class AddDriverDialog extends javax.swing.JPanel {
                 URLClassLoader jarloader = getJarClassLoader();
 
                 for (int i = 0; i < dlm.size(); i++) {
-                    try {
-                        String file  = dlm.get(i);
-                        JarFile jf = new JarFile(file);
-                        try {
-                            Enumeration<JarEntry> entries = jf.entries();
-                            while (entries.hasMoreElements()) {
-                                JarEntry entry = (JarEntry)entries.nextElement();
-                                String className = entry.getName();
-                                if (className.endsWith(".class")) { // NOI18N
-                                    className = className.replace('/', '.');
-                                    className = className.substring(0, className.length() - 6);
-                                    if ( isDriverClass(jarloader, className) ) {
-                                        if (progressHandle != null) {
-                                            addDriverClass(className);
-                                        } else {
-                                            // already stopped
-                                            updateState();
-                                            return;
-                                        }
+                    String file = dlm.get(i);
+                    try (JarFile jf = new JarFile(file)) {
+                        Enumeration<JarEntry> entries = jf.entries();
+                        while (entries.hasMoreElements()) {
+                            JarEntry entry = entries.nextElement();
+                            String className = entry.getName();
+                            if (className.endsWith(".class")) { // NOI18N
+                                className = className.replace('/', '.');
+                                className = className.substring(0, className.length() - 6);
+                                if (isDriverClass(jarloader, className)) {
+                                    if (progressHandle != null) {
+                                        addDriverClass(className);
+                                    } else {
+                                        // already stopped
+                                        updateState();
+                                        return;
                                     }
                                 }
                             }
-                        } finally {
-                            jf.close();
                         }
                     } catch (IOException exc) {
                         //PENDING
@@ -612,7 +607,7 @@ public final class AddDriverDialog extends javax.swing.JPanel {
         message popping up if a different driver is picked from the dropdown after an unrelated JAR
         file is added.) */
         jarClassLoader =
-                new URLClassLoader(drvs.toArray(new URL[drvs.size()]),
+                new URLClassLoader(drvs.toArray(new URL[0]),
                 this.getClass().getClassLoader());
         return jarClassLoader;
     }

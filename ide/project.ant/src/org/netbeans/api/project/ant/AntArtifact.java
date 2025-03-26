@@ -45,7 +45,7 @@ import org.openide.util.BaseUtilities;
  * For example, if a build script is known to generate a JAR of a certain name
  * as a result of running a certain target, this object will name that JAR
  * and point to the script and target responsible for creating it. You can use
- * this information to add an <samp>&lt;ant&gt;</samp> task to another project
+ * this information to add an <em>&lt;ant&gt;</em> task to another project
  * which will generate that JAR as a dependency before using it.
  * @see org.netbeans.spi.project.support.ant.SimpleAntArtifact
  * @author Jesse Glick
@@ -91,21 +91,21 @@ public abstract class AntArtifact {
     
     /**
      * Get a location for the Ant script that is able to produce this artifact.
-     * The name <samp>build.xml</samp> is conventional.
+     * The name <em>build.xml</em> is conventional.
      * @return the location of an Ant project file (might not currently exist)
      */
     public abstract File getScriptLocation();
     
     /**
      * Get the name of the Ant target that is able to produce this artifact.
-     * E.g. <samp>jar</samp> would be conventional for JAR artifacts.
+     * E.g. <em>jar</em> would be conventional for JAR artifacts.
      * @return an Ant target name
      */
     public abstract String getTargetName();
     
     /**
      * Get the name of an Ant target that will delete this artifact.
-     * Typically this should be <samp>clean</samp>.
+     * Typically this should be <em>clean</em>.
      * The target may delete other build products as well.
      * @return an Ant target name
      */
@@ -126,7 +126,7 @@ public abstract class AntArtifact {
     private static final Set<String> warnedClasses = Collections.synchronizedSet(new HashSet<String>());
     /**
      * Get the locations of the build artifacts relative to the Ant script.
-     * For example, <samp>dist/mylib.jar</samp>. The method is not defined 
+     * For example, <em>dist/mylib.jar</em>. The method is not defined 
      * as abstract only for backward compatibility reasons. <strong>It must be
      * overridden.</strong> The order is important and should stay the same
      * unless the artifact was changed.
@@ -207,7 +207,7 @@ public abstract class AntArtifact {
                 l.add(fo);
             }
         }
-        return l.toArray(new FileObject[l.size()]);
+        return l.toArray(new FileObject[0]);
     }
     
     /**

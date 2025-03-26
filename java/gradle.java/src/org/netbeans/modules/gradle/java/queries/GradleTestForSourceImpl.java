@@ -79,7 +79,7 @@ public class GradleTestForSourceImpl implements MultipleRootsUnitTestForSourceQu
         for (File f : retFile) {
             ret.add(fileToURL(f));
         }
-        return ret.toArray(new URL[ret.size()]);
+        return ret.toArray(new URL[0]);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class GradleTestForSourceImpl implements MultipleRootsUnitTestForSourceQu
                 ret.add(fileToURL(f));
             }
         }
-        return ret.toArray(new URL[ret.size()]);
+        return ret.toArray(new URL[0]);
     }
 
     private static URL fileToURL(File f) {

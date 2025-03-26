@@ -1,3 +1,4 @@
+--enable-native-access=ALL-UNNAMED
 --add-opens=java.base/java.net=ALL-UNNAMED
 --add-opens=java.base/java.lang.ref=ALL-UNNAMED
 --add-opens=java.base/java.lang=ALL-UNNAMED

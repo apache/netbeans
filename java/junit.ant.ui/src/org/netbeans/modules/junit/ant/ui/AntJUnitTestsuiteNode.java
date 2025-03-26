@@ -70,7 +70,7 @@ public class AntJUnitTestsuiteNode extends JUnitTestsuiteNode {
             }
         }
         
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
     
 }

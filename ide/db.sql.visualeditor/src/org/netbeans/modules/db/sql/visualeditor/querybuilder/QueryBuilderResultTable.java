@@ -299,7 +299,7 @@ public class QueryBuilderResultTable extends JTable
     }
     
     private void setClipboard(String contents) {
-        ExClipboard clipboard = (ExClipboard) Lookup.getDefault().lookup(ExClipboard.class);
+        ExClipboard clipboard = Lookup.getDefault().lookup(ExClipboard.class);
         StringSelection strSel = new StringSelection(contents);
         clipboard.setContents(strSel, strSel);
     }

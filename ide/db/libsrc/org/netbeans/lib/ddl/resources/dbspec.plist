@@ -1798,6 +1798,12 @@
       Format = "drop index {object.name}";
     };
 
+    SetDefaultSchemaCommand = {
+      Class = org.netbeans.lib.ddl.impl.SetDefaultSchema;
+      Format = "set search_path to {schemaName}";
+      Supported = true;
+    };
+
   };
 
 //  ********************************************************************************

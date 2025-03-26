@@ -25,12 +25,12 @@ import com.oracle.bmc.identity.responses.ListCompartmentsResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import static org.netbeans.modules.cloud.oracle.OCIManager.getDefault;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.netbeans.modules.cloud.oracle.ChildrenProvider;
 import org.netbeans.modules.cloud.oracle.NodeProvider;
 import org.netbeans.modules.cloud.oracle.OCINode;
+import org.netbeans.modules.cloud.oracle.OCISessionInitiator;
 
 /**
  *
@@ -46,6 +46,12 @@ public class CompartmentNode extends OCINode {
         setIconBaseWithExtension(COMPARTMENT_ICON);
     }
 
+    public CompartmentNode(OCISessionInitiator session, CompartmentItem compartment) {
+        super(compartment, session);
+        setDisplayName(compartment.getName());
+        setIconBaseWithExtension(COMPARTMENT_ICON);
+    }
+
     public static NodeProvider<CompartmentItem> createNode() {
         return CompartmentNode::new;
     }
@@ -56,12 +62,14 @@ public class CompartmentNode extends OCINode {
      * @param tenancyId OCID of the Tenancy
      * @return List of {@code OCIItem} describing tenancy Compartments
      */
-    public static ChildrenProvider<OCIItem, CompartmentItem> getCompartments() {
-        return parent -> {
-            Identity identityClient = new IdentityClient(getDefault().getConfigProvider());
-            identityClient.setRegion(getDefault().getConfigProvider().getRegion());
+    public static ChildrenProvider.SessionAware<OCIItem, CompartmentItem> getCompartments() {
+        return (parent, session) -> {
+            Identity identityClient = session.newClient(IdentityClient.class);
 
             List<CompartmentItem> compartments = new ArrayList<>();
+
+            String tenancyId = session.getTenancy().isPresent() ? session.getTenancy().get().getKey().getValue() : null;
+            String regionCode = session.getRegion().getRegionCode();
 
             String nextPageToken = null;
             do {
@@ -74,7 +82,12 @@ public class CompartmentNode extends OCINode {
                                         .page(nextPageToken)
                                         .build());
                 response.getItems().stream()
-                        .map(c -> new CompartmentItem(OCID.of(c.getId(), "Compartment"), c.getName())) // NOI18N
+                        .map(c -> new CompartmentItem(
+                                OCID.of(c.getId(), "Compartment"),
+                                parent.getKey().getValue(),
+                                c.getName(),
+                                tenancyId,
+                                regionCode)) // NOI18N
                         .collect(Collectors.toCollection(() -> compartments));
                 nextPageToken = response.getOpcNextPage();
             } while (nextPageToken != null);

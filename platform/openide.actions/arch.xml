@@ -549,7 +549,7 @@ calls to <code>SharedClassObject.findObject</code> which calls constructor by re
 <answer id="format-clipboard">
 Implementations of cut, copy and paste (<code>CutAction</code>, <code>CopyAction</code>
 and <code>PasteAction</code>) reads/writes from/into clipboard. It uses standard
-<a href="http://java.sun.com/j2se/1.4.1/docs/api/java/awt/datatransfer/package-summary.html">java datatransfer mechanism</a>
+<a href="@JDK@@JDKMODULE_JAVA_DATATRANSFER@/java/awt/datatransfer/package-summary.html">java datatransfer mechanism</a>
 and <a href="@org-openide-util-ui@/org/openide/util/datatransfer/package-summary.html">Netbeans extension to the mechanism</a>.
 </answer>
 
@@ -805,7 +805,7 @@ No.
 -->
 <answer id="resources-layer">
     <api name="UI-ToolActions" group="layer" type="export" category="stable">
-        Register your <a href="@JDK@/javax/swing/Action.html">javax.swing.Action</a>
+        Register your <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/Action.html">javax.swing.Action</a>
         instances in <code>UI/ToolActions</code> folder to make them known
         to <a href="@TOP@/org/openide/actions/ToolsAction.html">ToolsAction</a>.
     </api>
@@ -875,6 +875,7 @@ it belongs to <em>Window system module</em>.
 <answer id="resources-preferences">
     <api group="preferences" name="org.openide.actions.HeapView" type="export" category="private">
       <table>
+          <caption>resources preferences</caption>
           <tbody>
               <tr>
                   <th>key</th>

@@ -21,8 +21,6 @@ package org.netbeans.modules.gsf.testrunner.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.List;
@@ -34,8 +32,6 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import org.netbeans.modules.gsf.testrunner.ui.api.Manager;
 import org.netbeans.modules.gsf.testrunner.api.Report;
 import org.netbeans.modules.gsf.testrunner.api.RerunHandler;
@@ -89,10 +85,10 @@ public final class StatisticsPanel extends JPanel {
     private static final Icon alwaysOpenNewTabIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/gsf/testrunner/resources/newTab.png", true);
 
     private static final Icon rerunIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/gsf/testrunner/resources/rerun.png", true);
-    private static final Icon rerunFailedIcon = ImageUtilities.image2Icon(ImageUtilities.mergeImages(
-                            ImageUtilities.loadImage("org/netbeans/modules/gsf/testrunner/resources/rerun.png"), //NOI18N
-                            ImageUtilities.loadImage("org/netbeans/modules/gsf/testrunner/resources/error-badge.gif"), //NOI18N
-                            8, 8));
+    private static final Icon rerunFailedIcon = ImageUtilities.mergeIcons(
+                            ImageUtilities.loadIcon("org/netbeans/modules/gsf/testrunner/resources/rerun.png"), //NOI18N
+                            ImageUtilities.loadIcon("org/netbeans/modules/gsf/testrunner/resources/error-badge.gif"), //NOI18N
+                            8, 8);
 
     private static final boolean isMacLaf = "Aqua".equals(UIManager.getLookAndFeel().getID());
     private static final Color macBackground = UIManager.getColor("NbExplorerView.background");
@@ -184,23 +180,20 @@ public final class StatisticsPanel extends JPanel {
 	newButton.getAccessibleContext().setAccessibleName(accessibleName);
 	boolean isSelected = NbPreferences.forModule(StatisticsPanel.class).getBoolean(property, false);
 	newButton.setSelected(isSelected);
-	newButton.addItemListener(new ItemListener() {
-	    @Override
-	    public void itemStateChanged(ItemEvent e) {
-		boolean selected;
-		switch (e.getStateChange()) {
-		    case ItemEvent.SELECTED:
-			selected = true;
-			break;
-		    case ItemEvent.DESELECTED:
-			selected = false;
-			break;
-		    default:
-			return;
-		}
-		ResultWindow.getInstance().updateOptionStatus(property, selected);
-	    }
-	});
+	newButton.addItemListener((ItemEvent e) -> {
+            boolean selected;
+            switch (e.getStateChange()) {
+                case ItemEvent.SELECTED:
+                    selected = true;
+                    break;
+                case ItemEvent.DESELECTED:
+                    selected = false;
+                    break;
+                default:
+                    return;
+            }
+            ResultWindow.getInstance().updateOptionStatus(property, selected);
+        });
 	return newButton;
     }
 
@@ -229,24 +222,9 @@ public final class StatisticsPanel extends JPanel {
 
         final RerunHandler rerunHandler = displayHandler.getSession().getRerunHandler();
         if (rerunHandler != null) {
-            rerunButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    rerunHandler.rerun();
-                }
-            });
-            rerunFailedButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    rerunHandler.rerun(treePanel.getFailedTests());
-                }
-            });
-            rerunHandler.addChangeListener(new ChangeListener() {
-                @Override
-                public void stateChanged(ChangeEvent e) {
-                    updateButtons();
-                }
-            });
+            rerunButton.addActionListener(e -> rerunHandler.rerun());
+            rerunFailedButton.addActionListener(e -> rerunHandler.rerun(treePanel.getFailedTests()));
+            rerunHandler.addChangeListener(e -> updateButtons());
             updateButtons();
         }
     }
@@ -356,24 +334,11 @@ public final class StatisticsPanel extends JPanel {
     private void createNextPrevFailureButtons() {
         nextFailure = new JButton(ImageUtilities.loadImageIcon("org/netbeans/modules/gsf/testrunner/resources/nextmatch.png", true));
         nextFailure.setToolTipText(Bundle.MSG_NextFailure());
-        nextFailure.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectNextFailure();
-            }
-        });
+        nextFailure.addActionListener(e -> selectNextFailure());
 
         previousFailure = new JButton(ImageUtilities.loadImageIcon("org/netbeans/modules/gsf/testrunner/resources/prevmatch.png", true));
-
         previousFailure.setToolTipText(Bundle.MSG_PreviousFailure());
-        previousFailure.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectPreviousFailure();
-            }
-        });
+        previousFailure.addActionListener(e -> selectPreviousFailure());
     }
 
     void selectPreviousFailure() {

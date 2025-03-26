@@ -65,7 +65,7 @@ public class DocumentServices {
             }
             c = c.getSuperclass();
         } while (c != null && c != java.lang.Object.class);
-        Lookup[] arr = lkps.toArray(new Lookup[lkps.size()]);
+        Lookup[] arr = lkps.toArray(new Lookup[0]);
         @SuppressWarnings("rawtypes")
         Lookup.Result lookupResult = new ProxyLookup(arr).lookupResult(DocumentServiceFactory.class);
         @SuppressWarnings("unchecked")
@@ -106,7 +106,7 @@ public class DocumentServices {
             } catch (Exception ex) {
             }
         }
-        res = new ProxyLookup(lkps.toArray(new Lookup[lkps.size()]));
+        res = new ProxyLookup(lkps.toArray(new Lookup[0]));
         doc.putProperty(k, res);
         
         return res;

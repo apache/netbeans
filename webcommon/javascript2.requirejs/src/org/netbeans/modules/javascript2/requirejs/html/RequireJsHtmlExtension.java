@@ -73,7 +73,7 @@ public class RequireJsHtmlExtension extends HtmlExtension {
                 case OPEN_TAG:
                     OpenTag ot = (OpenTag) element;
                     String name = ot.unqualifiedName().toString();
-                    if (SCRIPT.equals(name.toLowerCase())) {
+                    if (SCRIPT.equalsIgnoreCase(name)) {
                         Collection<CustomAttribute> customAttributes = RequireJsCustomAttribute.getCustomAttributes();
                         for (CustomAttribute ca : customAttributes) {
                             if (LexerUtils.startsWith(ca.getName(), context.getPrefix(), true, false)) {

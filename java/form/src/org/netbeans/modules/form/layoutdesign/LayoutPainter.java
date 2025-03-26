@@ -21,6 +21,7 @@ package org.netbeans.modules.form.layoutdesign;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import javax.swing.Icon;
 import javax.swing.UIManager;
 import org.openide.util.ImageUtilities;
 import static org.netbeans.modules.form.layoutdesign.VisualState.GapInfo;
@@ -45,7 +46,7 @@ public class LayoutPainter implements LayoutConstants {
 
     private static final int BOTH_DIMENSIONS = 2;
 
-    private Image warningImage;
+    private Icon warningIcon;
 
     private static boolean PAINT_RES_GAP_MIN_SIZE;
 
@@ -171,15 +172,15 @@ public class LayoutPainter implements LayoutConstants {
     private void paintUnplacedWarningImage(Graphics2D g, LayoutComponent comp) {
         LayoutRegion region = comp.getCurrentSpace();
         Rectangle rect = region.toRectangle(new Rectangle());
-        Image image = getWarningImage();
-        g.drawImage(image, rect.x+rect.width-image.getWidth(null), rect.y, null);
+        Icon icon = getWarningIcon();
+        icon.paintIcon(null, g, rect.x+rect.width-icon.getIconWidth(), rect.y);
     }
 
-    private Image getWarningImage() {
-        if (warningImage == null) {
-            warningImage = ImageUtilities.loadImage("org/netbeans/modules/form/layoutsupport/resources/warning.png"); // NOI18N
+    private Icon getWarningIcon() {
+        if (warningIcon == null) {
+            warningIcon = ImageUtilities.loadIcon("org/netbeans/modules/form/layoutsupport/resources/warning.png"); // NOI18N
         }
-        return warningImage;
+        return warningIcon;
     }
     
     private void paintLinks(Graphics2D g, LayoutComponent component) {

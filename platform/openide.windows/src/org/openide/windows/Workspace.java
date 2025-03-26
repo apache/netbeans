@@ -35,13 +35,14 @@ import java.util.Set;
  * When serialized only keeps "weak" reference to this workspace does not
  * stores the content of the workspace (it is responsibility of window manager).
  *
- * <p><p>
- * <b><font color="red"><em>Important note: Do not provide implementation of this interface unless you are window system provider!</em></font></b>
+ * <p>
+ * <b><span style="color:red"><em>Important note: Do not provide implementation of this interface unless you are window system provider!</em></span></b>
  *
  * @author Jaroslav Tulach
  * @deprecated Do not use any more. Use {@link WindowManager} methods directly,
  * e.g. {@link WindowManager#getModes()} etc.
  */
+@Deprecated
 public interface Workspace extends Serializable {
     /** Name of property for modes in the workspace.
      * @deprecated Use {@link WindowManager#PROP_MODES} instead. */

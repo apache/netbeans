@@ -4,6 +4,8 @@ var hisObject = new |MyObject();
 ------------------------------------
 CONSTRUCTO sheObject(): sheObject          [PRIVATE]  constructors.js
 CLASS      Context                         [PUBLIC]   constructors.js
+CLASS      import                          [PUBLIC]   <font color=#999999>metaproperties.js</font>
+CLASS      new                             [PUBLIC]   <font color=#999999>metaproperties.js</font>
 METHOD     MyObject(): undefined           [PRIVATE]  constructors.js
 METHOD     test()                          [PUBLIC]   constructors.js
 METHOD     yourObject(): undefined         [PRIVATE]  constructors.js

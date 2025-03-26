@@ -40,6 +40,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectUtils;
+import org.openide.filesystems.FileUtil;
 
 /**
  * Caches audit results in NB cache folder. Uses Jackson to serialize the audit summary + 
@@ -71,7 +74,10 @@ final class AuditCache {
         File cacheDir = Places.getCacheSubdirectory(CACHE_SUBDIR);
         Path segPath = cacheDir.toPath().resolve(SEGMENTS_FILE);
         if (!Files.exists(segPath)) {
-            return segments;
+            synchronized (this) {
+                segments.clear();
+                return segments;
+            }
         }
         Properties p;
         try {
@@ -87,6 +93,7 @@ final class AuditCache {
             synchronized (this) {
                 if (ts > loadTimestamp) {
                     this.segments = p;
+                    this.loadTimestamp = ts;
                 } else {
                     p = this.segments;
                 }
@@ -150,11 +157,27 @@ final class AuditCache {
             }
         }
     }
-    public VulnerabilityReport cacheAuditResults(VulnerabilityReport report) throws IOException {
+    private static String key(Project project, String knowledgeBaseId) {
+        Project p2 = ProjectUtils.rootOf(project);
+        String k = "knowledge.segment." + knowledgeBaseId;
+        if (p2 != project) {
+            k = k + "." + FileUtil.getRelativePath(p2.getProjectDirectory(), project.getProjectDirectory()).replace('/', '.');
+        }
+        return k;
+    }
+    
+    public VulnerabilityReport cacheAuditResults(Project project, VulnerabilityReport report) throws IOException {
         Properties segments = loadSegments();
-        String k = "knowledge.segment." + report.summary.getKnowledgeBaseId();
+        String k = key(project, report.summary.getKnowledgeBaseId());
+        File cacheDir = Places.getCacheSubdirectory(CACHE_SUBDIR);
+        Path segPath = cacheDir.toPath().resolve(SEGMENTS_FILE);
+        boolean writeSegment = !Files.exists(segPath);
+        if (writeSegment) {
+            synchronized (this) {
+                this.segments.clear();
+            }
+        }
         String segName = segments.getProperty(k);
-        
         if (segName == null) {
             int segNo = 1;
             IOException saveException = null;
@@ -166,7 +189,6 @@ final class AuditCache {
                 String sN = "s" + segNo;
                 segments.put(sN, k);
                 segments.put(k, sN);
-                File cacheDir = Places.getCacheSubdirectory(CACHE_SUBDIR);
 
                 Path dirPath = cacheDir.toPath().resolve(sN);
                 try {
@@ -182,16 +204,13 @@ final class AuditCache {
                 throw saveException;
             }
             
-            File cacheDir = Places.getCacheSubdirectory(CACHE_SUBDIR);
-            Path segPath = cacheDir.toPath().resolve(SEGMENTS_FILE);
             try (OutputStream ostm = Files.newOutputStream(segPath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
                 segments.store(ostm, null);
             }
         }
         
-        File cacheDir = Places.getCacheSubdirectory(CACHE_SUBDIR);
         Path dirPath = cacheDir.toPath().resolve(segName);
-        
+        Files.createDirectories(dirPath);
         Path reportData = dirPath.resolve(FILE_REPORT);
         ObjectWriter om = new ObjectMapper()
             .writer(new SimpleFilterProvider().addFilter("explicitlySetFilter", new ExplicitlySetFilter())); // NOI18N
@@ -206,9 +225,9 @@ final class AuditCache {
      * @param knowledgeBaseId
      * @return 
      */
-    public VulnerabilityReport loadAudit(String knowledgeBaseId) throws IOException {
+    public VulnerabilityReport loadAudit(Project project, String knowledgeBaseId) throws IOException {
         Properties segments = loadSegments();
-        String k = "knowledge.segment." + knowledgeBaseId;
+        String k = key(project, knowledgeBaseId);
         String segName = segments.getProperty(k);
         
         if (segName == null) {
@@ -217,6 +236,13 @@ final class AuditCache {
         File cacheDir = Places.getCacheSubdirectory(CACHE_SUBDIR);
         Path dirPath = cacheDir.toPath().resolve(segName);
         
+        if (!Files.exists(dirPath)) {
+            synchronized (this) {
+                // clean up the segment cache
+                segments.remove(k);
+                segments.remove(segName);
+            }
+        }
         Path reportData = dirPath.resolve(FILE_REPORT);
         if (!Files.exists(reportData)) {
             return null;

@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: false
-OpenIDE-Module: org.netbeans.modules.libs.gradle/7
+OpenIDE-Module: org.netbeans.modules.libs.gradle/8
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/libs/gradle/Bundle.properties
-OpenIDE-Module-Specification-Version: 7.7
+OpenIDE-Module-Specification-Version: 8.12

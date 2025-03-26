@@ -136,7 +136,7 @@ public abstract class CPCategoryStructureItem implements StructureItem {
     @NbBundle.Messages("navigator.item.name.variables=Variables")
     public static class Variables extends ChildrenSetStructureItem {
 
-        private static final ImageIcon ICON = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/css/prep/editor/resources/variables.gif")); //NOI18N
+        private static final ImageIcon ICON = ImageUtilities.loadImageIcon("org/netbeans/modules/css/prep/editor/resources/variables.gif", false); //NOI18N
 
         public Variables(Set<StructureItem> children, FeatureContext context) {
             super(new DummyElementHandle(context.getFileObject(), Bundle.navigator_item_name_variables()), children);
@@ -151,7 +151,7 @@ public abstract class CPCategoryStructureItem implements StructureItem {
     @NbBundle.Messages("navigator.item.name.mixins=Mixins")
     public static class Mixins extends ChildrenSetStructureItem {
 
-        private static final ImageIcon ICON = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/css/prep/editor/resources/methods.gif")); //NOI18N
+        private static final ImageIcon ICON = ImageUtilities.loadImageIcon("org/netbeans/modules/css/prep/editor/resources/methods.gif", false); //NOI18N
 
         private final FeatureContext context;
 

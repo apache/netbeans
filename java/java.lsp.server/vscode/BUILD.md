@@ -23,14 +23,11 @@
 
 ## Prerequisities
 
-- JDK, version 11
+- JDK, version 11 or later
 - Ant, latest version
 - Maven, latest version
 - node.js, latest LTS (to build VSIX)
 
-It is currently possible to use JDK 8 for the build and execution.
-However, as the Apache NetBeans project is slowly moving towards JDK 11,
-using JDK 11 may be the safest bet.
 
 ## Getting the Code
 
@@ -134,6 +131,11 @@ and specify suitable debug arguments to start _standalone NBLS_ instance:
 vscode$ npm run nbcode -- --jdkhome /jdk -J-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000
 ```
 
+To add extra modules while debugging the NetBeans part
+```bash
+vscode$ npm run nbcode -- -J-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000 -J-Dnetbeans.extra.dirs=/path/to/extension
+```
+
 Connect to the process with Java debugger, setup all breakpoints. Then launch
 the VS Code extension (which connects to the already running _standalone NBLS_ Java process):
 
@@ -161,7 +163,11 @@ The default userdir location is inside the **global** vscode settings location:
 When the environment variable `nbcode_userdir` (to e.g. `/tmp/foo`) is set when starting vscode or nbcode (npm run nbcode), the userdir will point to `/tmp/foo/userdir`.
 
 ### Debug output 
-_Standalone NBLS_ can be instructed to print messages (stderr, out) to the console: add `-J-Dnetbeans.logger.console=true` to the npm commandline. This has the same effect as `netbeans.verbose = true` settings in the vscode. Messages from the LSP protocol can be displayed in vscode by setting `java.trace.server = verbose` setting in vscode JSON settings.
+_Standalone NBLS_ can be instructed to print messages (stderr, out) to the console: add `-J-Dnetbeans.logger.console=true` to the npm commandline. This has the same effect as `netbeans.verbose = true` settings in the vscode. 
+
+### LSP protocol tracing
+Messages from the LSP protocol can be displayed in vscode by setting `java.trace.server = verbose` setting in vscode JSON settings. Sometimes it may be needed to record LSP requests and responses in the debug output log stream from the Apache NetBeans language server so that requests are properly ordered with logs from executed actions. This can be enabled on language server startup by adding `-J-Dorg.netbeans.modules.java.lsp.server.lsptrace.level=FINEST`
+to the NBLS commandline.
 
 ### Debugging separately from global NBLS
 By default the extension uses **global** userdir of the **global** vscode instance and uses NBLS data in there. In case this is not desired, the `launch.json` must be changed:

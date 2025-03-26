@@ -33,7 +33,6 @@ import java.util.Properties;
 import java.util.Queue;
 import java.util.concurrent.locks.ReentrantLock;
 import org.netbeans.installer.Installer;
-import org.netbeans.installer.downloader.DownloadManager;
 import org.netbeans.installer.product.Registry;
 import org.netbeans.installer.product.RegistryNode;
 import org.netbeans.installer.product.components.Group;
@@ -646,10 +645,10 @@ public class RegistriesManagerImpl implements RegistriesManager {
         }
         
         final List <Pair <List<String>, String>> bundles = new LinkedList<Pair<List<String>, String>> ();
-        for(Object key : props.keySet()) {
-             Object value = props.get(key);
-             List <String> list = StringUtils.asList(value.toString());
-             bundles.add(new Pair(list,  key.toString()));
+
+        for (Map.Entry<Object, Object> entry : props.entrySet()) {
+            List<String> list = StringUtils.asList(entry.getValue().toString());
+            bundles.add(new Pair(list, entry.getKey().toString()));
         }
         
         final Map<String, String> notes = new HashMap<String, String>();
@@ -984,9 +983,6 @@ public class RegistriesManagerImpl implements RegistriesManager {
 
             //Issue #183611
             //Locale.setDefault(new Locale("en", "US"));
-            
-            DownloadManager.getInstance().setLocalDirectory(temp);
-            DownloadManager.getInstance().setFinishHandler(DummyFinishHandler.INSTANCE);
             
             System.setProperty(
                     Installer.LOCAL_DIRECTORY_PATH_PROPERTY, temp.getAbsolutePath());

@@ -131,7 +131,7 @@ class XMLHintPreferences extends AbstractPreferences {
             keys.add(resolve(((Element) nl.item(i)).getAttribute("name")));
         }
 
-        return keys.toArray(new String[keys.size()]);
+        return keys.toArray(new String[0]);
     }
 
     @Override
@@ -143,7 +143,7 @@ class XMLHintPreferences extends AbstractPreferences {
             names.add(resolve(((Element) nl.item(i)).getAttribute("name")));
         }
 
-        return names.toArray(new String[names.size()]);
+        return names.toArray(new String[0]);
     }
 
     @Override

@@ -26,6 +26,7 @@
         <folder name="text">
             <folder name="x-java">
                 <folder name="CompletionCollectors">
+                    <file name="org-netbeans-modules-nbcode-integration-java-AnnotationProcessorCompletionCollector.instance"/>
                     <file name="org-netbeans-lib-editor-codetemplates-CodeTemplateCompletionProvider$Collector.instance_hidden"/>
                     <file name="org-netbeans-modules-editor-java-JavaCompletionCollector.instance_hidden"/>
                     <file name="org-netbeans-modules-java-editor-javadoc-JavadocCompletionCollector.instance_hidden"/>

@@ -141,9 +141,31 @@ public interface ElementQuery {
 
         Set<ClassElement> getClasses(NameKind query, Set<AliasedName> aliases, AliasedElement.Trait trait);
 
+        /**
+         * Get classes marked as Attribute(#[\Attribute]).
+         *
+         * @param query the query
+         * @param aliases aliased names
+         * @param trait the trait
+         * @return classes marked as #[\Attribute]
+         * @since 2.36.0
+         */
+        Set<ClassElement> getAttributeClasses(NameKind query, Set<AliasedName> aliases, AliasedElement.Trait trait);
+
         Set<InterfaceElement> getInterfaces(NameKind query, Set<AliasedName> aliases, AliasedElement.Trait trait);
 
         Set<EnumElement> getEnums(NameKind query, Set<AliasedName> aliases, AliasedElement.Trait trait);
+
+        /**
+         * Get traits.
+         *
+         * @param query the query
+         * @param aliases aliased names
+         * @param trait the trait
+         * @return traits
+         * @since 2.38.0
+         */
+        Set<TraitElement> getTraits(NameKind query, Set<AliasedName> aliases, AliasedElement.Trait trait);
 
         Set<TraitElement> getTraits(final NameKind query);
 
@@ -152,6 +174,23 @@ public interface ElementQuery {
         Set<TypeElement> getTypes(NameKind query, Set<AliasedName> aliases, AliasedElement.Trait trait);
 
         Set<MethodElement> getConstructors(NameKind typeQuery, Set<AliasedName> aliases, AliasedElement.Trait trait);
+
+        /**
+         * Get constructors of attribute classes.
+         * <pre>
+         * #[\Attribute]
+         * class MyAttibute {
+         *     public function __construct(int $int, string $string) {}
+         * }
+         * </pre>
+         *
+         * @param typeQuery the query
+         * @param aliases aliased names
+         * @param trait the trait
+         * @return constructors of attribute classes
+         * @since 2.36.0
+         */
+        Set<MethodElement> getAttributeClassConstructors(NameKind typeQuery, Set<AliasedName> aliases, AliasedElement.Trait trait);
 
         Set<NamespaceElement> getNamespaces(NameKind query, Set<AliasedName> aliasedNames, AliasedElement.Trait trait);
 

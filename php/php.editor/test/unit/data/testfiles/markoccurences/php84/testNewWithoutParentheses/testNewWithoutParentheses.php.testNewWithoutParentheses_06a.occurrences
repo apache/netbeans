@@ -1,0 +1,4 @@
+    const |>MARK_OCCURRENCES:IMPLICIT_PUBLIC_^CONST<| = "implicit public const";
+        $example = new Example()::|>MARK_OCCURRENCES:IMPLICIT_PUBLIC_CONST<|;
+new Example()::|>MARK_OCCURRENCES:IMPLICIT_PUBLIC_CONST<|; // test
+new Example()->returnThis()::|>MARK_OCCURRENCES:IMPLICIT_PUBLIC_CONST<|; // test

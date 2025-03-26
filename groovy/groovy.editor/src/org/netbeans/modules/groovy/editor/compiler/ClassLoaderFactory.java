@@ -286,7 +286,7 @@ public class ClassLoaderFactory {
                 return;
             }
             LOG.log(Level.FINER, "Loader #{0} got PROP_ROOTS", id);
-            ClassPath[] paths = key.toArray(new ClassPath[key.size()]);
+            ClassPath[] paths = key.toArray(new ClassPath[0]);
             validate(paths);
         }
 

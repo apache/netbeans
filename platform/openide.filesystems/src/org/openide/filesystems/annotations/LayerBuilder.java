@@ -301,11 +301,7 @@ public final class LayerBuilder {
 
     /**
      * Validates a resource named in an annotation.
-     * <p>Note that resources found in the binary classpath (if permitted)
-     * cannot actually be located when running inside javac on JDK 6 (see #196933 for discussion), in which case
-     * no exception is thrown but the return value may not permit {@link FileObject#openInputStream}.
-     * <span class="nonnormative">{@code AnnotationProcessorTestUtils.searchClasspathBroken} should be used in unit tests affected by this bug.</span>
-     * <p>Also remember that the binary compilation classpath for an Ant-based NetBeans module does
+     * <p>Note that the binary compilation classpath for an Ant-based NetBeans module does
      * not include non-public packages.
      * (As of the 7.1 harness it does include non-classfile resources from public packages of module dependencies.)
      * The processorpath does contain all of these but it is not consulted.
@@ -376,7 +372,14 @@ public final class LayerBuilder {
             return resource.substring(1);
         } else {
             try {
-                return new URI(null, findPackage(originatingElement).replace('.', '/') + "/", null).resolve(new URI(null, resource, null)).getPath();
+                String packagePath = findPackage(originatingElement).replace('.', '/');
+                String pathPrefix;
+                if(packagePath.isEmpty()) {
+                    pathPrefix = "";
+                } else {
+                    pathPrefix = packagePath + "/";
+                }
+                return new URI(null, pathPrefix, null).resolve(new URI(null, resource, null)).getPath();
             } catch (URISyntaxException x) {
                 throw new LayerGenerationException(x.toString(), originatingElement);
             }

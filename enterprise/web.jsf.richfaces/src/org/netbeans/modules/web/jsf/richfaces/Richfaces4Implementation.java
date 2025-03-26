@@ -29,10 +29,10 @@ import org.netbeans.api.project.libraries.Library;
 import org.netbeans.api.project.libraries.LibraryManager;
 import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.jsf.api.JsfComponentUtils;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
 import org.netbeans.modules.web.jsf.richfaces.ui.Richfaces4CustomizerPanelVisual;
 import org.netbeans.modules.web.jsf.spi.components.JsfComponentCustomizer;
 import org.netbeans.modules.web.jsf.spi.components.JsfComponentImplementation;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataFolder;
@@ -104,8 +104,7 @@ public class Richfaces4Implementation implements JsfComponentImplementation {
             } else {
                 richfacesLibraries = Richfaces4Customizer.getRichfacesLibraries();
             }
-            ProjectClassPathModifier.removeLibraries(richfacesLibraries.toArray(
-                    new Library[richfacesLibraries.size()]), webModule.getJavaSources()[0], ClassPath.COMPILE);
+            ProjectClassPathModifier.removeLibraries(richfacesLibraries.toArray(new Library[0]), webModule.getJavaSources()[0], ClassPath.COMPILE);
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, "Exception during removing JSF suite from an web project", ex); //NOI18N
         } catch (UnsupportedOperationException ex) {
@@ -208,8 +207,8 @@ public class Richfaces4Implementation implements JsfComponentImplementation {
     }
 
     @Override
-    public Set<JSFVersion> getJsfVersion() {
-        return EnumSet.of(JSFVersion.JSF_2_0, JSFVersion.JSF_2_1, JSFVersion.JSF_2_2);
+    public Set<JsfVersion> getJsfVersion() {
+        return EnumSet.of(JsfVersion.JSF_2_0, JsfVersion.JSF_2_1, JsfVersion.JSF_2_2);
     }
 
     @Override

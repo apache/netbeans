@@ -88,11 +88,11 @@ public final class RecentFiles {
     private RecentFiles() {
     }
 
-    static void addPropertyChangeListener(PropertyChangeListener l) {
+    public static void addPropertyChangeListener(PropertyChangeListener l) {
         PCH_SUPPORT.addPropertyChangeListener(l);
     }
 
-    static void removePropertyChangeListener(PropertyChangeListener l) {
+    public static void removePropertyChangeListener(PropertyChangeListener l) {
         PCH_SUPPORT.removePropertyChangeListener(l);
     }
 
@@ -117,7 +117,7 @@ public final class RecentFiles {
     }
 
     /** Returns read-only list of recently closed files */
-    static List<HistoryItem> getRecentFiles() {
+    public static List<HistoryItem> getRecentFiles() {
         synchronized (HISTORY_LOCK) {
             checkHistory();
             return Collections.unmodifiableList(history);
@@ -305,7 +305,7 @@ public final class RecentFiles {
             }
             i = dObj == null
                     ? null
-                    : new ImageIcon(dObj.getNodeDelegate().getIcon(
+                    : ImageUtilities.image2Icon(dObj.getNodeDelegate().getIcon(
                     BeanInfo.ICON_COLOR_16x16));
         }
         return i;
@@ -422,7 +422,7 @@ public final class RecentFiles {
     * One item of the recently closed files history.
     * Comparable by the time field, ascending from most recent to older items.
     */
-    static final class HistoryItem implements Comparable<HistoryItem> {
+    public static final class HistoryItem implements Comparable<HistoryItem> {
 
         private int id;
         private String path;
@@ -469,14 +469,14 @@ public final class RecentFiles {
          * Set icon of this history item. The icon can be set after
          * initialization, usually after it was loaded in a background thread.
          */
-        public void setIcon(Icon icon) {
+        void setIcon(Icon icon) {
             this.icon = icon;
         }
 
         /**
          * Return bytes for the icon, or null if no icon is specified.
          */
-        public byte[] getIconBytes() {
+        byte[] getIconBytes() {
             return iconToBytes(icon);
         }
 

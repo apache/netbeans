@@ -87,7 +87,6 @@ public final class Comment {
     /**
      * Define a comment, using specified style.
      * @param style the style of comment
-     * @param indent indentation of comment
      * @param text textual content of comment. With or without proper escaping
      * @return new comment
      */

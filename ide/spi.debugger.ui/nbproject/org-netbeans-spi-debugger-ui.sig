@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.76
+#Version 2.85
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -298,6 +298,7 @@ meth public abstract org.netbeans.spi.debugger.ui.ColumnModelRegistration[] valu
 
 CLSS public abstract interface org.netbeans.spi.debugger.ui.Constants
 fld public final static java.lang.String BREAKPOINT_ENABLED_COLUMN_ID = "BreakpointEnabled"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String CALL_STACK_FRAME_LOCATION_COLUMN_ID = "CallStackFrameLocation"
 fld public final static java.lang.String LOCALS_TO_STRING_COLUMN_ID = "LocalsToString"
 fld public final static java.lang.String LOCALS_TYPE_COLUMN_ID = "LocalsType"

@@ -134,14 +134,14 @@ public class Utils {
         actions.add(null);
         actions.add(new MarkAllReadAction());
         actions.add(new DeleteAllAction());
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     public static Action[] getGlobalNotificationActions() {
         List<Action> actions = new ArrayList<Action>();
         actions.add(new MarkAllReadAction());
         actions.add(new DeleteAllAction());
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     private static class MarkUnreadAction extends AbstractAction {

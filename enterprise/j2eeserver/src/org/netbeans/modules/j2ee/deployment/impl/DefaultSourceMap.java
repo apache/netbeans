@@ -75,7 +75,7 @@ public class DefaultSourceMap extends SourceFileMap {
                 result.add(children[i].getJ2eeModule().getResourceDirectory());
             }
         }
-        return (File[]) result.toArray(new File[result.size()]);
+        return (File[]) result.toArray(new File[0]);
     }
    
     public boolean add(String distributionPath, FileObject sourceFile) {
@@ -95,7 +95,7 @@ public class DefaultSourceMap extends SourceFileMap {
             if (fo != null)
                 ret.add(fo);
         }
-        return (FileObject[]) ret.toArray(new FileObject[ret.size()]);
+        return (FileObject[]) ret.toArray(new FileObject[0]);
     }
     
     public File getDistributionPath(FileObject sourceFile) {

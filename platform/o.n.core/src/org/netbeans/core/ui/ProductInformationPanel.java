@@ -186,6 +186,7 @@ public class ProductInformationPanel extends JPanel implements HyperlinkListener
         copyright.setMinimumSize(new java.awt.Dimension(50, 0));
         copyright.setCaretPosition(0); // so that text is not scrolled down
         copyright.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 copyrightMouseClicked(evt);
             }

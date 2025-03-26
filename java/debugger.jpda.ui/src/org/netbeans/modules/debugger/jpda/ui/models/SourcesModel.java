@@ -709,7 +709,7 @@ NodeActionsProvider {
 
         private SourcesModel getModel () {
             SourcesModel tm = model.get ();
-            if (tm == null) {
+            if (tm != null) {
                 tm.sourcePath.removePropertyChangeListener (this);
                 tm.debugger.getSmartSteppingFilter ().
                     removePropertyChangeListener (this);

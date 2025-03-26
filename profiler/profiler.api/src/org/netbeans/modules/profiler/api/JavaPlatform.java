@@ -66,7 +66,7 @@ public final class JavaPlatform {
      */
     public static List<JavaPlatform> getPlatforms() {
         List<JavaPlatformProvider> platformProviders = provider().getPlatforms();
-        List<JavaPlatform> platforms = new ArrayList(platformProviders.size());
+        List<JavaPlatform> platforms = new ArrayList<>(platformProviders.size());
         
         for (JavaPlatformProvider p : platformProviders) {
             if (p.getPlatformJavaFile() != null &&

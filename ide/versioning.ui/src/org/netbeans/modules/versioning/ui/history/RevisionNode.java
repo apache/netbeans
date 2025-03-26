@@ -69,7 +69,7 @@ class RevisionNode extends AbstractNode implements Comparable {
         }
         lookup.addAll(Arrays.asList(entry.getLookupObjects()));
         lookup.add(entry);
-        return new RevisionNode(entry, Lookups.fixed(lookup.toArray(new Object[lookup.size()])));
+        return new RevisionNode(entry, Lookups.fixed(lookup.toArray(new Object[0])));
     }
     
     private static Children createChildren(HistoryEntry entry) {
@@ -150,7 +150,7 @@ class RevisionNode extends AbstractNode implements Comparable {
 
     @Override
     public int compareTo(Object obj) {
-        if( !(obj instanceof RevisionNode) || obj == null) {
+        if(!(obj instanceof RevisionNode)) {
             return -1;
         }
         RevisionNode node = (RevisionNode) obj;
@@ -421,7 +421,7 @@ class RevisionNode extends AbstractNode implements Comparable {
             }
             lookup.add(entry);
             lookup.addAll(Arrays.asList(entry.getLookupObjects()));
-            return Lookups.fixed(lookup.toArray(new Object[lookup.size()]));
+            return Lookups.fixed(lookup.toArray(new Object[0]));
         }        
     
         @Override
@@ -436,7 +436,7 @@ class RevisionNode extends AbstractNode implements Comparable {
         
         @Override
         public int compareTo(Object obj) {
-            if( !(obj instanceof FileNode) || obj == null) {
+            if(!(obj instanceof FileNode)) {
                 return -1;
             }
             FileNode node = (FileNode) obj;        

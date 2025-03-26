@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -55,6 +56,7 @@ import org.netbeans.modules.maven.model.pom.POMModelFactory;
 import org.netbeans.modules.project.dependency.ArtifactSpec;
 import org.netbeans.modules.project.dependency.Dependency;
 import org.netbeans.modules.project.dependency.DependencyResult;
+import org.netbeans.modules.project.dependency.ProjectScopes;
 import org.netbeans.modules.project.dependency.Scope;
 import org.netbeans.modules.project.dependency.SourceLocation;
 import org.netbeans.modules.xml.xam.ModelSource;
@@ -70,7 +72,7 @@ import org.openide.util.WeakListeners;
  *
  * @author sdedic
  */
-class MavenDependencyResult implements org.netbeans.modules.project.dependency.DependencyResult, PropertyChangeListener {
+class MavenDependencyResult implements org.netbeans.modules.project.dependency.DependencyResult, ProjectScopes, PropertyChangeListener {
     final Project ideProject;
     final NbMavenProject mavenProject;
     final Dependency rootNode;
@@ -92,6 +94,21 @@ class MavenDependencyResult implements org.netbeans.modules.project.dependency.D
         this.rootNode = rootNode;
         this.scopes = scopes;
         this.problems = problems;
+    }
+
+    @Override
+    public ProjectScopes getScopes() {
+        return this;
+    }
+
+    @Override
+    public Collection<? extends Scope> scopes() {
+        return MavenDependenciesImplementation.scope2Maven.keySet();
+    }
+
+    @Override
+    public Collection<? extends Scope> implies(Scope s, boolean direct) {
+        return (direct ? MavenDependenciesImplementation.directScopes : MavenDependenciesImplementation.impliedScopes).getOrDefault(s, Collections.emptySet());
     }
 
     @Override
@@ -260,7 +277,7 @@ class MavenDependencyResult implements org.netbeans.modules.project.dependency.D
             if (sourceListeners == null || sourceListeners.isEmpty()) {
                 return;
             }
-            ll = sourceListeners.toArray(new ChangeListener[sourceListeners.size()]);
+            ll = sourceListeners.toArray(new ChangeListener[0]);
         }
         ChangeEvent e = new ChangeEvent(this);
         for (ChangeListener l : ll) {

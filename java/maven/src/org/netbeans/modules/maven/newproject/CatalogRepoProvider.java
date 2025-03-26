@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,11 +51,11 @@ import org.apache.maven.wagon.proxy.ProxyInfo;
 import org.apache.maven.wagon.repository.Repository;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.util.FileUtils;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Namespace;
-import org.jdom.input.SAXBuilder;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.Namespace;
+import org.jdom2.input.SAXBuilder;
 import org.netbeans.modules.maven.api.archetype.Archetype;
 import org.netbeans.modules.maven.api.archetype.ArchetypeProvider;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
@@ -269,7 +270,7 @@ public abstract class CatalogRepoProvider implements ArchetypeProvider {
                         }
                     }
 
-                    File temp = File.createTempFile("maven", "catalog"); //NOI18N
+                    File temp = Files.createTempFile("maven", "catalog").toFile(); //NOI18N
                     try {
                         wagon.get("archetype-catalog.xml", temp); //NOI18N
                         //only overwrite the old file or create file if the content is there.

@@ -33,13 +33,13 @@ import org.openide.util.NbBundle.Messages;
 
 @ActionID(
         category = "Tools",
-        id = "org.netbeans.modules.cloud.oracle.OpenServiceConsoleAction"
+        id = "org.netbeans.modules.cloud.oracle.actions.OpenServiceConsoleAction"
 )
 @ActionRegistration(
         displayName = "#CTL_OpenServiceConsoleAction"
 )
 @ActionReferences(value = {
-    @ActionReference(path = "Cloud/Oracle/Databases/Actions", position = 260)
+    @ActionReference(path = "Cloud/Oracle/Database/Actions", position = 260)
 })
 @Messages({"CTL_OpenServiceConsoleAction=Open Service Console",
         "MSG_ServiceConsole=Service Console URL: {0}"})

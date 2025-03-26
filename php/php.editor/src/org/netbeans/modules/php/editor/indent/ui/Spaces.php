@@ -22,6 +22,10 @@ private ClassA&ClassB $intersectionType;
 	$result = $a < $b ? $a : $b;
     }
 
+    public function coalescingOperatorExample(?string $a): string {
+        return $a ?? 'default value';
+    }
+
 public function forExample() {
     for ($i = 1; $i <= 10; $i++) {echo 'Item: '; echo $i;}
 }
@@ -146,4 +150,10 @@ $data=[
 'very_looong_key'=>100,
 ];
 
-?>
+$match = match ($type) {
+    "condition" => 1,
+    "loooooong condition" => 2,
+    default => 0,
+};
+
+new (trim(' Example '))()->field;

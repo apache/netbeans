@@ -133,7 +133,7 @@ public class ClipboardHandler {
                     Scope cutScope = copy.getTrees().getScope(new TreePath(context.getCompilationUnit()));
                     List<Position[]> spans = new ArrayList<Position[]>(inSpans);
 
-                    Collections.sort(spans, new Comparator<Position[]>() {
+                    spans.sort(new Comparator<Position[]>() {
                         @Override public int compare(Position[] o1, Position[] o2) {
                             return o1[0].getOffset() - o2[0].getOffset();
                         }
@@ -252,6 +252,10 @@ public class ClipboardHandler {
                 SourcePositions[] sps = new SourcePositions[1];
 
                 OUTER: for (Entry<String, String> e : simple2FQNs.entrySet()) {
+                    // skip default static imports
+                    if ("java.lang.StringTemplate.STR".equals(e.getValue())) {
+                        continue;
+                    }
                     Element el = fqn2element(cc.getElements(), e.getValue());
                     if (el == null) {
                         continue;

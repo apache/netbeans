@@ -65,7 +65,7 @@ final class NodeLookup extends AbstractLookup {
      *
      * @param node node to ask
      * @param c class to query
-     * @param colleciton to put Pair into if found
+     * @param collection to put Pair into if found
      */
     private static void addCookie(Node node, Class<?> c, 
             Collection<AbstractLookup.Pair> collection, 
@@ -215,7 +215,7 @@ final class NodeLookup extends AbstractLookup {
         }
 
         List<AbstractLookup.Pair> list = new ArrayList<>(instances);
-        java.util.Collections.sort(list, new Cmp());
+        list.sort(new Cmp());
 
         if (toAdd == null) {
             setPairs(list);

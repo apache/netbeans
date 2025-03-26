@@ -181,7 +181,7 @@ public final class TaskSchedulingManager {
                 it.remove();
             }
         }
-        return allTasks.toArray(new IssueImpl[allTasks.size()]);
+        return allTasks.toArray(new IssueImpl[0]);
     }
 
     public boolean isInInterval(IssueScheduleInfo schedule, IssueScheduleInfo restrictionInterval) {
@@ -397,7 +397,7 @@ public final class TaskSchedulingManager {
     private void handleIssues() {
         IssueImpl[] issues;
         synchronized (issuesToHandle) {
-            issues = issuesToHandle.toArray(new IssueImpl[issuesToHandle.size()]);
+            issues = issuesToHandle.toArray(new IssueImpl[0]);
             issuesToHandle.clear();
         }
         boolean changed = false;
@@ -405,7 +405,7 @@ public final class TaskSchedulingManager {
             changed |= handleSingleIssue(issue);
         }
         synchronized (deletedIssues) {
-            issues = deletedIssues.toArray(new IssueImpl[deletedIssues.size()]);
+            issues = deletedIssues.toArray(new IssueImpl[0]);
             deletedIssues.clear();
         }
         for (IssueImpl issue : issues) {

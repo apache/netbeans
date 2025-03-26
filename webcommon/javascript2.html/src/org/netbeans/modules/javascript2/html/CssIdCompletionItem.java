@@ -58,7 +58,15 @@ class CssIdCompletionItem implements CompletionProposal {
 
     @Override
     public Set<Modifier> getModifiers() {
-        Set<Modifier> modifiers = (getElement() == null || getElement().getModifiers().isEmpty() ? Collections.EMPTY_SET : EnumSet.copyOf(getElement().getModifiers()));
+        Set<Modifier> modifiers;
+
+        if (getElement() == null || getElement().getModifiers().isEmpty()) {
+            modifiers = Collections.EMPTY_SET;
+        } else {
+            modifiers = EnumSet.noneOf(Modifier.class);
+            modifiers.addAll(getElement().getModifiers());
+        }
+
         if (modifiers.contains(Modifier.PRIVATE) && (modifiers.contains(Modifier.PUBLIC) || modifiers.contains(Modifier.PROTECTED))) {
             modifiers.remove(Modifier.PUBLIC);
             modifiers.remove(Modifier.PROTECTED);
@@ -74,7 +82,7 @@ class CssIdCompletionItem implements CompletionProposal {
     @Override
     public ImageIcon getIcon() {
         if (cssIcon == null) {
-            cssIcon = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/jquery/resources/style_sheet_16.png")); //NOI18N
+            cssIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/jquery/resources/style_sheet_16.png", false); //NOI18N
         }
         return cssIcon;
     }

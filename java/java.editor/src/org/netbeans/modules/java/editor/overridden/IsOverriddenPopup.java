@@ -26,12 +26,10 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListModel;
@@ -53,7 +51,7 @@ public class IsOverriddenPopup extends JPanel implements FocusListener {
         this.caption = caption;
         this.declarations = declarations;
 
-        Collections.sort(declarations, new Comparator<ElementDescription>() {
+        declarations.sort(new Comparator<ElementDescription>() {
             public int compare(ElementDescription o1, ElementDescription o2) {
                 if (o1.isOverridden() == o2.isOverridden()) {
                     return o1.getDisplayName().compareTo(o2.getDisplayName());
@@ -212,7 +210,7 @@ public class IsOverriddenPopup extends JPanel implements FocusListener {
             g.setColor(fgColor);
 
             // Render the item
-            CompletionUtilities.renderHtml(new ImageIcon(ImageUtilities.icon2Image(getIcon())), getText(), null, g, getFont(), fgColor, getWidth(), getHeight(), selected);
+            CompletionUtilities.renderHtml(ImageUtilities.icon2ImageIcon(getIcon()), getText(), null, g, getFont(), fgColor, getWidth(), getHeight(), selected);
         }
     }
     

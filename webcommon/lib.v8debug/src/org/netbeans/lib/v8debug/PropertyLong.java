@@ -60,7 +60,7 @@ public final class PropertyLong {
     /**
      * Get the property value or the provided value when the property does not have one.
      * @param defaultValue The default value to return when the property is undefined.
-     * @return 
+     * @return the property value, or defaultValue when not set
      */
     public long getValueOr(long defaultValue) {
         if (l == null) {

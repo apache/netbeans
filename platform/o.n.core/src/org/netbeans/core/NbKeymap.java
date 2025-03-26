@@ -39,6 +39,7 @@ import javax.swing.Action;
 import javax.swing.KeyStroke;
 import javax.swing.text.Keymap;
 import org.openide.awt.AcceleratorBinding;
+import org.openide.awt.Actions;
 import org.openide.awt.StatusDisplayer;
 import org.openide.cookies.InstanceCookie;
 import org.openide.filesystems.FileAttributeEvent;
@@ -273,7 +274,7 @@ public final class NbKeymap implements Keymap, Comparator<KeyStroke> {
     }
 
     public static KeyStroke[] getContext() { // called from ShortcutAndMenuKeyEventProcessor
-        return context.toArray(new KeyStroke[context.size()]);
+        return context.toArray(new KeyStroke[0]);
     }
 
     private static void shiftContext(KeyStroke stroke) {
@@ -281,19 +282,9 @@ public final class NbKeymap implements Keymap, Comparator<KeyStroke> {
 
         StringBuilder text = new StringBuilder();
         for (KeyStroke ks: context) {
-            text.append(getKeyText(ks)).append(' ');
+            text.append(Actions.keyStrokeToString(ks)).append(' ');
         }
         StatusDisplayer.getDefault().setStatusText(text.toString());        
-    }
-    
-    private static String getKeyText (KeyStroke keyStroke) {
-        if (keyStroke == null) return "";
-        String modifText = KeyEvent.getKeyModifiersText 
-            (keyStroke.getModifiers ());
-        if ("".equals (modifText))       
-            return KeyEvent.getKeyText (keyStroke.getKeyCode ());
-        return modifText + "+" +                                // NOI18N
-            KeyEvent.getKeyText (keyStroke.getKeyCode ()); 
     }
            
     private static final Logger LOG = Logger.getLogger(NbKeymap.class.getName());

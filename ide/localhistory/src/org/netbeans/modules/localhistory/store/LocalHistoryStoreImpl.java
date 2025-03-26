@@ -906,7 +906,7 @@ class LocalHistoryStoreImpl implements LocalHistoryStore {
                 }
             }
             if(newEntries.size() > 0) {
-                writeHistory(historyFile, newEntries.toArray(new HistoryEntry[newEntries.size()]), false);
+                writeHistory(historyFile, newEntries.toArray(new HistoryEntry[0]), false);
             } else {
                 historyFile.delete();
                 historyObsolete = true;

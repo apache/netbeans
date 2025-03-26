@@ -72,7 +72,7 @@ public class TestResultTest extends TestCase {
         result = TestResult.computeStatistics(values);
         assertEquals("wrong count", 0.0, result.getAverage());
 
-        values = new ArrayList();
+        values = new ArrayList<>();
         values.add(1);
         result = TestResult.computeStatistics(values);
         assertEquals("wrong average", 1.0, result.getAverage());

@@ -107,7 +107,7 @@ public final class ProjectConvertors {
      * The returned {@link Lookup} implements {@link Closeable}, calling {@link Closeable#close}
      * on it removes all the instances.
      * <p class="nonnormative">
-     * Typical usage would be to pass the {@link Lookup} to {@link ProjectConvertor.Result#Result}
+     * Typical usage would be to pass the {@link Lookup} to {@link ProjectConvertor.Result#Result(org.openide.util.Lookup, java.util.concurrent.Callable, java.lang.String, javax.swing.Icon) }
      * and call {@link Closeable#close} on it in the convertor's project factory before the real
      * project is created.
      * </p>

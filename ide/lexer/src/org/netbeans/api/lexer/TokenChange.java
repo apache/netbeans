@@ -25,12 +25,12 @@ import org.netbeans.lib.lexer.inc.TokenChangeInfo;
 
 /**
  * Token change describes modification on one level of a token hierarchy.
- * <br/>
+ * <br>
  * If there is only one token that was modified
  * and there was a language embedding in that token then
  * most of the embedded tokens can usually be retained.
  * This defines an embedded change accessible by {@link #embeddedChange(int)}.
- * <br/>
+ * <br>
  * There may possibly be multiple levels of the embedded changes.
  *
  * @author Miloslav Metelka
@@ -89,7 +89,7 @@ public final class TokenChange<T extends TokenId> {
     
     /**
      * Get offset of the first token that was modified.
-     * <br/>
+     * <br>
      * If there were any added/removed tokens then this is a start offset
      * of the first added/removed token.
      */
@@ -131,9 +131,9 @@ public final class TokenChange<T extends TokenId> {
     /**
      * Get the token sequence that corresponds to the current state
      * of the token hierarchy.
-     * <br/>
+     * <br>
      * The token sequence will be positioned at the {@link #index()}.
-     * <br/>
+     * <br>
      * If this is an embedded token change then this method returns
      * the token sequence at the corresponding embedded level.
      */
@@ -145,10 +145,10 @@ public final class TokenChange<T extends TokenId> {
     
     /**
      * Whether this change only modifies bounds of a single token.
-     * <br/>
+     * <br>
      * This flag is only set if there was a single token removed and a new single token
      * added with the same token id in terms of this change.
-     * <br/>
+     * <br>
      * For bounds changes the affected offsets of the event will only
      * cover the modified characters (not the modified tokens boundaries).
      */

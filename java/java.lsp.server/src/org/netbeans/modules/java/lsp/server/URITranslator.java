@@ -19,10 +19,7 @@
 package org.netbeans.modules.java.lsp.server;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -31,7 +28,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -49,7 +45,6 @@ public final class URITranslator {
     private static final URITranslator INSTANCE = new URITranslator();
 
     private final Map<String, String> uriFromCacheMap = new LRUCacheMap();
-    private final Map<String, String> uriToCacheMap = new LRUCacheMap();
 
     public static URITranslator getDefault() {
         return INSTANCE;
@@ -69,60 +64,10 @@ public final class URITranslator {
                 if (file == null) {
                     return uri;
                 }
-                File cacheDir = getCacheDir();
-                cacheDir.mkdirs();
-                File segments = new File(cacheDir, "segments"); // NOI18N
-                Properties props = new Properties();
-
-                try (InputStream in = new FileInputStream(segments)) {
-                    props.load(in);
-                } catch (IOException ex) {
-                    //OK, may not exist yet
-                }
-                FileObject archive = FileUtil.getArchiveFile(file);
-                String archiveString = archive.toURL().toString();
-                File foundSegment = null;
-                for (String segment : props.stringPropertyNames()) {
-                    if (archiveString.equals(props.getProperty(segment))) {
-                        foundSegment = new File(cacheDir, segment);
-                        break;
-                    }
-                }
-                if (foundSegment == null) {
-                    int i = 0;
-                    while (props.getProperty("s" + i) != null) {    // NOI18N
-                        i++;
-                    }
-                    foundSegment = new File(cacheDir, "s" + i);     // NOI18N
-                    props.put("s" + i, archiveString);              // NOI18N
-                    try (OutputStream in = new FileOutputStream(segments)) {
-                        props.store(in, "");
-                    } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                }
-                File cache = new File(foundSegment, FileUtil.getRelativePath(FileUtil.getArchiveRoot(archive), file));
-                cache.getParentFile().mkdirs();
-                if (file.isFolder()) {
-                    if (cache.exists() && cache.isFile()) {
-                        if (!cache.delete()) {
-                            return uri;
-                        }
-                    }
-                    cache.mkdir();
-                    return cache.toURI().toString();
-                } else if (file.isData()) {
-                    try {
-                        if (cache.exists() && cache.isDirectory()) {
-                            FileUtil.toFileObject(cache).delete();
-                        }
-                        try (OutputStream out = new FileOutputStream(cache)) {
-                            out.write(file.asBytes());
-                            return cache.toURI().toString();
-                        }
-                    } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
+                try {
+                    return URLMapper.findURL(file, URLMapper.EXTERNAL).toURI().toString();
+                } catch (URISyntaxException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
             }
             if (uriUri.getScheme().equals("nbfs")) {            // NOI18N
@@ -144,38 +89,42 @@ public final class URITranslator {
                     Exceptions.printStackTrace(ex);
                 }
             }
-            return uri;
-        });
-    }
-
-    public synchronized String uriFromLSP(String nbUri) {
-        return uriToCacheMap.computeIfAbsent(nbUri, uri -> {
-            URI uriUri = URI.create(uri);
-            File cacheDir = getCacheDir();
-            URI relative = cacheDir.toURI().relativize(uriUri);
-            if (relative != null && new File(cacheDir, relative.toString()).canRead()) {
-                String segmentAndPath = relative.toString();
-                int slash = segmentAndPath.indexOf('/');
-                String segment = segmentAndPath.substring(0, slash);
-                String path = segmentAndPath.substring(slash + 1);
-                File segments = new File(cacheDir, "segments");     // NOI18N
-                Properties props = new Properties();
-
-                try (InputStream in = new FileInputStream(segments)) {
-                    props.load(in);
-                    String archiveUri = props.getProperty(segment);
-                    FileObject archive = URLMapper.findFileObject(URI.create(archiveUri).toURL());
-                    archive = archive != null ? FileUtil.getArchiveRoot(archive) : null;
-                    FileObject file = archive != null ? archive.getFileObject(path) : null;
-                    if (file != null) {
-                        return file.toURI().toString();
-                    }
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
+            if ("file".equals(uriUri.getScheme()) && !uri.startsWith("file:///")) { // NOI18N
+                // in "file:/C:" the : drive separator is at char 7. The leading slash before "C" is at 5.
+                if ((uri.length() <= 7) || uri.charAt(7) != ':') { // NOI18N
+                    uri = "file://" + uri.substring(5); // NOI18N
                 }
             }
             return uri;
         });
+    }
+
+    public String uriFromLSP(String nbUri) {
+        // handle special cases. We use file:jar:.....!/ and nbjrt:file:..../!/ but vscode url-encodes that, but wrongly, as it leaves other URI-encoded
+        // special characters as they are. However doing a full decode using Decoder will damage other URL-encoded special characters that would be
+        // parsed by URI.create() later.
+        // So handle the special cases manually and only remove the vscode-added scheme/delimiter encoded chars
+        int slash = nbUri.indexOf('/'); // NOI18N
+        if (slash != -1) {
+            int indexOfInnerScheme = nbUri.substring(0, slash).indexOf("%3A"); // NOI18N
+            if (indexOfInnerScheme > 0 && indexOfInnerScheme < slash) {
+                int n = indexOfInnerScheme + 3;
+                StringBuilder sb = new StringBuilder();
+                sb.append(nbUri, 0, indexOfInnerScheme);
+                sb.append(':'); // NOI18N
+                
+                // now search for the mangled !
+                int mangledExclamation = nbUri.indexOf("%21/"); // NOI18N
+                if (mangledExclamation > 0) {
+                    sb.append(nbUri, n, mangledExclamation);
+                    sb.append('!'); // NOI18N
+                    n = mangledExclamation + 3;
+                }
+                sb.append(nbUri, n, nbUri.length());
+                return sb.toString();
+            }
+        }
+        return nbUri;
     }
 
     /**

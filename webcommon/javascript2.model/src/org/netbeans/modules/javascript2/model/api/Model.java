@@ -815,7 +815,7 @@ public final class Model {
                             Index.get(parseResult.getSnapshot().getSource().getFileObject()), true);
                 }
                 List<TypeUsage> returnTypes = new ArrayList<>(ret);
-                Collections.sort(returnTypes, RETURN_TYPES_COMPARATOR);
+                returnTypes.sort(RETURN_TYPES_COMPARATOR);
                 for (TypeUsage type : returnTypes) {
                     newLine(printer, sb, ident);
 
@@ -860,7 +860,7 @@ public final class Model {
             newLine(printer, sb, ident);
             sb.append("# PROPERTIES"); // NOI18N
 
-            Collections.sort(entries, PROPERTIES_COMPARATOR);
+            entries.sort(PROPERTIES_COMPARATOR);
             for (Map.Entry<String, ? extends JsObject> entry : entries) {
                 newLine(printer, sb, ident);
 

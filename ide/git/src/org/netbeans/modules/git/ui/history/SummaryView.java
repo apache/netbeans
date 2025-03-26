@@ -31,7 +31,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.swing.AbstractAction;
@@ -53,7 +52,6 @@ import org.netbeans.modules.versioning.history.AbstractSummaryView;
 import org.netbeans.modules.versioning.history.AbstractSummaryView.SummaryViewMaster.SearchHighlight;
 import org.netbeans.modules.versioning.spi.VCSContext;
 import org.netbeans.modules.versioning.util.Utils;
-import org.netbeans.modules.versioning.util.VCSKenaiAccessor.KenaiUser;
 import org.openide.filesystems.FileUtil;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
@@ -75,7 +73,7 @@ class SummaryView extends AbstractSummaryView {
     static final class GitLogEntry extends AbstractSummaryView.LogEntry implements PropertyChangeListener {
 
         private final RepositoryRevision revision;
-        private List<Event> events = new ArrayList<Event>(10);
+        private List<Event> events = new ArrayList<>(10);
         private List<Event> dummyEvents;
         private final SearchHistoryPanel master;
         private String complexRevision;
@@ -120,7 +118,7 @@ class SummaryView extends AbstractSummaryView {
         @Override
         public String getRevision () {
             if (complexRevision == null) {
-                complexRevisionHighlights = new ArrayList<AbstractSummaryView.LogEntry.RevisionHighlight>(revision.getBranches().length + revision.getTags().length + 1);
+                complexRevisionHighlights = new ArrayList<>(revision.getBranches().length + revision.getTags().length + 1);
                 StringBuilder sb = new StringBuilder();
                 // add branch labels
                 for (GitBranch branch : revision.getBranches()) {
@@ -158,7 +156,7 @@ class SummaryView extends AbstractSummaryView {
 
         @Override
         public Action[] getActions () {
-            List<Action> actions = new ArrayList<Action>();
+            List<Action> actions = new ArrayList<>();
             boolean hasParents = revision.getLog().getParents().length > 0;
             
             if (hasParents) {
@@ -170,7 +168,7 @@ class SummaryView extends AbstractSummaryView {
                 });
             }
             actions.addAll(Arrays.asList(revision.getActions()));
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(Action[]::new);
         }
 
         @Override
@@ -208,7 +206,7 @@ class SummaryView extends AbstractSummaryView {
         }
 
         void prepareDummyEvents () {
-            ArrayList<Event> evts = new ArrayList<Event>(revision.getDummyEvents().length);
+            ArrayList<Event> evts = new ArrayList<>(revision.getDummyEvents().length);
             for (RepositoryRevision.Event event : revision.getDummyEvents()) {
                 evts.add(new GitLogEvent(master, event));
             }
@@ -216,11 +214,11 @@ class SummaryView extends AbstractSummaryView {
         }
 
         void refreshEvents () {
-            ArrayList<Event> evts = new ArrayList<Event>(revision.getEvents().length);
+            ArrayList<Event> evts = new ArrayList<>(revision.getEvents().length);
             for (RepositoryRevision.Event event : revision.getEvents()) {
                 evts.add(new GitLogEvent(master, event));
             }
-            List<Event> newEvents = new ArrayList<Event>(evts);
+            List<Event> newEvents = new ArrayList<>(evts);
             events = evts;
             dummyEvents.clear();
             eventsChanged(null, newEvents);
@@ -265,7 +263,7 @@ class SummaryView extends AbstractSummaryView {
 
         @Override
         public Action[] getUserActions () {
-            List<Action> actions = new ArrayList<Action>();
+            List<Action> actions = new ArrayList<>();
             boolean hasParents = event.getLogInfoHeader().getLog().getParents().length > 0;
             
             if (hasParents) {
@@ -277,7 +275,7 @@ class SummaryView extends AbstractSummaryView {
                 });
             }
             actions.addAll(Arrays.asList(event.getActions(false)));
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(Action[]::new);
         }
 
         @Override
@@ -290,20 +288,21 @@ class SummaryView extends AbstractSummaryView {
             return event.toString();
         }
     }
-    
-    public SummaryView (SearchHistoryPanel master, List<? extends LogEntry> results, Map<String, KenaiUser> kenaiUserMap) {
-        super(createViewSummaryMaster(master), results, kenaiUserMap);
+
+    public SummaryView(SearchHistoryPanel master, List<? extends LogEntry> results) {
+        super(createViewSummaryMaster(master), results);
         this.master = master;
     }
-    
+
     private static SummaryViewMaster createViewSummaryMaster (final SearchHistoryPanel master) {
-        final Map<String, String> colors = new HashMap<String, String>();
-        colors.put("A", GitUtils.getColorString(AnnotationColorProvider.getInstance().ADDED_FILE.getActualColor()));
-        colors.put("C", GitUtils.getColorString(AnnotationColorProvider.getInstance().ADDED_FILE.getActualColor()));
-        colors.put("R", GitUtils.getColorString(AnnotationColorProvider.getInstance().ADDED_FILE.getActualColor()));
-        colors.put("M", GitUtils.getColorString(AnnotationColorProvider.getInstance().MODIFIED_FILE.getActualColor()));
-        colors.put("D", GitUtils.getColorString(AnnotationColorProvider.getInstance().REMOVED_FILE.getActualColor()));
-        colors.put("?", GitUtils.getColorString(AnnotationColorProvider.getInstance().EXCLUDED_FILE.getActualColor()));
+        final Map<String, String> colors = Map.of(
+            "A", GitUtils.getColorString(AnnotationColorProvider.getInstance().ADDED_FILE.getActualColor()),
+            "C", GitUtils.getColorString(AnnotationColorProvider.getInstance().ADDED_FILE.getActualColor()),
+            "R", GitUtils.getColorString(AnnotationColorProvider.getInstance().ADDED_FILE.getActualColor()),
+            "M", GitUtils.getColorString(AnnotationColorProvider.getInstance().MODIFIED_FILE.getActualColor()),
+            "D", GitUtils.getColorString(AnnotationColorProvider.getInstance().REMOVED_FILE.getActualColor()),
+            "?", GitUtils.getColorString(AnnotationColorProvider.getInstance().EXCLUDED_FILE.getActualColor())
+        );
 
         return new SummaryViewMaster() {
 
@@ -418,7 +417,7 @@ class SummaryView extends AbstractSummaryView {
                     @Override
                     public void actionPerformed (ActionEvent e) {
                         File[] roots = master.getRoots();
-                        List<Node> nodes = new ArrayList<Node>(roots.length);
+                        List<Node> nodes = new ArrayList<>(roots.length);
                         for (final File root : roots) {
                             nodes.add(new AbstractNode(Children.LEAF, Lookups.fixed(root)) {
                                 @Override
@@ -429,7 +428,7 @@ class SummaryView extends AbstractSummaryView {
                         }
                         GitRevisionInfo info1 = ((GitLogEntry) selection[0]).getRepositoryRevision().getLog();
                         GitRevisionInfo info2 = ((GitLogEntry) selection[1]).getRepositoryRevision().getLog();
-                        SystemAction.get(DiffAction.class).diff(VCSContext.forNodes(nodes.toArray(new Node[nodes.size()])),
+                        SystemAction.get(DiffAction.class).diff(VCSContext.forNodes(nodes.toArray(Node[]::new)),
                                 new Revision(info2.getRevision(), info2.getRevision(), info2.getShortMessage(), info2.getFullMessage()),
                                 new Revision(info1.getRevision(), info1.getRevision(), info1.getShortMessage(), info1.getFullMessage()));
                     }

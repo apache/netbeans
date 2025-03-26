@@ -54,12 +54,9 @@ public class DevopsProjectNode extends OCINode {
         return DevopsProjectNode::new;
     }
    
-    public static ChildrenProvider<CompartmentItem, DevopsProjectItem> listDevopsProjects() {
-        return compartmentId -> {
-            System.out.println("COMPARTMENT " + compartmentId.getKey().getValue());
-            try (
-                DevopsClient client = new DevopsClient(OCIManager.getDefault().getConfigProvider());
-            ) {
+    public static ChildrenProvider.SessionAware<CompartmentItem, DevopsProjectItem> listDevopsProjects() {
+        return (compartmentId, session) -> {
+            try ( DevopsClient client = session.newClient(DevopsClient.class)) {
                 ListProjectsRequest request = ListProjectsRequest.builder().compartmentId(compartmentId.getKey().getValue()).build();
                 ListProjectsResponse response = client.listProjects(request);
 
@@ -68,8 +65,17 @@ public class DevopsProjectNode extends OCINode {
                     project.getNotificationConfig().getTopicId();
                     
                 }
-                return projects.stream().map(p -> new DevopsProjectItem(OCID.of(p.getId(), "DevopsProject"), 
-                        p.getName())).collect(Collectors.toList());
+
+                String tenancyId = session.getTenancy().isPresent() ?
+                        session.getTenancy().get().getKey().getValue() : null;
+                String regionCode = session.getRegion().getRegionCode();
+
+                return projects.stream().map(p -> new DevopsProjectItem(
+                        OCID.of(p.getId(), "DevopsProject"),
+                        compartmentId.getKey().getValue(),
+                        p.getName(),
+                        tenancyId,
+                        regionCode)).collect(Collectors.toList());
             }
         };
     }

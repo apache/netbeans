@@ -21,12 +21,12 @@ package org.openide.loaders;
 
 import java.util.Map;
 
-/** This is an interface for <q>smart templating</q>.
+/** This is an interface for <em>smart templating</em>.
  * Implementations of this class can be registered in the global {@link org.openide.util.Lookup}
  * and allows anyone provide additional parameters to each {@link CreateFromTemplateHandler}s
  * when a template is instantiating.
- * Read more in the <a href="@TOP@/architecture-summary.html#script">howto document</a>.
- * <p/>
+ * Read more in the <a href="@TOP@/architecture-summary.html#loaders-script">howto document</a>.
+ * <p>
  * Since templating system need not to depend on Data Systems APIs, the relevant interfaces
  * were moved to the {@code openide.filesystems.templates} module. This interface has been kept
  * for backward compatibility and DataSystems provide a compatibility bridge, which allows
@@ -37,7 +37,7 @@ import java.util.Map;
  * @author Jaroslav Tulach
  * @since 6.3
  * @since deprecated from 7.59
- * @deprecated Use {@link CreateFromTemplateAttributes} in {@code openide.filesystems.templates} instead.
+ * @deprecated Use {@link org.netbeans.api.templates.CreateFromTemplateAttributes} instead.
  */
 @Deprecated
 public interface CreateFromTemplateAttributesProvider {

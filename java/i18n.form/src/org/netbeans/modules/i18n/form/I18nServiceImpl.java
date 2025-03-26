@@ -273,8 +273,7 @@ public class I18nServiceImpl implements I18nService {
         String newComment = i18nString.getComment();
         if ("".equals(newComment)) // NOI18N
             newComment = null;
-        return (storedValue == newValue || (storedValue != null && storedValue.equals(newValue)))
-            && (storedComment == newComment || (storedComment != null && storedComment.equals(newComment)));
+        return Objects.equals(storedValue, newValue) && Objects.equals(storedComment, newComment);
     }
 
     private static void updateAllData(FormI18nString newI18nString, String localeSuffix) {
@@ -380,7 +379,7 @@ public class I18nServiceImpl implements I18nService {
         } catch (IOException ex) {
             ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ex);
         }
-        Collections.sort(list, new Comparator() {
+        list.sort(new Comparator() {
             @Override
             public int compare(Object o1, Object o2) {
                 MultiDataObject.Entry e1 = (MultiDataObject.Entry) o1;

@@ -380,7 +380,7 @@ public class WLTrustHandler implements WebLogicTrustHandler {
                     }
                 }
             }
-            return chainList.toArray(new X509Certificate[chainList.size()]);
+            return chainList.toArray(new X509Certificate[0]);
         }
     }
 

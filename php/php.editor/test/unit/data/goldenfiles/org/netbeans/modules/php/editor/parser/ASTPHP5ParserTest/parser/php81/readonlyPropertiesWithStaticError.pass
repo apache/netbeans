@@ -42,14 +42,31 @@
             <Comment start='887' end='896' commentType='singleLine'/>
         </Comments>
         <Statements>
-            <ASTError start='815' end='860'/>
-            <ASTError start='870' end='873'/>
-            <ExpressionStatement start='874' end='886'>
-                <Variable start='874' end='885' isDollared='true'>
-                    <Identifier start='875' end='885' name='withStatic'/>
-                </Variable>
-            </ExpressionStatement>
-            <ASTError start='0' end='886'/>
+            <ClassDeclaration start='815' end='898' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='821' end='839' name='ReadonlyProperties'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='840' end='898' isCurly='true'>
+                    <FieldsDeclaration start='847' end='886' modifier='public readonly static'>
+                        <FieldType>
+                            <NamespaceName start='870' end='873' isCurrent='false' isGlobal='false'>
+                                <Identifier start='870' end='873' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='874' end='885' isDollared='true'>
+                                <Identifier start='875' end='885' name='withStatic'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                </Block>
+            </ClassDeclaration>
         </Statements>
     </Program>
 </testresult>

@@ -9,6 +9,18 @@ package ${package};
 
 import java.io.IOException;
 import java.io.PrintWriter;
+<#if jakartaPackages>
+import jakarta.servlet.ServletException;
+<#if classAnnotation??>
+import jakarta.servlet.annotation.WebServlet;
+</#if>
+<#if includeInitParams??>
+import jakarta.servlet.annotation.WebInitParam;
+</#if>
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+<#else>
 import javax.servlet.ServletException;
 <#if classAnnotation??>
 import javax.servlet.annotation.WebServlet;
@@ -19,6 +31,7 @@ import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+</#if>
 
 /**
  *
@@ -28,8 +41,8 @@ import javax.servlet.http.HttpServletResponse;
 ${classAnnotation}
 </#if>
 public class ${name} extends HttpServlet {
-   
-    /** 
+
+    /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
@@ -49,7 +62,7 @@ public class ${name} extends HttpServlet {
             out.println("${doctype?j_string}");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ${name}</title>");  
+            out.println("<title>Servlet ${name}</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet ${name} at " + request.getContextPath () + "</h1>");
@@ -60,10 +73,10 @@ public class ${name} extends HttpServlet {
             out.close();
 </#if>
         }
-    } 
+    }
 
     // <editor-fold defaultstate="collapsed" desc="${servletEditorFold}">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -76,9 +89,9 @@ public class ${name} extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         processRequest(request, response);
-    } 
+    }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -93,7 +106,7 @@ public class ${name} extends HttpServlet {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
      * @return a String containing servlet description
      */

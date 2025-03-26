@@ -504,12 +504,11 @@ public class J2eeUtil {
         List<SoapClientJ2eeOperationInfo> infos = new ArrayList<SoapClientJ2eeOperationInfo>();
         infos.add(new SoapClientJ2eeOperationInfo(m, project));
         
-        return infos.toArray(new SoapClientJ2eeOperationInfo[infos.size()]);
+        return infos.toArray(new SoapClientJ2eeOperationInfo[0]);
     }
 
     public static void addServletAnnotation(JavaSource javaSource, final String servletName, final String urlPattern)
         throws IOException {
-        final String[] seiClass = new String[1];
         final CancellableTask<WorkingCopy> modificationTask = new CancellableTask<WorkingCopy>() {
 
             public void cancel() {

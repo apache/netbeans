@@ -143,7 +143,7 @@ public class XMLFile {
             node = indexOf <0 ? null : getNode(xpath.substring(0, indexOf));
         }
         
-        String rest = xpath.substring(lastIndexOf + 1, xpath.length());
+        String rest = xpath.substring(lastIndexOf + 1);
         for (String newTag:rest.split("/")) { // NOI18N
             lastNode = lastNode.appendChild(doc.createElement(newTag));
         }

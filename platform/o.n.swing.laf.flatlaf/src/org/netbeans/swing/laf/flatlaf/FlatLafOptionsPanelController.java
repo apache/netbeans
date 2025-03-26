@@ -19,7 +19,6 @@
 package org.netbeans.swing.laf.flatlaf;
 
 import com.formdev.flatlaf.FlatLaf;
-import java.awt.Window;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import javax.swing.JComponent;
@@ -72,6 +71,7 @@ public class FlatLafOptionsPanelController extends OptionsPanelController {
             defaults.put("TitlePane.menuBarEmbedded", FlatLafPrefs.isMenuBarEmbedded());
             defaults.put("MenuItem.selectionType", FlatLafPrefs.isUnderlineMenuSelection() ? "underline" : null);
             defaults.put("Component.hideMnemonics", !FlatLafPrefs.isAlwaysShowMnemonics());
+            defaults.put(FlatLFCustoms.FILECHOOSER_FAVORITES_ENABLED, FlatLafPrefs.isShowFileChooserFavorites());
 
             FlatLFCustoms.updateUnifiedBackground();
 

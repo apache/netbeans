@@ -19,14 +19,18 @@
 package org.netbeans.modules.maven.hints.pom;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.prefs.Preferences;
 import javax.swing.JComponent;
 import javax.xml.namespace.QName;
+import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.editor.NbEditorUtilities;
+import org.netbeans.modules.maven.api.Constants;
+import org.netbeans.modules.maven.api.NbMavenProject;
+import org.netbeans.modules.maven.api.PluginPropertyUtils;
 import org.netbeans.modules.maven.hints.pom.spi.Configuration;
 import org.netbeans.modules.maven.hints.pom.spi.POMErrorFixProvider;
 import org.netbeans.modules.maven.model.pom.Build;
@@ -35,6 +39,7 @@ import org.netbeans.modules.maven.model.pom.POMExtensibilityElement;
 import org.netbeans.modules.maven.model.pom.POMModel;
 import org.netbeans.modules.maven.model.pom.POMQName;
 import org.netbeans.modules.maven.model.pom.Plugin;
+import org.netbeans.modules.maven.model.pom.PluginContainer;
 import org.netbeans.modules.maven.model.pom.PluginExecution;
 import org.netbeans.modules.maven.model.pom.Properties;
 import org.netbeans.spi.editor.hints.ChangeInfo;
@@ -61,48 +66,81 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
     private static final String SOURCE_TAG = "source";
     private static final String RELEASE_TAG = "release";
 
+    // min compiler plugin version for release option support
+    private static final ComparableVersion COMPILER_PLUGIN_VERSION = new ComparableVersion("3.6.0");
+
+    // maven version which added the required compiler plugin implicitly
+    private static final ComparableVersion MAVEN_VERSION = new ComparableVersion("3.9.0");
+
     private static final Configuration config = new Configuration(UseReleaseOptionHint.class.getName(),
                 TIT_UseReleaseVersionHint(), DESC_UseReleaseVersionHint(), true, Configuration.HintSeverity.WARNING);
 
     @Override
     public List<ErrorDescription> getErrorsForDocument(POMModel model, Project prj) {
 
-        Build build = model.getProject().getBuild();
-
-        if (build != null && build.getPlugins() != null) {
-
-            List<ErrorDescription> hints = new ArrayList<>();
-            Optional<Plugin> compilerPlugin = build.getPlugins().stream()
-                    .filter((p) -> "maven-compiler-plugin".equals(p.getArtifactId()))
-                    .filter(this::isPluginCompatible)
-                    .findFirst();
-
-            if (compilerPlugin.isPresent()) {
-                hints.addAll(createHintsForParent("", compilerPlugin.get().getConfiguration()));
-                if (compilerPlugin.get().getExecutions() != null) {
-                    for (PluginExecution exec : compilerPlugin.get().getExecutions()) {
-                        hints.addAll(createHintsForParent("", exec.getConfiguration()));
-                    }
-                }
-            } else {
-                return Collections.emptyList();
-            }
-
-            Properties properties = model.getProject().getProperties();
-            if (properties != null) {
-                hints.addAll(createHintsForParent("maven.compiler.", properties));
-            }
-
-            return hints;
+        if (prj == null) {
+            return List.of();
         }
 
-        return Collections.emptyList();
+        // no hints if plugin was downgraded
+        NbMavenProject nbproject = prj.getLookup().lookup(NbMavenProject.class);
+        if (nbproject != null) {
+            // note: this is the embedded plugin version, only useful for downgrade checks
+            String pluginVersion = PluginPropertyUtils.getPluginVersion(nbproject.getMavenProject(), Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER);
+            if (pluginVersion != null && new ComparableVersion(pluginVersion).compareTo(COMPILER_PLUGIN_VERSION) <= 0) {
+                return List.of();
+            }
+        }
+
+        Build build = model.getProject().getBuild();
+
+        List<ErrorDescription> hints = new ArrayList<>();
+
+        boolean releaseSupportedByDeclaredPlugin = false;
+
+        if (build != null) {
+
+            for (PluginContainer pc : Arrays.asList(build, build.getPluginManagement())) {
+                if (pc == null || pc.getPlugins() == null) {
+                    continue;
+                }
+                Optional<Plugin> compilerPlugin = pc.getPlugins().stream()
+                        .filter(p -> Constants.PLUGIN_COMPILER.equals(p.getArtifactId()))
+                        .filter(this::isPluginCompatible)
+                        .findFirst();
+
+                if (compilerPlugin.isPresent()) {
+                    releaseSupportedByDeclaredPlugin |= true;
+                    hints.addAll(createHintsForParent("", compilerPlugin.get().getConfiguration()));
+                    if (compilerPlugin.get().getExecutions() != null) {
+                        for (PluginExecution exec : compilerPlugin.get().getExecutions()) {
+                            hints.addAll(createHintsForParent("", exec.getConfiguration()));
+                        }
+                    }
+                }
+            }
+        }
+
+        // no hints if required version not declared and also not provided by maven
+        if (!releaseSupportedByDeclaredPlugin) {
+            ComparableVersion mavenVersion = PomModelUtils.getActiveMavenVersion();
+            if (mavenVersion == null || mavenVersion.compareTo(MAVEN_VERSION) <= 0) {
+                return List.of();
+            }
+        }
+
+        Properties properties = model.getProject().getProperties();
+        if (properties != null) {
+            hints.addAll(createHintsForParent("maven.compiler.", properties));
+        }
+
+        return hints;
     }
 
     private List<ErrorDescription> createHintsForParent(String prefix, POMComponent parent) {
 
         if (parent == null) {
-            return Collections.emptyList();
+            return List.of();
         }
 
         int source;
@@ -113,15 +151,15 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
 
         try {
             String sourceText = parent.getChildElementText(POMQName.createQName(prefix+SOURCE_TAG, true));
-            if (isProperty(sourceText)) {
+            if (PomModelUtils.isPropertyExpression(sourceText)) {
                 release = sourceText;
-                sourceText = getProperty(sourceText, parent.getModel());
+                sourceText = PomModelUtils.getProperty(parent.getModel(), sourceText);
             }
 
             String targetText = parent.getChildElementText(POMQName.createQName(prefix+TARGET_TAG, true));
-            if (isProperty(targetText)) {
+            if (PomModelUtils.isPropertyExpression(targetText)) {
                 release = targetText;
-                targetText = getProperty(targetText, parent.getModel());
+                targetText = PomModelUtils.getProperty(parent.getModel(), targetText);
             }
 
             source = Integer.parseInt(sourceText);
@@ -131,10 +169,10 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
             }
         } catch (NumberFormatException ignored) {
             // if source or target is invalid or missing
-            return Collections.emptyList();
+            return List.of();
         }
 
-        if (source == target && source >= 9) {
+        if (source == target && source >= 8) { // ok since 3.13.0+ maps release to source/target on 8
             List<ErrorDescription> hints = new ArrayList<>();
             for (POMComponent prop : parent.getChildren()) {
                 String name = prop.getPeer().getNodeName();
@@ -144,12 +182,12 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
             }
             return hints;
         }
-        return Collections.emptyList();
+        return List.of();
     }
 
     private ErrorDescription createHintForComponent(String prefix, POMComponent component, POMModel model, String release) {
         Line line = NbEditorUtilities.getLine(model.getBaseDocument(), component.findPosition(), false);
-        List<Fix> fix = Collections.singletonList(new ConvertToReleaseOptionFix(prefix, release, component));
+        List<Fix> fix = List.of(new ConvertToReleaseOptionFix(prefix, release, component));
         return ErrorDescriptionFactory.createErrorDescription(Severity.HINT, FIX_UseReleaseVersionHint(), fix, model.getBaseDocument(), line.getLineNumber()+1);
     }
 
@@ -157,35 +195,11 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
      * maven-compiler-plugin version must be >= 3.6
      */
     private boolean isPluginCompatible(Plugin plugin) {
-        String string = plugin.getVersion();
-        if (string == null) {
-            return false;
+        String version = plugin.getVersion();
+        if (version == null || version.isEmpty()) {
+            return true; // plugin management, lets assume that it is compatible
         }
-        String[] version = string.split("-")[0].split("\\.");
-        try {
-            int major = version.length > 0 ? Integer.parseInt(version[0]) : 0;
-            int minor = version.length > 1 ? Integer.parseInt(version[1]) : 0;
-            if (major < 3 || (major == 3 && minor < 6)) {
-                return false;
-            }
-        } catch (NumberFormatException ignored) {
-            return false;
-        }
-        return true;
-    }
-
-    private static boolean isProperty(String property) {
-        return property != null && property.startsWith("$");
-    }
-
-    private static String getProperty(String prop, POMModel model) {
-        if (prop.length() > 3) {
-            Properties properties = model.getProject().getProperties();
-            if (properties != null) {
-                return properties.getProperty(prop.substring(2, prop.length()-1));
-            }
-        }
-        return null;
+        return new ComparableVersion(version).compareTo(COMPILER_PLUGIN_VERSION) >= 0;
     }
 
     private static class ConvertToReleaseOptionFix implements Fix {

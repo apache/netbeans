@@ -87,7 +87,7 @@ public class WebProjectGenerator {
         } else {
             List<Element> l = XMLUtil.findSubElements(foldersEl);
             for (int i = 0; i < l.size(); i++) {
-                Element e = (Element) l.get(i);
+                Element e = l.get(i);
                 Element te = XMLUtil.findElement(e, "type", Util.NAMESPACE);
                 if (te != null && XMLUtil.findText(te).equals(folderType)) {
                     foldersEl.removeChild(e);
@@ -108,7 +108,7 @@ public class WebProjectGenerator {
         } else {
             List<Element> l = XMLUtil.findSubElements(itemsEl);
             for (int i = 0; i < l.size(); i++) {
-                Element e = (Element) l.get(i);
+                Element e = l.get(i);
                 if (e.hasAttribute("style")) {
                     if (e.getAttribute("style").equals("tree")) {
                         // #110173

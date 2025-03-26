@@ -224,7 +224,7 @@ public final class PathsCustomizer extends javax.swing.JPanel {
             if (treePaths.length > 0 && paths.isEmpty()) {
                 paths.addAll(Arrays.asList(getSelectionPaths()));
             }
-            super.setSelectionPaths(paths.toArray(new TreePath[paths.size()]));
+            super.setSelectionPaths(paths.toArray(new TreePath[0]));
         }        
     }
     

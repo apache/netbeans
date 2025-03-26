@@ -56,12 +56,7 @@ public final class AppServerValidationPanel extends DelegatingWizardDescriptorPa
         }
 
         WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
-        if (wm != null && (wm.getJ2eeProfile() == Profile.JAVA_EE_6_FULL || wm.getJ2eeProfile() == Profile.JAVA_EE_6_WEB ||
-                wm.getJ2eeProfile() == Profile.JAVA_EE_7_FULL || wm.getJ2eeProfile() == Profile.JAVA_EE_7_WEB ||
-                wm.getJ2eeProfile() == Profile.JAVA_EE_8_FULL || wm.getJ2eeProfile() == Profile.JAVA_EE_8_WEB ||
-                wm.getJ2eeProfile() == Profile.JAKARTA_EE_8_FULL || wm.getJ2eeProfile() == Profile.JAKARTA_EE_8_WEB ||
-                wm.getJ2eeProfile() == Profile.JAKARTA_EE_9_WEB || wm.getJ2eeProfile() == Profile.JAKARTA_EE_9_FULL ||
-                wm.getJ2eeProfile() == Profile.JAKARTA_EE_9_1_WEB || wm.getJ2eeProfile() == Profile.JAKARTA_EE_9_1_FULL)) {
+        if (wm != null && (wm.getJ2eeProfile().isAtLeast(Profile.JAVA_EE_6_WEB))) {
             // check that server is EJB lite sufficient
             EjbSupport ejbSupport = EjbSupport.getInstance(j2eePlatform);
             if (!ejbSupport.isEjb31LiteSupported(j2eePlatform)) {
@@ -92,7 +87,11 @@ public final class AppServerValidationPanel extends DelegatingWizardDescriptorPa
      */
     private static boolean isSessionBeanCodeGenerationAlowed(Project project) {
         ClassPath classpath = ClassPath.getClassPath(project.getProjectDirectory(), ClassPath.COMPILE);
-        return  !(classpath.findResource("javax/ejb/Stateless.class") == null //NOI18N
+        return !(classpath.findResource("jakarta/ejb/Stateless.class") == null //NOI18N
+                || classpath.findResource("jakarta/ejb/Stateful.class") == null //NOI18N
+                || classpath.findResource("jakarta/ejb/Singleton.class") == null) //NOI18N
+                || //NOI18N
+                !(classpath.findResource("javax/ejb/Stateless.class") == null //NOI18N
                 || classpath.findResource("javax/ejb/Stateful.class") == null //NOI18N
                 || classpath.findResource("javax/ejb/Singleton.class") == null); //NOI18N
     }

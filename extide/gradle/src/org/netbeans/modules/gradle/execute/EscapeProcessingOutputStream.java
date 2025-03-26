@@ -32,7 +32,7 @@ import org.openide.util.RequestProcessor;
  *
  * @author Laszlo Kishalmi
  */
-class EscapeProcessingOutputStream extends OutputStream {
+public class EscapeProcessingOutputStream extends OutputStream {
 
     private static final RequestProcessor RP = new RequestProcessor(EscapeProcessingOutputStream.class);
 

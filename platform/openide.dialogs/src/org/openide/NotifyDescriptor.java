@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
@@ -49,6 +50,8 @@ import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.LayoutStyle;
 import javax.swing.UIManager;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import org.openide.awt.Mnemonics;
 import org.openide.util.NbBundle;
 
@@ -326,7 +329,7 @@ public class NotifyDescriptor extends Object {
     * usage, the message is just a <code>String</code>.  However, the type
     * of this parameter is actually <code>Object</code>.  Its interpretation depends on
     * its type:
-    * <dl compact>
+    * <dl>
     * <dt><code>Object[]</code><dd> A recursively interpreted series of messages.
     * <dt>{@link Component}<dd> The <code>Component</code> is displayed in the dialog.
     * <dt>{@link javax.swing.Icon}<dd> The <code>Icon</code> is wrapped in a {@link JLabel} and displayed in the dialog.
@@ -478,7 +481,7 @@ public class NotifyDescriptor extends Object {
     * The usual value for the options parameter is an array of
     * <code>String</code>s.  But the parameter type is an array of <code>Object</code>s.  Its
     * interpretation depends on its type:
-    * <dl compact>
+    * <dl>
     * <dt>{@link Component}<dd>The component is added to the button row directly.
     * <dt>{@link javax.swing.Icon}<dd>A {@link javax.swing.JButton} is created with this icon as its label.
     * <dt>anything else<dd>The <code>Object</code> is {@link Object#toString converted} to a string and the result is used to
@@ -518,7 +521,7 @@ public class NotifyDescriptor extends Object {
     * The usual value for the options parameter is an array of
     * <code>String</code>s.  But the parameter type is an array of <code>Object</code>s.  Its
     * interpretation depends on its type:
-    * <dl compact>
+    * <dl>
     * <dt>{@link Component}<dd>The component is added to the button row directly.
     * <dt>{@link javax.swing.Icon}<dd>A {@link javax.swing.JButton} is created with this icon as its label.
     * <dt>anything else<dd>The <code>Object</code> is {@link Object#toString converted} to a string and the result is used to
@@ -1020,7 +1023,8 @@ public class NotifyDescriptor extends Object {
         public PasswordLine(String text, String title) {
             super(text, title);
         }
-        
+
+        @Override
         JTextField createTextField() {
             return new JPasswordField(25);
         }
@@ -1032,9 +1036,20 @@ public class NotifyDescriptor extends Object {
     */
     public static class InputLine extends NotifyDescriptor {
         /**
+         * Property whose value is the input text, an event is fired
+         * when the input text's value changes,
+         * if enabled using {@link #setInputTextEventEnabled(boolean) }.
+         *
+         * @since 7.70
+         */
+        public static final String PROP_INPUT_TEXT = "inputText"; // NOI18N
+
+        /**
         * The text field used to enter the input.
         */
         protected JTextField textField;
+        private final AtomicBoolean inputTextEventSuppressed = new AtomicBoolean();
+        private final AtomicBoolean inputTextEventEnabled = new AtomicBoolean();
 
         /** Construct dialog with the specified title and label text.
         * @param text label text
@@ -1069,8 +1084,28 @@ public class NotifyDescriptor extends Object {
         * @param text the new text
         */
         public void setInputText(final String text) {
-            textField.setText(text);
-            textField.selectAll();
+            inputTextEventSuppressed.set(true);
+            try {
+                textField.setText(text);
+                textField.selectAll();
+                if (inputTextEventEnabled.get()) {
+                    firePropertyChange(PROP_INPUT_TEXT, null, null);
+                }
+            } finally {
+                inputTextEventSuppressed.set(false);
+            }
+        }
+
+        /**
+         * Enable the {@link #PROP_INPUT_TEXT} when the input text is changed.
+         *
+         * @param value {@code true} if the {@code PROP_INPUT_TEXT} even should be fired
+         *              when the input text is modified, {@code false} otherwise.
+         *
+         * @since 7.70
+         */
+        public void setInputTextEventEnabled(boolean value) {
+            inputTextEventEnabled.set(value);
         }
 
         /** Make a component representing the input line.
@@ -1086,6 +1121,24 @@ public class NotifyDescriptor extends Object {
 
             boolean longText = text.length () > 80;
             textField = createTextField(); 
+            textField.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    if (inputTextEventEnabled.get() && !inputTextEventSuppressed.get()) {
+                        firePropertyChange(PROP_INPUT_TEXT, null, null);
+                    }
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    if (inputTextEventEnabled.get() && !inputTextEventSuppressed.get()) {
+                        firePropertyChange(PROP_INPUT_TEXT, null, null);
+                    }
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {}
+            });
             textLabel.setLabelFor(textField);
             
             textField.requestFocus();
@@ -1161,7 +1214,7 @@ public class NotifyDescriptor extends Object {
             
             return panel;
         }
-        
+
         JTextField createTextField() {
             return new JTextField(25);
         }

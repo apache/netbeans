@@ -29,4 +29,28 @@ public class LspTemplateUITest {
         String result = LspTemplateUI.stripHtml(s);
         assertEquals(expResult, result);
     }
+    
+    /**
+     * All newlines should be removed
+     */
+    @Test
+    public void testStripNewlines() {
+        String s = "\n<div>Pre <span\n>\nText</span> Post\n</div>";
+        String expResult = "Pre Text Post";
+        String result = LspTemplateUI.stripHtml(s);
+        assertEquals(expResult, result);
+    }
+    
+    
+    /**
+     * Consecutive whitespaces should be collapsed to a single space. Leading/trailing whitespaces
+     * removed.
+     */
+    @Test
+    public void testStripConsecutiveWhitespces() {
+        String s = "\t <div> Pre <span> Text\t </span>\t\t Post </div>\t";
+        String expResult = "Pre Text Post";
+        String result = LspTemplateUI.stripHtml(s);
+        assertEquals(expResult, result);
+    }
 }

@@ -33,8 +33,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -45,9 +43,9 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -61,22 +59,28 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
+import javax.swing.text.Document;
+import javax.swing.text.StyledDocument;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
+import org.eclipse.lsp4j.DidChangeWorkspaceFoldersParams;
+import org.eclipse.lsp4j.DocumentSymbol;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.ShowDocumentParams;
 import org.eclipse.lsp4j.SymbolInformation;
+import org.eclipse.lsp4j.WorkspaceFolder;
 import org.eclipse.lsp4j.WorkspaceSymbol;
 import org.eclipse.lsp4j.WorkspaceSymbolLocation;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
@@ -88,6 +92,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.DebuggerManager;
+import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
@@ -100,6 +105,7 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.ui.ElementOpen;
+import org.netbeans.api.lsp.StructureElement;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
@@ -107,21 +113,28 @@ import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.csl.api.IndexSearcher;
 import org.netbeans.modules.editor.indent.spi.CodeStylePreferences;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodFinder;
+import org.netbeans.modules.java.hints.spi.preview.PreviewEnabler;
+import org.netbeans.modules.java.hints.spi.preview.PreviewEnabler.Factory;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachConfigurations;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachNativeConfigurations;
 import org.netbeans.modules.java.lsp.server.project.LspProjectInfo;
+import org.netbeans.modules.java.lsp.server.singlesourcefile.SingleFileOptionsQueryImpl;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider;
 import org.netbeans.modules.java.source.ui.JavaTypeProvider;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
 import org.netbeans.modules.parsing.lucene.support.Queries;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.jumpto.type.SearchType;
+import org.netbeans.spi.lsp.ErrorProvider;
+import org.netbeans.spi.lsp.StructureProvider;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectConfiguration;
@@ -129,11 +142,14 @@ import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.netbeans.spi.project.ui.ProjectProblemsProvider;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
+import org.openide.modules.Places;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
-import org.openide.util.NbPreferences;
+import org.openide.util.NbBundle;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
@@ -149,26 +165,65 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
 
     private static final RequestProcessor WORKER = new RequestProcessor(WorkspaceServiceImpl.class.getName(), 1, false, false);
     private static final RequestProcessor PROJECT_WORKER = new RequestProcessor(WorkspaceServiceImpl.class.getName(), 5, false, false);
+    private static final String NETBEANS_JAVA_HINTS = "hints";
 
     private final Gson gson = new Gson();
     private final LspServerState server;
+    private final Workspace workspace = new Workspace() {
+        @Override
+        public List<FileObject> getClientWorkspaceFolders() {
+            return WorkspaceServiceImpl.this.getClientWorkspaceFolders();
+        }
+    };
     private NbCodeLanguageClient client;
 
+    /**
+     * List of workspace folders as reported by the client. Initialized in `initialize` request,
+     * and then updated by didChangeWorkspaceFolder notifications.
+     */
+    private volatile List<FileObject> clientWorkspaceFolders = Collections.emptyList();
+    
     WorkspaceServiceImpl(LspServerState server) {
         this.server = server;
     }
 
+    /**
+     * Returns the set of workspace folders reported by the client. If a folder from the list is recognized
+     * as a project, it will be also present in {@link #openedProjects()} including all its subprojects.
+     * The list of client workspace folders contains just toplevel items in client's workspace, as defined in
+     * LSP protocol.
+     * @return list of workspace folders
+     */
+    public List<FileObject> getClientWorkspaceFolders() {
+        return new ArrayList<>(clientWorkspaceFolders);
+    }
+
+    public void setClientWorkspaceFolders(List<WorkspaceFolder> clientWorkspaceFolders) {
+        if (clientWorkspaceFolders == null) {
+            return;
+        }
+        List<FileObject> newWorkspaceFolders = new ArrayList<>(this.clientWorkspaceFolders);
+        try {
+            for (WorkspaceFolder clientWorkspaceFolder : clientWorkspaceFolders) {
+                newWorkspaceFolders.add(Utils.fromUri(clientWorkspaceFolder.getUri()));
+            }
+            this.clientWorkspaceFolders = newWorkspaceFolders;
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+    
     @Override
     public CompletableFuture<Object> executeCommand(ExecuteCommandParams params) {
-        String command = params.getCommand();
+        String command = Utils.decodeCommand(params.getCommand(), client.getNbCodeCapabilities());
         switch (command) {
-            case Server.GRAALVM_PAUSE_SCRIPT:
+            case Server.NBLS_GRAALVM_PAUSE_SCRIPT:
                 ActionsManager am = DebuggerManager.getDebuggerManager().getCurrentEngine().getActionsManager();
                 am.doAction("pauseInGraalScript");
                 return CompletableFuture.completedFuture(true);
-            case Server.JAVA_NEW_FROM_TEMPLATE:
+            case Server.NBLS_NEW_FROM_TEMPLATE:
                 return LspTemplateUI.createFromTemplate("Templates", client, params);
-            case Server.JAVA_NEW_PROJECT:
+            case Server.NBLS_NEW_PROJECT:
                 return LspTemplateUI.createProject("Templates/Project", client, params);
             case Server.NBLS_BUILD_WORKSPACE: {
                 final CommandProgress progressOfCompilation = new CommandProgress();
@@ -182,7 +237,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 progressOfCompilation.checkStatus();
                 return progressOfCompilation.getFinishFuture();
             }
-            case Server.JAVA_RUN_PROJECT_ACTION: {
+            case Server.NBLS_RUN_PROJECT_ACTION: {
                 // TODO: maybe a structure would be better for future compatibility / extensions, i.e. what to place in the action's context Lookup.
                 List<FileObject> targets = new ArrayList<>();
                 ProjectActionParams actionParams = gson.fromJson(gson.toJson(params.getArguments().get(0)), ProjectActionParams.class);
@@ -208,6 +263,9 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 return server.asyncOpenSelectedProjects(targets, false).thenCompose((Project[] owners) -> {
                     Map<Project, List<FileObject>> items = new LinkedHashMap<>();
                     for (int i = 0; i < owners.length; i++) {
+                        if (owners[i] == null) {
+                            continue;
+                        }
                         items.computeIfAbsent(owners[i], (p) -> new ArrayList<>()).add(targets.get(i));
                     }
                     final CommandProgress progressOfCompilation = new CommandProgress();
@@ -232,7 +290,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                             }
                         }
                         // TBD: possibly include project configuration ?
-                        final Lookup ctx = Lookups.fixed(ctxObjects.toArray(new Object[ctxObjects.size()]));
+                        final Lookup ctx = Lookups.fixed(ctxObjects.toArray(new Object[0]));
                         ActionProvider ap = prj.getLookup().lookup(ActionProvider.class);
                         if (ap != null && ap.isActionEnabled(actionName, ctx)) {
                             ap.invokeAction(actionName, ctx);
@@ -259,6 +317,20 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 }
                 progressOfCompilation.checkStatus();
                 return progressOfCompilation.getFinishFuture();
+            }
+            case Server.NBLS_GET_ARCHIVE_FILE_CONTENT: {
+                CompletableFuture<Object> future = new CompletableFuture<>();
+                try {
+                    String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
+                    FileObject file = Utils.fromUri(uri);
+                    if (file != null && file.isData() && file.canRead()) {
+                        future.complete(file.asText("UTF-8"));
+                    }
+                    future.complete(null);
+                } catch (IOException ioe) {
+                    future.completeExceptionally(ioe);
+                }
+                return future;
             }
             case Server.JAVA_GET_PROJECT_SOURCE_ROOTS: {
                 String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
@@ -311,7 +383,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     return future;
                 });
             }
-            case Server.JAVA_LOAD_WORKSPACE_TESTS: {
+            case Server.NBLS_LOAD_WORKSPACE_TESTS: {
                 String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 FileObject file;
                 try {
@@ -323,14 +395,20 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 if (file == null) {
                     return CompletableFuture.completedFuture(Collections.emptyList());
                 }
+                long t = System.currentTimeMillis();
                 return server.asyncOpenFileOwner(file).thenCompose(this::getTestRoots).thenCompose(testRoots -> {
+                    LOG.log(Level.INFO, "Project {2}: {0} test roots opened in {1}ms", new Object[] { testRoots.size(), (System.currentTimeMillis() - t), file});
                     BiFunction<FileObject, Collection<TestMethodController.TestMethod>, Collection<TestSuiteInfo>> f = (fo, methods) -> {
                         String url = Utils.toUri(fo);
+                        Project owner = FileOwnerQuery.getOwner(fo);
+                        String moduleName = owner != null ? ProjectUtils.getInformation(owner).getDisplayName(): null;
+                        List<String> paths = getModuleTestPaths(owner);
+                        String modulePath = firstModulePath(paths, moduleName);
                         Map<String, TestSuiteInfo> suite2infos = new LinkedHashMap<>();
                         for (TestMethodController.TestMethod testMethod : methods) {
                             TestSuiteInfo suite = suite2infos.computeIfAbsent(testMethod.getTestClassName(), name -> {
                                 Position pos = testMethod.getTestClassPosition() != null ? Utils.createPosition(fo, testMethod.getTestClassPosition().getOffset()) : null;
-                                return new TestSuiteInfo(name, url, pos != null ? new Range(pos, pos) : null, TestSuiteInfo.State.Loaded, new ArrayList<>());
+                                return new TestSuiteInfo(name, moduleName, modulePath, url, pos != null ? new Range(pos, pos) : null, TestSuiteInfo.State.Loaded, new ArrayList<>());
                             });
                             String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
                             Position startPos = testMethod.start() != null ? Utils.createPosition(fo, testMethod.start().getOffset()) : null;
@@ -392,55 +470,54 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     return future;
                 });
             }
+            case Server.NBLS_RESOLVE_STACKTRACE_LOCATION: {
+                CompletableFuture<Object> future = new CompletableFuture<>();
+                try {
+                    if (params.getArguments().size() >= 3) {
+                        String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
+                        String methodName = ((JsonPrimitive) params.getArguments().get(1)).getAsString();
+                        String fileName = ((JsonPrimitive) params.getArguments().get(2)).getAsString();
+                        FileObject fo = Utils.fromUri(uri);
+                        if (fo != null) {
+                            ClassPath classPath = ClassPathSupport.createProxyClassPath(new ClassPath[] {
+                                ClassPath.getClassPath(fo, ClassPath.EXECUTE),
+                                ClassPath.getClassPath(fo, ClassPath.BOOT)
+                            });
+                            String name = fileName.substring(0, fileName.lastIndexOf('.'));
+                            String packageName = methodName.substring(0, methodName.indexOf(name)).replace('.', '/');
+                            String resourceName = packageName + name + ".class";
+                            List<FileObject> resources = classPath.findAllResources(resourceName);
+                            if (resources != null) {
+                                for (FileObject resource : resources) {
+                                    FileObject root = classPath.findOwnerRoot(resource);
+                                    if (root != null) {
+                                        URL url = URLMapper.findURL(root, URLMapper.INTERNAL);
+                                        SourceForBinaryQuery.Result res = SourceForBinaryQuery.findSourceRoots(url);
+                                        FileObject[] rootz = res.getRoots();
+                                        for (int i = 0; i < rootz.length; i++) {
+                                            String path = packageName + fileName;
+                                            FileObject sourceFo = rootz[i].getFileObject(path);
+                                            if (sourceFo != null) {
+                                                future.complete(Utils.toUri(sourceFo));
+                                                return future;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    future.complete(null);
+                } catch (IOException ex) {
+                    future.completeExceptionally(ex);
+                }
+                return future;
+            }
             case Server.JAVA_SUPER_IMPLEMENTATION:
                 String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 Position pos = gson.fromJson(gson.toJson(params.getArguments().get(1)), Position.class);
                 return (CompletableFuture)((TextDocumentServiceImpl)server.getTextDocumentService()).superImplementations(uri, pos);
-            case Server.JAVA_SOURCE_FOR: {
-                CompletableFuture<Object> result = new CompletableFuture<>();
-                try {
-                    String sourceUri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
-                    if (sourceUri == null || !sourceUri.startsWith(SOURCE_FOR)) {
-                        throw new IllegalArgumentException("Invalid uri: " + sourceUri);
-                    }
-                    sourceUri = URLDecoder.decode(sourceUri.substring(SOURCE_FOR.length()), StandardCharsets.UTF_8.toString());
-                    int qIdx = sourceUri.lastIndexOf('?');
-                    int hIdx = sourceUri.lastIndexOf('#');
-                    if (qIdx < 0 || hIdx < 0 || hIdx <= qIdx) {
-                        throw new IllegalArgumentException("Invalid uri: " + sourceUri);
-                    }
-                    String rootUri = sourceUri.substring(0, qIdx);
-                    FileObject root = URLMapper.findFileObject(URI.create(rootUri).toURL());
-                    if (root == null) {
-                        throw new IllegalStateException("Unable to find root: " + rootUri);
-                    }
-                    ElementHandle typeHandle = ElementHandleAccessor.getInstance().create(ElementKind.valueOf(sourceUri.substring(qIdx + 1, hIdx)), sourceUri.substring(hIdx + 1));
-                    CompletableFuture<ElementOpen.Location> location = ElementOpen.getLocation(ClasspathInfo.create(root), typeHandle, typeHandle.getQualifiedName().replace('.', '/') + ".class");
-                    location.exceptionally(ex -> {
-                        result.completeExceptionally(ex);
-                        return null;
-                    }).thenAccept(loc -> {
-                        if (loc != null) {
-                            ShowDocumentParams sdp = new ShowDocumentParams(Utils.toUri(loc.getFileObject()));
-                            Position position = Utils.createPosition(loc.getFileObject(), loc.getStartOffset());
-                            sdp.setSelection(new Range(position, position));
-                            client.showDocument(sdp).thenAccept(res -> {
-                                if (res.isSuccess()) {
-                                    result.complete(null);
-                                } else {
-                                    result.completeExceptionally(new IllegalStateException("Cannot open source for: " + typeHandle.getQualifiedName()));
-                                }
-                            });
-                        } else if (!result.isCompletedExceptionally()) {
-                            result.completeExceptionally(new IllegalStateException("Cannot find source for: " + typeHandle.getQualifiedName()));
-                        }
-                    });
-                } catch (Throwable t) {
-                    result.completeExceptionally(t);
-                }
-                return result;
-            }
-            case Server.JAVA_FIND_PROJECT_CONFIGURATIONS: {
+            case Server.NBLS_FIND_PROJECT_CONFIGURATIONS: {
                 String fileUri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 
                 FileObject file;
@@ -454,7 +531,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 return findProjectConfigurations(file);
             }
             case Server.JAVA_FIND_DEBUG_ATTACH_CONFIGURATIONS: {
-                return AttachConfigurations.findConnectors();
+                return AttachConfigurations.findConnectors(client.getNbCodeCapabilities());
             }
             case Server.JAVA_FIND_DEBUG_PROCESS_TO_ATTACH: {
                 return AttachConfigurations.findProcessAttachTo(client);
@@ -462,7 +539,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             case Server.NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH: {
                 return AttachNativeConfigurations.findProcessAttachTo(client);
             }
-            case Server.JAVA_PROJECT_CONFIGURATION_COMPLETION: {
+            case Server.NBLS_PROJECT_CONFIGURATION_COMPLETION: {
                 // We expect one, two or three arguments.
                 // The first argument is always the URI of the launch.json file.
                 // When not more arguments are provided, all available configurations ought to be provided.
@@ -470,7 +547,11 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 // and additional attributes valid in that particular configuration ought to be provided.
                 // When a third argument is present, it's an attribute name whose possible values ought to be provided.
                 List<Object> arguments = params.getArguments();
-                Collection<? extends LaunchConfigurationCompletion> configurations = Lookup.getDefault().lookupAll(LaunchConfigurationCompletion.class);
+                Collection<? extends LaunchConfigurationCompletion> configurations = Lookup.getDefault()
+                                                                                           .lookupAll(LaunchConfigurationCompletion.Factory.class)
+                                                                                           .stream()
+                                                                                           .map(f -> f.createLaunchConfigurationCompletion(client.getNbCodeCapabilities()))
+                                                                                           .collect(Collectors.toList());
                 List<CompletableFuture<List<CompletionItem>>> completionFutures;
                 String configUri = ((JsonPrimitive) arguments.get(0)).getAsString();
                 Supplier<CompletableFuture<Project>> projectSupplier = () -> {
@@ -507,7 +588,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                         .thenApply(avoid -> completionFutures.stream().flatMap(c -> c.join().stream()).collect(Collectors.toList()));
                 return (CompletableFuture<Object>) (CompletableFuture<?>) joinedFuture;
             }
-            case Server.JAVA_PROJECT_RESOLVE_PROJECT_PROBLEMS: {
+            case Server.NBLS_PROJECT_RESOLVE_PROJECT_PROBLEMS: {
                 final CompletableFuture<Object> result = new CompletableFuture<>();
                 List<Object> arguments = params.getArguments();
                 if (!arguments.isEmpty()) {
@@ -563,7 +644,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 }
                 return result;
             }
-            case Server.JAVA_CLEAR_PROJECT_CACHES: {
+            case Server.NBLS_CLEAR_PROJECT_CACHES: {
                 // politely clear project manager's cache of "no project" answers
                 ProjectManager.getDefault().clearNonProjectCache();
                 // impolitely clean the project-based traversal's cache, so any affiliation of intermediate folders will disappear
@@ -587,7 +668,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 return (CompletableFuture<Object>) (CompletableFuture<?>)result;
             }
             
-            case Server.JAVA_PROJECT_INFO: {
+            case Server.NBLS_PROJECT_INFO: {
                 final CompletableFuture<Object> result = new CompletableFuture<>();
                 List<Object> arguments = params.getArguments();
                 if (arguments.size() < 1) {
@@ -637,6 +718,86 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 }
                 return (CompletableFuture<Object>)(CompletableFuture<?>)new ProjectInfoWorker(locations, projectStructure, recursive, actions).process();
             }
+            case Server.JAVA_ENABLE_PREVIEW: {
+                String source = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
+                String newSourceLevel = params.getArguments().size() > 1 ? ((JsonPrimitive) params.getArguments().get(1)).getAsString()
+                                                                         : null;
+                FileObject file;
+                try {
+                    file = URLMapper.findFileObject(new URL(source));
+                    if (file != null) {
+                        for (Factory factory : Lookup.getDefault().lookupAll(Factory.class)) {
+                            PreviewEnabler enabler = factory.enablerFor(file);
+                            if (enabler != null) {
+                                enabler.enablePreview(newSourceLevel);
+                                break;
+                            }
+                        }
+                    }
+                } catch (Exception ex) {
+                    Exceptions.printStackTrace(ex);
+                    return CompletableFuture.completedFuture(Collections.emptyList());
+                }
+                return CompletableFuture.completedFuture(true);
+            }
+            case Server.NBLS_DOCUMENT_SYMBOLS: {
+                List<DocumentSymbol> result = new ArrayList<>();
+                try {
+                    List<Object> arguments = params.getArguments();
+                    String source = ((JsonPrimitive) arguments.get(0)).getAsString();
+                    String query = arguments.size() > 1 ? ((JsonPrimitive)arguments.get(1)).getAsString() : "";
+                    FileObject file = Utils.fromUri(source);
+                    Document rawDoc = server.getOpenedDocuments().getDocument(source);
+                    if (file != null && rawDoc instanceof StyledDocument) {
+                        StyledDocument doc = (StyledDocument)rawDoc;
+                        for (StructureProvider structureProvider : MimeLookup.getLookup(DocumentUtilities.getMimeType(doc)).lookupAll(StructureProvider.class)) {
+                            if (structureProvider != null) {
+                                List<StructureElement> structureElements = structureProvider.getStructure(doc);
+                                if (!structureElements.isEmpty()) {
+                                    for (StructureElement structureElement : structureElements) {
+                                        if (structureElement.getName().startsWith(query)) {
+                                            DocumentSymbol ds = TextDocumentServiceImpl.structureElement2DocumentSymbol(doc, structureElement);
+                                            if (ds != null) {
+                                                result.add(ds);
+                                            }
+                                        }
+                                    }
+                                };
+                            }
+                        }
+                    }
+                } catch (Exception ex) {
+                    Exceptions.printStackTrace(ex);
+                    return CompletableFuture.completedFuture(Collections.emptyList());
+                }
+                return CompletableFuture.completedFuture(result);
+            }
+            case Server.NBLS_GET_DIAGNOSTICS: {
+                    List<Object> arguments = params.getArguments();
+                    String source = ((JsonPrimitive) arguments.get(0)).getAsString();
+                    EnumSet<ErrorProvider.Kind> s;
+                    if (arguments.size() > 1 && arguments.get(1) instanceof JsonArray) {
+                        s = EnumSet.noneOf(ErrorProvider.Kind.class);
+                        for (JsonElement jse : ((JsonArray)arguments.get(1))) {
+                            if (jse instanceof JsonPrimitive) {
+                                ErrorProvider.Kind k = ErrorProvider.Kind.valueOf(jse.getAsString());
+                                s.add(k);
+                            }
+                        }
+                    } else {
+                        s = EnumSet.allOf(ErrorProvider.Kind.class);
+                    }
+                    return (CompletableFuture<Object>)(CompletableFuture)((TextDocumentServiceImpl)server.getTextDocumentService()).computeDiagnostics(source, s);
+            }
+            case Server.NBLS_GET_SERVER_DIRECTORIES: {
+                JsonObject o = new JsonObject();
+                o.addProperty("userdir", Places.getUserDirectory().toString());
+                o.addProperty("dirs", System.getProperty("netbeans.dirs"));
+                o.addProperty("extra.dirs", System.getProperty("netbeans.extra.dirs"));
+                o.addProperty("cache", Places.getCacheDirectory().toString());
+                o.addProperty("config", FileUtil.toFile(FileUtil.getConfigRoot()).toString());
+                return CompletableFuture.completedFuture(o);
+            }
             default:
                 for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
                     if (codeActionsProvider.getCommands().contains(command)) {
@@ -645,6 +806,33 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 }
         }
         throw new UnsupportedOperationException("Command not supported: " + params.getCommand());
+    }
+    
+    private String firstModulePath(List<String> paths, String moduleName) {
+        if (paths == null || paths.isEmpty()) {
+            return null;
+        } else if (paths.size() > 1) {
+            LOG.log(Level.WARNING, "Mutliple test roots are not yet supported for module {0}", moduleName);
+        }
+        return paths.iterator().next();
+    }
+    
+    private static List<String> getModuleTestPaths(Project project) {        
+        if (project == null) {
+            return null;
+        }
+        SourceGroup[] sourceGroups = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+        Set<String> paths = new LinkedHashSet<>();
+        for (SourceGroup sourceGroup : sourceGroups) {
+            URL[] urls = UnitTestForSourceQuery.findUnitTests(sourceGroup.getRootFolder());
+            for (URL u : urls) {
+                FileObject f = URLMapper.findFileObject(u);
+                if (f != null) {
+                    paths.add(f.getPath());
+                }
+            }
+        }
+        return paths.isEmpty() ? null : new ArrayList<>(paths);
     }
     
     private class ProjectInfoWorker {
@@ -664,7 +852,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         }
 
         public CompletableFuture<LspProjectInfo[]> process() {
-            List<FileObject> files = new ArrayList();
+            List<FileObject> files = new ArrayList<>();
             for (URL u : locations) {
                 FileObject f = URLMapper.findFileObject(u);
                 if (f != null) {
@@ -675,6 +863,9 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         }
         
         LspProjectInfo fillProjectInfo(Project p) {
+            if (p == null) {
+                return null;
+            }
             LspProjectInfo info = infos.get(p.getProjectDirectory());
             if (info != null) {
                 return info;
@@ -714,7 +905,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                         // should not happen
                     }
                 }
-                info.subprojects = subprojectDirs.toArray(new URI[subprojectDirs.size()]);
+                info.subprojects = subprojectDirs.toArray(new URI[0]);
                 Project root = ProjectUtils.rootOf(p);
                 if (root != null) {
                     try {
@@ -747,7 +938,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         }
         
         CompletableFuture<LspProjectInfo[]> finalizeInfos() {
-            List<LspProjectInfo> list = new ArrayList();
+            List<LspProjectInfo> list = new ArrayList<>();
             for (URL u : locations) {
                 FileObject f = URLMapper.findFileObject(u);
                 Project owner = FileOwnerQuery.getOwner(f);
@@ -758,7 +949,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 }
             }
             list.addAll(infos.values());
-            LspProjectInfo[] toArray = list.toArray(new LspProjectInfo[list.size()]);
+            LspProjectInfo[] toArray = list.toArray(new LspProjectInfo[0]);
             return CompletableFuture.completedFuture(toArray);
         }
     }
@@ -862,22 +1053,13 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         return UnitTestForSourceQuery.findSources(sg.getRootFolder()).length > 0;
     }
 
-    private static final Position NO_POS = new Position(0, 0);
-    private static final Range NO_RANGE = new Range(NO_POS, NO_POS);
-    private static final String SOURCE_FOR = "sourceFor:";
-
     @Override
     public CompletableFuture<Either<List<? extends SymbolInformation>, List<? extends WorkspaceSymbol>>> symbol(WorkspaceSymbolParams params) {
-        // shortcut: if the projects are not yet initialized, return empty:
-        if (server.openedProjects().getNow(null) == null) {
-            return CompletableFuture.completedFuture(Either.forLeft(Collections.emptyList()));
-        }
         String query = params.getQuery();
         if (query.isEmpty()) {
             //cannot query "all":
             return CompletableFuture.completedFuture(Either.forLeft(Collections.emptyList()));
         }
-        System.err.println("query=" + query);
         boolean exact = false;
         if (query.endsWith(" ")) {
             query = query.substring(0, query.length() - 1);
@@ -893,166 +1075,239 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 return super.cancel(mayInterruptIfRunning);
             }
         };
-        WORKER.post(() -> {
-            try {
-                List<WorkspaceSymbol> symbols = new ArrayList<>();
-                if (client.getNbCodeCapabilities().wantsJavaSupport()) {
-                    SearchType searchType = getSearchType(queryFin, exactFin, false, null, null);
+        server.openedProjects().thenAccept(openedProjects -> {
+            if (openedProjects.length < 1) {
+                result.complete(Either.forLeft(Collections.emptyList()));
+            } else {
+                ClasspathInfo cpInfo = ClasspathInfo.create(openedProjects[0].getProjectDirectory());
+                JavaSource js = JavaSource.create(cpInfo);
+                if (js == null) {
+                    result.complete(Either.forLeft(Collections.emptyList()));
+                } else {
+                    try {
+                        js.runWhenScanFinished(cc -> {
+                            WORKER.post(() -> {
+                                try {
+                                    Set<WorkspaceSymbol> symbols = new HashSet<>();
+                                    SearchType searchType = getSearchType(queryFin, exactFin, false, null, null);
 
-                    // CSL Part
-                    Collection<? extends IndexSearcher> providers = Lookup.getDefault().lookupAll(IndexSearcher.class);
-                    Set<? extends IndexSearcher.Descriptor> descriptors;
-                    if (!providers.isEmpty()) {
-                        for (IndexSearcher provider : providers) {
-                            descriptors = provider.getSymbols(null, queryFin, Utils.searchType2QueryKind(searchType), null);
-                            for (IndexSearcher.Descriptor desc : descriptors) {
-                                FileObject fo = desc.getFileObject();
-                                org.netbeans.modules.csl.api.ElementHandle element = desc.getElement();
-                                if (fo != null) {
-                                    Position startPos = Utils.createPosition(fo, desc.getOffset());
-                                    Position endPos = Utils.createPosition(fo, desc.getOffset() + desc.getSimpleName().length());
-                                    WorkspaceSymbol symbol = new WorkspaceSymbol(
-                                            desc.getSimpleName(),
-                                            Utils.cslElementKind2SymbolKind(element.getKind()),
-                                            Either.forLeft(new Location(Utils.toUri(fo), new Range(startPos, endPos))),
-                                            desc.getContextName());
-                                    symbols.add(symbol);
-                                }
-                            }
-                        }
-                    }
-
-                    // Java part
-                    JavaSymbolProvider.ResultHandler symbolHandler = new JavaSymbolProvider.ResultHandler() {
-                        @Override
-                        public void setHighlightText(String text) {
-                        }
-
-                        private Map<ElementHandle<TypeElement>, List<String>> type2Idents;
-
-                        @Override
-                        public void runRoot(FileObject root, ClassIndexImpl ci, Exec exec) throws IOException, InterruptedException {
-                            ClasspathInfo cpInfo = ClasspathInfo.create(root);
-                            try {
-                                type2Idents = new HashMap<>();
-                                exec.run();
-                                Map<FileObject, Map<ElementHandle<TypeElement>, List<String>>> sources = new HashMap<>();
-                                for (Entry<ElementHandle<TypeElement>, List<String>> e : type2Idents.entrySet()) {
-                                    FileObject sourceFile = SourceUtils.getFile(e.getKey(), cpInfo);
-                                    sources.computeIfAbsent(sourceFile, s -> new HashMap<>())
-                                           .put(e.getKey(), e.getValue());
-                                }
-                                if (!sources.isEmpty()) {
-                                    JavaSource.create(cpInfo, sources.keySet())
-                                            .runUserActionTask(cc -> {
-                                                if (Phase.ELEMENTS_RESOLVED.compareTo(cc.toPhase(Phase.ELEMENTS_RESOLVED))> 0) {
-                                                    return ;
-                                                }
-                                                for (Entry<ElementHandle<TypeElement>, List<String>> e : sources.get(cc.getFileObject()).entrySet()) {
-                                                    TypeElement te = e.getKey().resolve(cc);
-
-                                                    if (te == null) {
-                                                        //cannot resolve
-                                                        continue;
-                                                    }
-
-                                                    for (String ident : e.getValue()) {
-                                                        if (ident.equals(getSimpleName(te, null, false))) {
-                                                            TreePath path = cc.getTrees().getPath(te);
-
-                                                            if (path != null) {
-                                                                final String symbolName = te.getSimpleName().toString();
-                                                                final ElementKind kind = te.getKind();
-                                                                if (!kind.isClass() && !kind.isInterface()) {
-                                                                    WorkspaceSymbol symbol = new WorkspaceSymbol(symbolName, Utils.elementKind2SymbolKind(kind), Either.forLeft(tree2Location(cc, path)), te.getQualifiedName().toString());
-                                                                    symbols.add(symbol);
-                                                                }
-                                                            }
+                                    // CSL Part
+                                    Collection<? extends IndexSearcher> providers = Lookup.getDefault().lookupAll(IndexSearcher.class);
+                                    Set<? extends IndexSearcher.Descriptor> descriptors;
+                                    for (Project project : openedProjects) {
+                                        if (!providers.isEmpty()) {
+                                            for (IndexSearcher provider : providers) {
+                                                descriptors = provider.getSymbols(project, queryFin, Utils.searchType2QueryKind(searchType), null);
+                                                for (IndexSearcher.Descriptor desc : descriptors) {
+                                                    FileObject fo = desc.getFileObject();
+                                                    if (fo != null) {
+                                                        org.netbeans.modules.csl.api.ElementHandle element = desc.getElement();
+                                                        Position pos = desc.getOffset() > 0 ? Utils.createPosition(fo, desc.getOffset()) : new Position(0, 0);
+                                                        String uri = null;
+                                                        if (element instanceof org.netbeans.modules.csl.api.ElementHandle.UrlHandle) {
+                                                            uri = ((org.netbeans.modules.csl.api.ElementHandle.UrlHandle) element).getUrl();
                                                         }
-                                                        for (Element ne : te.getEnclosedElements()) {
-                                                            if (ident.equals(getSimpleName(ne, te, false))) {
-                                                                TreePath path = cc.getTrees().getPath(ne);
+                                                        if (uri == null) {
+                                                            uri = Utils.toUri(fo);
+                                                        }
+                                                        symbols.add(new WorkspaceSymbol(
+                                                                desc.getSimpleName(),
+                                                                Utils.cslElementKind2SymbolKind(element.getKind()),
+                                                                Either.forLeft(new Location(uri, new Range(pos, pos))),
+                                                                desc.getContextName()));
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
 
-                                                                if (path != null) {
-                                                                    final Pair<String,String> name = JavaSymbolProvider.getDisplayName(ne, te);
-                                                                    final String symbolName = name.first() + (name.second() != null ? name.second() : "");
-                                                                    final ElementKind kind = ne.getKind();
-                                                                    if (!kind.isClass() && !kind.isInterface()) {
-                                                                        WorkspaceSymbol symbol = new WorkspaceSymbol(symbolName, Utils.elementKind2SymbolKind(kind), Either.forLeft(tree2Location(cc, path)), te.getQualifiedName().toString());
-                                                                        symbols.add(symbol);
+                                    // Java part
+                                    if (client.getNbCodeCapabilities().wantsJavaSupport()) {
+                                        JavaSymbolProvider.ResultHandler symbolHandler = new JavaSymbolProvider.ResultHandler() {
+                                            @Override
+                                            public void setHighlightText(String text) {
+                                            }
+
+                                            private Map<ElementHandle<TypeElement>, List<String>> type2Idents;
+
+                                            @Override
+                                            public void runRoot(FileObject root, ClassIndexImpl ci, Exec exec) throws IOException, InterruptedException {
+                                                ClasspathInfo cpInfo = ClasspathInfo.create(root);
+                                                try {
+                                                    type2Idents = new HashMap<>();
+                                                    exec.run();
+                                                    Map<FileObject, Map<ElementHandle<TypeElement>, List<String>>> sources = new HashMap<>();
+                                                    for (Entry<ElementHandle<TypeElement>, List<String>> e : type2Idents.entrySet()) {
+                                                        FileObject sourceFile = SourceUtils.getFile(e.getKey(), cpInfo);
+                                                        sources.computeIfAbsent(sourceFile, s -> new HashMap<>())
+                                                               .put(e.getKey(), e.getValue());
+                                                    }
+                                                    if (!sources.isEmpty()) {
+                                                        JavaSource.create(cpInfo, sources.keySet())
+                                                                .runUserActionTask(cc -> {
+                                                                    if (Phase.ELEMENTS_RESOLVED.compareTo(cc.toPhase(Phase.ELEMENTS_RESOLVED))> 0) {
+                                                                        return ;
                                                                     }
-                                                                }
-                                                            }
-                                                        }
+                                                                    for (Entry<ElementHandle<TypeElement>, List<String>> e : sources.get(cc.getFileObject()).entrySet()) {
+                                                                        TypeElement te = e.getKey().resolve(cc);
+
+                                                                        if (te == null) {
+                                                                            //cannot resolve
+                                                                            continue;
+                                                                        }
+
+                                                                        for (String ident : e.getValue()) {
+                                                                            if (ident.equals(getSimpleName(te, null, false))) {
+                                                                                TreePath path = cc.getTrees().getPath(te);
+
+                                                                                if (path != null) {
+                                                                                    final String symbolName = te.getSimpleName().toString();
+                                                                                    final ElementKind kind = te.getKind();
+                                                                                    if (!kind.isClass() && !kind.isInterface()) {
+                                                                                        WorkspaceSymbol symbol = new WorkspaceSymbol(symbolName, Utils.elementKind2SymbolKind(kind), Either.forLeft(tree2Location(cc, path)), te.getQualifiedName().toString());
+                                                                                        symbols.add(symbol);
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                            for (Element ne : te.getEnclosedElements()) {
+                                                                                if (ident.equals(getSimpleName(ne, te, false))) {
+                                                                                    TreePath path = cc.getTrees().getPath(ne);
+
+                                                                                    if (path != null) {
+                                                                                        final Pair<String,String> name = JavaSymbolProvider.getDisplayName(ne, te);
+                                                                                        final String symbolName = name.first() + (name.second() != null ? name.second() : "");
+                                                                                        final ElementKind kind = ne.getKind();
+                                                                                        if (!kind.isClass() && !kind.isInterface()) {
+                                                                                            WorkspaceSymbol symbol = new WorkspaceSymbol(symbolName, Utils.elementKind2SymbolKind(kind), Either.forLeft(tree2Location(cc, path)), te.getQualifiedName().toString());
+                                                                                            symbols.add(symbol);
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }, true);
                                                     }
+                                                    //TODO: handle exceptions
+                                                } finally {
+                                                    type2Idents = null;
                                                 }
-                                            }, true);
+                                            }
+
+                                            @Override
+                                            public void handleResult(ElementHandle<TypeElement> owner, String ident, boolean caseSensitive) {
+                                                type2Idents.computeIfAbsent(owner, s -> new ArrayList<>()).add(ident);
+                                            }
+                                        };
+                                        JavaSymbolProvider.doComputeSymbols(searchType, queryFin, symbolHandler, true, cancel);
+                                        List<Pair<ElementHandle<TypeElement>, FileObject>> pairs = new ArrayList<>();
+                                        JavaTypeProvider.ResultHandler<Pair<ElementHandle<TypeElement>, FileObject>> typeHandler = new JavaTypeProvider.ResultHandler<Pair<ElementHandle<TypeElement>, FileObject>>() {
+                                            private FileObject root;
+
+                                            @Override
+                                            public void setMessage(String msg) {
+                                            }
+
+                                            @Override
+                                            public void setHighlightText(String text) {
+                                            }
+
+                                            @Override
+                                            public void pendingResult() {
+                                            }
+
+                                            @Override
+                                            public void runRoot(FileObject root, JavaTypeProvider.ResultHandler.Exec exec) throws IOException, InterruptedException {
+                                                this.root = root;
+                                                try {
+                                                    exec.run();
+                                                } finally {
+                                                    this.root = null;
+                                                }
+                                            }
+
+                                            @Override
+                                            public Pair<ElementHandle<TypeElement>, FileObject> create(JavaTypeProvider.CacheItem cacheItem, ElementHandle<TypeElement> handle, String simpleName, String relativePath) {
+                                                return Pair.of(handle, this.root);
+                                            }
+
+                                            @Override
+                                            public void addResult(List<? extends Pair<ElementHandle<TypeElement>, FileObject>> types) {
+                                                pairs.addAll(types);
+                                            }
+                                        };
+                                        JavaTypeProvider.doComputeTypes(searchType, queryFin, typeHandler, cancel);
+                                        for (Pair<ElementHandle<TypeElement>, FileObject> pair : pairs) {
+                                            ElementHandle<TypeElement> handle = pair.first();
+                                            String fqn = handle.getQualifiedName();
+                                            int idx = fqn.lastIndexOf('.');
+                                            String simpleName = idx < 0 ? fqn : fqn.substring(idx + 1);
+                                            String contextName = idx < 0 ? null : fqn.substring(0, idx);
+                                            String uri = (pair.second().toURI().toString()) + '?' + handle.getKind().name() + '#' + handle.getBinaryName();
+                                            WorkspaceSymbol symbol = new WorkspaceSymbol(simpleName, Utils.elementKind2SymbolKind(handle.getKind()), Either.forRight(new WorkspaceSymbolLocation(uri)), contextName);
+                                            symbols.add(symbol);
+                                        }
+                                    }
+                                    result.complete(Either.forRight(new ArrayList<>(symbols)));
+                                } catch (Throwable t) {
+                                    result.completeExceptionally(t);
                                 }
-                                //TODO: handle exceptions
-                            } finally {
-                                type2Idents = null;
-                            }
-                        }
-
-                        @Override
-                        public void handleResult(ElementHandle<TypeElement> owner, String ident, boolean caseSensitive) {
-                            type2Idents.computeIfAbsent(owner, s -> new ArrayList<>()).add(ident);
-                        }
-                    };
-                    JavaSymbolProvider.doComputeSymbols(searchType, queryFin, symbolHandler, true, cancel);
-                    List<Pair<ElementHandle<TypeElement>, FileObject>> pairs = new ArrayList<>();
-                    JavaTypeProvider.ResultHandler<Pair<ElementHandle<TypeElement>, FileObject>> typeHandler = new JavaTypeProvider.ResultHandler<Pair<ElementHandle<TypeElement>, FileObject>>() {
-                        private FileObject root;
-
-                        @Override
-                        public void setMessage(String msg) {
-                        }
-
-                        @Override
-                        public void setHighlightText(String text) {
-                        }
-
-                        @Override
-                        public void pendingResult() {
-                        }
-
-                        @Override
-                        public void runRoot(FileObject root, JavaTypeProvider.ResultHandler.Exec exec) throws IOException, InterruptedException {
-                            this.root = root;
-                            try {
-                                exec.run();
-                            } finally {
-                                this.root = null;
-                            }
-                        }
-
-                        @Override
-                        public Pair<ElementHandle<TypeElement>, FileObject> create(JavaTypeProvider.CacheItem cacheItem, ElementHandle<TypeElement> handle, String simpleName, String relativePath) {
-                            return Pair.of(handle, this.root);
-                        }
-
-                        @Override
-                        public void addResult(List<? extends Pair<ElementHandle<TypeElement>, FileObject>> types) {
-                            pairs.addAll(types);
-                        }
-                    };
-                    JavaTypeProvider.doComputeTypes(searchType, queryFin, typeHandler, cancel);
-                    for (Pair<ElementHandle<TypeElement>, FileObject> pair : pairs) {
-                        ElementHandle<TypeElement> handle = pair.first();
-                        String fqn = handle.getQualifiedName();
-                        int idx = fqn.lastIndexOf('.');
-                        String simpleName = idx < 0 ? fqn : fqn.substring(idx + 1);
-                        String contextName = idx < 0 ? null : fqn.substring(0, idx);
-                        String uri = URLEncoder.encode(pair.second().toURI().toString() + '?' + handle.getKind().name() + '#' + handle.getBinaryName(), StandardCharsets.UTF_8.toString());
-                        WorkspaceSymbol symbol = new WorkspaceSymbol(simpleName, Utils.elementKind2SymbolKind(handle.getKind()), Either.forRight(new WorkspaceSymbolLocation(SOURCE_FOR + uri)), contextName);
-                        symbols.add(symbol);
+                            });
+                        }, true);
+                    } catch (IOException ioe) {
+                        result.completeExceptionally(ioe);
                     }
                 }
-                result.complete(Either.forRight(symbols));
-            } catch (Throwable t) {
-                result.completeExceptionally(t);
             }
+        }).exceptionally(ex -> {
+            result.completeExceptionally(ex);
+            return null;
         });
+        return result;
+    }
+
+    @Override
+    public CompletableFuture<WorkspaceSymbol> resolveWorkspaceSymbol(WorkspaceSymbol workspaceSymbol) {
+        String sourceUri = workspaceSymbol.getLocation().isLeft() ? workspaceSymbol.getLocation().getLeft().getUri() : workspaceSymbol.getLocation().getRight().getUri();
+        CompletableFuture<WorkspaceSymbol> result = new CompletableFuture<>();
+        try {
+            int qIdx = sourceUri.lastIndexOf('?');
+            int hIdx = sourceUri.lastIndexOf('#');
+            if (qIdx < 0 || hIdx < 0 || hIdx <= qIdx) {
+                result.complete(workspaceSymbol);
+            } else {
+                String rootUri = sourceUri.substring(0, qIdx);
+                FileObject root = Utils.fromUri(rootUri);
+                if (root == null) {
+                    throw new IllegalStateException("Unable to find root: " + rootUri);
+                }
+                String[] signatures = URLDecoder.decode(sourceUri.substring(hIdx + 1)).split(":");
+                ElementHandle<?> handle = ElementHandleAccessor.getInstance().create(ElementKind.valueOf(sourceUri.substring(qIdx + 1, hIdx)), signatures);
+                CompletableFuture<ElementOpen.Location> location = ElementOpen.getLocation(ClasspathInfo.create(root), handle, signatures[0].replace('.', '/') + ".class");
+                location.exceptionally(ex -> {
+                    result.completeExceptionally(ex);
+                    return null;
+                }).thenAccept(loc -> {
+                    if (loc != null) {
+                        ShowDocumentParams sdp = new ShowDocumentParams(Utils.toUri(loc.getFileObject()));
+                        Position position = Utils.createPosition(loc.getFileObject(), loc.getStartOffset());
+                        sdp.setSelection(new Range(position, position));
+                        sdp.setTakeFocus(true);
+                        client.showDocument(sdp).thenAccept(res -> {
+                            if (res.isSuccess()) {
+                                result.complete(null);
+                            } else {
+                                result.completeExceptionally(new IllegalStateException("Cannot open source for: " + workspaceSymbol.getName()));
+                            }
+                        });
+                    } else if (!result.isCompletedExceptionally()) {
+                        result.completeExceptionally(new IllegalStateException("Cannot find source for: " + workspaceSymbol.getName()));
+                    }
+                });
+            }
+        } catch (Throwable t) {
+            result.completeExceptionally(t);
+        }
         return result;
     }
 
@@ -1119,42 +1374,53 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
 
     @Override
     public void didChangeConfiguration(DidChangeConfigurationParams params) {
+        String fullConfigPrefix = client.getNbCodeCapabilities().getConfigurationPrefix();
+        String configPrefix = fullConfigPrefix.substring(0, fullConfigPrefix.length() - 1);
         server.openedProjects().thenAccept(projects -> {
+            // PENDING: invent a pluggable mechanism for this, this does not scale and the typecast to serviceImpl is ugly
+            ((TextDocumentServiceImpl)server.getTextDocumentService()).updateJavaHintPreferences(((JsonObject) params.getSettings()).getAsJsonObject(configPrefix).getAsJsonObject(NETBEANS_JAVA_HINTS));
+            ((TextDocumentServiceImpl)server.getTextDocumentService()).updateProjectJDKHome(((JsonObject) params.getSettings()).getAsJsonObject(configPrefix).getAsJsonObject("project").getAsJsonPrimitive("jdkhome"));
             if (projects != null && projects.length > 0) {
-                updateJavaFormatPreferences(projects[0].getProjectDirectory(), ((JsonObject) params.getSettings()).getAsJsonObject("netbeans").getAsJsonObject("format"));
-                updateJavaImportPreferences(projects[0].getProjectDirectory(), ((JsonObject) params.getSettings()).getAsJsonObject("netbeans").getAsJsonObject("java").getAsJsonObject("imports"));
+                updateJavaFormatPreferences(projects[0].getProjectDirectory(), ((JsonObject) params.getSettings()).getAsJsonObject(configPrefix).getAsJsonObject("format"));
+                updateJavaImportPreferences(projects[0].getProjectDirectory(), ((JsonObject) params.getSettings()).getAsJsonObject(configPrefix).getAsJsonObject("java").getAsJsonObject("imports"));
             }
         });
+        String fullAltConfigPrefix = client.getNbCodeCapabilities().getAltConfigurationPrefix();
+        String altConfigPrefix = fullAltConfigPrefix.substring(0, fullAltConfigPrefix.length() - 1);
+        boolean modified = false;
+        String newVMOptions = "";
+        String newWorkingDirectory = null;
+        JsonObject javaPlus = ((JsonObject) params.getSettings()).getAsJsonObject(altConfigPrefix);
+        if (javaPlus != null) {
+            JsonObject runConfig = javaPlus.getAsJsonObject("runConfig");
+            if (runConfig != null) {
+                newVMOptions = runConfig.getAsJsonPrimitive("vmOptions").getAsString();
+                JsonPrimitive cwd = runConfig.getAsJsonPrimitive("cwd");
+                newWorkingDirectory = cwd != null ? cwd.getAsString() : null;
+            }
+        }
+        for (SingleFileOptionsQueryImpl query : Lookup.getDefault().lookupAll(SingleFileOptionsQueryImpl.class)) {
+            modified |= query.setConfiguration(workspace, newVMOptions, newWorkingDirectory);
+        }
+        if (modified) {
+            ((TextDocumentServiceImpl)server.getTextDocumentService()).reRunDiagnostics();
+        }
     }
 
     void updateJavaFormatPreferences(FileObject fo, JsonObject configuration) {
         if (configuration != null && client.getNbCodeCapabilities().wantsJavaSupport()) {
-            NbPreferences.Provider provider = Lookup.getDefault().lookup(NbPreferences.Provider.class);
-            Preferences prefs = provider != null ? provider.preferencesRoot().node("de/funfried/netbeans/plugins/externalcodeformatter") : null;
-            JsonPrimitive formatterPrimitive = configuration.getAsJsonPrimitive("codeFormatter");
-            String formatter = formatterPrimitive != null ? formatterPrimitive.getAsString() : null;
-            JsonPrimitive pathPrimitive = configuration.getAsJsonPrimitive("settingsPath");
-            String path = pathPrimitive != null ? pathPrimitive.getAsString() : null;
-            if (formatter == null || "NetBeans".equals(formatter)) {
-                if (prefs != null) {
-                    prefs.put("enabledFormatter.JAVA", "netbeans-formatter");
+            JsonElement pathElement = configuration.get("settingsPath");
+            String path = pathElement != null && pathElement.isJsonPrimitive() ? pathElement.getAsString() : null;
+            Path p = path != null ? Paths.get(path) : null;
+            File file = p != null ? p.toFile() : null;
+            try {
+                if (file != null && file.exists() && file.canRead() && file.getName().endsWith(".zip")) {
+                    OptionsExportModel.get().doImport(file);
+                } else {
+                    OptionsExportModel.get().clean();
                 }
-                Path p = path != null ? Paths.get(path) : null;
-                File file = p != null ? p.toFile() : null;
-                try {
-                    if (file != null && file.exists() && file.canRead() && file.getName().endsWith(".zip")) {
-                        OptionsExportModel.get().doImport(file);
-                    } else {
-                        OptionsExportModel.get().clean();
-                    }
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            } else if (prefs != null) {
-                prefs.put("enabledFormatter.JAVA", formatter.toLowerCase(Locale.ENGLISH).concat("-java-formatter"));
-                if (path != null) {
-                    prefs.put(formatter.toLowerCase(Locale.ENGLISH).concat("FormatterLocation"), path);
-                }
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
             }
         }
     }
@@ -1170,6 +1436,80 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         }
     }
 
+    @NbBundle.Messages({
+        "# {0} - project name",
+        "MSG_ProjectFolderInitializationComplete=Completed initialization of project {0}",
+        "# {0} - some project name",
+        "# {1} - number of other projects loaded",
+        "MSG_ProjectFolderInitializationComplete2=Completed initialization of {0} and {1} other projectss"
+    })
+    @Override
+    public void didChangeWorkspaceFolders(DidChangeWorkspaceFoldersParams params) {
+        // the client > server notification stream is sequential
+        List<FileObject> newWorkspaceFolders = new ArrayList<>(this.clientWorkspaceFolders);
+        List<FileObject> refreshProjectFolders = new ArrayList<>();
+        for (WorkspaceFolder wkspFolder : params.getEvent().getAdded()) {
+            String uri = wkspFolder.getUri();
+            try {
+                FileObject f = Utils.fromUri(uri);
+                if (f != null) {
+                    refreshProjectFolders.add(f);
+                    // avoid duplicates
+                    if (!newWorkspaceFolders.contains(f)) {
+                        LOG.log(Level.FINE, "Adding client workspace folder {0}", f);
+                        newWorkspaceFolders.add(f);
+                    }
+                }
+            } catch (MalformedURLException ex) {
+                // expected, perhaps some client-specific URL scheme ?
+                LOG.fine("Workspace folder URI could not be converted into fileobject: {0}");
+            }
+        }
+        
+        if (params.getEvent().getRemoved() != null) {
+            for (WorkspaceFolder wsf : params.getEvent().getRemoved()) {
+                String uri = wsf.getUri();
+                try {
+                    FileObject f = Utils.fromUri(uri);
+                    if (f != null) {
+                        LOG.log(Level.FINE, "Removing client workspace folder {0}", f);
+                        newWorkspaceFolders.remove(f);
+                    }
+                } catch (MalformedURLException ex) {
+                    // was never added 
+                }
+            }
+        }
+        // the client > server notification stream is sequential; no need to sync
+        this.clientWorkspaceFolders = newWorkspaceFolders;
+        
+        if (!refreshProjectFolders.isEmpty()) {
+            server.asyncOpenSelectedProjects(refreshProjectFolders, true).thenAccept((projects) -> {
+                // report initialization of a project / projects
+                String msg;
+                Project[] opened = Arrays.asList(projects).stream().filter(Objects::nonNull).toArray(Project[]::new);
+                if (opened.length == 0) {
+                    // this should happen immediately
+                    return;
+                } 
+                ProjectInformation pi = ProjectUtils.getInformation(opened[0]);
+                String n = pi.getDisplayName();
+                if (n == null) {
+                    n = pi.getName();
+                }
+                if (n == null) {
+                    n = opened[0].getProjectDirectory().getName();
+                }
+                if (opened.length == 1) {
+                    msg = Bundle.MSG_ProjectFolderInitializationComplete(n);
+                } else {
+                    msg = Bundle.MSG_ProjectFolderInitializationComplete2(n, opened.length);
+                }
+                StatusDisplayer.getDefault().setStatusText(msg, StatusDisplayer.IMPORTANCE_ANNOTATION);
+            });
+        }
+    }
+
     @Override
     public void didChangeWatchedFiles(DidChangeWatchedFilesParams arg0) {
         //TODO: not watching files for now
@@ -1180,9 +1520,13 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         this.client = (NbCodeLanguageClient)client;
     }
 
+    public Workspace getWorkspace() {
+        return workspace;
+    }
+
     private static final class CommandProgress extends ActionProgress {
 
-        private final CompletableFuture<Object> commandFinished = new CompletableFuture<>();;
+        private final CompletableFuture<Object> commandFinished = new CompletableFuture<>();
         private int running;
         private int success;
         private int failure;

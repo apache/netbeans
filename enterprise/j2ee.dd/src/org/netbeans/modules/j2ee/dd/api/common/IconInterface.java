@@ -21,7 +21,7 @@ package org.netbeans.modules.j2ee.dd.api.common;
 /**
  * Super interface for all DD elements having the icon property/properties.
  *
- *<p><b><font color="red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></font></b>
+ *<p><b><span style="color:red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></span></b>
  *</p>
  *
  * @author Milan Kuchtiak
@@ -109,7 +109,7 @@ public interface IconInterface {
      */
     public org.netbeans.modules.j2ee.dd.api.common.Icon getDefaultIcon();
     /**
-     * Returns all icon elements in the form of <@link java.util.Map>. 
+     * Returns all icon elements in the form of {@link java.util.Map}. 
      *
      * @return map of all icons in the form of [locale:String[]{smallIcon, largeIcon}]
      */

@@ -50,13 +50,14 @@
     
     
     <!-- project site we use -->
-    <filter pattern="https://bits\.netbeans\.org/html\+java/dev" accept="true" />
+    <filter pattern="https://bits\.netbeans\.org/html\+java/dev.*" accept="true" />
     <filter pattern="https://graalvm\.org" accept="true" />
     <filter pattern="https://freemarker\.apache\.org" accept="true" />
     <filter pattern="https://felix\.apache\.org" accept="true" />
     <filter pattern="https://ant\.apache\.org" accept="true" />
     <filter pattern="https://ant\.apache\.org/manual/running\.html#sysprops" accept="true" />
     <filter pattern="https://ant\.apache\.org/manual/Types/antlib\.html" accept="true" />
+    <filter pattern="https://maven\.apache\.org/guides/mini/.*" accept="true" />
     
     <filter pattern="https://river\.apache\.org" accept="true" /> <!-- jini -->
     <filter pattern="http://findbugs\.sourceforge\.net" accept="true" />
@@ -69,6 +70,8 @@
     <filter pattern="https://docs\.oracle\.com/javase.*" accept="true" />
     <filter pattern="https://docs\.oracle\.com/javaee.*" accept="true" />
     <filter pattern="https://docs\.microsoft\.com/.*" accept="true" />
+    <!-- new jdk above 8 documentation pattern -->
+    <filter pattern="https://docs\.oracle\.com/en/java/javase.*" accept="true" />
     
     <filter pattern="https://www\.graalvm\.org/truffle/javadoc/.*" accept="true" />
     <filter pattern="https://openjfx\.io/javadoc/.*" accept="true" />
@@ -137,10 +140,9 @@
     <filter pattern="http://www\.netbeans\.org/ns/j2se-project/2\.xsd" accept="true"/>
     
     <!-- j2ee dtd-->
-    <filter pattern="http://java\.sun\.com/dtd/.*" accept="true"/>
-    <filter pattern="http://java\.sun\.com/j2ee/dtds/.*" accept="true"/>
+    <filter pattern="https://java\.sun\.com/dtd/.*" accept="true"/>
+    <filter pattern="https://java\.sun\.com/j2ee/dtds/.*" accept="true"/>
     <filter pattern="https://www\.oracle\.com/webfolder/technetwork/.*" accept="true"/>
-    <filter pattern="http://www\.oracle\.com/webfolder/technetwork/.*" accept="true"/>
     <filter pattern="https://jcp\.org/aboutJava/communityprocess/.*" accept="true"/>
     
     

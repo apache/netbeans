@@ -27,13 +27,14 @@ import org.netbeans.modules.versioning.util.VCSHyperlinkProvider;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Provides hyperlink functionality on issue reference in VCS artefacts as e.g. log messages in Search History
  *
  * @author Tomas Stupka
  */
-@org.openide.util.lookup.ServiceProvider(service=org.netbeans.modules.versioning.util.VCSHyperlinkProvider.class)
+@ServiceProvider(service=VCSHyperlinkProvider.class, position = 100)
 public class VcsHyperlinkProviderImpl extends VCSHyperlinkProvider {
 
     @Override
@@ -53,11 +54,8 @@ public class VcsHyperlinkProviderImpl extends VCSHyperlinkProvider {
             Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "No issue found for {0}", text.substring(offsetStart, offsetEnd));
             return;
         }
-        RequestProcessor.getDefault().post(new Runnable() {
-            @Override
-            public void run() {
-                Util.openIssue(FileUtil.toFileObject(file), issueId);
-            }
+        RequestProcessor.getDefault().post(() -> {
+            Util.openIssue(FileUtil.toFileObject(file), issueId);
         });
     }
 

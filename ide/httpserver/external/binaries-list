@@ -14,4 +14,6 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-FCE6D146C0B03EF115B9AF05FF2976F15308998C tomcat:webserver:3.2.4
+
+ACBF9E2E7580A723ACA3185BD554D3BC602D1C96 org.apache.tomcat:tomcat-annotations-api:9.0.96
+5CEA46A9D71D3FF8D85A0964591C09DBCF014F82 org.apache.tomcat.embed:tomcat-embed-core:9.0.96

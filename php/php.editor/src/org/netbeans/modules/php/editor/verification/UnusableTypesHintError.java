@@ -40,6 +40,7 @@ import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
@@ -71,7 +72,7 @@ public class UnusableTypesHintError extends HintErrorRule {
     private static final List<String> INVALID_TYPES_WITH_INTERSECTION_TYPES = Arrays.asList(
             Type.ARRAY, Type.BOOL, Type.CALLABLE, Type.FALSE, Type.FLOAT,
             Type.INT, Type.ITERABLE, Type.MIXED, Type.NEVER, Type.NULL,
-            Type.OBJECT, Type.PARENT, Type.SELF, Type.STATIC, Type.STRING, Type.VOID
+            Type.OBJECT, Type.PARENT, Type.SELF, Type.STATIC, Type.STRING, Type.TRUE, Type.VOID
     );
 
     @Override
@@ -86,11 +87,15 @@ public class UnusableTypesHintError extends HintErrorRule {
         if (phpParseResult.getProgram() != null) {
             FileObject fileObject = phpParseResult.getSnapshot().getSource().getFileObject();
             if (fileObject != null) {
-                CheckVisitor checkVisitor = new CheckVisitor(this, fileObject, phpParseResult.getModel(), CodeUtils.getPhpVersion(fileObject));
+                CheckVisitor checkVisitor = new CheckVisitor(this, fileObject, phpParseResult.getModel(), getPhpVersion(fileObject));
                 phpParseResult.getProgram().accept(checkVisitor);
                 result.addAll(checkVisitor.getHints());
             }
         }
+    }
+
+    protected PhpVersion getPhpVersion(FileObject fileObject) {
+        return CodeUtils.getPhpVersion(fileObject);
     }
 
     //~ Inner classes
@@ -124,7 +129,19 @@ public class UnusableTypesHintError extends HintErrorRule {
             }
             Expression fieldType = node.getFieldType();
             if (fieldType != null) {
-                checkFieldType(fieldType, false);
+                checkFieldAndConstType(fieldType, false);
+            }
+            super.visit(node);
+        }
+
+        @Override
+        public void visit(ConstantDeclaration node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            Expression constType = node.getConstType();
+            if (constType != null) {
+                checkFieldAndConstType(constType, false);
             }
             super.visit(node);
         }
@@ -229,15 +246,17 @@ public class UnusableTypesHintError extends HintErrorRule {
             Expression type = nullableType.getType();
             if (phpVersion.hasMixedType() && type instanceof NamespaceName && isMixedType((NamespaceName) type)) {
                 createError(type, Type.MIXED, UnusableType.Context.Nullable);
+            } else if (type instanceof NamespaceName && isNullType((NamespaceName) type)) {
+                createError(type, Type.NULL, UnusableType.Context.Nullable);
             }
             super.visit(nullableType);
         }
 
-        private void checkFieldType(@NullAllowed Expression fieldType, boolean isInUnionType) {
+        private void checkFieldAndConstType(@NullAllowed Expression declaredType, boolean isInUnionType) {
             // unusable types: void and callable PHP 7.4
-            Expression type = fieldType;
-            if (fieldType instanceof NullableType) {
-                type = ((NullableType) fieldType).getType();
+            Expression type = declaredType;
+            if (declaredType instanceof NullableType) {
+                type = ((NullableType) declaredType).getType();
             }
             if (type == null) {
                 return;
@@ -253,26 +272,30 @@ public class UnusableTypesHintError extends HintErrorRule {
                     createError(type, Type.NEVER, UnusableType.Context.Property);
                 }
                 if (!isInUnionType) {
-                    checkFalseAndNullTypes((NamespaceName) type);
+                    checkTrueAndFalseAndNullTypes((NamespaceName) type);
                 }
             } else if (type instanceof UnionType) {
-                ((UnionType) type).getTypes().forEach(unionType -> checkFieldType(unionType, true));
+                ((UnionType) type).getTypes().forEach(unionType -> checkFieldAndConstType(unionType, true));
             }
         }
 
         private void checkParameterType(Expression parameterType, boolean isInUnionType) {
             // unusable type: void, never
-            if (parameterType instanceof NamespaceName) {
-                if (isVoidType((NamespaceName) parameterType)) {
-                    createError(parameterType, Type.VOID, UnusableType.Context.Parameter);
-                } else if (isNeverType((NamespaceName) parameterType)) {
-                    createError(parameterType, Type.NEVER, UnusableType.Context.Parameter);
+            Expression paramType = parameterType;
+            if (parameterType instanceof NullableType) {
+                paramType = ((NullableType) parameterType).getType();
+            }
+            if (paramType instanceof NamespaceName) {
+                if (isVoidType((NamespaceName) paramType)) {
+                    createError(paramType, Type.VOID, UnusableType.Context.Parameter);
+                } else if (isNeverType((NamespaceName) paramType)) {
+                    createError(paramType, Type.NEVER, UnusableType.Context.Parameter);
                 }
                 if (!isInUnionType) {
-                    checkFalseAndNullTypes((NamespaceName) parameterType);
+                    checkTrueAndFalseAndNullTypes((NamespaceName) paramType);
                 }
-            } else if (parameterType instanceof UnionType) {
-                ((UnionType) parameterType).getTypes().forEach(type -> checkParameterType(type, true));
+            } else if (paramType instanceof UnionType) {
+                ((UnionType) paramType).getTypes().forEach(type -> checkParameterType(type, true));
             }
         }
 
@@ -285,7 +308,7 @@ public class UnusableTypesHintError extends HintErrorRule {
                     createError(returnType, Type.NEVER, UnusableType.Context.ArrowFunctionReturn);
                 }
                 if (!isInUnionType) {
-                    checkFalseAndNullTypes((NamespaceName) returnType);
+                    checkTrueAndFalseAndNullTypes((NamespaceName) returnType);
                 }
             } else if (returnType instanceof UnionType) {
                 ((UnionType) returnType).getTypes().forEach(type -> checkArrowFunctionReturnType(type, true));
@@ -303,7 +326,7 @@ public class UnusableTypesHintError extends HintErrorRule {
 
             if (type instanceof NamespaceName) {
                 if (!isInUnionType) {
-                    checkFalseAndNullTypes((NamespaceName) type);
+                    checkTrueAndFalseAndNullTypes((NamespaceName) type);
                 } else {
                     // "void" can't be part of a union type
                     if (isVoidType((NamespaceName) type)) {
@@ -327,17 +350,78 @@ public class UnusableTypesHintError extends HintErrorRule {
             }
         }
 
-        private void checkFalseAndNullTypes(NamespaceName type) {
-            if (isFalseType(type)) {
+        private void checkTrueAndFalseAndNullTypes(NamespaceName type) {
+            if (isFalseType(type) && !phpVersion.hasNullAndFalseAndTrueTypes()) {
                 createError(type, Type.FALSE, UnusableType.Context.Standalone);
-            } else if (isNullType(type)) {
+            } else if (isTrueType(type) && !phpVersion.hasNullAndFalseAndTrueTypes()) {
+                createError(type, Type.TRUE, UnusableType.Context.Standalone);
+            } else if (isNullType(type) && !phpVersion.hasNullAndFalseAndTrueTypes()) {
                 createError(type, Type.NULL, UnusableType.Context.Standalone);
+            }
+        }
+
+        private void checkTrueAndFalseAndNullTypes(UnionType unionType) {
+            // null|false or false|null
+            // null|true or true|null
+            if (phpVersion.hasNullAndFalseAndTrueTypes() || unionType.getTypes().size() != 2) {
+                return;
+            }
+            Expression trueType = null;
+            Expression falseType = null;
+            boolean hasNull = false;
+            for (Expression type : unionType.getTypes()) {
+                if (CancelSupport.getDefault().isCancelled()) {
+                    return;
+                }
+                if (type instanceof NamespaceName) {
+                    if (isFalseType((NamespaceName) type)) {
+                        falseType = type;
+                    } else if (isTrueType((NamespaceName) type)) {
+                        trueType = type;
+                    } else if (isNullType((NamespaceName) type)) {
+                        hasNull = true;
+                    }
+                }
+            }
+            if (falseType != null && hasNull) {
+                createError(falseType, Type.FALSE, UnusableType.Context.Standalone);
+            } else if (trueType != null && hasNull) {
+                createError(falseType, Type.TRUE, UnusableType.Context.Standalone);
+            }
+        }
+
+        private void checkBothTrueAndFalseTypes(UnionType unionType) {
+            // e.g. true|false -> bool, false|true -> bool, int|true|false -> int|bool
+            Expression trueType = null;
+            Expression falseType = null;
+            for (Expression type : unionType.getTypes()) {
+                if (CancelSupport.getDefault().isCancelled()) {
+                    return;
+                }
+                if (type instanceof IntersectionType) {
+                    continue;
+                }
+                QualifiedName qualifiedName = QualifiedName.create(type);
+                assert qualifiedName != null;
+                String name = qualifiedName.toString().toLowerCase(Locale.ENGLISH);
+                if (Type.TRUE.equals(name)) {
+                    trueType = type;
+                } else if (Type.FALSE.equals(name)) {
+                    falseType = type;
+                }
+                if (trueType != null && falseType != null) {
+                    createError(trueType, Type.TRUE, UnusableType.Context.BothTrueAndFalse);
+                    createError(falseType, Type.FALSE, UnusableType.Context.BothTrueAndFalse);
+                    return;
+                }
             }
         }
 
         private void checkUnionType(UnionType unionType) {
             checkDuplicateType(unionType.getTypes());
             checkRedundantTypeCombination(unionType);
+            checkTrueAndFalseAndNullTypes(unionType); // null|false or false|null
+            checkBothTrueAndFalseTypes(unionType); // true|false -> bool
         }
 
         private void checkDuplicateType(List<Expression> types) {
@@ -346,16 +430,29 @@ public class UnusableTypesHintError extends HintErrorRule {
                 if (CancelSupport.getDefault().isCancelled()) {
                     return;
                 }
-                QualifiedName qualifiedName = QualifiedName.create(type);
-                assert qualifiedName != null;
-                String name = qualifiedName.toString().toLowerCase(Locale.ENGLISH);
-                if (Type.FALSE.equals(name)) {
-                    // check bool|false
-                    name = Type.BOOL;
+                String name;
+                String typeName;
+                if (type instanceof IntersectionType) {
+                    typeName = VariousUtils.getIntersectionType((IntersectionType) type);
+                    name = typeName.toLowerCase();
+                } else {
+                    QualifiedName qualifiedName = QualifiedName.create(type);
+                    assert qualifiedName != null;
+                    name = qualifiedName.toString().toLowerCase(Locale.ENGLISH);
+                    typeName = qualifiedName.toString();
                 }
                 if (checkedTypes.contains(name)) {
-                    createDuplicateTypeError(type, qualifiedName.toString());
-                    return;
+                    createDuplicateTypeError(type, typeName);
+                } else if (checkedTypes.contains(Type.BOOL)) {
+                    // bool|false bool|true
+                    if (Type.FALSE.equals(name) || Type.TRUE.equals(name)) {
+                        createDuplicateTypeError(type, typeName);
+                    }
+                } else if (checkedTypes.contains(Type.FALSE) || checkedTypes.contains(Type.TRUE)) {
+                    // false|bool true|bool
+                    if (Type.BOOL.equals(name)) {
+                        createDuplicateTypeError(type, typeName);
+                    }
                 }
                 checkedTypes.add(name);
             }
@@ -445,12 +542,10 @@ public class UnusableTypesHintError extends HintErrorRule {
 
             if (hasIterable) {
                 for (Expression type : unionType.getTypes()) {
-                    if (type instanceof Identifier) {
-                        if (isArrayType((Identifier) type)) {
+                    if (type instanceof NamespaceName) {
+                        if (isArrayType((NamespaceName) type)) {
                             hasArray = true;
-                        }
-                    } else if (type instanceof NamespaceName) {
-                        if (isTraversableType((NamespaceName) type)) {
+                        } else if (isTraversableType((NamespaceName) type)) {
                             NamespaceName name = (NamespaceName) type;
                             QualifiedName qualifiedName = QualifiedName.create(name);
                             NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(model.getFileScope(), type.getStartOffset());
@@ -490,10 +585,9 @@ public class UnusableTypesHintError extends HintErrorRule {
             hints.add(new IterableRedundantTypeCombination(rule, fileObject, unionType.getStartOffset(), unionType.getEndOffset(), unionType, redundantType));
         }
 
-        private static boolean isArrayType(Identifier identifier) {
-            return !identifier.isKeyword()
-                    && Type.ARRAY.equals(identifier.getName().toLowerCase(Locale.ENGLISH));
-        }
+        private static boolean isArrayType(NamespaceName namespaceName) {
+            return Type.ARRAY.equals(CodeUtils.extractUnqualifiedName(namespaceName));
+        }        
 
         private static boolean isCallableType(Identifier identifier) {
             return !identifier.isKeyword()
@@ -506,6 +600,10 @@ public class UnusableTypesHintError extends HintErrorRule {
 
         private static boolean isNeverType(NamespaceName namespaceName) {
             return Type.NEVER.equals(CodeUtils.extractUnqualifiedName(namespaceName));
+        }
+
+        private static boolean isTrueType(NamespaceName namespaceName) {
+            return Type.TRUE.equals(CodeUtils.extractUnqualifiedName(namespaceName));
         }
 
         private static boolean isFalseType(NamespaceName namespaceName) {
@@ -543,6 +641,8 @@ public class UnusableTypesHintError extends HintErrorRule {
         "UnusableType.Context.union=a union",
         "UnusableType.Context.intersection=an intersection",
         "UnusableType.Context.nullable=a nullable",
+        "UnusableType.Context.bothTrueAndFalse=both \"true\" and \"false\"",
+        "UnusableType.Context.bothTrueAndFalse.description=Contains both \"true\" and \"false\", \"bool\" should be used.",
         "# {0} - type",
         "# {1} - context",
         "UnusableType.description=\"{0}\" cannot be used as {1} type.",
@@ -558,6 +658,12 @@ public class UnusableTypesHintError extends HintErrorRule {
             Union(Bundle.UnusableType_Context_union()),
             Intersection(Bundle.UnusableType_Context_intersection()),
             Nullable(Bundle.UnusableType_Context_nullable()),
+            BothTrueAndFalse(Bundle.UnusableType_Context_bothTrueAndFalse()) {
+                @Override
+                public String getDescription(String type) {
+                    return Bundle.UnusableType_Context_bothTrueAndFalse_description();
+                }
+            },
             ;
             private final String context;
 

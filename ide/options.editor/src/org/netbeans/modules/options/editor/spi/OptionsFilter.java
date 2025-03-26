@@ -252,7 +252,7 @@ public final class OptionsFilter {
                 childIndicesArray[o++] = i;
             }
 
-            TreeModelEvent nue = new TreeModelEvent(this, e.getTreePath(), childIndicesArray, children.toArray(new Object[children.size()]));
+            TreeModelEvent nue = new TreeModelEvent(this, e.getTreePath(), childIndicesArray, children.toArray(new Object[0]));
             
             for (TreeModelListener l : getListeners()) {
                 l.treeNodesChanged(nue);

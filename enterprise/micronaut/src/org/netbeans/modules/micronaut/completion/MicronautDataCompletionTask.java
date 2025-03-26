@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.micronaut.completion;
 
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -27,22 +28,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.prefs.PreferenceChangeEvent;
-import java.util.prefs.PreferenceChangeListener;
-import java.util.prefs.Preferences;
-import java.util.regex.Pattern;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.regex.Matcher;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
@@ -52,7 +51,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import org.netbeans.api.db.explorer.ConnectionManager;
-import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -63,6 +61,9 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.db.sql.editor.api.completion.SQLCompletion;
 import org.netbeans.modules.db.sql.editor.api.completion.SQLCompletionContext;
 import org.netbeans.modules.db.sql.editor.api.completion.SQLCompletionResultSet;
+import org.netbeans.modules.micronaut.db.Utils;
+import org.netbeans.modules.micronaut.expression.EvaluationContext;
+import org.netbeans.modules.micronaut.expression.MicronautExpressionLanguageParser;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
@@ -71,7 +72,6 @@ import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.spi.editor.completion.CompletionItem;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
-import org.openide.util.WeakListeners;
 
 /**
  *
@@ -82,50 +82,32 @@ public class MicronautDataCompletionTask {
     private static final String JPA_REPOSITORY_ANNOTATION_NAME = "io.micronaut.data.annotation.Repository";
     private static final String JDBC_REPOSITORY_ANNOTATION_NAME = "io.micronaut.data.jdbc.annotation.JdbcRepository";
     private static final String REPOSITORY_TYPE_NAME = "io.micronaut.data.repository.GenericRepository";
+    private static final String CONTROLLER_ANNOTATION_NAME = "io.micronaut.http.annotation.Controller";
     private static final String QUERY_ANNOTATION_TYPE_NAME = "io.micronaut.data.annotation.Query";
     private static final String GET = "get";
-    private static final List<String> QUERY_PATTERNS = new ArrayList<>(Arrays.asList("find", "get", "query", "read", "retrieve", "search"));
-    private static final List<String> SPECIAL_QUERY_PATTERNS = new ArrayList<>(Arrays.asList("count", "countDistinct", "delete", "exists", "update"));
-    private static final List<String> QUERY_PROJECTIONS = new ArrayList<>(Arrays.asList("", "Avg", "Distinct", "Max", "Min", "Sum"));
-    private static final List<String> CRITERION_EXPRESSIONS = new ArrayList<>(Arrays.asList("", "After", "Before", "Contains", "StartingWith", "StartsWith", "EndingWith", "EndsWith",
+    private static final List<String> QUERY_PATTERNS = Arrays.asList("find", "get", "query", "read", "retrieve", "search");
+    private static final List<String> SPECIAL_QUERY_PATTERNS = Arrays.asList("count", "countDistinct", "delete", "eliminate", "erase", "exists", "remove",  "update");
+    private static final List<String> INSERT_QUERY_PATTERNS = Arrays.asList("insert", "persist", "save", "store");
+    private static final List<String> QUERY_PROJECTIONS = Arrays.asList("", "Avg", "Distinct", "Max", "Min", "Sum");
+    private static final List<String> CRITERION_EXPRESSIONS = Arrays.asList("", "After", "Before", "Contains", "StartingWith", "StartsWith", "EndingWith", "EndsWith",
             "Equal", "Equals", "NotEqual", "NotEquals", "GreaterThan", "GreaterThanEquals", "LessThan", "LessThanEquals", "Like", "Ilike", "In", "InList", "InRange", "Between",
-            "IsNull", "IsNotNull", "IsEmpty", "IsNotEmpty", "True", "False"));
-    private static final List<String> COMPOSE_EXPRESSIONS = new ArrayList<>(Arrays.asList("And", "Or"));
+            "IsNull", "IsNotNull", "IsEmpty", "IsNotEmpty", "True", "False");
+    private static final List<String> COMPOSE_EXPRESSIONS = Arrays.asList("And", "Or");
     private static final String BY = "By";
     private static final String ORDER_BY = "OrderBy";
     private static final String COUNT = "count";
     private static final String EXISTS = "exists";
     private static final String EMPTY = "";
-    private static final String COMPLETION_CASE_SENSITIVE = "completion-case-sensitive"; // NOI18N
-    private static final boolean COMPLETION_CASE_SENSITIVE_DEFAULT = true;
-    private static final String JAVA_COMPLETION_SUBWORDS = "javaCompletionSubwords"; //NOI18N
-    private static final boolean JAVA_COMPLETION_SUBWORDS_DEFAULT = false;
-    private static final PreferenceChangeListener preferencesTracker = new PreferenceChangeListener() {
-        @Override
-        public void preferenceChange(PreferenceChangeEvent evt) {
-            String settingName = evt == null ? null : evt.getKey();
-            if (settingName == null || COMPLETION_CASE_SENSITIVE.equals(settingName)) {
-                caseSensitive = preferences.getBoolean(COMPLETION_CASE_SENSITIVE, COMPLETION_CASE_SENSITIVE_DEFAULT);
-            }
-            if (settingName == null || JAVA_COMPLETION_SUBWORDS.equals(settingName)) {
-                javaCompletionSubwords = preferences.getBoolean(JAVA_COMPLETION_SUBWORDS, JAVA_COMPLETION_SUBWORDS_DEFAULT);
-            }
-        }
-    };
-    private static final AtomicBoolean inited = new AtomicBoolean(false);
-
-    private static Preferences preferences;
-    private static boolean caseSensitive = COMPLETION_CASE_SENSITIVE_DEFAULT;
-    private static boolean javaCompletionSubwords = JAVA_COMPLETION_SUBWORDS_DEFAULT;
-    private static String cachedPrefix = null;
-    private static Pattern cachedCamelCasePattern = null;
-    private static Pattern cachedSubwordsPattern = null;
 
     private int anchorOffset;
 
-    public static interface ItemFactory<T> {
+    public static interface ItemFactory<T> extends MicronautExpressionLanguageCompletion.ItemFactory<T> {
+        T createControllerMethodItem(CompilationInfo info, String annName, String controllerId, int offset);
+        T createControllerMethodItem(CompilationInfo info, VariableElement delegateRepository, ExecutableElement delegateMethod, String controllerId, String id, int offset);
         T createFinderMethodItem(String name, String returnType, int offset);
         T createFinderMethodNameItem(String prefix, String name, int offset);
+        T createFinderMethodParam(CompilationInfo info, VariableElement variableElement, int offset);
+        T createFinderMethodParams(CompilationInfo info, List<VariableElement> variableElements, int offset);
         T createSQLItem(CompletionItem item);
     }
 
@@ -137,7 +119,7 @@ public class MicronautDataCompletionTask {
                 public void run(ResultIterator resultIterator) throws Exception {
                     CompilationController cc = CompilationController.get(resultIterator.getParserResult(caretOffset));
                     if (cc != null) {
-                        cc.toPhase(JavaSource.Phase.PARSED);
+                        cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                         anchorOffset = caretOffset;
                         String prefix = EMPTY;
                         TokenSequence<JavaTokenId> ts = cc.getTokenHierarchy().tokenSequence(JavaTokenId.language());
@@ -158,8 +140,10 @@ public class MicronautDataCompletionTask {
                                 anchorOffset = ts.offset() + 3;
                             }
                         }
-                        Consumer consumer = (namePrefix, name, type) -> {
-                            items.add(type != null ? factory.createFinderMethodItem(name, type, anchorOffset) : factory.createFinderMethodNameItem(namePrefix, name, anchorOffset));
+                        Consumer<T> consumer = item -> {
+                            if (item != null) {
+                                items.add(item);
+                            }
                         };
                         TreeUtilities treeUtilities = cc.getTreeUtilities();
                         SourcePositions sp = cc.getTrees().getSourcePositions();
@@ -167,12 +151,26 @@ public class MicronautDataCompletionTask {
                         switch (path.getLeaf().getKind()) {
                             case CLASS:
                             case INTERFACE:
-                                resolveFinderMethods(cc, path, prefix, true, consumer);
+                                int startPos = (int) sp.getEndPosition(cc.getCompilationUnit(), ((ClassTree) path.getLeaf()).getModifiers());
+                                if (startPos <= 0) {
+                                    startPos = (int) sp.getStartPosition(cc.getCompilationUnit(), path.getLeaf());
+                                }
+                                String headerText = cc.getText().substring(startPos, anchorOffset);
+                                int idx = headerText.indexOf('{'); //NOI18N
+                                if (idx >= 0) {
+                                    resolveFinderMethods(cc, path, prefix, true, factory, consumer);
+                                    resolveControllerMethods(cc, path, prefix, factory, consumer);
+                                }
                                 break;
                             case METHOD:
                                 Tree returnType = ((MethodTree) path.getLeaf()).getReturnType();
-                                if (returnType != null && findLastNonWhitespaceToken(ts, (int) sp.getEndPosition(path.getCompilationUnit(), returnType), anchorOffset) == null) {
-                                    resolveFinderMethods(cc, path.getParentPath(), prefix, false, consumer);
+                                if (returnType != null) {
+                                    TokenSequence<JavaTokenId> last = findLastNonWhitespaceToken(ts, (int) sp.getEndPosition(path.getCompilationUnit(), returnType), anchorOffset);
+                                    if (last == null) {
+                                        resolveFinderMethods(cc, path.getParentPath(), prefix, false, factory, consumer);
+                                    } else if (last.token().id() == JavaTokenId.LPAREN || last.token().id() == JavaTokenId.COMMA) {
+                                        resolveFinderMethodParams(cc, path, prefix, factory, consumer);
+                                    }
                                 }
                                 break;
                             case VARIABLE:
@@ -180,15 +178,14 @@ public class MicronautDataCompletionTask {
                                 if (type != null && findLastNonWhitespaceToken(ts, (int) sp.getEndPosition(path.getCompilationUnit(), type), anchorOffset) == null) {
                                     TreePath parentPath = path.getParentPath();
                                     if (parentPath.getLeaf().getKind() == Tree.Kind.CLASS || parentPath.getLeaf().getKind() == Tree.Kind.INTERFACE) {
-                                        resolveFinderMethods(cc, parentPath, prefix, false, consumer);
+                                        resolveFinderMethods(cc, parentPath, prefix, false, factory, consumer);
                                     }
                                 }
                                 break;
                             case STRING_LITERAL:
                                 if (path.getParentPath().getLeaf().getKind() == Tree.Kind.ASSIGNMENT && path.getParentPath().getParentPath().getLeaf().getKind() == Tree.Kind.ANNOTATION) {
-                                    resolveQueryAnnotation(cc, path.getParentPath().getParentPath(), prefix, caretOffset - anchorOffset, item -> {
-                                        items.add(factory.createSQLItem(item));
-                                    });
+                                    resolveExpressionLanguage(cc, path.getParentPath(), prefix, caretOffset - anchorOffset, factory, consumer);
+                                    resolveQueryAnnotation(cc, path.getParentPath().getParentPath(), prefix, caretOffset - anchorOffset, factory, consumer);
                                 }
                                 break;
                         }
@@ -205,13 +202,32 @@ public class MicronautDataCompletionTask {
         return anchorOffset;
     }
 
-    private <T> void resolveQueryAnnotation(CompilationController cc, TreePath path, String prefix, int off, java.util.function.Consumer<CompletionItem> consumer) throws IOException {
-        cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-        Element el = cc.getTrees().getElement(path);
+    private <T> void resolveExpressionLanguage(CompilationInfo info, TreePath path, String prefix, int off, ItemFactory<T> factory, Consumer<T> consumer) {
+        Matcher matcher = MicronautExpressionLanguageParser.MEXP_PATTERN.matcher(prefix);
+        while (matcher.find() && matcher.groupCount() == 1) {
+            if (off >= matcher.start(1) && off <= matcher.end(1)) {
+                EvaluationContext ctx = EvaluationContext.get(info, path);
+                if (ctx != null) {
+                    MicronautExpressionLanguageCompletion completion = new MicronautExpressionLanguageCompletion(info, ctx, matcher.group(1), anchorOffset + matcher.start(1));
+                    MicronautExpressionLanguageCompletion.Result<T> result = completion.query(off - matcher.start(1), factory);
+                    int newOffset = result.getAnchorOffset();
+                    if (newOffset >= 0) {
+                        this.anchorOffset = newOffset;
+                    }
+                    for (T item : result.getItems()) {
+                        consumer.accept(item);
+                    }
+                }
+            }
+        }
+    }
+
+    private <T> void resolveQueryAnnotation(CompilationInfo info, TreePath path, String prefix, int off, ItemFactory<T> factory, Consumer<T> consumer) {
+        Element el = info.getTrees().getElement(path);
         if (el instanceof TypeElement) {
             if (QUERY_ANNOTATION_TYPE_NAME.contentEquals(((TypeElement) el).getQualifiedName())) {
-                TreePath clsPath = cc.getTreeUtilities().getPathElementOfKind(TreeUtilities.CLASS_TREE_KINDS, path);
-                if (clsPath != null && checkForRepositoryAnnotation(cc.getTrees().getElement(clsPath).getAnnotationMirrors(), false, new HashSet<>())) {
+                TreePath clsPath = info.getTreeUtilities().getPathElementOfKind(TreeUtilities.CLASS_TREE_KINDS, path);
+                if (clsPath != null && Utils.getAnnotation(info.getTrees().getElement(clsPath).getAnnotationMirrors(), JDBC_REPOSITORY_ANNOTATION_NAME) != null) {
                     SQLCompletionContext ctx = SQLCompletionContext.empty()
                             .setStatement(prefix)
                             .setOffset(off)
@@ -233,99 +249,189 @@ public class MicronautDataCompletionTask {
                         } catch (BadLocationException ex) {
                         }
                     });
+                    int newOffset = resultSet.getAnchorOffset();
+                    if (newOffset >= 0) {
+                        this.anchorOffset = newOffset;
+                    }
                     for (CompletionItem item : resultSet.getItems()) {
-                        consumer.accept(item);
+                        consumer.accept(factory.createSQLItem(item));
                     }
                 }
             }
         }
     }
 
-    private <T> void resolveFinderMethods(CompilationController cc, TreePath path, String prefix, boolean full, Consumer consumer) throws IOException {
-        cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-        TypeUtilities tu = cc.getTypeUtilities();
-        TypeElement entity = getEntityFor(cc, path);
+    private <T> void resolveControllerMethods(CompilationInfo info, TreePath path, String prefix, ItemFactory<T> factory, Consumer<T> consumer) {
+        TypeElement te = (TypeElement) info.getTrees().getElement(path);
+        AnnotationMirror controllerAnn = Utils.getAnnotation(te.getAnnotationMirrors(), CONTROLLER_ANNOTATION_NAME);
+        if (controllerAnn != null) {
+            List<VariableElement> repositories = Utils.getRepositoriesFor(info, te);
+            if (repositories.isEmpty()) {
+                Utils.collectMissingEndpoints(info, te, (annName, controllerId) -> {
+                    consumer.accept(factory.createControllerMethodItem(info, annName, controllerId, anchorOffset));
+                });
+            } else {
+                Utils.collectMissingDataEndpoints(info, te, prefix, (repository, delegateMethod, controllerId, id) -> {
+                    consumer.accept(factory.createControllerMethodItem(info, repository, delegateMethod, controllerId, id, anchorOffset));
+                });
+            }
+        }
+    }
+
+    private <T> void resolveFinderMethods(CompilationInfo info, TreePath path, String prefix, boolean full, ItemFactory<T> factory, Consumer<T> consumer) throws IOException {
+        TypeElement entity = getEntityFor(info, path);
         if (entity != null) {
-            Map<String, String> prop2Types = new HashMap<>();
-            for (ExecutableElement method : ElementFilter.methodsIn(entity.getEnclosedElements())) {
-                String methodName = method.getSimpleName().toString();
-                if (methodName.startsWith(GET) && methodName.length() > 3 && method.getParameters().isEmpty()) {
-                    TypeMirror type = method.getReturnType();
-                    if (type.getKind() != TypeKind.ERROR) {
-                        methodName = methodName.substring(GET.length());
-                        methodName = methodName.substring(0, 1).toUpperCase(Locale.ENGLISH) + methodName.substring(1);
-                        prop2Types.put(methodName, tu.getTypeName(type).toString());
-                    }
-                }
-            }
-            for (RecordComponentElement recordComponent : ElementFilter.recordComponentsIn(entity.getEnclosedElements())) {
-                TypeMirror type = recordComponent.asType();
+            TypeUtilities tu = info.getTypeUtilities();
+            Map<String, String> prop2Types = new LinkedHashMap<>();
+            for (VariableElement variableElement : ElementFilter.fieldsIn(entity.getEnclosedElements())) {
+                TypeMirror type = variableElement.asType();
                 if (type.getKind() != TypeKind.ERROR) {
-                    String name = recordComponent.getSimpleName().toString();
-                    name = name.substring(0, 1).toUpperCase(Locale.ENGLISH) + name.substring(1);
-                    prop2Types.put(name, tu.getTypeName(type).toString());
+                    String name = variableElement.getSimpleName().toString();
+                    prop2Types.put(name.substring(0, 1).toUpperCase(Locale.ENGLISH) + name.substring(1), tu.getTypeName(type).toString());
                 }
             }
-            addFindByCompletions(entity, prop2Types, prefix, full, consumer);
-        }
-    }
-
-    private void addFindByCompletions(TypeElement entity, Map<String, String> prop2Types, String prefix, boolean full, Consumer consumer) {
-        for (String pattern : QUERY_PATTERNS) {
-            String name = pattern + BY;
-            if (prefix.length() >= name.length() && prefix.startsWith(name)) {
-                addPropertyCriterionCompletions(prop2Types, name, prefix, consumer);
-            } else if (startsWith(name, prefix)) {
-                consumer.accept(EMPTY, name, full ? entity.getSimpleName().toString() : null);
-            }
-            for (String projection : QUERY_PROJECTIONS) {
-                for (String propName : prop2Types.keySet()) {
-                    name = pattern + projection + propName + BY;
-                    if (prefix.length() >= name.length() && prefix.startsWith(name)) {
-                        addPropertyCriterionCompletions(prop2Types, name, prefix, consumer);
-                    } else if (startsWith(name, prefix)) {
-                        consumer.accept(EMPTY, name, full ? prop2Types.get(propName) : null);
+            for (String pattern : QUERY_PATTERNS) {
+                if (Utils.startsWith(pattern, prefix) && (full || pattern.length() > prefix.length())) {
+                    consumer.accept(full ? factory.createFinderMethodItem(pattern, entity.getSimpleName().toString(), anchorOffset)
+                            : factory.createFinderMethodNameItem(EMPTY, pattern, anchorOffset));
+                }
+                String name = pattern + BY;
+                if (prefix.length() >= name.length() && prefix.startsWith(name)) {
+                    addPropertyCriterionCompletions(prop2Types, name, prefix, full ? entity.getSimpleName().toString() : null, factory, consumer);
+                } else if (Utils.startsWith(name, prefix)) {
+                    consumer.accept(full ? factory.createFinderMethodItem(name, entity.getSimpleName().toString(), anchorOffset)
+                            : factory.createFinderMethodNameItem(EMPTY, name, anchorOffset));
+                }
+                for (String projection : QUERY_PROJECTIONS) {
+                    for (String propName : prop2Types.keySet()) {
+                        name = pattern + projection + propName + BY;
+                        if (prefix.length() >= name.length() && prefix.startsWith(name)) {
+                            addPropertyCriterionCompletions(prop2Types, name, prefix, full ? prop2Types.get(propName) : null, factory, consumer);
+                        } else if (Utils.startsWith(name, prefix)) {
+                            consumer.accept(full ? factory.createFinderMethodItem(name, prop2Types.get(propName), anchorOffset)
+                                    : factory.createFinderMethodNameItem(EMPTY, name, anchorOffset));
+                        }
                     }
                 }
             }
-        }
-        for (String pattern : SPECIAL_QUERY_PATTERNS) {
-            for (String propName : prop2Types.keySet()) {
-                String name = pattern + propName + BY;
-                if (prefix.length() >= name.length() && prefix.startsWith(name)) {
-                    addPropertyCriterionCompletions(prop2Types, name, prefix, consumer);
-                } else if (startsWith(name, prefix)) {
-                    consumer.accept(EMPTY, name, full ? name.startsWith(COUNT) ? "int" : name.startsWith(EXISTS) ? "boolean" : "void" : null);
+            for (String pattern : SPECIAL_QUERY_PATTERNS) {
+                if (Utils.startsWith(pattern, prefix) && (full || pattern.length() > prefix.length())) {
+                    consumer.accept(full ? factory.createFinderMethodItem(pattern, pattern.startsWith(COUNT) ? "int" : pattern.startsWith(EXISTS) ? "boolean" : "void", anchorOffset)
+                            : factory.createFinderMethodNameItem(EMPTY, pattern, anchorOffset));
+                }
+                for (String propName : prop2Types.keySet()) {
+                    String name = pattern + BY + propName;
+                    if (prefix.length() >= name.length() && prefix.startsWith(name)) {
+                        addCriterionCompletions(prop2Types, name, prefix, full ? pattern.startsWith(COUNT) ? "int" : pattern.startsWith(EXISTS) ? "boolean" : "void"
+                                : null, factory, consumer);
+                    } else if (Utils.startsWith(name, prefix)) {
+                        consumer.accept(full ? factory.createFinderMethodItem(name, name.startsWith(COUNT) ? "int" : name.startsWith(EXISTS) ? "boolean" : "void", anchorOffset)
+                                : factory.createFinderMethodNameItem(EMPTY, name, anchorOffset));
+                    }
+                }
+            }
+            for (String pattern : INSERT_QUERY_PATTERNS) {
+                if (Utils.startsWith(pattern, prefix) && (full || pattern.length() > prefix.length())) {
+                    consumer.accept(full ? factory.createFinderMethodItem(pattern, entity.getSimpleName().toString(), anchorOffset)
+                            : factory.createFinderMethodNameItem(EMPTY, pattern, anchorOffset));
                 }
             }
         }
     }
 
-    private void addPropertyCriterionCompletions(Map<String, String> prop2Types, String namePrefix, String prefix, Consumer consumer) {
+    private <T> void addPropertyCriterionCompletions(Map<String, String> prop2Types, String namePrefix, String prefix, String returnType, ItemFactory<T> factory, Consumer<T> consumer) {
         for (String propName : prop2Types.keySet()) {
-            for (String criterion : CRITERION_EXPRESSIONS) {
-                String name = propName + criterion;
-                if (prefix.length() >= namePrefix.length() + name.length() && prefix.startsWith(namePrefix + name)) {
-                    addComposeAndOrderCompletions(prop2Types, namePrefix + name, prefix, consumer);
-                } else if (startsWith(namePrefix + name, prefix)) {
-                    consumer.accept(namePrefix, name, null);
-                }
+            addCriterionCompletions(prop2Types, namePrefix + propName, prefix, returnType, factory, consumer);
+        }
+    }
+
+    private <T> void addCriterionCompletions(Map<String, String> prop2Types, String namePrefix, String prefix, String returnType, ItemFactory<T> factory, Consumer<T> consumer) {
+        for (String criterion : CRITERION_EXPRESSIONS) {
+            if (prefix.length() >= namePrefix.length() + criterion.length() && prefix.startsWith(namePrefix + criterion)) {
+                addComposeAndOrderCompletions(prop2Types, namePrefix + criterion, prefix, returnType, factory, consumer);
+            } else if (Utils.startsWith(namePrefix + criterion, prefix)) {
+                consumer.accept(returnType != null ? factory.createFinderMethodItem(namePrefix + criterion, returnType, anchorOffset)
+                        : factory.createFinderMethodNameItem(namePrefix, criterion, anchorOffset));
             }
         }
     }
 
-    private void addComposeAndOrderCompletions(Map<String, String> prop2Types, String namePrefix, String prefix, Consumer consumer) {
+    private <T> void addComposeAndOrderCompletions(Map<String, String> prop2Types, String namePrefix, String prefix, String returnType, ItemFactory<T> factory, Consumer<T> consumer) {
         for (String name : COMPOSE_EXPRESSIONS) {
             if (prefix.length() >= namePrefix.length() + name.length() && prefix.startsWith(namePrefix + name)) {
-                addPropertyCriterionCompletions(prop2Types, namePrefix + name, prefix, consumer);
-            } else if (startsWith(namePrefix + name, prefix)) {
-                consumer.accept(namePrefix, name, null);
+                addPropertyCriterionCompletions(prop2Types, namePrefix + name, prefix, returnType, factory, consumer);
+            } else if (Utils.startsWith(namePrefix + name, prefix)) {
+                consumer.accept(returnType != null ? factory.createFinderMethodItem(namePrefix + name, returnType, anchorOffset)
+                        : factory.createFinderMethodNameItem(namePrefix, name, anchorOffset));
             }
         }
         for (String propName : prop2Types.keySet()) {
             String name = ORDER_BY + propName;
-            if (prefix.length() < namePrefix.length() + name.length() && startsWith(namePrefix + name, prefix)) {
-                consumer.accept(namePrefix, name, null);
+            if (prefix.length() < namePrefix.length() + name.length() && Utils.startsWith(namePrefix + name, prefix)) {
+                consumer.accept(returnType != null ? factory.createFinderMethodItem(namePrefix + name, returnType, anchorOffset)
+                        : factory.createFinderMethodNameItem(namePrefix, name, anchorOffset));
+            }
+        }
+    }
+
+    private <T> void resolveFinderMethodParams(CompilationInfo info, TreePath path, String prefix, ItemFactory<T> factory, Consumer<T> consumer) {
+        TypeElement entity = getEntityFor(info, path.getParentPath());
+        if (entity != null) {
+            MethodTree method = (MethodTree) path.getLeaf();
+            SourcePositions sp = info.getTrees().getSourcePositions();
+            Set<String> paramNames = new HashSet<>();
+            for (VariableTree param : method.getParameters()) {
+                if (sp.getEndPosition(path.getCompilationUnit(), param) < anchorOffset) {
+                    paramNames.add(param.getName().toString());
+                }
+            }
+            Map<String, VariableElement> prop2fields = new LinkedHashMap<>();
+            for (VariableElement variableElement : ElementFilter.fieldsIn(entity.getEnclosedElements())) {
+                String name = variableElement.getSimpleName().toString();
+                if (!paramNames.contains(name)) {
+                    TypeMirror type = variableElement.asType();
+                    if (type.getKind() != TypeKind.ERROR) {
+                        prop2fields.put(name.substring(0, 1).toUpperCase(Locale.ENGLISH) + name.substring(1), variableElement);
+                        consumer.accept(factory.createFinderMethodParam(info, variableElement, anchorOffset));
+                    }
+                }
+            }
+            if (paramNames.isEmpty() && !prop2fields.isEmpty()) {
+                addParamsParsedFromFinderMethodName(info, prop2fields, method.getName().toString(), factory, consumer);
+            }
+        }
+    }
+
+    private <T> void addParamsParsedFromFinderMethodName(CompilationInfo info, Map<String, VariableElement> prop2fields, String name, ItemFactory<T> factory, Consumer<T> consumer) {
+        for (String pattern : QUERY_PATTERNS) {
+            if (name.startsWith(pattern)) {
+                name = name.substring(pattern.length());
+                int idx = name.indexOf("By");
+                if (idx >= 0) {
+                    name = name.substring(idx + 2);
+                    List<VariableElement> fields = new ArrayList<>();
+                    int lastLen = Integer.MAX_VALUE;
+                    while (name.length() < lastLen) {
+                        lastLen = name.length();
+                        for (Map.Entry<String, VariableElement> entry : prop2fields.entrySet()) {
+                            String propName = entry.getKey();
+                            if (name.startsWith(propName)) {
+                                fields.add(entry.getValue());
+                                name = name.substring(propName.length());
+                            }
+                        }
+                        for (String criterion : CRITERION_EXPRESSIONS) {
+                            for (String expr : COMPOSE_EXPRESSIONS) {
+                                if (name.startsWith(criterion + expr)) {
+                                    name = name.substring(criterion.length() + expr.length());
+                                }
+                            }
+                        }
+                    }
+                    if (!fields.isEmpty()) {
+                        consumer.accept(factory.createFinderMethodParams(info, fields, anchorOffset));
+                    }
+                }
             }
         }
     }
@@ -333,7 +439,7 @@ public class MicronautDataCompletionTask {
     private static TypeElement getEntityFor(CompilationInfo info, TreePath path) {
         TypeElement te = (TypeElement) info.getTrees().getElement(path);
         if (te.getModifiers().contains(Modifier.ABSTRACT)) {
-            if (checkForRepositoryAnnotation(te.getAnnotationMirrors(), true, new HashSet<>())) {
+            if (Utils.getAnnotation(te.getAnnotationMirrors(), JPA_REPOSITORY_ANNOTATION_NAME) != null) {
                 Types types = info.getTypes();
                 TypeMirror repositoryType = types.erasure(info.getElements().getTypeElement(REPOSITORY_TYPE_NAME).asType());
                 for (TypeMirror iface : te.getInterfaces()) {
@@ -350,17 +456,6 @@ public class MicronautDataCompletionTask {
             }
         }
         return null;
-    }
-
-    private static boolean checkForRepositoryAnnotation(List<? extends AnnotationMirror> annotations, boolean jpa, HashSet<TypeElement> checked) {
-        for (AnnotationMirror annotation : annotations) {
-            TypeElement annotationElement = (TypeElement) annotation.getAnnotationType().asElement();
-            String repositoryAnnotationName = jpa ? JPA_REPOSITORY_ANNOTATION_NAME : JDBC_REPOSITORY_ANNOTATION_NAME;
-            if (repositoryAnnotationName.contentEquals(annotationElement.getQualifiedName()) || checked.add(annotationElement) && checkForRepositoryAnnotation(annotationElement.getAnnotationMirrors(), jpa, checked)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private static TokenSequence<JavaTokenId> findLastNonWhitespaceToken(TokenSequence<JavaTokenId> ts, int startPos, int endPos) {
@@ -385,128 +480,5 @@ public class MicronautDataCompletionTask {
             }
         }
         return null;
-    }
-
-    private static boolean startsWith(String theString, String prefix) {
-        return isCamelCasePrefix(prefix) ? isCaseSensitive()
-                ? startsWithCamelCase(theString, prefix)
-                : startsWithCamelCase(theString, prefix) || startsWithPlain(theString, prefix)
-                : startsWithPlain(theString, prefix);
-    }
-
-    private static boolean isCamelCasePrefix(String prefix) {
-        if (prefix == null || prefix.length() < 2 || prefix.charAt(0) == '"') {
-            return false;
-        }
-        for (int i = 1; i < prefix.length(); i++) {
-            if (Character.isUpperCase(prefix.charAt(i))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static boolean isCaseSensitive() {
-        lazyInit();
-        return caseSensitive;
-    }
-
-    public static boolean isSubwordSensitive() {
-        lazyInit();
-        return javaCompletionSubwords;
-    }
-
-    private static boolean startsWithPlain(String theString, String prefix) {
-        if (theString == null || theString.length() == 0) {
-            return false;
-        }
-        if (prefix == null || prefix.length() == 0) {
-            return true;
-        }
-        if (isSubwordSensitive()) {
-            if (!prefix.equals(cachedPrefix)) {
-                cachedCamelCasePattern = null;
-                cachedSubwordsPattern = null;
-            }
-            if (cachedSubwordsPattern == null) {
-                cachedPrefix = prefix;
-                String patternString = createSubwordsPattern(prefix);
-                cachedSubwordsPattern = patternString != null ? Pattern.compile(patternString) : null;
-            }
-            if (cachedSubwordsPattern != null && cachedSubwordsPattern.matcher(theString).matches()) {
-                return true;
-            }
-        }
-        return isCaseSensitive() ? theString.startsWith(prefix) : theString.toLowerCase(Locale.ENGLISH).startsWith(prefix.toLowerCase(Locale.ENGLISH));
-    }
-
-    private static String createSubwordsPattern(String prefix) {
-        StringBuilder sb = new StringBuilder(3 + 8 * prefix.length());
-        sb.append(".*?");
-        for (int i = 0; i < prefix.length(); i++) {
-            char charAt = prefix.charAt(i);
-            if (!Character.isJavaIdentifierPart(charAt)) {
-                return null;
-            }
-            if (Character.isLowerCase(charAt)) {
-                sb.append("[");
-                sb.append(charAt);
-                sb.append(Character.toUpperCase(charAt));
-                sb.append("]");
-            } else {
-                //keep uppercase characters as beacons
-                // for example: java.lang.System.sIn -> setIn
-                sb.append(charAt);
-            }
-            sb.append(".*?");
-        }
-        return sb.toString();
-    }
-
-    private static boolean startsWithCamelCase(String theString, String prefix) {
-        if (theString == null || theString.length() == 0 || prefix == null || prefix.length() == 0) {
-            return false;
-        }
-        if (!prefix.equals(cachedPrefix)) {
-            cachedCamelCasePattern = null;
-            cachedSubwordsPattern = null;
-        }
-        if (cachedCamelCasePattern == null) {
-            StringBuilder sb = new StringBuilder();
-            int lastIndex = 0;
-            int index;
-            do {
-                index = findNextUpper(prefix, lastIndex + 1);
-                String token = prefix.substring(lastIndex, index == -1 ? prefix.length() : index);
-                sb.append(token);
-                sb.append(index != -1 ? "[\\p{javaLowerCase}\\p{Digit}_\\$]*" : ".*");
-                lastIndex = index;
-            } while (index != -1);
-            cachedPrefix = prefix;
-            cachedCamelCasePattern = Pattern.compile(sb.toString());
-        }
-        return cachedCamelCasePattern.matcher(theString).matches();
-    }
-
-    private static int findNextUpper(String text, int offset) {
-        for (int i = offset; i < text.length(); i++) {
-            if (Character.isUpperCase(text.charAt(i))) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    private static void lazyInit() {
-        if (inited.compareAndSet(false, true)) {
-            preferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
-            preferences.addPreferenceChangeListener(WeakListeners.create(PreferenceChangeListener.class, preferencesTracker, preferences));
-            preferencesTracker.preferenceChange(null);
-        }
-    }
-
-    @FunctionalInterface
-    private static interface Consumer {
-        void accept(String namePrefix, String name, String type);
     }
 }

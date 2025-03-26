@@ -81,6 +81,7 @@ public class MavenArtifactsImplementation implements ProjectArtifactsImplementat
                     case ActionProvider.COMMAND_RUN_SINGLE:
                     case ActionProvider.COMMAND_DEBUG_SINGLE:
                     case ActionProvider.COMMAND_TEST:
+                    case ActionProvider.COMMAND_TEST_PARALLEL:
                     case ActionProvider.COMMAND_TEST_SINGLE:
                     case ActionProvider.COMMAND_DEBUG_STEP_INTO:
                         break;
@@ -569,7 +570,7 @@ public class MavenArtifactsImplementation implements ProjectArtifactsImplementat
                 } else if (this.artifacts.equals(q.specs)) {
                     return;
                 } else {
-                    ll = listeners.toArray(new ChangeListener[listeners.size()]);
+                    ll = listeners.toArray(new ChangeListener[0]);
                 }
             }
             ChangeEvent e = new ChangeEvent(this);
@@ -610,7 +611,7 @@ public class MavenArtifactsImplementation implements ProjectArtifactsImplementat
 
             synchronized (this) {
                 artifacts = null;
-                if (listeners == null && listeners.isEmpty()) {
+                if (listeners == null || listeners.isEmpty()) {
                     return;
                 }
                 if (refreshTask != null) {

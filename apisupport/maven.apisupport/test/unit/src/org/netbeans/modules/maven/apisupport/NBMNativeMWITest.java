@@ -30,10 +30,15 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.junit.Test;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.maven.api.archetype.ProjectInfo;
+import org.netbeans.modules.maven.indexer.api.RepositoryInfo;
+import org.netbeans.modules.maven.indexer.spi.impl.IndexingNotificationProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.lookup.ServiceProvider;
 
 public class NBMNativeMWITest extends NbTestCase {
+
+    private static final String EXPECTED_JAVAC_PLUGIN_VERSION = "3.13.0";
 
     private FileObject wd;
 
@@ -61,7 +66,7 @@ public class NBMNativeMWITest extends NbTestCase {
         assertEquals("nbm-maven-plugin", model.getBuild().getPlugins().get(0).getArtifactId());
         assertEquals(MavenNbModuleImpl.getLatestNbmPluginVersion(), model.getBuild().getPlugins().get(0).getVersion());
         assertEquals("maven-compiler-plugin", model.getBuild().getPlugins().get(1).getArtifactId());
-        assertEquals("3.8.1", model.getBuild().getPlugins().get(1).getVersion());
+        assertEquals(EXPECTED_JAVAC_PLUGIN_VERSION, model.getBuild().getPlugins().get(1).getVersion());
         assertEquals(0, model.getRepositories().size());
     }
 
@@ -79,7 +84,7 @@ public class NBMNativeMWITest extends NbTestCase {
         assertEquals("nbm-maven-plugin", model.getBuild().getPlugins().get(0).getArtifactId());
         assertEquals(MavenNbModuleImpl.getLatestNbmPluginVersion(), model.getBuild().getPlugins().get(0).getVersion());
         assertEquals("maven-compiler-plugin", model.getBuild().getPlugins().get(1).getArtifactId());
-        assertEquals("3.8.1", model.getBuild().getPlugins().get(1).getVersion());
+        assertEquals(EXPECTED_JAVAC_PLUGIN_VERSION, model.getBuild().getPlugins().get(1).getVersion());
         assertEquals(1, model.getRepositories().size());
     }
 
@@ -106,7 +111,7 @@ public class NBMNativeMWITest extends NbTestCase {
         assertEquals("nbm-maven-plugin", model.getBuild().getPlugins().get(0).getArtifactId());
         assertEquals(MavenNbModuleImpl.getLatestNbmPluginVersion(), model.getBuild().getPlugins().get(0).getVersion());
         assertEquals("maven-compiler-plugin", model.getBuild().getPlugins().get(1).getArtifactId());
-        assertEquals("3.8.1", model.getBuild().getPlugins().get(1).getVersion());
+        assertEquals(EXPECTED_JAVAC_PLUGIN_VERSION, model.getBuild().getPlugins().get(1).getVersion());
         assertEquals(0, model.getRepositories().size());
     }
 
@@ -132,7 +137,7 @@ public class NBMNativeMWITest extends NbTestCase {
         assertEquals("nbm-maven-plugin", model.getBuild().getPlugins().get(0).getArtifactId());
         assertEquals(MavenNbModuleImpl.getLatestNbmPluginVersion(), model.getBuild().getPlugins().get(0).getVersion());
         assertEquals("maven-compiler-plugin", model.getBuild().getPlugins().get(1).getArtifactId());
-        assertEquals("3.8.1", model.getBuild().getPlugins().get(1).getVersion());
+        assertEquals(EXPECTED_JAVAC_PLUGIN_VERSION, model.getBuild().getPlugins().get(1).getVersion());
         assertEquals(1, model.getRepositories().size());
     }
 
@@ -187,11 +192,11 @@ public class NBMNativeMWITest extends NbTestCase {
         assertEquals("nbm-maven-plugin", modeloutput.getBuild().getPlugins().get(0).getArtifactId());
         assertEquals(MavenNbModuleImpl.getLatestNbmPluginVersion(), modeloutput.getBuild().getPlugins().get(0).getVersion());
         assertEquals("maven-compiler-plugin", modeloutput.getBuild().getPlugins().get(1).getArtifactId());
-        assertEquals("3.8.1", modeloutput.getBuild().getPlugins().get(1).getVersion());
+        assertEquals(EXPECTED_JAVAC_PLUGIN_VERSION, modeloutput.getBuild().getPlugins().get(1).getVersion());
         assertEquals(0, model.getRepositories().size());
     }
 
-    private String POMCOMPILER
+    private final String POMCOMPILER
             = "<project>\n"
             + "<modelVersion>4.0.0</modelVersion>"
             + "<build>"
@@ -206,7 +211,7 @@ public class NBMNativeMWITest extends NbTestCase {
             + "</build>"
             + "</project>";
 
-    private String POMJAR
+    private final String POMJAR
             = "<project>\n"
             + "<modelVersion>4.0.0</modelVersion>"
             + "<build>"
@@ -220,4 +225,15 @@ public class NBMNativeMWITest extends NbTestCase {
             + "</pluginManagement>"
             + "</build>"
             + "</project>";
+
+    @ServiceProvider(service=IndexingNotificationProvider.class, position=1)
+    public static class NoOpNotificationProvider implements IndexingNotificationProvider {
+        @Override
+        public void notifyError(String message) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void requestPermissionsFor(RepositoryInfo repo) {}
+    }
 }

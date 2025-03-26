@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.1.0
+#Version 2.11.0
 
 CLSS public java.lang.Object
 cons public init()
@@ -15,6 +15,14 @@ meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
 
+CLSS public org.netbeans.modules.java.lsp.server.ui.AbstractApplyEditsImplementation
+cons public init()
+intf org.netbeans.spi.lsp.ApplyEditsImplementation
+meth public java.util.concurrent.CompletableFuture<java.util.List<java.lang.String>> applyChanges(java.util.List<org.netbeans.api.lsp.WorkspaceEdit>,boolean)
+supr java.lang.Object
+hfds LOG
+hcls Worker
+
 CLSS public org.netbeans.modules.java.lsp.server.ui.AbstractDiagnosticReporter
 cons public init()
 intf org.netbeans.spi.lsp.DiagnosticReporter
@@ -28,7 +36,7 @@ meth public java.awt.Dialog createDialog(org.openide.DialogDescriptor)
 meth public java.lang.Object notify(org.openide.NotifyDescriptor)
 meth public void notifyLater(org.openide.NotifyDescriptor)
 supr org.openide.DialogDisplayer
-hfds context
+hfds LOG
 
 CLSS public org.netbeans.modules.java.lsp.server.ui.AbstractGlobalActionContext
 cons public init()
@@ -39,6 +47,17 @@ meth public org.openide.util.Lookup getLookup()
 meth public static <%0 extends java.lang.Object> {%%0} withActionContext(org.openide.util.Lookup,java.util.concurrent.Callable<{%%0}>)
 supr java.lang.Object
 hcls ContextHolder
+
+CLSS public abstract org.netbeans.modules.java.lsp.server.ui.AbstractJavaPlatformProviderOverride
+cons public init()
+intf org.netbeans.modules.java.platform.implspi.JavaPlatformProvider
+meth public org.netbeans.api.java.platform.JavaPlatform getDefaultPlatform()
+meth public org.netbeans.api.java.platform.JavaPlatform[] getInstalledPlatforms()
+meth public static void setDefaultPlatformOverride(java.lang.String)
+meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
+meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
+supr java.lang.Object
+hfds NO_PLATFORMS,defaultPlatformOverride,pcs
 
 CLSS public abstract org.netbeans.modules.java.lsp.server.ui.AbstractLspBrokenReferences
 cons protected init()
@@ -92,8 +111,9 @@ supr java.lang.Object
 
 CLSS public final static org.netbeans.modules.java.lsp.server.ui.AbstractLspInputOutputProvider$LspIO
  outer org.netbeans.modules.java.lsp.server.ui.AbstractLspInputOutputProvider
+meth protected org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient getClient()
 supr java.lang.Object
-hfds ctx,err,in,lookup,name,out
+hfds client,ctx,err,in,lookup,name,out
 hcls LspWriter
 
 CLSS public abstract org.netbeans.modules.java.lsp.server.ui.AbstractLspStatusDisplayer
@@ -127,6 +147,13 @@ meth protected void stdIn(java.lang.String) throws java.io.IOException
 supr java.lang.Object
 hfds lastCtx
 hcls StdErrContext
+
+CLSS public abstract interface org.netbeans.modules.java.platform.implspi.JavaPlatformProvider
+fld public final static java.lang.String PROP_INSTALLED_PLATFORMS = "installedPlatforms"
+meth public abstract org.netbeans.api.java.platform.JavaPlatform getDefaultPlatform()
+meth public abstract org.netbeans.api.java.platform.JavaPlatform[] getInstalledPlatforms()
+meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeListener)
+meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
 
 CLSS public abstract interface org.netbeans.modules.progress.spi.ProgressEnvironment
 meth public abstract org.netbeans.api.progress.ProgressHandle createHandle(java.lang.String,org.openide.util.Cancellable,boolean)
@@ -200,6 +227,9 @@ meth public abstract {org.netbeans.spi.io.InputOutputProvider%3} startFold({org.
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
+
+CLSS public abstract interface org.netbeans.spi.lsp.ApplyEditsImplementation
+meth public abstract java.util.concurrent.CompletableFuture<java.util.List<java.lang.String>> applyChanges(java.util.List<org.netbeans.api.lsp.WorkspaceEdit>,boolean)
 
 CLSS public abstract interface org.netbeans.spi.lsp.DiagnosticReporter
 meth public abstract org.netbeans.api.lsp.Diagnostic$ReporterControl findDiagnosticControl(org.openide.util.Lookup,org.openide.filesystems.FileObject)

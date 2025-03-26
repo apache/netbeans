@@ -21,7 +21,9 @@ package org.netbeans.modules.textmate.lexer;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -37,8 +39,8 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
-import org.eclipse.tm4e.core.registry.IRegistryOptions;
-import org.eclipse.tm4e.core.registry.Registry;
+import org.eclipse.tm4e.core.internal.grammar.raw.RawGrammarReader;
+import org.eclipse.tm4e.core.registry.IGrammarSource;
 import org.openide.filesystems.annotations.LayerBuilder;
 import org.openide.filesystems.annotations.LayerGeneratingProcessor;
 import org.openide.filesystems.annotations.LayerGenerationException;
@@ -141,22 +143,21 @@ public class CreateRegistrationProcessor extends LayerGeneratingProcessor {
 
             LayerBuilder layer = layer(toRegister);
             javax.tools.FileObject file = layer.validateResource(grammar, toRegister, null, null, false);
-            try (InputStream in = file.openInputStream()) {
-                IRegistryOptions opts = new IRegistryOptions() {
+            try (InputStream in = file.openInputStream();
+                    InputStreamReader isr = new InputStreamReader(in, StandardCharsets.UTF_8)) {
+                String finalGrammar = grammar;
+                IGrammarSource referencedGrammar = new IGrammarSource() {
                     @Override
-                    public String getFilePath(String scopeName) {
-                        return null;
+                    public String getFilePath() {
+                        return finalGrammar;
                     }
+
                     @Override
-                    public InputStream getInputStream(String scopeName) throws IOException {
-                        return null;
-                    }
-                    @Override
-                    public Collection<String> getInjections(String scopeName) {
-                        return null;
+                    public Reader getReader() throws IOException {
+                        return isr;
                     }
                 };
-                String scopeName = new Registry(opts).loadGrammarFromPathSync(grammar, in).getScopeName();
+                String scopeName = RawGrammarReader.readGrammar(referencedGrammar).getScopeName();
                 String simpleName = grammar.lastIndexOf('/') != (-1) ? grammar.substring(grammar.lastIndexOf('/') + 1) : grammar;
                 layer.file("Editors" + mimeType + "/" + simpleName)
                      .url("nbresloc:/" + grammar)
@@ -191,22 +192,21 @@ public class CreateRegistrationProcessor extends LayerGeneratingProcessor {
         if (injectTo != null && grammar != null) {
             LayerBuilder layer = layer(toRegister);
             javax.tools.FileObject file = layer.validateResource(grammar, toRegister, null, null, false);
-            try (InputStream in = file.openInputStream()) {
-                IRegistryOptions opts = new IRegistryOptions() {
+            try (InputStream in = file.openInputStream();
+                    InputStreamReader isr = new InputStreamReader(in, StandardCharsets.UTF_8)) {
+                String finalGrammar = grammar;
+                IGrammarSource referencedGrammar = new IGrammarSource() {
                     @Override
-                    public String getFilePath(String scopeName) {
-                        return null;
+                    public String getFilePath() {
+                        return finalGrammar;
                     }
+
                     @Override
-                    public InputStream getInputStream(String scopeName) throws IOException {
-                        return null;
-                    }
-                    @Override
-                    public Collection<String> getInjections(String scopeName) {
-                        return null;
+                    public Reader getReader() throws IOException {
+                        return isr;
                     }
                 };
-                String scopeName = new Registry(opts).loadGrammarFromPathSync(grammar, in).getScopeName();
+                String scopeName = RawGrammarReader.readGrammar(referencedGrammar).getScopeName();
                 String simpleName = grammar.lastIndexOf('/') != (-1) ? grammar.substring(grammar.lastIndexOf('/') + 1) : grammar;
                 layer.file("Editors" + "/" + simpleName)
                      .url("nbresloc:/" + grammar)
@@ -261,7 +261,7 @@ public class CreateRegistrationProcessor extends LayerGeneratingProcessor {
                     l = CreateRegistrationProcessor.class.getClassLoader();
                 }
                 try {
-                    COMPLETIONS = (Processor)Class.forName(pathCompletions, true, l).newInstance();
+                    COMPLETIONS = (Processor)Class.forName(pathCompletions, true, l).getDeclaredConstructor().newInstance();
                 } catch (Exception ex) {
                     Exceptions.printStackTrace(ex);
                     // no completions, OK

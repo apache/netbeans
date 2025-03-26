@@ -24,8 +24,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.netbeans.libs.git.GitBranch;
+import org.netbeans.libs.git.GitException;
 import org.netbeans.libs.git.GitRemoteConfig;
+import org.netbeans.libs.git.GitRevisionInfo;
 import org.netbeans.modules.git.Git;
 import org.netbeans.modules.git.client.GitProgressSupport;
 import org.netbeans.modules.git.ui.actions.MultipleRepositoryAction;
@@ -36,11 +40,14 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle;
 import org.openide.util.actions.SystemAction;
+
 import static org.netbeans.modules.git.ui.push.Bundle.*;
+
 import org.netbeans.modules.git.ui.repository.RepositoryInfo.PushMode;
 import org.netbeans.modules.git.utils.GitUtils;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 import org.openide.util.RequestProcessor.Task;
@@ -102,6 +109,7 @@ public class PushToUpstreamAction extends MultipleRepositoryAction {
                 List<String> fetchSpecs = cfg.getFetchRefSpecs();
                 String remoteBranchName;
                 String trackedBranchId = null;
+                boolean conflicted = false;
                 if (trackedBranch == null) {
                     if (shallCreateNewBranch(activeBranch)) {
                         remoteBranchName = activeBranch.getName();
@@ -115,8 +123,28 @@ public class PushToUpstreamAction extends MultipleRepositoryAction {
                         GitUtils.notifyError(errorLabel, MSG_Err_unknownRemoteBranchName(trackedBranch.getName()));
                         return;
                     }
+
+                    try {
+                        GitBranch remoteBranch = getClient()
+                                .listRemoteBranches(uri, getProgressMonitor())
+                                .get(remoteBranchName);
+                        GitRevisionInfo rev = getClient().getCommonAncestor(new String[]{activeBranch.getId(), remoteBranch.getId()}, getProgressMonitor());
+                        // conflict if
+                        // A) rev == null : completely unrelated commits
+                        // B) ancestor is neither remote branch (opposite means EQUAL or PUSH needed but not CONFLICT)
+                        //    nor local head (opposite means EQUAL or pull needed but not CONFLICT)
+                        conflicted = rev == null || (!remoteBranch.getId().equals(rev.getRevision()) && !activeBranch.getId().equals(rev.getRevision()));
+                    } catch (GitException ex) {
+                        Logger.getLogger(PushBranchesStep.class.getName()).log(Level.INFO, activeBranch.getId() + ", " + remoteBranchName, ex); //NOI18N
+                    }
+
+                    if(conflicted) {
+                        if(!shallForcePush(remoteBranchName)) {
+                            return;
+                        }
+                    }
                 }
-                pushMappings.add(new PushMapping.PushBranchMapping(remoteBranchName, trackedBranchId, activeBranch, false, false));
+                pushMappings.add(new PushMapping.PushBranchMapping(remoteBranchName, trackedBranchId, activeBranch, conflicted, false));
                 Utils.logVCSExternalRepository("GIT", uri); //NOI18N
                 if (!isCanceled()) {
                     t[0] = SystemAction.get(PushAction.class).push(repository, uri, pushMappings,
@@ -225,6 +253,25 @@ public class PushToUpstreamAction extends MultipleRepositoryAction {
                 Bundle.MSG_Push_createNewBranch(branch.getName()),
                 Bundle.LBL_Push_createNewBranch(),
                 NotifyDescriptor.YES_NO_OPTION, NotifyDescriptor.QUESTION_MESSAGE));
+    }
+
+    @NbBundle.Messages({
+        "LBL_Push.forcePush=Conflicting change",
+        "# {0} - branch name",
+        "MSG_Push.forcePush=There are conflicting changes in the target branch \"{0}\".\n"
+                + "Do you want to abort or force push?",
+        "BTN_Push.forcePush=Force push"
+    })
+    private static boolean shallForcePush (String branchName) {
+        String push = Bundle.BTN_Push_forcePush();
+        return push == DialogDisplayer.getDefault().notify(new NotifyDescriptor(
+                Bundle.MSG_Push_forcePush(branchName),
+                Bundle.LBL_Push_forcePush(),
+                NotifyDescriptor.YES_NO_OPTION,
+                NotifyDescriptor.QUESTION_MESSAGE,
+                new Object[] {NotifyDescriptor.CANCEL_OPTION, push},
+                NotifyDescriptor.CANCEL_OPTION
+        ));
     }
     
 }

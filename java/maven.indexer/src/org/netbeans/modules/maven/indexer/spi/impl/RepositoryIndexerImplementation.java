@@ -27,9 +27,8 @@ import org.netbeans.modules.maven.indexer.api.RepositoryInfo;
  * 
  * Used internally.
  * 
- * Implementation of repository indexer (repository manager). Apart from basic
- * indexing features also serves as provider of various index queries.
- * There is one implementation based on apache indexer
+ * Implementation of repository indexer (repository manager).
+ * There is one implementation based on apache indexer.
  * 
  * @author Milos Kleint
  */

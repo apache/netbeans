@@ -329,6 +329,10 @@
                         <code-name-base>org.netbeans.modules.projectapi.nb</code-name-base>
                     </test-dependency>
                     <test-dependency>
+                        <code-name-base>org.netbeans.modules.xml.xdm</code-name-base>
+                        <recursive/>
+                    </test-dependency>
+                    <test-dependency>
                         <code-name-base>org.openide.filesystems</code-name-base>
                         <compile-dependency/>
                         <test/>

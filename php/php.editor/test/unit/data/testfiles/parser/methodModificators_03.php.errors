@@ -1,13 +1,1 @@
-[[51,58]-Syntax error
- unexpected:	private
- after:	protected
- expected:	identifier, variable, function, const, array, callable, define, ?, &, static, abstract, final, readonly] 51-58:Syntax error
- unexpected:	private
- after:	protected
- expected:	identifier, variable, function, const, array, callable, define, ?, &, static, abstract, final, readonly
-[[75,78]-POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	identifier 'fnc'] 75-78:POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	identifier 'fnc'
-[[91,92]-POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	}] 91-92:POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	}
+

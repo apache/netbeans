@@ -82,7 +82,7 @@ public class NewWebFreeformProjectWizardIterator implements WizardDescriptor.Ins
         l.add(new WebLocationsWizardPanel());
         l.addAll(Arrays.asList(NewJavaFreeformProjectSupport.createJavaPanels()));
         l.add(new WebClasspathWizardPanel());
-        return l.toArray(new WizardDescriptor.Panel[l.size()]);
+        return l.toArray(new WizardDescriptor.Panel[0]);
     }
     
     public Set<FileObject> instantiate () throws IOException {
@@ -157,7 +157,7 @@ public class NewWebFreeformProjectWizardIterator implements WizardDescriptor.Ins
             JComponent jc = (JComponent)c;
             l.add(jc.getName());
         }
-        String[] steps = l.toArray(new String[l.size()]);
+        String[] steps = l.toArray(new String[0]);
         for (int i = 0; i < panels.length; i++) {
             Component c = panels[i].getComponent();
             assert c instanceof JComponent;

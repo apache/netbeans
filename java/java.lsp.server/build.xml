@@ -21,6 +21,9 @@
 -->
 <project basedir="." default="netbeans" name="java/java.lsp.server">
     <description>Builds, tests, and runs the project org.netbeans.modules.java.lsp.server</description>
+    <condition property="cmd.suffix" value=".cmd" else="">
+        <os family="windows"/>
+    </condition>
     <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="proxy-setup" depends="test-init">
         <taskdef name="autoupdate" classname="org.netbeans.nbbuild.AutoUpdate" classpath="${nbantext.jar}"/>
@@ -28,7 +31,7 @@
         <configureproxy connectto="https://netbeans.osuosl.org/binaries/" hostProperty="proxyHost" portProperty="proxyPort"/>
         <setproxy proxyhost="${proxyHost}" proxyPort="${proxyPort}"/>
     </target>
-    <target name="build-lsp-server" depends="-set-use-jdk-javac,build,test-init,proxy-setup" description="Prepares NetBeans bits for vscode extensions">
+    <target name="build-lsp-server" depends="-set-use-jdk-javac,build,test-init,proxy-setup" description="Prepares NetBeans bits for VS Code extension">
         <ant dir="nbcode" target="build-zip" inheritall="false" inheritrefs="false" />
         <unzip src="nbcode/dist/nbcode.zip" dest="${lsp.build.dir}/../">
             <globmapper from="nbcode/nb/*" to="nbcode/nbcode/*"/>
@@ -42,10 +45,23 @@
         <chmod file="${lsp.build.dir}/platform/lib/nbexec" perm="u+x"/>
         <chmod file="${lsp.build.dir}/java/maven/bin/mvn" perm="u+x" />
 
-        <property name="3rdparty.modules" value=".*externalcodeformatter.*"/>
-        <autoupdate todir="${lsp.build.dir}/extra" updatecenter="https://netbeans.apache.org/nb/plugins/14/catalog.xml.gz">
+        <!-- Code which adds 3rd party modules into VSNetBeans. Not needed any more, was just prolonging a build. Keeping here if needed in the future. -->
+
+        <!-- <property name="3rdparty.modules" value=""/>
+        <autoupdate todir="${lsp.build.dir}/extra" updatecenter="https://netbeans.apache.org/nb/plugins/17/catalog.xml.gz">
             <modules includes="${3rdparty.modules}"/>
+        </autoupdate> -->
+    </target>
+    <target name="add-extra-modules" depends="build-lsp-server" if="extra.modules">
+        <ant dir="../../nbbuild" target="build-nbms" inheritall="false" inheritrefs="false">
+            <property name="cluster.config" value="basic"/>
+        </ant>
+        <ant dir="../../nbbuild" target="generate-uc-catalog" inheritall="false" inheritrefs="false"/>
+        <makeurl file="../../nbbuild/nbms/updates.xml.gz" property="update.center.url"/>
+        <autoupdate installdir="${lsp.build.dir}" updatecenter="${update.center.url}">
+            <modules includes="${extra.modules}"/>
         </autoupdate>
+        <delete file="../../nbbuild/nbms/tasks.jar"/>
     </target>
     <target name="-set-use-jdk-javac">
         <property name="test.use.jdk.javac" value="true" />
@@ -56,7 +72,7 @@
         <delete dir="vscode/out" />
         <ant dir="nbcode" target="clean" inheritall="false" inheritrefs="false"/>
     </target>
-    <target name="build-vscode-ext" depends="build-lsp-server" description="Build the Visual Studio Code extension.">
+    <target name="build-vscode-ext" depends="add-extra-modules" description="Build the Visual Studio Code extension.">
         <taskdef name="gitbranchhash" classname="org.netbeans.nbbuild.GitBranchHash" classpath="${nbantext.jar}" />
         <gitbranchhash file="." branchproperty="metabuild.branch" hashproperty="metabuild.hash" />
         <condition property="metabuild.hash" value="master" >
@@ -66,17 +82,17 @@
         </condition>
         <property name="vsix.version" value="0.1.0"/>
 
-        <exec executable="npm" failonerror="true" dir="vscode">
+        <exec executable="npm${cmd.suffix}" failonerror="true" dir="vscode">
             <arg value="--allow-same-version"/>
             <arg value="version" />
             <arg value="${vsix.version}" />
         </exec>
 
-        <exec executable="npm" failonerror="true" dir="vscode">
+        <exec executable="npm${cmd.suffix}" failonerror="true" dir="vscode">
             <arg value="install" />
         </exec>
 
-        <exec executable="npm" failonerror="true" dir="vscode">
+        <exec executable="npm${cmd.suffix}" failonerror="true" dir="vscode">
             <arg value="run" />
             <arg value="compile" />
         </exec>
@@ -86,7 +102,7 @@
         <copy file="vscode/package.json" todir="${build.dir}/bundles/package" />
         <copy file="vscode/package-lock.json" todir="${build.dir}/bundles/package" />
 
-        <exec executable="mvn" failonerror="true" dir="${nb_all}/nbbuild/misc/prepare-bundles">
+        <exec executable="mvn${cmd.suffix}" failonerror="true" dir="${nb_all}/nbbuild/misc/prepare-bundles">
             <arg value="package" />
             <arg value="exec:java" />
             <arg value="-Dexec.mainClass=org.netbeans.prepare.bundles.PrepareBundles" />
@@ -94,12 +110,12 @@
         </exec>
  
         <mkdir dir="${build.dir}/vsce" />
-        <exec executable="npm" failonerror="true" dir="${build.dir}/vsce">
+        <exec executable="npm${cmd.suffix}" failonerror="true" dir="${build.dir}/vsce">
             <arg value="install" />
             <arg value="--save" />
-            <arg value="vsce@2.6.4" />
+            <arg value="@vscode/vsce@2.19.0" />
         </exec>
-        <exec executable="${build.dir}/vsce/node_modules/vsce/vsce" failonerror="true" dir="${basedir}/vscode">
+        <exec executable="${build.dir}/vsce/node_modules/@vscode/vsce/vsce" failonerror="true" dir="${basedir}/vscode">
             <arg value="package" />
             <arg value="--baseImagesUrl" />
             <arg value="https://github.com/apache/netbeans/raw/${metabuild.hash}/java/java.lsp.server/vscode" />
@@ -117,7 +133,7 @@
         <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
 
         <property name="config.javadoc.all" value="" />
-        <resolvelist name="allmodules" path="modules.fullpath" dir="${nb_all}" list="${clusters.config.java.list}"/>
+        <resolvelist name="allmodules" path="modules.fullpath" dir="${nb_all}" list="${clusters.config.release.list}"/>
 
         <createlicensesummary licenseStub="${nb_all}/LICENSE"
                               noticeStub="${nb_all}/nbbuild/notice-stub.txt"
@@ -141,12 +157,12 @@
     </target>
 
     <target name="test-vscode-ext" depends="test-lsp-server" description="Tests the Visual Studio Code extension built by 'build-vscode-ext' target.">
-        <exec executable="npm" failonerror="true" dir="vscode">
+        <exec executable="npm${cmd.suffix}" failonerror="true" dir="vscode">
             <arg value="--allow-same-version"/>
             <arg value="run" />
             <arg value="test" />
         </exec>
-        <exec executable="npm" failonerror="true" dir="vscode">
+        <exec executable="npm${cmd.suffix}" failonerror="true" dir="vscode">
             <arg value="--allow-same-version"/>
             <arg value="run" />
             <arg value="apisupport" />

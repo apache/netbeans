@@ -1,0 +1,4 @@
+    private const |>MARK_OCCURRENCES:PRIVATE_TRAIT<| = 'ExampleTrait private';
+        echo static::|>MARK_OCCURRENCES:PRIVATE_TRAIT<| . PHP_EOL;
+        echo static::|>MARK_OCCURRENCES:PRIVATE_TRAIT<| . PHP_EOL; // use
+        echo static::|>MARK_OCCURRENCES:PR^IVATE_TRAIT<| . PHP_EOL; // class

@@ -155,7 +155,7 @@ public abstract class DataLoader extends SharedClassObject implements DataObject
             }
         }
         
-        return list.toArray(new SystemAction[list.size()]);
+        return list.toArray(new SystemAction[0]);
     }
     
     /** Swing actions getter, used from DataNode */
@@ -204,7 +204,7 @@ public abstract class DataLoader extends SharedClassObject implements DataObject
      * <p>
      * {@link javax.swing.JSeparator} instances may be used to separate items.
      * <p>
-     * Suggested context name: <samp>Loaders/<em>PRIMARY-FILE/MIME-TYPE</em>/Actions</samp>
+     * Suggested context name: <code>Loaders/<em>PRIMARY-FILE/MIME-TYPE</em>/Actions</code>
      *
      * @return the string name of the context on layer files to read/write actions to
      * @since 5.0
@@ -531,7 +531,7 @@ public abstract class DataLoader extends SharedClassObject implements DataObject
             }
             if (main == null && !isdefault) {
                 // Whole action list was successfully read.
-                setActions(ll.toArray(new SystemAction[ll.size()]));
+                setActions(ll.toArray(new SystemAction[0]));
             } // Else do not try to override the default action list if it is incomplete anyway.
         }
         
@@ -558,7 +558,7 @@ public abstract class DataLoader extends SharedClassObject implements DataObject
     /** Get a registered loader from the pool.
      * @param loaderClass exact class of the loader (<em>not</em> its data object representation class)
      * @return the loader instance, or <code>null</code> if there is no such loader registered
-     * @see DataLoaderPool#allLoaders
+     * @see DataLoaderPool#allLoaders()
      */
     public static <T extends DataLoader> T getLoader(Class<T> loaderClass) {
         return findObject(loaderClass, true);

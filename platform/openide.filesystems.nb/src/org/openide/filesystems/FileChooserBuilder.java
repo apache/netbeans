@@ -47,32 +47,32 @@ import org.openide.util.*;
  * &ldquo;remember&rdquo; where the user keeps particular types of files, and
  * saves the user from having to navigate through the same set of directories
  * every time they need to locate a file from a particular place.
- * <p/>
+ * <p>
  * <code>FileChooserBuilder</code>'s methods each return <code>this</code>, so
  * it is possible to chain invocations to simplify setting up a file chooser.
  * Example usage:
  * <pre>
- *      <font color="gray">//The default dir to use if no value is stored</font>
+ *      <span style="color:gray">//The default dir to use if no value is stored</span>
  *      File home = new File (System.getProperty("user.home") + File.separator + "lib");
- *      <font color="gray">//Now build a file chooser and invoke the dialog in one line of code</font>
- *      <font color="gray">//&quot;libraries-dir&quot; is our unique key</font>
+ *      <span style="color:gray">//Now build a file chooser and invoke the dialog in one line of code</span>
+ *      <span style="color:gray">//&quot;libraries-dir&quot; is our unique key</span>
  *      File toAdd = new FileChooserBuilder ("libraries-dir").setTitle("Add Library").
  *              setDefaultWorkingDirectory(home).setApproveText("Add").showOpenDialog();
- *      <font color="gray">//Result will be null if the user clicked cancel or closed the dialog w/o OK</font>
+ *      <span style="color:gray">//Result will be null if the user clicked cancel or closed the dialog w/o OK</span>
  *      if (toAdd != null) {
  *          //do something
  *      }
  *</pre>
- * <p/>
+ * <p>
  * Instances of this class are intended to be thrown away after use.  Typically
  * you create a builder, set it to create file choosers as you wish, then
  * use it to show a dialog or create a file chooser you then do something
  * with.
- * <p/>
+ * <p>
  * Supports the most common subset of JFileChooser functionality;  if you
  * need to do something exotic with a file chooser, you are probably better
  * off creating your own.
- * <p/>
+ * <p>
  * <b>Note:</b> If you use the constructor that takes a <code>Class</code> object,
  * please use <code>new FileChooserBuilder(MyClass.class)</code>, not
  * <code>new FileChooserBuilder(getClass())</code>.  This avoids unexpected

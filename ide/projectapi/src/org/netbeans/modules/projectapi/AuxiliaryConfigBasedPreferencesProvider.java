@@ -62,8 +62,8 @@ import org.w3c.dom.NodeList;
  */
 public class AuxiliaryConfigBasedPreferencesProvider {
     
-    private static Map<Project, Reference<AuxiliaryConfigBasedPreferencesProvider>> projects2SharedPrefs = new WeakHashMap<Project, Reference<AuxiliaryConfigBasedPreferencesProvider>>();
-    private static Map<Project, Reference<AuxiliaryConfigBasedPreferencesProvider>> projects2PrivatePrefs = new WeakHashMap<Project, Reference<AuxiliaryConfigBasedPreferencesProvider>>();
+    private static final Map<Project, Reference<AuxiliaryConfigBasedPreferencesProvider>> projects2SharedPrefs = new WeakHashMap<>();
+    private static final Map<Project, Reference<AuxiliaryConfigBasedPreferencesProvider>> projects2PrivatePrefs = new WeakHashMap<>();
     
     static synchronized AuxiliaryConfigBasedPreferencesProvider findProvider(Project p, boolean shared) {
         Map<Project, Reference<AuxiliaryConfigBasedPreferencesProvider>> target = shared ? projects2SharedPrefs : projects2PrivatePrefs;
@@ -77,23 +77,19 @@ public class AuxiliaryConfigBasedPreferencesProvider {
         AuxiliaryConfiguration ac = ProjectUtils.getAuxiliaryConfiguration(p);
         assert p.getLookup() != null : p;
         AuxiliaryProperties ap = p.getLookup().lookup(AuxiliaryProperties.class);
-        
-        target.put(p, new WeakReference<AuxiliaryConfigBasedPreferencesProvider>(prov = new AuxiliaryConfigBasedPreferencesProvider(p, ac, ap, shared)));
-        
+
+        prov = new AuxiliaryConfigBasedPreferencesProvider(p, ac, ap, shared);
+        target.put(p, new WeakReference<>(prov));
         return prov;
     }
     
     public static Preferences getPreferences(final Project project, final Class clazz, final boolean shared) {
-        return ProjectManager.mutex(false, project).readAccess(new Action<Preferences>() {
-            @Override public Preferences run() {
-                AuxiliaryConfigBasedPreferencesProvider provider = findProvider(project, shared);
-
-                if (provider == null) {
-                    return null;
-                }
-
-                return provider.findModule(AuxiliaryConfigBasedPreferencesProvider.findCNBForClass(clazz));
+        return ProjectManager.mutex(false, project).readAccess((Action<Preferences>) () -> {
+            AuxiliaryConfigBasedPreferencesProvider provider = findProvider(project, shared);
+            if (provider == null) {
+                return null;
             }
+            return provider.findModule(AuxiliaryConfigBasedPreferencesProvider.findCNBForClass(clazz));
         });
     }
 
@@ -156,7 +152,7 @@ public class AuxiliaryConfigBasedPreferencesProvider {
     private static final String ATTR_NAME = "name";
     private static final String ATTR_VALUE = "value";
     
-    private static final String INVALID_KEY_CHARACTERS = "_.";
+    private static final String INVALID_KEY_CHARACTERS = "_.$";
     
     private static final RequestProcessor WORKER = new RequestProcessor("AuxiliaryConfigBasedPreferencesProvider worker", 1);
     private static final int AUTOFLUSH_TIMEOUT = 5000;
@@ -165,19 +161,15 @@ public class AuxiliaryConfigBasedPreferencesProvider {
     private final AuxiliaryConfiguration ac;
     private final AuxiliaryProperties ap;
     private final boolean shared;
-    private final Map<String, Reference<AuxiliaryConfigBasedPreferences>> module2Preferences = new HashMap<String, Reference<AuxiliaryConfigBasedPreferences>>();
+    private final Map<String, Reference<AuxiliaryConfigBasedPreferences>> module2Preferences = new HashMap<>();
     private Element configRoot;
     private boolean modified;
-    private final Task autoFlushTask = WORKER.create(new Runnable() {
-        public void run() {
-            flush();
-        }
-    });
+    private final Task autoFlushTask = WORKER.create(this::flush);
     
-    private final Map<String, Map<String, String>> path2Data = new HashMap<String, Map<String, String>>();
-    private final Map<String, Set<String>> path2Removed = new HashMap<String, Set<String>>();
-    private final Set<String> removedNodes = new HashSet<String>();
-    private final Set<String> createdNodes = new HashSet<String>();
+    private final Map<String, Map<String, String>> path2Data = new HashMap<>();
+    private final Map<String, Set<String>> path2Removed = new HashMap<>();
+    private final Set<String> removedNodes = new HashSet<>();
+    private final Set<String> createdNodes = new HashSet<>();
 
     AuxiliaryConfigBasedPreferencesProvider(Project project, AuxiliaryConfiguration ac, AuxiliaryProperties ap, boolean shared) {
         this.project = project;
@@ -203,11 +195,9 @@ public class AuxiliaryConfigBasedPreferencesProvider {
     }
     
     void flush() {
-        ProjectManager.mutex(false, project).writeAccess(new Action<Void>() {
-            public Void run() {
-                flushImpl();
-                return null;
-            }
+        ProjectManager.mutex(false, project).writeAccess((Action<Void>) () -> {
+            flushImpl();
+            return null;
         });
     }
     
@@ -299,11 +289,9 @@ public class AuxiliaryConfigBasedPreferencesProvider {
     }
     
     void sync() {
-        ProjectManager.mutex(false, project).writeAccess(new Action<Void>() {
-            public Void run() {
-                syncImpl();
-                return null;
-            }
+        ProjectManager.mutex(false, project).writeAccess((Action<Void>) () -> {
+            syncImpl();
+            return null;
         });
     }
     
@@ -334,7 +322,7 @@ public class AuxiliaryConfigBasedPreferencesProvider {
         AuxiliaryConfigBasedPreferences pref = prefRef != null ? prefRef.get() : null;
         
         if (pref == null) {
-            module2Preferences.put(moduleName, new WeakReference<AuxiliaryConfigBasedPreferences>(pref = new AuxiliaryConfigBasedPreferences(null, "", moduleName)));
+            module2Preferences.put(moduleName, new WeakReference<>(pref = new AuxiliaryConfigBasedPreferences(null, "", moduleName)));
         }
         
         return pref;
@@ -359,23 +347,11 @@ public class AuxiliaryConfigBasedPreferencesProvider {
     }
 
     private Map<String, String> getData(String path) {
-        Map<String, String> data = path2Data.get(path);
-        
-        if (data == null) {
-            path2Data.put(path, data = new HashMap<String, String>());
-        }
-        
-        return data;
+        return path2Data.computeIfAbsent(path, k -> new HashMap<String, String>());
     }
     
     private Set<String> getRemoved(String path) {
-        Set<String> removed = path2Removed.get(path);
-        
-        if (removed == null) {
-            path2Removed.put(path, removed = new HashSet<String>());
-        }
-        
-        return removed;
+        return path2Removed.computeIfAbsent(path, k -> new HashSet<String>());
     }
     
     private void removeNode(String path) {
@@ -494,7 +470,7 @@ public class AuxiliaryConfigBasedPreferencesProvider {
         @Override
         protected String[] keysSpi() throws BackingStoreException {
             synchronized (AuxiliaryConfigBasedPreferencesProvider.this) {
-                Collection<String> result = new LinkedHashSet<String>();
+                Collection<String> result = new LinkedHashSet<>();
 
                 if (!isRemovedNode(path)) {
                     result.addAll(list(EL_PROPERTY));
@@ -561,7 +537,7 @@ public class AuxiliaryConfigBasedPreferencesProvider {
         }
 
         private Collection<String> getChildrenNames() {
-            Collection<String> result = new LinkedHashSet<String>();
+            Collection<String> result = new LinkedHashSet<>();
 
             if (!isRemovedNode(path)) {
                 result.addAll(list(EL_NODE));
@@ -608,7 +584,7 @@ public class AuxiliaryConfigBasedPreferencesProvider {
                 return Collections.emptyList();
             }
             
-            List<String> names = new LinkedList<String>();
+            List<String> names = new LinkedList<>();
             NodeList nl = dom.getElementsByTagNameNS(NAMESPACE, elementName);
 
             for (int cntr = 0; cntr < nl.getLength(); cntr++) {
@@ -622,55 +598,46 @@ public class AuxiliaryConfigBasedPreferencesProvider {
 
         @Override
         public void put(final String key, final String value) {
-            ProjectManager.mutex(false, project).writeAccess(new Action<Void>() {
-                public Void run() {
-                    //#151856
-                    String oldValue = getSpi(key);
-                    if (value.equals(oldValue)) {
-                        return null;
-                    }
-                    try {
-                        AuxiliaryConfigBasedPreferences.super.put(key, value);
-                    } catch (IllegalArgumentException iae) {
-                        if (iae.getMessage().contains("too long")) {
-                            // Not for us!
-                            putSpi(key, value);
-                        } else {
-                            throw iae;
-                        }
-                    }
+            ProjectManager.mutex(false, project).writeAccess((Action<Void>) () -> {
+                //#151856
+                String oldValue = getSpi(key);
+                if (value.equals(oldValue)) {
                     return null;
                 }
+                try {
+                    AuxiliaryConfigBasedPreferences.super.put(key, value);
+                } catch (IllegalArgumentException iae) {
+                    if (iae.getMessage().contains("too long")) {
+                        // Not for us!
+                        putSpi(key, value);
+                    } else {
+                        throw iae;
+                    }
+                }
+                return null;
             });
         }
 
         @Override
         public String get(final String key, final String def) {
-            return ProjectManager.mutex(false, project).readAccess(new Action<String>() {
-                public String run() {
-                    return AuxiliaryConfigBasedPreferences.super.get(key, def);
-                }
-            });
+            return ProjectManager.mutex(false, project).readAccess(
+                    (Action<String>) () -> AuxiliaryConfigBasedPreferences.super.get(key, def));
         }
 
         @Override
         public void remove(final String key) {
-            ProjectManager.mutex(false, project).writeAccess(new Action<Void>() {
-                public Void run() {
-                    AuxiliaryConfigBasedPreferences.super.remove(key);
-                    return null;
-                }
+            ProjectManager.mutex(false, project).writeAccess((Action<Void>) () -> {
+                AuxiliaryConfigBasedPreferences.super.remove(key);
+                return null;
             });
         }
 
         @Override
         public void clear() throws BackingStoreException {
             try {
-                ProjectManager.mutex(false, project).writeAccess(new ExceptionAction<Void>() {
-                    public Void run() throws BackingStoreException {
-                        AuxiliaryConfigBasedPreferences.super.clear();
-                        return null;
-                    }
+                ProjectManager.mutex(false, project).writeAccess((ExceptionAction<Void>) () -> {
+                    AuxiliaryConfigBasedPreferences.super.clear();
+                    return null;
                 });
             } catch (MutexException ex) {
                 throw (BackingStoreException) ex.getException();
@@ -680,11 +647,8 @@ public class AuxiliaryConfigBasedPreferencesProvider {
         @Override
         public String[] keys() throws BackingStoreException {
             try {
-                return ProjectManager.mutex(false, project).readAccess(new ExceptionAction<String[]>() {
-                    public String[] run() throws BackingStoreException {
-                        return AuxiliaryConfigBasedPreferences.super.keys();
-                    }
-                });
+                return ProjectManager.mutex(false, project).readAccess(
+                        (ExceptionAction<String[]>) AuxiliaryConfigBasedPreferences.super::keys);
             } catch (MutexException ex) {
                 throw (BackingStoreException) ex.getException();
             }
@@ -693,11 +657,8 @@ public class AuxiliaryConfigBasedPreferencesProvider {
         @Override
         public String[] childrenNames() throws BackingStoreException {
             try {
-                return ProjectManager.mutex(false, project).readAccess(new ExceptionAction<String[]>() {
-                    public String[] run() throws BackingStoreException {
-                        return AuxiliaryConfigBasedPreferences.super.childrenNames();
-                    }
-                });
+                return ProjectManager.mutex(false, project).readAccess(
+                        (ExceptionAction<String[]>) AuxiliaryConfigBasedPreferences.super::childrenNames);
             } catch (MutexException ex) {
                 throw (BackingStoreException) ex.getException();
             }
@@ -705,21 +666,15 @@ public class AuxiliaryConfigBasedPreferencesProvider {
 
         @Override
         public Preferences node(final String path) {
-            return ProjectManager.mutex(false, project).readAccess(new Action<Preferences>() {
-                public Preferences run() {
-                    return AuxiliaryConfigBasedPreferences.super.node(path);
-                }
-            });
+            return ProjectManager.mutex(false, project).readAccess(
+                    (Action<Preferences>) () -> AuxiliaryConfigBasedPreferences.super.node(path));
         }
 
         @Override
         public boolean nodeExists(final String path) throws BackingStoreException {
             try {
-                return ProjectManager.mutex(false, project).readAccess(new ExceptionAction<Boolean>() {
-                    public Boolean run() throws BackingStoreException {
-                        return AuxiliaryConfigBasedPreferences.super.nodeExists(path);
-                    }
-                });
+                return ProjectManager.mutex(false, project).readAccess(
+                        (ExceptionAction<Boolean>) () -> AuxiliaryConfigBasedPreferences.super.nodeExists(path));
             } catch (MutexException ex) {
                 throw (BackingStoreException) ex.getException();
             }
@@ -728,11 +683,9 @@ public class AuxiliaryConfigBasedPreferencesProvider {
         @Override
         public void removeNode() throws BackingStoreException {
             try {
-                ProjectManager.mutex(false, project).writeAccess(new ExceptionAction<Void>() {
-                    public Void run() throws BackingStoreException {
-                        AuxiliaryConfigBasedPreferences.super.removeNode();
-                        return null;
-                    }
+                ProjectManager.mutex(false, project).writeAccess((ExceptionAction<Void>) () -> {
+                    AuxiliaryConfigBasedPreferences.super.removeNode();
+                    return null;
                 });
             } catch (MutexException ex) {
                 throw (BackingStoreException) ex.getException();
@@ -742,11 +695,8 @@ public class AuxiliaryConfigBasedPreferencesProvider {
         @Override
         protected AbstractPreferences getChild(final String nodeName) throws BackingStoreException {
             try {
-                return ProjectManager.mutex(false, project).readAccess(new ExceptionAction<AbstractPreferences>() {
-                    public AbstractPreferences run() throws BackingStoreException {
-                        return AuxiliaryConfigBasedPreferences.super.getChild(nodeName);
-                    }
-                });
+                return ProjectManager.mutex(false, project).readAccess(
+                        (ExceptionAction<AbstractPreferences>) () -> AuxiliaryConfigBasedPreferences.super.getChild(nodeName));
             } catch (MutexException ex) {
                 throw (BackingStoreException) ex.getException();
             }

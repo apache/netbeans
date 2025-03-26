@@ -31,6 +31,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -105,9 +106,7 @@ public class ExportZIP extends JPanel {
                     @Override public void run() {
                         try {
                             if (!build(root, zip)) {
-                                if (!zip.delete()) {
-                                    throw new IOException("Cannot delete " + zip);
-                                }
+                                Files.delete(zip.toPath());
                                 return;
                             }
                         } catch (IOException x) {

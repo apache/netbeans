@@ -22,6 +22,7 @@ import org.netbeans.modules.java.hints.spiimpl.batch.TestUtils.File;
 import org.netbeans.modules.java.hints.spiimpl.MessageImpl;
 import org.netbeans.modules.java.hints.spiimpl.batch.BatchSearchTest.ClassPathProviderImpl;
 import org.netbeans.modules.java.hints.providers.spi.HintDescription;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -122,6 +123,20 @@ public class BatchUtilitiesTest extends NbTestCase {
         assertEquals(src3Test1Golden, src3Test1Real);
 
         assertTrue(file2New.toString(), file2New.isEmpty());
+    }
+
+    public void testMultipleWithErrors() throws Exception {
+        writeFilesAndWaitForScan(src1,
+                                 new File("test/Test1.java", "package test; public class Test1 { public class A1 extends Test2.A2 { public int t(Unknown u) { return this.doesNotExist(u); } } public class B1 {} private void x(java.io.File f) { boolean b = f.isDirectory(); } }"),
+                                 new File("test/Test2.java", "package test; public class Test2 { public class A2 {} public class B2 extends Test1.B1 { public int t(Unknown u) { return this.doesNotExist(u); } } private void x(java.io.File f) { boolean b = f.isDirectory(); } }"));
+
+        Iterable<? extends HintDescription> hints = prepareHints("$1.isDirectory() => !$1.isDirectory()", "$1", "java.io.File");
+        BatchResult result = BatchSearch.findOccurrences(hints, Scopes.specifiedFoldersScope(Folder.convert(src1, src3, empty)));
+        List<MessageImpl> problems = new LinkedList<MessageImpl>();
+
+        BatchUtilities.applyFixes(result, new ProgressHandleWrapper(100), new AtomicBoolean(), new ArrayList<>(), new HashMap<>(), problems);
+
+        assertTrue(problems.toString(), problems.isEmpty());
     }
 
 //    public void testRemoveUnusedImports() throws Exception {

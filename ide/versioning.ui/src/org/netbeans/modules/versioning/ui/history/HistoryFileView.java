@@ -116,7 +116,7 @@ class HistoryFileView implements PreferenceChangeListener, VCSHistoryProvider.Hi
     
     private HistoryRootNode getRootNode() {
         Node rootContext = tablePanel.getExplorerManager().getRootContext();
-        if(rootContext == null || !(rootContext instanceof HistoryRootNode)) {
+        if(!(rootContext instanceof HistoryRootNode)) {
             return null;
         }  
         return (HistoryRootNode) rootContext;
@@ -245,7 +245,7 @@ class HistoryFileView implements PreferenceChangeListener, VCSHistoryProvider.Hi
                     for (VCSHistoryProvider.HistoryEntry he : vcsHistory) {
                         entries.add(new HistoryEntry(he, false));
                     }
-                    rootNode.addVCSEntries(entries.toArray(new HistoryEntry[entries.size()]), 0);
+                    rootNode.addVCSEntries(entries.toArray(new HistoryEntry[0]), 0);
                 } finally {
                     rootNode.loadingVCSFinished(currentDateFrom);
                     EventQueue.invokeLater(new Runnable() {
@@ -293,7 +293,7 @@ class HistoryFileView implements PreferenceChangeListener, VCSHistoryProvider.Hi
                     ret.add(root);
                 }
             }            
-            return ret.toArray(new Node[ret.size()]);                            
+            return ret.toArray(new Node[0]);                            
         }                   
         
         private Node findEqualInChildren(Node node, Node toFind) {
@@ -601,7 +601,7 @@ class HistoryFileView implements PreferenceChangeListener, VCSHistoryProvider.Hi
                 loadVCSEntries(History.toProxies(tc.getFiles()), true);
             }
         });
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
     private class FileTablePanel extends JPanel implements ExplorerManager.Provider, TreeExpansionListener {
         private final BrowserTreeTableView treeView;    
@@ -1033,7 +1033,7 @@ class HistoryFileView implements PreferenceChangeListener, VCSHistoryProvider.Hi
                 sb.append(s.substring(start, end));
                 if(i == spans.length) {
                     sb.append("</u></font>"); // NOI18N
-                    sb.append(s.substring(end, s.length()));
+                    sb.append(s.substring(end));
                 }
             }
             return sb.toString();

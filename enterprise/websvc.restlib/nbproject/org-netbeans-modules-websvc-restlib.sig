@@ -1,5 +1,213 @@
 #Signature file v4.1
-#Version 2.26
+#Version 2.35
+
+CLSS public abstract interface !annotation com.fasterxml.jackson.annotation.JacksonAnnotation
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface com.fasterxml.jackson.core.Versioned
+meth public abstract com.fasterxml.jackson.core.Version version()
+
+CLSS public abstract interface com.fasterxml.jackson.databind.BeanProperty
+fld public final static com.fasterxml.jackson.annotation.JsonFormat$Value EMPTY_FORMAT
+fld public final static com.fasterxml.jackson.annotation.JsonInclude$Value EMPTY_INCLUDE
+innr public static Bogus
+innr public static Std
+intf com.fasterxml.jackson.databind.util.Named
+meth public abstract <%0 extends java.lang.annotation.Annotation> {%%0} getAnnotation(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.annotation.Annotation> {%%0} getContextAnnotation(java.lang.Class<{%%0}>)
+meth public abstract boolean isRequired()
+meth public abstract boolean isVirtual()
+meth public abstract com.fasterxml.jackson.annotation.JsonFormat$Value findFormatOverrides(com.fasterxml.jackson.databind.AnnotationIntrospector)
+ anno 0 java.lang.Deprecated()
+meth public abstract com.fasterxml.jackson.annotation.JsonFormat$Value findPropertyFormat(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,java.lang.Class<?>)
+meth public abstract com.fasterxml.jackson.annotation.JsonInclude$Value findPropertyInclusion(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,java.lang.Class<?>)
+meth public abstract com.fasterxml.jackson.databind.JavaType getType()
+meth public abstract com.fasterxml.jackson.databind.PropertyMetadata getMetadata()
+meth public abstract com.fasterxml.jackson.databind.PropertyName getFullName()
+meth public abstract com.fasterxml.jackson.databind.PropertyName getWrapperName()
+meth public abstract com.fasterxml.jackson.databind.introspect.AnnotatedMember getMember()
+meth public abstract java.lang.String getName()
+meth public abstract java.util.List<com.fasterxml.jackson.databind.PropertyName> findAliases(com.fasterxml.jackson.databind.cfg.MapperConfig<?>)
+meth public abstract void depositSchemaProperty(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor,com.fasterxml.jackson.databind.SerializerProvider) throws com.fasterxml.jackson.databind.JsonMappingException
+
+CLSS public static com.fasterxml.jackson.databind.BeanProperty$Std
+ outer com.fasterxml.jackson.databind.BeanProperty
+cons public init(com.fasterxml.jackson.databind.BeanProperty$Std,com.fasterxml.jackson.databind.JavaType)
+cons public init(com.fasterxml.jackson.databind.PropertyName,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.PropertyName,com.fasterxml.jackson.databind.introspect.AnnotatedMember,com.fasterxml.jackson.databind.PropertyMetadata)
+cons public init(com.fasterxml.jackson.databind.PropertyName,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.PropertyName,com.fasterxml.jackson.databind.util.Annotations,com.fasterxml.jackson.databind.introspect.AnnotatedMember,com.fasterxml.jackson.databind.PropertyMetadata)
+ anno 0 java.lang.Deprecated()
+fld protected final com.fasterxml.jackson.databind.JavaType _type
+fld protected final com.fasterxml.jackson.databind.PropertyMetadata _metadata
+fld protected final com.fasterxml.jackson.databind.PropertyName _name
+fld protected final com.fasterxml.jackson.databind.PropertyName _wrapperName
+fld protected final com.fasterxml.jackson.databind.introspect.AnnotatedMember _member
+intf com.fasterxml.jackson.databind.BeanProperty
+intf java.io.Serializable
+meth public <%0 extends java.lang.annotation.Annotation> {%%0} getAnnotation(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.annotation.Annotation> {%%0} getContextAnnotation(java.lang.Class<{%%0}>)
+meth public boolean isRequired()
+meth public boolean isVirtual()
+meth public com.fasterxml.jackson.annotation.JsonFormat$Value findFormatOverrides(com.fasterxml.jackson.databind.AnnotationIntrospector)
+ anno 0 java.lang.Deprecated()
+meth public com.fasterxml.jackson.annotation.JsonFormat$Value findPropertyFormat(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,java.lang.Class<?>)
+meth public com.fasterxml.jackson.annotation.JsonInclude$Value findPropertyInclusion(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,java.lang.Class<?>)
+meth public com.fasterxml.jackson.databind.BeanProperty$Std withType(com.fasterxml.jackson.databind.JavaType)
+meth public com.fasterxml.jackson.databind.JavaType getType()
+meth public com.fasterxml.jackson.databind.PropertyMetadata getMetadata()
+meth public com.fasterxml.jackson.databind.PropertyName getFullName()
+meth public com.fasterxml.jackson.databind.PropertyName getWrapperName()
+meth public com.fasterxml.jackson.databind.introspect.AnnotatedMember getMember()
+meth public java.lang.String getName()
+meth public java.util.List<com.fasterxml.jackson.databind.PropertyName> findAliases(com.fasterxml.jackson.databind.cfg.MapperConfig<?>)
+meth public void depositSchemaProperty(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor,com.fasterxml.jackson.databind.SerializerProvider)
+supr java.lang.Object
+hfds serialVersionUID
+
+CLSS public abstract interface com.fasterxml.jackson.databind.cfg.ConfigFeature
+meth public abstract boolean enabledByDefault()
+meth public abstract boolean enabledIn(int)
+meth public abstract int getMask()
+
+CLSS public abstract interface com.fasterxml.jackson.databind.util.Named
+meth public abstract java.lang.String getName()
+
+CLSS public abstract interface !annotation jakarta.annotation.Generated
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=SOURCE)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[PACKAGE, TYPE, ANNOTATION_TYPE, METHOD, CONSTRUCTOR, FIELD, LOCAL_VARIABLE, PARAMETER])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String comments()
+meth public abstract !hasdefault java.lang.String date()
+meth public abstract java.lang.String[] value()
+
+CLSS public abstract interface !annotation jakarta.annotation.ManagedBean
+ anno 0 java.lang.Deprecated()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String value()
+
+CLSS public abstract interface !annotation jakarta.annotation.Nonnull
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation jakarta.annotation.Nullable
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation jakarta.annotation.PostConstruct
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation jakarta.annotation.PreDestroy
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation jakarta.annotation.Priority
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+intf java.lang.annotation.Annotation
+meth public abstract int value()
+
+CLSS public abstract interface !annotation jakarta.annotation.Resource
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class jakarta.annotation.Resources)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, FIELD, METHOD])
+innr public final static !enum AuthenticationType
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean shareable()
+meth public abstract !hasdefault jakarta.annotation.Resource$AuthenticationType authenticationType()
+meth public abstract !hasdefault java.lang.Class<?> type()
+meth public abstract !hasdefault java.lang.String description()
+meth public abstract !hasdefault java.lang.String lookup()
+meth public abstract !hasdefault java.lang.String mappedName()
+meth public abstract !hasdefault java.lang.String name()
+
+CLSS public final static !enum jakarta.annotation.Resource$AuthenticationType
+ outer jakarta.annotation.Resource
+fld public final static jakarta.annotation.Resource$AuthenticationType APPLICATION
+fld public final static jakarta.annotation.Resource$AuthenticationType CONTAINER
+meth public static jakarta.annotation.Resource$AuthenticationType valueOf(java.lang.String)
+meth public static jakarta.annotation.Resource$AuthenticationType[] values()
+supr java.lang.Enum<jakarta.annotation.Resource$AuthenticationType>
+
+CLSS public abstract interface !annotation jakarta.annotation.Resources
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract jakarta.annotation.Resource[] value()
+
+CLSS public abstract interface !annotation jakarta.annotation.security.DeclareRoles
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.String[] value()
+
+CLSS public abstract interface !annotation jakarta.annotation.security.DenyAll
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation jakarta.annotation.security.PermitAll
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation jakarta.annotation.security.RolesAllowed
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.String[] value()
+
+CLSS public abstract interface !annotation jakarta.annotation.security.RunAs
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.String value()
+
+CLSS public abstract interface !annotation jakarta.annotation.sql.DataSourceDefinition
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class jakarta.annotation.sql.DataSourceDefinitions)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean transactional()
+meth public abstract !hasdefault int initialPoolSize()
+meth public abstract !hasdefault int isolationLevel()
+meth public abstract !hasdefault int loginTimeout()
+meth public abstract !hasdefault int maxIdleTime()
+meth public abstract !hasdefault int maxPoolSize()
+meth public abstract !hasdefault int maxStatements()
+meth public abstract !hasdefault int minPoolSize()
+meth public abstract !hasdefault int portNumber()
+meth public abstract !hasdefault java.lang.String databaseName()
+meth public abstract !hasdefault java.lang.String description()
+meth public abstract !hasdefault java.lang.String password()
+meth public abstract !hasdefault java.lang.String serverName()
+meth public abstract !hasdefault java.lang.String url()
+meth public abstract !hasdefault java.lang.String user()
+meth public abstract !hasdefault java.lang.String[] properties()
+meth public abstract java.lang.String className()
+meth public abstract java.lang.String name()
+
+CLSS public abstract interface !annotation jakarta.annotation.sql.DataSourceDefinitions
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract jakarta.annotation.sql.DataSourceDefinition[] value()
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -408,11 +616,64 @@ meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
 
+CLSS public java.util.HashMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
+cons public init()
+cons public init(int)
+cons public init(int,float)
+cons public init(java.util.Map<? extends {java.util.HashMap%0},? extends {java.util.HashMap%1}>)
+intf java.io.Serializable
+intf java.lang.Cloneable
+intf java.util.Map<{java.util.HashMap%0},{java.util.HashMap%1}>
+meth public boolean containsKey(java.lang.Object)
+meth public boolean containsValue(java.lang.Object)
+meth public boolean isEmpty()
+meth public boolean remove(java.lang.Object,java.lang.Object)
+meth public boolean replace({java.util.HashMap%0},{java.util.HashMap%1},{java.util.HashMap%1})
+meth public int size()
+meth public java.lang.Object clone()
+meth public java.util.Collection<{java.util.HashMap%1}> values()
+meth public java.util.Set<java.util.Map$Entry<{java.util.HashMap%0},{java.util.HashMap%1}>> entrySet()
+meth public java.util.Set<{java.util.HashMap%0}> keySet()
+meth public void clear()
+meth public void forEach(java.util.function.BiConsumer<? super {java.util.HashMap%0},? super {java.util.HashMap%1}>)
+meth public void putAll(java.util.Map<? extends {java.util.HashMap%0},? extends {java.util.HashMap%1}>)
+meth public void replaceAll(java.util.function.BiFunction<? super {java.util.HashMap%0},? super {java.util.HashMap%1},? extends {java.util.HashMap%1}>)
+meth public {java.util.HashMap%1} compute({java.util.HashMap%0},java.util.function.BiFunction<? super {java.util.HashMap%0},? super {java.util.HashMap%1},? extends {java.util.HashMap%1}>)
+meth public {java.util.HashMap%1} computeIfAbsent({java.util.HashMap%0},java.util.function.Function<? super {java.util.HashMap%0},? extends {java.util.HashMap%1}>)
+meth public {java.util.HashMap%1} computeIfPresent({java.util.HashMap%0},java.util.function.BiFunction<? super {java.util.HashMap%0},? super {java.util.HashMap%1},? extends {java.util.HashMap%1}>)
+meth public {java.util.HashMap%1} get(java.lang.Object)
+meth public {java.util.HashMap%1} getOrDefault(java.lang.Object,{java.util.HashMap%1})
+meth public {java.util.HashMap%1} merge({java.util.HashMap%0},{java.util.HashMap%1},java.util.function.BiFunction<? super {java.util.HashMap%1},? super {java.util.HashMap%1},? extends {java.util.HashMap%1}>)
+meth public {java.util.HashMap%1} put({java.util.HashMap%0},{java.util.HashMap%1})
+meth public {java.util.HashMap%1} putIfAbsent({java.util.HashMap%0},{java.util.HashMap%1})
+meth public {java.util.HashMap%1} remove(java.lang.Object)
+meth public {java.util.HashMap%1} replace({java.util.HashMap%0},{java.util.HashMap%1})
+supr java.util.AbstractMap<{java.util.HashMap%0},{java.util.HashMap%1}>
+
 CLSS public abstract interface java.util.Iterator<%0 extends java.lang.Object>
 meth public abstract boolean hasNext()
 meth public abstract {java.util.Iterator%0} next()
 meth public void forEachRemaining(java.util.function.Consumer<? super {java.util.Iterator%0}>)
 meth public void remove()
+
+CLSS public java.util.LinkedHashMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
+cons public init()
+cons public init(int)
+cons public init(int,float)
+cons public init(int,float,boolean)
+cons public init(java.util.Map<? extends {java.util.LinkedHashMap%0},? extends {java.util.LinkedHashMap%1}>)
+intf java.util.Map<{java.util.LinkedHashMap%0},{java.util.LinkedHashMap%1}>
+meth protected boolean removeEldestEntry(java.util.Map$Entry<{java.util.LinkedHashMap%0},{java.util.LinkedHashMap%1}>)
+meth public boolean containsValue(java.lang.Object)
+meth public java.util.Collection<{java.util.LinkedHashMap%1}> values()
+meth public java.util.Set<java.util.Map$Entry<{java.util.LinkedHashMap%0},{java.util.LinkedHashMap%1}>> entrySet()
+meth public java.util.Set<{java.util.LinkedHashMap%0}> keySet()
+meth public void clear()
+meth public void forEach(java.util.function.BiConsumer<? super {java.util.LinkedHashMap%0},? super {java.util.LinkedHashMap%1}>)
+meth public void replaceAll(java.util.function.BiFunction<? super {java.util.LinkedHashMap%0},? super {java.util.LinkedHashMap%1},? extends {java.util.LinkedHashMap%1}>)
+meth public {java.util.LinkedHashMap%1} get(java.lang.Object)
+meth public {java.util.LinkedHashMap%1} getOrDefault(java.lang.Object,{java.util.LinkedHashMap%1})
+supr java.util.HashMap<{java.util.LinkedHashMap%0},{java.util.LinkedHashMap%1}>
 
 CLSS public abstract interface java.util.ListIterator<%0 extends java.lang.Object>
 intf java.util.Iterator<{java.util.ListIterator%0}>
@@ -546,137 +807,12 @@ meth public abstract java.io.OutputStream getOutputStream() throws java.io.IOExc
 meth public abstract java.lang.String getContentType()
 meth public abstract java.lang.String getName()
 
-CLSS public abstract interface !annotation javax.annotation.Generated
- anno 0 java.lang.annotation.Documented()
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=SOURCE)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[PACKAGE, TYPE, ANNOTATION_TYPE, METHOD, CONSTRUCTOR, FIELD, LOCAL_VARIABLE, PARAMETER])
-intf java.lang.annotation.Annotation
-meth public abstract !hasdefault java.lang.String comments()
-meth public abstract !hasdefault java.lang.String date()
-meth public abstract java.lang.String[] value()
-
-CLSS public abstract interface !annotation javax.annotation.ManagedBean
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
-intf java.lang.annotation.Annotation
-meth public abstract !hasdefault java.lang.String value()
-
-CLSS public abstract interface !annotation javax.annotation.PostConstruct
- anno 0 java.lang.annotation.Documented()
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
-intf java.lang.annotation.Annotation
-
-CLSS public abstract interface !annotation javax.annotation.PreDestroy
- anno 0 java.lang.annotation.Documented()
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
-intf java.lang.annotation.Annotation
-
 CLSS public abstract interface !annotation javax.annotation.Priority
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, PARAMETER])
 intf java.lang.annotation.Annotation
 meth public abstract int value()
-
-CLSS public abstract interface !annotation javax.annotation.Resource
- anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.annotation.Resources)
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, FIELD, METHOD])
-innr public final static !enum AuthenticationType
-intf java.lang.annotation.Annotation
-meth public abstract !hasdefault boolean shareable()
-meth public abstract !hasdefault java.lang.Class<?> type()
-meth public abstract !hasdefault java.lang.String description()
-meth public abstract !hasdefault java.lang.String lookup()
-meth public abstract !hasdefault java.lang.String mappedName()
-meth public abstract !hasdefault java.lang.String name()
-meth public abstract !hasdefault javax.annotation.Resource$AuthenticationType authenticationType()
-
-CLSS public final static !enum javax.annotation.Resource$AuthenticationType
- outer javax.annotation.Resource
-fld public final static javax.annotation.Resource$AuthenticationType APPLICATION
-fld public final static javax.annotation.Resource$AuthenticationType CONTAINER
-meth public static javax.annotation.Resource$AuthenticationType valueOf(java.lang.String)
-meth public static javax.annotation.Resource$AuthenticationType[] values()
-supr java.lang.Enum<javax.annotation.Resource$AuthenticationType>
-
-CLSS public abstract interface !annotation javax.annotation.Resources
- anno 0 java.lang.annotation.Documented()
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
-intf java.lang.annotation.Annotation
-meth public abstract javax.annotation.Resource[] value()
-
-CLSS public abstract interface !annotation javax.annotation.security.DeclareRoles
- anno 0 java.lang.annotation.Documented()
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
-intf java.lang.annotation.Annotation
-meth public abstract java.lang.String[] value()
-
-CLSS public abstract interface !annotation javax.annotation.security.DenyAll
- anno 0 java.lang.annotation.Documented()
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
-intf java.lang.annotation.Annotation
-
-CLSS public abstract interface !annotation javax.annotation.security.PermitAll
- anno 0 java.lang.annotation.Documented()
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
-intf java.lang.annotation.Annotation
-
-CLSS public abstract interface !annotation javax.annotation.security.RolesAllowed
- anno 0 java.lang.annotation.Documented()
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
-intf java.lang.annotation.Annotation
-meth public abstract java.lang.String[] value()
-
-CLSS public abstract interface !annotation javax.annotation.security.RunAs
- anno 0 java.lang.annotation.Documented()
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
-intf java.lang.annotation.Annotation
-meth public abstract java.lang.String value()
-
-CLSS public abstract interface !annotation javax.annotation.sql.DataSourceDefinition
- anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.annotation.sql.DataSourceDefinitions)
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
-intf java.lang.annotation.Annotation
-meth public abstract !hasdefault boolean transactional()
-meth public abstract !hasdefault int initialPoolSize()
-meth public abstract !hasdefault int isolationLevel()
-meth public abstract !hasdefault int loginTimeout()
-meth public abstract !hasdefault int maxIdleTime()
-meth public abstract !hasdefault int maxPoolSize()
-meth public abstract !hasdefault int maxStatements()
-meth public abstract !hasdefault int minPoolSize()
-meth public abstract !hasdefault int portNumber()
-meth public abstract !hasdefault java.lang.String databaseName()
-meth public abstract !hasdefault java.lang.String description()
-meth public abstract !hasdefault java.lang.String password()
-meth public abstract !hasdefault java.lang.String serverName()
-meth public abstract !hasdefault java.lang.String url()
-meth public abstract !hasdefault java.lang.String user()
-meth public abstract !hasdefault java.lang.String[] properties()
-meth public abstract java.lang.String className()
-meth public abstract java.lang.String name()
-
-CLSS public abstract interface !annotation javax.annotation.sql.DataSourceDefinitions
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
-intf java.lang.annotation.Annotation
-meth public abstract javax.annotation.sql.DataSourceDefinition[] value()
-
-CLSS public abstract interface !annotation javax.inject.Inject
- anno 0 java.lang.annotation.Documented()
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, CONSTRUCTOR, FIELD])
-intf java.lang.annotation.Annotation
 
 CLSS public abstract interface !annotation javax.inject.Named
  anno 0 java.lang.annotation.Documented()
@@ -7147,6 +7283,12 @@ meth public java.lang.reflect.Method getMethod()
 supr java.lang.Object
 hfds hashCode,method
 
+CLSS public abstract org.glassfish.jersey.AbstractFeatureConfigurator<%0 extends java.lang.Object>
+cons protected init(java.lang.Class,javax.ws.rs.RuntimeType)
+meth protected java.util.List<java.lang.Class<{org.glassfish.jersey.AbstractFeatureConfigurator%0}>> loadImplementations(java.util.Map<java.lang.String,java.lang.Object>,java.lang.ClassLoader)
+meth protected void registerFeatures(java.util.List<java.lang.Class<{org.glassfish.jersey.AbstractFeatureConfigurator%0}>>,org.glassfish.jersey.internal.BootstrapBag)
+supr org.glassfish.jersey.internal.AbstractServiceFinderConfigurator<{org.glassfish.jersey.AbstractFeatureConfigurator%0}>
+
 CLSS public abstract interface !annotation org.glassfish.jersey.Beta
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=CLASS)
@@ -7158,6 +7300,7 @@ fld public final static java.lang.String ALLOW_SYSTEM_PROPERTIES_PROVIDER = "jer
 fld public final static java.lang.String FEATURE_AUTO_DISCOVERY_DISABLE = "jersey.config.disableAutoDiscovery"
 fld public final static java.lang.String FEATURE_AUTO_DISCOVERY_DISABLE_CLIENT = "jersey.config.client.disableAutoDiscovery"
 fld public final static java.lang.String FEATURE_AUTO_DISCOVERY_DISABLE_SERVER = "jersey.config.server.disableAutoDiscovery"
+fld public final static java.lang.String JAXRS_SERVICE_LOADING_ENABLE = "jakarta.ws.rs.loadServices"
 fld public final static java.lang.String JSON_PROCESSING_FEATURE_DISABLE = "jersey.config.disableJsonProcessing"
 fld public final static java.lang.String JSON_PROCESSING_FEATURE_DISABLE_CLIENT = "jersey.config.client.disableJsonProcessing"
 fld public final static java.lang.String JSON_PROCESSING_FEATURE_DISABLE_SERVER = "jersey.config.server.disableJsonProcessing"
@@ -8243,6 +8386,7 @@ intf org.glassfish.jersey.internal.inject.InjectionManager
 meth public !varargs <%0 extends java.lang.Object> java.util.List<org.glassfish.jersey.internal.inject.ServiceHolder<{%%0}>> getAllServiceHolders(java.lang.Class<{%%0}>,java.lang.annotation.Annotation[])
 meth public !varargs <%0 extends java.lang.Object> {%%0} getInstance(java.lang.Class<{%%0}>,java.lang.annotation.Annotation[])
 meth public <%0 extends java.lang.Object> java.util.List<{%%0}> getAllInstances(java.lang.reflect.Type)
+meth public <%0 extends java.lang.Object> {%%0} create(java.lang.Class<{%%0}>)
 meth public <%0 extends java.lang.Object> {%%0} createAndInitialize(java.lang.Class<{%%0}>)
 meth public <%0 extends java.lang.Object> {%%0} getInstance(java.lang.Class<{%%0}>)
 meth public <%0 extends java.lang.Object> {%%0} getInstance(java.lang.Class<{%%0}>,java.lang.String)
@@ -8313,6 +8457,7 @@ intf org.glassfish.jersey.internal.inject.InjectionManager
 meth public !varargs <%0 extends java.lang.Object> java.util.List<org.glassfish.jersey.internal.inject.ServiceHolder<{%%0}>> getAllServiceHolders(java.lang.Class<{%%0}>,java.lang.annotation.Annotation[])
 meth public !varargs <%0 extends java.lang.Object> {%%0} getInstance(java.lang.Class<{%%0}>,java.lang.annotation.Annotation[])
 meth public <%0 extends java.lang.Object> java.util.List<{%%0}> getAllInstances(java.lang.reflect.Type)
+meth public <%0 extends java.lang.Object> {%%0} create(java.lang.Class<{%%0}>)
 meth public <%0 extends java.lang.Object> {%%0} createAndInitialize(java.lang.Class<{%%0}>)
 meth public <%0 extends java.lang.Object> {%%0} getInstance(java.lang.Class<{%%0}>)
 meth public <%0 extends java.lang.Object> {%%0} getInstance(java.lang.Class<{%%0}>,java.lang.String)
@@ -8442,7 +8587,9 @@ hfds hps,map
 CLSS public abstract org.glassfish.jersey.internal.AbstractServiceFinderConfigurator<%0 extends java.lang.Object>
 cons protected init(java.lang.Class<{org.glassfish.jersey.internal.AbstractServiceFinderConfigurator%0}>,javax.ws.rs.RuntimeType)
 intf org.glassfish.jersey.internal.BootstrapConfigurator
+meth protected java.lang.Class<{org.glassfish.jersey.internal.AbstractServiceFinderConfigurator%0}> getContract()
 meth protected java.util.List<java.lang.Class<{org.glassfish.jersey.internal.AbstractServiceFinderConfigurator%0}>> loadImplementations(java.util.Map<java.lang.String,java.lang.Object>)
+meth protected javax.ws.rs.RuntimeType getRuntimeType()
 supr java.lang.Object
 hfds contract,runtimeType
 
@@ -8491,6 +8638,11 @@ meth public void init(org.glassfish.jersey.internal.inject.InjectionManager,org.
 meth public void postInit(org.glassfish.jersey.internal.inject.InjectionManager,org.glassfish.jersey.internal.BootstrapBag)
 supr java.lang.Object
 hfds contextResolverFactory
+
+CLSS public org.glassfish.jersey.internal.DynamicFeatureConfigurator
+cons public init()
+meth public void init(org.glassfish.jersey.internal.inject.InjectionManager,org.glassfish.jersey.internal.BootstrapBag)
+supr org.glassfish.jersey.AbstractFeatureConfigurator<javax.ws.rs.container.DynamicFeature>
 
 CLSS public org.glassfish.jersey.internal.Errors
 innr public static ErrorMessage
@@ -8549,6 +8701,11 @@ meth public void init(org.glassfish.jersey.internal.inject.InjectionManager,org.
 meth public void postInit(org.glassfish.jersey.internal.inject.InjectionManager,org.glassfish.jersey.internal.BootstrapBag)
 supr java.lang.Object
 hfds exceptionMapperFactory
+
+CLSS public org.glassfish.jersey.internal.FeatureConfigurator
+cons public init(javax.ws.rs.RuntimeType)
+meth public void init(org.glassfish.jersey.internal.inject.InjectionManager,org.glassfish.jersey.internal.BootstrapBag)
+supr org.glassfish.jersey.AbstractFeatureConfigurator<javax.ws.rs.core.Feature>
 
 CLSS public org.glassfish.jersey.internal.InternalProperties
 fld public final static java.lang.String JSON_FEATURE = "jersey.config.jsonFeature"
@@ -9691,6 +9848,7 @@ CLSS public abstract interface org.glassfish.jersey.internal.inject.InjectionMan
 meth public abstract !varargs <%0 extends java.lang.Object> java.util.List<org.glassfish.jersey.internal.inject.ServiceHolder<{%%0}>> getAllServiceHolders(java.lang.Class<{%%0}>,java.lang.annotation.Annotation[])
 meth public abstract !varargs <%0 extends java.lang.Object> {%%0} getInstance(java.lang.Class<{%%0}>,java.lang.annotation.Annotation[])
 meth public abstract <%0 extends java.lang.Object> java.util.List<{%%0}> getAllInstances(java.lang.reflect.Type)
+meth public abstract <%0 extends java.lang.Object> {%%0} create(java.lang.Class<{%%0}>)
 meth public abstract <%0 extends java.lang.Object> {%%0} createAndInitialize(java.lang.Class<{%%0}>)
 meth public abstract <%0 extends java.lang.Object> {%%0} getInstance(java.lang.Class<{%%0}>)
 meth public abstract <%0 extends java.lang.Object> {%%0} getInstance(java.lang.Class<{%%0}>,java.lang.String)
@@ -9759,6 +9917,7 @@ cons public init()
 innr public static AggregatedProvider
 innr public static CharacterProvider
 innr public static DateProvider
+innr public static OptionalCustomProvider
 innr public static OptionalProvider
 innr public static StringConstructor
 innr public static TypeFromString
@@ -9770,7 +9929,8 @@ hcls AbstractStringReader
 CLSS public static org.glassfish.jersey.internal.inject.ParamConverters$AggregatedProvider
  outer org.glassfish.jersey.internal.inject.ParamConverters
  anno 0 javax.inject.Singleton()
-cons public init()
+cons public init(org.glassfish.jersey.internal.inject.InjectionManager)
+ anno 0 javax.inject.Inject()
 intf javax.ws.rs.ext.ParamConverterProvider
 meth public <%0 extends java.lang.Object> javax.ws.rs.ext.ParamConverter<{%%0}> getConverter(java.lang.Class<{%%0}>,java.lang.reflect.Type,java.lang.annotation.Annotation[])
 supr java.lang.Object
@@ -9792,15 +9952,23 @@ intf javax.ws.rs.ext.ParamConverterProvider
 meth public <%0 extends java.lang.Object> javax.ws.rs.ext.ParamConverter<{%%0}> getConverter(java.lang.Class<{%%0}>,java.lang.reflect.Type,java.lang.annotation.Annotation[])
 supr java.lang.Object
 
-CLSS public static org.glassfish.jersey.internal.inject.ParamConverters$OptionalProvider
+CLSS public static org.glassfish.jersey.internal.inject.ParamConverters$OptionalCustomProvider
  outer org.glassfish.jersey.internal.inject.ParamConverters
  anno 0 javax.inject.Singleton()
-cons public init(org.glassfish.jersey.internal.inject.ParamConverters$AggregatedProvider)
- anno 0 javax.inject.Inject()
+cons public init(org.glassfish.jersey.internal.inject.InjectionManager)
 intf javax.ws.rs.ext.ParamConverterProvider
 meth public <%0 extends java.lang.Object> javax.ws.rs.ext.ParamConverter<{%%0}> getConverter(java.lang.Class<{%%0}>,java.lang.reflect.Type,java.lang.annotation.Annotation[])
 supr java.lang.Object
-hfds aggregated
+hfds manager
+
+CLSS public static org.glassfish.jersey.internal.inject.ParamConverters$OptionalProvider
+ outer org.glassfish.jersey.internal.inject.ParamConverters
+ anno 0 javax.inject.Singleton()
+cons public init()
+intf javax.ws.rs.ext.ParamConverterProvider
+meth public <%0 extends java.lang.Object> javax.ws.rs.ext.ParamConverter<{%%0}> getConverter(java.lang.Class<{%%0}>,java.lang.reflect.Type,java.lang.annotation.Annotation[])
+supr java.lang.Object
+hcls Optionals
 
 CLSS public static org.glassfish.jersey.internal.inject.ParamConverters$StringConstructor
  outer org.glassfish.jersey.internal.inject.ParamConverters
@@ -10287,6 +10455,7 @@ meth public static <%0 extends java.lang.Object> {%%0} getValue(java.util.Map<ja
 meth public static <%0 extends java.lang.Object> {%%0} getValue(java.util.Map<java.lang.String,?>,javax.ws.rs.RuntimeType,java.lang.String,java.lang.Class<{%%0}>,java.util.Map<java.lang.String,java.lang.String>)
 meth public static <%0 extends java.lang.Object> {%%0} getValue(java.util.Map<java.lang.String,?>,javax.ws.rs.RuntimeType,java.lang.String,{%%0},java.lang.Class<{%%0}>,java.util.Map<java.lang.String,java.lang.String>)
 meth public static <%0 extends java.lang.Object> {%%0} getValue(java.util.Map<java.lang.String,?>,javax.ws.rs.RuntimeType,java.lang.String,{%%0},java.util.Map<java.lang.String,java.lang.String>)
+meth public static boolean isJaxRsServiceLoadingEnabled(java.util.Map<java.lang.String,java.lang.Object>)
 meth public static boolean isMetaInfServicesEnabled(java.util.Map<java.lang.String,java.lang.Object>,javax.ws.rs.RuntimeType)
 meth public static boolean isProperty(java.lang.Object)
 meth public static boolean isProperty(java.util.Map<java.lang.String,java.lang.Object>,java.lang.String)
@@ -10295,7 +10464,7 @@ meth public static java.security.PrivilegedAction<java.lang.String> getSystemPro
 meth public static java.security.PrivilegedAction<java.lang.String> getSystemProperty(java.lang.String,java.lang.String)
 meth public static java.security.PrivilegedAction<java.util.Properties> getSystemProperties()
 supr java.lang.Object
-hfds LOGGER,METAINF_SERVICES_LOOKUP_DISABLE_DEFAULT
+hfds JAXRS_SERVICE_LOADING_ENABLE_DEFAULT,LOGGER,METAINF_SERVICES_LOOKUP_DISABLE_DEFAULT
 
 CLSS public abstract interface !annotation org.glassfish.jersey.internal.util.Property
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
@@ -10627,6 +10796,359 @@ meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> ja
 meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> setDiffView(java.util.Set<? extends {%%0}>,java.util.Set<? extends {%%0}>)
 meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> setUnionView(java.util.Set<? extends {%%0}>,java.util.Set<? extends {%%0}>)
 supr java.lang.Object
+
+CLSS public org.glassfish.jersey.jackson.JacksonFeature
+cons public init()
+intf javax.ws.rs.core.Feature
+meth public boolean configure(javax.ws.rs.core.FeatureContext)
+meth public static org.glassfish.jersey.jackson.JacksonFeature withExceptionMappers()
+meth public static org.glassfish.jersey.jackson.JacksonFeature withoutExceptionMappers()
+supr java.lang.Object
+hfds JSON_FEATURE,registerExceptionMappers
+
+CLSS public org.glassfish.jersey.jackson.internal.DefaultJacksonJaxbJsonProvider
+ anno 0 javax.inject.Singleton()
+ anno 0 javax.ws.rs.Consumes(java.lang.String[] value=["*/*"])
+ anno 0 javax.ws.rs.Produces(java.lang.String[] value=["*/*"])
+cons public !varargs init(org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations[])
+cons public init()
+supr org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider
+hfds EXCLUDE_MODULE_NAME
+
+CLSS public final org.glassfish.jersey.jackson.internal.FilteringJacksonJaxbJsonProvider
+ anno 0 javax.inject.Singleton()
+ anno 0 javax.ws.rs.Consumes(java.lang.String[] value=["*/*"])
+ anno 0 javax.ws.rs.Produces(java.lang.String[] value=["*/*"])
+cons public init()
+meth protected org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JsonEndpointConfig _configForWriting(com.fasterxml.jackson.databind.ObjectMapper,java.lang.annotation.Annotation[],java.lang.Class<?>)
+meth public void writeTo(java.lang.Object,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,java.io.OutputStream) throws java.io.IOException
+supr org.glassfish.jersey.jackson.internal.DefaultJacksonJaxbJsonProvider
+hfds provider
+hcls FilteringObjectWriterModifier
+
+CLSS public org.glassfish.jersey.jackson.internal.JacksonAutoDiscoverable
+ anno 0 javax.annotation.Priority(int value=2000)
+cons public init()
+intf org.glassfish.jersey.internal.spi.AutoDiscoverable
+meth public void configure(javax.ws.rs.core.FeatureContext)
+supr java.lang.Object
+
+CLSS public final org.glassfish.jersey.jackson.internal.JacksonFilteringFeature
+cons public init()
+intf javax.ws.rs.core.Feature
+meth public boolean configure(javax.ws.rs.core.FeatureContext)
+supr java.lang.Object
+hcls Binder
+
+CLSS public abstract interface !annotation org.glassfish.jersey.jackson.internal.jackson.jaxrs.annotation.JacksonFeatures
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD, PARAMETER])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault com.fasterxml.jackson.databind.DeserializationFeature[] deserializationDisable()
+meth public abstract !hasdefault com.fasterxml.jackson.databind.DeserializationFeature[] deserializationEnable()
+meth public abstract !hasdefault com.fasterxml.jackson.databind.SerializationFeature[] serializationDisable()
+meth public abstract !hasdefault com.fasterxml.jackson.databind.SerializationFeature[] serializationEnable()
+
+CLSS public org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.JsonMappingExceptionMapper
+cons public init()
+intf javax.ws.rs.ext.ExceptionMapper<com.fasterxml.jackson.databind.JsonMappingException>
+meth public javax.ws.rs.core.Response toResponse(com.fasterxml.jackson.databind.JsonMappingException)
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.JsonParseExceptionMapper
+cons public init()
+intf javax.ws.rs.ext.ExceptionMapper<com.fasterxml.jackson.core.JsonParseException>
+meth public javax.ws.rs.core.Response toResponse(com.fasterxml.jackson.core.JsonParseException)
+supr java.lang.Object
+
+CLSS public abstract org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase<%0 extends org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase<{org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%0},{org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%1},{org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%2},{org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%3}>, %1 extends com.fasterxml.jackson.databind.ObjectMapper, %2 extends org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.EndpointConfigBase<{org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%2}>, %3 extends org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.MapperConfiguratorBase<{org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%3},{org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%1}>>
+cons protected init()
+ anno 0 java.lang.Deprecated()
+cons protected init({org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%3})
+fld protected boolean _cfgCheckCanDeserialize
+fld protected boolean _cfgCheckCanSerialize
+fld protected final java.util.concurrent.atomic.AtomicReference<java.io.IOException> _noContentExceptionRef
+fld protected final org.glassfish.jersey.jackson.internal.jackson.jaxrs.util.LRUMap<org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.AnnotationBundleKey,{org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%2}> _readers
+fld protected final org.glassfish.jersey.jackson.internal.jackson.jaxrs.util.LRUMap<org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.AnnotationBundleKey,{org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%2}> _writers
+fld protected final static int JAXRS_FEATURE_DEFAULTS
+fld protected final static java.util.HashSet<org.glassfish.jersey.jackson.internal.jackson.jaxrs.util.ClassKey> DEFAULT_UNTOUCHABLES
+fld protected final {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%3} _mapperConfig
+fld protected int _jaxRSFeatures
+fld protected java.lang.Class<?> _defaultReadView
+fld protected java.lang.Class<?> _defaultWriteView
+fld protected java.util.HashMap<org.glassfish.jersey.jackson.internal.jackson.jaxrs.util.ClassKey,java.lang.Boolean> _cfgCustomUntouchables
+fld public final static java.lang.Class<?>[] DEFAULT_UNREADABLES
+fld public final static java.lang.Class<?>[] DEFAULT_UNWRITABLES
+fld public final static java.lang.Class<?>[] _unreadableClasses
+fld public final static java.lang.Class<?>[] _unwritableClasses
+fld public final static java.lang.String HEADER_CONTENT_TYPE_OPTIONS = "X-Content-Type-Options"
+fld public final static java.util.HashSet<org.glassfish.jersey.jackson.internal.jackson.jaxrs.util.ClassKey> _untouchables
+intf com.fasterxml.jackson.core.Versioned
+intf javax.ws.rs.ext.MessageBodyReader<java.lang.Object>
+intf javax.ws.rs.ext.MessageBodyWriter<java.lang.Object>
+meth protected abstract boolean hasMatchingMediaType(javax.ws.rs.core.MediaType)
+meth protected abstract {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%1} _locateMapperViaProvider(java.lang.Class<?>,javax.ws.rs.core.MediaType)
+meth protected abstract {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%2} _configForReading(com.fasterxml.jackson.databind.ObjectReader,java.lang.annotation.Annotation[])
+meth protected abstract {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%2} _configForWriting(com.fasterxml.jackson.databind.ObjectWriter,java.lang.annotation.Annotation[])
+meth protected boolean _isIgnorableForReading(org.glassfish.jersey.jackson.internal.jackson.jaxrs.util.ClassKey)
+meth protected boolean _isIgnorableForWriting(org.glassfish.jersey.jackson.internal.jackson.jaxrs.util.ClassKey)
+meth protected boolean _isSpecialReadable(java.lang.Class<?>)
+meth protected boolean hasMatchingMediaTypeForReading(javax.ws.rs.core.MediaType)
+meth protected boolean hasMatchingMediaTypeForWriting(javax.ws.rs.core.MediaType)
+meth protected com.fasterxml.jackson.core.JsonEncoding findEncoding(javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>)
+meth protected com.fasterxml.jackson.core.JsonGenerator _createGenerator(com.fasterxml.jackson.databind.ObjectWriter,java.io.OutputStream,com.fasterxml.jackson.core.JsonEncoding) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonParser _createParser(com.fasterxml.jackson.databind.ObjectReader,java.io.InputStream) throws java.io.IOException
+meth protected java.io.IOException _createNoContentException()
+meth protected java.lang.Boolean _findCustomUntouchable(java.lang.Class<?>)
+meth protected static boolean _containedIn(java.lang.Class<?>,java.util.HashSet<org.glassfish.jersey.jackson.internal.jackson.jaxrs.util.ClassKey>)
+meth protected static java.util.List<java.lang.Class<?>> findSuperTypes(java.lang.Class<?>,java.lang.Class<?>)
+meth protected static java.util.List<java.lang.Class<?>> findSuperTypes(java.lang.Class<?>,java.lang.Class<?>,java.util.List<java.lang.Class<?>>)
+meth protected static void _addSuperTypes(java.lang.Class<?>,java.lang.Class<?>,java.util.Collection<java.lang.Class<?>>,boolean)
+meth protected void _modifyHeaders(java.lang.Object,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,{org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%2}) throws java.io.IOException
+meth protected {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%2} _configForReading({org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%1},java.lang.annotation.Annotation[],java.lang.Class<?>)
+meth protected {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%2} _configForWriting({org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%1},java.lang.annotation.Annotation[],java.lang.Class<?>)
+meth protected {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%2} _endpointForReading(java.lang.Class<java.lang.Object>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>)
+meth protected {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%2} _endpointForWriting(java.lang.Object,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>)
+meth public !varargs {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%0} disable(org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.JaxRSFeature,org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.JaxRSFeature[])
+meth public !varargs {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%0} enable(org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.JaxRSFeature,org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.JaxRSFeature[])
+meth public boolean isEnabled(org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.JaxRSFeature)
+meth public boolean isReadable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public boolean isWriteable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public java.lang.Object readFrom(java.lang.Class<java.lang.Object>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>,java.io.InputStream) throws java.io.IOException
+meth public long getSize(java.lang.Object,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
+meth public void addUntouchable(java.lang.Class<?>)
+meth public void checkCanDeserialize(boolean)
+meth public void checkCanSerialize(boolean)
+meth public void removeUntouchable(java.lang.Class<?>)
+meth public void setAnnotationsToUse(org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations[])
+meth public void setMapper({org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%1})
+meth public void writeTo(java.lang.Object,java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,java.io.OutputStream) throws java.io.IOException
+meth public {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%0} configure(com.fasterxml.jackson.core.JsonGenerator$Feature,boolean)
+meth public {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%0} configure(com.fasterxml.jackson.core.JsonParser$Feature,boolean)
+meth public {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%0} configure(com.fasterxml.jackson.databind.DeserializationFeature,boolean)
+meth public {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%0} configure(com.fasterxml.jackson.databind.SerializationFeature,boolean)
+meth public {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%0} configure(org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.JaxRSFeature,boolean)
+meth public {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%0} disable(com.fasterxml.jackson.core.JsonGenerator$Feature)
+meth public {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%0} disable(com.fasterxml.jackson.core.JsonParser$Feature)
+meth public {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%0} disable(com.fasterxml.jackson.databind.DeserializationFeature)
+meth public {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%0} disable(com.fasterxml.jackson.databind.SerializationFeature)
+meth public {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%0} disable(org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.JaxRSFeature)
+meth public {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%0} enable(com.fasterxml.jackson.core.JsonGenerator$Feature)
+meth public {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%0} enable(com.fasterxml.jackson.core.JsonParser$Feature)
+meth public {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%0} enable(com.fasterxml.jackson.databind.DeserializationFeature)
+meth public {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%0} enable(com.fasterxml.jackson.databind.SerializationFeature)
+meth public {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%0} enable(org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.JaxRSFeature)
+meth public {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%0} setDefaultReadView(java.lang.Class<?>)
+meth public {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%0} setDefaultView(java.lang.Class<?>)
+meth public {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%0} setDefaultWriteView(java.lang.Class<?>)
+meth public {org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase%1} locateMapper(java.lang.Class<?>,javax.ws.rs.core.MediaType)
+supr java.lang.Object
+
+CLSS public final org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.AnnotationBundleKey
+cons public init(java.lang.annotation.Annotation[],java.lang.Class<?>)
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.String toString()
+meth public org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.AnnotationBundleKey immutableKey()
+supr java.lang.Object
+hfds NO_ANNOTATIONS,_annotations,_annotationsCopied,_hashCode,_type
+
+CLSS public final !enum org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations
+fld public final static org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations JACKSON
+fld public final static org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations JAXB
+meth public static org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations valueOf(java.lang.String)
+meth public static org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations[] values()
+supr java.lang.Enum<org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations>
+
+CLSS public abstract org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.EndpointConfigBase<%0 extends org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.EndpointConfigBase<{org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.EndpointConfigBase%0}>>
+cons protected init(com.fasterxml.jackson.databind.cfg.MapperConfig<?>)
+fld protected com.fasterxml.jackson.databind.DeserializationFeature[] _deserDisable
+fld protected com.fasterxml.jackson.databind.DeserializationFeature[] _deserEnable
+fld protected com.fasterxml.jackson.databind.ObjectReader _reader
+fld protected com.fasterxml.jackson.databind.ObjectWriter _writer
+fld protected com.fasterxml.jackson.databind.SerializationFeature[] _serDisable
+fld protected com.fasterxml.jackson.databind.SerializationFeature[] _serEnable
+fld protected final com.fasterxml.jackson.databind.cfg.MapperConfig<?> _config
+fld protected java.lang.Class<?> _activeView
+fld protected java.lang.String _rootName
+meth protected static <%0 extends java.lang.Object> {%%0}[] nullIfEmpty({%%0}[])
+meth protected void addAnnotation(java.lang.Class<? extends java.lang.annotation.Annotation>,java.lang.annotation.Annotation,boolean)
+meth protected {org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.EndpointConfigBase%0} add(java.lang.annotation.Annotation[],boolean)
+meth protected {org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.EndpointConfigBase%0} initReader(com.fasterxml.jackson.databind.ObjectReader)
+meth protected {org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.EndpointConfigBase%0} initWriter(com.fasterxml.jackson.databind.ObjectWriter)
+meth public abstract java.lang.Object modifyBeforeWrite(java.lang.Object)
+meth public final com.fasterxml.jackson.databind.ObjectReader getReader()
+meth public final com.fasterxml.jackson.databind.ObjectWriter getWriter()
+meth public java.lang.Class<?> getActiveView()
+meth public java.lang.String getRootName()
+supr java.lang.Object
+
+CLSS public final !enum org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.JaxRSFeature
+fld public final static org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.JaxRSFeature ADD_NO_SNIFF_HEADER
+fld public final static org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.JaxRSFeature ALLOW_EMPTY_INPUT
+fld public final static org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.JaxRSFeature CACHE_ENDPOINT_READERS
+fld public final static org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.JaxRSFeature CACHE_ENDPOINT_WRITERS
+fld public final static org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.JaxRSFeature DYNAMIC_OBJECT_MAPPER_LOOKUP
+intf com.fasterxml.jackson.databind.cfg.ConfigFeature
+meth public boolean enabledByDefault()
+meth public boolean enabledIn(int)
+meth public int getMask()
+meth public static int collectDefaults()
+meth public static org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.JaxRSFeature valueOf(java.lang.String)
+meth public static org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.JaxRSFeature[] values()
+supr java.lang.Enum<org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.JaxRSFeature>
+hfds _defaultState
+
+CLSS public abstract org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.MapperConfiguratorBase<%0 extends org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.MapperConfiguratorBase<{org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.MapperConfiguratorBase%0},{org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.MapperConfiguratorBase%1}>, %1 extends com.fasterxml.jackson.databind.ObjectMapper>
+cons public init({org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.MapperConfiguratorBase%1},org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations[])
+fld protected java.lang.Class<? extends com.fasterxml.jackson.databind.AnnotationIntrospector> _jaxbIntrospectorClass
+fld protected org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations[] _defaultAnnotationsToUse
+fld protected {org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.MapperConfiguratorBase%1} _defaultMapper
+fld protected {org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.MapperConfiguratorBase%1} _mapper
+meth protected abstract com.fasterxml.jackson.databind.AnnotationIntrospector _resolveIntrospectors(org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations[])
+meth protected abstract {org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.MapperConfiguratorBase%1} mapper()
+meth protected final void _setAnnotations(com.fasterxml.jackson.databind.ObjectMapper,org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations[])
+meth public abstract {org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.MapperConfiguratorBase%1} getConfiguredMapper()
+meth public abstract {org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.MapperConfiguratorBase%1} getDefaultMapper()
+meth public final void configure(com.fasterxml.jackson.core.JsonGenerator$Feature,boolean)
+meth public final void configure(com.fasterxml.jackson.core.JsonParser$Feature,boolean)
+meth public final void configure(com.fasterxml.jackson.databind.DeserializationFeature,boolean)
+meth public final void configure(com.fasterxml.jackson.databind.SerializationFeature,boolean)
+meth public final void setAnnotationsToUse(org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations[])
+meth public final void setMapper({org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.MapperConfiguratorBase%1})
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.ObjectReaderInjector
+fld protected final static java.lang.ThreadLocal<org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.ObjectReaderModifier> _threadLocal
+fld protected final static java.util.concurrent.atomic.AtomicBoolean _hasBeenSet
+meth public static org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.ObjectReaderModifier get()
+meth public static org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.ObjectReaderModifier getAndClear()
+meth public static void set(org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.ObjectReaderModifier)
+supr java.lang.Object
+
+CLSS public abstract org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.ObjectReaderModifier
+cons public init()
+meth public abstract com.fasterxml.jackson.databind.ObjectReader modify(org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.EndpointConfigBase<?>,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.ObjectReader,com.fasterxml.jackson.core.JsonParser) throws java.io.IOException
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.ObjectWriterInjector
+fld protected final static java.lang.ThreadLocal<org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.ObjectWriterModifier> _threadLocal
+fld protected final static java.util.concurrent.atomic.AtomicBoolean _hasBeenSet
+meth public static org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.ObjectWriterModifier get()
+meth public static org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.ObjectWriterModifier getAndClear()
+meth public static void set(org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.ObjectWriterModifier)
+supr java.lang.Object
+
+CLSS public abstract org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.ObjectWriterModifier
+cons public init()
+meth public abstract com.fasterxml.jackson.databind.ObjectWriter modify(org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.EndpointConfigBase<?>,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,java.lang.Object,com.fasterxml.jackson.databind.ObjectWriter,com.fasterxml.jackson.core.JsonGenerator) throws java.io.IOException
+supr java.lang.Object
+
+CLSS public org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider
+ anno 0 javax.ws.rs.Consumes(java.lang.String[] value=["*/*"])
+ anno 0 javax.ws.rs.Produces(java.lang.String[] value=["*/*"])
+ anno 0 javax.ws.rs.ext.Provider()
+cons public !varargs init(org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations[])
+cons public init()
+cons public init(com.fasterxml.jackson.databind.ObjectMapper,org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations[])
+fld public final static org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations[] DEFAULT_ANNOTATIONS
+supr org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJsonProvider
+
+CLSS public org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJsonProvider
+ anno 0 javax.ws.rs.Consumes(java.lang.String[] value=["*/*"])
+ anno 0 javax.ws.rs.Produces(java.lang.String[] value=["*/*"])
+ anno 0 javax.ws.rs.ext.Provider()
+cons public !varargs init(org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations[])
+cons public init()
+cons public init(com.fasterxml.jackson.databind.ObjectMapper)
+cons public init(com.fasterxml.jackson.databind.ObjectMapper,org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations[])
+fld protected java.lang.String _jsonpFunctionName
+fld protected javax.ws.rs.ext.Providers _providers
+ anno 0 javax.ws.rs.core.Context()
+fld public final static java.lang.String MIME_JAVASCRIPT = "application/javascript"
+fld public final static java.lang.String MIME_JAVASCRIPT_MS = "application/x-javascript"
+fld public final static org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations[] BASIC_ANNOTATIONS
+meth protected boolean hasMatchingMediaType(javax.ws.rs.core.MediaType)
+meth protected com.fasterxml.jackson.databind.ObjectMapper _locateMapperViaProvider(java.lang.Class<?>,javax.ws.rs.core.MediaType)
+meth protected org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JsonEndpointConfig _configForReading(com.fasterxml.jackson.databind.ObjectReader,java.lang.annotation.Annotation[])
+meth protected org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JsonEndpointConfig _configForWriting(com.fasterxml.jackson.databind.ObjectWriter,java.lang.annotation.Annotation[])
+meth public com.fasterxml.jackson.core.Version version()
+meth public void setJSONPFunctionName(java.lang.String)
+supr org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase<org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJsonProvider,com.fasterxml.jackson.databind.ObjectMapper,org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JsonEndpointConfig,org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JsonMapperConfigurator>
+
+CLSS public org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JsonEndpointConfig
+cons protected init(com.fasterxml.jackson.databind.cfg.MapperConfig<?>)
+fld protected org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.annotation.JSONP$Def _jsonp
+meth protected void addAnnotation(java.lang.Class<? extends java.lang.annotation.Annotation>,java.lang.annotation.Annotation,boolean)
+meth public java.lang.Object applyJSONP(java.lang.Object)
+meth public java.lang.Object modifyBeforeWrite(java.lang.Object)
+meth public static org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JsonEndpointConfig forReading(com.fasterxml.jackson.databind.ObjectReader,java.lang.annotation.Annotation[])
+meth public static org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JsonEndpointConfig forWriting(com.fasterxml.jackson.databind.ObjectWriter,java.lang.annotation.Annotation[],java.lang.String)
+supr org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.EndpointConfigBase<org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JsonEndpointConfig>
+
+CLSS public org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JsonMapperConfigurator
+cons public init(com.fasterxml.jackson.databind.ObjectMapper,org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations[])
+meth protected com.fasterxml.jackson.databind.AnnotationIntrospector _resolveIntrospector(org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations)
+meth protected com.fasterxml.jackson.databind.AnnotationIntrospector _resolveIntrospectors(org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations[])
+meth protected com.fasterxml.jackson.databind.ObjectMapper mapper()
+meth public com.fasterxml.jackson.databind.ObjectMapper getConfiguredMapper()
+meth public com.fasterxml.jackson.databind.ObjectMapper getDefaultMapper()
+supr org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.MapperConfiguratorBase<org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JsonMapperConfigurator,com.fasterxml.jackson.databind.ObjectMapper>
+
+CLSS public final org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.PackageVersion
+cons public init()
+fld public final static com.fasterxml.jackson.core.Version VERSION
+intf com.fasterxml.jackson.core.Versioned
+meth public com.fasterxml.jackson.core.Version version()
+supr java.lang.Object
+
+CLSS public abstract interface !annotation org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.annotation.JSONP
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
+innr public static Def
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String prefix()
+meth public abstract !hasdefault java.lang.String suffix()
+meth public abstract !hasdefault java.lang.String value()
+
+CLSS public static org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.annotation.JSONP$Def
+ outer org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.annotation.JSONP
+cons public init(java.lang.String)
+cons public init(org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.annotation.JSONP)
+fld public final java.lang.String method
+fld public final java.lang.String prefix
+fld public final java.lang.String suffix
+supr java.lang.Object
+
+CLSS public final org.glassfish.jersey.jackson.internal.jackson.jaxrs.util.ClassKey
+cons public init()
+cons public init(java.lang.Class<?>)
+intf java.lang.Comparable<org.glassfish.jersey.jackson.internal.jackson.jaxrs.util.ClassKey>
+meth public boolean equals(java.lang.Object)
+meth public int compareTo(org.glassfish.jersey.jackson.internal.jackson.jaxrs.util.ClassKey)
+meth public int hashCode()
+meth public java.lang.String toString()
+meth public void reset(java.lang.Class<?>)
+supr java.lang.Object
+hfds _class,_className,_hashCode
+
+CLSS public org.glassfish.jersey.jackson.internal.jackson.jaxrs.util.EndpointAsBeanProperty
+cons protected init(org.glassfish.jersey.jackson.internal.jackson.jaxrs.util.EndpointAsBeanProperty,com.fasterxml.jackson.databind.JavaType)
+cons public init(com.fasterxml.jackson.databind.PropertyName,com.fasterxml.jackson.databind.JavaType,java.lang.annotation.Annotation[])
+fld protected java.lang.annotation.Annotation[] _rawAnnotations
+fld public com.fasterxml.jackson.databind.introspect.AnnotationMap _annotations
+fld public final static com.fasterxml.jackson.databind.PropertyName ENDPOINT_NAME
+meth protected com.fasterxml.jackson.databind.introspect.AnnotationMap annotations()
+meth public <%0 extends java.lang.annotation.Annotation> {%%0} getAnnotation(java.lang.Class<{%%0}>)
+meth public com.fasterxml.jackson.databind.BeanProperty$Std withType(com.fasterxml.jackson.databind.JavaType)
+supr com.fasterxml.jackson.databind.BeanProperty$Std
+hfds NO_ANNOTATIONS,serialVersionUID
+
+CLSS public org.glassfish.jersey.jackson.internal.jackson.jaxrs.util.LRUMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
+cons public init(int,int)
+fld protected final int _maxEntries
+meth protected boolean removeEldestEntry(java.util.Map$Entry<{org.glassfish.jersey.jackson.internal.jackson.jaxrs.util.LRUMap%0},{org.glassfish.jersey.jackson.internal.jackson.jaxrs.util.LRUMap%1}>)
+supr java.util.LinkedHashMap<{org.glassfish.jersey.jackson.internal.jackson.jaxrs.util.LRUMap%0},{org.glassfish.jersey.jackson.internal.jackson.jaxrs.util.LRUMap%1}>
 
 CLSS public org.glassfish.jersey.logging.LoggingFeature
 cons public init()

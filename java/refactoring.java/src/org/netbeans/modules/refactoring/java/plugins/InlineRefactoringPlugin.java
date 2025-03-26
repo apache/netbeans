@@ -75,7 +75,7 @@ public class InlineRefactoringPlugin extends JavaRefactoringPlugin {
     
     protected ClasspathInfo getClasspathInfo(Set<FileObject> a) {
         ClasspathInfo cpInfo;
-        cpInfo = JavaRefactoringUtils.getClasspathInfoFor(a.toArray(new FileObject[a.size()]));
+        cpInfo = JavaRefactoringUtils.getClasspathInfoFor(a.toArray(new FileObject[0]));
         return cpInfo;
     }
 
@@ -212,7 +212,7 @@ public class InlineRefactoringPlugin extends JavaRefactoringPlugin {
             case FIELD:
             case LOCAL_VARIABLE:
                 Tree tree = javac.getTrees().getTree(element);
-                if (!tree.getKind().equals(Tree.Kind.VARIABLE)) {
+                if (tree.getKind() != Tree.Kind.VARIABLE) {
                     preCheckProblem = createProblem(preCheckProblem, true, ERR_InlineWrongType(element.getKind().toString())); //NOI18N
                 }
                 VariableTree variableTree = (VariableTree) tree;
@@ -247,7 +247,7 @@ public class InlineRefactoringPlugin extends JavaRefactoringPlugin {
                 // Possible change
                 ExpressionTree initializer = variableTree.getInitializer();
                 int skipFirstMethodInvocation = 0;
-                if (initializer.getKind().equals(Tree.Kind.METHOD_INVOCATION)) {
+                if (initializer.getKind() == Tree.Kind.METHOD_INVOCATION) {
                     skipFirstMethodInvocation++;
                 }
                 ErrorAwareTreeScanner<Boolean, Boolean> scanner = new UnsafeTreeScanner(skipFirstMethodInvocation);
@@ -294,8 +294,8 @@ public class InlineRefactoringPlugin extends JavaRefactoringPlugin {
                 MethodTree methodTree = (MethodTree) methodPath.getLeaf();
                 Tree returnType = methodTree.getReturnType();
                 boolean hasReturn = true;
-                if (returnType.getKind().equals(Tree.Kind.PRIMITIVE_TYPE)) {
-                    if (((PrimitiveTypeTree) returnType).getPrimitiveTypeKind().equals(TypeKind.VOID)) {
+                if (returnType.getKind() == Tree.Kind.PRIMITIVE_TYPE) {
+                    if (((PrimitiveTypeTree) returnType).getPrimitiveTypeKind() == TypeKind.VOID) {
                         hasReturn = false;
                     }
                 }
@@ -348,9 +348,9 @@ public class InlineRefactoringPlugin extends JavaRefactoringPlugin {
             if (element.equals(asElement)) {
                 isRecursive = true;
             } else if (asElement != null) {
-                if (asElement.getKind().equals(ElementKind.FIELD)
-                        || asElement.getKind().equals(ElementKind.METHOD)
-                        || asElement.getKind().equals(ElementKind.CLASS)) {
+                if (asElement.getKind() == ElementKind.FIELD
+                        || asElement.getKind() == ElementKind.METHOD
+                        || asElement.getKind() == ElementKind.CLASS) {
                     Modifier mod = getAccessSpecifier(asElement.getModifiers());
 //                    accessorRightProblem = hasAccessorRightProblem(mod);
                     qualIdentProblem = hasQualIdentProblem(element, asElement);
@@ -364,8 +364,7 @@ public class InlineRefactoringPlugin extends JavaRefactoringPlugin {
             ElementUtilities elementUtilities = workingCopy.getElementUtilities();
             TypeElement bodyEnclosingTypeElement = elementUtilities.enclosingTypeElement(p);
             TypeElement invocationEnclosingTypeElement = elementUtilities.enclosingTypeElement(asElement);
-            if (bodyEnclosingTypeElement.equals(invocationEnclosingTypeElement)
-                    && (access == null || !access.equals(Modifier.PRIVATE))) {
+            if (bodyEnclosingTypeElement.equals(invocationEnclosingTypeElement) && access != Modifier.PRIVATE) {
                 result = true;
             }
             return result;
@@ -415,9 +414,9 @@ public class InlineRefactoringPlugin extends JavaRefactoringPlugin {
             Element asElement = asElement(new TreePath(p, node));
             if (!node.getName().contentEquals("this") &&
                     asElement != null && 
-                    (asElement.getKind().equals(ElementKind.FIELD)
-                    || asElement.getKind().equals(ElementKind.METHOD)
-                    || asElement.getKind().equals(ElementKind.CLASS))) {
+                    (asElement.getKind() == ElementKind.FIELD
+                    || asElement.getKind() == ElementKind.METHOD
+                    || asElement.getKind() == ElementKind.CLASS)) {
                 Modifier mod = getAccessSpecifier(asElement.getModifiers());
 //                accessorRightProblem = hasAccessorRightProblem(mod);
                 qualIdentProblem = hasQualIdentProblem(element, asElement);
@@ -428,9 +427,9 @@ public class InlineRefactoringPlugin extends JavaRefactoringPlugin {
         @Override
         public Tree visitNewClass(NewClassTree node, TreePath p) {
             Element asElement = asElement(new TreePath(p, node));
-            if (asElement != null && (asElement.getKind().equals(ElementKind.FIELD) 
-                    || asElement.getKind().equals(ElementKind.METHOD)
-                    || asElement.getKind().equals(ElementKind.CLASS))) {
+            if (asElement != null && (asElement.getKind() == ElementKind.FIELD
+                    || asElement.getKind() == ElementKind.METHOD
+                    || asElement.getKind() == ElementKind.CLASS)) {
                 Modifier mod = getAccessSpecifier(asElement.getModifiers());
 //                accessorRightProblem = hasAccessorRightProblem(mod);
                 qualIdentProblem = hasQualIdentProblem(element, asElement);
@@ -441,9 +440,9 @@ public class InlineRefactoringPlugin extends JavaRefactoringPlugin {
         @Override
         public Tree visitMemberSelect(MemberSelectTree node, TreePath p) {
             Element asElement = asElement(new TreePath(p, node));
-            if (asElement != null && (asElement.getKind().equals(ElementKind.FIELD)
-                    || asElement.getKind().equals(ElementKind.METHOD)
-                    || asElement.getKind().equals(ElementKind.CLASS))) {
+            if (asElement != null && (asElement.getKind() == ElementKind.FIELD
+                    || asElement.getKind() == ElementKind.METHOD
+                    || asElement.getKind() == ElementKind.CLASS)) {
                 Modifier mod = getAccessSpecifier(asElement.getModifiers());
 //                accessorRightProblem = hasAccessorRightProblem(mod);
                 qualIdentProblem = hasQualIdentProblem(element, asElement);

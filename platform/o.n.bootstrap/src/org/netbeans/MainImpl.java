@@ -119,6 +119,19 @@ final class MainImpl extends Object {
         }
         // #34069: need to do the same for nbdirs.
         String nbdirs = System.getProperty("netbeans.dirs"); // NOI18N
+        String extNbDirs = System.getProperty("netbeans.extra.dirs"); // NOI18N
+        if (extNbDirs != null) {
+            // support for potential spaces in the cluster path:
+            if (extNbDirs.startsWith("\"")) {
+                extNbDirs = extNbDirs.substring(1, extNbDirs.lastIndexOf('"'));
+            }
+            if (nbdirs == null) {
+                nbdirs = extNbDirs;
+            } else {
+                nbdirs = nbdirs + File.pathSeparator + extNbDirs;
+            }
+            System.setProperty("netbeans.dirs", nbdirs); // NOI18N
+        }
         if (nbdirs != null) {
             StringTokenizer tok = new StringTokenizer(nbdirs, File.pathSeparator);
             while (tok.hasMoreTokens()) {
@@ -233,7 +246,7 @@ final class MainImpl extends Object {
             if (r == Integer.MIN_VALUE) {
                 r = 0;
             }
-            TopSecurityManager.exit(r);
+            NbExit.exit(r);
         }
     }
 

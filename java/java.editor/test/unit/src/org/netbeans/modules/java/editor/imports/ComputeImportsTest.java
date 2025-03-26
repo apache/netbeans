@@ -27,7 +27,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -35,7 +34,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -58,7 +56,6 @@ import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.java.source.test.support.MemoryValidator;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.editor.imports.ComputeImports.Pair;
-import org.netbeans.modules.java.source.TestUtil;
 import org.netbeans.modules.java.source.usages.IndexUtil;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
@@ -91,12 +88,14 @@ public class ComputeImportsTest extends NbTestCase {
         "sunw.io.Serializable",
         "sun.rmi.transport.Target",
         "com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.Element",
-        "com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections"
+        "com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections",
+        "com.azul.crs.client.service.JarLoadMonitor.ProcessedJarFiles.LRU.Element"
     }));
     
     private static final List<Pattern> IGNORE_PATTERNS = Collections.unmodifiableList(Arrays.asList(
         Pattern.compile("jdk\\..*\\.internal\\..*"),
-        Pattern.compile("org\\.graalvm\\..*")
+        Pattern.compile("org\\.graalvm\\..*"),
+        Pattern.compile("com\\.azul\\.crs\\..*") // https://docs.azul.com/vulnerability-detection/detailed-information/configuration-options
     ));
 
     private FileObject testSource;
@@ -302,6 +301,26 @@ public class ComputeImportsTest extends NbTestCase {
                                 "package mytest.test;\n"
                                 + "public record MyRecord() {\n"
                                 + "}\n")
+                ),
+                "",
+                "");
+    }
+
+    // https://github.com/apache/netbeans/issues/7073
+    public void testDontImportRootPackageMatchingMember() throws Exception {
+        doTest("test/Test",
+                "11",
+                Arrays.asList(
+                        new FileData("test/Test.java",
+                                "package test;\n" +
+                                "import java.util.List;\n" +
+                                "public class Test {\n" +
+                                "    public static class SomeClass {\n" +
+                                "        public static Object java(java.util.Map<String, String> value) {\n" +
+                                "            return value;\n" +
+                                "        }\n" +
+                                "    }\n" +
+                                "}")
                 ),
                 "",
                 "");

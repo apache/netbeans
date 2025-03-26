@@ -28,7 +28,6 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -36,7 +35,11 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JSeparator;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.libraries.LibrariesCustomizer;
 import org.netbeans.modules.j2ee.persistence.dd.common.Persistence;
 import org.netbeans.modules.j2ee.persistence.provider.DefaultProvider;
@@ -46,6 +49,7 @@ import org.netbeans.modules.j2ee.persistence.spi.provider.PersistenceProviderSup
 import org.netbeans.modules.j2ee.persistence.wizard.Util;
 import org.netbeans.modules.j2ee.persistence.wizard.library.PersistenceLibraryCustomizer;
 import org.netbeans.modules.j2ee.persistence.wizard.library.PersistenceLibrarySupport;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.util.NbBundle;
 import org.openide.util.Parameters;
 
@@ -61,7 +65,7 @@ public final class PersistenceProviderComboboxHelper {
     
     private static final String SEPARATOR = "PersistenceProviderComboboxHelper.SEPARATOR";
     private static final String EMPTY = "PersistenceProviderComboboxHelper.EMPTY";
-    private static final Provider preferredProvider = ProviderUtil.ECLIPSELINK_PROVIDER;
+    private static final Provider preferredProvider = ProviderUtil.ECLIPSELINK_PROVIDER3_1;
 
     private final PersistenceProviderSupplier providerSupplier;
     private final Project project;
@@ -80,7 +84,7 @@ public final class PersistenceProviderComboboxHelper {
         
         if (aProviderSupplier == null){
             // a java se project
-            aProviderSupplier = new DefaultPersistenceProviderSupplier();
+            aProviderSupplier = new DefaultPersistenceProviderSupplier(project);
         }
         this.project = project;
         this.providerSupplier = aProviderSupplier;
@@ -115,9 +119,10 @@ public final class PersistenceProviderComboboxHelper {
         
         providerCombo.addActionListener(new ActionListener() {
             
-            Object currentItem = providerCombo.getSelectedItem();
-            int currentIndex = providerCombo.getSelectedIndex();
+            private Object currentItem = providerCombo.getSelectedItem();
+            private int currentIndex = providerCombo.getSelectedIndex();
             
+            @Override
             public void actionPerformed(ActionEvent e) {
                 Object selectedItem = providerCombo.getSelectedItem();
                 // skipping of separator
@@ -171,7 +176,13 @@ public final class PersistenceProviderComboboxHelper {
         int selectIndex = 0;
         if(providers.getSize()>1 && providers.getElementAt(0) instanceof Provider){
             String defProviderVersion = ProviderUtil.getVersion((Provider) providers.getElementAt(0));
-            boolean specialCase = (Util.isJPAVersionSupported(project, Persistence.VERSION_2_0) || Util.isJPAVersionSupported(project, Persistence.VERSION_2_1)) && (defProviderVersion == null || defProviderVersion.equals(Persistence.VERSION_1_0));//jpa 2.0 is supported by default (or first) is jpa1.0 or udefined version provider
+            boolean specialCase = (Util.isJPAVersionSupported(project, Persistence.VERSION_2_0)
+                    || Util.isJPAVersionSupported(project, Persistence.VERSION_2_1)
+                    || Util.isJPAVersionSupported(project, Persistence.VERSION_2_2)
+                    || Util.isJPAVersionSupported(project, Persistence.VERSION_3_0)
+                    || Util.isJPAVersionSupported(project, Persistence.VERSION_3_1)
+                    || Util.isJPAVersionSupported(project, Persistence.VERSION_3_2))
+                    && (defProviderVersion == null || defProviderVersion.equals(Persistence.VERSION_1_0));//jpa 3.1 is supported by default (or first) is jpa1.0 or udefined version provider
             if(specialCase){
                 for (int i = 1; i<providers.getSize() ; i++){
                     if(preferredProvider.equals(providers.getElementAt(i))){
@@ -209,18 +220,22 @@ public final class PersistenceProviderComboboxHelper {
     }
     
     private static class NewPersistenceLibraryItem implements LibraryItem {
+        @Override
         public String getText() {
             return NbBundle.getMessage(PersistenceProviderComboboxHelper.class, "LBL_NewPersistenceLibrary");
         }
+        @Override
         public void performAction() {
             PersistenceLibraryCustomizer.showCustomizer();
         }
     }
     
     private static class ManageLibrariesItem implements LibraryItem {
+        @Override
         public String getText() {
             return NbBundle.getMessage(PersistenceProviderComboboxHelper.class, "LBL_ManageLibraries");
         }
+        @Override
         public void performAction() {
             LibrariesCustomizer.showCustomizer(null);
         }
@@ -234,6 +249,7 @@ public final class PersistenceProviderComboboxHelper {
             this.defaultProvider = defaultProvider;
         }
         
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             
             if (isSelected) {
@@ -280,28 +296,47 @@ public final class PersistenceProviderComboboxHelper {
      * for instance for Java SE projects).
      */ 
     private static class DefaultPersistenceProviderSupplier implements PersistenceProviderSupplier{
-        
+
+        private final Project project;
+
+        public DefaultPersistenceProviderSupplier(Project project) {
+            this.project = project;
+        }
+
         @Override
         public List<Provider> getSupportedProviders() {
-            ArrayList<Provider> providers = new ArrayList<Provider>();
-            for (Provider each : PersistenceLibrarySupport.getProvidersFromLibraries()){
-                boolean found = false;
-                for (int i = 0; i < providers.size(); i++) {
-                    Object elem = providers.get(i);
-                    if (elem instanceof Provider && each.equals(elem)){
-                        found = true;
-                        break;
-                    }
+            ArrayList<Provider> providers = new ArrayList<>();
+
+            SourceGroup[] sourceGroups = ProjectUtils
+                    .getSources(project)
+                    .getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+
+            List<ClassPath> classPaths = new ArrayList<>();
+            if (sourceGroups != null) {
+                for (SourceGroup sourceGroup : sourceGroups) {
+                    ClassPath cp = ClassPath.getClassPath(sourceGroup.getRootFolder(), ClassPath.COMPILE);
+                    classPaths.add(cp);
                 }
-                if (!found){
+            }
+            ClassPath cp = ClassPathSupport.createProxyClassPath(classPaths.toArray(ClassPath[]::new));
+
+            for(Provider p: ProviderUtil.getAllProviders()) {
+                if (p.isOnClassPath(cp) && !providers.contains(p)) {
+                    providers.add(p);
+                }
+            }
+
+            for (Provider each : PersistenceLibrarySupport.getProvidersFromLibraries()){
+                if (! providers.contains(each)){
                    providers.add(each);
                 }
             }
             return providers;
         }
 
+        @Override
         public boolean supportsDefaultProvider() {
             return false;
         }
-}
+    }
 }

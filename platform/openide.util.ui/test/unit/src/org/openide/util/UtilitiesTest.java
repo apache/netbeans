@@ -55,7 +55,7 @@ import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.InvalidDnDOperationException;
-import java.awt.dnd.peer.DragSourceContextPeer;
+//import java.awt.dnd.peer.DragSourceContextPeer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -64,6 +64,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
+/*
 import java.awt.peer.ButtonPeer;
 import java.awt.peer.CanvasPeer;
 import java.awt.peer.CheckboxMenuItemPeer;
@@ -86,6 +87,8 @@ import java.awt.peer.ScrollbarPeer;
 import java.awt.peer.TextAreaPeer;
 import java.awt.peer.TextFieldPeer;
 import java.awt.peer.WindowPeer;
+*/
+import java.beans.PropertyChangeListener;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -273,6 +276,39 @@ public class UtilitiesTest extends NbTestCase {
             done.release();
         }
     }
+    
+    public static class ContextData {
+        final String suffix;
+
+        public ContextData(String suffix) {
+            this.suffix = suffix;
+        }
+    }
+
+    public void testActionsForPathWithLookup() throws Exception {
+        MockLookup.setInstances(new NamedServicesProviderImpl());
+        // #156829: ensure that no tree lock is acquired.
+        final Semaphore ready = new Semaphore(0);
+        final Semaphore done = new Semaphore(0);
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                synchronized (new JSeparator().getTreeLock()) {
+                    ready.release();
+                    try {
+                        done.acquire();
+                    } catch (InterruptedException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+            }
+        });
+        ready.acquire();
+        try {
+            assertEquals("[hello-ehlo, null, there-ehlo]", Utilities.actionsForPath("stuff", Lookups.fixed(new ContextData("ehlo"))).toString());
+        } finally {
+            done.release();
+        }
+    }
 
     private static class CustomToolkitComponent extends Component {
         private Toolkit customToolkit;
@@ -280,31 +316,16 @@ public class UtilitiesTest extends NbTestCase {
         public CustomToolkitComponent( Toolkit t ) {
             this.customToolkit = t;
         }
-        
+
+        @Override
         public Toolkit getToolkit() {
             return customToolkit;
         }
     }
-    
+
     private static class NoCustomCursorToolkit extends Toolkit {
         public FontMetrics getFontMetrics(Font font) {
             return Toolkit.getDefaultToolkit().getFontMetrics( font );
-        }
-
-        protected TextFieldPeer createTextField(TextField target) throws HeadlessException {
-            throw new IllegalStateException("Method not implemented");
-        }
-
-        protected ListPeer createList(java.awt.List target) throws HeadlessException {
-            throw new IllegalStateException("Method not implemented");
-        }
-
-        protected MenuBarPeer createMenuBar(MenuBar target) throws HeadlessException {
-            throw new IllegalStateException("Method not implemented");
-        }
-
-        public DragSourceContextPeer createDragSourceContextPeer(DragGestureEvent dge) throws InvalidDnDOperationException {
-            throw new IllegalStateException("Method not implemented");
         }
 
         public boolean prepareImage(Image image, int width, int height, ImageObserver observer) {
@@ -315,28 +336,12 @@ public class UtilitiesTest extends NbTestCase {
             return Toolkit.getDefaultToolkit().checkImage( image, width, height, observer );
         }
 
-        protected PopupMenuPeer createPopupMenu(PopupMenu target) throws HeadlessException {
-            throw new IllegalStateException("Method not implemented");
-        }
-
         public PrintJob getPrintJob(Frame frame, String jobtitle, Properties props) {
             return Toolkit.getDefaultToolkit().getPrintJob( frame, jobtitle, props );
         }
 
-        protected ButtonPeer createButton(Button target) throws HeadlessException {
-            throw new IllegalStateException("Method not implemented");
-        }
-
         public Image createImage(ImageProducer producer) {
             return Toolkit.getDefaultToolkit().createImage( producer );
-        }
-
-        protected CanvasPeer createCanvas(Canvas target) {
-            throw new IllegalStateException("Method not implemented");
-        }
-
-        protected ScrollbarPeer createScrollbar(Scrollbar target) throws HeadlessException {
-            throw new IllegalStateException("Method not implemented");
         }
 
         public Image getImage(String filename) {
@@ -345,14 +350,6 @@ public class UtilitiesTest extends NbTestCase {
 
         public Image createImage(String filename) {
             return Toolkit.getDefaultToolkit().createImage( filename );
-        }
-
-        protected MenuPeer createMenu(Menu target) throws HeadlessException {
-            throw new IllegalStateException("Method not implemented");
-        }
-
-        protected MenuItemPeer createMenuItem(MenuItem target) throws HeadlessException {
-            throw new IllegalStateException("Method not implemented");
         }
 
         public Map mapInputMethodHighlight(InputMethodHighlight highlight) throws HeadlessException {
@@ -367,56 +364,8 @@ public class UtilitiesTest extends NbTestCase {
             return Toolkit.getDefaultToolkit().getImage( url );
         }
 
-        protected CheckboxPeer createCheckbox(Checkbox target) throws HeadlessException {
-            throw new IllegalStateException("Method not implemented");
-        }
-
         public Image createImage(URL url) {
             return Toolkit.getDefaultToolkit().createImage( url );
-        }
-
-        protected TextAreaPeer createTextArea(TextArea target) throws HeadlessException {
-            throw new IllegalStateException("Method not implemented");
-        }
-
-        protected FileDialogPeer createFileDialog(FileDialog target) throws HeadlessException {
-            throw new IllegalStateException("Method not implemented");
-        }
-
-        protected ScrollPanePeer createScrollPane(ScrollPane target) throws HeadlessException {
-            throw new IllegalStateException("Method not implemented");
-        }
-
-        protected DialogPeer createDialog(Dialog target) throws HeadlessException {
-            throw new IllegalStateException("Method not implemented");
-        }
-
-        protected PanelPeer createPanel(Panel target) {
-            throw new IllegalStateException("Method not implemented");
-        }
-
-        protected ChoicePeer createChoice(Choice target) throws HeadlessException {
-            throw new IllegalStateException("Method not implemented");
-        }
-
-        protected FramePeer createFrame(Frame target) throws HeadlessException {
-            throw new IllegalStateException("Method not implemented");
-        }
-
-        protected LabelPeer createLabel(Label target) throws HeadlessException {
-            throw new IllegalStateException("Method not implemented");
-        }
-
-        protected FontPeer getFontPeer(String name, int style) {
-            throw new IllegalStateException("Method not implemented");
-        }
-
-        protected CheckboxMenuItemPeer createCheckboxMenuItem(CheckboxMenuItem target) throws HeadlessException {
-            throw new IllegalStateException("Method not implemented");
-        }
-
-        protected WindowPeer createWindow(Window target) throws HeadlessException {
-            throw new IllegalStateException("Method not implemented");
         }
 
         public void sync() {
@@ -452,6 +401,8 @@ public class UtilitiesTest extends NbTestCase {
         }
 
         boolean createCustomCursorCalled = false;
+
+        @Override
         public Cursor createCustomCursor(Image cursor, Point hotSpot, String name) throws IndexOutOfBoundsException, HeadlessException {
 
             createCustomCursorCalled = true;
@@ -459,13 +410,11 @@ public class UtilitiesTest extends NbTestCase {
         }
 
         boolean getBestCursorSizeCalled = false;
+
+        @Override
         public Dimension getBestCursorSize(int preferredWidth, int preferredHeight) throws HeadlessException {
             getBestCursorSizeCalled = true;
             return new Dimension(0,0);
-        }
-
-        protected DesktopPeer createDesktopPeer(Desktop target) throws HeadlessException {
-            throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
@@ -511,21 +460,34 @@ public class UtilitiesTest extends NbTestCase {
                 return Lookup.EMPTY;
             }
             InstanceContent content = new InstanceContent();
-            InstanceContent.Convertor<String, Action> actionConvertor = new InstanceContent.Convertor<String, Action>() {
 
-                public Action convert(final String obj) {
-                    return new AbstractAction() {
+            class ContextAction extends AbstractAction implements ContextAwareAction {
+                final String obj;
 
-                        public void actionPerformed(ActionEvent e) {
-                        }
-
-                        @Override
-                        public String toString() {
-                            return obj;
-                        }
-                    };
+                public ContextAction(String obj) {
+                    this.obj = obj;
+                }
+                
+                public void actionPerformed(ActionEvent e) {
                 }
 
+                @Override
+                public String toString() {
+                    return obj;
+                }
+
+                @Override
+                public Action createContextAwareInstance(Lookup actionContext) {
+                    ContextData cd = actionContext.lookup(ContextData.class);
+                    return new ContextAction(obj + (cd == null ? "-ctx" : "-" + cd.suffix));
+                }
+            }
+            
+            InstanceContent.Convertor<String, Action> actionConvertor = new InstanceContent.Convertor<String, Action>() {
+                public Action convert(final String obj) {
+                    return new ContextAction(obj);
+                }
+                
                 public Class<? extends Action> type(String obj) {
                     return AbstractAction.class;
                 }

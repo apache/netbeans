@@ -127,7 +127,7 @@ public final class CompositeFCS extends FontColorSettings {
             colorings.add(AttributesUtilities.createImmutable(
                     EditorStyleConstants.RenderingHints, getRenderingHints()));
 
-            return AttributesUtilities.createImmutable(colorings.toArray(new AttributeSet[colorings.size()]));
+            return AttributesUtilities.createImmutable(colorings.toArray(new AttributeSet[0]));
 
         }
 
@@ -176,7 +176,7 @@ public final class CompositeFCS extends FontColorSettings {
         }
 
         if (colorings.size() > 0) {
-            return AttributesUtilities.createImmutable(colorings.toArray(new AttributeSet[colorings.size()]));
+            return AttributesUtilities.createImmutable(colorings.toArray(new AttributeSet[0]));
         } else {
             return NULL;
         }

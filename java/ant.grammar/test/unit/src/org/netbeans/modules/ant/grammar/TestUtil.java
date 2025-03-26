@@ -92,7 +92,7 @@ final class TestUtil {
                 }
             }
         }
-        return (HintContext)Proxy.newProxyInstance(TestUtil.class.getClassLoader(), interfaces.toArray(new Class[interfaces.size()]), new Handler());
+        return (HintContext)Proxy.newProxyInstance(TestUtil.class.getClassLoader(), interfaces.toArray(new Class[0]), new Handler());
     }
     
     static void findAllInterfaces(Class c, Set<Class> interfaces) {

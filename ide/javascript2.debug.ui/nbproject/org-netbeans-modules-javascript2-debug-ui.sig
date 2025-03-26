@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.21
+#Version 1.30
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -599,6 +599,7 @@ meth public abstract org.openide.text.Line$Part getContext()
 CLSS public org.netbeans.modules.javascript2.debug.ui.JSUtils
 cons public init()
 fld public final static java.lang.String JS_MIME_TYPE = "text/javascript"
+fld public final static java.lang.String TS_MIME_TYPE = "application/x-typescript"
 meth public static java.lang.String getFileName(org.netbeans.modules.javascript2.debug.breakpoints.JSLineBreakpoint)
 meth public static org.netbeans.modules.javascript2.debug.EditorLineHandler createLineHandler(org.openide.text.Line)
 meth public static org.netbeans.modules.javascript2.debug.breakpoints.JSLineBreakpoint createLineBreakpoint(org.openide.text.Line)

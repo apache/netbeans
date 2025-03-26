@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -90,8 +91,8 @@ public class InstallJasmineWizardDescriptorPanel implements WizardDescriptor.Pan
     @NbBundle.Messages("DownloadFailure=Download of remote files failed. See IDE log for more details.")
     public void downloadJasmine(FileObject libs) {
         try {
-            File jasmine = File.createTempFile("jasmine", "zip"); // NOI18N
-            File jasmineJSTD = File.createTempFile("jasmine-jstd", "zip"); // NOI18N
+            File jasmine = Files.createTempFile("jasmine", "zip").toFile(); // NOI18N
+            File jasmineJSTD = Files.createTempFile("jasmine-jstd", "zip").toFile(); // NOI18N
             download("https://github.com/pivotal/jasmine/zipball/v1.2.0", jasmine); // NOI18N
             download("https://github.com/ibolmo/jasmine-jstd-adapter/zipball/1.1.2", jasmineJSTD); // NOI18N
             unzip(new FileInputStream(jasmine), FileUtil.createFolder(libs, "jasmine"), "1.2.0"); // NOI18N

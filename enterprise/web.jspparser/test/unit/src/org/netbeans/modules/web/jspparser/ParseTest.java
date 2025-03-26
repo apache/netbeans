@@ -75,16 +75,6 @@ public class ParseTest extends NbTestCase {
         parserTestInProject("project2", "/outside/outsidewm.jsp");
     }
 
-	/* Commented out - see bug 194639.
-    public void testAnalysisFunction() throws Exception {
-        parserTestInProject("project3", "/web/jsp2/el/functions.jsp");
-    }
-	 */
-
-    public void testAnalysisXMLTextRotate_1_5() throws Exception {
-            parserTestInProject("project3", "/web/jsp2/jspx/textRotate.jspx");
-    }
-
     // TODO: temporarily disabled because of JDK 5 and 6 differences
     public void disableTestAnalysisTagLibFromTagFiles_1_6() throws Exception {
             parserTestInProject("project2", "/web/testTagLibs.jsp");
@@ -103,11 +93,6 @@ public class ParseTest extends NbTestCase {
         JspParserAPI.ParseResult result = parserTestInProject("project2", "/web/includePreludeCoda.jsp");
         log("Prelude: " + result.getPageInfo().getIncludePrelude());
         log("Coda: " + result.getPageInfo().getIncludeCoda());
-    }
-
-     public void testTagFileAttribute() throws Exception {
-        parserTestInProject("project3", "/web/WEB-INF/tags/displayProducts.tag");
-        parserTestInProject("project3", "/web/WEB-INF/tags/displayProducts.tag");
     }
 
     public JspParserAPI.ParseResult parserTestInProject(String projectFolderName, String pagePath) throws Exception {

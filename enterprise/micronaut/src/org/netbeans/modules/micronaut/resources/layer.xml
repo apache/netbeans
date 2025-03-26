@@ -26,6 +26,7 @@
             <folder name="x-java">
                 <folder name="AnnotationProcessors">
                     <file name="org-netbeans-modules-micronaut-completion-MicronautJavaConfigPropertiesCompletion.instance"/>
+                    <file name="org-netbeans-modules-micronaut-completion-MicronautJavaMappingPropertiesCompletion.instance"/>
                 </folder>
             </folder>
             <folder name="x-yaml">
@@ -67,6 +68,18 @@
             </folder>
         </folder>
         <folder name="org-netbeans-modules-maven">
+            <folder name="RunGoals">
+                <file name="mn">
+                    <attr name="alias" stringvalue="./io.micronaut.maven:micronaut-maven-plugin"/>
+                </file>
+                <file name="io.micronaut.maven:micronaut-maven-plugin">
+                    <attr name="goals" stringvalue="run"/>
+                </file>
+                <file name="io.micronaut.build:micronaut-maven-plugin">
+                    <attr name="goals" stringvalue="run"/>
+                </file>
+            </folder>
+            <!-- For Micornaut 3.x -->
             <folder name="io.micronaut.build:micronaut-maven-plugin">
                 <folder name="Lookup">
                     <file name="maven-project-actions.instance">
@@ -80,11 +93,57 @@
                     </file>
                 </folder>
             </folder>
+            <!-- Micronaut 4.x -->
+            <folder name="io.micronaut.maven:micronaut-maven-plugin">
+                <folder name="Lookup">
+                    <file name="maven-project-actions.instance">
+                        <attr name="instanceOf" stringvalue="org.netbeans.spi.project.LookupProvider"/>
+                        <attr name="instanceCreate" methodvalue="org.netbeans.api.maven.MavenActions.forProjectLayer"/>
+                        <attr name="resource" stringvalue="nbres:/org/netbeans/modules/micronaut/resources/micronaut-actions-maven.xml"/>
+                    </file>
+                    <file name="native-image-artifacts.instance">
+                        <attr name="instanceOf" stringvalue="org.netbeans.spi.project.LookupProvider"/>
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.micronaut.maven.MicronautPackagingArtifactsImpl.projectLookup"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="org.springframework.boot:spring-boot-maven-plugin">
+                <folder name="Lookup">
+                    <file name="maven-project-actions.instance">
+                        <attr name="instanceOf" stringvalue="org.netbeans.spi.project.LookupProvider"/>
+                        <attr name="instanceCreate" methodvalue="org.netbeans.api.maven.MavenActions.forProjectLayer"/>
+                        <attr name="resource" stringvalue="nbres:/org/netbeans/modules/micronaut/resources/spring-actions-maven.xml"/>
+                    </file>
+                    <file name="native-image-artifacts.instance">
+                        <attr name="instanceOf" stringvalue="org.netbeans.spi.project.LookupProvider"/>
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.micronaut.maven.MicronautPackagingArtifactsImpl.projectLookup"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="configuredPlugins">
+                <folder name="io.helidon.build-tools:helidon-maven-plugin">
+                    <folder name="Lookup">
+                        <file name="maven-project-actions.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.spi.project.LookupProvider"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.api.maven.MavenActions.forProjectLayer"/>
+                            <attr name="resource" stringvalue="nbres:/org/netbeans/modules/micronaut/resources/helidon-actions-maven.xml"/>
+                        </file>
+                        <file name="native-image-artifacts.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.spi.project.LookupProvider"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.micronaut.maven.MicronautPackagingArtifactsImpl.projectLookup"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
             <folder name="LifecycleParticipants">
                 <folder name="org.graalvm.buildtools.maven.NativeExtension">
                     <attr name="ignoreOnModelLoad" boolvalue="true"/>
                 </folder>
                 <folder name="io.micronaut.build.testresources.TestResourcesLifecycleExtension">
+                    <attr name="ignoreOnModelLoad" boolvalue="true"/>
+                </folder>
+                <!-- For micronaut 4.x -->
+                <folder name="io.micronaut.maven.testresources.TestResourcesLifecycleExtension">
                     <attr name="ignoreOnModelLoad" boolvalue="true"/>
                 </folder>
             </folder>
@@ -95,18 +154,8 @@
             <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.micronaut.db.Bundle"/>
             <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/micronaut/resources/Micronaut.html"/>
             <attr name="position" intvalue="1280"/>
-            <file name="Controller">
-                <attr name="position" intvalue="120"/>
-                <attr name="template" boolvalue="true"/>
-                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.micronaut.db.MicronautController.create"/>
-                <attr name="template.createTemplateHandler" methodvalue="org.netbeans.modules.micronaut.db.MicronautController.handler"/>
-                <attr name="templateCategory" stringvalue="persistence"/>
-                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/micronaut/resources/Controller.html"/>
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.micronaut.db.Bundle"/>
-                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.png"/>
-            </file>
             <file name="Entity">
-                <attr name="position" intvalue="220"/>
+                <attr name="position" intvalue="120"/>
                 <attr name="template" boolvalue="true"/>
                 <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.micronaut.db.MicronautEntity.create"/>
                 <attr name="template.createTemplateHandler" methodvalue="org.netbeans.modules.micronaut.db.MicronautEntity.handler"/>
@@ -116,7 +165,7 @@
                 <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.png"/>
             </file>
             <file name="Repository">
-                <attr name="position" intvalue="320"/>
+                <attr name="position" intvalue="220"/>
                 <attr name="template" boolvalue="true"/>
                 <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.micronaut.db.MicronautRepository.create"/>
                 <attr name="template.createTemplateHandler" methodvalue="org.netbeans.modules.micronaut.db.MicronautRepository.handler"/>
@@ -125,6 +174,33 @@
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.micronaut.db.Bundle"/>
                 <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/interface_file.png"/>
             </file>
+            <file name="Controller">
+                <attr name="position" intvalue="320"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.micronaut.db.MicronautController.create"/>
+                <attr name="template.createTemplateHandler" methodvalue="org.netbeans.modules.micronaut.db.MicronautController.handler"/>
+                <attr name="templateCategory" stringvalue="persistence"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/micronaut/resources/Controller.html"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.micronaut.db.Bundle"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.png"/>
+            </file>
+            <file name="ControllerFromRepository">
+                <attr name="position" intvalue="330"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.micronaut.db.MicronautController.createFromReposiory"/>
+                <attr name="template.createTemplateHandler" methodvalue="org.netbeans.modules.micronaut.db.MicronautController.fromReposioryHandler"/>
+                <attr name="templateCategory" stringvalue="persistence"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/micronaut/resources/ControllerFromRepository.html"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.micronaut.db.Bundle"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.png"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="org-netbeans-modules-java-hints">
+        <folder name="rules">
+            <folder name="errors">
+                <file name="org-netbeans-modules-micronaut-hints-AddArgForRouteVar.instance"/>
+            </folder>
         </folder>
     </folder>
 </filesystem>

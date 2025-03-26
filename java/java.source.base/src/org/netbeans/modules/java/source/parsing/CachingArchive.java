@@ -24,6 +24,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,7 +38,6 @@ import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipError;
 import java.util.zip.ZipFile;
 import javax.lang.model.SourceVersion;
 import javax.tools.JavaFileObject;
@@ -45,11 +45,13 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.modules.java.preprocessorbridge.spi.JavaFileFilterImplementation;
+import static org.netbeans.modules.java.source.parsing.FileObjects.getZipPathURI;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.Parameters;
@@ -200,6 +202,18 @@ public class CachingArchive implements Archive, FileChangeListener {
     }
 
     @Override
+    public URI getDirectory(String dirName) throws IOException {
+        Map<String, Folder> folders = doInit();
+
+        if (folders.containsKey(dirName)) {
+            URI zipURI = BaseUtilities.toURI(this.archiveFile);
+            return getZipPathURI(zipURI, dirName);
+        }
+
+        return null;
+    }
+
+    @Override
     public String toString() {
         return String.format(
             "%s[archive: %s]",   //NOI18N
@@ -347,12 +361,12 @@ public class CachingArchive implements Archive, FileChangeListener {
                         entry = e.nextElement();
                     } catch (IllegalArgumentException iae) {
                         throw new IOException(iae);
-                    } catch (ZipError ze) {
+                    } catch (Exception ex) {
                         // the JAR may be corrupted somehow; no further entry read
                         // will probably succeed, so just skip the rest of the jar.
                         Exceptions.printStackTrace(
                                 Exceptions.attachLocalizedMessage(
-                                Exceptions.attachSeverity(ze, Level.WARNING),
+                                Exceptions.attachSeverity(ex, Level.WARNING),
                                 Bundle.ERR_CorruptedZipFile(file)));
                         break;
                     }

@@ -1,0 +1,12 @@
+    public function abstractTraitPublicMethod(): int {
+                    -------------------------
+HINT:Add "#[\Override]" Attribute
+FIX:Add "#[\Override]" Attribute
+    protected function abstractTraitProtectedMethod(): int {
+                       ----------------------------
+HINT:Add "#[\Override]" Attribute
+FIX:Add "#[\Override]" Attribute
+    private function abstractTraitPrivateMethod(): string {
+                     --------------------------
+HINT:Add "#[\Override]" Attribute
+FIX:Add "#[\Override]" Attribute

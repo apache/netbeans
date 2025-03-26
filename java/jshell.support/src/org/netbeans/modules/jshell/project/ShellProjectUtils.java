@@ -240,10 +240,6 @@ public final class ShellProjectUtils {
     }
     
     public static boolean isModularProject(Project project) {
-        return isModularProject(project, false);
-    }
-    
-    public static boolean isModularProject(Project project, boolean checkModuleInfo) {
         if (project == null) { 
             return false;
         }
@@ -254,9 +250,6 @@ public final class ShellProjectUtils {
         String s = SourceLevelQuery.getSourceLevel(project.getProjectDirectory());
         if (!(s != null && new SpecificationVersion("9").compareTo(new SpecificationVersion(s)) <= 0)) {
             return false;
-        }
-        if (!checkModuleInfo) {
-            return true;
         }
         // find module-info.java
         for (SourceGroup sg : ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
@@ -294,7 +287,7 @@ public final class ShellProjectUtils {
                 delegates.add(del);
             }
         }
-        return ClassPathSupport.createProxyClassPath(delegates.toArray(new ClassPath[delegates.size()]));
+        return ClassPathSupport.createProxyClassPath(delegates.toArray(ClassPath[]::new));
     }
     
     public static ClassPath projecRuntimeClassPath(Project project) {
@@ -317,7 +310,7 @@ public final class ShellProjectUtils {
                 delegates.add(del);
             }
         }
-        return ClassPathSupport.createProxyClassPath(delegates.toArray(new ClassPath[delegates.size()]));
+        return ClassPathSupport.createProxyClassPath(delegates.toArray(ClassPath[]::new));
     }
 
     @NonNull
@@ -327,7 +320,7 @@ public final class ShellProjectUtils {
                 ShellProjectUtils.findProjectImportedModules(project, 
                     ShellProjectUtils.findProjectModules(project, null))
         );
-        boolean modular = isModularProject(project, false);
+        boolean modular = isModularProject(project);
         if (exportMods.isEmpty() || !modular) {
             return result;
         }
@@ -355,7 +348,7 @@ public final class ShellProjectUtils {
         );
         
         List<String> addReads = new ArrayList<>();
-        boolean modular = isModularProject(project, false);
+        boolean modular = isModularProject(project);
         if (exportMods.isEmpty() || !modular) {
             return addReads;
         }

@@ -43,7 +43,7 @@ final class CallstackFrameNode extends org.netbeans.modules.gsf.testrunner.ui.ap
         if (preferred != null){
             actions.add(preferred);
         }
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     @Override

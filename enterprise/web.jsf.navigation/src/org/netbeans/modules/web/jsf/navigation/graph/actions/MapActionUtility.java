@@ -270,7 +270,7 @@ public class MapActionUtility {
             scene.setSelectedObjects(set);
             scene.setFocusedObject(nextElement);
         } else {
-            scene.setSelectedObjects(new HashSet());
+            scene.setSelectedObjects(new HashSet<>());
             scene.setHoveredObject(null); //Not sure if I can do this yet.
         }
     }
@@ -511,7 +511,7 @@ public class MapActionUtility {
             PageFlowSceneElement selElement = getSelectedPageFlowSceneElement(scene);
             Widget selectedWidget;
             Point popupPoint;
-            if (selElement != null && selElement instanceof PageFlowSceneElement) {
+            if (selElement instanceof PageFlowSceneElement) {
                 selectedWidget = scene.findWidget(selElement);
                 assert selectedWidget != null;
 
@@ -601,7 +601,7 @@ public class MapActionUtility {
         assert scene != null;
 
         PageFlowSceneElement element = getSelectedPageFlowSceneElement(scene);
-        if (element != null && element instanceof Page) {
+        if (element instanceof Page) {
             return (Page) element;
         }
         return null;

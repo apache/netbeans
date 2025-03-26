@@ -436,7 +436,7 @@ public class ExtractSuperclassTest extends RefactoringTestBase {
                             selectedMembers.add(memberInfo);
                         }
                     }
-                    members = selectedMembers.toArray(new MemberInfo[selectedMembers.size()]);
+                    members = selectedMembers.toArray(new MemberInfo[0]);
                 } else {
                     members = new MemberInfo[1];
                     Tree member = classTree.getMembers().get(position);

@@ -514,7 +514,7 @@ public final class J2EEProjectProperties {
             }
         }
         
-        return toClasspathString(files.toArray(new File[files.size()]), roots);
+        return toClasspathString(files.toArray(new File[0]), roots);
     }
 
     /**

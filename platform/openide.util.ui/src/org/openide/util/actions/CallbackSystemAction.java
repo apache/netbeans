@@ -107,7 +107,7 @@ public abstract class CallbackSystemAction extends CallableSystemAction implemen
     * This method is <em>too dynamic</em> it depends on the actuall order of callers and
     * is for example very fragile with respect to focus switching and correct delivering of
     * focus change events. That is why an alternative based on
-    * <a href="http://openide.netbeans.org/proposals/actions/design.html#callback">ActionMap proposal</a>
+    * <a href="https://netbeans.apache.org/projects/platform/openide/proposals/actions/design#callback">ActionMap proposal</a>
     * has been developed.
     * <P>
     * So if you are providing a <a href="@org-openide-windows@/org/openide/windows/TopComponent.html">TopComponent</a>
@@ -482,6 +482,7 @@ public abstract class CallbackSystemAction extends CallableSystemAction implemen
             delegate.addPropertyChangeListener(this);
         }
 
+        @Override
         public void clear() {
             Action a;
 

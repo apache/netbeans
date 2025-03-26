@@ -238,7 +238,7 @@ public class DomainEditor {
         Document domainDoc = getDomainDocument();
         NodeList javaConfigNodeList = domainDoc.getElementsByTagName("java-config");
         if (javaConfigNodeList == null || javaConfigNodeList.getLength() == 0) {
-            return httpProxyOptions.toArray(new String[httpProxyOptions.size()]);
+            return httpProxyOptions.toArray(new String[0]);
         }
         
         NodeList jvmOptionNodeList = domainDoc.getElementsByTagName(CONST_JVM_OPTIONS);
@@ -481,7 +481,7 @@ public class DomainEditor {
 
     private Map<String,String> getPoolValues(Map<String, Node> cpMap, String poolName) {
         Map<String,String> pValues = new HashMap<>();
-        Node cpNode = (Node) cpMap.get(poolName);
+        Node cpNode = cpMap.get(poolName);
         NamedNodeMap cpAttrMap = cpNode.getAttributes();
         Node dsClassName = cpAttrMap.getNamedItem(CONST_DS_CLASS);
         Node resType = cpAttrMap.getNamedItem(CONST_RES_TYPE);

@@ -31,7 +31,7 @@ import org.netbeans.editor.TokenID;
 *
 * @deprecated Use Lexer API instead. See {@link HTMLLexer} and {@link HTMLTokenId}.
 */
-
+@Deprecated
 public class HtmlSyntax extends Syntax {
 
     /** Internal state of the lexical analyzer before entering subanalyzer of

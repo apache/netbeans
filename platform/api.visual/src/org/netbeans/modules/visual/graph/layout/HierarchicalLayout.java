@@ -289,6 +289,7 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
             }
         }
 
+        @Override
         public void postCheck() {
 
             assert vertexToLayoutNode.keySet().size() == nodes.size();
@@ -408,6 +409,7 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
             oldTo.succs.add(e);
         }
 
+        @Override
         public void postCheck() {
 
             for (LayoutNode n : nodes) {
@@ -437,6 +439,7 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
 
     private class AssignLayers extends AlgorithmPart {
 
+        @Override
         public void preCheck() {
             for (LayoutNode n : nodes) {
                 assert n.layer == -1;
@@ -515,12 +518,14 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
 
         }
 
+        @Override
         public void printStatistics() {
             //for(LayoutNode n : nodes) {
             //	System.out.println(n + " on layer " + n.layer);
             //}
         }
 
+        @Override
         public void postCheck() {
             for (LayoutNode n : nodes) {
                 assert n.layer >= 0;
@@ -536,6 +541,7 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
 
         private int oldNodeCount;
 
+        @Override
         protected void preCheck() {
             for (LayoutNode n : nodes) {
                 for (LayoutEdge e : n.succs) {
@@ -591,10 +597,12 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
             return result;
         }
 
+        @Override
         public void printStatistics() {
             System.out.println("Dummy nodes created: " + (nodes.size() - oldNodeCount));
         }
 
+        @Override
         public void postCheck() {
             ArrayList<LayoutNode> currentNodes = new ArrayList<LayoutNode>(nodes);
             for (LayoutNode n : currentNodes) {
@@ -627,6 +635,7 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
 
     private class CrossingReduction extends AlgorithmPart {
 
+        @Override
         public void preCheck() {
             for (LayoutNode n : nodes) {
                 assert n.layer < layerCount;
@@ -711,7 +720,7 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
                     }
                 }
 
-                Collections.sort(layers[i], crossingNodeComparator);
+                layers[i].sort(crossingNodeComparator);
 
                 int z = 0;
                 for (LayoutNode n : layers[i]) {
@@ -745,7 +754,7 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
 
                 }
 
-                Collections.sort(layers[i], crossingNodeComparator);
+                layers[i].sort(crossingNodeComparator);
 
                 int z = 0;
                 for (LayoutNode n : layers[i]) {
@@ -760,6 +769,7 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
             return 0;
         }
 
+        @Override
         public void postCheck() {
 
             HashSet<LayoutNode> visited = new HashSet<LayoutNode>();
@@ -879,8 +889,8 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
                     upProcessingOrder[i].add(n);
                 }
 
-                Collections.sort(downProcessingOrder[i], nodeProcessingDownComparator);
-                Collections.sort(upProcessingOrder[i], nodeProcessingUpComparator);
+                downProcessingOrder[i].sort(nodeProcessingDownComparator);
+                upProcessingOrder[i].sort(nodeProcessingUpComparator);
             }
 
             initialPositions();
@@ -1162,6 +1172,7 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
             graph.getScene().revalidate();
         }
 
+        @Override
         protected void printStatistics() {
             System.out.println("Number of nodes: " + nodes.size());
             int edgeCount = 0;

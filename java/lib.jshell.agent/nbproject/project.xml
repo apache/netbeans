@@ -34,11 +34,6 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.libs.jshell.compile</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                </dependency>
-                <dependency>
                     <code-name-base>org.netbeans.lib.nbjshell</code-name-base>
                     <run-dependency>
                         <specification-version>1.3</specification-version>

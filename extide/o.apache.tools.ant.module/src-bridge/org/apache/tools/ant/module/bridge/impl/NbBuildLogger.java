@@ -1388,7 +1388,7 @@ final class NbBuildLogger implements BuildListener, LoggerTrampoline.AntSessionI
             for (RuntimeConfigurable subrc : NbCollections.iterable(getChildrenOfRuntimeConfigurable(rc))) {
                 structures.add(LoggerTrampoline.TASK_STRUCTURE_CREATOR.makeTaskStructure(new TaskStructureImpl(subrc)));
             }
-            return structures.toArray(new TaskStructure[structures.size()]);
+            return structures.toArray(new TaskStructure[0]);
         }
         
     }

@@ -72,6 +72,8 @@ public interface Visitor {
     //public void endVisit(ClassDeclaration classDeclaration);
     public void visit(ClassInstanceCreation classInstanceCreation);
 
+    public void visit(ClassInstanceCreationVariable classInstanceCreationVariable);
+
     //public void endVisit(ClassInstanceCreation classInstanceCreation);
     public void visit(ClassName className);
 
@@ -80,6 +82,8 @@ public interface Visitor {
 
     //public void endVisit(CloneExpression cloneExpression);
     public void visit(Comment comment);
+
+    public void visit(ConstantVariable constantVariable);
 
     //public void endVisit(Comment comment);
     public void visit(ConditionalExpression conditionalExpression);

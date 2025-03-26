@@ -2067,7 +2067,7 @@ public class RADComponent {
 
         @Override
         public PropertyDescriptor[] getPropertyDescriptors() {
-            return propertyDescriptors.toArray(new PropertyDescriptor[propertyDescriptors.size()]);
+            return propertyDescriptors.toArray(new PropertyDescriptor[0]);
         }
 
         @Override

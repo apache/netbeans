@@ -36,15 +36,18 @@ import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 import org.netbeans.modules.web.beans.hints.EditorAnnotationsHelper;
 import org.openide.util.NbBundle;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.INTERCEPTOR;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.INTERCEPTOR_JAKARTA;
+
 
 /**
  * @author ads
  *
  */
-public class InterceptedBeanAnalyzer extends AbstractInterceptedElementAnalyzer 
-    implements ClassAnalyzer 
+public class InterceptedBeanAnalyzer extends AbstractInterceptedElementAnalyzer
+    implements ClassAnalyzer
 {
-    
+
     /* (non-Javadoc)
      * @see org.netbeans.modules.web.beans.analysis.analyzer.ClassModelAnalyzer.ClassAnalyzer#analyze(javax.lang.model.element.TypeElement, javax.lang.model.element.TypeElement, org.netbeans.modules.web.beans.api.model.WebBeansModel, java.util.List, org.netbeans.api.java.source.CompilationInfo, java.util.concurrent.atomic.AtomicBoolean)
      */
@@ -53,11 +56,10 @@ public class InterceptedBeanAnalyzer extends AbstractInterceptedElementAnalyzer
             WebBeansModel model, AtomicBoolean cancel,
             Result result )
     {
-        if ( AnnotationUtil.hasAnnotation(element, AnnotationUtil.INTERCEPTOR, 
-                model.getCompilationController() ))
+        if (AnnotationUtil.hasAnnotation(element, model, INTERCEPTOR_JAKARTA, INTERCEPTOR))
         {
             result.requireCdiEnabled(element, model);
-            // rule should not be applied to interceptor 
+            // rule should not be applied to interceptor
             return ;
         }
         boolean hasIBindings = hasInterceptorBindings(element, model);
@@ -66,12 +68,12 @@ public class InterceptedBeanAnalyzer extends AbstractInterceptedElementAnalyzer
             EditorAnnotationsHelper helper = EditorAnnotationsHelper.getInstance(result);
             ElementHandle<TypeElement> handle = ElementHandle.create(element);
             if ( helper != null ){
-                helper.addInterceptedBean( result , 
+                helper.addInterceptedBean( result ,
                         handle.resolve( result.getInfo()));
             }
         }
-        
-        
+
+
         Set<Modifier> modifiers = element.getModifiers();
         boolean isFinal = modifiers.contains(Modifier.FINAL);
         List<ExecutableElement> methods = ElementFilter.methodsIn(
@@ -85,7 +87,7 @@ public class InterceptedBeanAnalyzer extends AbstractInterceptedElementAnalyzer
             if ( !modifiers.contains( Modifier.FINAL )){
                 continue;
             }
-            if ( modifiers.contains( Modifier.STATIC ) || 
+            if ( modifiers.contains( Modifier.STATIC ) ||
                     modifiers.contains( Modifier.PRIVATE))
             {
                 continue;
@@ -100,13 +102,13 @@ public class InterceptedBeanAnalyzer extends AbstractInterceptedElementAnalyzer
             return;
         }
         if (hasIBindings && isFinal) {
-            result.addError(element, model, 
+            result.addError(element, model,
                             NbBundle.getMessage(
                             InterceptedBeanAnalyzer.class,
                             "ERR_FinalInterceptedBean")); // NOI18N
         }
         if (hasIBindings && badMethod != null) {
-            result.addError(element, model,   
+            result.addError(element, model,
                             NbBundle.getMessage(
                             InterceptedBeanAnalyzer.class,
                             "ERR_InterceptedBeanHasFinalMethod", badMethod

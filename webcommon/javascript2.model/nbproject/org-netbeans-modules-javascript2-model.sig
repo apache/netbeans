@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.23
+#Version 1.33
 
 CLSS public abstract com.oracle.js.parser.ir.visitor.NodeVisitor<%0 extends com.oracle.js.parser.ir.LexicalContext>
 cons public init({com.oracle.js.parser.ir.visitor.NodeVisitor%0})
@@ -14,6 +14,7 @@ meth public boolean enterBreakNode(com.oracle.js.parser.ir.BreakNode)
 meth public boolean enterCallNode(com.oracle.js.parser.ir.CallNode)
 meth public boolean enterCaseNode(com.oracle.js.parser.ir.CaseNode)
 meth public boolean enterCatchNode(com.oracle.js.parser.ir.CatchNode)
+meth public boolean enterClassElement(com.oracle.js.parser.ir.ClassElement)
 meth public boolean enterClassNode(com.oracle.js.parser.ir.ClassNode)
 meth public boolean enterContinueNode(com.oracle.js.parser.ir.ContinueNode)
 meth public boolean enterDebuggerNode(com.oracle.js.parser.ir.DebuggerNode)
@@ -59,6 +60,7 @@ meth public com.oracle.js.parser.ir.Node leaveBreakNode(com.oracle.js.parser.ir.
 meth public com.oracle.js.parser.ir.Node leaveCallNode(com.oracle.js.parser.ir.CallNode)
 meth public com.oracle.js.parser.ir.Node leaveCaseNode(com.oracle.js.parser.ir.CaseNode)
 meth public com.oracle.js.parser.ir.Node leaveCatchNode(com.oracle.js.parser.ir.CatchNode)
+meth public com.oracle.js.parser.ir.Node leaveClassElement(com.oracle.js.parser.ir.ClassElement)
 meth public com.oracle.js.parser.ir.Node leaveClassNode(com.oracle.js.parser.ir.ClassNode)
 meth public com.oracle.js.parser.ir.Node leaveContinueNode(com.oracle.js.parser.ir.ContinueNode)
 meth public com.oracle.js.parser.ir.Node leaveDebuggerNode(com.oracle.js.parser.ir.DebuggerNode)
@@ -248,7 +250,7 @@ meth public static int getFlag(org.netbeans.modules.javascript2.model.api.JsObje
 meth public static java.util.Set<org.netbeans.modules.csl.api.Modifier> getModifiers(int)
 meth public static org.netbeans.modules.javascript2.model.api.JsElement$Kind getJsKind(int)
 supr java.lang.Object
-hfds ANONYMOUS,ANONYMOUS_OBJECT,CALLBACK,CONSTANT,CONSTRUCTOR,DECLARED,DEPRICATED,FIELD,FILE,FUNCTION,GENERATOR,GLOBAL,METHOD,OBJECT,OBJECT_LITERAL,PARAMETER,PLATFORM,PRIVATE,PRIVILAGE,PROPERTY,PROPERTY_GETTER,PROPERTY_SETTER,PUBLIC,STATIC,VARIABLE
+hfds ANONYMOUS,ANONYMOUS_OBJECT,ARROW_FUNCTION,CALLBACK,CONSTANT,CONSTRUCTOR,DECLARED,DEPRICATED,FIELD,FILE,FUNCTION,GENERATOR,GLOBAL,METHOD,OBJECT,OBJECT_LITERAL,PARAMETER,PLATFORM,PRIVATE,PRIVILAGE,PROPERTY,PROPERTY_GETTER,PROPERTY_SETTER,PUBLIC,STATIC,VARIABLE
 
 CLSS public static org.netbeans.modules.javascript2.model.api.IndexedElement$FunctionIndexedElement
  outer org.netbeans.modules.javascript2.model.api.IndexedElement
@@ -275,6 +277,7 @@ meth public abstract org.netbeans.modules.javascript2.model.api.JsElement$Kind g
 CLSS public final static !enum org.netbeans.modules.javascript2.model.api.JsElement$Kind
  outer org.netbeans.modules.javascript2.model.api.JsElement
 fld public final static org.netbeans.modules.javascript2.model.api.JsElement$Kind ANONYMOUS_OBJECT
+fld public final static org.netbeans.modules.javascript2.model.api.JsElement$Kind ARROW_FUNCTION
 fld public final static org.netbeans.modules.javascript2.model.api.JsElement$Kind BLOCK
 fld public final static org.netbeans.modules.javascript2.model.api.JsElement$Kind CALLBACK
 fld public final static org.netbeans.modules.javascript2.model.api.JsElement$Kind CATCH_BLOCK
@@ -530,6 +533,7 @@ meth public boolean enterBreakNode(com.oracle.js.parser.ir.BreakNode)
 meth public boolean enterCallNode(com.oracle.js.parser.ir.CallNode)
 meth public boolean enterCaseNode(com.oracle.js.parser.ir.CaseNode)
 meth public boolean enterCatchNode(com.oracle.js.parser.ir.CatchNode)
+meth public boolean enterClassElement(com.oracle.js.parser.ir.ClassElement)
 meth public boolean enterClassNode(com.oracle.js.parser.ir.ClassNode)
 meth public boolean enterContinueNode(com.oracle.js.parser.ir.ContinueNode)
 meth public boolean enterDebuggerNode(com.oracle.js.parser.ir.DebuggerNode)
@@ -574,6 +578,7 @@ meth public com.oracle.js.parser.ir.Node leaveBreakNode(com.oracle.js.parser.ir.
 meth public com.oracle.js.parser.ir.Node leaveCallNode(com.oracle.js.parser.ir.CallNode)
 meth public com.oracle.js.parser.ir.Node leaveCaseNode(com.oracle.js.parser.ir.CaseNode)
 meth public com.oracle.js.parser.ir.Node leaveCatchNode(com.oracle.js.parser.ir.CatchNode)
+meth public com.oracle.js.parser.ir.Node leaveClassElement(com.oracle.js.parser.ir.ClassElement)
 meth public com.oracle.js.parser.ir.Node leaveClassNode(com.oracle.js.parser.ir.ClassNode)
 meth public com.oracle.js.parser.ir.Node leaveContinueNode(com.oracle.js.parser.ir.ContinueNode)
 meth public com.oracle.js.parser.ir.Node leaveDebuggerNode(com.oracle.js.parser.ir.DebuggerNode)

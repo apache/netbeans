@@ -819,32 +819,32 @@
         <token id='T_NAMESPACE' start='2161' end='2170'>
             <text>namespace</text>
         </token>
-        <token id='T_STRING' start='2171' end='2181'>
-            <text>ineterface</text>
+        <token id='T_INTERFACE' start='2171' end='2180'>
+            <text>interface</text>
         </token>
-        <token id='T_CURLY_OPEN' start='2182' end='2183'>
+        <token id='T_CURLY_OPEN' start='2181' end='2182'>
             <text>{</text>
         </token>
-        <token id='T_CURLY_CLOSE' start='2183' end='2184'>
+        <token id='T_CURLY_CLOSE' start='2182' end='2183'>
             <text>}</text>
         </token>
-        <token id='T_NAMESPACE' start='2185' end='2194'>
+        <token id='T_NAMESPACE' start='2184' end='2193'>
             <text>namespace</text>
         </token>
-        <token id='T_STRING' start='2195' end='2199'>
+        <token id='T_STRING' start='2194' end='2198'>
             <text>enum</text>
         </token>
-        <token id='T_CURLY_OPEN' start='2200' end='2201'>
+        <token id='T_CURLY_OPEN' start='2199' end='2200'>
             <text>{</text>
         </token>
-        <token id='T_CURLY_CLOSE' start='2201' end='2202'>
+        <token id='T_CURLY_CLOSE' start='2200' end='2201'>
             <text>}</text>
         </token>
-        <token id='EOF' start='2203' end='2203'>
+        <token id='EOF' start='2202' end='2202'>
             <text></text>
         </token>
     </scanner>
-    <Program start='0' end='2203'>
+    <Program start='0' end='2202'>
         <Comments>
             <Comment start='6' end='815' commentType='multiLine'/>
             <Comment start='6' end='815' commentType='multiLine'/>
@@ -1327,18 +1327,18 @@
                 <Block start='2158' end='2160' isCurly='true'>
                 </Block>
             </NamespaceDeclaration>
-            <NamespaceDeclaration start='2161' end='2184' isBracketed='true'>
-                <NamespaceName start='2171' end='2181' isCurrent='false' isGlobal='false'>
-                    <Identifier start='2171' end='2181' name='ineterface'/>
+            <NamespaceDeclaration start='2161' end='2183' isBracketed='true'>
+                <NamespaceName start='2171' end='2180' isCurrent='false' isGlobal='false'>
+                    <Identifier start='2171' end='2180' name='interface'/>
                 </NamespaceName>
-                <Block start='2182' end='2184' isCurly='true'>
+                <Block start='2181' end='2183' isCurly='true'>
                 </Block>
             </NamespaceDeclaration>
-            <NamespaceDeclaration start='2185' end='2202' isBracketed='true'>
-                <NamespaceName start='2195' end='2199' isCurrent='false' isGlobal='false'>
-                    <Identifier start='2195' end='2199' name='enum'/>
+            <NamespaceDeclaration start='2184' end='2201' isBracketed='true'>
+                <NamespaceName start='2194' end='2198' isCurrent='false' isGlobal='false'>
+                    <Identifier start='2194' end='2198' name='enum'/>
                 </NamespaceName>
-                <Block start='2200' end='2202' isCurly='true'>
+                <Block start='2199' end='2201' isCurly='true'>
                 </Block>
             </NamespaceDeclaration>
         </Statements>

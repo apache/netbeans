@@ -1904,7 +1904,7 @@
                                     </Assignment>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='1133' end='1143'>
-                                    <StaticConstantAccess start='1133' end='1142'>
+                                    <StaticConstantAccess start='1133' end='1142' isDynamicName='false'>
                                         <Variable start='1133' end='1135' isDollared='true'>
                                             <Identifier start='1134' end='1135' name='i'/>
                                         </Variable>
@@ -1917,8 +1917,8 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='1152' end='1169'>
-                                    <StaticConstantAccess start='1152' end='1168'>
-                                        <StaticConstantAccess start='1152' end='1161'>
+                                    <StaticConstantAccess start='1152' end='1168' isDynamicName='false'>
+                                        <StaticConstantAccess start='1152' end='1161' isDynamicName='false'>
                                             <Variable start='1152' end='1154' isDollared='true'>
                                                 <Identifier start='1153' end='1154' name='i'/>
                                             </Variable>
@@ -1938,9 +1938,9 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='1178' end='1206'>
-                                    <StaticConstantAccess start='1178' end='1205'>
-                                        <StaticConstantAccess start='1178' end='1194'>
-                                            <StaticConstantAccess start='1178' end='1187'>
+                                    <StaticConstantAccess start='1178' end='1205' isDynamicName='false'>
+                                        <StaticConstantAccess start='1178' end='1194' isDynamicName='false'>
+                                            <StaticConstantAccess start='1178' end='1187' isDynamicName='false'>
                                                 <Variable start='1178' end='1180' isDollared='true'>
                                                     <Identifier start='1179' end='1180' name='i'/>
                                                 </Variable>
@@ -1967,9 +1967,9 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='1215' end='1246'>
-                                    <StaticConstantAccess start='1215' end='1245'>
-                                        <StaticConstantAccess start='1215' end='1231'>
-                                            <StaticConstantAccess start='1215' end='1224'>
+                                    <StaticConstantAccess start='1215' end='1245' isDynamicName='false'>
+                                        <StaticConstantAccess start='1215' end='1231' isDynamicName='false'>
+                                            <StaticConstantAccess start='1215' end='1224' isDynamicName='false'>
                                                 <Variable start='1215' end='1217' isDollared='true'>
                                                     <Identifier start='1216' end='1217' name='i'/>
                                                 </Variable>
@@ -2010,9 +2010,9 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='1255' end='1289'>
-                                    <StaticConstantAccess start='1255' end='1288'>
-                                        <StaticConstantAccess start='1255' end='1271'>
-                                            <StaticConstantAccess start='1255' end='1264'>
+                                    <StaticConstantAccess start='1255' end='1288' isDynamicName='false'>
+                                        <StaticConstantAccess start='1255' end='1271' isDynamicName='false'>
+                                            <StaticConstantAccess start='1255' end='1264' isDynamicName='false'>
                                                 <Variable start='1255' end='1257' isDollared='true'>
                                                     <Identifier start='1256' end='1257' name='i'/>
                                                 </Variable>
@@ -2067,7 +2067,7 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='1298' end='1312'>
-                                    <StaticConstantAccess start='1298' end='1311'>
+                                    <StaticConstantAccess start='1298' end='1311' isDynamicName='false'>
                                         <Variable start='1298' end='1300' isDollared='true'>
                                             <Identifier start='1299' end='1300' name='i'/>
                                         </Variable>
@@ -2080,7 +2080,7 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='1321' end='1352'>
-                                    <StaticConstantAccess start='1321' end='1351'>
+                                    <StaticConstantAccess start='1321' end='1351' isDynamicName='false'>
                                         <Variable start='1321' end='1323' isDollared='true'>
                                             <Identifier start='1322' end='1323' name='i'/>
                                         </Variable>
@@ -2089,7 +2089,7 @@
                                                 <Identifier start='1325' end='1334' name='CONSTANT1'/>
                                                 <ArrayDimension start='1334' end='1351'>
                                                     <Index>
-                                                        <StaticConstantAccess start='1335' end='1350'>
+                                                        <StaticConstantAccess start='1335' end='1350' isDynamicName='false'>
                                                             <NamespaceName start='1335' end='1339' isCurrent='false' isGlobal='false'>
                                                                 <Identifier start='1335' end='1339' name='self'/>
                                                             </NamespaceName>
@@ -2109,7 +2109,7 @@
                                                 <Identifier start='1325' end='1334' name='CONSTANT1'/>
                                                 <ArrayDimension start='1334' end='1351'>
                                                     <Index>
-                                                        <StaticConstantAccess start='1335' end='1350'>
+                                                        <StaticConstantAccess start='1335' end='1350' isDynamicName='false'>
                                                             <NamespaceName start='1335' end='1339' isCurrent='false' isGlobal='false'>
                                                                 <Identifier start='1335' end='1339' name='self'/>
                                                             </NamespaceName>
@@ -2127,7 +2127,7 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='1361' end='1381'>
-                                    <StaticConstantAccess start='1361' end='1380'>
+                                    <StaticConstantAccess start='1361' end='1380' isDynamicName='false'>
                                         <Variable start='1361' end='1363' isDollared='true'>
                                             <Identifier start='1362' end='1363' name='i'/>
                                         </Variable>
@@ -2169,7 +2169,7 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='1390' end='1416'>
                                     <MethodInvocation start='1390' end='1415' isNullsafe='false'>
-                                        <StaticConstantAccess start='1390' end='1399'>
+                                        <StaticConstantAccess start='1390' end='1399' isDynamicName='false'>
                                             <Variable start='1390' end='1392' isDollared='true'>
                                                 <Identifier start='1391' end='1392' name='i'/>
                                             </Variable>
@@ -2193,7 +2193,7 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='1425' end='1461'>
                                     <MethodInvocation start='1425' end='1460' isNullsafe='false'>
-                                        <StaticConstantAccess start='1425' end='1434'>
+                                        <StaticConstantAccess start='1425' end='1434' isDynamicName='false'>
                                             <Variable start='1425' end='1427' isDollared='true'>
                                                 <Identifier start='1426' end='1427' name='i'/>
                                             </Variable>
@@ -2218,7 +2218,7 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='1470' end='1497'>
                                     <MethodInvocation start='1470' end='1496' isNullsafe='true'>
-                                        <StaticConstantAccess start='1470' end='1479'>
+                                        <StaticConstantAccess start='1470' end='1479' isDynamicName='false'>
                                             <Variable start='1470' end='1472' isDollared='true'>
                                                 <Identifier start='1471' end='1472' name='i'/>
                                             </Variable>
@@ -2242,7 +2242,7 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='1506' end='1538'>
                                     <StaticMethodInvocation start='1506' end='1537'>
-                                        <StaticConstantAccess start='1506' end='1515'>
+                                        <StaticConstantAccess start='1506' end='1515' isDynamicName='false'>
                                             <Variable start='1506' end='1508' isDollared='true'>
                                                 <Identifier start='1507' end='1508' name='i'/>
                                             </Variable>
@@ -2273,8 +2273,8 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='1547' end='1580'>
                                     <MethodInvocation start='1547' end='1579' isNullsafe='false'>
-                                        <StaticConstantAccess start='1547' end='1563'>
-                                            <StaticConstantAccess start='1547' end='1556'>
+                                        <StaticConstantAccess start='1547' end='1563' isDynamicName='false'>
+                                            <StaticConstantAccess start='1547' end='1556' isDynamicName='false'>
                                                 <Variable start='1547' end='1549' isDollared='true'>
                                                     <Identifier start='1548' end='1549' name='i'/>
                                                 </Variable>
@@ -2305,8 +2305,8 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='1589' end='1623'>
                                     <MethodInvocation start='1589' end='1622' isNullsafe='true'>
-                                        <StaticConstantAccess start='1589' end='1605'>
-                                            <StaticConstantAccess start='1589' end='1598'>
+                                        <StaticConstantAccess start='1589' end='1605' isDynamicName='false'>
+                                            <StaticConstantAccess start='1589' end='1598' isDynamicName='false'>
                                                 <Variable start='1589' end='1591' isDollared='true'>
                                                     <Identifier start='1590' end='1591' name='i'/>
                                                 </Variable>
@@ -2337,8 +2337,8 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='1632' end='1671'>
                                     <StaticMethodInvocation start='1632' end='1670'>
-                                        <StaticConstantAccess start='1632' end='1648'>
-                                            <StaticConstantAccess start='1632' end='1641'>
+                                        <StaticConstantAccess start='1632' end='1648' isDynamicName='false'>
+                                            <StaticConstantAccess start='1632' end='1641' isDynamicName='false'>
                                                 <Variable start='1632' end='1634' isDollared='true'>
                                                     <Identifier start='1633' end='1634' name='i'/>
                                                 </Variable>
@@ -2398,7 +2398,7 @@
                                     </StaticMethodInvocation>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='1714' end='1728'>
-                                    <StaticConstantAccess start='1714' end='1727'>
+                                    <StaticConstantAccess start='1714' end='1727' isDynamicName='false'>
                                         <NamespaceName start='1714' end='1720' isCurrent='false' isGlobal='false'>
                                             <Identifier start='1714' end='1720' name='Simple'/>
                                         </NamespaceName>
@@ -2411,8 +2411,8 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='1737' end='1758'>
-                                    <StaticConstantAccess start='1737' end='1757'>
-                                        <StaticConstantAccess start='1737' end='1750'>
+                                    <StaticConstantAccess start='1737' end='1757' isDynamicName='false'>
+                                        <StaticConstantAccess start='1737' end='1750' isDynamicName='false'>
                                             <NamespaceName start='1737' end='1743' isCurrent='false' isGlobal='false'>
                                                 <Identifier start='1737' end='1743' name='Simple'/>
                                             </NamespaceName>
@@ -2432,9 +2432,9 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='1767' end='1799'>
-                                    <StaticConstantAccess start='1767' end='1798'>
-                                        <StaticConstantAccess start='1767' end='1787'>
-                                            <StaticConstantAccess start='1767' end='1780'>
+                                    <StaticConstantAccess start='1767' end='1798' isDynamicName='false'>
+                                        <StaticConstantAccess start='1767' end='1787' isDynamicName='false'>
+                                            <StaticConstantAccess start='1767' end='1780' isDynamicName='false'>
                                                 <NamespaceName start='1767' end='1773' isCurrent='false' isGlobal='false'>
                                                     <Identifier start='1767' end='1773' name='Simple'/>
                                                 </NamespaceName>
@@ -2461,9 +2461,9 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='1808' end='1843'>
-                                    <StaticConstantAccess start='1808' end='1842'>
-                                        <StaticConstantAccess start='1808' end='1828'>
-                                            <StaticConstantAccess start='1808' end='1821'>
+                                    <StaticConstantAccess start='1808' end='1842' isDynamicName='false'>
+                                        <StaticConstantAccess start='1808' end='1828' isDynamicName='false'>
+                                            <StaticConstantAccess start='1808' end='1821' isDynamicName='false'>
                                                 <NamespaceName start='1808' end='1814' isCurrent='false' isGlobal='false'>
                                                     <Identifier start='1808' end='1814' name='Simple'/>
                                                 </NamespaceName>
@@ -2504,9 +2504,9 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='1852' end='1890'>
-                                    <StaticConstantAccess start='1852' end='1889'>
-                                        <StaticConstantAccess start='1852' end='1872'>
-                                            <StaticConstantAccess start='1852' end='1865'>
+                                    <StaticConstantAccess start='1852' end='1889' isDynamicName='false'>
+                                        <StaticConstantAccess start='1852' end='1872' isDynamicName='false'>
+                                            <StaticConstantAccess start='1852' end='1865' isDynamicName='false'>
                                                 <NamespaceName start='1852' end='1858' isCurrent='false' isGlobal='false'>
                                                     <Identifier start='1852' end='1858' name='Simple'/>
                                                 </NamespaceName>
@@ -2561,7 +2561,7 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='1899' end='1917'>
-                                    <StaticConstantAccess start='1899' end='1916'>
+                                    <StaticConstantAccess start='1899' end='1916' isDynamicName='false'>
                                         <NamespaceName start='1899' end='1905' isCurrent='false' isGlobal='false'>
                                             <Identifier start='1899' end='1905' name='Simple'/>
                                         </NamespaceName>
@@ -2574,7 +2574,7 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='1926' end='1961'>
-                                    <StaticConstantAccess start='1926' end='1960'>
+                                    <StaticConstantAccess start='1926' end='1960' isDynamicName='false'>
                                         <NamespaceName start='1926' end='1932' isCurrent='false' isGlobal='false'>
                                             <Identifier start='1926' end='1932' name='Simple'/>
                                         </NamespaceName>
@@ -2583,7 +2583,7 @@
                                                 <Identifier start='1934' end='1943' name='CONSTANT1'/>
                                                 <ArrayDimension start='1943' end='1960'>
                                                     <Index>
-                                                        <StaticConstantAccess start='1944' end='1959'>
+                                                        <StaticConstantAccess start='1944' end='1959' isDynamicName='false'>
                                                             <NamespaceName start='1944' end='1948' isCurrent='false' isGlobal='false'>
                                                                 <Identifier start='1944' end='1948' name='self'/>
                                                             </NamespaceName>
@@ -2603,7 +2603,7 @@
                                                 <Identifier start='1934' end='1943' name='CONSTANT1'/>
                                                 <ArrayDimension start='1943' end='1960'>
                                                     <Index>
-                                                        <StaticConstantAccess start='1944' end='1959'>
+                                                        <StaticConstantAccess start='1944' end='1959' isDynamicName='false'>
                                                             <NamespaceName start='1944' end='1948' isCurrent='false' isGlobal='false'>
                                                                 <Identifier start='1944' end='1948' name='self'/>
                                                             </NamespaceName>
@@ -2621,7 +2621,7 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='1970' end='1994'>
-                                    <StaticConstantAccess start='1970' end='1993'>
+                                    <StaticConstantAccess start='1970' end='1993' isDynamicName='false'>
                                         <NamespaceName start='1970' end='1976' isCurrent='false' isGlobal='false'>
                                             <Identifier start='1970' end='1976' name='Simple'/>
                                         </NamespaceName>
@@ -2663,7 +2663,7 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='2003' end='2033'>
                                     <MethodInvocation start='2003' end='2032' isNullsafe='false'>
-                                        <StaticConstantAccess start='2003' end='2016'>
+                                        <StaticConstantAccess start='2003' end='2016' isDynamicName='false'>
                                             <NamespaceName start='2003' end='2009' isCurrent='false' isGlobal='false'>
                                                 <Identifier start='2003' end='2009' name='Simple'/>
                                             </NamespaceName>
@@ -2687,7 +2687,7 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='2042' end='2086'>
                                     <MethodInvocation start='2042' end='2085' isNullsafe='false'>
-                                        <StaticConstantAccess start='2042' end='2055'>
+                                        <StaticConstantAccess start='2042' end='2055' isDynamicName='false'>
                                             <NamespaceName start='2042' end='2048' isCurrent='false' isGlobal='false'>
                                                 <Identifier start='2042' end='2048' name='Simple'/>
                                             </NamespaceName>
@@ -2714,7 +2714,7 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='2095' end='2126'>
                                     <MethodInvocation start='2095' end='2125' isNullsafe='true'>
-                                        <StaticConstantAccess start='2095' end='2108'>
+                                        <StaticConstantAccess start='2095' end='2108' isDynamicName='false'>
                                             <NamespaceName start='2095' end='2101' isCurrent='false' isGlobal='false'>
                                                 <Identifier start='2095' end='2101' name='Simple'/>
                                             </NamespaceName>
@@ -2738,7 +2738,7 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='2135' end='2171'>
                                     <StaticMethodInvocation start='2135' end='2170'>
-                                        <StaticConstantAccess start='2135' end='2148'>
+                                        <StaticConstantAccess start='2135' end='2148' isDynamicName='false'>
                                             <NamespaceName start='2135' end='2141' isCurrent='false' isGlobal='false'>
                                                 <Identifier start='2135' end='2141' name='Simple'/>
                                             </NamespaceName>
@@ -2769,8 +2769,8 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='2180' end='2217'>
                                     <MethodInvocation start='2180' end='2216' isNullsafe='false'>
-                                        <StaticConstantAccess start='2180' end='2200'>
-                                            <StaticConstantAccess start='2180' end='2193'>
+                                        <StaticConstantAccess start='2180' end='2200' isDynamicName='false'>
+                                            <StaticConstantAccess start='2180' end='2193' isDynamicName='false'>
                                                 <NamespaceName start='2180' end='2186' isCurrent='false' isGlobal='false'>
                                                     <Identifier start='2180' end='2186' name='Simple'/>
                                                 </NamespaceName>
@@ -2801,8 +2801,8 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='2226' end='2264'>
                                     <MethodInvocation start='2226' end='2263' isNullsafe='true'>
-                                        <StaticConstantAccess start='2226' end='2246'>
-                                            <StaticConstantAccess start='2226' end='2239'>
+                                        <StaticConstantAccess start='2226' end='2246' isDynamicName='false'>
+                                            <StaticConstantAccess start='2226' end='2239' isDynamicName='false'>
                                                 <NamespaceName start='2226' end='2232' isCurrent='false' isGlobal='false'>
                                                     <Identifier start='2226' end='2232' name='Simple'/>
                                                 </NamespaceName>
@@ -2833,8 +2833,8 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='2273' end='2316'>
                                     <StaticMethodInvocation start='2273' end='2315'>
-                                        <StaticConstantAccess start='2273' end='2293'>
-                                            <StaticConstantAccess start='2273' end='2286'>
+                                        <StaticConstantAccess start='2273' end='2293' isDynamicName='false'>
+                                            <StaticConstantAccess start='2273' end='2286' isDynamicName='false'>
                                                 <NamespaceName start='2273' end='2279' isCurrent='false' isGlobal='false'>
                                                     <Identifier start='2273' end='2279' name='Simple'/>
                                                 </NamespaceName>
@@ -2894,7 +2894,7 @@
                                     </StaticMethodInvocation>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='2363' end='2375'>
-                                    <StaticConstantAccess start='2363' end='2374'>
+                                    <StaticConstantAccess start='2363' end='2374' isDynamicName='false'>
                                         <NamespaceName start='2363' end='2367' isCurrent='false' isGlobal='false'>
                                             <Identifier start='2363' end='2367' name='self'/>
                                         </NamespaceName>
@@ -2907,8 +2907,8 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='2384' end='2403'>
-                                    <StaticConstantAccess start='2384' end='2402'>
-                                        <StaticConstantAccess start='2384' end='2395'>
+                                    <StaticConstantAccess start='2384' end='2402' isDynamicName='false'>
+                                        <StaticConstantAccess start='2384' end='2395' isDynamicName='false'>
                                             <NamespaceName start='2384' end='2388' isCurrent='false' isGlobal='false'>
                                                 <Identifier start='2384' end='2388' name='self'/>
                                             </NamespaceName>
@@ -2928,9 +2928,9 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='2412' end='2442'>
-                                    <StaticConstantAccess start='2412' end='2441'>
-                                        <StaticConstantAccess start='2412' end='2430'>
-                                            <StaticConstantAccess start='2412' end='2423'>
+                                    <StaticConstantAccess start='2412' end='2441' isDynamicName='false'>
+                                        <StaticConstantAccess start='2412' end='2430' isDynamicName='false'>
+                                            <StaticConstantAccess start='2412' end='2423' isDynamicName='false'>
                                                 <NamespaceName start='2412' end='2416' isCurrent='false' isGlobal='false'>
                                                     <Identifier start='2412' end='2416' name='self'/>
                                                 </NamespaceName>
@@ -2957,9 +2957,9 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='2451' end='2484'>
-                                    <StaticConstantAccess start='2451' end='2483'>
-                                        <StaticConstantAccess start='2451' end='2469'>
-                                            <StaticConstantAccess start='2451' end='2462'>
+                                    <StaticConstantAccess start='2451' end='2483' isDynamicName='false'>
+                                        <StaticConstantAccess start='2451' end='2469' isDynamicName='false'>
+                                            <StaticConstantAccess start='2451' end='2462' isDynamicName='false'>
                                                 <NamespaceName start='2451' end='2455' isCurrent='false' isGlobal='false'>
                                                     <Identifier start='2451' end='2455' name='self'/>
                                                 </NamespaceName>
@@ -3000,9 +3000,9 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='2493' end='2529'>
-                                    <StaticConstantAccess start='2493' end='2528'>
-                                        <StaticConstantAccess start='2493' end='2511'>
-                                            <StaticConstantAccess start='2493' end='2504'>
+                                    <StaticConstantAccess start='2493' end='2528' isDynamicName='false'>
+                                        <StaticConstantAccess start='2493' end='2511' isDynamicName='false'>
+                                            <StaticConstantAccess start='2493' end='2504' isDynamicName='false'>
                                                 <NamespaceName start='2493' end='2497' isCurrent='false' isGlobal='false'>
                                                     <Identifier start='2493' end='2497' name='self'/>
                                                 </NamespaceName>
@@ -3057,7 +3057,7 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='2538' end='2554'>
-                                    <StaticConstantAccess start='2538' end='2553'>
+                                    <StaticConstantAccess start='2538' end='2553' isDynamicName='false'>
                                         <NamespaceName start='2538' end='2542' isCurrent='false' isGlobal='false'>
                                             <Identifier start='2538' end='2542' name='self'/>
                                         </NamespaceName>
@@ -3070,7 +3070,7 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='2563' end='2596'>
-                                    <StaticConstantAccess start='2563' end='2595'>
+                                    <StaticConstantAccess start='2563' end='2595' isDynamicName='false'>
                                         <NamespaceName start='2563' end='2567' isCurrent='false' isGlobal='false'>
                                             <Identifier start='2563' end='2567' name='self'/>
                                         </NamespaceName>
@@ -3079,7 +3079,7 @@
                                                 <Identifier start='2569' end='2578' name='CONSTANT1'/>
                                                 <ArrayDimension start='2578' end='2595'>
                                                     <Index>
-                                                        <StaticConstantAccess start='2579' end='2594'>
+                                                        <StaticConstantAccess start='2579' end='2594' isDynamicName='false'>
                                                             <NamespaceName start='2579' end='2583' isCurrent='false' isGlobal='false'>
                                                                 <Identifier start='2579' end='2583' name='self'/>
                                                             </NamespaceName>
@@ -3099,7 +3099,7 @@
                                                 <Identifier start='2569' end='2578' name='CONSTANT1'/>
                                                 <ArrayDimension start='2578' end='2595'>
                                                     <Index>
-                                                        <StaticConstantAccess start='2579' end='2594'>
+                                                        <StaticConstantAccess start='2579' end='2594' isDynamicName='false'>
                                                             <NamespaceName start='2579' end='2583' isCurrent='false' isGlobal='false'>
                                                                 <Identifier start='2579' end='2583' name='self'/>
                                                             </NamespaceName>
@@ -3117,7 +3117,7 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='2605' end='2627'>
-                                    <StaticConstantAccess start='2605' end='2626'>
+                                    <StaticConstantAccess start='2605' end='2626' isDynamicName='false'>
                                         <NamespaceName start='2605' end='2609' isCurrent='false' isGlobal='false'>
                                             <Identifier start='2605' end='2609' name='self'/>
                                         </NamespaceName>
@@ -3159,7 +3159,7 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='2636' end='2664'>
                                     <MethodInvocation start='2636' end='2663' isNullsafe='false'>
-                                        <StaticConstantAccess start='2636' end='2647'>
+                                        <StaticConstantAccess start='2636' end='2647' isDynamicName='false'>
                                             <NamespaceName start='2636' end='2640' isCurrent='false' isGlobal='false'>
                                                 <Identifier start='2636' end='2640' name='self'/>
                                             </NamespaceName>
@@ -3183,7 +3183,7 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='2673' end='2702'>
                                     <MethodInvocation start='2673' end='2701' isNullsafe='true'>
-                                        <StaticConstantAccess start='2673' end='2684'>
+                                        <StaticConstantAccess start='2673' end='2684' isDynamicName='false'>
                                             <NamespaceName start='2673' end='2677' isCurrent='false' isGlobal='false'>
                                                 <Identifier start='2673' end='2677' name='self'/>
                                             </NamespaceName>
@@ -3207,7 +3207,7 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='2711' end='2745'>
                                     <StaticMethodInvocation start='2711' end='2744'>
-                                        <StaticConstantAccess start='2711' end='2722'>
+                                        <StaticConstantAccess start='2711' end='2722' isDynamicName='false'>
                                             <NamespaceName start='2711' end='2715' isCurrent='false' isGlobal='false'>
                                                 <Identifier start='2711' end='2715' name='self'/>
                                             </NamespaceName>
@@ -3238,8 +3238,8 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='2754' end='2789'>
                                     <MethodInvocation start='2754' end='2788' isNullsafe='false'>
-                                        <StaticConstantAccess start='2754' end='2772'>
-                                            <StaticConstantAccess start='2754' end='2765'>
+                                        <StaticConstantAccess start='2754' end='2772' isDynamicName='false'>
+                                            <StaticConstantAccess start='2754' end='2765' isDynamicName='false'>
                                                 <NamespaceName start='2754' end='2758' isCurrent='false' isGlobal='false'>
                                                     <Identifier start='2754' end='2758' name='self'/>
                                                 </NamespaceName>
@@ -3270,8 +3270,8 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='2798' end='2834'>
                                     <MethodInvocation start='2798' end='2833' isNullsafe='true'>
-                                        <StaticConstantAccess start='2798' end='2816'>
-                                            <StaticConstantAccess start='2798' end='2809'>
+                                        <StaticConstantAccess start='2798' end='2816' isDynamicName='false'>
+                                            <StaticConstantAccess start='2798' end='2809' isDynamicName='false'>
                                                 <NamespaceName start='2798' end='2802' isCurrent='false' isGlobal='false'>
                                                     <Identifier start='2798' end='2802' name='self'/>
                                                 </NamespaceName>
@@ -3302,8 +3302,8 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='2843' end='2884'>
                                     <StaticMethodInvocation start='2843' end='2883'>
-                                        <StaticConstantAccess start='2843' end='2861'>
-                                            <StaticConstantAccess start='2843' end='2854'>
+                                        <StaticConstantAccess start='2843' end='2861' isDynamicName='false'>
+                                            <StaticConstantAccess start='2843' end='2854' isDynamicName='false'>
                                                 <NamespaceName start='2843' end='2847' isCurrent='false' isGlobal='false'>
                                                     <Identifier start='2843' end='2847' name='self'/>
                                                 </NamespaceName>
@@ -3363,7 +3363,7 @@
                                     </StaticMethodInvocation>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='2929' end='2943'>
-                                    <StaticConstantAccess start='2929' end='2942'>
+                                    <StaticConstantAccess start='2929' end='2942' isDynamicName='false'>
                                         <Identifier start='2929' end='2935' name='static'/>
                                         <Constant>
                                             <Identifier start='2937' end='2942' name='CASE1'/>
@@ -3374,8 +3374,8 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='2952' end='2973'>
-                                    <StaticConstantAccess start='2952' end='2972'>
-                                        <StaticConstantAccess start='2952' end='2965'>
+                                    <StaticConstantAccess start='2952' end='2972' isDynamicName='false'>
+                                        <StaticConstantAccess start='2952' end='2965' isDynamicName='false'>
                                             <Identifier start='2952' end='2958' name='static'/>
                                             <Constant>
                                                 <Identifier start='2960' end='2965' name='CASE1'/>
@@ -3393,9 +3393,9 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='2982' end='3014'>
-                                    <StaticConstantAccess start='2982' end='3013'>
-                                        <StaticConstantAccess start='2982' end='3002'>
-                                            <StaticConstantAccess start='2982' end='2995'>
+                                    <StaticConstantAccess start='2982' end='3013' isDynamicName='false'>
+                                        <StaticConstantAccess start='2982' end='3002' isDynamicName='false'>
+                                            <StaticConstantAccess start='2982' end='2995' isDynamicName='false'>
                                                 <Identifier start='2982' end='2988' name='static'/>
                                                 <Constant>
                                                     <Identifier start='2990' end='2995' name='CASE1'/>
@@ -3420,9 +3420,9 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='3023' end='3058'>
-                                    <StaticConstantAccess start='3023' end='3057'>
-                                        <StaticConstantAccess start='3023' end='3043'>
-                                            <StaticConstantAccess start='3023' end='3036'>
+                                    <StaticConstantAccess start='3023' end='3057' isDynamicName='false'>
+                                        <StaticConstantAccess start='3023' end='3043' isDynamicName='false'>
+                                            <StaticConstantAccess start='3023' end='3036' isDynamicName='false'>
                                                 <Identifier start='3023' end='3029' name='static'/>
                                                 <Constant>
                                                     <Identifier start='3031' end='3036' name='CASE1'/>
@@ -3461,9 +3461,9 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='3067' end='3105'>
-                                    <StaticConstantAccess start='3067' end='3104'>
-                                        <StaticConstantAccess start='3067' end='3087'>
-                                            <StaticConstantAccess start='3067' end='3080'>
+                                    <StaticConstantAccess start='3067' end='3104' isDynamicName='false'>
+                                        <StaticConstantAccess start='3067' end='3087' isDynamicName='false'>
+                                            <StaticConstantAccess start='3067' end='3080' isDynamicName='false'>
                                                 <Identifier start='3067' end='3073' name='static'/>
                                                 <Constant>
                                                     <Identifier start='3075' end='3080' name='CASE1'/>
@@ -3516,7 +3516,7 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='3114' end='3132'>
-                                    <StaticConstantAccess start='3114' end='3131'>
+                                    <StaticConstantAccess start='3114' end='3131' isDynamicName='false'>
                                         <Identifier start='3114' end='3120' name='static'/>
                                         <Constant>
                                             <Identifier start='3122' end='3131' name='CONSTANT1'/>
@@ -3527,14 +3527,14 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='3141' end='3176'>
-                                    <StaticConstantAccess start='3141' end='3175'>
+                                    <StaticConstantAccess start='3141' end='3175' isDynamicName='false'>
                                         <Identifier start='3141' end='3147' name='static'/>
                                         <Constant>
                                             <ExpressionArrayAccess start='3149' end='3175'>
                                                 <Identifier start='3149' end='3158' name='CONSTANT1'/>
                                                 <ArrayDimension start='3158' end='3175'>
                                                     <Index>
-                                                        <StaticConstantAccess start='3159' end='3174'>
+                                                        <StaticConstantAccess start='3159' end='3174' isDynamicName='false'>
                                                             <NamespaceName start='3159' end='3163' isCurrent='false' isGlobal='false'>
                                                                 <Identifier start='3159' end='3163' name='self'/>
                                                             </NamespaceName>
@@ -3554,7 +3554,7 @@
                                                 <Identifier start='3149' end='3158' name='CONSTANT1'/>
                                                 <ArrayDimension start='3158' end='3175'>
                                                     <Index>
-                                                        <StaticConstantAccess start='3159' end='3174'>
+                                                        <StaticConstantAccess start='3159' end='3174' isDynamicName='false'>
                                                             <NamespaceName start='3159' end='3163' isCurrent='false' isGlobal='false'>
                                                                 <Identifier start='3159' end='3163' name='self'/>
                                                             </NamespaceName>
@@ -3572,7 +3572,7 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='3185' end='3209'>
-                                    <StaticConstantAccess start='3185' end='3208'>
+                                    <StaticConstantAccess start='3185' end='3208' isDynamicName='false'>
                                         <Identifier start='3185' end='3191' name='static'/>
                                         <Constant>
                                             <ExpressionArrayAccess start='3193' end='3208'>
@@ -3612,7 +3612,7 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='3218' end='3248'>
                                     <MethodInvocation start='3218' end='3247' isNullsafe='false'>
-                                        <StaticConstantAccess start='3218' end='3231'>
+                                        <StaticConstantAccess start='3218' end='3231' isDynamicName='false'>
                                             <Identifier start='3218' end='3224' name='static'/>
                                             <Constant>
                                                 <Identifier start='3226' end='3231' name='CASE1'/>
@@ -3634,7 +3634,7 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='3257' end='3288'>
                                     <MethodInvocation start='3257' end='3287' isNullsafe='true'>
-                                        <StaticConstantAccess start='3257' end='3270'>
+                                        <StaticConstantAccess start='3257' end='3270' isDynamicName='false'>
                                             <Identifier start='3257' end='3263' name='static'/>
                                             <Constant>
                                                 <Identifier start='3265' end='3270' name='CASE1'/>
@@ -3656,7 +3656,7 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='3297' end='3333'>
                                     <StaticMethodInvocation start='3297' end='3332'>
-                                        <StaticConstantAccess start='3297' end='3310'>
+                                        <StaticConstantAccess start='3297' end='3310' isDynamicName='false'>
                                             <Identifier start='3297' end='3303' name='static'/>
                                             <Constant>
                                                 <Identifier start='3305' end='3310' name='CASE1'/>
@@ -3685,8 +3685,8 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='3342' end='3379'>
                                     <MethodInvocation start='3342' end='3378' isNullsafe='false'>
-                                        <StaticConstantAccess start='3342' end='3362'>
-                                            <StaticConstantAccess start='3342' end='3355'>
+                                        <StaticConstantAccess start='3342' end='3362' isDynamicName='false'>
+                                            <StaticConstantAccess start='3342' end='3355' isDynamicName='false'>
                                                 <Identifier start='3342' end='3348' name='static'/>
                                                 <Constant>
                                                     <Identifier start='3350' end='3355' name='CASE1'/>
@@ -3715,8 +3715,8 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='3388' end='3426'>
                                     <MethodInvocation start='3388' end='3425' isNullsafe='true'>
-                                        <StaticConstantAccess start='3388' end='3408'>
-                                            <StaticConstantAccess start='3388' end='3401'>
+                                        <StaticConstantAccess start='3388' end='3408' isDynamicName='false'>
+                                            <StaticConstantAccess start='3388' end='3401' isDynamicName='false'>
                                                 <Identifier start='3388' end='3394' name='static'/>
                                                 <Constant>
                                                     <Identifier start='3396' end='3401' name='CASE1'/>
@@ -3745,8 +3745,8 @@
                                 </ExpressionStatement>
                                 <ExpressionStatement start='3435' end='3478'>
                                     <StaticMethodInvocation start='3435' end='3477'>
-                                        <StaticConstantAccess start='3435' end='3455'>
-                                            <StaticConstantAccess start='3435' end='3448'>
+                                        <StaticConstantAccess start='3435' end='3455' isDynamicName='false'>
+                                            <StaticConstantAccess start='3435' end='3448' isDynamicName='false'>
                                                 <Identifier start='3435' end='3441' name='static'/>
                                                 <Constant>
                                                     <Identifier start='3443' end='3448' name='CASE1'/>

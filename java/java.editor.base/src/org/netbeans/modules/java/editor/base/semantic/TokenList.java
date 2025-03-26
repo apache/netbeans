@@ -373,18 +373,29 @@ public class TokenList {
         return ts != null ? ts.index() : -1;
     }
 
-    public void resetToIndex(int index, int offset) {
-        if (ts == null) {
-            return ;
-        }
+    public void resetToIndex(int index) {
+        doc.render(() -> {
+            if (cancel.get()) {
+                return ;
+            }
 
-        if (topLevelIsJava) {
-            ts.moveIndex(index);
-            ts.moveNext();
-        } else {
-            ts = null;
-            moveToOffset(offset);
-        }
+            if (ts == null) {
+                return ;
+            }
+
+            if (!ts.isValid()) {
+                cancel.set(true);
+                return ;
+            }
+
+            if (topLevelIsJava) {
+                ts.moveIndex(index);
+                ts.moveNext();
+            } else {
+                ts = null;
+                moveToOffset(offset);
+            }
+        });
     }
 
     private static List<TokenSequence<?>> embeddedTokenSequences(TokenHierarchy<Document> th, int offset) {

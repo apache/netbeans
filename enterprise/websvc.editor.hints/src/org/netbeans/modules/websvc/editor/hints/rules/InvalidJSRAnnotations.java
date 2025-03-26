@@ -68,6 +68,6 @@ public class InvalidJSRAnnotations extends AbstractWebServiceRule {
                 }
             }
         }
-        return errors.isEmpty() ? null : errors.toArray(new ErrorDescription[errors.size()]);
+        return errors.isEmpty() ? null : errors.toArray(new ErrorDescription[0]);
     }
 }

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.38
+#Version 1.47
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -322,6 +322,7 @@ meth public java.util.List<org.netbeans.modules.docker.api.DockerTag> getTags()
 meth public long getCreated()
 meth public long getSize()
 meth public long getVirtualSize()
+ anno 0 java.lang.Deprecated()
 meth public org.netbeans.modules.docker.api.DockerEntityType getType()
 meth public org.netbeans.modules.docker.api.DockerInstance getInstance()
 supr java.lang.Object

@@ -126,7 +126,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
         JspTagTokenContext.COMMENT
     };
 
-    protected FileObject fobj;
+    private FileObject fobj;
 
     /** Special bracket finder is used when caret is in JSP context */
     private boolean useCustomBracketFinder = true;
@@ -156,22 +156,6 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
                 fobj = NbEditorUtilities.getDataObject(getDocument()).getPrimaryFile();
                 fobj.addFileChangeListener(WeakListeners.create(FileChangeListener.class, this, fobj));
             }
-    }
-
-    public String[] getImports(){
-        JspParserAPI.ParseResult pre = getParseResult();
-        if (pre != null){
-            PageInfo pi = pre.getPageInfo();
-            if(pi == null) {
-                //report error but do not break the entire CC
-                err.log(Level.WARNING, null, new NullPointerException("PageInfo obtained from JspParserAPI.ParseResult is null"));
-                return null;
-            }
-            List<String> imports = pi.getImports();
-            return imports.toArray(new String[imports.size()]);
-        }
-
-        return null;
     }
 
     public boolean isXmlSyntax(){
@@ -204,9 +188,9 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
         if (result != null && result.getPageInfo() != null) {
             //if (result.isParsingSuccess()) {
             // PENDING - can we somehow get incomplete parsed information ?
-            if (result.getPageInfo().getXMLPrefixMapper().size() > 0) {
+            if (!result.getPageInfo().getXMLPrefixMapper().isEmpty()) {
                 prefixMapper = result.getPageInfo().getApproxXmlPrefixMapper();
-                if (prefixMapper.size() == 0){
+                if (prefixMapper.isEmpty()){
                     prefixMapper = result.getPageInfo().getXMLPrefixMapper();
                 }
                 prefixMapper.putAll(result.getPageInfo().getJspPrefixMapper());
@@ -239,19 +223,11 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
     }
 
     private TagInfo[] getSortedTagInfos(TagInfo[] tinfos) {
-        Arrays.sort(tinfos, new Comparator() {
-            public int compare(Object o1, Object o2) {
-                TagInfo ti1 = (TagInfo)o1;
-                TagInfo ti2 = (TagInfo)o2;
-                String tname1 = (ti1.getDisplayName() == null ? ti1.getTagName() : ti1.getDisplayName());
-                String tname2 = (ti2.getDisplayName() == null ? ti2.getTagName() : ti2.getDisplayName());
-                if(tname1 == null || tname2 == null) return 0;
-                return tname1.compareTo(tname2);
-            }
-            @Override
-            public boolean equals(Object o) {
-                return o.equals(this);
-            }
+        Arrays.sort(tinfos, (TagInfo ti1, TagInfo ti2) -> {
+            String tname1 = (ti1.getDisplayName() == null ? ti1.getTagName() : ti1.getDisplayName());
+            String tname2 = (ti2.getDisplayName() == null ? ti2.getTagName() : ti2.getDisplayName());
+            if(tname1 == null || tname2 == null) return 0;
+            return tname1.compareTo(tname2);
         });
         return tinfos;
     }
@@ -302,7 +278,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
 
         char first = typedText.charAt(0); //get typed char
 
-        TokenItem item = null; //get token on the cursor
+        TokenItem item; //get token on the cursor
         try{
             item = getItemAtOrBefore(target.getCaret().getDot());
         }catch(BadLocationException e) {
@@ -375,7 +351,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
                     try {
                         //check if the cursor is behind an open tag
                         SyntaxElement se = getElementChain(tracking.getOffset());
-                        if(se != null && (se instanceof SyntaxElement.Tag)) {
+                        if(se instanceof SyntaxElement.Tag) {
                             return COMPLETION_POPUP;
                         }
                     }catch(BadLocationException e) {
@@ -401,7 +377,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
     }
 
     /** Returns offset where the next offset after this offset starts. */
-    private final int getTokenEnd( TokenItem item ) {
+    private int getTokenEnd( TokenItem item ) {
         if (item == null)
             return 0; //getDocument().getLength();
         return item.getOffset() + item.getImage().length();
@@ -410,7 +386,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
     /** Filters list of strings so only strings starting
      * with a given prefix are returned in the new List. */
     public static final List<Object> filterList(List<? extends Object> toFilter, String prefix) {
-        List<Object> newList = new ArrayList<Object>();
+        List<Object> newList = new ArrayList<>();
         Object item;
         for (int i = 0; i < toFilter.size(); i++) {
             item = toFilter.get(i);
@@ -432,7 +408,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
      /** Filters list of strings so only strings starting
      * with a given prefix are returned in the new List. */
     public static final List<String> filterStrings(List<String> toFilter, String prefix) {
-        List<String> newList = new ArrayList<String>();
+        List<String> newList = new ArrayList<>();
         for(String val : toFilter) {
             if(val.startsWith(prefix)) {
                 newList.add(val);
@@ -547,15 +523,13 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
                 tagAllInfosLength = tagInfosLength;
             }
             if (tagFileInfos != null) { // it can be null, when the jsp parser finished unexpectedly
-                tagAllInfosLength = tagAllInfosLength + tagFileInfos.length;
+                tagAllInfosLength += tagFileInfos.length;
             }
 
             allTags = new TagInfo[tagAllInfosLength];
 
             if (tagInfos != null) {
-                for (int i = 0; i < tagInfosLength; i++) {
-                    allTags[i] = tagInfos[i];
-                }
+                System.arraycopy(tagInfos, 0, allTags, 0, tagInfosLength);
             }
             if (tagFileInfos != null) {
                 for (int i = 0; i < tagFileInfos.length; i++) {
@@ -575,9 +549,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
         initCompletionData();
         if (STANDARD_JSP_PREFIX.equals(prefix)) {
             TagInfo[] stanTagDatas = getTagInfos();
-            for (int i=0; i<stanTagDatas.length; i++) {
-                items.add(stanTagDatas[i]);
-            }
+            items.addAll(Arrays.asList(stanTagDatas));
         }
 
         TagLibraryInfo info = getTagLibrary(prefix, requiresFresh);
@@ -586,6 +558,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
             tags = getAllTagInfos(info);
         }
         if (tags != null) {
+            assert info != null;
             tags = getSortedTagInfos(tags);
             String url = (String)helpMap.get(info.getURI());
             if (url != null && !url.equals("")){
@@ -599,9 +572,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
                             tags[i].getTagVariableInfos(), tags[i].hasDynamicAttributes()));
                 }
             } else {
-                for (int i = 0; i < tags.length; i++) {
-                    items.add(tags[i]);
-                }
+                items.addAll(Arrays.asList(tags));
             }
         }
         return items;
@@ -620,8 +591,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
             for (int i=0; i<stanTagDatas.length; i++) {
                 if (stanTagDatas[i].getTagName().equals(tag)) {
                     TagAttributeInfo[] attrs = stanTagDatas[i].getAttributes();
-                    for (int j=0; j<attrs.length; j++)
-                        items.add(attrs[j]);
+                    items.addAll(Arrays.asList(attrs));
                     break;
                 }
             }
@@ -649,8 +619,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
                                 attributes[i].isFragment()));
                     }
                 } else {
-                    for (int i = 0; i < attributes.length; i++)
-                        items.add(attributes[i]);
+                    items.addAll(Arrays.asList(attributes));
                 }
             }
         }
@@ -662,7 +631,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
     /** Should be overriden ny subclasses to support JSP 1.1. */
     protected List<TagInfo> getAllDirectives() {
         initCompletionData();
-        List<TagInfo> items = new ArrayList<TagInfo>();
+        List<TagInfo> items = new ArrayList<>();
 
         //Is xml syntax? => return nothing.
         if (isXmlSyntax()) return items;
@@ -674,9 +643,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
             directiveData = directiveJspData;
 
         }
-        for (int i = 0; i < directiveData.length; i++){
-            items.add(directiveData[i]);
-        }
+        items.addAll(Arrays.asList(directiveData));
         return items;
     }
 
@@ -695,8 +662,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
         for (int i=0; i<directiveData.length; i++) {
             if (directiveData[i].getTagName().equals(directive)) {
                 TagAttributeInfo[] attrs = directiveData[i].getAttributes();
-                for (int j=0; j<attrs.length; j++)
-                    items.add(attrs[j]);
+                items.addAll(Arrays.asList(attrs));
                 break;
             }
         }
@@ -962,7 +928,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
                         null, null, directiveJspData[0].getAttributes())
             };
 
-            List<TagInfo> standardTagTagDatasList = new ArrayList<TagInfo>();
+            List<TagInfo> standardTagTagDatasList = new ArrayList<>();
             standardTagTagDatasList.addAll(Arrays.asList(standardJspTagDatas));
 
             standardTagTagDatasList.add(new TagInfo("doBody", null, TagInfo.BODY_CONTENT_EMPTY, url + "syntaxref2017.html", null, null,            // NOI18N
@@ -1001,12 +967,12 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
                         new TagAttributeInfo("xmlns:x", false, url+"syntaxref2024.html#1003301#1003311", false)})
             };
 
-            List<TagInfo> xmlJspTagDatasList = new ArrayList<TagInfo>();
+            List<TagInfo> xmlJspTagDatasList = new ArrayList<>();
             xmlJspTagDatasList.addAll(Arrays.asList(standardJspTagDatas));
             xmlJspTagDatasList.addAll(Arrays.asList(commonXMLTagDatas));
             xmlJspTagDatas = xmlJspTagDatasList.toArray(new TagInfo[]{});
 
-            List<TagInfo> xmlTagFileTagDatasList = new ArrayList<TagInfo>();
+            List<TagInfo> xmlTagFileTagDatasList = new ArrayList<>();
             xmlTagFileTagDatasList.addAll(Arrays.asList(standardTagTagDatas));
             xmlTagFileTagDatasList.addAll(Arrays.asList(commonXMLTagDatas));
             xmlTagFileTagDatas = xmlTagFileTagDatasList.toArray(new TagInfo[]{});
@@ -1043,29 +1009,39 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
 
     /** Debug output of all tags and directives. */
     private String printJspCompletionInfo() {
-        StringBuffer output = new StringBuffer();
+        StringBuilder output = new StringBuilder();
 
         output.append("TAGS\n");    // NOI18N
         List tagPrefixes = getTagPrefixes("");  // NOI18N
         for (int i = 0; i < tagPrefixes.size(); i++) {
             String prefix = (String)tagPrefixes.get(i);
-            output.append("  " + prefix + "\n");    // NOI18N
+            output.append("  ");    // NOI18N
+            output.append(prefix);
+            output.append("\n");    // NOI18N
             List tags = getTags(prefix, "");    // NOI18N
             for (int j = 0; j < tags.size(); j++) {
                 if (tags.get(j) instanceof TagInfo){
                     TagInfo ti = (TagInfo) tags.get(j);
-                    output.append("    " + ti.getTagName() + "\n");
+                    output.append("    "); // NOI18N
+                    output.append(ti.getTagName());
+                    output.append("\n"); // NOI18N
                     TagAttributeInfo[] attributes =  ti.getAttributes();
                     for (int k = 0; k < attributes.length; k++) {
-                        output.append("      " + attributes[k].getName() + "\n");// NOI18N
+                        output.append("      "); // NOI18N
+                        output.append(attributes[k].getName());
+                        output.append("\n");// NOI18N
                     }
                 } else {
                     String tagName = (String)tags.get(j);
-                    output.append("    " + tagName + "\n"); // NOI18N
+                    output.append("    "); // NOI18N
+                    output.append(tagName);
+                    output.append("\n"); // NOI18N
                     List attributes = getTagAttributes(prefix, tagName, "");// NOI18N
                     for (int k = 0; k < attributes.size(); k++) {
                         String attribute = (String)attributes.get(k);
-                        output.append("      " + attribute + "\n");// NOI18N
+                        output.append("      "); // NOI18N
+                        output.append(attribute);
+                        output.append("\n"); // NOI18N
                     }
                 }
             }
@@ -1077,18 +1053,26 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
         for (int i = 0; i < directives.size(); i++) {
             if (directives.get(i) instanceof TagInfo){
                 TagInfo ti = (TagInfo) directives.get(i);
-                output.append("    " + ti.getTagName() + "\n");
+                output.append("    "); // NOI18N
+                output.append(ti.getTagName());
+                output.append("\n"); // NOI18N
                 TagAttributeInfo[] attributes =  ti.getAttributes();
                 for (int k = 0; k < attributes.length; k++) {
-                    output.append("      " + attributes[k].getName() + "\n");// NOI18N
+                    output.append("      "); // NOI18N
+                    output.append(attributes[k].getName());
+                    output.append("\n");// NOI18N
                 }
             } else {
                 String directive = (String)directives.get(i);
-                output.append("  " + directive + "\n");// NOI18N
+                output.append("  "); // NOI18N
+                output.append(directive);
+                output.append("\n");// NOI18N
                 List attributes = getDirectiveAttributes(directive, "");// NOI18N
                 for (int k = 0; k < attributes.size(); k++) {
                     String attribute = (String)attributes.get(k);
-                    output.append("      " + attribute + "\n");// NOI18N
+                    output.append("      "); // NOI18N
+                    output.append(attribute);
+                    output.append("\n"); // NOI18N
                 }
             }
         }
@@ -1113,8 +1097,10 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
                 backItem = getTokenChain(Math.max(offset-50, 0), offset);
             }
 
-            if (chainLength++ > 1000)
+            if (chainLength > 1000) {
                 break;
+            }
+            chainLength++;
         }
         if (backItem == null)
             return null;
@@ -1165,23 +1151,23 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
 
         //JSP comment
         if(id == JspTagTokenContext.COMMENT || id == JspDirectiveTokenContext.COMMENT) {
-            return getCommentChain(item, offset);
+            return getCommentChain(item);
         }
 
         //Expression language handling
         if(item.getTokenContextPath().contains(ELTokenContext.contextPath)) {
-            return getELChain(item, offset);
+            return getELChain(item);
         }
 
         if (id == JspTagTokenContext.SYMBOL2 || id == JspDirectiveTokenContext.SYMBOL2) {
             if (isScriptStartToken(item)) {
-                return getScriptingChain(item, offset);
+                return getScriptingChain(item);
             }
 
             if ((getTokenEnd(item) == offset) && isScriptEndToken(item)) {
                 item.getNext();
                 if (!isTagDirToken(item))
-                    return getContentChain(item, offset);
+                    return getContentChain(item);
             }
             return null;
         }
@@ -1209,13 +1195,13 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
                 if (elementStart.getTokenID() == JspTagTokenContext.SYMBOL
                         || elementStart.getTokenID() == JspDirectiveTokenContext.SYMBOL) {
                     if (elementStart.getImage().equals("<")) {   // NOI18N
-                        return getTagOrDirectiveChain(true, elementStart, offset);
+                        return getTagOrDirectiveChain(true, elementStart);
                     }
                     if (elementStart.getImage().equals("</")) {   // NOI18N
-                        return getEndTagChain(elementStart, offset);
+                        return getEndTagChain(elementStart);
                     }
                     if (elementStart.getImage().equals("<%@")) {   // NOI18N
-                        return getTagOrDirectiveChain(false, elementStart, offset);
+                        return getTagOrDirectiveChain(false, elementStart);
                     }
                 }
                 if(elementStart.getTokenID() == JspTagTokenContext.ERROR
@@ -1242,7 +1228,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
                 if (elementStart.getPrevious() == null) {
                     // we backtracked to the beginning without finding
                     // a distinguishing symbol - we are in the content language
-                    return getContentChain(elementStart, offset);
+                    return getContentChain(elementStart);
                 }
                 elementStart = elementStart.getPrevious(); // now non-null
                 if (!isScriptingOrContentToken(elementStart)
@@ -1251,9 +1237,9 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
                         || elementStart.getTokenContextPath().contains(ELTokenContext.contextPath)) {
                     // something from JSP
                     if (isScriptStartToken(elementStart)) {
-                        return getScriptingChain(elementStart.getNext(), offset);
+                        return getScriptingChain(elementStart.getNext());
                     } else {
-                        return getContentChain(elementStart.getNext(), offset);
+                        return getContentChain(elementStart.getNext());
                     }
                 }
             }
@@ -1389,7 +1375,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
 
     // ------- METHODS FOR CONSTRUCTING SEMANTICALLY LIKNKED CHAINS OF TOKENS ------
 
-    private SyntaxElement getCommentChain(TokenItem token, int offset) {
+    private SyntaxElement getCommentChain(TokenItem token) {
         //we are somewhere in a JSP comment - need to find its start and end
         //backtrace for start
         TokenItem start = null;
@@ -1427,7 +1413,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
         return new SyntaxElement.Comment(this, start.getOffset(), getTokenEnd(end));
     }
 
-    private SyntaxElement getELChain(TokenItem token, int offset) {
+    private SyntaxElement getELChain(TokenItem token) {
         //we are somewhere in an expression language - need to find its start and end
         //backtrace for start
         TokenItem scan = token;
@@ -1450,28 +1436,31 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
 
 
     /** Gets an element representing a tag or directive starting with token item firstToken. */
-    private SyntaxElement getTagOrDirectiveChain(boolean tag, TokenItem firstToken, int offset) {
+    private SyntaxElement getTagOrDirectiveChain(boolean tag, TokenItem firstToken) {
         //suppose we are in a tag or directive => we do not have to distinguish tokenIDs -
         //it is sufficient to work with numeric ids (solves directive/tag tokenID problem)
         TokenItem item = firstToken.getNext();
         String name = getWholeWord(item, JspTagTokenContext.TAG);
         while ((item != null) && (item.getTokenID().getNumericID() == JspTagTokenContext.TAG_ID ||
-                item.getTokenID().getNumericID() == JspTagTokenContext.WHITESPACE_ID ))
+                item.getTokenID().getNumericID() == JspTagTokenContext.WHITESPACE_ID )) {
             item = item.getNext();
+        }
         TreeMap attributes = new TreeMap();
         while (isInnerTagDirToken(item)) {
             // collect the attributes
             if (item.getTokenID().getNumericID() == JspTagTokenContext.ATTRIBUTE_ID) {
                 String attributeName = getWholeWord(item, JspTagTokenContext.ATTRIBUTE);
                 // forward to the next non-ATTRIBUTE token
-                while ((item != null) && (item.getTokenID().getNumericID() == JspTagTokenContext.ATTRIBUTE_ID))
+                while ((item != null) && (item.getTokenID().getNumericID() == JspTagTokenContext.ATTRIBUTE_ID)) {
                     item = item.getNext();
+                }
                 // find the value
                 while ((item != null) &&
                         (item.getTokenID().getNumericID() == JspTagTokenContext.SYMBOL_ID) &&
-                        (isValueBeginning(item.getImage())))
+                        (isValueBeginning(item.getImage()))) {
                     item = item.getNext();
-                StringBuffer value = new StringBuffer();
+                }
+                StringBuilder value = new StringBuilder();
                 while ((item != null)
                         && ((item.getTokenID().getNumericID() == JspTagTokenContext.ATTR_VALUE_ID)
                         || (item.getTokenID().getNumericID() == JspTagTokenContext.EOL_ID))) {
@@ -1546,11 +1535,12 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
         }
     }
 
-    private SyntaxElement getEndTagChain(TokenItem firstToken, int offset) {
+    private SyntaxElement getEndTagChain(TokenItem firstToken) {
         TokenItem item = firstToken.getNext();
         String name = getWholeWord(item, JspTagTokenContext.TAG);
-        while ((item != null) && (item.getTokenID() == JspTagTokenContext.TAG))
+        while ((item != null) && (item.getTokenID() == JspTagTokenContext.TAG)) {
             item = item.getNext();
+        }
         while (isInnerTagDirToken(item)) {
             item = item.getNext();
         }
@@ -1559,7 +1549,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
     }
 
     private String getWholeWord(TokenItem firstToken, TokenID requestedTokenID) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         while ((firstToken != null) && (firstToken.getTokenID().getNumericID() == requestedTokenID.getNumericID())) {
             sb.append(firstToken.getImage());
             firstToken = firstToken.getNext();
@@ -1570,7 +1560,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
     /** Returns an element of scripting language starting with firstToken.
      * If forstToken is null, returns element representing end of the document.
      */
-    private SyntaxElement getScriptingChain(TokenItem firstToken, int offset) {
+    private SyntaxElement getScriptingChain(TokenItem firstToken) {
         if (firstToken == null) {
             return new SyntaxElement.ScriptingL(this,
                     getDocument().getLength(), getDocument().getLength());
@@ -1593,7 +1583,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
     /** Returns an element of content language starting with firstToken.
      * If forstToken is null, returns element representing end of the document.
      */
-    private SyntaxElement getContentChain(TokenItem firstToken, int offset) {
+    private SyntaxElement getContentChain(TokenItem firstToken) {
         if (firstToken == null) {
             return new SyntaxElement.ContentL(this,
                     getDocument().getLength(), getDocument().getLength());
@@ -1664,9 +1654,9 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
     public List<JspCompletionItem> getPossibleEndTags(int offset, int anchor, String pattern, boolean firstOnly) throws BadLocationException {
         SyntaxElement elem = getElementChain( offset );
 
-        Stack<String> stack = new Stack<String>();
-        List<JspCompletionItem> result = new ArrayList<JspCompletionItem>();
-        Set<String> found = new HashSet<String>();
+        Stack<String> stack = new Stack<>();
+        List<JspCompletionItem> result = new ArrayList<>();
+        Set<String> found = new HashSet<>();
 
         if( elem != null ) {
             elem = elem.getPrevious();  // we need smtg. before our </
@@ -1752,7 +1742,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
     public CompletionItem getAutocompletedEndTag(int offset) {
         try {
             SyntaxElement elem = getElementChain( offset - 1);
-            if(elem != null && elem instanceof SyntaxElement.Tag) {
+            if(elem instanceof SyntaxElement.Tag) {
                 String tagName = ((SyntaxElement.Tag)elem).getName();
                 return HtmlCompletionItem.createAutocompleteEndTag(tagName, offset);
             }
@@ -1881,9 +1871,10 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
         return null;
     }
 
-    private int[] findMatchingTag(TokenItem token){
+    private int[] findMatchingTag(TokenItem inputToken){
         // TODO - replanning to the other thread. Now it's in awt thread
         // if the curret is after jsp tag ( after the char '>' ), ship inside the tag
+        TokenItem token = inputToken;
         if (token != null && token.getTokenID().getNumericID() == JspTagTokenContext.SYMBOL_ID
                 && token.getImage().charAt(token.getImage().length()-1) == '>')
             token = token.getPrevious();
@@ -1891,12 +1882,14 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
         if (token != null
                 && ((token.getTokenID().getNumericID() == JspTagTokenContext.TAG_ID && token.getImage().trim().length() > 0)
                 || (token.getTokenID().getNumericID() == JspTagTokenContext.SYMBOL_ID && token.getImage().charAt(0)=='<'))){
-            if (token.getTokenID().getNumericID() == JspTagTokenContext.SYMBOL_ID) // the starting of the jsp tag
+            if (token.getTokenID().getNumericID() == JspTagTokenContext.SYMBOL_ID) { // the starting of the jsp tag
                 // we are somewhere at beginning of the jsp tag. Find out the token with the jsp tag.
                 while (token !=null
                 && !(token.getTokenID().getNumericID() == JspTagTokenContext.TAG_ID
-                && token.getImage().trim().length() > 0))
+                && token.getImage().trim().length() > 0)) {
                     token = token.getNext();    // move at the jsp tag
+                }
+            }
             isInside = true; // the curret is somewhere in '<jsptag' or '</jsptag'
         } else {
             // find out whether the curret is inside a jsp tag
@@ -1908,10 +1901,12 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
                         && !(token.getTokenID().getNumericID() == JspTagTokenContext.TAG_ID
                         && token.getImage().trim().length() > 0)  // this is hack, because a whitspaces are returned are with TAG_ID
                         && !(token.getTokenID().getNumericID() == JspTagTokenContext.SYMBOL_ID
-                        && token.getImage().charAt(token.getImage().length()-1) == '>'))
+                        && token.getImage().charAt(token.getImage().length()-1) == '>')) {
                     token = token.getPrevious();
-                if (token!=null && token.getTokenID().getNumericID() == JspTagTokenContext.TAG_ID)
+                }
+                if (token!=null && token.getTokenID().getNumericID() == JspTagTokenContext.TAG_ID) {
                     isInside = true;
+                }
             }
         }
         // Now we have the begining of the tag and we can start with the finding opposit tag.
@@ -2060,6 +2055,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
      * and character and string constants. Returns empty array by default.
      */
     @Override
+    @SuppressWarnings("ReturnOfCollectionOrArrayField")
     protected TokenID[] getBracketSkipTokens() {
         return JSP_BRACKET_SKIP_TOKENS;
     }
@@ -2122,23 +2118,29 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
 
     }
 
+    @Override
     public void fileFolderCreated(FileEvent fe) {
     }
 
+    @Override
     public void fileDataCreated(FileEvent fe) {
     }
 
+    @Override
     public void fileChanged(FileEvent fe) {
     }
 
+    @Override
     public void fileDeleted(FileEvent fe) {
         //refresh fileobject
         initFileObject();
     }
 
+    @Override
     public void fileRenamed(FileRenameEvent fe) {
     }
 
+    @Override
     public void fileAttributeChanged(FileAttributeEvent fe) {
     }
 }

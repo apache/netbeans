@@ -39,11 +39,13 @@ import org.netbeans.modules.php.editor.parser.astnodes.CastExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.CatchClause;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
+import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreationVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassName;
 import org.netbeans.modules.php.editor.parser.astnodes.CloneExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Comment;
 import org.netbeans.modules.php.editor.parser.astnodes.ConditionalExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.ConstantVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ContinueStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.DeclareStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.DoStatement;
@@ -287,6 +289,13 @@ public class DefaultTreePathVisitor extends DefaultVisitor {
     }
 
     @Override
+    public void visit(ClassInstanceCreationVariable node) {
+        addToPath(node);
+        super.visit(node);
+        removeFromPath();
+    }
+
+    @Override
     public void visit(ClassName node) {
         addToPath(node);
         super.visit(node);
@@ -304,6 +313,13 @@ public class DefaultTreePathVisitor extends DefaultVisitor {
     public void visit(Comment node) {
         addToPath(node);
         super.visit(node);
+        removeFromPath();
+    }
+
+    @Override
+    public void visit(ConstantVariable constantVariable) {
+        addToPath(constantVariable);
+        super.visit(constantVariable);
         removeFromPath();
     }
 

@@ -50,7 +50,8 @@ import org.netbeans.api.annotations.common.StaticResource;
 
 import static org.antlr.parser.antlr4.ANTLRv4Lexer.*;
 import org.netbeans.modules.languages.antlr.AntlrParserResult.ReferenceType;
-import static org.netbeans.modules.languages.antlr.AntlrTokenSequence.DEFAULT_CHANNEL;
+import org.netbeans.spi.lexer.antlr4.AntlrTokenSequence;
+import static org.netbeans.spi.lexer.antlr4.AntlrTokenSequence.DEFAULT_CHANNEL;
 import org.openide.util.NbBundle;
 
 /**

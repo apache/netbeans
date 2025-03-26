@@ -21,13 +21,11 @@ package org.netbeans.modules.maven.execute;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -42,20 +40,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 import javax.swing.AbstractAction;
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
-import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
-import org.apache.maven.artifact.versioning.VersionRange;
-import org.apache.maven.model.Prerequisites;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
 import org.netbeans.api.extexecution.base.Processes;
@@ -67,7 +55,6 @@ import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.Constants;
 import org.netbeans.modules.maven.api.FileUtilities;
 import org.netbeans.modules.maven.api.NbMavenProject;
-import org.netbeans.modules.maven.api.PluginPropertyUtils;
 import org.netbeans.modules.maven.api.execute.ActiveJ2SEPlatformProvider;
 import org.netbeans.modules.maven.api.execute.ExecutionContext;
 import org.netbeans.modules.maven.api.execute.ExecutionResultChecker;
@@ -83,7 +70,9 @@ import org.netbeans.modules.maven.indexer.api.RepositoryPreferences;
 import org.netbeans.modules.maven.options.MavenSettings;
 import org.netbeans.modules.maven.runjar.MavenExecuteUtils;
 import org.netbeans.spi.project.ui.support.BuildExecutionSupport;
+import org.openide.DialogDisplayer;
 import org.openide.LifecycleManager;
+import org.openide.NotifyDescriptor;
 import org.openide.awt.HtmlBrowser;
 import org.openide.awt.NotificationDisplayer;
 import org.openide.execution.ExecutionEngine;
@@ -91,7 +80,6 @@ import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.InstalledFileLocator;
-import org.openide.modules.Places;
 import org.openide.modules.SpecificationVersion;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
@@ -99,7 +87,6 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Task;
-import org.openide.util.TaskListener;
 import org.openide.util.Utilities;
 import org.openide.windows.IOColorLines;
 import org.openide.windows.IOColors;
@@ -122,8 +109,8 @@ import org.openide.windows.OutputListener;
  * Example use:
  * {@snippet file="org/netbeans/modules/maven/execute/MavenExecutionTestBase.java" region="samplePassAdditionalVMargs"}
  * The example will <b>append</b> <code>-DvmArg2=2</code> to VM arguments and <b>replaces</b> all user
- * program arguments with <code>"paramY"</code>. Append mode can be controlled using {@link ExplicitProcessParameters.Builder#appendArgs} or
- * {@link ExplicitProcessParameters.Builder#appendPriorityArgs}.
+ * program arguments with <code>"paramY"</code>. Append mode can be controlled using {@link ExplicitProcessParameters.Builder#replaceArgs(boolean) } or
+ * {@link ExplicitProcessParameters.Builder#replaceLauncherArgs(boolean) }.
  *
  * @author  Milos Kleint (mkleint@codehaus.org)
  * @author  Svata Dedic (svatopluk.dedic@gmail.com)
@@ -141,7 +128,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     private String processUUID;
     private Process preProcess;
     private String preProcessUUID;
-    private static final SpecificationVersion VER17 = new SpecificationVersion("1.7"); //NOI18N
+    private static final SpecificationVersion VER18 = new SpecificationVersion("1.8"); //NOI18N
     private static final Logger LOGGER = Logger.getLogger(MavenCommandLineExecutor.class.getName());
 
     private static final RequestProcessor RP = new RequestProcessor(MavenCommandLineExecutor.class.getName(),1);
@@ -149,6 +136,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     private static final RequestProcessor UPDATE_INDEX_RP = new RequestProcessor(RunUtils.class.getName(), 5);
 
     private static final String ICON_MAVEN_PROJECT = "org/netbeans/modules/maven/resources/Maven2Icon.gif"; // NOI18N
+
     /**
      * Execute maven build in NetBeans execution engine.
      * Most callers should rather use {@link #run} as this variant does no (non-late-bound) prerequisite checks.
@@ -171,31 +159,30 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
      * Hooks for tests to mock the Maven execution.
      */
     public static class ExecuteMaven {
+        // tests only
+        MavenExecutor createCommandLineExecutor(RunConfig config, InputOutput io, TabContext tc) {
+            return new MavenCommandLineExecutor(config, io, tc);
+        }
+        
         public ExecutorTask execute(RunConfig config, InputOutput io, TabContext tc) {
             LifecycleManager.getDefault().saveAll();
-            MavenExecutor exec = new MavenCommandLineExecutor(config, io, tc);
+            MavenExecutor exec = createCommandLineExecutor(config, io, tc);
             ExecutorTask task = ExecutionEngine.getDefault().execute(config.getTaskDisplayName(), exec, new ProxyNonSelectableInputOutput(exec.getInputOutput()));
             exec.setTask(task);
-            task.addTaskListener(new TaskListener() {
-                @Override
-                public void taskFinished(Task t) {
-                    MavenProject mp = config.getMavenProject();
-                    if (mp == null) {
-                        return;
-                    }
-                    final List<Artifact> arts = new ArrayList<Artifact>();
-                    Artifact main = mp.getArtifact();
-                    if (main != null) {
-                        arts.add(main);
-                    }
-                    arts.addAll(mp.getArtifacts());
-                    UPDATE_INDEX_RP.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            RepositoryIndexer.updateIndexWithArtifacts(RepositoryPreferences.getInstance().getLocalRepository(), arts);
-                        }
-                    });
+            task.addTaskListener((Task t) -> {
+                MavenProject mp = config.getMavenProject();
+                if (mp == null) {
+                    return;
                 }
+                final List<Artifact> arts = new ArrayList<>();
+                Artifact main = mp.getArtifact();
+                if (main != null) {
+                    arts.add(main);
+                }
+                arts.addAll(mp.getArtifacts());
+                UPDATE_INDEX_RP.post(() -> {
+                    RepositoryIndexer.updateIndexWithArtifacts(RepositoryPreferences.getInstance().getLocalRepository(), arts);
+                });
             });
             return task;
         }
@@ -206,14 +193,14 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         this.io = io;
     }
 
+    /**
+     * not to be called directly.. use execute();
+     */
     @NbBundle.Messages({
         "# {0} - original message",
         "ERR_CannotOverrideProxy=Could not override the proxy: {0}",
         "ERR_BuildCancelled=Build cancelled by the user"
     })
-    /**
-     * not to be called directly.. use execute();
-     */
     @Override
     public void run() {
         synchronized (SEMAPHORE) {
@@ -264,17 +251,14 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                         ex.getLocalizedMessage(), null, NotificationDisplayer.Priority.NORMAL, NotificationDisplayer.Category.ERROR);
                 ioput.getErr().append(Bundle.ERR_CannotOverrideProxy(ex.getLocalizedMessage()));
                 // FIXME: log exception
-            } catch (ExecutionException ex) {
-                // FIXME: log exception
-            } catch (InterruptedException ex) {
-                // FIXME: log exception
+            } catch (ExecutionException | InterruptedException ex) {
+                LOGGER.log(Level.WARNING, "could not determine proxy settings", ex);
             } finally {
                 if (!ok) {
                     ioput.getOut().close();
                     ioput.getErr().close();
                     actionStatesAtFinish(null, null);
                     markFreeTab();
-                    return;
                 }
             }
         }
@@ -317,17 +301,16 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
 //        final Properties originalProperties = clonedConfig.getProperties();
         handle.start();
         processInitialMessage();
-        boolean isMaven3 = !isMaven2();
         boolean singlethreaded = !isMultiThreaded(clonedConfig);
         boolean eventSpyCompatible = isEventSpyCompatible(clonedConfig);
-        if (isMaven3 && singlethreaded && eventSpyCompatible) {
+        if (singlethreaded && eventSpyCompatible) {
             injectEventSpy( clonedConfig );
             if (clonedConfig.getPreExecution() != null) {
                 injectEventSpy( (BeanRunConfig) clonedConfig.getPreExecution());
             }
         }
 
-        CommandLineOutputHandler out = new CommandLineOutputHandler(ioput, clonedConfig.getProject(), handle, clonedConfig, isMaven3 && singlethreaded);
+        CommandLineOutputHandler out = new CommandLineOutputHandler(ioput, clonedConfig.getProject(), handle, clonedConfig, singlethreaded);
         try {
             BuildExecutionSupport.registerRunningItem(item);
             if (MavenSettings.getDefault().isAlwaysShowOutput()) {
@@ -387,7 +370,9 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                 final Project prj = clonedConfig.getProject();
                 if (prj != null) {
                     NbMavenProjectImpl impl = prj.getLookup().lookup(NbMavenProjectImpl.class);
-                    if (impl != null) {
+                    // magic number -10 seems to be a cancelled process.
+                    if (impl != null && executionresult != -10) {
+                        // this reload must not wait for blockers.
                         RequestProcessor.Task reloadTask = impl.fireProjectReload();
                         reloadTask.waitFinished();
                     }
@@ -397,11 +382,11 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     }
 
     private boolean isEventSpyCompatible(final BeanRunConfig clonedConfig) {
-        // EventSpy cannot work on jdk < 7
+        // EventSpy cannot work on jdk < 8
         if (clonedConfig.getProject() != null) {
             ActiveJ2SEPlatformProvider javaprov = clonedConfig.getProject().getLookup().lookup(ActiveJ2SEPlatformProvider.class);
             JavaPlatform platform = javaprov.getJavaPlatform();
-            return (platform.getSpecification().getVersion().compareTo(VER17) >= 0);
+            return (platform.getSpecification().getVersion().compareTo(VER18) >= 0);
         } else {
             return true;
         }
@@ -421,7 +406,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     }
     
     private void kill(Process prcs, String uuid) {
-        Map<String, String> env = new HashMap<String, String>();
+        Map<String, String> env = new HashMap<>();
         env.put(KEY_UUID, uuid);
         Processes.killTree(prcs, env);
     }
@@ -432,22 +417,22 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         preProcess = null;
         final Process pro = process;
         process = null;
-        RP.post(new Runnable() {
-            @Override
-            public void run() {
-                if (pre != null) {
-                    kill(pre, preProcessUUID);
-                }
-                if (pro != null) {
-                    kill(pro, processUUID);
-                }
+        RP.post(() -> {
+            if (pre != null) {
+                kill(pre, preProcessUUID);
+            }
+            if (pro != null) {
+                kill(pro, processUUID);
             }
         });
         return true;
     }
 
+     @NbBundle.Messages({
+        "MSG_MissingValue=Option: {0} requires value to be present"
+    })
     private static List<String> createMavenExecutionCommand(RunConfig config, Constructor base) {
-        List<String> toRet = new ArrayList<String>(base.construct());
+        List<String> toRet = new ArrayList<>(base.construct());
 
         if (Utilities.isUnix()) { // #198997 - defend against symlinks
             File basedir = config.getExecutionDirectory();
@@ -463,10 +448,29 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                 LOGGER.log(Level.FINE, "Could not canonicalize " + basedir, x);
             }
         }
-
+    
         //#164234
         //if maven.bat file is in space containing path, we need to quote with simple quotes.
         String quote = "\"";
+        
+        for (Map.Entry<? extends String, ? extends String> entry : config.getOptions().entrySet()) {
+            String key = entry.getKey();
+            String value = quote2apos(entry.getValue());
+            if (MavenCommandLineOptions.optionRequiresValue(key)) {
+                if (value.isEmpty()) {
+                    DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_MissingValue(key), NotifyDescriptor.WARNING_MESSAGE));
+                    continue;
+                } else if (value.equals("${" + key + "}")) { //NOI18N
+                    continue;
+                }
+            }
+            toRet.add("--" + key);
+            if (value != null && !value.isBlank()) {
+                String s = (Utilities.isWindows() && value.contains(" ") ? quote + value + quote : value); 
+                toRet.add(value);
+            }
+        }
+
         // the command line parameters with space in them need to be quoted and escaped to arrive
         // correctly to the java runtime on windows
         for (Map.Entry<? extends String, ? extends String> entry : config.getProperties().entrySet()) {
@@ -493,7 +497,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             }
         }
 
-        if (config.isOffline() != null && config.isOffline().booleanValue()) {
+        if (config.isOffline() != null && config.isOffline()) {
             toRet.add("--offline");//NOI18N
         }
         if (!config.isInteractive()) {
@@ -514,8 +518,8 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         }
         if (config.getReactorStyle() != RunConfig.ReactorStyle.NONE) {
             File basedir = config.getExecutionDirectory();
-            MavenProject mp = config.getMavenProject();
-            File projdir = NbMavenProject.isErrorPlaceholder(mp) ? basedir : mp.getBasedir();
+            MavenProject mp = NbMavenProject.getPartialProject(config.getMavenProject());
+            File projdir = mp == null || NbMavenProject.isErrorPlaceholder(mp) ? basedir : mp.getBasedir();
             String rel = basedir != null && projdir != null ? FileUtilities.relativizeFile(basedir, projdir) : null;
             if (!".".equals(rel)) {
                 toRet.add(config.getReactorStyle() == RunConfig.ReactorStyle.ALSO_MAKE ? "--also-make" : "--also-make-dependents");
@@ -549,7 +553,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                         if (config.isInteractive() && (one.equals("--batch-mode") || one.equals("-B"))) {
                             continue;
                         }
-                        if ((config.isOffline() != null && !config.isOffline().booleanValue()) && (one.equals("--offline") || one.equals("-o"))) {
+                        if ((config.isOffline() != null && !config.isOffline()) && (one.equals("--offline") || one.equals("-o"))) {
                             continue;
                         }
                     }
@@ -567,15 +571,12 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         for (Object profile : config.getActivatedProfiles()) {
             profiles = profiles + "," + profile;//NOI18N
         }
-        if (profiles.length() > 0) {
+        if (!profiles.isEmpty()) {
             profiles = profiles.substring(1);
             toRet.add("-P" + profiles);//NOI18N
         }
 
-        for (String goal : config.getGoals()) {
-            toRet.add(goal);
-        }
-
+        toRet.addAll(config.getGoals());
         return toRet;
     }
    
@@ -625,9 +626,10 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         return sb.toString();
     }
 
-    private ProcessBuilder constructBuilder(final RunConfig clonedConfig, InputOutput ioput) {
+    // tests only
+    ProcessBuilder constructBuilder(final RunConfig clonedConfig, InputOutput ioput) {
         File javaHome = null;
-        Map<String, String> envMap = new LinkedHashMap<String, String>();
+        Map<String, String> envMap = new LinkedHashMap<>();
         for (Map.Entry<? extends String,? extends String> entry : clonedConfig.getProperties().entrySet()) {
             if (entry.getKey().startsWith(ENV_PREFIX)) {
                 String env = entry.getKey().substring(ENV_PREFIX.length());
@@ -682,18 +684,13 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         File mavenHome = null;
         File wrapper = null;
         if (MavenSettings.getDefault().isPreferMavenWrapper()) {
-            wrapper = searchMavenWrapper(config);
+            // wrapper will be an absolute or relative path, do not "absolutize" after searchMavenWrapper
+            wrapper = searchMavenWrapper(clonedConfig);
         }
         if (wrapper != null) {
             constructeur = new WrapperShellConstructor(wrapper);
         } else {
             mavenHome = EmbedderFactory.getEffectiveMavenHome();
-            if (MavenSettings.getDefault().isUseBestMaven()) {
-                File n = guessBestMaven(clonedConfig, ioput);
-                if (n != null) {
-                    mavenHome = n;
-                }
-            }
             constructeur = new ShellConstructor(mavenHome);
         }
         
@@ -770,31 +767,30 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         }
         else {
             //very hacky here.. have a way to remove
-            List<String> command = new ArrayList<String>(builder.command());
-            for (Iterator<String> it = command.iterator(); it.hasNext();) {
-                String s = it.next();
-                if (s.startsWith("-D" + CosChecker.MAVENEXTCLASSPATH + "=")) {
-                    it.remove();
-                }
-            }
-            display.append(Utilities.escapeParameters(command.toArray(new String[command.size()])));
+            List<String> command = new ArrayList<>(builder.command());
+            command.removeIf(s -> s.startsWith("-D" + CosChecker.MAVENEXTCLASSPATH + "="));
+            display.append(Utilities.escapeParameters(command.toArray(String[]::new)));
         }
 
         printGray(ioput, display.toString());
 
         return builder;
     }
-
-    private static void printGray(InputOutput io, String text) {
+    
+    private static void printColor(InputOutput io, String text, IOColors.OutputType style) {
         if (IOColorLines.isSupported(io)) {
             try {
-                IOColorLines.println(io, text, IOColors.getColor(io, IOColors.OutputType.LOG_DEBUG));
+                IOColorLines.println(io, text, IOColors.getColor(io, style));
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
         } else {
             io.getOut().println(text);
         }
+    }
+
+    private static void printGray(InputOutput io, String text) {
+        printColor(io, text, IOColors.OutputType.LOG_DEBUG);
     }
 
     private void processIssue153101(IOException x, InputOutput ioput) {
@@ -805,10 +801,6 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             ioput.getErr().println("Cannot execute the mvn.bat executable directly due to wrong access rights, switching to execution via 'cmd.exe /c mvn.bat'."); //NOI18N - in maven output
             try {
                 ioput.getErr().println("  See issue http://www.netbeans.org/issues/show_bug.cgi?id=153101 for details.", new OutputListener() {                    //NOI18N - in maven output
-                    @Override
-                    public void outputLineSelected(OutputEvent ev) {}
-                    @Override
-                    public void outputLineCleared(OutputEvent ev) {}
                     @Override
                     public void outputLineAction(OutputEvent ev) {
                         try {
@@ -823,12 +815,9 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             }
             ioput.getErr().println("  This message will show on the next start of the IDE again, to skip it, add -J-Dmaven.run.cmd=true to your etc/netbeans.conf file in your NetBeans installation."); //NOI18N - in maven output
             ioput.getErr().println("The detailed exception output is printed to the IDE's log file."); //NOI18N - in maven output
-            RP.post(new Runnable() {
-                @Override
-                public void run() {
-                    RunConfig newConfig = new BeanRunConfig(config);
-                    RunUtils.executeMaven(newConfig);
-                }
+            RP.post(() -> {
+                RunConfig newConfig = new BeanRunConfig(config);
+                RunUtils.executeMaven(newConfig);
             });
         } else {
             ioput.getErr().println(x.getMessage());
@@ -838,10 +827,6 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     private void printCoSWarning(BeanRunConfig clonedConfig, InputOutput ioput) {
         if (clonedConfig.getProperties().containsKey(CosChecker.ENV_NETBEANS_PROJECT_MAPPINGS)) {
             printGray(ioput, "Running NetBeans Compile On Save execution. Phase execution is skipped and output directories of dependency projects (with Compile on Save turned on) will be used instead of their jar artifacts.");
-            if (isMaven2()) {
-                printGray(ioput, "WARNING: Using Maven 2.x for execution, NetBeans cannot establish links between current project and output directories of dependency projects with Compile on Save turned on. Only works with Maven 3.0+.");
-            }
-
         }
         if (clonedConfig.getProperties().containsKey(ModelRunConfig.EXEC_MERGED)) {
             printGray(ioput, "\nDefault '" + clonedConfig.getActionName() + "' action exec.args merged with maven-exec-plugin arguments declared in pom.xml.");
@@ -849,10 +834,9 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
 
     }
 
-    boolean isMaven2() {
+    private boolean isMavenDaemon() {
         File mvnHome = EmbedderFactory.getEffectiveMavenHome();
-        String version = MavenSettings.getCommandLineMavenVersion(mvnHome);
-        return version != null && version.startsWith("2");
+        return MavenSettings.isMavenDaemon(Path.of(mvnHome.getPath()));
     }
 
     private void injectEventSpy(final BeanRunConfig clonedConfig) {
@@ -878,196 +862,96 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     }
 
     private boolean isMultiThreaded(BeanRunConfig clonedConfig) {
-        String list = MavenSettings.getDefault().getDefaultOptions();
-        for (String s : clonedConfig.getGoals()) {
-            list = list + " " + s;
-        }
+
+        List<String> params = new ArrayList<>();
+        params.addAll(Arrays.asList(MavenSettings.getDefault().getDefaultOptions().split(" ")));
+        params.addAll(clonedConfig.getGoals());
         if (clonedConfig.getPreExecution() != null) {
-            for (String s : clonedConfig.getPreExecution().getGoals()) {
-                list = list + " " + s;
-            }
+            params.addAll(clonedConfig.getPreExecution().getGoals());
         }
-        return list.contains("-T") || list.contains("--threads");
+
+        return isMavenDaemon() ? isMultiThreadedMvnd(params)
+                               : isMultiThreadedMaven(params);
     }
 
-    private File guessBestMaven(RunConfig clonedConfig, InputOutput ioput) {
-        MavenProject mp = clonedConfig.getMavenProject();
-        if (mp != null) {
-            if (mp.getPrerequisites() != null) {
-                Prerequisites pp = mp.getPrerequisites();
-                String ver = pp.getMaven();
-                if (ver != null) {
-                    return checkAvailability(ver, null, ioput);
+    // mvnd is MT by default
+    static boolean isMultiThreadedMvnd(List<String> params) {
+        for (int i = 0; i < params.size(); i++) {
+            String p = params.get(i);
+            if (p.equals("-1") || p.equals("--serial") || p.equals("-Dmvnd.serial")) { // "behave like standard maven" mode
+                return false;
+            }
+            if (i + 1 < params.size() && (p.equals("-T") || p.equals("--threads"))) {
+                if (params.get(i+1).equals("1")) {
+                    return false;
                 }
             }
-            String value = PluginPropertyUtils.getPluginPropertyBuildable(clonedConfig.getMavenProject(), Constants.GROUP_APACHE_PLUGINS, "maven-enforcer-plugin", "enforce", new PluginPropertyUtils.ConfigurationBuilder<String>() {
-                @Override
-                public String build(Xpp3Dom configRoot, ExpressionEvaluator eval) {
-                    if(configRoot != null) {
-                        Xpp3Dom rules = configRoot.getChild("rules");
-                        if (rules != null) {
-                            Xpp3Dom rmv = rules.getChild("requireMavenVersion");
-                            if (rmv != null) {
-                                Xpp3Dom v = rmv.getChild("version");
-                                if (v != null) {
-                                    return v.getValue();
-                                }
-                            }
-                        }
-                    }
-                    return null;
-                }
-            });
-            if (value != null) {
-                if (value.contains("[") || value.contains("(")) {
-                    try {
-                        VersionRange vr = VersionRange.createFromVersionSpec(value);
-                        return checkAvailability(null, vr, ioput);
-                    } catch (InvalidVersionSpecificationException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                } else {
-                    return checkAvailability(value, null, ioput);
-                }
-            }
-        }
-        return null;
-    }
-
-    private File checkAvailability(String ver, VersionRange vr, InputOutput ioput) {
-        ArrayList<String> all = new ArrayList(MavenSettings.getDefault().getUserDefinedMavenRuntimes());
-        //TODO this could be slow? but is it slower than downloading stuff?
-        //is there a faster way? or can we somehow log the findings after first attempt?
-        DefaultArtifactVersion candidate = null;
-        File candidateFile = null;
-        for (String one : all) {
-            File f = FileUtil.normalizeFile(new File(one));
-            String oneVersion = MavenSettings.getCommandLineMavenVersion(f);
-            if(oneVersion == null) {
-                continue;
-            }
-            if (ver != null && ver.equals(oneVersion)) {
-                return f;
-            }
-            DefaultArtifactVersion dav = new DefaultArtifactVersion(oneVersion);
-            if (vr != null && vr.containsVersion(dav)) {
-                if (candidate != null) {
-                    if (candidate.compareTo(dav) < 0) {
-                        candidate = dav;
-                        candidateFile = f;
-                    }
-                } else {
-                    candidate = new DefaultArtifactVersion(oneVersion);
-                    candidateFile = f;
-                }
-            }
-        }
-        if (candidateFile != null) {
-            return candidateFile;
-        } else if (vr != null) {
-            ver = vr.getRecommendedVersion() != null ? vr.getRecommendedVersion().toString() : null;
-            if (ver == null) {
-                //TODO can we figure out which version to get without hardwiring a list of known versions?
-                ioput.getOut().println("NetBeans: No match and no recommended version for version range " + vr.toString());
-                return null;
-            }
-        }
-        if (ver == null) {
-            return null;
-        }
-
-        File f = getAltMavenLocation();
-        File child = FileUtil.normalizeFile(new File(f, "apache-maven-" + ver));
-        if (child.exists()) {
-            return child;
-        } else {
-            f.mkdirs();
-            ioput.getOut().println("NetBeans: Downloading and unzipping Maven version " + ver);
-            ZipInputStream str = null;
             try {
-                //this url pattern works for all versions except the last one 3.2.3
-                //which is only under <mirror>/apache/maven/maven-3/3.2.3/binaries/
-                URL[] urls = new URL[] {new URL("http://archive.apache.org/dist/maven/binaries/apache-maven-" + ver + "-bin.zip"),
-                    new URL("http://archive.apache.org/dist/maven/maven-3/" + ver + "/binaries/apache-maven-" + ver + "-bin.zip")};
-                InputStream is = null;
-                for (URL u : urls) {
-                    try {
-                        is = u.openStream();
-                        break;
-                    } catch (FileNotFoundException e) {
-                        // try next url
-                    }
+                if (p.startsWith("-Dmvnd.threads=") && Integer.parseInt(p.substring(15)) == 1)  {
+                    return false;
                 }
-                if(is == null) {
-                    LOGGER.log(Level.WARNING, "wasn''t able to download maven binaries, version {0}", ver);
-                    return null;
-                }
-                str = new ZipInputStream(is);
-                ZipEntry entry;
-                while ((entry = str.getNextEntry()) != null) {
-                    //base it of f not child as the zip contains the maven base folder
-                    File fileOrDir = new File(f,  entry.getName());
-                    if (entry.isDirectory()) {
-                        fileOrDir.mkdirs();
-                    } else {
-                        FileOutputStream fos = null;
-                        try {
-                            fos = new FileOutputStream(fileOrDir);
-                            FileUtil.copy(str, fos);
-                        } finally {
-                            IOUtil.close(fos);
-                        }
-                        // correct way to set executable flag?
-                        if ("bin".equals(fileOrDir.getParentFile().getName()) && !fileOrDir.getName().endsWith(".conf")) {
-                            fileOrDir.setExecutable(true);
-                        }
-                    }
-                }
-                if (!all.contains(child.getAbsolutePath())) {
-                    all.add(child.getAbsolutePath());
-                    MavenSettings.getDefault().setMavenRuntimes(all);
-                }
-                return child;
-            } catch (MalformedURLException ex) {
-                Exceptions.printStackTrace(ex);
-                try {
-                    FileUtils.deleteDirectory(child);
-                } catch (IOException ex1) {
-                    Exceptions.printStackTrace(ex1);
-                }
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-                try {
-                    FileUtils.deleteDirectory(child);
-                } catch (IOException ex1) {
-                    Exceptions.printStackTrace(ex1);
-                }
-            } finally {
-                IOUtil.close(str);
-            }
+            } catch (NumberFormatException ignored) {} 
         }
-        return null;
+        return true;
     }
 
-    private File getAltMavenLocation() {
-        if (MavenSettings.getDefault().isUseBestMavenAltLocation()) {
-            String s = MavenSettings.getDefault().getBestMavenAltLocation();
-            if (s != null && s.trim().length() > 0) {
-                return FileUtil.normalizeFile(new File(s));
+    // mvn is ST by default
+    static boolean isMultiThreadedMaven(List<String> params) {
+        for (int i = 0; i < params.size() - 1; i++) {
+            String p = params.get(i);
+            if ((p.equals("-T") || p.equals("--threads")) && !params.get(i+1).equals("1")) {
+                return true;
             }
         }
-        return Places.getCacheSubdirectory("downloaded-mavens");
+        return false;
+    }
+
+    /**
+     * Tries to relativize wrapper path. The execution starts in a {@link RunConfig#getExecutionDirectory() },
+     * assuming one of the project or parent project directories. If wrapper is present, it should be inside
+     * project, so relative paths between project modules should work. This is how "normal humans" run and use
+     * mvnw wrapper. In addition, it avoids issues with the wrapper script when the project has a space
+     * in its path - there's most probably no spaces in module names - but it is NOT forbidden !!
+     * 
+     * @param wrapper wrapper file
+     * @param config execution config
+     * @return relativized path, if possible.
+     */
+    @NbBundle.Messages({
+        "WARN_SpaceInPath=Warning: A space in project path or module name may prevent mvnw wrapper to function properly."
+    })
+    private File resolveWrapperPath(File wrapper, RunConfig config) {
+        File absWrapper = wrapper.getAbsoluteFile();
+        File executionDir = config.getExecutionDirectory();
+        Path absWrapperDir = absWrapper.toPath().getParent();
+        Path absDir = executionDir.getAbsoluteFile().toPath();
+
+        if (absWrapperDir.startsWith(absDir) || absDir.startsWith(absWrapperDir)) {
+            Path relative = absDir.relativize(wrapper.getAbsoluteFile().toPath());
+            if (!relative.toString().contains(" ")) { // NOI18N
+                if (relative.getNameCount() == 1) {
+                    // prevent searching on PATH
+                    return Path.of(".").resolve(relative).toFile();  // NOI18N
+                } else {
+                    return relative.toFile();
+                }
+            }
+        } 
+        if (absWrapper.toString().contains(" ")) {
+            printColor(io, Bundle.WARN_SpaceInPath(), IOColors.OutputType.LOG_WARNING);
+        }
+        return absWrapper;
     }
     
     private File searchMavenWrapper(RunConfig config) {
         String fileName = Utilities.isWindows() ? "mvnw.cmd" : "mvnw"; //NOI18N
-        MavenProject project = config.getMavenProject();
+        MavenProject project = NbMavenProject.getPartialProject(config.getMavenProject());
         while (project != null) {
             File baseDir = project.getBasedir();
             if (baseDir != null) {
                 File mvnw = new File(baseDir, fileName);
                 if (mvnw.exists()) {
-                    return mvnw;
+                    return resolveWrapperPath(mvnw, config);
                 }
             }
             project = project.getParent();
@@ -1079,7 +963,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     private static class WrapperShellConstructor implements Constructor {
 
         private final @NonNull File wrapper;
-
+        
         WrapperShellConstructor(@NonNull File wrapper) {
             this.wrapper = wrapper;
         }
@@ -1090,7 +974,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             //if maven.bat file is in space containing path, we need to quote with simple quotes.
             String quote = "\"";
             List<String> toRet = new ArrayList<>();
-            toRet.add(quoteSpaces(wrapper.getAbsolutePath(), quote));
+            toRet.add(quoteSpaces(wrapper.getPath(), quote));
 
             if (Utilities.isWindows()) { //#153101, since #228901 always on windows use cmd /c
                 toRet.add(0, "/c"); //NOI18N

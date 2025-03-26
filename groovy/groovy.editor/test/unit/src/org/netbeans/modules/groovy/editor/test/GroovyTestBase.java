@@ -19,8 +19,6 @@
 
 package org.netbeans.modules.groovy.editor.test;
 
-import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +28,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.logging.Level;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.editor.BaseDocument;
@@ -46,7 +43,6 @@ import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Utilities;
 
 /**
  * In order to be able to run tests using java.source on Mac, you need to apply patch
@@ -78,6 +74,14 @@ public class GroovyTestBase extends CslTestBase {
         
         FileObject workDir = FileUtil.toFileObject(getWorkDir());
         testFO = workDir.createData("Test.groovy");
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        if (testFO != null) {
+            testFO.delete();
+        }
+        super.tearDown();
     }
 
     @Override
@@ -151,7 +155,7 @@ public class GroovyTestBase extends CslTestBase {
         List<FileObject> classPathSources = new ArrayList<FileObject>();
         classPathSources.addAll(additionalSources());
 
-        return ClassPathSupport.createClassPath(classPathSources.toArray(new FileObject[classPathSources.size()]));
+        return ClassPathSupport.createClassPath(classPathSources.toArray(new FileObject[0]));
     }
 
     private Set<FileObject> additionalSources() {

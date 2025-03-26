@@ -1,0 +1,2 @@
+    public const (A&B)|C |>MARK_OCCURRENCES:DNF<| = C;
+var_dump(ClassTest::|>MARK_OCCURRENCES:D^NF<|);

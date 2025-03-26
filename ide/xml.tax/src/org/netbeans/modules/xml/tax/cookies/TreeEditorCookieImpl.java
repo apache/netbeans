@@ -537,7 +537,7 @@ public class TreeEditorCookieImpl implements TreeEditorCookie, UpdateDocumentCoo
         }
         
         public TreeDocumentRoot getDocumentRoot() {
-            return (TreeDocumentRoot) super.get();
+            return super.get();
         }
         
         public TreeEditorCookieImpl getEditor() {
@@ -591,7 +591,7 @@ public class TreeEditorCookieImpl implements TreeEditorCookie, UpdateDocumentCoo
             if (editor == null) {
                 return prepareEditor();
             } else {
-                TreeEditorCookieImpl cached = (TreeEditorCookieImpl) editor.get();
+                TreeEditorCookieImpl cached = editor.get();
                 if (cached == null) {
                     return prepareEditor();
                 } else {

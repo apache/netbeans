@@ -174,7 +174,7 @@ public final class UILookupMergerSupport {
                 }
                 templates.addAll(Arrays.asList(temp));
             }
-            return templates.toArray(new String[templates.size()]);
+            return templates.toArray(new String[0]);
         }
     }
     
@@ -196,7 +196,7 @@ public final class UILookupMergerSupport {
                 }
                 templates.addAll(Arrays.asList(temp));
             }
-            return templates.toArray(new String[templates.size()]);
+            return templates.toArray(new String[0]);
         }
         
     }

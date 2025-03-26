@@ -24,7 +24,32 @@
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/2">
             <code-name-base>org.netbeans.libs.commons_compress</code-name-base>
-            <module-dependencies/>
+            <module-dependencies>
+                <dependency>
+                    <code-name-base>org.apache.commons.codec</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.17</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.apache.commons.commons_io</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>2.15</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.apache.commons.lang3</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>3.14</specification-version>
+                    </run-dependency>
+                </dependency>
+            </module-dependencies>
             <friend-packages>
                 <friend>org.netbeans.modules.db.dataview</friend>
                 <friend>org.netbeans.modules.docker.api</friend>
@@ -36,8 +61,8 @@
                 <package>org.apache.commons.compress.utils</package>
             </friend-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/commons-compress-1.21.jar</runtime-relative-path>
-                <binary-origin>external/commons-compress-1.21.jar</binary-origin>
+                <runtime-relative-path>ext/commons-compress-1.26.2.jar</runtime-relative-path>
+                <binary-origin>external/commons-compress-1.26.2.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

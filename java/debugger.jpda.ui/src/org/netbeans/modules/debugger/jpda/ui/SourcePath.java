@@ -635,7 +635,7 @@ public class SourcePath {
         boolean isNewLineExp = false;
         if (lastOperations != null && lastOperations.size() > 0) {
             if (annotations == null) {
-                annotations = new ArrayList();
+                annotations = new ArrayList<>();
             }
             isNewLineExp = currentOperation == null;
             for (int i = 0; i < lastOperations.size(); i++) {

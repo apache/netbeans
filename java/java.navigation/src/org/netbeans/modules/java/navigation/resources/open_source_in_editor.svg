@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,108 +19,64 @@
     under the License.
 
 -->
-<!-- Generator: Adobe Illustrator 23.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
-	<!ENTITY Drop_x0020_Shadow "fill:none;">
-	<!ENTITY Outer_x0020_Glow_x0020_5_x0020_pt "fill:none;">
-	<!ENTITY Blue_x0020_Neon "fill:none;stroke:#8AACDA;stroke-width:7;stroke-linecap:round;stroke-linejoin:round;">
-	<!ENTITY Chrome_x0020_Highlight "fill:url(#SVGID_1_);stroke:#FFFFFF;stroke-width:0.3629;stroke-miterlimit:1;">
-	<!ENTITY Jive_GS "fill:#FFDD00;">
-	<!ENTITY Alyssa_GS "fill:#A6D0E4;">
-	<!ENTITY st0 "fill:#FFFFFF;">
-	<!ENTITY st1 "opacity:0.25;">
-	<!ENTITY st2 "fill:#FAFAFA;">
-	<!ENTITY st3 "opacity:0.33;">
-	<!ENTITY st4 "fill:none;stroke:#474747;stroke-miterlimit:10;">
-	<!ENTITY st5 "opacity:0.42;">
-	<!ENTITY st6 "fill:#CAE3FF;">
-	<!ENTITY st7 "opacity:0.2;">
-	<!ENTITY st8 "opacity:0.03;">
-	<!ENTITY st9 "opacity:0.1;">
-	<!ENTITY st10 "opacity:0.15;">
-	<!ENTITY st11 "opacity:0.45;">
-	<!ENTITY st12 "fill:#FFE1B0;">
-	<!ENTITY st13 "fill:#B3DBFF;">
-	<!ENTITY st14 "fill:#FBDC7C;">
-	<!ENTITY st15 "fill:#FFDB43;">
-	<!ENTITY st16 "fill:#E79B00;">
-	<!ENTITY st17 "fill:#3883CE;">
-	<!ENTITY st18 "fill:none;stroke:#003399;stroke-width:1.375;stroke-miterlimit:10;">
-	<!ENTITY st19 "fill:#E8513D;">
-	<!ENTITY st20 "fill:#1E1E1E;">
-	<!ENTITY st21 "fill:#FFC36D;">
-	<!ENTITY st22 "fill:#9FCBFF;">
-	<!ENTITY st23 "fill:#E9F7FF;">
-	<!ENTITY st24 "fill:#62707C;">
-	<!ENTITY st25 "fill:#7A8896;">
-	<!ENTITY st26 "fill:#57BFFF;">
-	<!ENTITY st27 "fill:#E69D35;">
-	<!ENTITY st28 "fill:#9CFF73;">
-	<!ENTITY st29 "fill:#4891CC;">
-	<!ENTITY st30 "fill:#474747;">
-	<!ENTITY st31 "fill:#CCA05E;">
-	<!ENTITY st32 "opacity:0.67;">
-	<!ENTITY st33 "opacity:0.3;">
-	<!ENTITY st34 "fill:#EAEAEA;">
-	<!ENTITY st35 "fill:#FFE945;">
-	<!ENTITY st36 "fill:#FFCF8C;">
-	<!ENTITY st37 "fill:#FF5252;">
-	<!ENTITY st38 "opacity:0.12;">
-	<!ENTITY st39 "fill:#45A5F4;">
-	<!ENTITY st40 "fill:url(#SVGID_2_);">
-	<!ENTITY st41 "fill:url(#SVGID_3_);">
-	<!ENTITY st42 "opacity:0.05;">
-	<!ENTITY st43 "fill:#3D81F5;">
-	<!ENTITY st44 "fill:#CECECE;">
-	<!ENTITY st45 "fill:#B5B5B5;">
-	<!ENTITY st46 "opacity:0.4;">
-	<!ENTITY st47 "fill:#595959;">
-	<!ENTITY st48 "fill:#80FF80;">
-	<!ENTITY st49 "fill:#C8FF80;">
-	<!ENTITY st50 "fill:#FFEE80;">
-	<!ENTITY st51 "fill:#FFA680;">
-	<!ENTITY st52 "fill:#FF8080;">
-	<!ENTITY st53 "fill:none;">
-	<!ENTITY st54 "fill:#007AFF;">
-	<!ENTITY st55 "fill:#EFFF78;">
-	<!ENTITY st56 "fill:#FFDA00;">
-	<!ENTITY st57 "fill:#3EADFF;">
-	<!ENTITY st58 "opacity:0.67;fill:#FFFFFF;">
-	<!ENTITY st59 "fill:#2E92FF;">
-	<!ENTITY st60 "fill:#3AEA00;">
-	<!ENTITY st61 "fill:#303030;">
-]>
-<svg version="1.1" id="Vector_Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-	 y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
-<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="-112" y1="-168" x2="-112" y2="-169">
-	<stop  offset="0" style="stop-color:#656565"/>
-	<stop  offset="0.618" style="stop-color:#1B1B1B"/>
-	<stop  offset="0.6292" style="stop-color:#545454"/>
-	<stop  offset="0.9831" style="stop-color:#3E3E3E"/>
-</linearGradient>
-<g>
-	<rect y="1" style="&st0;" width="13" height="14"/>
-	<g style="&st1;">
-		<path d="M12,2v12H1V2H12 M13,1H0v14h13V1L13,1z"/>
-	</g>
-</g>
-<rect x="4" style="&st0;" width="12" height="10"/>
-<g style="&st3;">
-	<path d="M15,1v8H5V1H15 M16,0H4v10h12V0L16,0z"/>
-</g>
-<rect x="4" style="&st57;" width="12" height="3"/>
-<rect x="14" y="1" style="&st58;" width="1" height="1"/>
-<rect x="12" y="1" style="&st58;" width="1" height="1"/>
-<rect x="5" y="10" style="&st10;" width="8" height="1"/>
-<rect x="6" y="4" style="&st61;" width="2" height="0.5"/>
-<rect x="9" y="4" style="&st61;" width="4" height="0.5"/>
-<rect x="6" y="6" style="&st61;" width="5" height="0.5"/>
-<g>
-	<polygon style="&st21;" points="2.761,14.549 0.45,12.239 3.685,9.004 1.375,6.693 2.068,6 9,6 9,12.932 8.307,13.625 
-		5.996,11.314 	"/>
-	<g style="&st3;">
-		<path d="M8.25,6.75l0,5.758l-1.724-1.724l-0.53-0.53l-0.53,0.53l-2.705,2.705l-1.25-1.25l2.705-2.705l0.53-0.53l-0.53-0.53
-			L2.492,6.75H8.25 M9,6H2.068L1.375,6.693l2.311,2.311L0.45,12.239l2.311,2.311l3.235-3.235l2.311,2.311L9,12.932L9,6L9,6z"/>
-	</g>
-</g>
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        opacity: .67;
+      }
+
+      .st0, .st1 {
+        fill: #fff;
+      }
+
+      .st2 {
+        fill: #303030;
+      }
+
+      .st3 {
+        fill: #ffc36d;
+      }
+
+      .st4 {
+        fill: #3eadff;
+      }
+
+      .st5 {
+        opacity: .33;
+      }
+
+      .st6 {
+        opacity: .25;
+      }
+
+      .st7 {
+        opacity: .15;
+      }
+    </style>
+  </defs>
+  <g>
+    <rect class="st1" y="1" width="13" height="14"/>
+    <g class="st6">
+      <path d="M12,2v12H1V2h11M13,1H0v14h13V1h0Z"/>
+    </g>
+  </g>
+  <rect class="st1" x="4" width="12" height="10"/>
+  <g class="st5">
+    <path d="M15,1v8H5V1h10M16,0H4v10h12V0h0Z"/>
+  </g>
+  <rect class="st4" x="4" width="12" height="3"/>
+  <rect class="st0" x="14" y="1" width="1" height="1"/>
+  <rect class="st0" x="12" y="1" width="1" height="1"/>
+  <rect class="st7" x="5" y="10" width="8" height="1"/>
+  <rect class="st2" x="6" y="4" width="2" height=".5"/>
+  <rect class="st2" x="9" y="4" width="4" height=".5"/>
+  <rect class="st2" x="6" y="6" width="5" height=".5"/>
+  <g>
+    <polygon class="st3" points="2.761 14.549 .45 12.239 3.685 9.004 1.375 6.693 2.068 6 9 6 9 12.932 8.307 13.625 5.996 11.315 2.761 14.549"/>
+    <g class="st5">
+      <path d="M8.25,6.75v5.758s-1.724-1.724-1.724-1.724l-.53-.53-.53.53-2.705,2.704-1.25-1.25,2.705-2.705.53-.53-.53-.53-1.723-1.723h5.758M9,6H2.068l-.693.693,2.311,2.311L.451,12.239l2.311,2.311,3.235-3.235,2.311,2.311.693-.693v-6.932h0Z"/>
+    </g>
+  </g>
 </svg>

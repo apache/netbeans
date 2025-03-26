@@ -26,6 +26,7 @@ import javax.lang.model.element.TypeElement;
 
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.AnnotationModelHelper;
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.PersistentObject;
+import org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil;
 import org.netbeans.modules.web.beans.impl.model.AbstractObjectProvider.Refreshable;
 
 
@@ -49,11 +50,11 @@ class DecoratorObject extends PersistentObject implements Refreshable {
     @Override
     public boolean refresh( TypeElement type ) {
         List<? extends AnnotationMirror> allAnnotationMirrors = 
-            getHelper().getCompilationController().getElements().
-                getAllAnnotationMirrors(type);
-        Map<String, ? extends AnnotationMirror> annotationsByType = 
-                getHelper().getAnnotationsByType( allAnnotationMirrors );
-        return annotationsByType.get( EnableBeansFilter.DECORATOR) != null ;
+      getHelper().getCompilationController().getElements().
+                        getAllAnnotationMirrors(type);
+        Map<String, ? extends AnnotationMirror> annotationsByType
+                = getHelper().getAnnotationsByType(allAnnotationMirrors);
+        return annotationsByType.get(AnnotationUtil.DECORATOR_JAKARTA) != null || annotationsByType.get(AnnotationUtil.DECORATOR) != null;
     }
 
 }

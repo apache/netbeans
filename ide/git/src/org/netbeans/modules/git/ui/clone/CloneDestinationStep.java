@@ -159,7 +159,7 @@ public class CloneDestinationStep extends AbstractWizardPanel implements Documen
             model = new DefaultComboBoxModel(new GitBranch[] { null });
             panel.branchesComboBox.setEnabled(false);
         } else {
-            model = new DefaultComboBoxModel(branches.toArray(new GitBranch[branches.size()]));
+            model = new DefaultComboBoxModel(branches.toArray(new GitBranch[0]));
             panel.branchesComboBox.setEnabled(true);
         }
         panel.branchesComboBox.setModel(model);

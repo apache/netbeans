@@ -41,10 +41,8 @@ import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.support.CaretAwareJavaSourceTaskFactory;
-import org.netbeans.jemmy.EventTool;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.junit.RandomlyFails;
 import org.netbeans.modules.java.editor.base.options.MarkOccurencesSettingsNames;
 import org.netbeans.modules.java.editor.base.semantic.MarkOccurrencesHighlighterBase;
 import org.netbeans.modules.java.editor.options.MarkOccurencesSettings;
@@ -317,7 +315,7 @@ public class MarkOccurrencesTest extends NbTestCase {
         if(foundMarks==null) {
             ref = "";
         } else {            
-            Collections.sort(foundMarks, new Comparator<int[]>(){
+            foundMarks.sort(new Comparator<int[]>(){
 
                 public int compare(int[] o1, int[] o2) {
                     if(o1[0]<o2[0]) return -1;

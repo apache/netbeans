@@ -1,0 +1,50 @@
+|-DeprecatedAttributeTest [824, 4752] : ESCAPED{DeprecatedAttributeTest}
+|--Deprecated [854, 864] : ESCAPED{Deprecated}
+|--DeprecatedClassConstant [873, 1842] : ESCAPED{DeprecatedClassConstant}
+|---PUBLIC_CONSTANT [935, 950] : ESCAPED{PUBLIC_CONSTANT}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"public constant"}</font>
+|---PRIVATE_CONSTANT [997, 1013] : ESCAPED{PRIVATE_CONSTANT}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"private constant"}</font>
+|---PROTECTED_CONSTANT [1063, 1081] : ESCAPED{PROTECTED_CONSTANT}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"protected constant"}</font>
+|---PUBLIC_DEPRECATED_CONSTANT [1148, 1174] : DEPRECATED{ESCAPED{PUBLIC_DEPRECATED_CONSTANT}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"public constant"}</font>
+|---PRIVATE_DEPRECATED_CONSTANT [1251, 1278] : DEPRECATED{ESCAPED{PRIVATE_DEPRECATED_CONSTANT}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"private constant"}</font>
+|---PROTECTED_DEPRECATED_CONSTANT [1346, 1375] : DEPRECATED{ESCAPED{PROTECTED_DEPRECATED_CONSTANT}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"protected constant"}</font>
+|---PUBLIC_DEPRECATED_CONSTANT2 [1443, 1470] : DEPRECATED{ESCAPED{PUBLIC_DEPRECATED_CONSTANT2}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"public constant"}</font>
+|---PUBLIC_DEPRECATED_CONSTANT3 [1535, 1562] : DEPRECATED{ESCAPED{PUBLIC_DEPRECATED_CONSTANT3}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"public constant"}</font>
+|---PUBLIC_DEPRECATED_CONSTANT4 [1584, 1611] : DEPRECATED{ESCAPED{PUBLIC_DEPRECATED_CONSTANT4}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"public constant"}</font>
+|---PRIVATE_DEPRECATED_CONSTANT2 [1689, 1717] : DEPRECATED{ESCAPED{PRIVATE_DEPRECATED_CONSTANT2}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"private constant"}</font>
+|---PROTECTED_DEPRECATED_CONSTANT2 [1786, 1816] : DEPRECATED{ESCAPED{PROTECTED_DEPRECATED_CONSTANT2}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"protected constant"}</font>
+|--DeprecatedInterfaceConstant [1854, 2128] : ESCAPED{DeprecatedInterfaceConstant}
+|---PUBLIC_CONSTANT [1908, 1923] : ESCAPED{PUBLIC_CONSTANT}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"public constant"}</font>
+|---PUBLIC_DEPRECATED_CONSTANT [1987, 2013] : DEPRECATED{ESCAPED{PUBLIC_DEPRECATED_CONSTANT}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"public constant"}</font>
+|---PUBLIC_DEPRECATED_CONSTANT2 [2078, 2105] : DEPRECATED{ESCAPED{PUBLIC_DEPRECATED_CONSTANT2}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"public constant"}</font>
+|--DeprecatedTraitConstant [2136, 3105] : ESCAPED{DeprecatedTraitConstant}
+|---PUBLIC_CONSTANT [2198, 2213] : ESCAPED{PUBLIC_CONSTANT}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"public constant"}</font>
+|---PRIVATE_CONSTANT [2260, 2276] : ESCAPED{PRIVATE_CONSTANT}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"private constant"}</font>
+|---PROTECTED_CONSTANT [2326, 2344] : ESCAPED{PROTECTED_CONSTANT}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"protected constant"}</font>
+|---PUBLIC_DEPRECATED_CONSTANT [2411, 2437] : DEPRECATED{ESCAPED{PUBLIC_DEPRECATED_CONSTANT}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"public constant"}</font>
+|---PRIVATE_DEPRECATED_CONSTANT [2514, 2541] : DEPRECATED{ESCAPED{PRIVATE_DEPRECATED_CONSTANT}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"private constant"}</font>
+|---PROTECTED_DEPRECATED_CONSTANT [2609, 2638] : DEPRECATED{ESCAPED{PROTECTED_DEPRECATED_CONSTANT}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"protected constant"}</font>
+|---PUBLIC_DEPRECATED_CONSTANT2 [2706, 2733] : DEPRECATED{ESCAPED{PUBLIC_DEPRECATED_CONSTANT2}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"public constant"}</font>
+|---PUBLIC_DEPRECATED_CONSTANT3 [2798, 2825] : DEPRECATED{ESCAPED{PUBLIC_DEPRECATED_CONSTANT3}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"public constant"}</font>
+|---PUBLIC_DEPRECATED_CONSTANT4 [2847, 2874] : DEPRECATED{ESCAPED{PUBLIC_DEPRECATED_CONSTANT4}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"public constant"}</font>
+|---PRIVATE_DEPRECATED_CONSTANT2 [2952, 2980] : DEPRECATED{ESCAPED{PRIVATE_DEPRECATED_CONSTANT2}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"private constant"}</font>
+|---PROTECTED_DEPRECATED_CONSTANT2 [3049, 3079] : DEPRECATED{ESCAPED{PROTECTED_DEPRECATED_CONSTANT2}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"protected constant"}</font>
+|--DeprecatedEnumConstant [3112, 3911] : ESCAPED{DeprecatedEnumConstant}
+|---PUBLIC_CONSTANT [3161, 3176] : ESCAPED{PUBLIC_CONSTANT}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"public constant"}</font>
+|---PRIVATE_CONSTANT [3223, 3239] : ESCAPED{PRIVATE_CONSTANT}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"private constant"}</font>
+|---PROTECTED_CONSTANT [3289, 3307] : ESCAPED{PROTECTED_CONSTANT}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"protected constant"}</font>
+|---PUBLIC_DEPRECATED_CONSTANT [3374, 3400] : DEPRECATED{ESCAPED{PUBLIC_DEPRECATED_CONSTANT}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"public constant"}</font>
+|---PRIVATE_DEPRECATED_CONSTANT [3473, 3500] : DEPRECATED{ESCAPED{PRIVATE_DEPRECATED_CONSTANT}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"private constant"}</font>
+|---PROTECTED_DEPRECATED_CONSTANT [3568, 3597] : DEPRECATED{ESCAPED{PROTECTED_DEPRECATED_CONSTANT}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"protected constant"}</font>
+|---PUBLIC_DEPRECATED_CONSTANT2 [3665, 3692] : DEPRECATED{ESCAPED{PUBLIC_DEPRECATED_CONSTANT2}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"public constant"}</font>
+|---PRIVATE_DEPRECATED_CONSTANT2 [3758, 3786] : DEPRECATED{ESCAPED{PRIVATE_DEPRECATED_CONSTANT2}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"private constant"}</font>
+|---PROTECTED_DEPRECATED_CONSTANT2 [3855, 3885] : DEPRECATED{ESCAPED{PROTECTED_DEPRECATED_CONSTANT2}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"protected constant"}</font>
+|--#anon#deprecatedAttributeTypeConstantInNamespaceWithUse_php#1 [3925, 4751] : ESCAPED{{}}
+|---PUBLIC_CONSTANT [3959, 3974] : ESCAPED{PUBLIC_CONSTANT}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"public constant"}</font>
+|---PRIVATE_CONSTANT [4021, 4037] : ESCAPED{PRIVATE_CONSTANT}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"private constant"}</font>
+|---PROTECTED_CONSTANT [4087, 4105] : ESCAPED{PROTECTED_CONSTANT}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"protected constant"}</font>
+|---PUBLIC_DEPRECATED_CONSTANT [4172, 4198] : DEPRECATED{ESCAPED{PUBLIC_DEPRECATED_CONSTANT}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"public constant"}</font>
+|---PRIVATE_DEPRECATED_CONSTANT [4263, 4290] : DEPRECATED{ESCAPED{PRIVATE_DEPRECATED_CONSTANT}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"private constant"}</font>
+|---PROTECTED_DEPRECATED_CONSTANT [4358, 4387] : DEPRECATED{ESCAPED{PROTECTED_DEPRECATED_CONSTANT}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"protected constant"}</font>
+|---PUBLIC_DEPRECATED_CONSTANT2 [4455, 4482] : DEPRECATED{ESCAPED{PUBLIC_DEPRECATED_CONSTANT2}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"public constant"}</font>
+|---PRIVATE_DEPRECATED_CONSTANT2 [4556, 4584] : DEPRECATED{ESCAPED{PRIVATE_DEPRECATED_CONSTANT2}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"private constant"}</font>
+|---PROTECTED_DEPRECATED_CONSTANT2 [4695, 4725] : DEPRECATED{ESCAPED{PROTECTED_DEPRECATED_CONSTANT2}}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"protected constant"}</font>

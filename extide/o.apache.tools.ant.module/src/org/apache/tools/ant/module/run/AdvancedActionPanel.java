@@ -360,7 +360,7 @@ final class AdvancedActionPanel extends javax.swing.JPanel {
             StringTokenizer tok = new StringTokenizer(selection, " ,"); // NOI18N
             List<String> targetsL = Collections.list(NbCollections.checkedEnumerationByFilter(tok, String.class, true));
             if (!targetsL.isEmpty()) {
-                targets = targetsL.toArray(new String[targetsL.size()]);
+                targets = targetsL.toArray(new String[0]);
             }
         }
         Properties props = parseProperties(propertiesPane.getText());

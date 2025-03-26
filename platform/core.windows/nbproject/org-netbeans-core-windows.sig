@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.103
+#Version 2.112
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -721,7 +721,7 @@ fld protected final org.netbeans.core.windows.options.LafOptionsPanelController 
 meth protected boolean store()
 meth protected void load()
 supr javax.swing.JPanel
-hfds COLOR_MODEL_CLASS_NAME,NO_RESTART_ON_LAF_CHANGE,buttonGroup1,checkMaximizeNativeLaF,comboLaf,defaultLookAndFeelIndex,isAquaLaF,lafs,lblLaf,lblRestart,panelLaF,panelLaFCombo,prefs,restartNotification
+hfds COLOR_MODEL_CLASS_NAME,NO_RESTART_ON_LAF_CHANGE,checkMaximizeNativeLaF,comboLaf,defaultLookAndFeelIndex,lafs,lblRestart,panelLaFCombo,prefs,restartNotification,showAllLafs
 
 CLSS public org.netbeans.core.windows.options.TabsOptionsPanelController
 cons public init()
@@ -747,7 +747,7 @@ meth protected boolean store()
 meth protected void initTabsPanel(javax.swing.JPanel)
 meth protected void load()
 supr javax.swing.JPanel
-hfds buttonGroup1,checkMultiRow,defMultiRow,defTabPlacement,filler,isAquaLaF,isCloseActivatesMostRecentDocument,isNewDocumentOpensNextToActiveTab,jLabel1,panelDocTabs,panelTabs,prefs,radioBottom,radioLeft,radioRight,radioSortFileName,radioSortFileNameWithParent,radioSortFullFilePath,radioSortNothing,radioTop,sortButtonGroup,sortTabsLabel
+hfds buttonGroup1,checkMultiRow,defMultiRow,defTabPlacement,isAquaLaF,isCloseActivatesMostRecentDocument,isNewDocumentOpensNextToActiveTab,jLabel1,panelDocTabs,panelTabs,prefs,radioBottom,radioLeft,radioRight,radioSortFileName,radioSortFileNameWithParent,radioSortFullFilePath,radioSortNothing,radioTop,sortButtonGroup,sortTabsLabel
 
 CLSS public final static !enum org.netbeans.core.windows.options.TabsPanel$EditorSortType
  outer org.netbeans.core.windows.options.TabsPanel

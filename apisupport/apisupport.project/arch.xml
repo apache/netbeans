@@ -633,11 +633,11 @@
       <api name="org.netbeans.ui.apisupport.DEPENDENCIES" category="friend" group="logger" type="export">
       There is a special support for notifying the UI gestures collector
       about the usage of NetBeans APIs. When a project customizer is closed,
-      the modules sends to <a href="@JDK@/java/util/logging/Logger.html">
+      the modules sends to <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">
       Logger.getLogger("org.netbeans.ui.apisupport")
-      </a> a <a href="@JDK@/java/util/logging/LogRecord.html">LogRecord</a>
+      </a> a <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">LogRecord</a>
       with message <code>DEPENDENCIES</code>, 
-      <code>CONFIG</code> <a href="@JDK@/java/util/logging/LogRecord.html">level</a>
+      <code>CONFIG</code> <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">level</a>
       and paramerters being the code name bases of modules that start with
       <code>org.openide</code> or <code>org.netbeans</code>.
       This message can then be consumed
@@ -646,7 +646,7 @@
       </api>
       <api name="org.openide.awt.ActionReference.completion" category="devel" group="systemproperty" type="import">
           <code>apisupport.project</code> registers a 
-          <a href="@JDK@/javax/annotation/processing/Processor.html">Processor</a>
+          <a href="@JDK@@JDKMODULE_JAVA_COMPILER@/javax/annotation/processing/Processor.html">Processor</a>
           implementation to provide
           items representing valid paths in current project for
           <a href="@org-openide-awt@/org/openide/awt/ActionReference.html#path()">

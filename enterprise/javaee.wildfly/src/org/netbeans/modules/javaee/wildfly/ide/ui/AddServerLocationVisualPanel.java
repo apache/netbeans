@@ -19,9 +19,9 @@
 package org.netbeans.modules.javaee.wildfly.ide.ui;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
@@ -29,7 +29,9 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
+
 import static org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginUtils.getDefaultConfigurationFile;
+
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
@@ -41,7 +43,7 @@ import org.openide.util.NbBundle;
  */
 public class AddServerLocationVisualPanel extends javax.swing.JPanel {
 
-    private final Set listeners = new HashSet();
+    private final Set<ChangeListener> listeners = ConcurrentHashMap.newKeySet();
 
     /**
      * Creates new form AddServerLocationVisualPanel
@@ -92,26 +94,16 @@ public class AddServerLocationVisualPanel extends javax.swing.JPanel {
     }
 
     public void addChangeListener(ChangeListener l) {
-        synchronized (listeners) {
-            listeners.add(l);
-        }
+        listeners.add(l);
     }
 
     public void removeChangeListener(ChangeListener l) {
-        synchronized (listeners) {
-            listeners.remove(l);
-        }
+        listeners.remove(l);
     }
 
     private void fireChangeEvent() {
-        Iterator it;
-        synchronized (listeners) {
-            it = new HashSet(listeners).iterator();
-        }
         ChangeEvent ev = new ChangeEvent(this);
-        while (it.hasNext()) {
-            ((ChangeListener) it.next()).stateChanged(ev);
-        }
+        new ArrayList<>(listeners).forEach(l -> l.stateChanged(ev));
     }
 
     private void locationChanged() {

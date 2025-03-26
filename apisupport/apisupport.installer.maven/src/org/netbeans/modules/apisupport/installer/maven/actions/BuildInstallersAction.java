@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -171,7 +172,7 @@ public final class BuildInstallersAction extends AbstractAction implements Conte
                             URL url = new URL(licenseResource);
                             is = url.openStream();
                             if (is != null) {
-                                licenseFile = File.createTempFile("license", ".txt");
+                                licenseFile = Files.createTempFile("license", ".txt").toFile();
                                 licenseFile.getParentFile().mkdirs();
                                 licenseFile.deleteOnExit();
 

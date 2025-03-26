@@ -50,9 +50,11 @@ public abstract class EntityManagerGenerationTestSupport  extends SourceTestSupp
         
         CancellableTask task = new CancellableTask<WorkingCopy>() {
             
+            @Override
             public void cancel() {
             }
             
+            @Override
             public void run(WorkingCopy workingCopy) throws Exception {
                 
                 workingCopy.toPhase(Phase.RESOLVED);
@@ -89,16 +91,14 @@ public abstract class EntityManagerGenerationTestSupport  extends SourceTestSupp
         EntityManagerGenerationStrategy result = null;
         
         try{
-            result = getStrategyClass().newInstance();
+            result = getStrategyClass().getDeclaredConstructor().newInstance();
             result.setClassTree(clazz);
             result.setWorkingCopy(workingCopy);
             result.setGenerationOptions(options);
             result.setTreeMaker(make);
             result.setPersistenceUnit(getPersistenceUnit());
-        } catch (IllegalAccessException iae){
-            throw new RuntimeException(iae);
-        } catch (InstantiationException ie){
-            throw new RuntimeException(ie);
+        } catch (ReflectiveOperationException ex){
+            throw new RuntimeException(ex);
         }
         
         return result;

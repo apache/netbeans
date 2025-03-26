@@ -79,17 +79,6 @@ public abstract class SetupHid extends NbTestCase {
         return Level.FINE;
     }
 
-    protected static void deleteRec(File f) throws IOException {
-        if (f.isDirectory()) {
-            File[] kids = f.listFiles();
-            if (kids == null) throw new IOException("Could not list: " + f);
-            for (int i = 0; i < kids.length; i++) {
-                deleteRec(kids[i]);
-            }
-        }
-        if (! f.delete()) throw new IOException("Could not delete: " + f);
-    }
-
     /** same as FileUtil.copy */
     protected static void copyStreams(InputStream is, OutputStream os) throws IOException {
         final byte[] BUFFER = new byte[4096];

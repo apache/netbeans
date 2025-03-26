@@ -100,7 +100,7 @@ public class ObjectScene extends Scene {
      * Removes mapping for an object. The caller is responsible for removing
      * widgets from the scene before this call. If the object is already removed or did not exist, the method
      * does nothing. The method <b>will not</b> clear object's state. 
-     * <p/>
+     * <p>
      * As {@link #addObject} allows to add object-widget mapping as the user works with the scene,
      * this method allows to remove such mapping. Selection, highlight and other flags remain unchanged.
      * 
@@ -556,7 +556,7 @@ public class ObjectScene extends Scene {
         List<ObjectSceneListener> listeners = this.listeners.get (type);
         if (listeners == null)
             return EMPTY_LISTENERS;
-        return listeners.toArray (new ObjectSceneListener[listeners.size ()]);
+        return listeners.toArray (new ObjectSceneListener[0]);
     }
 
     private class ObjectSelectProvider implements SelectProvider {
@@ -597,7 +597,7 @@ public class ObjectScene extends Scene {
      * it may not be registered yet and no widgets are created for it. The method may return {@code null}
      * for instances that are not proper models for the scene. The default method returns {@link ObjectState#createNormal}
      * for all inputs. 
-     * <p/>
+     * <p>
      * Note that even objects, which have currently no widgets can have ObjectState associated.
      * For example objects, for which the widgets were not created yet, or whose widgets were removed.
      * 

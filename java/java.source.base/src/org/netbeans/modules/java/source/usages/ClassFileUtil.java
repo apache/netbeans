@@ -21,6 +21,8 @@ package org.netbeans.modules.java.source.usages;
 
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.util.Convert;
+import com.sun.tools.javac.util.Convert.Validation;
+import com.sun.tools.javac.util.InvalidUtfException;
 import com.sun.tools.javac.util.Name;
 
 import java.util.*;
@@ -301,13 +303,12 @@ public class ClassFileUtil {
     public static void encodeClassName (TypeElement te, final StringBuilder sb, final char separator) {
         Name name = ((Symbol.ClassSymbol)te).flatname;
         assert name != null;
-        final int nameLength = name.getByteLength();
-        final char[] nameChars = new char[nameLength];
-        int charLength = Convert.utf2chars(name.getByteArray(), name.getByteOffset(), nameChars, 0, nameLength);
+        final char[] nameChars = name.toString().toCharArray();
+        int charLength = nameChars.length;
         if (separator != '.') {         //NOI18N
             for (int i=0; i<charLength; i++) {
                 if (nameChars[i] == '.') {  //NOI18N
-                    nameChars[i] = separator; 
+                    nameChars[i] = separator;
                 }
             }
         }
@@ -348,19 +349,19 @@ public class ClassFileUtil {
     public static ClassName[] getTypesFromMethodTypeSignature (final String jvmTypeId) {
         Set<ClassName> result = new HashSet<ClassName> ();
         methodTypeSignature (jvmTypeId, new int[] {0}, result);        
-        return result.toArray(new ClassName[result.size()]);
+        return result.toArray(new ClassName[0]);
     }
     
     public static ClassName[] getTypesFromFiledTypeSignature (final String jvmTypeId) {
         Set<ClassName> result = new HashSet<ClassName> ();
         typeSignatureType (jvmTypeId, new int[] {0}, result, false);        
-        return result.toArray(new ClassName[result.size()]);
+        return result.toArray(new ClassName[0]);
     }
     
     public static ClassName[] getTypesFromClassTypeSignature (final String jvmTypeId) {
         Set<ClassName> result = new HashSet<ClassName> ();
         classTypeSignature (jvmTypeId, new int[] {0}, result);        
-        return result.toArray(new ClassName[result.size()]);
+        return result.toArray(new ClassName[0]);
     }
     
     private static char getChar (final String buffer, final int pos) {

@@ -93,6 +93,7 @@ public final class JumpList {
      * 
      * @deprecated Use {@link #addEntry(JTextComponent, int)} instead.
      */
+    @Deprecated
     public static void checkAddEntry(JTextComponent c, int pos) {
         addEntry(c, pos);
     }
@@ -209,8 +210,9 @@ public final class JumpList {
 
     /**
      * @return Unspecified string.
-     * @deprecate Should have never been public.
+     * @deprecated Should have never been public.
      */
+    @Deprecated
     public static String dump() {
         StringBuilder sb = new StringBuilder();
         

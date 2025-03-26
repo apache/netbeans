@@ -2,4 +2,5 @@ Code completion result for source line:
 ['abc', 'def']*.@b|
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
+FIELD      blank                           [PUBLIC]   boolean
 FIELD      bytes                           [PUBLIC]   byte[]

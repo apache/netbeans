@@ -848,6 +848,8 @@ public final class PhpProject implements Project {
             // autoconfigured?
             checkAutoconfigured();
 
+            ComputeTestMethodAnnotations.getInstance().register();
+
             // #187060 - exception in projectOpened => project IS NOT opened (so move it at the end of the hook)
             getCopySupport().projectOpened();
 
@@ -886,6 +888,8 @@ public final class PhpProject implements Project {
                 }
 
             } finally {
+                ComputeTestMethodAnnotations.getInstance().unregister();
+
                 // #187060 - exception in projectClosed => project IS closed (so do it in finally block)
                 getCopySupport().projectClosed();
                 // #192386
@@ -1034,7 +1038,7 @@ public final class PhpProject implements Project {
         public List<Object> getTestSourceRoots(Collection<SourceGroup> createdSourceRoots, FileObject refFileObject) {
             ArrayList<Object> folders = new ArrayList<>();
             Project p = FileOwnerQuery.getOwner(refFileObject);
-            if (p != null && (p instanceof PhpProject)) {
+            if (p instanceof PhpProject) {
                 List<FileObject> seleniumDirectories = ProjectPropertiesSupport.getSeleniumDirectories((PhpProject) p, true);
                 SourceGroup[] sourceGroups = PhpProjectUtils.getSourceGroups((PhpProject) p);
                 for (SourceGroup sg : sourceGroups) {
@@ -1260,7 +1264,7 @@ public final class PhpProject implements Project {
             addRoots(roots, project.getTestRoots());
             addRoots(roots, project.getSeleniumRoots());
             addIncludePath(roots, PhpSourcePath.getIncludePath(project.getSourcesDirectory()));
-            return roots.toArray(new FileObject[roots.size()]);
+            return roots.toArray(new FileObject[0]);
         }
 
         // #197968

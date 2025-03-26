@@ -281,7 +281,7 @@ class GrammarManager extends FileChangeAdapter implements DocumentListener {
                     }
                 }
                 
-                guarded = (Position[]) positions.toArray(new Position[positions.size()]);
+                guarded = (Position[]) positions.toArray(new Position[0]);
                 maxGuarded = NbDocument.createPosition(doc, max, Position.Bias.Backward);
                 
                 

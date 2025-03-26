@@ -21,13 +21,18 @@
 package org.netbeans.modules.javascript2.json.parser;
 
 /**
- * This class provides an empty implementation of {@link JsonVisitor},
- * which can be extended to create a visitor which only needs to handle a subset
- * of the available methods.
+ * This class provides an empty implementation of {@link JsonVisitor}, which can
+ * be extended to create a visitor which only needs to handle a subset of the
+ * available methods.
+ *
  *
  * @param <T> The return type of the visit operation. Use {@link Void} for
  * operations with no return type.
+ * @deprecated This class is deprecated since Antlr4.13.1. Use
+ * JsonParserBaseVisitor instead.
+ * @see JsonParserBaseVisitor
  */
+@Deprecated
 @SuppressWarnings("CheckReturnValue")
 public class JsonBaseVisitor<T> extends JsonParserBaseVisitor<T> {
 }

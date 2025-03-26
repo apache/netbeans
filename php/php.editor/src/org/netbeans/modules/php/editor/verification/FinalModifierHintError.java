@@ -19,16 +19,10 @@
 package org.netbeans.modules.php.editor.verification;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import org.netbeans.api.lexer.Token;
-import org.netbeans.api.lexer.TokenHierarchy;
-import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.editor.BaseDocument;
-import org.netbeans.modules.csl.api.EditList;
 import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.HintFix;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -39,8 +33,6 @@ import org.netbeans.modules.php.editor.api.ElementQueryFactory;
 import org.netbeans.modules.php.editor.api.NameKind;
 import org.netbeans.modules.php.editor.api.elements.ElementFilter;
 import org.netbeans.modules.php.editor.api.elements.TypeConstantElement;
-import org.netbeans.modules.php.editor.lexer.LexUtilities;
-import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.modules.php.editor.model.ClassConstantElement;
 import org.netbeans.modules.php.editor.model.ClassScope;
 import org.netbeans.modules.php.editor.model.FileScope;
@@ -48,9 +40,6 @@ import org.netbeans.modules.php.editor.model.ModelUtils;
 import org.netbeans.modules.php.editor.model.Scope;
 import org.netbeans.modules.php.editor.model.TypeScope;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
-import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration.Modifier;
-import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
-import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
@@ -71,7 +60,6 @@ public class FinalModifierHintError extends HintErrorRule {
 
     @Override
     @NbBundle.Messages({
-        "FinalModifierHintError.finalPrivateConstants.desc=Private class constants can't be final.",
         "# {0} - constant name",
         "FinalModifierHintError.overridingFinalConstant.desc={0} can''t override final constant.",
     })
@@ -86,50 +74,8 @@ public class FinalModifierHintError extends HintErrorRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
-            CheckVisitor checkVisitor = new CheckVisitor();
-            phpParseResult.getProgram().accept(checkVisitor);
-            for (ConstantDeclaration constant : checkVisitor.getIncorrectFinalPrivateConstants()) {
-                if (CancelSupport.getDefault().isCancelled()) {
-                    return;
-                }
-                OffsetRange finalRange = getFinalRange(constant, phpParseResult);
-                if (finalRange != OffsetRange.NONE) {
-                    addHint(finalRange, Bundle.FinalModifierHintError_finalPrivateConstants_desc(), hints, createFixes(finalRange, context.doc));
-                }
-            }
             checkOverridingFinalConstants(fileScope, phpParseResult, hints);
         }
-    }
-
-    private OffsetRange getFinalRange(ConstantDeclaration incorrectConstant, PHPParseResult parserResult) {
-        int startOffset = incorrectConstant.getStartOffset();
-        TokenHierarchy<?> th = parserResult.getSnapshot().getTokenHierarchy();
-        if (th == null) {
-            return OffsetRange.NONE;
-        }
-        TokenSequence<PHPTokenId> ts = LexUtilities.getPHPTokenSequence(th, startOffset);
-        if (ts == null) {
-            return OffsetRange.NONE;
-        }
-        ts.move(startOffset);
-        if (ts.moveNext()) {
-            Token<? extends PHPTokenId> nextFinalToken = LexUtilities.findNextToken(ts, Arrays.asList(PHPTokenId.PHP_FINAL));
-            if (nextFinalToken == null) {
-                return OffsetRange.NONE;
-            }
-            int finalStart = ts.offset();
-            int finalEnd = finalStart + "final".length(); // NOI18N
-            return new OffsetRange(finalStart, finalEnd);
-        }
-        return OffsetRange.NONE;
-    }
-
-    private List<HintFix> createFixes(OffsetRange finalRange, BaseDocument document) {
-        List<HintFix> fixes = Collections.emptyList();
-        if (finalRange != OffsetRange.NONE) {
-            fixes = Collections.singletonList(new Fix(new OffsetRange(finalRange.getStart(), finalRange.getEnd() + 1), document)); // 1: whitespace
-        }
-        return fixes;
     }
 
     private void checkOverridingFinalConstants(FileScope fileScope, PHPParseResult phpParseResult, List<Hint> hints) {
@@ -183,65 +129,5 @@ public class FinalModifierHintError extends HintErrorRule {
                 fixes,
                 500
         ));
-    }
-
-    //~ Inner classes
-    private static final class CheckVisitor extends DefaultVisitor {
-
-        private final List<ConstantDeclaration> incorrectFinalPrivateConstants = new ArrayList<>();
-
-        @Override
-        public void visit(ConstantDeclaration node) {
-            if (CancelSupport.getDefault().isCancelled()) {
-                return;
-            }
-            if (!node.isGlobal()) {
-                int modifier = node.getModifier();
-                if (Modifier.isFinal(modifier) && Modifier.isPrivate(modifier)) {
-                    incorrectFinalPrivateConstants.add(node);
-                }
-            }
-            super.visit(node);
-        }
-
-        public List<ConstantDeclaration> getIncorrectFinalPrivateConstants() {
-            return Collections.unmodifiableList(incorrectFinalPrivateConstants);
-        }
-    }
-
-    private static final class Fix implements HintFix {
-
-        private final OffsetRange finalModifierRange;
-        private final BaseDocument document;
-
-        private Fix(OffsetRange finalModifierRange, BaseDocument document) {
-            this.finalModifierRange = finalModifierRange;
-            this.document = document;
-        }
-
-        @Override
-        @NbBundle.Messages({
-            "IncorrectFinalHintError.Fix.Description=Remove \"final\"",})
-        public String getDescription() {
-            return Bundle.IncorrectFinalHintError_Fix_Description();
-        }
-
-        @Override
-        public void implement() throws Exception {
-            EditList edits = new EditList(document);
-            edits.replace(finalModifierRange.getStart(), finalModifierRange.getLength(), "", true, 0); // NOI18N
-            edits.apply();
-        }
-
-        @Override
-        public boolean isSafe() {
-            return true;
-        }
-
-        @Override
-        public boolean isInteractive() {
-            return false;
-        }
-
     }
 }

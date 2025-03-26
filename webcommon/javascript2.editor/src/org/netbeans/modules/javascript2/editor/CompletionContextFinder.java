@@ -255,7 +255,7 @@ public class CompletionContextFinder {
         tokenId = token.id();
         boolean commaFirst = false;
         if (tokenId == JsTokenId.OPERATOR_COMMA && ts.movePrevious()) {
-            List<JsTokenId> checkParentList = new ArrayList(listIds);
+            List<JsTokenId> checkParentList = new ArrayList<>(listIds);
             List<JsTokenId> parentList = Arrays.asList(JsTokenId.BRACKET_LEFT_PAREN, JsTokenId.BRACKET_RIGHT_PAREN, JsTokenId.BRACKET_RIGHT_CURLY);
             checkParentList.addAll(parentList);
             token = LexUtilities.findPreviousToken(ts, checkParentList);
@@ -318,6 +318,12 @@ public class CompletionContextFinder {
         int orgTokenSequencePos = tokenSequence.offset();
         boolean accept = true;
         boolean moreTokens = movePrevious ? tokenSequence.movePrevious() : true;
+        while((tokenSequence.token().id() == JsTokenId.BLOCK_COMMENT || tokenSequence.token().id() == JsTokenId.LINE_COMMENT)) {
+            moreTokens = tokenSequence.movePrevious();
+            if(! moreTokens) {
+                break;
+            }
+        }
 
         for (int i = tokenIdChain.length - 1; i >= 0; i --){
             Object tokenID = tokenIdChain[i];
@@ -328,8 +334,14 @@ public class CompletionContextFinder {
             }
 
            if (tokenID instanceof JsTokenId) {
-                if (tokenSequence.token().id() == tokenID){
+                if (tokenSequence.token().id() == tokenID) {
                     moreTokens = tokenSequence.movePrevious();
+                    while ((tokenSequence.token().id() == JsTokenId.BLOCK_COMMENT || tokenSequence.token().id() == JsTokenId.LINE_COMMENT)) {
+                        moreTokens = tokenSequence.movePrevious();
+                        if (!moreTokens) {
+                            break;
+                        }
+                    }
                 } else {
                     // NO MATCH
                     accept = false;
@@ -342,7 +354,7 @@ public class CompletionContextFinder {
 
         tokenSequence.move(orgTokenSequencePos);
         tokenSequence.moveNext();
-       return accept;
+        return accept;
     }
 
     private static void balanceBracketBack(TokenSequence<JsTokenId> ts) {

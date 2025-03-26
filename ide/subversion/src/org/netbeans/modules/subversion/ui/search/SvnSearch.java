@@ -195,7 +195,7 @@ public class SvnSearch implements ActionListener, DocumentListener {
                     public void run() {
                         panel.listPanel.setVisible(true);
                         panel.noContentPanel.setVisible(false);                     
-                        searchView.setResults(messages.toArray(new ISVNLogMessage[messages.size()]));      
+                        searchView.setResults(messages.toArray(new ISVNLogMessage[0]));      
                     }
                 });
             }                        

@@ -46,23 +46,45 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
          * Creates an instance of individual JPA specifications support class.
          * <p/>
          * @param jpa_1_0 JPA 1.0 supported.
-         * @param jpa_2_0 JPA 1.0 supported.
+         * @param jpa_2_0 JPA 2.0 supported.
          * @param jpa_2_1 JPA 2.1 supported.
+         * @param jpa_2_2 JPA 2.2 supported.
+         * @param jpa_3_0 JPA 3.0 supported.
+         * @param jpa_3_1 JPA 3.1 supported.
+         * @param jpa_3_2 JPA 3.2 supported.
          */
-        JpaSupportVector(boolean jpa_1_0, boolean jpa_2_0, boolean jpa_2_1) {
+        JpaSupportVector(boolean jpa_1_0, boolean jpa_2_0, 
+                boolean jpa_2_1, boolean jpa_2_2,
+                boolean jpa_3_0, boolean jpa_3_1, boolean jpa_3_2) {
             _1_0 = jpa_1_0;
             _2_0 = jpa_2_0;
             _2_1 = jpa_2_1;
+            _2_2 = jpa_2_2;
+            _3_0 = jpa_3_0;
+            _3_1 = jpa_3_1;
+            _3_2 = jpa_3_2;
         }
 
         /** JPA 1.0 supported. */
         boolean _1_0;
 
-        /** JPA 1.0 supported. */
+        /** JPA 2.0 supported. */
         boolean _2_0;
 
         /** JPA 2.1 supported. */
         boolean _2_1;
+
+        /** JPA 2.2 supported. */
+        boolean _2_2;
+
+        /** JPA 3.0 supported. */
+        boolean _3_0;
+
+        /** JPA 3.1 supported. */
+        boolean _3_1;
+        
+        /** JPA 3.2 supported. */
+        boolean _3_2;
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -77,11 +99,16 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
     // major release.
     /**
      * GlassFish JPA support matrix:<p/><table>
-     * <tr><th>GlassFish</th><th>JPA 1.0</th><th>JPA 2.0</th><th>JPA 2.1</th></tr>
-     * <tr><th>V1</th><td>YES</td><td>NO</td><td>NO</td></tr>
-     * <tr><th>V2</th><td>YES</td><td>NO</td><td>NO</td></tr>
-     * <tr><th>V3</th><td>YES</td><td>YES</td><td>NO</td></tr>
-     * <tr><th>V4</th><td>YES</td><td>YES</td><td>YES</td></tr>
+     * <tr><th>GlassFish</th><th>JPA 1.0</th><th>JPA 2.0</th><th>JPA 2.1</th>
+     * <th>JPA 2.2</th><th>JPA 3.0</th><th>JPA 3.1</th><th>JPA 3.2</th></tr>
+     * <tr><th>V1</th><td>YES</td><td>NO</td><td>NO</td><td>NO</td><td>NO</td><td>NO</td><td>NO</td></tr>
+     * <tr><th>V2</th><td>YES</td><td>NO</td><td>NO</td><td>NO</td><td>NO</td><td>NO</td><td>NO</td></tr>
+     * <tr><th>V3</th><td>YES</td><td>YES</td><td>NO</td><td>NO</td><td>NO</td><td>NO</td><td>NO</td></tr>
+     * <tr><th>V4</th><td>YES</td><td>YES</td><td>YES</td><td>NO</td><td>NO</td><td>NO</td><td>NO</td></tr>
+     * <tr><th>V5</th><td>YES</td><td>YES</td><td>YES</td><td>YES</td><td>NO</td><td>NO</td><td>NO</td></tr>
+     * <tr><th>V6</th><td>NO</td><td>NO</td><td>NO</td><td>NO</td><td>YES</td><td>NO</td><td>NO</td></tr>
+     * <tr><th>V7</th><td>NO</td><td>NO</td><td>NO</td><td>NO</td><td>YES</td><td>YES</td><td>NO</td></tr>
+     * <tr><th>V8</th><td>NO</td><td>NO</td><td>NO</td><td>NO</td><td>YES</td><td>YES</td><td>YES</td></tr>
      * </table>
      */
     private static final JpaSupportVector jpaSupport[]
@@ -91,8 +118,14 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
     static {
         for (GlassFishVersion version : GlassFishVersion.values()) {
             jpaSupport[version.ordinal()] = new JpaSupportVector(
-                    true, version.ordinal() >= GlassFishVersion.GF_3.ordinal(),
-                    version.ordinal() >= GlassFishVersion.GF_4.ordinal());
+                    GlassFishVersion.lt(version, GlassFishVersion.GF_6),
+                    GlassFishVersion.lt(version, GlassFishVersion.GF_6) && GlassFishVersion.ge(version, GlassFishVersion.GF_3),
+                    GlassFishVersion.lt(version, GlassFishVersion.GF_6) && GlassFishVersion.ge(version, GlassFishVersion.GF_4),
+                    GlassFishVersion.lt(version, GlassFishVersion.GF_6) && GlassFishVersion.ge(version, GlassFishVersion.GF_5),
+                    GlassFishVersion.lt(version, GlassFishVersion.GF_7_0_0) && GlassFishVersion.ge(version, GlassFishVersion.GF_6),
+                    GlassFishVersion.lt(version, GlassFishVersion.GF_8_0_0) && GlassFishVersion.ge(version, GlassFishVersion.GF_7_0_0),
+                    GlassFishVersion.ge(version, GlassFishVersion.GF_8_0_0)
+            );
         }
     }
 
@@ -160,11 +193,18 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
                 // Unknown version is as the worst known case.
                 JpaSupportVector instanceJpaSupport
                         = jpaSupport[instance.getVersion() != null
-                        ? instance.getVersion().ordinal()
-                        : GlassFishVersion.GF_1.ordinal()];
-                defaultProvider = JpaProviderFactory.createJpaProvider(
-                        JPA_PROVIDER, true, instanceJpaSupport._1_0,
-                        instanceJpaSupport._2_0, instanceJpaSupport._2_1);
+                            ? instance.getVersion().ordinal()
+                            : GlassFishVersion.GF_1.ordinal()];
+                        defaultProvider = JpaProviderFactory.createJpaProvider(
+                                JPA_PROVIDER,
+                                true,
+                                instanceJpaSupport._1_0,
+                                instanceJpaSupport._2_0,
+                                instanceJpaSupport._2_1,
+                                instanceJpaSupport._2_2,
+                                instanceJpaSupport._3_0,
+                                instanceJpaSupport._3_1,
+                                instanceJpaSupport._3_2);
             }
         }
         return defaultProvider;

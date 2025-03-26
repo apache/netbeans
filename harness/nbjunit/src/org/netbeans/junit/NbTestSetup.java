@@ -46,12 +46,14 @@ public class NbTestSetup extends NbTestDecorator {
 	/**
 	 * Sets up the fixture. Override to set up additional fixture
 	 * state.
+         * @throws Exception if an exception occurs
 	 */
 	protected void setUp() throws Exception {
 	}
 	/**
 	 * Tears down the fixture. Override to tear down the additional
 	 * fixture state.
+         * @throws Exception if an exception occurs
 	 */
 	protected void tearDown() throws Exception {
 	}

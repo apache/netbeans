@@ -110,6 +110,7 @@ public final class SingleModuleProperties extends ModuleProperties {
     public static final String IS_AUTOLOAD = "is.autoload"; // NOI18N
     public static final String IS_EAGER = "is.eager"; // NOI18N
     public static final String JAVAC_SOURCE = "javac.source"; // NOI18N
+    public static final String JAVAC_RELEASE = "javac.release"; // NOI18N
     public static final String JAVADOC_TITLE = "javadoc.title"; // NOI18N
     public static final String LICENSE_FILE = "license.file"; // NOI18N
     public static final String NBM_HOMEPAGE = "nbm.homepage"; // NOI18N
@@ -118,6 +119,7 @@ public final class SingleModuleProperties extends ModuleProperties {
     public static final String SPEC_VERSION_BASE = "spec.version.base"; // NOI18N
     /** @see "#66278" */
     public static final String JAVAC_COMPILERARGS = "javac.compilerargs"; // NOI18N
+    public static final String JAVAC_COMPILERARGS_INTERNAL_EXTRA = "javac.internal.extra.compilerargs"; // NOI18N
     private static final Map<String, String> DEFAULTS;
 
     private static final Logger LOG = Logger.getLogger(SingleModuleProperties.class.getName());
@@ -754,7 +756,7 @@ public final class SingleModuleProperties extends ModuleProperties {
                 set.add(dep.getModuleEntry().getCodeNameBase());
             }
         } // else standalone module - leave empty (see the UI spec)
-        return set.toArray(new String[set.size()]);
+        return set.toArray(new String[0]);
     }
 
     FriendListModel getFriendListModel() {

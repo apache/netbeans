@@ -61,7 +61,7 @@ public class JoinSectionsMod1Test extends NbTestCase {
     @Override
     protected Level logLevel() {
         return Level.INFO;
-//        return super.logLevel();;
+//        return super.logLevel();
     }
 
     public void testRemoveContent() throws Exception {

@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.payara.tooling.data;
 
+import java.util.Objects;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 import org.testng.annotations.Test;
@@ -86,16 +87,17 @@ public class PayaraVersionTest {
                     = fullVersion.split(PayaraPlatformVersionAPI.SEPARATOR_PATTERN);
             assertTrue(numbers != null && numbers.length == 4,
                     "Invalid count of version numbers");
-            short major, minor, update, build;
+            short major, minor, update;
+            String build;
             try {
                 major  = Short.parseShort(numbers[0]);
                 minor  = Short.parseShort(numbers[1]);
                 update = Short.parseShort(numbers[2]);
-                build  = Short.parseShort(numbers[3]);
+                build  = numbers[3];
                 assertTrue(major == version.getMajor()
                         && minor == version.getMinor()
                         && update == version.getUpdate()
-                        && build == version.getBuild());
+                        && Objects.equals(build, version.getBuild()));
             } catch (NumberFormatException nfe) {
                 fail("Could not parse version number");
             }

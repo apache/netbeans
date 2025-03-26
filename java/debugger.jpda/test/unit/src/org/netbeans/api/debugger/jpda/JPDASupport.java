@@ -34,6 +34,10 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -62,14 +66,13 @@ import org.netbeans.spi.java.classpath.support.ClassPathSupport;
  */
 public final class JPDASupport implements DebuggerManagerListener {
 
-    private static final boolean    verbose = false;
-    private static DebuggerManager  dm = DebuggerManager.getDebuggerManager ();
+    private static final DebuggerManager dm = DebuggerManager.getDebuggerManager ();
 
     private JPDADebugger            jpdaDebugger;
     private DebuggerEngine          debuggerEngine;
     private final ProcessIO         processIO;
     
-    private Object                  STATE_LOCK = new Object ();
+    private final Object            STATE_LOCK = new Object ();
     
     private JPDASupport (JPDADebugger jpdaDebugger, ProcessIO pio) {
         this.jpdaDebugger = jpdaDebugger;
@@ -87,7 +90,7 @@ public final class JPDASupport implements DebuggerManagerListener {
     
     public static Test createTestSuite(Class<? extends TestCase> clazz) {
         Configuration suiteConfiguration = NbModuleSuite.createConfiguration(clazz);
-        suiteConfiguration = suiteConfiguration.clusters(".*").enableModules(".*java.source.*").gui(false);
+        suiteConfiguration = suiteConfiguration.clusters(".*").enableModules(".*java.source.*").enableModules(".*libs.nbjavacapi.*").gui(false);
         if (!(ClassLoader.getSystemClassLoader() instanceof URLClassLoader)) {
             //when running on JDK 9+, to make the com.sun.jdi package dependency work, we need to make getPackage("com.sun.jdi") work
             //for system CL's parent (which otherwise happily loads the VirtualMachineManager class,
@@ -168,7 +171,17 @@ public final class JPDASupport implements DebuggerManagerListener {
     }
     public static JPDASupport attach (String mainClass, String[] args, File[] classPath) throws IOException,
     DebuggerStartException {
-        Process process = launchVM (mainClass, args, classPath, "", true);
+        return attach(new String[0], mainClass, args, classPath);
+    }
+    public static JPDASupport attach (String[] vmArgs, String mainClass, String[] args, File[] classPath) throws IOException,
+    DebuggerStartException {
+        String sourceRoot = System.getProperty ("test.dir.src");
+        if (mainClass.endsWith(".java")) {
+            sourceRoot = new File(mainClass).getParent();
+        } else {
+            sourceRoot = System.getProperty ("test.dir.src");
+        }
+        Process process = launchVM (vmArgs, mainClass, args, classPath, "", true);
         String line = readLine (process.getInputStream ());
         int port = Integer.parseInt (line.substring (line.lastIndexOf (':') + 1).trim ());
         ProcessIO pio = new ProcessIO (process);
@@ -191,15 +204,14 @@ public final class JPDASupport implements DebuggerManagerListener {
         JPDADebugger jpdaDebugger = JPDADebugger.attach (
             "localhost", 
             port, 
-            createServices ()
+            createServices (sourceRoot)
         );
         return new JPDASupport (jpdaDebugger, pio);
     }
 
     public static JPDASupport attachScript(String launcher, String path) throws IOException, DebuggerStartException {
         String [] cmdArray = new String [] {
-            System.getProperty ("java.home") + File.separatorChar +
-                "bin" + File.separatorChar + launcher,
+            launcherPath(launcher),
             "--jvm",
             "--vm.agentlib:jdwp=transport=dt_socket,suspend=y,server=y",
             path
@@ -233,6 +245,13 @@ public final class JPDASupport implements DebuggerManagerListener {
         return new JPDASupport(jpdaDebugger, pio);
     }
 
+    private static String launcherPath(String launcher) {
+        return System.getProperty("java.home") + File.separatorChar + "bin" + File.separatorChar + launcher;
+    }
+
+    public static boolean isLauncherAvailable(String launcher) {
+        return Files.exists(Paths.get(launcherPath(launcher)));
+    }
 
     // public interface ........................................................
     
@@ -346,10 +365,9 @@ public final class JPDASupport implements DebuggerManagerListener {
     
     // other methods ...........................................................
     
-    private static Object[] createServices () {
+    private static Object[] createServices (String sourceRoot) {
         try {
             Map map = new HashMap ();
-            String sourceRoot = System.getProperty ("test.dir.src");
             URL sourceUrl = new File(sourceRoot).toURI().toURL();
             String sourceUrlStr = sourceUrl.toString() + "/";
             sourceUrl = new URL(sourceUrlStr);
@@ -381,6 +399,7 @@ public final class JPDASupport implements DebuggerManagerListener {
     }
     
     private static Process launchVM (
+        String[] vmArgs,
         String mainClass,
         String[] args,
         File[] extraCP,
@@ -391,24 +410,21 @@ public final class JPDASupport implements DebuggerManagerListener {
         String cp = getClassPath(extraCP);
         //System.err.println("CP = "+cp);
 
-        String [] cmdArray = new String [] {
-            System.getProperty ("java.home") + File.separatorChar + 
-                "bin" + File.separatorChar + "java",
-            "-agentlib:jdwp=transport=" + "dt_socket" + ",address=" + 
+        List<String> cmdArgs = new ArrayList<>();
+
+        cmdArgs.add(launcherPath("java"));
+        cmdArgs.add("-agentlib:jdwp=transport=" + "dt_socket" + ",address=" +
                 connectorAddress + ",suspend=y,server=" + 
-                (server ? "y" : "n"),
-            "-classpath",
-            cp.substring(0, cp.length() -1),
-            mainClass
-        };
+                (server ? "y" : "n"));
+        cmdArgs.add("-classpath");
+        cmdArgs.add(cp.substring(0, cp.length() -1));
+        cmdArgs.addAll(Arrays.asList(vmArgs));
+        cmdArgs.add(mainClass);
         if (args != null && args.length > 0) {
-            String[] arr = new String[cmdArray.length + args.length];
-            System.arraycopy(cmdArray, 0, arr, 0, cmdArray.length);
-            System.arraycopy(args, 0, arr, cmdArray.length, args.length);
-            cmdArray = arr;
+            cmdArgs.addAll(Arrays.asList(args));
         }
 
-        ProcessBuilder pb = new ProcessBuilder().command(cmdArray);
+        ProcessBuilder pb = new ProcessBuilder().command(cmdArgs);
         String classesDir = System.getProperty("test.dir.classes");
         if (classesDir != null) {
             pb.directory(new File(classesDir));

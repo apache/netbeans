@@ -179,7 +179,7 @@ public final class FoldingScanner {
             program.accept(new FoldingVisitor(folds));
             Source source = phpParseResult.getSnapshot().getSource();
             assert source != null : "source was null";
-            Document doc = source.getDocument(false);
+            Document doc = source.getDocument(true);
             if (FOLD_PHPTAG) {
                 processPHPTags(folds, doc);
             }
@@ -518,6 +518,10 @@ public final class FoldingScanner {
                 return;
             }
             super.visit(node);
+            if (node.getElements().isEmpty()) {
+                // GH-7187 don't fold an empty array
+                return;
+            }
             ArrayCreation.Type type = node.getType();
             if (type == ArrayCreation.Type.NEW) {
                 addFold(node, TYPE_ARRAY);

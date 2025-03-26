@@ -8,12 +8,12 @@ Not Searchable Keys:
 
 Document 1
 Searchable Keys:
-  clz.const : constant1;CONSTANT1;1599;"constant";0;<TESTURL>/testGetEnums.php;32;
-  clz.const : constant2;CONSTANT2;1633;?;0;<TESTURL>/testGetEnums.php;32;
+  clz.const : constant1;CONSTANT1;1599;"constant";0;<TESTURL>/testGetEnums.php;32;;
+  clz.const : constant2;CONSTANT2;1633;?;0;<TESTURL>/testGetEnums.php;32;;
   enum : attributes;Attributes;1491;;int;Iface|\Iface;1;;0;<TESTURL>/testGetEnums.php;
-  enum.case : a;A;1545;1;0;<TESTURL>/testGetEnums.php;1;
-  enum.case : b;B;1571;2;0;<TESTURL>/testGetEnums.php;1;
-  method : implmethod;implMethod;1685;$test:Test:1::1:0:0:0:0:0;void;1;0;<TESTURL>/testGetEnums.php;0;0;
+  enum.case : a;A;1545;1;0;<TESTURL>/testGetEnums.php;1;1;
+  enum.case : b;B;1571;2;0;<TESTURL>/testGetEnums.php;1;1;
+  method : implmethod;implMethod;1685;$test:Test:1::1:0:0:0:0:0:Test:;void;1;0;<TESTURL>/testGetEnums.php;0;0;void;
   superiface : iface;Iface;
   top : attributes
 
@@ -31,12 +31,12 @@ Not Searchable Keys:
 Document 3
 Searchable Keys:
   enum : backedcaseint2;BackedCaseInt2;945;;int;;1;;0;<TESTURL>/testGetEnums.php;
-  enum.case : a;A;976;1;0;<TESTURL>/testGetEnums.php;1;
-  enum.case : b;B;992;2;0;<TESTURL>/testGetEnums.php;1;
-  enum.case : c;C;1008;3;0;<TESTURL>/testGetEnums.php;1;
-  enum.case : d;D;1024;4;0;<TESTURL>/testGetEnums.php;1;
-  enum.case : e;E;1040;?;0;<TESTURL>/testGetEnums.php;1;
-  enum.case : f;F;1061;-1;0;<TESTURL>/testGetEnums.php;1;
+  enum.case : a;A;976;1;0;<TESTURL>/testGetEnums.php;1;1;
+  enum.case : b;B;992;2;0;<TESTURL>/testGetEnums.php;1;1;
+  enum.case : c;C;1008;3;0;<TESTURL>/testGetEnums.php;1;1;
+  enum.case : d;D;1024;4;0;<TESTURL>/testGetEnums.php;1;1;
+  enum.case : e;E;1040;?;0;<TESTURL>/testGetEnums.php;1;1;
+  enum.case : f;F;1061;-1;0;<TESTURL>/testGetEnums.php;1;1;
   top : backedcaseint2
 
 Not Searchable Keys:
@@ -53,16 +53,16 @@ Not Searchable Keys:
 Document 5
 Searchable Keys:
   enum : backedcasestring2;BackedCaseString2;1112;;string;;1;;0;<TESTURL>/testGetEnums.php;
-  enum.case : a;A;1149;"A";0;<TESTURL>/testGetEnums.php;1;
-  enum.case : b;B;1167;"B";0;<TESTURL>/testGetEnums.php;1;
-  enum.case : c;C;1185;"C";0;<TESTURL>/testGetEnums.php;1;
-  enum.case : d;D;1203;"D";0;<TESTURL>/testGetEnums.php;1;
-  enum.case : e;E;1221;?;0;<TESTURL>/testGetEnums.php;1;
-  enum.case : f;F;1245;?;0;<TESTURL>/testGetEnums.php;1;
+  enum.case : a;A;1149;"A";0;<TESTURL>/testGetEnums.php;1;1;
+  enum.case : b;B;1167;"B";0;<TESTURL>/testGetEnums.php;1;1;
+  enum.case : c;C;1185;"C";0;<TESTURL>/testGetEnums.php;1;1;
+  enum.case : d;D;1203;"D";0;<TESTURL>/testGetEnums.php;1;1;
+  enum.case : e;E;1221;?;0;<TESTURL>/testGetEnums.php;1;1;
+  enum.case : f;F;1245;?;0;<TESTURL>/testGetEnums.php;1;1;
   enum.case : g;G;1297;    Test
     Test
     Test
-;0;<TESTURL>/testGetEnums.php;1;
+;0;<TESTURL>/testGetEnums.php;1;1;
   top : backedcasestring2
 
 Not Searchable Keys:
@@ -71,10 +71,10 @@ Not Searchable Keys:
 Document 6
 Searchable Keys:
   enum : impl;Impl;1350;;;Iface2,Iface1|\Iface1,\Iface2;1;;0;<TESTURL>/testGetEnums.php;
-  enum.case : a;A;1392;?;0;<TESTURL>/testGetEnums.php;1;
-  enum.case : b;B;1404;?;0;<TESTURL>/testGetEnums.php;1;
-  enum.case : c;C;1416;?;0;<TESTURL>/testGetEnums.php;1;
-  method : implmethod;implMethod;1440;$test:Test:1::1:0:0:0:0:0;void;1;0;<TESTURL>/testGetEnums.php;0;0;
+  enum.case : a;A;1392;?;0;<TESTURL>/testGetEnums.php;1;0;
+  enum.case : b;B;1404;?;0;<TESTURL>/testGetEnums.php;1;0;
+  enum.case : c;C;1416;?;0;<TESTURL>/testGetEnums.php;1;0;
+  method : implmethod;implMethod;1440;$test:Test:1::1:0:0:0:0:0:Test:;void;1;0;<TESTURL>/testGetEnums.php;0;0;void;
   superiface : iface1;Iface1;
   superiface : iface2;Iface2;
   top : impl
@@ -93,11 +93,11 @@ Not Searchable Keys:
 Document 8
 Searchable Keys:
   enum : simple2;Simple2;837;;;;1;;0;<TESTURL>/testGetEnums.php;
-  enum.case : a;A;856;?;0;<TESTURL>/testGetEnums.php;1;
-  enum.case : aa;AA;868;?;0;<TESTURL>/testGetEnums.php;1;
-  enum.case : b;B;881;?;0;<TESTURL>/testGetEnums.php;1;
-  enum.case : c;C;893;?;0;<TESTURL>/testGetEnums.php;1;
-  enum.case : d;D;905;?;0;<TESTURL>/testGetEnums.php;1;
+  enum.case : a;A;856;?;0;<TESTURL>/testGetEnums.php;1;0;
+  enum.case : aa;AA;868;?;0;<TESTURL>/testGetEnums.php;1;0;
+  enum.case : b;B;881;?;0;<TESTURL>/testGetEnums.php;1;0;
+  enum.case : c;C;893;?;0;<TESTURL>/testGetEnums.php;1;0;
+  enum.case : d;D;905;?;0;<TESTURL>/testGetEnums.php;1;0;
   top : simple2
 
 Not Searchable Keys:
@@ -106,9 +106,9 @@ Not Searchable Keys:
 Document 9
 Searchable Keys:
   enum : withtrait;WithTrait;1805;;;;1;\TestTrait;0;<TESTURL>/testGetEnums.php;
-  enum.case : a;A;1846;?;0;<TESTURL>/testGetEnums.php;1;
-  enum.case : b;B;1858;?;0;<TESTURL>/testGetEnums.php;1;
-  method : staticmethod;staticMethod;1889;;void;9;0;<TESTURL>/testGetEnums.php;0;0;
+  enum.case : a;A;1846;?;0;<TESTURL>/testGetEnums.php;1;0;
+  enum.case : b;B;1858;?;0;<TESTURL>/testGetEnums.php;1;0;
+  method : staticmethod;staticMethod;1889;;void;9;0;<TESTURL>/testGetEnums.php;0;0;void;
   top : withtrait
   usedtrait : testtrait;TestTrait;
 
@@ -197,7 +197,7 @@ Not Searchable Keys:
 
 Document 11
 Searchable Keys:
-  method : test;test;1776;;void;9;0;<TESTURL>/testGetEnums.php;0;0;
+  method : test;test;1776;;void;9;0;<TESTURL>/testGetEnums.php;0;0;void;
   top : testtrait
   trait : testtrait;TestTrait;1737;;;0;<TESTURL>/testGetEnums.php;
 

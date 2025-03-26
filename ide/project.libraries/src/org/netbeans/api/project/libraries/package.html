@@ -34,9 +34,9 @@
 </head>
 <body>
 <p>Representation of a library, and the ability to find the installed libraries.</p>
-<h1>
+<h2>
 Contents
-</h1>
+</h2>
 <ul>
 <li><a href="#overview">Overview</a>
 <li><a href="#manager">How to obtain a list of installed libraries</a>
@@ -44,14 +44,14 @@ Contents
 <li><a href="#dtd">Library definition format</a>
 </ul>
 
-<h1>Libraries API</h1>
-<h2><a name="overview">Overview</a></h2>
+<h2>Libraries API</h2>
+<h3 id="overview">Overview</h3>
 <p>The libraries API provides a client API of the Libraries framework. The <strong>Library</strong> itself is a typed set of
-volumes. The <a name="volumeType"><strong>volume</strong></a> is a ordered list of <strong>resources</strong>. The type of library implies the volumes contained
+volumes. The <a id="volumeType"><strong>volume</strong></a> is a ordered list of <strong>resources</strong>. The type of library implies the volumes contained
 in it. For example the Java SE library contains three volumes (sources, classpath and javadoc). The resource is a
 valid URL of the physical resource.
 </p>
-<h2><a name="manager">How to obtain a list of installed libraries or given library</a></h2>
+<h3 id="manager">How to obtain a list of installed libraries or given library</h3>
 <p>
 To obtain a list of installed libraries you want to call
 {@link org.netbeans.api.project.libraries.LibraryManager#getLibraries}
@@ -70,16 +70,16 @@ Library library = LibraryManager.getDefault().getLibrary (<span CLASS="STR">"Ant
     System.out.println(library.getName()+<span CLASS="STR">" : "</span>+libraries[i].getType());
 }
 </pre>
-<h2><a name="customizer">Managing libraries</a></h2>
+<h3 id="customizer">Managing libraries</h3>
 <p>
 Libraries module provides graphical manager of libraries. The manager allows you to create a new library
 of a given type, to delete existing library or to change content of volumes. It is not possible to create
 or delete a volume in the library since the volumes are implied by the library type.</p>
 <p>
 To open the graphical libraries manager you need to call
-{@link org.netbeans.api.project.libraries.LibrariesCustomizer#showCustomizer} method.
+<a href="@org-netbeans-modules-project-libraries-ui@/org/netbeans/api/project/libraries/LibrariesCustomizer.html#showCustomizer-org.netbeans.api.project.libraries.Library-">LibrariesCustomizer#showCustomizer</a> method.
 </p>
-<h2><a name="dtd">Library definition format</a></h2>
+<h3 id="dtd">Library definition format</h3>
 <p>
 A module is able to register the predefined library. For example the junit module installs
 the junit library. The library definition is placed in the <strong>org-netbeans-api-project-libraries/Libraries</strong> folder

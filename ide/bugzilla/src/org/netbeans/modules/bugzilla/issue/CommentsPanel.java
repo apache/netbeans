@@ -68,9 +68,7 @@ import org.netbeans.modules.bugtracking.commons.HyperlinkSupport;
 import org.netbeans.modules.bugtracking.commons.LinkButton;
 import org.netbeans.modules.bugtracking.commons.UIUtils;
 import org.netbeans.modules.bugzilla.Bugzilla;
-import org.netbeans.modules.bugzilla.kenai.KenaiRepository;
 import org.netbeans.modules.bugzilla.repository.IssueField;
-import org.netbeans.modules.team.spi.TeamAccessorUtils;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 
@@ -217,15 +215,6 @@ public class CommentsPanel extends JPanel {
         
         // state label
         JLabel stateLabel = null;
-        if (issue.getRepository() instanceof KenaiRepository) {
-            int index = author.indexOf('@'); // NOI18N
-            String userName = (index == -1) ? author : author.substring(0,index);
-            String host = ((KenaiRepository) issue.getRepository()).getHost();
-            stateLabel = TeamAccessorUtils.createUserWidget(issue.getRepository().getUrl(), userName, host, TeamAccessorUtils.getChatLink(issue.getID()));
-            if (stateLabel != null) {
-                stateLabel.setText(null);
-            }
-        }
         
         // replay button
         LinkButton replyButton = new LinkButton(bundle.getString("Comments.replyButton.text")); // NOI18N
@@ -435,7 +424,7 @@ public class CommentsPanel extends JPanel {
                 StyledDocument doc = pane.getStyledDocument();
                 Element elem = doc.getCharacterElement(pane.viewToModel(clickPoint));
                 Object l = elem.getAttributes().getAttribute(HyperlinkSupport.LINK_ATTRIBUTE);
-                if (l != null && l instanceof AttachmentLink) {
+                if (l instanceof AttachmentLink) {
                     BugzillaIssue.Attachment attachment = ((AttachmentLink) l).attachment;
                     if (attachment != null) {
                         add(new JMenuItem(attachment.getOpenAction()));

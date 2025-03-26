@@ -21,7 +21,7 @@ package org.netbeans.modules.j2ee.dd.api.web;
 /**
  * Generated interface for ServletMapping.
  *
- *<p><b><font color="red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></font></b>
+ *<p><b><span style="color:red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></span></b>
  *</p>
  */
 public interface ServletMapping extends org.netbeans.modules.j2ee.dd.api.common.CommonDDBean {
@@ -34,7 +34,6 @@ public interface ServletMapping extends org.netbeans.modules.j2ee.dd.api.common.
          */
 	public java.lang.String getServletName();
         /** Getter for url-pattern property. Use ServletMapping25.setUrlPattern(int, String) instead.
-         * @return property value 
          */
         @Deprecated
 	public void setUrlPattern(java.lang.String value);

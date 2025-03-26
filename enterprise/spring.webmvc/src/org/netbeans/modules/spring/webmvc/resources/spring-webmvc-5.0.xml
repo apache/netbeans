@@ -25,7 +25,7 @@
     <localizing-bundle>org.netbeans.modules.spring.webmvc.resources.Bundle</localizing-bundle>
     <volume>
         <type>classpath</type>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-webmvc-5.2.9.RELEASE.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-5/spring-webmvc-5.3.31.jar!/</resource>
     </volume>
     <volume>
         <type>src</type>
@@ -36,7 +36,7 @@
     <properties>
         <property>
             <name>maven-dependencies</name>
-            <value>org.springframework:spring-webmvc:5.2.9.RELEASE:jar</value>
+            <value>org.springframework:spring-webmvc:5.3.31:jar</value>
         </property>
     </properties>
 </library>

@@ -39,14 +39,14 @@ public class JanitorOptionsPanel extends javax.swing.JPanel {
 
     void loadValues() {
         cbEnabled.setSelected(Janitor.isEnabled());
-        cbAutoRemove.setSelected(Janitor.isAutoRemoveAbanconedCache());
+        cbAutoRemove.setSelected(Janitor.isAutoRemoveAbandonedCache());
         spinnerModel.setValue(Janitor.getUnusedDays());
         resetRunNow();
     }
 
     void saveValues() {
         Janitor.setEnabled(cbEnabled.isSelected());
-        Janitor.setAutoRemoveAbanconedCache(cbAutoRemove.isSelected());
+        Janitor.setAutoRemoveAbandonedCache(cbAutoRemove.isSelected());
         Janitor.setUnusedDays(spinnerModel.getNumber().intValue());
         resetRunNow();
     }
@@ -54,7 +54,7 @@ public class JanitorOptionsPanel extends javax.swing.JPanel {
     boolean isChanged() {
         boolean changed = false;
         changed |= cbEnabled.isSelected() != Janitor.isEnabled();
-        changed |= cbAutoRemove.isSelected() != Janitor.isAutoRemoveAbanconedCache();
+        changed |= cbAutoRemove.isSelected() != Janitor.isAutoRemoveAbandonedCache();
         changed |= spinnerModel.getNumber().intValue() != Janitor.getUnusedDays();
         changed |= !btRunNow.isEnabled();
         return changed;
@@ -105,13 +105,11 @@ public class JanitorOptionsPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(21, 21, 21)
-                                .addComponent(cbAutoRemove))
-                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(lbUnusedDays)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(spUnusedDays, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 45, Short.MAX_VALUE)))
+                                .addComponent(spUnusedDays, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cbAutoRemove))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -132,7 +130,7 @@ public class JanitorOptionsPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btRunNow)))
-                .addContainerGap(166, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

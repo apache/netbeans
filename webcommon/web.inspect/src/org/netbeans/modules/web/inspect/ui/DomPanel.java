@@ -306,7 +306,7 @@ public class DomPanel extends JPanel implements ExplorerManager.Provider {
             if (image == null) {
                 icon = lookup.lookup(Icon.class);
             } else {
-                icon = new ImageIcon(image);
+                icon = ImageUtilities.image2Icon(image);
             }
             if (icon == null) {
                 BrowserFamilyId id = lookup.lookup(BrowserFamilyId.class);
@@ -315,7 +315,7 @@ public class DomPanel extends JPanel implements ExplorerManager.Provider {
                         if (browser.hasNetBeansIntegration() && (id == browser.getBrowserFamily())) {
                             image = browser.getIconImage(true);
                             if (image != null) {
-                                icon = new ImageIcon(image);
+                                icon = ImageUtilities.image2Icon(image);
                                 break;
                             }
                         }
@@ -429,11 +429,11 @@ public class DomPanel extends JPanel implements ExplorerManager.Provider {
         treeView.expandNode(root);
         for (Node node : root.getChildren().getNodes()) {
             String nodeName = node.getName();
-            if (nodeName != null && nodeName.trim().toLowerCase().equals("html")) { // NOI18N
+            if (nodeName != null && nodeName.trim().equalsIgnoreCase("html")) { // NOI18N
                 treeView.expandNode(node);
                 for (Node subNode : node.getChildren().getNodes()) {
                     nodeName = subNode.getName();
-                    if (nodeName != null && nodeName.trim().toLowerCase().equals("body")) { // NOI18N
+                    if (nodeName != null && nodeName.trim().equalsIgnoreCase("body")) { // NOI18N
                         treeView.expandNode(subNode);
                     }
                 }
@@ -485,7 +485,7 @@ public class DomPanel extends JPanel implements ExplorerManager.Provider {
     private void updateSelection() {
         if (EventQueue.isDispatchThread()) {
             List<? extends Node> nodes = pageModel.getSelectedNodes();
-            Node[] selection = nodes.toArray(new Node[nodes.size()]);
+            Node[] selection = nodes.toArray(new Node[0]);
             updatingView = true;
             try {
                 manager.setSelectedNodes(selection);

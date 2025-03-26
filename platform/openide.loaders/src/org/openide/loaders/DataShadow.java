@@ -674,7 +674,7 @@ public class DataShadow extends MultiDataObject implements DataObject.Container 
         // update nodes
         ShadowNode n [] = null;
         synchronized (nodes) {
-            n = nodes.toArray(new ShadowNode[nodes.size()]);
+            n = nodes.toArray(new ShadowNode[0]);
         }
         
         try {

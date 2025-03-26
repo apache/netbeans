@@ -43,6 +43,8 @@
     embeddedIdFields - contains information about embedded primary IDs
     cdiEnabled - project contains beans.xml, so Named beans can be used
     bundle - name of the variable defined in the JSF config file for the resource bundle (type: String)
+    jakartaPersistencePackages - true if jakarta persistence is used, false if not (type: Boolean)
+    jakartaJsfPackages - true if jakarta JSF is used, false if not (type: Boolean)
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category JavaServer Faces->JSF from Entity.
@@ -65,6 +67,30 @@ import ${jpaControllerFullClassName};
 
 import java.io.Serializable;
 import java.util.ResourceBundle;
+<#if jakartaJsfPackages?? && jakartaJsfPackages==true>
+<#if isInjected?? && isInjected==true>
+import jakarta.annotation.Resource;
+</#if>
+<#if ejbClassName??>
+import jakarta.ejb.EJB;
+</#if>
+<#if managedBeanName??>
+<#if cdiEnabled?? && cdiEnabled>
+import jakarta.inject.Named;
+import jakarta.enterprise.context.SessionScoped;
+<#else>
+import jakarta.faces.bean.ManagedBean;
+import jakarta.faces.bean.SessionScoped;
+</#if>
+</#if>
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.convert.Converter;
+import jakarta.faces.convert.FacesConverter;
+import jakarta.faces.model.DataModel;
+import jakarta.faces.model.ListDataModel;
+import jakarta.faces.model.SelectItem;
+<#else>
 <#if isInjected?? && isInjected==true>
 import javax.annotation.Resource;
 </#if>
@@ -87,13 +113,24 @@ import javax.faces.convert.FacesConverter;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
+</#if>
 <#if jpaControllerClassName??>
-<#if isInjected?? && isInjected==true>
+<#if jakartaPersistencePackages?? && jakartaPersistencePackages==true >
+<#if isInjected?? && isInjected==true >
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceUnit;
+import jakarta.transaction.UserTransaction;
+<#else>
+import jakarta.persistence.Persistence;
+</#if>
+<#else>
+<#if isInjected?? && isInjected==true >
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.transaction.UserTransaction;
 <#else>
 import javax.persistence.Persistence;
+</#if>
 </#if>
 </#if>
 

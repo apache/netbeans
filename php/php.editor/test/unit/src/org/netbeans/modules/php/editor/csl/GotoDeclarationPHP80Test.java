@@ -317,4 +317,352 @@ public class GotoDeclarationPHP80Test extends GotoDeclarationTestBase {
         checkDeclaration(getTestPath(), "protected int|string|\\Test2\\F^oo $field2,", "    class ^Foo {}");
     }
 
+    public void testAttributes_a01() throws Exception {
+        checkDeclaration(getTestPath(), "#[AttributeCl^ass1(1, self::CONSTANT_CLASS)]", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a02() throws Exception {
+        checkDeclaration(getTestPath(), "    #[AttributeClas^s1(2, \"class const\")]", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a03() throws Exception {
+        checkDeclaration(getTestPath(), "    #[AttributeCla^ss1(3, \"class field\")]", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a04() throws Exception {
+        checkDeclaration(getTestPath(), "    #[AttributeCl^ass1(4, \"class static field\"), AttributeClass2(4, \"class static field\", new \\Attributes\\Example)] // group", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a05() throws Exception {
+        checkDeclaration(getTestPath(), "    #[AttributeCla^ss1(5, \"class method\")]", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a06() throws Exception {
+        checkDeclaration(getTestPath(), "    public function method(#[AttributeC^lass1(5, \"class method param\")] $param1, #[AttributeClass1(5, 'class method param')] int $pram2) {}", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a07() throws Exception {
+        checkDeclaration(getTestPath(), "    public function method(#[AttributeClass1(5, \"class method param\")] $param1, #[AttributeCla^ss1(5, 'class method param')] int $pram2) {}", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a08() throws Exception {
+        checkDeclaration(getTestPath(), "    #[\\Attributes\\AttributeClas^s1(6, \"class static method\")]", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a09() throws Exception {
+        checkDeclaration(getTestPath(), "    public static function staticMethod(#[\\Attributes\\Attrib^uteClass1(6, \"class static method param\")] int|string $param1): bool|int {", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a10() throws Exception {
+        checkDeclaration(getTestPath(), "#[AttributeC^lass1(1, \"class child\")]", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a11() throws Exception {
+        checkDeclaration(getTestPath(), "#[Attribute^Class1(1, \"trait\")]", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a12() throws Exception {
+        checkDeclaration(getTestPath(), "    #[AttributeCl^ass1(3, \"trait field\")]", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a13() throws Exception {
+        checkDeclaration(getTestPath(), "    #[AttributeCl^ass1(4, \"trait static field\")]", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a14() throws Exception {
+        checkDeclaration(getTestPath(), "    #[AttributeCla^ss1(5, \"trait method\")]", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a15() throws Exception {
+        checkDeclaration(getTestPath(), "    public function traitMethod(#[AttributeCl^ass1(5, \"trait method param\")] $param1) {}", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a16() throws Exception {
+        checkDeclaration(getTestPath(), "    #[Attri^buteClass1(6, \"trait static method\")]", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a17() throws Exception {
+        checkDeclaration(getTestPath(), "$anon = new #[Attribut^eClass1(1, \"anonymous class\")] class () {};", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a18() throws Exception {
+        checkDeclaration(getTestPath(), "    #[AttributeClas^s1(int: 7, string: \"anonymous class static method\")]", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a19() throws Exception {
+        checkDeclaration(getTestPath(), "#[Attr^ibuteClass1(1, \"interface\")]", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a20() throws Exception {
+        checkDeclaration(getTestPath(), "#[\\Attributes\\AttributeClass3(1, \"enum\"), Attrib^uteClass1]", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a21() throws Exception {
+        checkDeclaration(getTestPath(), "    #[AttributeCl^ass1(2, \"enum const\")]", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a22() throws Exception {
+        checkDeclaration(getTestPath(), "    #[AttributeC^lass1(3, \"enum case\")]", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a23() throws Exception {
+        checkDeclaration(getTestPath(), "    #[AttributeCl^ass1(4, \"enum method\")] #[AttributeClass3()]", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a24() throws Exception {
+        checkDeclaration(getTestPath(), "    #[AttributeCl^ass1(int: 5, string: \"enum static method\")]", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a25() throws Exception {
+        checkDeclaration(getTestPath(), "    AttributeCla^ss1(1, \"function\"),", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a26() throws Exception {
+        checkDeclaration(getTestPath(), "$labmda1 = #[Attribut^eClass1(1, \"closure\")] function() {};", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a27() throws Exception {
+        checkDeclaration(getTestPath(), "$arrow1 = #[AttributeCla^ss1(1, \"arrow\")] fn() => 100;", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a28() throws Exception {
+        checkDeclaration(getTestPath(), "$arrow2 = #[AttributeCla^ss1(2, \"arrow\"), AttributeClass2(2, \"arrow\")] fn(#[AttributeClass1(\\Attributes\\CONST_1 / 5, \"arrow param\" . Example::class)] $test): int|string => 100;", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a29() throws Exception {
+        checkDeclaration(getTestPath(), "$arrow2 = #[AttributeClass1(2, \"arrow\"), AttributeClass2(2, \"arrow\")] fn(#[AttributeC^lass1(\\Attributes\\CONST_1 / 5, \"arrow param\" . Example::class)] $test): int|string => 100;", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_a30() throws Exception {
+        checkDeclaration(getTestPath(), "$arrow3 = #[Attribute^Class1(3, string: Example::CONST_EXAMPLE . \"arrow\")] static fn(): int|string => 100;", "class ^AttributeClass1 {");
+    }
+
+    public void testAttributes_b01() throws Exception {
+        checkDeclaration(getTestPath(), "#[AttributeCl^ass2(1, \"class\")]", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b02() throws Exception {
+        checkDeclaration(getTestPath(), "    #[AttributeCla^ss2(2, \"class const\", new Example())]", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b03() throws Exception {
+        checkDeclaration(getTestPath(), "    #[AttributeClass1(4, \"class static field\"), Attribut^eClass2(4, \"class static field\", new \\Attributes\\Example)] // group", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b04() throws Exception {
+        checkDeclaration(getTestPath(), "#[AttributeClas^s2(1, \"trait\")]", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b05() throws Exception {
+        checkDeclaration(getTestPath(), "    #[A^ttributeClass2(2, \"trait const\")]", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b06() throws Exception {
+        checkDeclaration(getTestPath(), "    #[Attr^ibuteClass2(6, \"trait static method\")]", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b07() throws Exception {
+        checkDeclaration(getTestPath(), "$anon2 = new #[At^tributeClass2(1, \"anonymous class\")] class ($test) {", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b08() throws Exception {
+        checkDeclaration(getTestPath(), "    #[AttributeC^lass2(2, \"anonymous class const\")]", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b09() throws Exception {
+        checkDeclaration(getTestPath(), "    #[Att^ributeClass2(3, \"anonymous class field\")]", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b10() throws Exception {
+        checkDeclaration(getTestPath(), "    #[At^tributeClass2(4, \"anonymous class static field\")]", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b11() throws Exception {
+        checkDeclaration(getTestPath(), "    #[Att^ributeClass2(5, \"anonymous class constructor\")]", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b12() throws Exception {
+        checkDeclaration(getTestPath(), "    public function __construct(#[Attr^ibuteClass2(5, \"anonymous class\")] $param1) {", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b13() throws Exception {
+        checkDeclaration(getTestPath(), "    #[A^ttributeClass2(6, \"anonymous class method\")] #[AttributeClass3()]", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b14() throws Exception {
+        checkDeclaration(getTestPath(), "    public function method(#[Attribute^Class2(6, \"anonymous class method param\")] $param1): int|string {", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b15() throws Exception {
+        checkDeclaration(getTestPath(), "    private static function staticMethod(#[AttributeClas^s2(7, \"anonymous class static method param\")] int|bool $pram1): int|string {", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b16() throws Exception {
+        checkDeclaration(getTestPath(), "    #[Attribute^Class2(2, \"interface const\")]", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b17() throws Exception {
+        checkDeclaration(getTestPath(), "    #[Attribut^eClass2(self::CONSTANT_INTERFACE, \"interface method\")] #[AttributeClass3()]", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b18() throws Exception {
+        checkDeclaration(getTestPath(), "    public function interfaceMethod(#[AttributeC^lass2(AttributedInterface::CONSTANT_INTERFACE, \"interface method param\")] $param1): int|string;", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b19() throws Exception {
+        checkDeclaration(getTestPath(), "    #[Att^ributeClass2(4, \"interface static method\")] #[AttributeClass3()]", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b20() throws Exception {
+        checkDeclaration(getTestPath(), "    public static function staticInterfaceMethod(#[Attribu^teClass2(4, \"interface static method param\" . Example::CONST_EXAMPLE)] $param1): int|string;", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b21() throws Exception {
+        checkDeclaration(getTestPath(), "#[\\Attributes\\AttributeCla^ss2(1, \"enum\", new Example)]", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b22() throws Exception {
+        checkDeclaration(getTestPath(), "    public function method(#[Attrib^uteClass2(4, \"enum method param\")] $param1): int|string {", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b23() throws Exception {
+        checkDeclaration(getTestPath(), "#[Attribut^eClass2(1, \"function\")]", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b24() throws Exception {
+        checkDeclaration(getTestPath(), "function func2(#[AttributeC^lass2(1 + \\Attributes\\CONST_1 + 1, Example::CONST_EXAMPLE . \"function param\")] int|string $param): void {}", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b25() throws Exception {
+        checkDeclaration(getTestPath(), "$labmda2 = #[Att^ributeClass2(2, \"closure\")] #[AttributeClass3(2, \"closurr\")] function(#[AttributeClass2(int: 2 * \\Attributes\\CONST_1, string: \"closure param\" . Example::CONST_EXAMPLE)] $test): void {};", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b26() throws Exception {
+        checkDeclaration(getTestPath(), "$labmda2 = #[AttributeClass2(2, \"closure\")] #[AttributeClass3(2, \"closurr\")] function(#[AttributeCla^ss2(int: 2 * \\Attributes\\CONST_1, string: \"closure param\" . Example::CONST_EXAMPLE)] $test): void {};", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_b27() throws Exception {
+        checkDeclaration(getTestPath(), "$arrow2 = #[AttributeClass1(2, \"arrow\"), Attri^buteClass2(2, \"arrow\")] fn(#[AttributeClass1(\\Attributes\\CONST_1 / 5, \"arrow param\" . Example::class)] $test): int|string => 100;", "class ^AttributeClass2 {");
+    }
+
+    public void testAttributes_c01() throws Exception {
+        checkDeclaration(getTestPath(), "    #[AttributeClas^s3(6, \"trait static method\")]", "class ^AttributeClass3 {");
+    }
+
+    public void testAttributes_c02() throws Exception {
+        checkDeclaration(getTestPath(), "    public static function staticTraitMethod(#[At^tributeClass3] int|string $param1): bool|int {", "class ^AttributeClass3 {");
+    }
+
+    public void testAttributes_c03() throws Exception {
+        checkDeclaration(getTestPath(), "    #[At^tributeClass3(3, \"anonymous class field\")]", "class ^AttributeClass3 {");
+    }
+
+    public void testAttributes_c04() throws Exception {
+        checkDeclaration(getTestPath(), "    #[AttributeClass2(6, \"anonymous class method\")] #[A^ttributeClass3()]", "class ^AttributeClass3 {");
+    }
+
+    public void testAttributes_c05() throws Exception {
+        checkDeclaration(getTestPath(), "    #[AttributeClass2(self::CONSTANT_INTERFACE, \"interface method\")] #[Attribu^teClass3()]", "class ^AttributeClass3 {");
+    }
+
+    public void testAttributes_c06() throws Exception {
+        checkDeclaration(getTestPath(), "    #[AttributeClass2(4, \"interface static method\")] #[Attribut^eClass3()]", "class ^AttributeClass3 {");
+    }
+
+    public void testAttributes_c07() throws Exception {
+        checkDeclaration(getTestPath(), "#[\\Attributes\\Attribute^Class3(1, \"enum\"), AttributeClass1]", "class ^AttributeClass3 {");
+    }
+
+    public void testAttributes_c08() throws Exception {
+        checkDeclaration(getTestPath(), "    #[AttributeClass1(4, \"enum method\")] #[Att^ributeClass3()]", "class ^AttributeClass3 {");
+    }
+
+    public void testAttributes_c09() throws Exception {
+        checkDeclaration(getTestPath(), "    public static function staticMethod(#[AttributeC^lass3(5, \"enum static method param\")] int|bool $pram1): int|string {", "class ^AttributeClass3 {");
+    }
+
+    public void testAttributes_c10() throws Exception {
+        checkDeclaration(getTestPath(), "    Att^ributeClass3(int: CONST_1, string: \"function\" . Example::class)", "class ^AttributeClass3 {");
+    }
+
+    public void testAttributes_c11() throws Exception {
+        checkDeclaration(getTestPath(), "$labmda2 = #[AttributeClass2(2, \"closure\")] #[Attr^ibuteClass3(2, \"closurr\")] function(#[AttributeClass2(int: 2 * \\Attributes\\CONST_1, string: \"closure param\" . Example::CONST_EXAMPLE)] $test): void {};", "class ^AttributeClass3 {");
+    }
+
+    public void testAttributes_c12() throws Exception {
+        checkDeclaration(getTestPath(), "$labmda3 = #[Attribute^Class3(3, \"closure\")] static function(): void {};", "class ^AttributeClass3 {");
+    }
+
+    public void testAttributes_d01() throws Exception {
+        checkDeclaration(getTestPath(), "    AttributeClass3(int: CONS^T_1, string: \"function\" . Example::class)", "const ^CONST_1 = 1;");
+    }
+
+    public void testAttributes_d02() throws Exception {
+        checkDeclaration(getTestPath(), "function func2(#[AttributeClass2(1 + \\Attributes\\CONS^T_1 + 1, Example::CONST_EXAMPLE . \"function param\")] int|string $param): void {}", "const ^CONST_1 = 1;");
+    }
+
+    public void testAttributes_d03() throws Exception {
+        checkDeclaration(getTestPath(), "$labmda2 = #[AttributeClass2(2, \"closure\")] #[AttributeClass3(2, \"closurr\")] function(#[AttributeClass2(int: 2 * \\Attributes\\CO^NST_1, string: \"closure param\" . Example::CONST_EXAMPLE)] $test): void {};", "const ^CONST_1 = 1;");
+    }
+
+    public void testAttributes_d04() throws Exception {
+        checkDeclaration(getTestPath(), "$arrow2 = #[AttributeClass1(2, \"arrow\"), AttributeClass2(2, \"arrow\")] fn(#[AttributeClass1(\\Attributes\\C^ONST_1 / 5, \"arrow param\" . Example::class)] $test): int|string => 100;", "const ^CONST_1 = 1;");
+    }
+
+    public void testAttributes_e01() throws Exception {
+        checkDeclaration(getTestPath(), "    #[AttributeClass2(2, \"class const\", new Exa^mple())]", "class ^Example {");
+    }
+
+    public void testAttributes_e02() throws Exception {
+        checkDeclaration(getTestPath(), "    #[AttributeClass1(4, \"class static field\"), AttributeClass2(4, \"class static field\", new \\Attributes\\E^xample)] // group", "class ^Example {");
+    }
+
+    public void testAttributes_e03() throws Exception {
+        checkDeclaration(getTestPath(), "    public static function staticInterfaceMethod(#[AttributeClass2(4, \"interface static method param\" . Ex^ample::CONST_EXAMPLE)] $param1): int|string;", "class ^Example {");
+    }
+
+    public void testAttributes_e04() throws Exception {
+        checkDeclaration(getTestPath(), "#[\\Attributes\\AttributeClass2(1, \"enum\", new E^xample)]", "class ^Example {");
+    }
+
+    public void testAttributes_e05() throws Exception {
+        checkDeclaration(getTestPath(), "    AttributeClass3(int: CONST_1, string: \"function\" . Exam^ple::class)", "class ^Example {");
+    }
+
+    public void testAttributes_e06() throws Exception {
+        checkDeclaration(getTestPath(), "function func2(#[AttributeClass2(1 + \\Attributes\\CONST_1 + 1, Ex^ample::CONST_EXAMPLE . \"function param\")] int|string $param): void {}", "class ^Example {");
+    }
+
+    public void testAttributes_e07() throws Exception {
+        checkDeclaration(getTestPath(), "$labmda2 = #[AttributeClass2(2, \"closure\")] #[AttributeClass3(2, \"closurr\")] function(#[AttributeClass2(int: 2 * \\Attributes\\CONST_1, string: \"closure param\" . E^xample::CONST_EXAMPLE)] $test): void {};", "class ^Example {");
+    }
+
+    public void testAttributes_e08() throws Exception {
+        checkDeclaration(getTestPath(), "$arrow2 = #[AttributeClass1(2, \"arrow\"), AttributeClass2(2, \"arrow\")] fn(#[AttributeClass1(\\Attributes\\CONST_1 / 5, \"arrow param\" . Exa^mple::class)] $test): int|string => 100;", "class ^Example {");
+    }
+
+    public void testAttributes_e09() throws Exception {
+        checkDeclaration(getTestPath(), "$arrow3 = #[AttributeClass1(3, string: E^xample::CONST_EXAMPLE . \"arrow\")] static fn(): int|string => 100;", "class ^Example {");
+    }
+
+    public void testAttributes_f01() throws Exception {
+        checkDeclaration(getTestPath(), "    public static function staticInterfaceMethod(#[AttributeClass2(4, \"interface static method param\" . Example::CONST_EXA^MPLE)] $param1): int|string;", "    public const string ^CONST_EXAMPLE = \"example\";");
+    }
+
+    public void testAttributes_f02() throws Exception {
+        checkDeclaration(getTestPath(), "function func2(#[AttributeClass2(1 + \\Attributes\\CONST_1 + 1, Example::CONS^T_EXAMPLE . \"function param\")] int|string $param): void {}", "    public const string ^CONST_EXAMPLE = \"example\";");
+    }
+
+    public void testAttributes_f03() throws Exception {
+        checkDeclaration(getTestPath(), "$labmda2 = #[AttributeClass2(2, \"closure\")] #[AttributeClass3(2, \"closurr\")] function(#[AttributeClass2(int: 2 * \\Attributes\\CONST_1, string: \"closure param\" . Example::CO^NST_EXAMPLE)] $test): void {};", "    public const string ^CONST_EXAMPLE = \"example\";");
+    }
+
+    public void testAttributes_f04() throws Exception {
+        checkDeclaration(getTestPath(), "$arrow3 = #[AttributeClass1(3, string: Example::CONST_EXAM^PLE . \"arrow\")] static fn(): int|string => 100;", "    public const string ^CONST_EXAMPLE = \"example\";");
+    }
+
+    public void testAttributes_g01() throws Exception {
+        checkDeclaration(getTestPath(), "#[AttributeClass1(1, self::CONSTA^NT_CLASS)]", "    public const ^CONSTANT_CLASS = 'constant';");
+    }
+
 }

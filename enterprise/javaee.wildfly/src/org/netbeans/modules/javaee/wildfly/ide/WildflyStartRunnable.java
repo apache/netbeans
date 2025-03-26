@@ -27,6 +27,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -201,6 +202,12 @@ class WildflyStartRunnable implements Runnable {
             javaOptsBuilder.append(" -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.byteman -Djava.awt.headless=true");
         }
 
+        if(ip.getProperty(WildflyPluginProperties.PROPERTY_PORT_OFFSET) != null ) {
+            int portOffSet = Integer.parseInt(ip.getProperty(WildflyPluginProperties.PROPERTY_PORT_OFFSET));
+            if(portOffSet > 0 ) {
+                javaOptsBuilder.append(" -Djboss.socket.binding.port-offset=").append(portOffSet);
+            }
+        }
         if (ip.getProperty(WildflyPluginProperties.PROPERTY_CONFIG_FILE) != null) {
             File configFile = new File(ip.getProperty(WildflyPluginProperties.PROPERTY_CONFIG_FILE));
             if (configFile.exists() && configFile.getParentFile().exists() && configFile.getParentFile().getParentFile().exists()) {
@@ -446,11 +453,11 @@ class WildflyStartRunnable implements Runnable {
                 boolean needChangeConf = matcherConf != null && matcherConf.matches();
                 try {
                     if (needChangeRun || needChangeConf) {
-                        File startBat = File.createTempFile(RUN_FILE_NAME, ".bat"); // NOI18N
+                        File startBat = Files.createTempFile(RUN_FILE_NAME, ".bat").toFile(); // NOI18N
                         File confBat = null;
                         if (contentConf != null) {
-                            confBat = File.createTempFile(CONF_FILE_NAME, ".bat", // NOI18N
-                                    startBat.getParentFile()); // NOI18N
+                            confBat = Files.createTempFile(// NOI18N
+                                    startBat.getParentFile().toPath(), CONF_FILE_NAME, ".bat").toFile(); // NOI18N
                         }
                         startBat.deleteOnExit();
                         contentRun = replaceJavaOpts(contentRun, matcherRun);

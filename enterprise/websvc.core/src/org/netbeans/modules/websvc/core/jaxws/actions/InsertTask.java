@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.EnumSet;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
@@ -114,11 +115,10 @@ class InsertTask implements CancellableTask<WorkingCopy> {
                         Identifier("wsdlLocation"), make.Literal(wsdlUrl)))); //NOI18N
         // create field modifier: private(static) with @WebServiceRef annotation
         FileObject targetFo = workingCopy.getFileObject();
-        Set<Modifier> modifiers = new HashSet<Modifier>();
+        Set<Modifier> modifiers = EnumSet.of(Modifier.PRIVATE);
         if (Car.getCar(targetFo) != null) {
             modifiers.add(Modifier.STATIC);
         }
-        modifiers.add(Modifier.PRIVATE);
         ModifiersTree methodModifiers = make.Modifiers(
                 modifiers,
                 Collections.<AnnotationTree>singletonList(wsRefAnnotation));
@@ -159,7 +159,7 @@ class InsertTask implements CancellableTask<WorkingCopy> {
             ElementFilter.fieldsIn( classElement.getEnclosedElements())) 
         {
             TypeMirror varType = var.asType();
-            if (!varType.getKind().equals(TypeKind.ARRAY)) {
+            if (varType.getKind() != TypeKind.ARRAY) {
                 continue;
             }
             if ( var.getSimpleName().contentEquals(PolicyManager.SECURITY_FEATURE)) {
@@ -170,10 +170,8 @@ class InsertTask implements CancellableTask<WorkingCopy> {
                 return javaClass;
             }
         }
-        Set<Modifier> modifiers = new HashSet<Modifier>();
-        modifiers.add( Modifier.PRIVATE);
-        modifiers.add( Modifier.STATIC);
-        modifiers.add( Modifier.FINAL);
+
+        Set<Modifier> modifiers = EnumSet.of(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL);
         
         ModifiersTree modifiersTree = make.Modifiers(
                 modifiers);

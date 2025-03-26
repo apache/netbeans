@@ -407,7 +407,7 @@ public class RebaseAction extends SingleRepositoryAction {
             if (o == review) {
                 openInVersioningView(conflicts);
             } else if (o == resolve) {
-                GitProgressSupport supp = new ResolveConflictsExecutor(conflicts.toArray(new File[conflicts.size()]));
+                GitProgressSupport supp = new ResolveConflictsExecutor(conflicts.toArray(new File[0]));
                 supp.start(Git.getInstance().getRequestProcessor(repository), repository, Bundle.MSG_Rebase_resolving());
             } else if (o == abort) {
                 action = RebaseOperationType.ABORT;
@@ -538,7 +538,7 @@ public class RebaseAction extends SingleRepositoryAction {
                     msg.getRevision(),
                     new Date(msg.getCommitTime())));
         }
-        return entries.toArray(new GitHookContext.LogEntry[entries.size()]);
+        return entries.toArray(new GitHookContext.LogEntry[0]);
     }
     
 }

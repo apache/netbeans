@@ -24,15 +24,18 @@ import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.support.ReferencesCount;
 
 /**
+ * Characters are lazily computed in charAt(), avoid toString().
+ * 
+ * Use link() to combine lazy sequences.
  *
  * @author Dusan Balek
  */
-class LazySortText implements CharSequence {
+final class LazySortText implements CharSequence {
 
-    private String simpleName;
-    private String enclName;
-    private ElementHandle<TypeElement> handle;
-    private ReferencesCount referencesCount;
+    private final String simpleName;
+    private final String enclName;
+    private final ElementHandle<TypeElement> handle;
+    private final ReferencesCount referencesCount;
     private String importanceLevel = null;
 
     LazySortText(String simpleName, String enclName, ElementHandle<TypeElement> handle, ReferencesCount referencesCount) {
@@ -48,6 +51,7 @@ class LazySortText implements CharSequence {
     }
 
     @Override
+    @SuppressWarnings("AssignmentToMethodParameter")
     public char charAt(int index) {
         if ((index < 0) || (index >= length())) {
             throw new StringIndexOutOfBoundsException(index);
@@ -74,10 +78,61 @@ class LazySortText implements CharSequence {
         throw new UnsupportedOperationException("Not supported yet."); //NOI18N
     }
 
+    @Override
+    public String toString() {
+        return new StringBuilder(this).toString();
+    }
+
     private String getImportanceLevel() {
         if (importanceLevel == null) {
             importanceLevel = String.format("%8d", Utilities.getImportanceLevel(referencesCount, handle)); //NOI18N
         }
         return importanceLevel;
     }
+    
+    public static CharSequence link(CharSequence first, CharSequence second) {
+        return new LinkedLazyCharSequence(first, second);
+    }
+    
+    public static CharSequence link(CharSequence first, CharSequence second, CharSequence third) {
+        return new LinkedLazyCharSequence(first, new LinkedLazyCharSequence(second, third));
+    }
+
+    private static final class LinkedLazyCharSequence implements CharSequence {
+
+        private final CharSequence first;
+        private final CharSequence second;
+        private final int length;
+
+        private LinkedLazyCharSequence(CharSequence first, CharSequence second) {
+            this.first = first;
+            this.second = second;
+            this.length = first.length() + second.length() + 1;
+        }
+
+        @Override
+        @SuppressWarnings("AssignmentToMethodParameter")
+        public char charAt(int index) {
+            if (index < first.length()) {
+                return first.charAt(index);
+            }
+            index -= first.length();
+            if (index-- == 0) {
+                return '#';
+            }
+            return second.charAt(index);
+        }
+
+        @Override
+        public int length() {
+            return length;
+        }
+
+        @Override
+        public CharSequence subSequence(int start, int end) {
+            throw new UnsupportedOperationException("Not supported yet."); //NOI18N
+        }
+
+    }
+
 }

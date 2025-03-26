@@ -136,7 +136,7 @@ public final class Modifications {
 
             // need to be sure, that the differences will be sorted acocrding
             // their start offset
-            Difference aDifferences[] = differences.toArray(new Difference[differences.size()]);
+            Difference aDifferences[] = differences.toArray(new Difference[0]);
             Arrays.sort(aDifferences, new Comparator<Difference>() {
                 public int compare(Difference diff1, Difference diff2) {
                     int result = 0;

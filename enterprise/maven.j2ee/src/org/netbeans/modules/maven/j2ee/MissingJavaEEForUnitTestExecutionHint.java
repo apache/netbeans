@@ -75,7 +75,7 @@ public class MissingJavaEEForUnitTestExecutionHint extends AbstractHint {
             return null;
         }
         //Logger.getAnonymousLogger().log(Level.SEVERE, "---"+el+"  "+(treePath.getLeaf() != null ? treePath.getLeaf().getKind() : "no kind"));
-        if (el.asType() == null || !el.asType().getKind().equals(TypeKind.DECLARED)) {
+        if (el.asType() == null || el.asType().getKind() != TypeKind.DECLARED) {
             return null;
         }
         if (!isEEType(info, el.asType())) {

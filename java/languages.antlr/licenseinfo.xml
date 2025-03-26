@@ -21,12 +21,12 @@
 -->
 <licenseinfo>
     <fileset>
-        <file>src/org/antlr/parser/antlr3/ANTLRv3Lexer.g4</file>
-        <file>src/org/antlr/parser/antlr3/ANTLRv3Parser.g4</file>
+        <file>src/org/antlr/parser/antlr3/g4/ANTLRv3Lexer.g4</file>
+        <file>src/org/antlr/parser/antlr3/g4/ANTLRv3Parser.g4</file>
         <file>src/org/antlr/parser/antlr3/LexerAdaptor.java</file>
-        <file>src/org/antlr/parser/antlr4/ANTLRv4Lexer.g4</file>
-        <file>src/org/antlr/parser/antlr4/ANTLRv4Parser.g4</file>
-        <file>src/org/antlr/parser/antlr4/LexBasic.g4</file>
+        <file>src/org/antlr/parser/antlr4/g4/ANTLRv4Lexer.g4</file>
+        <file>src/org/antlr/parser/antlr4/g4/ANTLRv4Parser.g4</file>
+        <file>src/org/antlr/parser/antlr4/g4/LexBasic.g4</file>
         <file>src/org/antlr/parser/antlr4/LexerAdaptor.java</file>
         <license ref="BSD-antlr4-grammar" />
     </fileset>

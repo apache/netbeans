@@ -97,7 +97,7 @@ final class JavadocSearchEngineImpl extends JavadocSearchEngine {
         // run search threads
         IndexSearchThread[] tasksArray;
         synchronized(this) {
-            tasksArray = tasks.toArray(new IndexSearchThread[tasks.size()]);
+            tasksArray = tasks.toArray(new IndexSearchThread[0]);
         }
         for (IndexSearchThread searchThread : tasksArray) {
             if (isStopped) {
@@ -120,7 +120,7 @@ final class JavadocSearchEngineImpl extends JavadocSearchEngine {
             isStopped = true;
             noTask = tasks.isEmpty();
             if (!noTask) {
-                tasksArray = tasks.toArray(new IndexSearchThread[tasks.size()]);
+                tasksArray = tasks.toArray(new IndexSearchThread[0]);
             }
         }
         IndexSearch.LOG.fine("JavadocSearchEngineImpl.stop");

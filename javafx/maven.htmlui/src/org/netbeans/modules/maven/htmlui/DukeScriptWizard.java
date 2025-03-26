@@ -57,7 +57,7 @@ import org.openide.util.Utilities;
 })
 public class DukeScriptWizard {
     @TemplateRegistration(
-            position = 120,
+            position = 955,
             page = "dukeScriptWizard.html",
             content = "dukescript.archetype",
             folder = "Project/Maven2",
@@ -66,7 +66,7 @@ public class DukeScriptWizard {
             description = "description.html"
     )
     
-    @Messages("DukeScriptWizard_displayName=Java Frontend Application")
+    @Messages("DukeScriptWizard_displayName=DukeScript Frontend Application")
     public static WizardData javafxWebViewAppWizard() {
         WizardData data = new WizardData();
         data.init(Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE);

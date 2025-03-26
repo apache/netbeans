@@ -1413,7 +1413,7 @@
                     <Variable start='1857' end='1865' isDollared='true'>
                         <Identifier start='1858' end='1865' name='country'/>
                     </Variable>
-                    <StaticConstantAccess start='1868' end='1902'>
+                    <StaticConstantAccess start='1868' end='1902' isDynamicName='false'>
                         <MethodInvocation start='1868' end='1898' isNullsafe='true'>
                             <FieldAccess start='1868' end='1883' isNullsafe='true'>
                                 <Variable start='1868' end='1876' isDollared='true'>

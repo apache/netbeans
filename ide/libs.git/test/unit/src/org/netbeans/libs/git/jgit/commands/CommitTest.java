@@ -21,6 +21,7 @@ package org.netbeans.libs.git.jgit.commands;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -492,7 +493,7 @@ public class CommitTest extends AbstractGitTestCase {
             DirCacheBuilder builder = cache.builder();
             DirCacheEntry e = new DirCacheEntry(f.getName(), 1);
             e.setLength(0);
-            e.setLastModified(0);
+            e.setLastModified(Instant.ofEpochMilli(0));
             e.setFileMode(FileMode.REGULAR_FILE);
             builder.add(e);
             builder.finish();

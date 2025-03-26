@@ -39,6 +39,7 @@ import org.netbeans.modules.java.lsp.server.explorer.api.FindPathParams;
 import org.netbeans.modules.java.lsp.server.explorer.api.GetResourceParams;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
+import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangesParams;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeOperationParams;
 import org.netbeans.modules.java.lsp.server.explorer.api.ResourceData;
 import org.openide.nodes.Node;
@@ -207,6 +208,19 @@ public class LspTreeViewServiceImpl implements TreeViewService, LanguageClientAw
             }
         }
         return CompletableFuture.completedFuture(null);
+    }
+
+    @Override
+    public CompletableFuture<Long> changes(NodeChangesParams params) {
+        long[] deactivate = params.getDeactivateListeners();
+        if (deactivate != null) {
+            for (long l : deactivate) {
+                treeService.removeNodeChangesListener(l, params.getTypes());
+            }
+            return CompletableFuture.completedFuture(-1l);
+        } else {
+            return CompletableFuture.completedFuture(treeService.addNodeChangesListener(params.getNodeId(), params.getTypes()));
+        }
     }
     
     private static int[] toIntArray(List<Integer> wrappers) {

@@ -25,7 +25,6 @@ class Connection {
 
 
     public ?int $field2;
-
 }
 
 ?>

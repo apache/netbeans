@@ -84,7 +84,7 @@ public abstract class SaasNode extends AbstractNode {
         actions.add(SystemAction.get(DeleteServiceAction.class));
         actions.add(SystemAction.get(RefreshServiceAction.class));
 
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     @Override

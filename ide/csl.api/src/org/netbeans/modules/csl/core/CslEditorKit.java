@@ -186,7 +186,7 @@ public final class CslEditorKit extends NbEditorKit {
         }
 
         return TextAction.augmentList(superActions,
-            actions.toArray(new Action[actions.size()]));
+            actions.toArray(new Action[0]));
     }
 
     // -----------------------------------------------------------------------
@@ -221,6 +221,7 @@ public final class CslEditorKit extends NbEditorKit {
     /**
      * @deprecated use {@link TypedTextInterceptor} instead
      */
+    @Deprecated
     private final class GsfDefaultKeyTypedAction extends ExtDefaultKeyTypedAction {
         private JTextComponent currentTarget;
         private String replacedText = null;
@@ -311,6 +312,7 @@ public final class CslEditorKit extends NbEditorKit {
     /**
      * @deprecated use {@link TypedBreakInterceptor} instead
      */
+    @Deprecated
     private final class GsfInsertBreakAction extends InsertBreakAction {
         static final long serialVersionUID = -1506173310438326380L;
 
@@ -359,6 +361,7 @@ public final class CslEditorKit extends NbEditorKit {
     /**
      * @deprecated use {@link DeletedTextInterceptor} instead
      */
+    @Deprecated
     private final class GsfDeleteCharAction extends ExtDeleteCharAction {
         private JTextComponent currentTarget;
 
@@ -438,7 +441,7 @@ public final class CslEditorKit extends NbEditorKit {
 
                         Object helpID = a.getValue("helpID"); // NOI18N
 
-                        if ((helpID != null) && (helpID instanceof String)) {
+                        if (helpID instanceof String) {
                             item.putClientProperty("HelpID", helpID); // NOI18N
                         }
                     } else {

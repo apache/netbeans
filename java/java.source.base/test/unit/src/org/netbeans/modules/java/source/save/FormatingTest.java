@@ -2205,6 +2205,133 @@ public class FormatingTest extends NbTestCase {
         preferences.putBoolean("indentCasesFromSwitch", true);
 
     }
+
+    public void testSwitchWithTryExpr() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+
+        String content
+                = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public void taragui(int i) {\n"
+                + "        switch (i) {\n"
+                + "        case 0:\n"
+                + "        try {\n"
+                + "        System.out.println(i);\n"
+                + "        } catch (Exception ex) {\n"
+                + "        System.out.println(ex);\n"
+                + "        }\n"
+                + "        break;\n"
+                + "        case 1:\n"
+                + "        try {\n"
+                + "        System.out.println(i);\n"
+                + "        } catch (Exception ex) {\n"
+                + "        System.out.println(ex);\n"
+                + "        } finally {\n"
+                + "        System.out.println(\"FINALLY\");\n"
+                + "        }\n"
+                + "        break;\n"
+                + "        case 2:\n"
+                + "        try (  StringReader r = new StringReader(\"\")  ) {\n"
+                + "        System.out.println(i);\n"
+                + "        } catch (Exception ex) {\n"
+                + "        System.out.println(ex);\n"
+                + "        }\n"
+                + "        break;\n"
+                + "        default:\n"
+                + "        try {\n"
+                + "        System.out.println(\"DEFAULT\");\n"
+                + "        } catch (Exception ex) {\n"
+                + "        System.out.println(ex);\n"
+                + "        }\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+
+        String golden
+                = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public void taragui(int i) {\n"
+                + "        switch (i) {\n"
+                + "            case 0:\n"
+                + "                try {\n"
+                + "                    System.out.println(i);\n"
+                + "                } catch (Exception ex) {\n"
+                + "                    System.out.println(ex);\n"
+                + "                }\n"
+                + "                break;\n"
+                + "            case 1:\n"
+                + "                try {\n"
+                + "                    System.out.println(i);\n"
+                + "                } catch (Exception ex) {\n"
+                + "                    System.out.println(ex);\n"
+                + "                } finally {\n"
+                + "                    System.out.println(\"FINALLY\");\n"
+                + "                }\n"
+                + "                break;\n"
+                + "            case 2:\n"
+                + "                try (StringReader r = new StringReader(\"\")) {\n"
+                + "                    System.out.println(i);\n"
+                + "                } catch (Exception ex) {\n"
+                + "                    System.out.println(ex);\n"
+                + "                }\n"
+                + "                break;\n"
+                + "            default:\n"
+                + "                try {\n"
+                + "                    System.out.println(\"DEFAULT\");\n"
+                + "                } catch (Exception ex) {\n"
+                + "                    System.out.println(ex);\n"
+                + "                }\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+
+        reformat(doc, content, golden);
+
+        content = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public void taragui(int i) {\n"
+                + "        switch (i) {\n"
+                + "        case 0:\n"
+                + "        int x = i*2;\n"
+                + "        try {\n"
+                + "        System.out.println(x);\n"
+                + "        } catch (Exception ex) {\n"
+                + "        System.out.println(ex);\n"
+                + "        }\n"
+                + "        break;\n"
+                + "        default:\n"
+                + "        System.out.println(\"DEFAULT\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+
+        golden = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public void taragui(int i) {\n"
+                + "        switch (i) {\n"
+                + "            case 0:\n"
+                + "                int x = i * 2;\n"
+                + "                try {\n"
+                + "                    System.out.println(x);\n"
+                + "                } catch (Exception ex) {\n"
+                + "                    System.out.println(ex);\n"
+                + "                }\n"
+                + "                break;\n"
+                + "            default:\n"
+                + "                System.out.println(\"DEFAULT\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
+
+    }
+
     public void testRuleSwitch() throws Exception {
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile,
@@ -3081,109 +3208,6 @@ public class FormatingTest extends NbTestCase {
         reformat(doc, content, golden);
     }
 
-    public void testSwitchCaseParenthesizedGuardedPatternAndNull() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
-        } catch (IllegalArgumentException ex) {
-            //OK, no RELEASE_17, skip test
-            return;
-        }
-        testFile = new File(getWorkDir(), "Test.java");
-        TestUtilities.copyStringToFile(testFile, "");
-        FileObject testSourceFO = FileUtil.toFileObject(testFile);
-        DataObject testSourceDO = DataObject.find(testSourceFO);
-        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
-        final Document doc = ec.openDocument();
-        doc.putProperty(Language.class, JavaTokenId.language());
-        String content = "package p;"
-                + "public class Test{    \n"
-                + "void testSwitchCaseParenthesizedGuardedPatternAndNull() {\n"
-                + "        Object str = \"pattern matching switch\";\n"
-                + "        switch (str) {\n"
-                + "case \n"
-                + "        (String       \n"
-                + "        s)       when\n"
-                + "        s.length() == 1\n"
-                + "        , \n"
-                + "        null\n"
-                + "                    \n"
-                + "                    ->\n"
-                + "                System.out.println(\"case with Parenthesized Binding Pattern formatting\");default ->\n"
-                + "                System.out.println(\"default formatting\");\n"
-                + "        }\n"
-                + "    }"
-                + "}";
-
-        String golden
-                = "package p;\n"
-                + "\n"
-                + "public class Test {\n"
-                + "\n"
-                + "    void testSwitchCaseParenthesizedGuardedPatternAndNull() {\n"
-                + "        Object str = \"pattern matching switch\";\n"
-                + "        switch (str) {\n"
-                + "            case (String s) when s.length() == 1, null ->\n"
-                + "                System.out.println(\"case with Parenthesized Binding Pattern formatting\");\n"
-                + "            default ->\n"
-                + "                System.out.println(\"default formatting\");\n"
-                + "        }\n"
-                + "    }\n"
-                + "}\n"
-                + "";
-        reformat(doc, content, golden);
-    }
-   
-    public void testSwitchCaseGuardedPatternNestedParenthesizedPattern() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
-        } catch (IllegalArgumentException ex) {
-            //OK, no RELEASE_17, skip test
-            return;
-        }
-        testFile = new File(getWorkDir(), "Test.java");
-        TestUtilities.copyStringToFile(testFile, "");
-        FileObject testSourceFO = FileUtil.toFileObject(testFile);
-        DataObject testSourceDO = DataObject.find(testSourceFO);
-        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
-        final Document doc = ec.openDocument();
-        doc.putProperty(Language.class, JavaTokenId.language());
-        String content = "package p;"
-                + "public class Test{    \n"
-                + "    void testSwitchCaseGuardedPatternNestedParenthesizedPattern() {\n"
-                + "        Object str = \"pattern matching switch\";\n"
-                + "        switch (str) {\n"
-                + "case (  \n"
-                + "                String s) when s.length() >= 2 && \n"
-                + "                \n"
-                + "                            (s.contains(\"@\") || s.contains(\"!\")) \n"
-                + "                \n"
-                + "                ->\n"
-                + "                String.format(\"Valid string value is %s\", s);default ->\n"
-                + "                System.out.println(\"default formatting\");\n"
-                + "        }\n"
-                + "    }\n"
-                + "}";
-
-        String golden
-                = "package p;\n"
-                + "\n"
-                + "public class Test {\n"
-                + "\n"
-                + "    void testSwitchCaseGuardedPatternNestedParenthesizedPattern() {\n"
-                + "        Object str = \"pattern matching switch\";\n"
-                + "        switch (str) {\n"
-                + "            case (String s) when s.length() >= 2\n"
-                + "            && (s.contains(\"@\") || s.contains(\"!\")) ->\n"
-                + "                String.format(\"Valid string value is %s\", s);\n"
-                + "            default ->\n"
-                + "                System.out.println(\"default formatting\");\n"
-                + "        }\n"
-                + "    }\n"
-                + "}\n"
-                + "";
-        reformat(doc, content, golden);
-    }
-
     public void testSwitchCaseAllPatterns() throws Exception {
         try {
             SourceVersion.valueOf("RELEASE_17"); //NOI18N
@@ -3341,7 +3365,7 @@ public class FormatingTest extends NbTestCase {
                 + "    private void test(Object o) {\n"
                 + "        if (o instanceof Point\n"
                 + "                (int     x, int    \n"
-                + "                y) p) {\n"
+                + "                y) ) {\n"
                 + "            System.out.println(\"Hello\");\n"
                 + "        }\n"
                 + "    }\n"
@@ -3356,7 +3380,7 @@ public class FormatingTest extends NbTestCase {
                 + "public class Test {\n"
                 + "\n"
                 + "    private void test(Object o) {\n"
-                + "        if (o instanceof Point(int x, int y) p) {\n"
+                + "        if (o instanceof Point(int x, int y)) {\n"
                 + "            System.out.println(\"Hello\");\n"
                 + "        }\n"
                 + "    }\n"
@@ -3392,7 +3416,7 @@ public class FormatingTest extends NbTestCase {
                 + "        if (o instanceof\n"
                 + "                Rect\n"
                 + "                (       ColoredPoint      ul,   ColoredPoint\n"
-                + "                        lr)    r) {\n"
+                + "                        lr)  ) {\n"
                 + "            Point p = ul.p();\n"
                 + "            System.out.println(\"Hello\");\n"
                 + "        }\n"
@@ -3420,7 +3444,7 @@ public class FormatingTest extends NbTestCase {
                 + "public class Test {\n"
                 + "\n"
                 + "    private void test(Object o) {\n"
-                + "        if (o instanceof Rect(ColoredPoint ul, ColoredPoint lr) r) {\n"
+                + "        if (o instanceof Rect(ColoredPoint ul, ColoredPoint lr)) {\n"
                 + "            Point p = ul.p();\n"
                 + "            System.out.println(\"Hello\");\n"
                 + "        }\n"
@@ -3459,8 +3483,8 @@ public class FormatingTest extends NbTestCase {
                 + "                (       ColoredPoint(Point   \n"
                 + "                        p, Color \n"
                 + "                                c\n"
-                + "                        )      ul,   ColoredPoint\n"
-                + "                        lr)    r\n"
+                + "                        )      ,   ColoredPoint\n"
+                + "                        lr)    \n"
                 + "                ) {\n"
                 + "            int x = p.x();\n"
                 + "            System.out.println(\"Hello\");\n"
@@ -3489,7 +3513,7 @@ public class FormatingTest extends NbTestCase {
                 + "public class Test {\n"
                 + "\n"
                 + "    private void test(Object o) {\n"
-                + "        if (o instanceof Rect(ColoredPoint(Point p, Color c) ul, ColoredPoint lr) r) {\n"
+                + "        if (o instanceof Rect(ColoredPoint(Point p, Color c), ColoredPoint lr)) {\n"
                 + "            int x = p.x();\n"
                 + "            System.out.println(\"Hello\");\n"
                 + "        }\n"
@@ -3498,7 +3522,44 @@ public class FormatingTest extends NbTestCase {
                 + "\n";
         reformat(doc, content, golden);
     }
-    
+
+    public void testAnnotatedRecord() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getLookup().lookup(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content =
+                  "package test;\n"
+                + "\n"
+                + "/**\n"
+                + " * @author duke\n"
+                + " */\n"
+                + "@Deprecated public record DeprecatedRecord(int a) {}"
+                + "\n";
+
+        String golden =
+                  "package test;\n"
+                + "\n"
+                + "/**\n"
+                + " * @author duke\n"
+                + " */\n"
+                + "@Deprecated\n"
+                + "public record DeprecatedRecord(int a) {\n"
+                + "\n"
+                + "}"
+                + "\n";
+        reformat(doc, content, golden);
+    }
+
     public void testDoWhile() throws Exception {
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile,
@@ -5140,6 +5201,54 @@ public class FormatingTest extends NbTestCase {
                 + "}\n";
         reformat(doc, content, golden);
 
+        content ="""
+                package hierbas.del.litoral;
+
+                public class Test{
+                /**{@return foo bar method} */    String bar() { 
+                        return null; 
+                    }
+                }""";
+        golden ="""
+                package hierbas.del.litoral;
+
+                public class Test {
+
+                    /**
+                     * {@return foo bar method}
+                     */
+                    String bar() {
+                        return null;
+                    }
+                }
+                """;
+        reformat(doc, content, golden);    
+        
+        content ="""
+                 package hierbas.del.litoral;
+                 
+                 public class Test{
+                 /** bar method description {@return foo bar method} */    String bar() { 
+                         return null; 
+                     }
+                 }
+                 """;
+        golden ="""
+                package hierbas.del.litoral;
+                
+                public class Test {
+                
+                    /**
+                     * bar method description
+                     * {@return foo bar method}
+                     */
+                    String bar() {
+                        return null;
+                    }
+                }
+                """;
+        reformat(doc, content, golden);
+        
         content =
                 "package hierbas.del.litoral;\n"
                 + "\n"
@@ -6330,6 +6439,42 @@ public class FormatingTest extends NbTestCase {
                 + "    }\n"
                 + "}\n";
         reformat(doc, content, golden);
+
+        content = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        try ( var  out = System.out) {\n"
+                + "            System.out.println(\"TEST\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        golden = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        try (var out = System.out) {\n"
+                + "            System.out.println(\"TEST\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
+
+        content = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        try ( final  var  out = System.out) {\n"
+                + "            System.out.println(\"TEST\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        golden = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        try (final var out = System.out) {\n"
+                + "            System.out.println(\"TEST\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
     }
 
     public void testSynchronizedBlockAfterFor() throws Exception {
@@ -6538,6 +6683,61 @@ public class FormatingTest extends NbTestCase {
                 + "}\n";
         reformat(doc, content, golden);
     }
+
+    // verify closing '}' position during record formatting
+    public void testRecordClosingBrace7043() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip test
+            return;
+        }
+        sourceLevel = "17";
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        
+        Preferences preferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
+        preferences.putBoolean("spaceWithinMethodDeclParens", true);
+        preferences.putInt("blankLinesAfterClassHeader", 0);
+
+        String content ="""
+                        package test;
+                        record Student(int id,String lastname,String firstname) implements Serializable {
+                        int m(int x){ 
+                        return id+x;
+                        }
+                        } // should stay flush to left margin
+                        """;
+        String golden = """
+                        package test;
+
+                        record Student( int id, String lastname, String firstname ) implements Serializable {
+                            int m( int x ) {
+                                return id + x;
+                            }
+                        } // should stay flush to left margin
+                        """;
+        reformat(doc, content, golden);
+
+        preferences.putBoolean("spaceWithinMethodDeclParens", false);
+        golden =        """
+                        package test;
+
+                        record Student(int id, String lastname, String firstname) implements Serializable {
+                            int m(int x) {
+                                return id + x;
+                            }
+                        } // should stay flush to left margin
+                        """;
+        reformat(doc, content, golden);
+    }
+    
     @ServiceProvider(service = CompilerOptionsQueryImplementation.class, position = 100)
     public static class TestCompilerOptionsQueryImplementation implements CompilerOptionsQueryImplementation {
 

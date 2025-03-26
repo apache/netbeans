@@ -24,6 +24,7 @@ import com.sun.source.util.TreePath;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -35,6 +36,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.prefs.Preferences;
 import javax.lang.model.element.Element;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.source.CompilationController;
@@ -49,11 +51,13 @@ import org.netbeans.api.lsp.CodeAction;
 import org.netbeans.api.lsp.Command;
 import org.netbeans.api.lsp.Diagnostic;
 import org.netbeans.api.lsp.Diagnostic.Builder;
+import org.netbeans.api.lsp.LazyCodeAction;
 import org.netbeans.api.lsp.ResourceOperation;
 import org.netbeans.api.lsp.ResourceOperation.CreateFile;
 import org.netbeans.api.lsp.TextDocumentEdit;
 import org.netbeans.api.lsp.TextEdit;
 import org.netbeans.api.lsp.WorkspaceEdit;
+import org.netbeans.modules.editor.tools.storage.api.ToolPreferences;
 import org.netbeans.modules.java.hints.errors.ModificationResultBasedFix;
 import org.netbeans.modules.java.hints.errors.ImportClass;
 import org.netbeans.modules.java.hints.project.IncompleteClassPath;
@@ -75,6 +79,7 @@ import org.netbeans.spi.lsp.ErrorProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.text.PositionBounds;
 import org.openide.util.Exceptions;
+import org.openide.util.Pair;
 import org.openide.util.Union2;
 
 /**
@@ -83,7 +88,8 @@ import org.openide.util.Union2;
  */
 @MimeRegistration(mimeType="text/x-java", service=ErrorProvider.class)
 public class JavaErrorProvider implements ErrorProvider {
-
+    
+    public static final String HINTS_TOOL_ID = "hints";
     public static Consumer<ErrorProvider.Kind> computeDiagsCallback; //for tests
 
     @Override
@@ -111,7 +117,16 @@ public class JavaErrorProvider implements ErrorProvider {
                                 if (disabled.size() != Severity.values().length) {
                                     AtomicBoolean cancel = new AtomicBoolean();
                                     context.registerCancelCallback(() -> cancel.set(true));
-                                    result.addAll(convert2Diagnostic(context.errorKind(), new HintsInvoker(HintsSettings.getGlobalSettings(), context.getOffset(), cancel).computeHints(cc), ed -> !disabled.contains(ed.getSeverity())));
+                                    HintsSettings settings;
+
+                                    if (context.getHintsConfigFile() != null) {
+                                        Preferences hintSettings = ToolPreferences.from(context.getHintsConfigFile().toURI()).getPreferences(HINTS_TOOL_ID, "text/x-java");
+                                        settings = HintsSettings.createPreferencesBasedHintsSettings(hintSettings, true, null);
+                                    } else {
+                                        settings = HintsSettings.getGlobalSettings();
+                                    }
+                                    result.addAll(convert2Diagnostic(context.errorKind(), new HintsInvoker(settings, context.getOffset(), cancel).computeHints(cc), ed -> !disabled.contains(ed.getSeverity())));
+
                                 }
                                 break;
                         }
@@ -187,17 +202,42 @@ public class JavaErrorProvider implements ErrorProvider {
         }
 
         List<Fix> fixes = sortFixes(lfl.getFixes());
-        List<CodeAction> result = new ArrayList<>();
+
+        List<Pair<Fix, Boolean>> fixesAndSubfixes = new ArrayList<>(); // true if main fix
 
         for (Fix f : fixes) {
+            fixesAndSubfixes.add(Pair.of(f, true));
+            for (Fix subFix : f.getSubfixes()) {
+                fixesAndSubfixes.add(Pair.of(subFix, false));
+            }
+        }
+
+        List<CodeAction> result = new ArrayList<>();
+        boolean printSubFixes = false;
+
+        for (Pair<Fix, Boolean> textAndFix : fixesAndSubfixes) {
+            if (!printSubFixes && !textAndFix.second()) {
+                continue;
+            }
+
+            Fix f = textAndFix.first();
+            int startResultSize = result.size();
+            String text = textAndFix.second() ? f.getText() : " -> " + f.getText();
+
             if (f instanceof IncompleteClassPath.ResolveFix) {
                 // We know that this is a project problem and that the problems reported by ProjectProblemsProvider should be resolved
-                CodeAction action = new CodeAction(f.getText(), new Command(f.getText(), "java.project.resolveProjectProblems"));
+                CodeAction action = new CodeAction(text, new Command(text, "nbls.project.resolveProjectProblems"));
+                result.add(action);
+            }
+            if (f instanceof org.netbeans.modules.java.hints.errors.EnablePreview.ResolveFix) {
+                org.netbeans.modules.java.hints.errors.EnablePreview.ResolveFix rf = (org.netbeans.modules.java.hints.errors.EnablePreview.ResolveFix) f;
+                List<Object> params = rf.getNewSourceLevel() != null ? Arrays.asList(rf.getNewSourceLevel())
+                        : Collections.emptyList();
+                CodeAction action = new CodeAction(text, new Command(text, "nbls.java.project.enable.preview", params));
                 result.add(action);
             }
             if (f instanceof ImportClass.FixImport) {
                 //TODO: FixImport is not a JavaFix, create one. Is there a better solution?
-                String text = f.getText();
                 CharSequence sortText = ((ImportClass.FixImport) f).getSortText();
                 ElementHandle<Element> toImport = ((ImportClass.FixImport) f).getToImport();
                 f = new JavaFix(topLevelHandle[0], sortText != null ? sortText.toString() : null) {
@@ -213,74 +253,80 @@ public class JavaErrorProvider implements ErrorProvider {
                         }
                         WorkingCopy copy = ctx.getWorkingCopy();
                         CompilationUnitTree cut = GeneratorUtilities.get(copy).addImports(
-                            copy.getCompilationUnit(),
-                            Collections.singleton(resolved)
+                                copy.getCompilationUnit(),
+                                Collections.singleton(resolved)
                         );
                         copy.rewrite(copy.getCompilationUnit(), cut);
                     }
                 }.toEditorFix();
             }
             if (f instanceof JavaFixImpl) {
-                try {
-                    JavaFix jf = ((JavaFixImpl) f).jf;
-                    List<TextEdit> edits = modify2TextEdits(js, wc -> {
-                        wc.toPhase(JavaSource.Phase.RESOLVED);
-                        Map<FileObject, byte[]> resourceContentChanges = new HashMap<FileObject, byte[]>();
-                        JavaFixImpl.Accessor.INSTANCE.process(jf, wc, true, resourceContentChanges, /*Ignored in editor:*/new ArrayList<>());
-                    });
-                    TextDocumentEdit te = new TextDocumentEdit(file.toURI().toString(),
-                                                               edits);
-                    CodeAction action = new CodeAction(f.getText(), new WorkspaceEdit(Collections.singletonList(Union2.createFirst(te))));
-                    result.add(action);
-                } catch (IOException ex) {
-                    //TODO: include stack trace:
-                    errorReporter.accept(ex);
-                }
+                JavaFix jf = ((JavaFixImpl) f).jf;
+                CodeAction action = new LazyCodeAction(text, () -> {
+                    try {
+                        List<TextEdit> edits = modify2TextEdits(js, wc -> {
+                            wc.toPhase(JavaSource.Phase.RESOLVED);
+                            Map<FileObject, byte[]> resourceContentChanges = new HashMap<>();
+                            JavaFixImpl.Accessor.INSTANCE.process(jf, wc, true, resourceContentChanges, /*Ignored in editor:*/new ArrayList<>());
+                        });
+                        TextDocumentEdit te = new TextDocumentEdit(file.toURI().toString(), edits);
+                        return new WorkspaceEdit(Collections.singletonList(Union2.createFirst(te)));
+                    } catch (IOException ex) {
+                        //TODO: include stack trace:
+                        errorReporter.accept(ex);
+                        return null;
+                    }
+                });
+                result.add(action);
             }
             if (f instanceof ModificationResultBasedFix) {
-                try {
-                    ModificationResultBasedFix cf = (ModificationResultBasedFix) f;
-                    List<Union2<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
-                    for (ModificationResult changes : cf.getModificationResults()) {
-                        Set<File> newFiles = changes.getNewFiles();
-                        if (newFiles.size() > 1) {
-                            throw new IllegalStateException();
-                        }
-                        String newFilePath = null;
-                        for (File newFile : newFiles) {
-                            newFilePath = newFile.toURI().toString();
-                            documentChanges.add(Union2.createSecond(new CreateFile(newFilePath)));
-                        }
-                        outer: for (FileObject fileObject : changes.getModifiedFileObjects()) {
-                            List<? extends ModificationResult.Difference> diffs = changes.getDifferences(fileObject);
-                            if (diffs != null) {
-                                List<TextEdit> edits = new ArrayList<>();
-                                for (ModificationResult.Difference diff : diffs) {
-                                    String newText = diff.getNewText();
-                                    if (diff.getKind() == ModificationResult.Difference.Kind.CREATE) {
-                                        if (newFilePath != null) {
-                                            documentChanges.add(Union2.createFirst(new TextDocumentEdit(newFilePath,
-                                                    Collections.singletonList(new TextEdit(0, 0,
-                                                            newText != null ? newText : "")))));
+                ModificationResultBasedFix cf = (ModificationResultBasedFix) f;
+                CodeAction codeAction = new LazyCodeAction(text, () -> {
+                    try {
+                        List<Union2<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
+                        for (ModificationResult changes : cf.getModificationResults()) {
+                            Set<File> newFiles = changes.getNewFiles();
+                            if (newFiles.size() > 1) {
+                                throw new IllegalStateException();
+                            }
+                            String newFilePath = null;
+                            for (File newFile : newFiles) {
+                                newFilePath = newFile.toURI().toString();
+                                documentChanges.add(Union2.createSecond(new CreateFile(newFilePath)));
+                            }
+                            outer: for (FileObject fileObject : changes.getModifiedFileObjects()) {
+                                List<? extends ModificationResult.Difference> diffs = changes.getDifferences(fileObject);
+                                if (diffs != null) {
+                                    List<TextEdit> edits = new ArrayList<>();
+                                    for (ModificationResult.Difference diff : diffs) {
+                                        String newText = diff.getNewText();
+                                        if (diff.getKind() == ModificationResult.Difference.Kind.CREATE) {
+                                            if (newFilePath != null) {
+                                                documentChanges.add(Union2.createFirst(new TextDocumentEdit(newFilePath,
+                                                        Collections.singletonList(new TextEdit(0, 0,
+                                                                newText != null ? newText : "")))));
+                                            }
+                                            continue outer;
+                                        } else {
+                                            edits.add(new TextEdit(diff.getStartPosition().getOffset(),
+                                                    diff.getEndPosition().getOffset(),
+                                                    newText != null ? newText : ""));
                                         }
-                                        continue outer;
-                                    } else {
-                                        edits.add(new TextEdit(diff.getStartPosition().getOffset(),
-                                                               diff.getEndPosition().getOffset(),
-                                                               newText != null ? newText : ""));
                                     }
+                                    documentChanges.add(Union2.createFirst(new TextDocumentEdit(fileObject.toURI().toString(), edits))); //XXX: toURI
                                 }
-                                documentChanges.add(Union2.createFirst(new TextDocumentEdit(fileObject.toURI().toString(), edits))); //XXX: toURI
                             }
                         }
+                        return new WorkspaceEdit(documentChanges);
+                    } catch (IOException ex) {
+                        errorReporter.accept(ex);
+                        return null;
                     }
-                    if (!documentChanges.isEmpty()) {
-                        CodeAction codeAction = new CodeAction(f.getText(), new WorkspaceEdit(documentChanges));
-                        result.add(codeAction);
-                    }
-                } catch (IOException ex) {
-                    errorReporter.accept(ex);
-                }
+                });
+                result.add(codeAction);
+            }
+            if (textAndFix.second()) {
+                printSubFixes = startResultSize != result.size();
             }
         }
 
@@ -291,7 +337,7 @@ public class JavaErrorProvider implements ErrorProvider {
     private static List<Fix> sortFixes(Collection<Fix> fixes) {
         List<Fix> result = new ArrayList<Fix>(fixes);
 
-        Collections.sort(result, new FixComparator());
+        result.sort(new FixComparator());
 
         return result;
     }
@@ -346,8 +392,8 @@ public class JavaErrorProvider implements ErrorProvider {
         for (ModificationResult.Difference diff : diffs) {
             String newText = diff.getNewText();
             edits.add(new TextEdit(diff.getStartPosition().getOffset(),
-                                   diff.getEndPosition().getOffset(),
-                                   newText != null ? newText : ""));
+                    diff.getEndPosition().getOffset(),
+                    newText != null ? newText : ""));
         }
         return edits;
     }

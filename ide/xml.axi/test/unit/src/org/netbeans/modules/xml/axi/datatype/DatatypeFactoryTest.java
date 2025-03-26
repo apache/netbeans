@@ -40,7 +40,7 @@ public class DatatypeFactoryTest extends AbstractTestCase {
     public static final String TEST_XSD         = "resources/types.xsd";
     public static final String GLOBAL_ELEMENT   = "purchaseOrder";
     
-    private List<Attribute> attList;;
+    private List<Attribute> attList;
     
     public DatatypeFactoryTest(String testName) {
         super(testName, TEST_XSD, GLOBAL_ELEMENT);

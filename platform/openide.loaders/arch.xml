@@ -56,7 +56,7 @@
     A lot of usecases is described <a href="@TOP@/org/openide/loaders/doc-files/api.html" >in the javadoc</a>. Here 
     is the list of some faqs:
   
-    <usecase id="script" name="Using Scripting and Templating Languages" >
+    <usecase id="loaders-script" name="Using Scripting and Templating Languages" >
         <p>
         Often many people require ability to create a "clever" template - e.g.
         write piece of simple text and at the time of its 
@@ -64,7 +64,7 @@
             processing
         </a>
         do some advanced changes to it using either 
-        <a name="script">scripting or templating</a> languages.
+        <a id="loaders-script">scripting or templating</a> languages.
         </p>
         
         <p>
@@ -497,7 +497,7 @@ for more information about this.
 <!-- XMLDataObject: -->
     <api type="import" group="property" name="org.xml.sax.driver" category="private" > 
         This is a standard way to find a class of a SAX2 driver. See
-        <a href="http://www.saxproject.org/"> SAX2 documentation </a>
+        <a href="http://www.saxproject.org"> SAX2 documentation </a>
     </api>
 
     <api type="import" group="property" name="netbeans.profile.memory" category="private" > 
@@ -539,7 +539,7 @@ for more information about this.
         <a href="@TOP@/org/openide/loaders/DataObject.html">DataObject</a>.createFromTemplate,
         it passes as argument all its <a href="@org-openide-dialogs@/org/openide/WizardDescriptor.html#getProperties--">properties</a>
         to it with prefix <code>wizard.</code>. That way they are available to
-        underlaying <a href="@TOP@/architecture-summary.html#script">scripting and templating
+        underlaying <a href="@TOP@/architecture-summary.html#loaders-script">scripting and templating
         engines</a>.
     </api>
 
@@ -850,17 +850,17 @@ about used templates.
         The main menu of the application is composed by reading <code>Menu/</code>
         folder in the layer. A sub folder is treated as a sub menu. 
         Instances of individual files (usually <code>.instance</code> 
-        or <code>.shadow</code>) may then represent <a href="@JDK@/javax/swing/Action.html">Action</a>
-        or <a href="@JDK@/javax/swing/JMenuItem.html">JMenuItem</a>
-        or <a href="@JDK@/javax/swing/JSeparator.html">JSeparator</a>.
+        or <code>.shadow</code>) may then represent <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/Action.html">Action</a>
+        or <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JMenuItem.html">JMenuItem</a>
+        or <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JSeparator.html">JSeparator</a>.
     </p>
     <p>
         Since version 7.44 one can attach <code>property-prefix</code> attribute
         to every folder. Then all the file attributes are scanned and if some 
         of them start with the specified prefix they are placed a 
-        <a href="@JDK@/javax/swing/JComponent.html#putClientProperty-java.lang.Object-java.lang.Object-">
+        <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JComponent.html#putClientProperty-java.lang.Object-java.lang.Object-">
         client
-        properties</a> on the <a href="@JDK@/javax/swing/JMenu.html">JMenu</a>
+        properties</a> on the <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JMenu.html">JMenu</a>
         instance (after stripping the prefix off).
     </p>
     </api><p></p>

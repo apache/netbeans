@@ -1,15 +1,30 @@
-    abstract public function __construct(private ?int $incorrect1 = 1);
+    abstract public function __construct(private ?int $incorrect1 = 1); // error1
                                          ----------------------------
 HINT:Can't declare a promoted property in an abstract constructor.
-            private $incorrect1,
+            private $incorrect1, // error2
             -------------------
 HINT:Can't declare a promoted property in an abstract constructor.
-            private ?int $incorrect2 = 1
+            private ?int $incorrect2 = 1 // error3
             ----------------------------
 HINT:Can't declare a promoted property in an abstract constructor.
-    public function __construct(public int|string $incorrect1);
+    public function __construct(public int|string $incorrect1); // error4
                                 -----------------------------
 HINT:Can't declare a promoted property in an abstract constructor.
-    public function __construct(int $test, protected $incorrect1);
+    public function __construct(int $test, protected $incorrect1); // error5
                                            ---------------------
+HINT:Can't declare a promoted property in an abstract constructor.
+    abstract public function __construct(private(set) ?int $incorrect1 = 1); // error6
+                                         ---------------------------------
+HINT:Can't declare a promoted property in an abstract constructor.
+            private(set) $incorrect1, // error7
+            ------------------------
+HINT:Can't declare a promoted property in an abstract constructor.
+            private(set) ?int $incorrect2 = 1 // error8
+            ---------------------------------
+HINT:Can't declare a promoted property in an abstract constructor.
+    public function __construct(public(set) int|string $incorrect1); // error9
+                                ----------------------------------
+HINT:Can't declare a promoted property in an abstract constructor.
+    public function __construct(int $test, protected(set) $incorrect1); // error10
+                                           --------------------------
 HINT:Can't declare a promoted property in an abstract constructor.

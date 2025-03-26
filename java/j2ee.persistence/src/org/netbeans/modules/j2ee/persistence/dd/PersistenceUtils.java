@@ -36,7 +36,6 @@ import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.libraries.Library;
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModel;
-import org.netbeans.modules.j2ee.metadata.model.api.MetadataModelAction;
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModelException;
 import org.netbeans.modules.j2ee.persistence.api.EntityClassScope;
 import org.netbeans.modules.j2ee.persistence.api.PersistenceScope;
@@ -73,16 +72,7 @@ public class PersistenceUtils {
         MetadataModel<EntityMappingsMetadata> model = entityClassScope.getEntityMappingsModel(true);
         EntityMappings mappings = null;
         try {
-            mappings = model.runReadAction(
-                    new MetadataModelAction<EntityMappingsMetadata, EntityMappings>(){
-
-                        @Override
-                        public EntityMappings run(EntityMappingsMetadata metadata) throws Exception {
-                            return metadata.getRoot();
-                        }
-            
-                    }
-            );
+            mappings = model.runReadAction( (EntityMappingsMetadata metadata) -> metadata.getRoot() );
         } catch (MetadataModelException ex) {
             Exceptions.printStackTrace(ex);
         } catch (IOException ex) {
@@ -115,7 +105,7 @@ public class PersistenceUtils {
             return new PersistenceUnit[0];
         }
         
-        List<PersistenceUnit> result = new ArrayList<PersistenceUnit>();
+        List<PersistenceUnit> result = new ArrayList<>();
         ClassPath cp = ClassPath.getClassPath(sourceFile, ClassPath.SOURCE);
         for (PersistenceScope persistenceScope : getPersistenceScopes(project, cp != null ? cp.findOwnerRoot(sourceFile) : null)) {
             Persistence persistence = null;
@@ -129,7 +119,7 @@ public class PersistenceUtils {
             }
         }
         
-        return result.toArray(new PersistenceUnit[result.size()]);
+        return result.toArray(new PersistenceUnit[0]);
     }
     
     /**
@@ -223,7 +213,15 @@ public class PersistenceUtils {
         SourceGroup firstGroup=groups[0];
         FileObject fo=firstGroup.getRootFolder();
         ClassPath compile=ClassPath.getClassPath(fo, ClassPath.COMPILE);
-        if(compile.findResource("javax/persistence/criteria/CriteriaUpdate.class")!=null) {
+        if(compile.findResource("jakarta/persistence/criteria/CriteriaSelect.class")!=null) {
+            version=Persistence.VERSION_3_2;
+        } else if(compile.findResource("jakarta/persistence/spi/TransformerException.class")!=null) {
+            version=Persistence.VERSION_3_1;
+        } else if(compile.findResource("jakarta/persistence/Entity.class")!=null) {
+            version=Persistence.VERSION_3_0;
+        } else if(compile.findResource("javax/persistence/TableGenerators.class")!=null) {
+            version=Persistence.VERSION_2_2;
+        } else if(compile.findResource("javax/persistence/criteria/CriteriaUpdate.class")!=null) {
             version=Persistence.VERSION_2_1;
         } else if(compile.findResource("javax/persistence/criteria/JoinType.class")!=null) {
             version=Persistence.VERSION_2_0;
@@ -235,9 +233,17 @@ public class PersistenceUtils {
 
     public static String getJPAVersion(Library lib) {
         List<URL> roots=lib.getContent("classpath");
-        ClassPath cp = ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
+        ClassPath cp = ClassPathSupport.createClassPath(roots.toArray(new URL[0]));
         String version=null;
-        if(cp.findResource("javax/persistence/criteria/CriteriaUpdate.class")!=null) {
+        if(cp.findResource("jakarta/persistence/criteria/CriteriaSelect.class")!=null) {
+            version=Persistence.VERSION_3_2;
+        } else if(cp.findResource("jakarta/persistence/spi/TransformerException.class")!=null) {
+            version=Persistence.VERSION_3_1;
+        } else if(cp.findResource("jakarta/persistence/Entity.class")!=null) {
+            version=Persistence.VERSION_3_0;
+        } else if(cp.findResource("javax/persistence/TableGenerators.class")!=null) {
+            version=Persistence.VERSION_2_2;
+        } else if(cp.findResource("javax/persistence/criteria/CriteriaUpdate.class")!=null) {
             version=Persistence.VERSION_2_1;
         } else if(cp.findResource("javax/persistence/criteria/JoinType.class")!=null) {
             version=Persistence.VERSION_2_0;

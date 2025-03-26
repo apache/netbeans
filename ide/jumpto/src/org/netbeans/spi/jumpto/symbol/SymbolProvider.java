@@ -63,7 +63,7 @@ public interface SymbolProvider {
      * up calling {@link #cancel} on the same symbol provider during the operation, in which
      * case the method can return incomplete results. If there is a "current project",
      * the Go To Symbol infrastructure will perform the search in two passes; first it
-     * will call {@link #getSymbolNames} with the current project, which should be a reasonably
+     * will call {@link SymbolDescriptor#getSymbolName()} with the current project, which should be a reasonably
      * fast search, and display those symbols first. It will then call the method again
      * with a null project, which should return all symbols.
      * <p>
@@ -184,7 +184,7 @@ public interface SymbolProvider {
     }
 
     /**
-     * Represents a collection of <tt>SymbolDescriptor</tt>s that match
+     * Represents a collection of <code>SymbolDescriptor</code>s that match
      * the given search criteria. Moreover, it can contain message
      * for the user, such as an incomplete search result.
      *
@@ -242,7 +242,7 @@ public interface SymbolProvider {
         /**
           * Adds list of result descriptors.
           *
-          * @param  symbolDescriptor  symbol descriptor to be added to result
+          * @param  symbolDescriptors  symbol descriptor to be added to result
           */
         @SuppressWarnings("unchecked")
         public void addResult(List<? extends SymbolDescriptor> symbolDescriptors) {

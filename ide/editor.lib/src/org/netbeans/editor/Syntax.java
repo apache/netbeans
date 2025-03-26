@@ -22,30 +22,30 @@ package org.netbeans.editor;
 /**
 * Lexical analyzer that works on a given text buffer. It allows
 * to sequentially parse a given character buffer by calling
-* <tt>nextToken()</tt> that returns the token-ids.
+* <code>nextToken()</code> that returns the token-ids.
 *
-* After the token is found by calling the <tt>nextToken</tt> method,
-* the <tt>getTokenOffset()</tt> method can be used
+* After the token is found by calling the <code>nextToken</code> method,
+* the <code>getTokenOffset()</code> method can be used
 * to get the starting offset of the current
-* token in the buffer. The <tt>getTokenLength()</tt> gives the length
+* token in the buffer. The <code>getTokenLength()</code> gives the length
 * of the current token.
 *
-* The heart of the analyzer is the <tt>parseToken()</tt> method which
+* The heart of the analyzer is the <code>parseToken()</code> method which
 * parses the text and returns the token-id of the last token found.
-* The <tt>parseToken()</tt> method is called from the <tt>nextToken()</tt>.
-* It operates with two important variables. The <tt>offset</tt>
+* The <code>parseToken()</code> method is called from the <code>nextToken()</code>.
+* It operates with two important variables. The <code>offset</code>
 * variable identifies the currently scanned character in the buffer.
-* The <tt>tokenOffset</tt> is the begining of the current token.
-* The <tt>state</tt> variable that identifies the current internal
+* The <code>tokenOffset</code> is the begining of the current token.
+* The <code>state</code> variable that identifies the current internal
 * state of the analyzer is set accordingly when the characters are parsed.
-* If the <tt>parseToken()</tt> recognizes a token, it returns its ID
-* and the <tt>tokenOffset</tt> is its begining in the buffer and
-* <tt>offset - tokenOffset</tt> is its length. When the token is processed
-* the value of <tt>tokenOffset</tt> is set to be the same as current
-* value of the <tt>offset</tt> and the parsing continues.
+* If the <code>parseToken()</code> recognizes a token, it returns its ID
+* and the <code>tokenOffset</code> is its begining in the buffer and
+* <code>offset - tokenOffset</code> is its length. When the token is processed
+* the value of <code>tokenOffset</code> is set to be the same as current
+* value of the <code>offset</code> and the parsing continues.
 *
 * Internal states are the integer constants used internally by analyzer.
-* They are assigned to the <tt>state</tt> variable to express
+* They are assigned to the <code>state</code> variable to express
 * that the analyzer has moved from one state to another.
 * They are usually numbered starting from zero but they don't
 * have to. The only reserved value is -1 which is reserved
@@ -56,19 +56,19 @@ package org.netbeans.editor;
 * to restore the parsing from some particular state instead of
 * parsing from the begining of the buffer. This feature is very
 * useful if there are the modifications performed in the document.
-* The info is stored in the <tt>StateInfo</tt> interface
-* with the <tt>BaseStateInfo</tt> as the basic implementation.
+* The info is stored in the <code>StateInfo</code> interface
+* with the <code>BaseStateInfo</code> as the basic implementation.
 * It enables to get and set the two important values
 * from the persistent point of view.
-* The first one is the value of the <tt>state</tt> variable.
-* The other one is the difference <tt>offset - tokenOffset</tt>
+* The first one is the value of the <code>state</code> variable.
+* The other one is the difference <code>offset - tokenOffset</code>
 * which is called pre-scan. The particular analyzer can define
 * additional values important for the persistent storage.
-* The <tt>createStateInfo()</tt> can be overriden to create
-* custom state-info and <tt>loadState()</tt> and <tt>storeState()</tt>
+* The <code>createStateInfo()</code> can be overriden to create
+* custom state-info and <code>loadState()</code> and <code>storeState()</code>
 * can be overriden to get/set the additional values.
 *
-* The <tt>load()</tt> method sets the buffer to be parsed.
+* The <code>load()</code> method sets the buffer to be parsed.
 * There is a special parameter in the load() method called position
 * that allows a relation of the character buffer passed to the load()
 * method and the position of the buffer's data in the document.
@@ -95,7 +95,7 @@ public class Syntax {
 
 
     /** Internal state of the lexical analyzer. At the begining
-    * it's set to INIT value but it is changed by <tt>parseToken()</tt>
+    * it's set to INIT value but it is changed by <code>parseToken()</code>
     * as the characters are processed one by one.
     */
     protected int state = INIT;
@@ -113,7 +113,7 @@ public class Syntax {
     protected int tokenLength;
 
     /** Path from which the found token-id comes from.
-    * The <tt>TokenContext.getContextPath()</tt> can be used
+    * The <code>TokenContext.getContextPath()</code> can be used
     * to get the path. If the lexical analyzer doesn't use
     * any children token-contexts it can assign
     * the path in the constructor.
@@ -223,12 +223,12 @@ public class Syntax {
     *   If there is no relation to the document data, the stopPosition parameter
     *   must be filled with -1 which means an invalid value.
     *   The stop-position is passed (instead of start-position) because it doesn't
-    *   change through the analyzer operation. It corresponds to the <tt>stopOffset</tt>
+    *   change through the analyzer operation. It corresponds to the <code>stopOffset</code>
     *   that also doesn't change through the analyzer operation so any
     *   buffer-offset can be transferred to position by computing
-    *   <tt>stopPosition + buffer-offset - stopOffset</tt>
+    *   <code>stopPosition + buffer-offset - stopOffset</code>
     *   where stopOffset is the instance variable that is assigned
-    *   to <tt>offset + len</tt> in the body of relocate().
+    *   to <code>offset + len</code> in the body of relocate().
     */
     public void load(StateInfo stateInfo, char buffer[], int offset, int len,
                      boolean lastBuffer, int stopPosition) {
@@ -270,12 +270,12 @@ public class Syntax {
     *   If there is no relation to the document data, the stopPosition parameter
     *   must be filled with -1 which means an invalid value.
     *   The stop-position is passed (instead of start-position) because it doesn't
-    *   change through the analyzer operation. It corresponds to the <tt>stopOffset</tt>
+    *   change through the analyzer operation. It corresponds to the <code>stopOffset</code>
     *   that also doesn't change through the analyzer operation so any
     *   buffer-offset can be transferred to position by computing
-    *   <tt>stopPosition + buffer-offset - stopOffset</tt>
+    *   <code>stopPosition + buffer-offset - stopOffset</code>
     *   where stopOffset is the instance variable that is assigned
-    *   to <tt>offset + len</tt> in the body of relocate().
+    *   to <code>offset + len</code> in the body of relocate().
     */
     public void relocate(char buffer[], int offset, int len,
     boolean lastBuffer, int stopPosition) {
@@ -353,7 +353,7 @@ public class Syntax {
     * are already initialized when this method is called. This method
     * must get the state from the mark and set it to the analyzer. Then
     * it must decrease tokenOffset by the preScan stored in the mark state.
-    * @param markState mark state to be loaded into syntax. It must be non-null value.
+    * @param stateInfo mark state to be loaded into syntax. It must be non-null value.
     */
     public void loadState(StateInfo stateInfo) {
         state = stateInfo.getState();

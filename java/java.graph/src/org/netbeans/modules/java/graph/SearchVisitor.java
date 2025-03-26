@@ -44,7 +44,7 @@ class SearchVisitor implements GraphNodeVisitor {
         if (root == null) {
             root = node;
         }
-        if (scene.isIncluded(node)) {
+        if (!path.contains(node) && scene.isIncluded(node)) {
             GraphNode grNode = scene.getGraphNodeRepresentant(node);
             if (grNode == null) {
                 return false;
@@ -59,7 +59,7 @@ class SearchVisitor implements GraphNodeVisitor {
     }
 
     @Override public boolean endVisit(GraphNodeImplementation node) {
-        if (scene.isIncluded(node)) {
+        if (path.peek() == node) {
             path.pop();
         }
         return true;

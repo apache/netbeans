@@ -241,45 +241,40 @@ public class Utils {
         // call ejb should not make this check, all should be handled in EnterpriseReferenceContainer
         boolean isCallerFreeform = enterpriseProject.getClass().getName().equals("org.netbeans.modules.ant.freeform.FreeformProject");
 
-        boolean isCallerEE6WebProject = isEE6WebProject(enterpriseProject);
-        boolean isCallerEE9WebProject = isEE9WebProject(enterpriseProject);
+        final boolean isEjb31LiteSupported = isEjb31LiteSupported(enterpriseProject);
+        final boolean isEjb40LiteSupported = isEjb40LiteSupported(enterpriseProject);
 
         List<Project> filteredResults = new ArrayList<Project>(allProjects.length);
         for (int i = 0; i < allProjects.length; i++) {
             boolean isEJBModule = false;
             J2eeModuleProvider j2eeModuleProvider = allProjects[i].getLookup().lookup(J2eeModuleProvider.class);
             if (j2eeModuleProvider != null){
-                    Type type = j2eeModuleProvider.getJ2eeModule().getType();
-                    EjbJar[] ejbJars = EjbJar.getEjbJars(allProjects[i]);
-                    Profile profile = ejbJars.length > 0 ? ejbJars[0].getJ2eeProfile() : null;
+                Type type = j2eeModuleProvider.getJ2eeModule().getType();
+                EjbJar[] ejbJars = EjbJar.getEjbJars(allProjects[i]);
+                Profile profile = ejbJars.length > 0 ? ejbJars[0].getJ2eeProfile() : null;
 
-                    if (J2eeModule.Type.EJB.equals(type) || (J2eeModule.Type.WAR.equals(type) &&
-                                (Profile.JAVA_EE_6_WEB.equals(profile) || Profile.JAVA_EE_6_FULL.equals(profile) ||
-                                Profile.JAVA_EE_7_WEB.equals(profile) || Profile.JAVA_EE_7_FULL.equals(profile) ||
-                                Profile.JAVA_EE_8_WEB.equals(profile) || Profile.JAVA_EE_8_FULL.equals(profile) ||
-                                Profile.JAKARTA_EE_8_WEB.equals(profile) || Profile.JAKARTA_EE_8_FULL.equals(profile) ||
-                                Profile.JAKARTA_EE_9_WEB.equals(profile) || Profile.JAKARTA_EE_9_FULL.equals(profile) ||
-                                Profile.JAKARTA_EE_9_1_WEB.equals(profile) || Profile.JAKARTA_EE_9_1_FULL.equals(profile)))){
-                        isEJBModule = true;
-                    }
+                if (J2eeModule.Type.EJB.equals(type) || 
+                        (J2eeModule.Type.WAR.equals(type) && profile.isAtLeast(Profile.JAVA_EE_6_WEB))) {
+                    isEJBModule = true;
+                }
             }
 
             // If the caller project is NOT a freeform project, include all EJB modules
             // If the caller project is a freeform project, include caller itself only
             // If the caller project is a Java EE 6 web project, include itself in the list
             if ((isEJBModule && !isCallerFreeform) ||
-                    (enterpriseProject.equals(allProjects[i]) && (isCallerFreeform || isCallerEE6WebProject || isCallerEE9WebProject) ) ) {
+                    (enterpriseProject.equals(allProjects[i]) && (isCallerFreeform || isEjb31LiteSupported || isEjb40LiteSupported) ) ) {
                 filteredResults.add(allProjects[i]);
             }
         }
         return filteredResults.toArray(new Project[0]);
     }
 
-    public static boolean isEE6WebProject(Project enterpriseProject) {
+    public static boolean isEjb31LiteSupported(Project enterpriseProject) {
         return J2eeProjectCapabilities.forProject(enterpriseProject).isEjb31LiteSupported();
     }
     
-    public static boolean isEE9WebProject(Project enterpriseProject) {
+    public static boolean isEjb40LiteSupported(Project enterpriseProject) {
         return J2eeProjectCapabilities.forProject(enterpriseProject).isEjb40LiteSupported();
     }
 

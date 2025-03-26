@@ -1275,7 +1275,7 @@ public final class LayoutInterval implements LayoutConstants {
 
     static void prepareDiagnostics() {
         cleanDiagnostics();
-        removedIntervalsMap = new HashMap();
+        removedIntervalsMap = new HashMap<>();
     }
 
     static void cleanDiagnostics() {

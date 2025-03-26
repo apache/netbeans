@@ -21,10 +21,10 @@ package org.netbeans.modules.java.mx.project;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import org.junit.Assume;
@@ -39,7 +39,7 @@ public final class CoreSuiteTest {
 
     public static void main(String... args) throws Exception {
         // mx version "5.279.0"
-        URL u = new URL("https://raw.githubusercontent.com/graalvm/mx/dcfad27487a5d13d406febc92976cf3c026e50dd/mx.mx/suite.py");
+        URL u = new URI("https://raw.githubusercontent.com/graalvm/mx/dcfad27487a5d13d406febc92976cf3c026e50dd/mx.mx/suite.py").toURL();
         assert u != null : "mx suite found";
         MxSuite mxSuite = MxSuite.parse(u);
 
@@ -114,10 +114,8 @@ public final class CoreSuiteTest {
     }
 
     private static Iterable<Method> sortMethods(Method[] methods) {
-        List<Method> arr = new ArrayList<Method>(Arrays.asList(methods));
-        Collections.sort(arr, (o1, o2) -> {
-            return o1.getName().compareTo(o2.getName());
-        });
+        List<Method> arr = new ArrayList<>(Arrays.asList(methods));
+        arr.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
         return arr;
     }
 }

@@ -324,7 +324,7 @@ public abstract class QueryParameter {
             return ret;
         }
         public void setParameterValues(List<ParameterValue> values) {
-            setParameterValues(values.toArray(new ParameterValue[values.size()]));
+            setParameterValues(values.toArray(new ParameterValue[0]));
         }
         public void setParameterValues(ParameterValue[] values) {
             DefaultListModel<ParameterValue> m = new DefaultListModel<>();
@@ -345,7 +345,7 @@ public abstract class QueryParameter {
                 // need case sensitive compare
                 for(int j = 0; j < model.getSize(); j++) {
                     ParameterValue pv = (ParameterValue) model.getElementAt(j);
-                    if(pv.getValue().toLowerCase().equals(values[i].getValue().toLowerCase())) {
+                    if(pv.getValue().equalsIgnoreCase(values[i].getValue())) {
                         selectionList.add(j);
                         break;
                     }

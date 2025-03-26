@@ -129,7 +129,7 @@ public class SpockMethodParamCompletion  extends BaseCompletion {
                 AnnotationNode unroll = null;
                 
                 ParserResult pr = request.getParserResult();
-                if(pr != null && pr instanceof GroovyParserResult) {
+                if(pr instanceof GroovyParserResult) {
                     GroovyParserResult gpr = (GroovyParserResult)request.getParserResult();
                     ClassNode unrollCN = gpr.resolveClassName(UNROLL_CLASS);
                     if (unrollCN != null) {

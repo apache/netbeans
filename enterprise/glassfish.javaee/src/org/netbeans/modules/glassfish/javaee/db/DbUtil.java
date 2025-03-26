@@ -81,7 +81,7 @@ public class DbUtil {
         String password = poolValues.get(__Password);
         String user = poolValues.get(__User);
         
-        if (driverClassName.indexOf("pointbase") != -1) {
+        if (driverClassName != null && driverClassName.indexOf("pointbase") != -1) {
             url = poolValues.get(__DatabaseName);
         }
         // Search for server name key should be case insensitive.

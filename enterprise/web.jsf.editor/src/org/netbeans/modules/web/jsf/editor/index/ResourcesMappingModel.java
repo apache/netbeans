@@ -174,10 +174,10 @@ public class ResourcesMappingModel extends JsfPageModel {
 
         private Collection<Resource> getResourcesDefinedByJsfComponents(HtmlParserResult result) {
             final List<Resource> resources = new ArrayList<>();
-            Node node = result.root(DefaultLibraryInfo.HTML.getNamespace());
-            if (node == null || node.children().isEmpty()) {
-                node = result.root(DefaultLibraryInfo.HTML.getLegacyNamespace());
-            }
+            Node node = DefaultLibraryInfo.HTML.getValidNamespaces().stream()
+                    .map(result::root)
+                    .findFirst()
+                    .orElse(null);
             if (node == null || node.children().isEmpty()) {
                 return resources; //no HTML Basic component in the page
             }

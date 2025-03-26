@@ -32,6 +32,7 @@ import javax.swing.text.Position.Bias;
 * @version 1.00
 * @deprecated Use {@link Position} instead.
 */
+@Deprecated
 public class Mark {
 
     private static final MarkComparator MARK_COMPARATOR = new MarkComparator();
@@ -43,8 +44,8 @@ public class Mark {
     private Position pos;
     
     /** Bias of the mark. It is either
-     * {@link javax.swing.text.Position.Bias.Forward}
-     * or {@link javax.swing.text.Position.Bias.Backward}
+     * {@link javax.swing.text.Position.Bias#Forward}
+     * or {@link javax.swing.text.Position.Bias#Backward}
      */
     private Position.Bias bias;
     
@@ -61,7 +62,7 @@ public class Mark {
     * @param backwardBias whether the inserts performed right at the position
     *   of this mark will go after this mark i.e. this mark will not move
     *   forward when inserting right at its position. This flag corresponds
-    *   to <tt>Position.Bias.Backward</tt>.
+    *   to <code>Position.Bias.Backward</code>.
     */
     public Mark(boolean backwardBias) {
         this(backwardBias ? Position.Bias.Backward : Position.Bias.Forward);
@@ -161,8 +162,8 @@ public class Mark {
     }
     
     /** @return the bias of this mark. It will be either
-     * {@link javax.swing.text.Position.Bias.Forward}
-     * or {@link javax.swing.text.Position.Bias.Backward}.
+     * {@link javax.swing.text.Position.Bias#Forward}
+     * or {@link javax.swing.text.Position.Bias#Backward}.
      */
     public final Position.Bias getBias() {
         return bias;

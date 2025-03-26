@@ -23,7 +23,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.EventQueue;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
@@ -32,7 +31,6 @@ import java.util.prefs.Preferences;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -82,8 +80,8 @@ public class GeneralOptionsPanel extends JPanel implements ActionListener {
             nbErrorForeground = new Color(255, 0, 0);
         }
         errorLabel.setForeground(nbErrorForeground);
-        Image img = ImageUtilities.loadImage("org/netbeans/core/ui/resources/error.gif"); //NOI18N
-        errorLabel.setIcon(new ImageIcon(img));
+        Icon icon = ImageUtilities.loadIcon("org/netbeans/core/ui/resources/error.gif"); //NOI18N
+        errorLabel.setIcon(icon);
         errorLabel.setVisible(false);
         
         loc (lWebBrowser, "Web_Browser");
@@ -212,9 +210,11 @@ public class GeneralOptionsPanel extends JPanel implements ActionListener {
         org.openide.awt.Mnemonics.setLocalizedText(lProxyHost, org.openide.util.NbBundle.getMessage(GeneralOptionsPanel.class, "CTL_Proxy_Host", new Object[] {})); // NOI18N
 
         tfProxyHost.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 tfProxyHostFocusGained(evt);
             }
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 tfProxyHostFocusLost(evt);
             }
@@ -225,9 +225,11 @@ public class GeneralOptionsPanel extends JPanel implements ActionListener {
 
         tfProxyPort.setColumns(4);
         tfProxyPort.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 tfProxyPortFocusGained(evt);
             }
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 tfProxyPortFocusLost(evt);
             }
@@ -253,9 +255,11 @@ public class GeneralOptionsPanel extends JPanel implements ActionListener {
 
         org.openide.awt.Mnemonics.setLocalizedText(lblLearnMore, org.openide.util.NbBundle.getMessage(GeneralOptionsPanel.class, "CTL_Learn_More")); // NOI18N
         lblLearnMore.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 lblLearnMoreMouseEntered(evt);
             }
+            @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 lblLearnMoreMousePressed(evt);
             }

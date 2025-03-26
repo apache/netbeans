@@ -1,0 +1,6 @@
+Code completion result for source line:
+new Example()?->returnThis()?->public|Method(); // test
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicMethod()                  [PUBLIC]   Example
+METHOD     publicStaticMethod()            [STATIC]   Example
+VARIABLE   int publicField                 [PUBLIC]   Example

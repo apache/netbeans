@@ -20,32 +20,14 @@
 package org.netbeans.modules.maven.execute;
 
 import java.io.IOException;
-import org.netbeans.modules.maven.api.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.function.Function;
 import static junit.framework.TestCase.assertEquals;
-import org.apache.maven.project.MavenProject;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.maven.api.ModelUtils.Descriptor;
-import org.netbeans.modules.maven.api.ModelUtils.LibraryDescriptor;
 import org.netbeans.modules.maven.api.customizer.ModelHandle2;
 import org.netbeans.modules.maven.configurations.M2ConfigProvider;
-import org.netbeans.modules.maven.configurations.M2Configuration;
 import org.netbeans.modules.maven.execute.ModelRunConfig;
 import org.netbeans.modules.maven.execute.model.NetbeansActionMapping;
-import org.netbeans.modules.maven.model.ModelOperation;
-import org.netbeans.modules.maven.model.Utilities;
-import org.netbeans.modules.maven.model.pom.POMModel;
-import org.netbeans.modules.maven.model.pom.Repository;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.test.TestFileUtils;
@@ -260,7 +242,7 @@ public class ModelRunConfigTest extends NbTestCase {
                 + "            <plugin>\n"
                 + "                <groupId>org.codehaus.mojo</groupId>\n"
                 + "                <artifactId>exec-maven-plugin</artifactId>\n"
-                + "                <version>3.0.0</version>\n"
+                + "                <version>3.1.0</version>\n"
                 + "                <configuration>\n"
                 + "                    <executable>${java.home}/bin/java</executable>\n"
                 +                      argsString 

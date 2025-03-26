@@ -32,7 +32,7 @@ import org.netbeans.editor.ext.java.JavaTokenContext;
  * @version 1.00
  * @deprecated Use JSP lexer instead
  */
-
+@Deprecated
 public class JspJavaFakeTokenContext {
 
     public static class JavaScriptletTokenContext extends TokenContext {

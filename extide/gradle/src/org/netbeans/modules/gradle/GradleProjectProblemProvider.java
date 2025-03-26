@@ -24,6 +24,7 @@ import org.netbeans.modules.gradle.api.NbGradleProject;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -43,6 +44,11 @@ import org.openide.util.NbBundle;
  */
 @ProjectServiceProvider(service = ProjectProblemsProvider.class, projectType = NbGradleProject.GRADLE_PROJECT_TYPE)
 public class GradleProjectProblemProvider implements ProjectProblemsProvider {
+    /**
+     * Maximum number of lines presented from a report. Prevents stacktrace errors to flood everything, but Gradle has deep
+     * stacks...
+     */
+    private static final int MAX_REPORT_LINES = 100;
     
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     private final Project project;
@@ -90,8 +96,25 @@ public class GradleProjectProblemProvider implements ProjectProblemsProvider {
         } else {
             for (GradleReport report : gp.getProblems()) {
                 String problem = formatReport(report);
-                String[] lines = problem.split("\\n"); //NOI18N
-                ret.add(ProjectProblem.createWarning(lines[0], problem.replaceAll("\\n", "<br/>"), null)); //NOI18N
+                String m;
+                String d;
+                if (report.getDetails() == null || report.getDetails().length == 0) {
+                    String[] lines = problem.split("\n"); //NOI18N
+                    m = lines[0];
+                    d = problem.replaceAll("\n", "<br/>");
+                } else {
+                    m = problem;
+                    d = String.join("\n", Arrays.asList(report.getDetails()).subList(0, Math.min(report.getDetails().length, MAX_REPORT_LINES)));
+                }
+                switch (report.getSeverity()) {
+                    case ERROR:
+                    case EXCEPTION:
+                        ret.add(ProjectProblem.createError(m, d, null)); //NOI18N
+                        break;
+                    case WARNING:
+                        ret.add(ProjectProblem.createWarning(m, d, null)); //NOI18N
+                        break;
+                }
             }
         }
         return ret;

@@ -32,6 +32,7 @@ import com.sun.source.doctree.IndexTree;
 import com.sun.source.doctree.InheritDocTree;
 import com.sun.source.doctree.LinkTree;
 import com.sun.source.doctree.ParamTree;
+import com.sun.source.doctree.RawTextTree;
 import com.sun.source.doctree.ReferenceTree;
 import com.sun.source.doctree.SeeTree;
 import com.sun.source.doctree.SerialDataTree;
@@ -61,22 +62,27 @@ import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.jvm.ClassReader;
 import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.model.JavacTypes;
-import com.sun.tools.javac.tree.DCTree;
+import com.sun.tools.javac.parser.Tokens.Comment;
+import com.sun.tools.javac.parser.Tokens.Comment.CommentStyle;
+import com.sun.tools.javac.tree.DCTree.DCDocComment;
+import com.sun.tools.javac.tree.DCTree.DCReference;
 import com.sun.tools.javac.tree.DocTreeMaker;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.*;
 import com.sun.tools.javac.tree.JCTree.JCCaseLabel;
-import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.DiagnosticSource;
 import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Context;
-import java.lang.reflect.InvocationTargetException;
+import com.sun.tools.javac.util.JCDiagnostic;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.lang.model.element.*;
 import javax.lang.model.type.ArrayType;
@@ -95,6 +101,8 @@ import static org.netbeans.modules.java.source.save.PositionEstimator.*;
  * @since 0.44.0
  */
 public class TreeFactory {
+    private static final Logger LOG = Logger.getLogger(TreeFactory.class.getName());
+
     Names names;
     ClassReader classReader;
     com.sun.tools.javac.tree.TreeMaker make;
@@ -215,15 +223,19 @@ public class TreeFactory {
         return make.at(NOPOS).ConstantCaseLabel((JCExpression) expr);
     }
 
-    public PatternCaseLabelTree PatternCaseLabel(PatternTree pat, ExpressionTree guard) {
-        return make.at(NOPOS).PatternCaseLabel((JCPattern) pat, (JCExpression) guard);
+    public PatternCaseLabelTree PatternCaseLabel(PatternTree pat) {
+        return make.at(NOPOS).PatternCaseLabel((JCPattern) pat);
     }
 
-    public DeconstructionPatternTree DeconstructionPattern(ExpressionTree deconstructor, List<? extends PatternTree> nested, VariableTree var) {
+    public AnyPatternTree AnyPattern() {
+        return make.at(NOPOS).AnyPattern();
+    }
+
+    public DeconstructionPatternTree DeconstructionPattern(ExpressionTree deconstructor, List<? extends PatternTree> nested) {
         ListBuffer<JCPattern> pats = new ListBuffer<>();
         for (PatternTree t : nested)
             pats.append((JCPattern)t);
-        return make.at(NOPOS).RecordPattern((JCExpression) deconstructor, pats.toList(), (JCVariableDecl) var);
+        return make.at(NOPOS).RecordPattern((JCExpression) deconstructor, pats.toList());
     }
 
     public CaseTree Case(ExpressionTree expression, List<? extends StatementTree> statements) {
@@ -231,31 +243,31 @@ public class TreeFactory {
     }
     
     public CaseTree Case(List<? extends ExpressionTree> expressions, List<? extends StatementTree> statements) {
-        return CaseMultiplePatterns(expressions.isEmpty() ? Collections.singletonList(DefaultCaseLabel()) : expressions.stream().map(e -> ConstantCaseLabel(e)).collect(Collectors.toList()), statements);
+        return CaseMultiplePatterns(expressions.isEmpty() ? Collections.singletonList(DefaultCaseLabel()) : expressions.stream().map(e -> ConstantCaseLabel(e)).collect(Collectors.toList()), null, statements);
     }
     
     public CaseTree Case(List<? extends ExpressionTree> expressions, Tree body) {
-        return CaseMultiplePatterns(expressions.isEmpty() ? Collections.singletonList(DefaultCaseLabel()) : expressions.stream().map(e -> ConstantCaseLabel(e)).collect(Collectors.toList()), body);
+        return CaseMultiplePatterns(expressions.isEmpty() ? Collections.singletonList(DefaultCaseLabel()) : expressions.stream().map(e -> ConstantCaseLabel(e)).collect(Collectors.toList()), null, body);
     }
     
-    public CaseTree CaseMultiplePatterns(List<? extends CaseLabelTree> expressions, Tree body) {
+    public CaseTree CaseMultiplePatterns(List<? extends CaseLabelTree> expressions, ExpressionTree guard, Tree body) {
         ListBuffer<JCStatement> lb = new ListBuffer<>();
         lb.append(body instanceof ExpressionTree ? (JCStatement) Yield((ExpressionTree) body) : (JCStatement) body);
         ListBuffer<JCCaseLabel> exprs = new ListBuffer<>();
         for (Tree t : expressions)
             exprs.append((JCCaseLabel)t);
-        return make.at(NOPOS).Case(CaseKind.RULE, exprs.toList(), lb.toList(), (JCTree) body);
+        return make.at(NOPOS).Case(CaseKind.RULE, exprs.toList(), (JCExpression) guard, lb.toList(), (JCTree) body);
     }
     
 
-    public CaseTree CaseMultiplePatterns(List<? extends CaseLabelTree> expressions, List<? extends StatementTree> statements) {
+    public CaseTree CaseMultiplePatterns(List<? extends CaseLabelTree> expressions, ExpressionTree guard, List<? extends StatementTree> statements) {
         ListBuffer<JCStatement> lb = new ListBuffer<JCStatement>();
         for (StatementTree t : statements)
             lb.append((JCStatement)t);
         ListBuffer<JCCaseLabel> exprs = new ListBuffer<>();
         for (Tree t : expressions)
             exprs.append((JCCaseLabel)t);
-        return make.at(NOPOS).Case(CaseKind.STATEMENT, exprs.toList(), lb.toList(), null);
+        return make.at(NOPOS).Case(CaseKind.STATEMENT, exprs.toList(), (JCExpression) guard, lb.toList(), null);
     }
     
     public CatchTree Catch(VariableTree parameter, BlockTree block) {
@@ -464,7 +476,16 @@ public class TreeFactory {
     }
     
     public ImportTree Import(Tree qualid, boolean importStatic) {
-        return make.at(NOPOS).Import((JCTree)qualid, importStatic);
+        if (qualid.getKind() == Kind.IDENTIFIER) {
+            //existing code sometimes sends the FQN as an identifier:
+            String fqn = ((IdentifierTree) qualid).getName().toString();
+            int lastDot = fqn.lastIndexOf('.');
+            if (lastDot != (-1)) {
+                qualid = make.Select(make.Ident(names.fromString(fqn.substring(0, lastDot))),
+                                     names.fromString(fqn.substring(lastDot + 1)));
+            }
+        }
+        return make.at(NOPOS).Import((JCFieldAccess)qualid, importStatic);
     }
     
     public InstanceOfTree InstanceOf(ExpressionTree expression, Tree type) {
@@ -909,6 +930,15 @@ public class TreeFactory {
                            (JCExpression)type, (JCExpression)initializer);
     }
     
+    public VariableTree RecordComponent(ModifiersTree modifiers,
+                          CharSequence name,
+                          Tree type) {
+        JCModifiers augmentedModifiers = (JCModifiers) Modifiers(modifiers.getFlags(), modifiers.getAnnotations());
+
+        augmentedModifiers.flags |= Flags.RECORD;
+
+        return Variable(augmentedModifiers, name, type, null);
+    }
     public Tree BindingPattern(CharSequence name,
                                Tree type) {
         try {
@@ -920,10 +950,6 @@ public class TreeFactory {
     
     public BindingPatternTree BindingPattern(VariableTree vt) {
         return make.at(NOPOS).BindingPattern((JCVariableDecl) vt);
-    }
-
-    public ParenthesizedPatternTree ParenthesizedPattern(PatternTree pattern) {
-        return make.at(NOPOS).ParenthesizedPattern((JCPattern) pattern);
     }
 
     public VariableTree Variable(VariableElement variable, ExpressionTree initializer) {
@@ -1022,8 +1048,9 @@ public class TreeFactory {
     }
     
     private CaseTree modifyCaseStatement(CaseTree kejs, int index, StatementTree statement, Operation op) {
-        CaseTree copy = Case(
-                kejs.getExpression(),
+        CaseTree copy = CaseMultiplePatterns(
+                kejs.getLabels(),
+                kejs.getGuard(),
                 c(kejs.getStatements(), index, statement, op)
         );
         return copy;
@@ -1784,9 +1811,17 @@ public class TreeFactory {
     }
     
     public DocCommentTree DocComment(List<? extends DocTree> fullBody, List<? extends DocTree> tags) {
-        return docMake.at(NOPOS).newDocCommentTree(fullBody, tags);
+        return DocComment(HTML_JAVADOC_COMMENT, fullBody, tags);
+    }
+
+    public DocCommentTree MarkdownDocComment(List<? extends DocTree> fullBody, List<? extends DocTree> tags) {
+        return DocComment(MARKDOWN_JAVADOC_COMMENT, fullBody, tags);
     }
     
+    private DocCommentTree DocComment(Comment comment, List<? extends DocTree> fullBody, List<? extends DocTree> tags) {
+        return docMake.at(NOPOS).newDocCommentTree(comment, fullBody, tags, Collections.emptyList(), Collections.emptyList());
+    }
+
     public DocTree Snippet(List<? extends DocTree> attributes, TextTree text){
         try {
             return (DocTree) docMake.getClass().getMethod("newSnippetTree", List.class, TextTree.class).invoke(docMake.at(NOPOS), attributes, text);
@@ -1796,10 +1831,18 @@ public class TreeFactory {
     }
     
     public DocCommentTree DocComment(List<? extends DocTree> firstSentence, List<? extends DocTree> body, List<? extends DocTree> tags) {
+        return DocComment(HTML_JAVADOC_COMMENT, firstSentence, body, tags);
+    }
+
+    public DocCommentTree MarkdownDocComment(List<? extends DocTree> firstSentence, List<? extends DocTree> body, List<? extends DocTree> tags) {
+        return DocComment(MARKDOWN_JAVADOC_COMMENT, firstSentence, body, tags);
+    }
+
+    private DocCommentTree DocComment(Comment comment, List<? extends DocTree> firstSentence, List<? extends DocTree> body, List<? extends DocTree> tags) {
         final ArrayList<DocTree> fullBody = new ArrayList<>(firstSentence.size() + body.size());
         fullBody.addAll(firstSentence);
         fullBody.addAll(body);                
-        return docMake.at(NOPOS).newDocCommentTree(fullBody, tags);
+        return docMake.at(NOPOS).newDocCommentTree(comment, fullBody, tags, Collections.emptyList(), Collections.emptyList());
     }
     
     public com.sun.source.doctree.ErroneousTree Erroneous(String text, DiagnosticSource diagSource, String code, Object... args) {
@@ -1880,6 +1923,10 @@ public class TreeFactory {
     public VersionTree Version(List<? extends DocTree> text) {
         return docMake.at(NOPOS).newVersionTree(text);
     }
+
+    public RawTextTree RawText(String text) {
+        return docMake.at(NOPOS).newRawTextTree(DocTree.Kind.MARKDOWN, text);
+    }
     
     public com.sun.source.doctree.LiteralTree Code(TextTree text) {
         return docMake.at(NOPOS).newCodeTree(text);
@@ -1926,19 +1973,84 @@ public class TreeFactory {
     }
 
     public ReferenceTree Reference(ExpressionTree qualExpr, CharSequence member, List<? extends Tree> paramTypes) {
-        com.sun.tools.javac.util.List<JCTree> paramTypesParam = null;
-        if (paramTypes != null) {
-            ListBuffer<JCTree> lbl = new ListBuffer<>();
-            for (Tree t : paramTypes) {
-                lbl.append((JCTree) t);
+        try {
+            com.sun.tools.javac.util.List<JCTree> paramTypesParam = null;
+            if (paramTypes != null) {
+                ListBuffer<JCTree> lbl = new ListBuffer<>();
+                for (Tree t : paramTypes) {
+                    lbl.append((JCTree) t);
+                }
+                paramTypesParam = lbl.toList();
             }
-            paramTypesParam = lbl.toList();
+            Constructor<DCReference> c = DCReference.class.getDeclaredConstructor(String.class, JCExpression.class, JCTree.class, javax.lang.model.element.Name.class, List.class);
+            c.setAccessible(true);
+            DCReference result = c.newInstance("", (JCTree.JCExpression) qualExpr, qualExpr == null ? null : ((JCTree.JCExpression) qualExpr).getTree(), member != null ? (com.sun.tools.javac.util.Name) names.fromString(member.toString()) : null, paramTypesParam);
+            result.pos = NOPOS;
+            return result;
+        } catch (ReflectiveOperationException ex) {
+            LOG.log(Level.INFO, "Cannot fully create DCReference, using fallback approach", ex);
+
+            StringBuilder ref = new StringBuilder();
+            if (qualExpr != null) {
+                ref.append(qualExpr.toString());
+            }
+            if (member != null) {
+                ref.append("#");
+                ref.append(member);
+            }
+            if (paramTypes != null) {
+                ref.append("(");
+                String sep = "";
+                for (Tree t : paramTypes) {
+                    ref.append(sep);
+                    ref.append(t.toString());
+                    sep = ",";
+                }
+                ref.append(")");
+            }
+            return docMake.at(NOPOS).newReferenceTree(ref.toString());
         }
-        return docMake.at(NOPOS).newReferenceTree("", (JCTree.JCExpression) qualExpr, qualExpr == null ? null : ((JCTree.JCExpression) qualExpr).getTree(), member != null ? (com.sun.tools.javac.util.Name) names.fromString(member.toString()) : null, paramTypesParam);
     }
     
     @SuppressWarnings("unchecked")
     private <T extends Throwable> RuntimeException throwAny(Throwable t) throws T {
         throw (T) t;
+    }
+
+    private static final Comment HTML_JAVADOC_COMMENT = new CommentImpl(CommentStyle.JAVADOC_BLOCK);
+    private static final Comment MARKDOWN_JAVADOC_COMMENT = new CommentImpl(CommentStyle.JAVADOC_LINE);
+
+    private static class CommentImpl implements Comment {
+
+        private final CommentStyle style;
+
+        public CommentImpl(CommentStyle style) {
+            this.style = style;
+        }
+
+        @Override
+        public String getText() {
+            return "";
+        }
+
+        @Override
+        public JCDiagnostic.DiagnosticPosition getPos() {
+            return null;
+        }
+
+        @Override
+        public int getSourcePos(int index) {
+            return -1;
+        }
+
+        @Override
+        public CommentStyle getStyle() {
+            return style;
+        }
+
+        @Override
+        public boolean isDeprecated() {
+            return false;
+        }
     }
 }

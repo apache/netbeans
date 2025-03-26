@@ -1,0 +1,2 @@
+    protected int $|>MARK_OCCURRENCES:protectedField<| = 2;
+        $example = new Example()->|>MARK_OCCURRENCES:protectedFiel^d<|;

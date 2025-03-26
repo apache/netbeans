@@ -292,11 +292,7 @@ implements Cloneable, Stamps.Updater {
                     }
                     if (exported instanceof String) {
                         for (String p : exported.toString().split(",")) { // NOI18N
-                            int semic = p.indexOf(';');
-                            if (semic >= 0) {
-                                p = p.substring(0, semic);
-                            }
-                            pkgs.add(p);
+                            pkgs.add(extractBundleName(p));
                         }
                     }
                 } finally {
@@ -328,7 +324,7 @@ implements Cloneable, Stamps.Updater {
                     throw possible;
                 }
                 // Bundle is a fragment, replace it with host in classloader
-                String fragmentHost = b.getHeaders("").get("Fragment-Host");
+                String fragmentHost = extractBundleName(b.getHeaders("").get("Fragment-Host"));
                 Bundle hostBundle = findBundle(fragmentHost);
                 if (hostBundle == null) {
                     LOG.log(Level.WARNING, "Failed to locate fragment host bundle {0} for fragment bundle {1}",
@@ -355,6 +351,17 @@ implements Cloneable, Stamps.Updater {
 
     private static boolean isRealBundle(Bundle b) {
         return b.getHeaders("").get("Fragment-Host") == null; // NOI18N
+    }
+
+    private static String extractBundleName(String fullBundleSpec) {
+        if (fullBundleSpec == null) {
+            return fullBundleSpec;
+        }
+        int semic = fullBundleSpec.indexOf(';');
+        if (semic >= 0) {
+            return fullBundleSpec.substring(0, semic);
+        }
+        return fullBundleSpec;
     }
 
     @Override

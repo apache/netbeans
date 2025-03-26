@@ -43,6 +43,8 @@ import java.lang.invoke.MethodType;
  */
 public class NBAttr extends Attr {
 
+    public static boolean TEST_DO_SINGLE_FAIL;
+
     public static void preRegister(Context context) {
         context.put(attrKey, new Context.Factory<Attr>() {
             public Attr make(Context c) {
@@ -52,12 +54,24 @@ public class NBAttr extends Attr {
     }
 
     private final CancelService cancelService;
+    private final NBResolve rs;
     private final TreeMaker tm;
 
     public NBAttr(Context context) {
         super(context);
         cancelService = CancelService.instance(context);
+        rs = NBResolve.instance(context);
         tm = TreeMaker.instance(context);
+    }
+
+    @Override
+    public void attribClass(DiagnosticPosition pos, ClassSymbol c) {
+        cancelService.abortIfCanceled();
+        if (TEST_DO_SINGLE_FAIL) {
+            TEST_DO_SINGLE_FAIL = false;
+            throw new AssertionError("Test requested failure");
+        }
+        super.attribClass(pos, c);
     }
 
     @Override

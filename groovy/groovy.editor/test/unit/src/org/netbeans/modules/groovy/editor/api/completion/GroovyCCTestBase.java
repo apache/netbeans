@@ -19,7 +19,6 @@
 package org.netbeans.modules.groovy.editor.api.completion;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -80,7 +79,7 @@ public abstract class GroovyCCTestBase extends GroovyTestBase {
     }
 
     private String firstLetterToLowerCase(String className) {
-        return Character.toLowerCase(className.charAt(0)) + className.substring(1, className.length());
+        return Character.toLowerCase(className.charAt(0)) + className.substring(1);
     }
 
     protected String getBasicSourcePath() {
@@ -228,7 +227,7 @@ public abstract class GroovyCCTestBase extends GroovyTestBase {
             indexes.put(c, idx);
             m.put(c, cslProposals.get(idx));
         }
-        Collections.sort(proposals, new Comparator<Completion>() {
+        proposals.sort(new Comparator<Completion>() {
 
             public int compare(Completion p1, Completion p2) {
                 int idx1 = indexes.get(p1);

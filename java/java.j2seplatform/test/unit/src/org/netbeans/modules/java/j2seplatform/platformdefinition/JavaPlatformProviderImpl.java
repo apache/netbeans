@@ -66,7 +66,7 @@ public final class JavaPlatformProviderImpl implements JavaPlatformProvider {
         
     @Override
     public JavaPlatform[] getInstalledPlatforms() {
-        return this.platforms.toArray(new JavaPlatform[this.platforms.size()]);
+        return this.platforms.toArray(new JavaPlatform[0]);
     }
 
     @Override

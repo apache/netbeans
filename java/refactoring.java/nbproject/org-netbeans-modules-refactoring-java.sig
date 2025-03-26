@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.80.0
+#Version 1.89.0
 
 CLSS public abstract interface com.sun.source.doctree.DocTreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.doctree.DocTreeVisitor%0} visitAttribute(com.sun.source.doctree.AttributeTree,{com.sun.source.doctree.DocTreeVisitor%1})
@@ -32,10 +32,13 @@ meth public abstract {com.sun.source.doctree.DocTreeVisitor%0} visitUnknownInlin
 meth public abstract {com.sun.source.doctree.DocTreeVisitor%0} visitValue(com.sun.source.doctree.ValueTree,{com.sun.source.doctree.DocTreeVisitor%1})
 meth public abstract {com.sun.source.doctree.DocTreeVisitor%0} visitVersion(com.sun.source.doctree.VersionTree,{com.sun.source.doctree.DocTreeVisitor%1})
 meth public {com.sun.source.doctree.DocTreeVisitor%0} visitDocType(com.sun.source.doctree.DocTypeTree,{com.sun.source.doctree.DocTreeVisitor%1})
+meth public {com.sun.source.doctree.DocTreeVisitor%0} visitEscape(com.sun.source.doctree.EscapeTree,{com.sun.source.doctree.DocTreeVisitor%1})
 meth public {com.sun.source.doctree.DocTreeVisitor%0} visitHidden(com.sun.source.doctree.HiddenTree,{com.sun.source.doctree.DocTreeVisitor%1})
 meth public {com.sun.source.doctree.DocTreeVisitor%0} visitIndex(com.sun.source.doctree.IndexTree,{com.sun.source.doctree.DocTreeVisitor%1})
 meth public {com.sun.source.doctree.DocTreeVisitor%0} visitProvides(com.sun.source.doctree.ProvidesTree,{com.sun.source.doctree.DocTreeVisitor%1})
+meth public {com.sun.source.doctree.DocTreeVisitor%0} visitRawText(com.sun.source.doctree.RawTextTree,{com.sun.source.doctree.DocTreeVisitor%1})
 meth public {com.sun.source.doctree.DocTreeVisitor%0} visitSnippet(com.sun.source.doctree.SnippetTree,{com.sun.source.doctree.DocTreeVisitor%1})
+meth public {com.sun.source.doctree.DocTreeVisitor%0} visitSpec(com.sun.source.doctree.SpecTree,{com.sun.source.doctree.DocTreeVisitor%1})
 meth public {com.sun.source.doctree.DocTreeVisitor%0} visitSummary(com.sun.source.doctree.SummaryTree,{com.sun.source.doctree.DocTreeVisitor%1})
 meth public {com.sun.source.doctree.DocTreeVisitor%0} visitSystemProperty(com.sun.source.doctree.SystemPropertyTree,{com.sun.source.doctree.DocTreeVisitor%1})
 meth public {com.sun.source.doctree.DocTreeVisitor%0} visitUses(com.sun.source.doctree.UsesTree,{com.sun.source.doctree.DocTreeVisitor%1})
@@ -43,6 +46,7 @@ meth public {com.sun.source.doctree.DocTreeVisitor%0} visitUses(com.sun.source.d
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotation(com.sun.source.tree.AnnotationTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnyPattern(com.sun.source.tree.AnyPatternTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitArrayAccess(com.sun.source.tree.ArrayAccessTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitArrayType(com.sun.source.tree.ArrayTypeTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAssert(com.sun.source.tree.AssertTree,{com.sun.source.tree.TreeVisitor%1})
@@ -89,7 +93,6 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitOther(com.sun.sour
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitPackage(com.sun.source.tree.PackageTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitParameterizedType(com.sun.source.tree.ParameterizedTypeTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitParenthesized(com.sun.source.tree.ParenthesizedTree,{com.sun.source.tree.TreeVisitor%1})
-meth public abstract {com.sun.source.tree.TreeVisitor%0} visitParenthesizedPattern(com.sun.source.tree.ParenthesizedPatternTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitPatternCaseLabel(com.sun.source.tree.PatternCaseLabelTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitPrimitiveType(com.sun.source.tree.PrimitiveTypeTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitProvides(com.sun.source.tree.ProvidesTree,{com.sun.source.tree.TreeVisitor%1})
@@ -126,6 +129,7 @@ meth public {com.sun.source.util.TreeScanner%0} scan(com.sun.source.tree.Tree,{c
 meth public {com.sun.source.util.TreeScanner%0} scan(java.lang.Iterable<? extends com.sun.source.tree.Tree>,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitAnnotation(com.sun.source.tree.AnnotationTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitAnyPattern(com.sun.source.tree.AnyPatternTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitArrayAccess(com.sun.source.tree.ArrayAccessTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitArrayType(com.sun.source.tree.ArrayTypeTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitAssert(com.sun.source.tree.AssertTree,{com.sun.source.util.TreeScanner%1})
@@ -172,7 +176,6 @@ meth public {com.sun.source.util.TreeScanner%0} visitOther(com.sun.source.tree.T
 meth public {com.sun.source.util.TreeScanner%0} visitPackage(com.sun.source.tree.PackageTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitParameterizedType(com.sun.source.tree.ParameterizedTypeTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitParenthesized(com.sun.source.tree.ParenthesizedTree,{com.sun.source.util.TreeScanner%1})
-meth public {com.sun.source.util.TreeScanner%0} visitParenthesizedPattern(com.sun.source.tree.ParenthesizedPatternTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitPatternCaseLabel(com.sun.source.tree.PatternCaseLabelTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitPrimitiveType(com.sun.source.tree.PrimitiveTypeTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitProvides(com.sun.source.tree.ProvidesTree,{com.sun.source.util.TreeScanner%1})
@@ -201,8 +204,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -211,6 +216,7 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
@@ -227,6 +233,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -258,6 +265,9 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public abstract interface org.netbeans.api.java.source.CancellableTask<%0 extends java.lang.Object>
 intf org.netbeans.api.java.source.Task<{org.netbeans.api.java.source.CancellableTask%0}>
@@ -505,7 +515,7 @@ meth public static boolean isRefactorable(org.openide.filesystems.FileObject)
 meth public static com.sun.source.util.TreePath findEnclosingClass(org.netbeans.api.java.source.CompilationInfo,com.sun.source.util.TreePath,boolean,boolean,boolean,boolean,boolean)
 meth public static java.util.Collection<javax.lang.model.element.ExecutableElement> getOverriddenMethods(javax.lang.model.element.ExecutableElement,org.netbeans.api.java.source.CompilationInfo)
 meth public static java.util.Collection<javax.lang.model.element.ExecutableElement> getOverridingMethods(javax.lang.model.element.ExecutableElement,org.netbeans.api.java.source.CompilationInfo)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.util.Collection<javax.lang.model.element.ExecutableElement> getOverridingMethods(javax.lang.model.element.ExecutableElement,org.netbeans.api.java.source.CompilationInfo,java.util.concurrent.atomic.AtomicBoolean)
 meth public static java.util.Collection<javax.lang.model.element.TypeElement> getSuperTypes(javax.lang.model.element.TypeElement,org.netbeans.api.java.source.CompilationInfo,boolean)
 meth public static java.util.Collection<org.netbeans.api.java.source.TreePathHandle> getInvocationsOf(org.netbeans.api.java.source.ElementHandle,org.netbeans.api.java.source.CompilationController) throws java.io.IOException
@@ -672,7 +682,7 @@ CLSS public abstract org.netbeans.modules.refactoring.java.spi.JavaRefactoringPl
 cons public init()
 fld protected final java.util.concurrent.atomic.AtomicBoolean cancelRequested
 fld protected volatile boolean cancelRequest
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 innr protected TransformTask
 innr protected final static !enum Phase
 intf org.netbeans.modules.refactoring.spi.RefactoringPlugin

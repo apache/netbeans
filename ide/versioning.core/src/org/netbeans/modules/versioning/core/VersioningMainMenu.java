@@ -98,7 +98,7 @@ public class VersioningMainMenu extends AbstractAction implements DynamicMenuCon
             }
             items.add(Utils.createJSeparator());
 
-            Collections.sort(systems, new ByDisplayNameComparator());
+            systems.sort(new ByDisplayNameComparator());
 
             VersioningSystem localHistory = null;
             boolean accepted = false;
@@ -128,7 +128,7 @@ public class VersioningMainMenu extends AbstractAction implements DynamicMenuCon
             accepted |= ownerMenuDisplayed;
             if(!accepted) {
                 items.add(NoVCSMenuItem.createNoVcsMenu(NbBundle.getMessage(VersioningMainMenu.class, "CTL_MenuItem_VersioningMenu")));
-                return items.toArray(new JComponent[items.size()]);
+                return items.toArray(new JComponent[0]);
             }
 
             if (localHistory != null) {
@@ -136,7 +136,7 @@ public class VersioningMainMenu extends AbstractAction implements DynamicMenuCon
                 items.add(createVersioningSystemMenu(localHistory, false));
             }
         }
-        return items.toArray(new JComponent[items.size()]);
+        return items.toArray(new JComponent[0]);
     }
 
     private JMenu createVersioningSystemMenu(final VersioningSystem system, final boolean isRegularVCS) {

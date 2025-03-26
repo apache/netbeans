@@ -181,7 +181,7 @@ public final class SourceMapsScanner {
             // Scan rootsToScan:
             FileObject[] roots;
             synchronized (rootsToScan) {
-                roots = rootsToScan.toArray(new FileObject[rootsToScan.size()]);
+                roots = rootsToScan.toArray(new FileObject[0]);
             }
             for (FileObject root : roots) {
                 scan(root);

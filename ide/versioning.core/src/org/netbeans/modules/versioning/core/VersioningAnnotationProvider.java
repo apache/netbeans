@@ -135,7 +135,7 @@ public class VersioningAnnotationProvider {
         if(owners.keySet().size() == 1) {
             vs = owners.keySet().iterator().next();
         } else {
-            return actions.toArray(new Action [actions.size()]);
+            return actions.toArray(new Action [0]);
         } 
         
         VCSAnnotator an = null;
@@ -148,7 +148,7 @@ public class VersioningAnnotationProvider {
             actions.add(action);
         }
 
-        return actions.toArray(new Action [actions.size()]);
+        return actions.toArray(new Action [0]);
     }
     
     public static class VersioningSystemActions extends AbstractVersioningSystemActions {               
@@ -690,7 +690,7 @@ public class VersioningAnnotationProvider {
                             cachedValues.remove(key);
                         }
                     }
-                    ItemKey<T, KEY>[] keysArray = keys.toArray(new ItemKey[keys.size()]);
+                    ItemKey<T, KEY>[] keysArray = keys.toArray(new ItemKey[0]);
                     for (ItemKey<T, KEY> key : keysArray) {
                         if (LOG.isLoggable(Level.FINEST)) {
                             // TODO: remove after fix

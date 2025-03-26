@@ -1,0 +1,12 @@
+Code completion result for source line:
+testFunctionReturnType()->|publicXField; // (ClassX&ClassY)|ClassZ
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticXMethod()           [STATIC]   ClassX
+METHOD     publicStaticYMethod()           [STATIC]   ClassY
+METHOD     publicStaticZMethod()           [STATIC]   ClassZ
+METHOD     publicXMethod()                 [PUBLIC]   ClassX
+METHOD     publicYMethod()                 [PUBLIC]   ClassY
+METHOD     publicZMethod()                 [PUBLIC]   ClassZ
+VARIABLE   (ClassY&ClassZ)|ClassX publicX  [PUBLIC]   ClassX
+VARIABLE   (ClassY&ClassZ)|ClassX publicY  [PUBLIC]   ClassY
+VARIABLE   (ClassY&ClassZ)|ClassX publicZ  [PUBLIC]   ClassZ

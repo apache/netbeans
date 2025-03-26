@@ -185,7 +185,7 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
         customScopeLab = new JLabel(NbBundle.getMessage(InspectAndRefactorPanel.class, "LBL_CustomScope"), prj , SwingConstants.LEFT); //NOI18N
         if (fileObject!=null) {
             if (!fileObject.isFolder())
-                currentFile = new JLabel(NbBundle.getMessage(InspectAndRefactorPanel.class, "LBL_CurrentFile", fileObject.getNameExt()), new ImageIcon(dob.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16)), SwingConstants.LEFT);
+                currentFile = new JLabel(NbBundle.getMessage(InspectAndRefactorPanel.class, "LBL_CurrentFile", fileObject.getNameExt()), ImageUtilities.image2Icon(dob.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16)), SwingConstants.LEFT);
             String packageName = getPackageName(fileObject);
             if (packageName!=null)
                 currentPackage = new JLabel(NbBundle.getMessage(InspectAndRefactorPanel.class, "LBL_CurrentPackage", packageName), ImageUtilities.loadImageIcon(PACKAGE, false), SwingConstants.LEFT);
@@ -240,7 +240,7 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
             if (o!=null)
                 a.add(o);
         }
-        return a.toArray(new Object[a.size()]);
+        return a.toArray(new Object[0]);
     }
 
     /** This method is called from within the constructor to

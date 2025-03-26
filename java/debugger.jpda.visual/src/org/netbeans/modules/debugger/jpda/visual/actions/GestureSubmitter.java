@@ -54,7 +54,7 @@ class GestureSubmitter {
         record.setLoggerName(USG_LOGGER.getName());
         List<String> params = new ArrayList<>();
         params.add(language);
-        record.setParameters(params.toArray(new Object[params.size()]));
+        record.setParameters(params.toArray(new Object[0]));
         USG_LOGGER.log(record);
     }
 }

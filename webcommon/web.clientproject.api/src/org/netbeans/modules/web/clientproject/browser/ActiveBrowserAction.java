@@ -380,9 +380,9 @@ public class ActiveBrowserAction extends CallableSystemAction implements LookupL
     private Icon badgeWithArrowIcon(Image im) {
         // #235642
         assert im != null : "Image must be provided";
-        return ImageUtilities.image2Icon(ImageUtilities.mergeImages(im,
-            ImageUtilities.icon2Image(DropDownButtonFactory.getArrowIcon(false)),
-            isSmallToolbarIcon() ? 20 : 28, isSmallToolbarIcon() ? 6 : 10)); // NOI18N
+        return ImageUtilities.mergeIcons(ImageUtilities.image2Icon(im),
+            DropDownButtonFactory.getArrowIcon(false),
+            isSmallToolbarIcon() ? 20 : 28, isSmallToolbarIcon() ? 6 : 10); // NOI18N
     }
 
     private void showBrowserPickerPopup( JButton invoker ) {
@@ -430,7 +430,7 @@ public class ActiveBrowserAction extends CallableSystemAction implements LookupL
                 TopComponent activeTc = reg.getActivated();
                 if( null != activeTc ) {
                     Collection<? extends Node> nodesFromLookup = activeTc.getLookup().lookupAll(Node.class );
-                    nodes = nodesFromLookup.toArray( new Node[nodesFromLookup.size()] );
+                    nodes = nodesFromLookup.toArray(new Node[0] );
                 }
             }
             Lookup[] delegates = new Lookup[nodes.length];
@@ -472,7 +472,7 @@ public class ActiveBrowserAction extends CallableSystemAction implements LookupL
                 result.add( p );
             }
         }
-        Project[] projectsArray = result.toArray(new Project[result.size()]);
+        Project[] projectsArray = result.toArray(new Project[0]);
 
         if ( command != null ) {
             // All projects have to have the command enabled

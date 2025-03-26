@@ -143,8 +143,6 @@ class ContextManager extends Object {
             if (e) {
                 List<? extends T> all = listFromResult(result);
                 e = enabler.enabled(all, new LkpAE(all, type));
-            } else if (enabler != null) {
-                enabler.detach();
             }
         }
         

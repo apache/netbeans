@@ -25,7 +25,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.FocusTraversalPolicy;
-import java.awt.Font;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.KeyboardFocusManager;
@@ -41,10 +40,8 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPopupMenu;
 import javax.swing.JToggleButton;
@@ -63,6 +60,7 @@ import org.netbeans.modules.palette.Category;
 import org.netbeans.modules.palette.Item;
 import org.netbeans.modules.palette.Utils;
 import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Utilities;
 
 /**
@@ -298,7 +296,7 @@ public class CategoryList extends JList implements Autoscroll {
             Item item = (Item) value;
             Image icon = item.getIcon (iconSize);
             if (icon != null) {
-                button.setIcon (new ImageIcon (icon));
+                button.setIcon (ImageUtilities.image2Icon(icon));
             }
 
             button.setText (showNames ? item.getDisplayName () : null);
@@ -564,7 +562,7 @@ public class CategoryList extends JList implements Autoscroll {
                 policy = kfm.getDefaultFocusTraversalPolicy();
             Component next = focusNext ? policy.getComponentAfter( container, CategoryList.this )
                                       : policy.getComponentBefore( container, CategoryList.this );
-            if( null != next && next instanceof CategoryButton ) {
+            if(next instanceof CategoryButton) {
                 clearSelection();
                 next.requestFocus();
             }

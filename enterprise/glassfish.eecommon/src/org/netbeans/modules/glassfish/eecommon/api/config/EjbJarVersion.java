@@ -81,6 +81,14 @@ public final class EjbJarVersion extends J2EEBaseVersion {
             "4.0", 4000, // NOI18N
             "9.0", 9000 // NOI18N
     );
+    
+    /**
+     * Represents ejbjar version 4.0.1
+     */
+    public static final EjbJarVersion EJBJAR_4_0_1 = new EjbJarVersion(
+            "4.0.1", 4010, // NOI18N
+            "10.0", 10000 // NOI18N
+    );
     /** -----------------------------------------------------------------------
      *  Implementation
      */

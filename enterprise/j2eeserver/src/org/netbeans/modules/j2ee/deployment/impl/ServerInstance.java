@@ -141,7 +141,7 @@ public class ServerInstance implements Node.Cookie, Comparable {
     private DatasourceManager ddsMgr;
     private MessageDestinationDeployment msgDestDeploymentConnected;
     private MessageDestinationDeployment msgDestDeploymentDisconnected;
-    private final Set targetsStartedByIde = new HashSet(); // valued by target name
+    private final Set<String> targetsStartedByIde = new HashSet<>(); // valued by target name
     private Map targets; // keyed by target name, valued by ServerTarget
     private boolean managerStartedByIde = false;
     private ServerTarget coTarget = null;
@@ -1674,7 +1674,7 @@ public class ServerInstance implements Node.Cookie, Comparable {
     }
     
     public boolean isManagerOf(Target target) {
-        return getTargetMap().keySet().contains(target.getName());
+        return getTargetMap().containsKey(target.getName());
     }
     
     public synchronized ServerTarget getCoTarget() {

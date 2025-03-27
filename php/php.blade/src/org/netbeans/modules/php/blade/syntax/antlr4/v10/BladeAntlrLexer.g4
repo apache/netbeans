@@ -407,6 +407,8 @@ FOREACH_RCURLYBRACE: '}' {curlyparenBalance--;}->skip;
 
 FOREACH_VAR : '$' Identifier {rparenBalance == 1}?; //not in argument
 
+FOREACH_PHP_EXPR_STRING :  STRING_LITERAL->skip;
+
 FOREACH_AS : 'as';
 
 FOREACH_DOUBLE_ARROW : '=>' {rparenBalance == 1 && sqparenBalance == 0 && curlyparenBalance == 0}?;

@@ -45,4 +45,8 @@ public class BladeParserErrorTest extends BladeTestBase {
     public void testUnclosedDirectiveBracketError_01() throws Exception {
         checkErrors("testfiles/parser/unopend/unclosed_directive_bracket_error_01.blade.php");
     }
+    
+    public void testWrongForeachSyntaxError() throws Exception {
+        checkErrors("testfiles/parser/errors/wrong_foreach_syntax_error.blade.php");
+    }
 }

@@ -26,6 +26,7 @@
     <fontcolor name="blade_directive" foreColor="ff966738">
         <font style="bold" />
     </fontcolor>
+    <fontcolor name="blade_comp_attribute" foreColor="pink" />
     <fontcolor name="blade_echo_delimiters" foreColor="ff966738">
     </fontcolor>
     <!--"semantic" highlighting:-->

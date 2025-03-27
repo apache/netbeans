@@ -25,8 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.swing.text.Document;
-import javax.swing.text.JTextComponent;
-import org.netbeans.api.editor.*;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;

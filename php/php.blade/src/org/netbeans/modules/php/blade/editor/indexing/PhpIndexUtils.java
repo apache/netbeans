@@ -28,7 +28,6 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexResult;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
-import org.netbeans.modules.php.blade.editor.EditorStringUtils;
 import static org.netbeans.modules.php.blade.editor.EditorStringUtils.NAMESPACE_SEPARATOR;
 import org.netbeans.modules.php.blade.editor.cache.QueryCache;
 import org.netbeans.modules.php.editor.api.QuerySupportFactory;
@@ -644,46 +643,6 @@ public class PhpIndexUtils {
         return results;
     }
     
-    /**
-     * @notused TO BE continued
-     * 
-     * @param fo
-     * @param prefix
-     * @param ownerClass
-     * @return 
-     */
-    public static Collection<PhpIndexResult> queryClassProperties(FileObject fo, String prefix, String ownerClass){
-        QuerySupport phpindex = QuerySupportFactory.get(fo);
-        Collection<PhpIndexResult> results = new ArrayList<>();
-        String queryPrefix = prefix.toLowerCase();
-        try {
-            Collection<? extends IndexResult> indexResults = phpindex.query(PHPIndexer.FIELD_FIELD, queryPrefix, QuerySupport.Kind.PREFIX, new String[]{
-                PHPIndexer.FIELD_FIELD, PHPIndexer.FIELD_CLASS});
-            for (IndexResult indexResult : indexResults) {
-                FileObject indexFile = indexResult.getFile();
-                //internal php index
-
-                String classOwnerName = indexResult.getValue(PHPIndexer.FIELD_CLASS);
-                if (classOwnerName == null || !classOwnerName.startsWith(ownerClass.toLowerCase() + PHP_INDEX_INFO_SEPARATOR)) {
-                    continue;
-                }
-                String[] values = indexResult.getValues(PHPIndexer.FIELD_FIELD);
-                for (String value : values) {
-                    Signature sig = Signature.get(value);
-                    String name = sig.string(SIGN_NAME_POS);
-
-                    if (name.length() > 0 && name.equals(prefix)) {
-                        Integer offset = sig.integer(SIGN_METHOD_OFFSET_POS);
-                        results.add(new PhpIndexResult(name, indexFile, PhpIndexResult.Type.CONSTANT, new OffsetRange(offset, offset + name.length())));
-                    }
-                }
-            }
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        return results;
-    }
-
     public static Collection<PhpIndexResult> queryExactClassConstants(String prefix, String ownerClass, FileObject fo) {
         QuerySupport phpindex = QuerySupportFactory.get(fo);
         Collection<PhpIndexResult> results = new ArrayList<>();

@@ -34,7 +34,6 @@ import org.netbeans.modules.csl.api.RuleContext;
 import org.netbeans.modules.csl.api.HintsProvider;
 import org.netbeans.modules.php.blade.editor.BladeLanguage;
 import org.netbeans.modules.php.blade.editor.directives.CustomDirectives;
-import static org.netbeans.modules.php.blade.editor.hints.PhpDirectiveSyntaxErrorRule.PHP_SYNTAX_ERROR_HINT_ID;
 import org.netbeans.modules.php.blade.editor.parser.BladeParserResult;
 import org.netbeans.modules.php.blade.editor.path.BladePathUtils;
 import org.netbeans.modules.php.blade.project.ProjectUtils;
@@ -60,7 +59,7 @@ public class BladeHintsProvider implements HintsProvider {
             return;
         }
         Map<?, List<? extends Rule.AstRule>> allHints = manager.getHints(false, context);
-        List<? extends Rule.AstRule> directiveHints = allHints.get("blade.option.directive.hints");
+        List<? extends Rule.AstRule> directiveHints = allHints.get("blade.option.directive.hints"); //NOI18N
 
         BladeParserResult parserResult = (BladeParserResult) context.parserResult;
         FileObject fo = EditorDocumentUtils.getFileObject(context.doc);
@@ -177,17 +176,6 @@ public class BladeHintsProvider implements HintsProvider {
     @Override
     public RuleContext createRuleContext() {
         return new BladeRuleContext();
-    }
-    
-    public static boolean phpSyntaxErrorsDisplayEnabled() {
-        HintsManager bladeHintsManager = HintsProvider.HintsManager.getManagerForMimeType(BladeLanguage.MIME_TYPE);
-        Map<?, List<? extends Rule.AstRule>> allHints = bladeHintsManager.getHints();
-        List<? extends Rule.AstRule> phpSyntaxHints = allHints.get(PHP_SYNTAX_ERROR_HINT_ID); //NOI18N
-        if (phpSyntaxHints == null || phpSyntaxHints.isEmpty()) {
-            return false;
-        }
-        Rule.AstRule rule = phpSyntaxHints.get(0);
-        return bladeHintsManager.isEnabled(rule);
     }
 
     private static final class BladeRule implements ErrorRule {

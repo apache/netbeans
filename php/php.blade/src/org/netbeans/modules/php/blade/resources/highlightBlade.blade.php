@@ -10,6 +10,12 @@
         {!! $x !!}
     @endif
 
+    <x-alert :name="warning">
+        
+    </x-alert>
+    
+    @custom('local')
+    
     @verbatim
         <div>{{escaped}}</div>
     @endverbatim    

@@ -86,7 +86,7 @@ public class BladeBracesMatcher implements BracesMatcher {
             tokenOffset = token.offset(th);
 
             switch (id) {
-                case BLADE_DIRECTIVE: {
+                case BLADE_DIRECTIVE -> {
                     tokenText = token.text().toString().trim();
                     currentDirection = findDirectiveBlockDirectionType(tokenText);
                     if (currentDirection.equals(BraceDirectionType.STOP)) {
@@ -94,12 +94,12 @@ public class BladeBracesMatcher implements BracesMatcher {
                     }
                     return new int[]{tokenOffset, tokenOffset + token.length()};
                 }
-                case BLADE_ECHO_DELIMITOR: {
+                case BLADE_ECHO_DELIMITOR -> {
                     tokenText = token.text().toString().trim();
                     currentDirection = isStartTag(tokenText) ? BraceDirectionType.CURLY_START_TO_END : BraceDirectionType.CURLY_END_TO_START;
                     return new int[]{tokenOffset, tokenOffset + token.length()};
                 }
-                case BLADE_CUSTOM_DIRECTIVE: {
+                case BLADE_CUSTOM_DIRECTIVE -> {
                     tokenText = token.text().toString().trim();
                     Project projectOwner = FileSystemUtils.getProjectOwner(document);
                     if (projectOwner == null) {

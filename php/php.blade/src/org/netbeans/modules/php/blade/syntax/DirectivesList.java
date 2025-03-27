@@ -108,6 +108,7 @@ import org.netbeans.modules.php.blade.syntax.annotation.DirectiveRegister;
     @Directive(name = "@when", params = true, since = "11"),
     @Directive(name = "@bool", params = true, since = "11"),
     //styles
+    @Directive(name = "@props", params = true, since = "7.4"),
     @Directive(name = "@class", params = true, since = "8"),
     @Directive(name = "@style", params = true, since = "9"),
     @Directive(name = "@checked", params = true, since = "9"),

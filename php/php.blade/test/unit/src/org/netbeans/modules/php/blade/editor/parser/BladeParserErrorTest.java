@@ -41,12 +41,16 @@ public class BladeParserErrorTest extends BladeTestBase {
     public void testInlineSectionNoError_01() throws Exception {
         checkErrors("testfiles/parser/unopend/inline_section_noerror_01.blade.php");
     }
-    
+
     public void testUnclosedDirectiveBracketError_01() throws Exception {
         checkErrors("testfiles/parser/unopend/unclosed_directive_bracket_error_01.blade.php");
     }
-    
+
     public void testWrongForeachSyntaxError() throws Exception {
         checkErrors("testfiles/parser/errors/wrong_foreach_syntax_error.blade.php");
+    }
+
+    public void testWrongEmptySyntaxError() throws Exception {
+        checkErrors("testfiles/parser/errors/wrong_empty_block_syntax_error.blade.php");
     }
 }

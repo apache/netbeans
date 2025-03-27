@@ -104,7 +104,6 @@ public class PhpExpressionOccurenceListener extends BladeAntlrParserBaseListener
         markPhpOutputExprOccurence(leftParen, rightParen, 1);
     }
 
-
     @Override
     public void exitBladeContentTags(BladeAntlrParser.BladeContentTagsContext ctx) {
         if (ctx.BLADE_CONTENT_OPEN_TAG() == null || ctx.BLADE_CONTENT_CLOSE_TAG() == null) {
@@ -142,41 +141,53 @@ public class PhpExpressionOccurenceListener extends BladeAntlrParserBaseListener
         }
         Token openTag = ctx.start;
         Token closeTag = ctx.stop;
-        markPhpExprOccurence(openTag, closeTag, 1);
+        markPhpRawExprOccurence(openTag, closeTag, 1);
     }
 
     private void markPhpExprOccurence(Token start, Token end, int offset) {
         int startOffset = start.getStopIndex() + offset;
         int endOffset = end.getStartIndex();
-        
-        if (startOffset > endOffset){
+
+        if (startOffset > endOffset) {
             return;
         }
-        
+
         OffsetRange range = new OffsetRange(startOffset, endOffset);
         phpExprOccurences.markPhpInlineExpressionOccurence(range);
     }
-    
+
+    private void markPhpRawExprOccurence(Token start, Token end, int offset) {
+        int startOffset = start.getStopIndex() + offset;
+        int endOffset = end.getStartIndex();
+
+        if (startOffset > endOffset) {
+            return;
+        }
+
+        OffsetRange range = new OffsetRange(startOffset, endOffset);
+        phpExprOccurences.markPhpRawInlineExpressionOccurence(range);
+    }
+
     private void markPhpOutputExprOccurence(Token start, Token end, int offset) {
         int startOffset = start.getStopIndex() + offset;
         int endOffset = end.getStartIndex();
-        
-        if (startOffset > endOffset){
+
+        if (startOffset > endOffset) {
             return;
         }
-        
+
         OffsetRange range = new OffsetRange(startOffset, endOffset);
         phpExprOccurences.markPhpOutputExpressionOccurence(range);
     }
-    
+
     private void markPhpForeachExprOccurence(Token start, Token end, int offset) {
         int startOffset = start.getStopIndex() + offset;
         int endOffset = end.getStartIndex();
-        
-        if (startOffset > endOffset){
+
+        if (startOffset > endOffset) {
             return;
         }
-        
+
         OffsetRange range = new OffsetRange(startOffset, endOffset);
         phpExprOccurences.markPhpForeachExpressionOccurence(range);
     }

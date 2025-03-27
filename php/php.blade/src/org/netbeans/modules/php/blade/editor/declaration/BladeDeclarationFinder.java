@@ -438,7 +438,7 @@ public class BladeDeclarationFinder implements DeclarationFinder {
                 if (directive.getName().equals(customDirectiveOccurence.directiveName)) {
                     NamedElement customDirectiveHandle = new NamedElement(customDirectiveOccurence.directiveName, file, ElementType.CUSTOM_DIRECTIVE);
                     DeclarationFinder.DeclarationLocation newLoc = new DeclarationFinder.DeclarationLocation(file, directive.getOffset(), customDirectiveHandle);
-                    this.location.addAlternative(new AlternativeLocationImpl(newLoc));
+                    this.getLocation().addAlternative(new AlternativeLocationImpl(newLoc));
                 }
             }
         });

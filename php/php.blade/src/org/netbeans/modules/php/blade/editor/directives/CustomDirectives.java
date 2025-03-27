@@ -61,7 +61,7 @@ public final class CustomDirectives {
     private static final Map<Project, CustomDirectives> INSTANCES = new WeakHashMap<>();
     private final Map<FileObject, List<CustomDirective>> customDirectives = new LinkedHashMap<>();
 
-    public List<CustomDirective> customDirectiveList = new ArrayList<>();
+    private List<CustomDirective> customDirectiveList = new ArrayList<>();
 
     private final FileChangeListener fileChangeListener = new FileChangeListenerImpl();
 
@@ -98,7 +98,7 @@ public final class CustomDirectives {
     }
 
     private void extractCustomDirectives() {
-        LOGGER.info("Extracting custom directives");
+        LOGGER.info("Extracting custom directives"); // NOI18N
         String[] compilerPathList = BladeProjectProperties.getInstance(project).getCompilerPathList();
         FileObject defaultAppProvider = project.getProjectDirectory().getFileObject(APP_PROVIDER_RELATIVE_PATH);
         String defaultAppPath = "";
@@ -204,7 +204,7 @@ public final class CustomDirectives {
 
     public boolean customDirectiveConfigured(String query) {
         for (CustomDirectives.CustomDirective customDirective : customDirectiveList) {
-            if (customDirective.name.equals(query)) {
+            if (customDirective.getName().equals(query)) {
                 return true;
             }
         }
@@ -306,13 +306,17 @@ public final class CustomDirectives {
 
     public static abstract class FilterCallbackDeclaration {
 
-        protected DeclarationFinder.DeclarationLocation location;
+        private DeclarationFinder.DeclarationLocation location;
 
         public FilterCallbackDeclaration(DeclarationFinder.DeclarationLocation location) {
             this.location = location;
         }
 
         public void filterDirectiveName(CustomDirective directive, FileObject file) {
+        }
+
+        public DeclarationFinder.DeclarationLocation getLocation() {
+            return location;
         }
     }
 

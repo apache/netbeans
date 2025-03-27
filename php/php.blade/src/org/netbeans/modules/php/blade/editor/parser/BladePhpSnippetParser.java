@@ -18,13 +18,8 @@
  */
 package org.netbeans.modules.php.blade.editor.parser;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import javax.swing.text.Document;
-import org.netbeans.modules.csl.api.Error;
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CharStream;
@@ -37,23 +32,14 @@ import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
-import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.Severity;
-import org.netbeans.modules.parsing.api.ParserManager;
-import org.netbeans.modules.parsing.api.ResultIterator;
-import org.netbeans.modules.parsing.api.Source;
-import org.netbeans.modules.parsing.api.UserTask;
-import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexUtils.FieldAccessType;
 import org.netbeans.modules.php.blade.editor.parser.BladeParserResult.BladeError;
-import org.netbeans.modules.php.blade.editor.parser.ParsingUtils;
 import org.netbeans.modules.php.blade.syntax.antlr4.php.BladePhpAntlrLexer;
 import org.netbeans.modules.php.blade.syntax.antlr4.php.BladePhpAntlrParser;
 import org.netbeans.modules.php.blade.syntax.antlr4.php.BladePhpAntlrParserBaseListener;
-import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -64,12 +50,12 @@ public class BladePhpSnippetParser {
     private final String snippet;
     private final FileObject originFile;
     private final int snippetOffset;
-    private final List<Error> errors = new ArrayList<>();
     private final Map<OffsetRange, PhpReference> identifierReference = new TreeMap<>();
     private final Map<OffsetRange, FieldAcces> fieldAccessReference = new TreeMap<>();
 
     public static final String PHP_START = "<?php "; //NOI18N
-    
+    public static final String PHP_END = "?>"; //NOI18N
+
     public enum PhpReferenceType {
         PHP_NAMESPACE,
         PHP_CLASS,
@@ -84,59 +70,24 @@ public class BladePhpSnippetParser {
         this.snippetOffset = snippetOffset;
     }
 
+    public FileObject getOriginFile() {
+        return originFile;
+    }
+
+    public int getSnippetOffset() {
+        return snippetOffset;
+    }
+
     public void parse() {
         CharStream cs = CharStreams.fromString(snippet);
         BladePhpAntlrLexer lexer = new BladePhpAntlrLexer(cs);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         BladePhpAntlrParser parser = new BladePhpAntlrParser(tokens);
         parser.removeErrorListeners();
-        parser.setErrorHandler(new RustANTLRErrorStrategy());
-        parser.addErrorListener(createErrorListener());
+        parser.setErrorHandler(new BasicANTLRErrorStrategy());
 
         parser.addParseListener(createIdentifiablePhpElementReferences());
         parser.expression();
-    }
-    
-    public void syntaxAnalysis(){
-        ParsingUtils parsingUtils = new ParsingUtils();
-        BaseDocument doc = parsingUtils.createPhpBaseDocument(snippet);
-        if (doc == null) {
-            return;
-        }
-        
-        try {
-            Source source = Source.create(doc);
-
-            if (source == null) {
-                return;
-            }
-
-            Document sourceDoc = source.getDocument(false);
-
-            if (sourceDoc == null) {
-                return;
-            }
-
-            source.createSnapshot();
-            ParserManager.parseWhenScanFinished(Collections.singletonList(source), new UserTask() {
-
-                @Override
-                public void run(ResultIterator resultIterator) throws Exception {
-                    org.netbeans.modules.parsing.spi.Parser.Result parserResult = resultIterator.getParserResult();
-                    if (parserResult != null && parserResult instanceof PHPParseResult) {
-                        PHPParseResult phpParserResult = (PHPParseResult) parserResult;
-                        for (Error error : phpParserResult.getDiagnostics()) {
-                            int errorStartPosition = error.getStartPosition() + snippetOffset - 1;
-                            int errorEndPosition = error.getEndPosition() + snippetOffset;
-                            errors.add(new BladeError(error.getKey(), error.getDisplayName(), error.getDescription(), originFile, errorStartPosition, errorEndPosition, error.getSeverity()));
-                        }
-                    }
-                }
-            });
-
-        } catch (ParseException ex) {
-            Exceptions.printStackTrace(ex);
-        }
     }
 
     private ParseTreeListener createIdentifiablePhpElementReferences() {
@@ -235,16 +186,6 @@ public class BladePhpSnippetParser {
                 OffsetRange range = new OffsetRange(classToken.getStartIndex(), classToken.getStopIndex() + 1);
                 PhpReference reference = new PhpReference(PhpReferenceType.PHP_CLASS, classToken.getText(), namespace);
                 identifierReference.put(range, reference);
-
-                if (ctx.DOUBLE_COLON() != null && ctx.DOUBLE_COLON().getSymbol() != null) {
-                    //generic access
-//                    Token dbColon = ctx.DOUBLE_COLON().getSymbol();
-//                    PhpReference methodReference = new PhpReference(PhpReferenceType.PHP_CLASS_CONSTANT, "", namespace);
-//                    OffsetRange accessRange = new OffsetRange(dbColon.getStopIndex(), dbColon.getStopIndex() + 1);
-//                    identifierReference.put(accessRange, methodReference);
-//                    FieldAcces fieldAccess = new FieldAcces(FieldAccessType.STATIC, methodReference, reference);
-//                    fieldAccessReference.put(accessRange, fieldAccess);
-                }
             }
 
             @Override
@@ -325,7 +266,7 @@ public class BladePhpSnippetParser {
         return null;
     }
 
-    private final class RustANTLRErrorStrategy extends DefaultErrorStrategy {
+    private final class BasicANTLRErrorStrategy extends DefaultErrorStrategy {
 
         @Override
         protected void reportFailedPredicate(Parser recognizer, FailedPredicateException e) {
@@ -339,25 +280,6 @@ public class BladePhpSnippetParser {
             }
             super.reportError(recognizer, e);
         }
-    }
-
-    private ANTLRErrorListener createErrorListener() {
-        return new BaseErrorListener() {
-            @Override
-            public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
-                int errorPosition = snippetOffset;
-                if (offendingSymbol instanceof Token) {
-                    Token offendingToken = (Token) offendingSymbol;
-                    errorPosition += offendingToken.getStartIndex();
-                }
-                errors.add(new BladeError(null, "PHP error: " + msg, null, originFile, errorPosition, errorPosition, Severity.ERROR));
-            }
-
-        };
-    }
-
-    public List<? extends org.netbeans.modules.csl.api.Error> getDiagnostics() {
-        return errors;
     }
 
     public static class PhpReference {

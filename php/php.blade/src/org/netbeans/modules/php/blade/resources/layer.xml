@@ -102,9 +102,6 @@
                     <folder name="directive">
                         <file name="org-netbeans-modules-php-blade-editor-hints-UnknownDirective.instance"/>
                     </folder>
-                    <folder name="php_syntax">
-                        <file name="org-netbeans-modules-php-blade-editor-hints-PhpDirectiveSyntaxErrorRule.instance"/>
-                    </folder>
                 </folder>
             </folder>
         </folder>

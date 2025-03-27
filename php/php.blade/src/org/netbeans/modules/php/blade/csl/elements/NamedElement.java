@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.php.blade.csl.elements;
 
-import java.util.HashSet;
 import java.util.Set;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;

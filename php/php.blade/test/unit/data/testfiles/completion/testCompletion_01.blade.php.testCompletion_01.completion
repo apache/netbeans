@@ -75,6 +75,7 @@ CONSTRUCTO @method()
 CONSTRUCTO @php ... @endphp                           
 CONSTRUCTO @prepend()                                 
 CONSTRUCTO @prepend() ... @endprepend                 
+CONSTRUCTO @props()                                   v7.4
 CONSTRUCTO @push()                                    
 CONSTRUCTO @push() ... @endpush                       
 CONSTRUCTO @pushIf()                                  

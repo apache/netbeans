@@ -95,7 +95,6 @@ public class BladeParserResult extends ParserResult {
             parser.addErrorListener(createErrorListener());
             parser.addParseListener(new ReferenceIdListener(bladeRreferenceIdsCollection));
             parser.addParseListener(new PhpExpressionOccurenceListener(bladePhpExpressionOccurences));
-            parser.addParseListener(new CustomDirectivesListener(bladeCustomDirectiveOccurences));
 
             if (taskClassL.contains("completion")) { //NOI18N
                 parser.addParseListener(new ScopeListener(bladeScope));
@@ -103,17 +102,11 @@ public class BladeParserResult extends ParserResult {
 
             //avoid on index
             if (!taskClassL.contains(".indexing.repository")) { //NOI18N
+                parser.addParseListener(new CustomDirectivesListener(bladeCustomDirectiveOccurences));
                 parser.addParseListener(new StructureListener(structure, folds, getFileObject()));
             }
 
-
             evaluateParser(parser);
-
-            if (allowPhpSyntaxParsingForTask(taskClassL) 
-                    && BladeHintsProvider.phpSyntaxErrorsDisplayEnabled()
-                    ) {
-                phpSyntaxAnalyzer();
-            }
 
             finished = true;
         }
@@ -179,15 +172,6 @@ public class BladeParserResult extends ParserResult {
         return bladeScope;
     }
 
-    public void phpSyntaxAnalyzer() {
-        for (OffsetRange range : getBladePhpExpressionOccurences().getPhpInlineOccurences()) {
-            CharSequence snapshotExpr = getSnapshot().getText().subSequence(range.getStart(), range.getEnd());
-            BladePhpSnippetParser phpSnippetParser = new BladePhpSnippetParser(snapshotExpr.toString(), getFileObject(), range.getStart());
-            phpSnippetParser.parse();
-            errors.addAll(phpSnippetParser.getDiagnostics());
-        }
-    }
-
     public static class BladeStringReference {
 
         public final int antlrTokentype;
@@ -197,14 +181,6 @@ public class BladeParserResult extends ParserResult {
             this.antlrTokentype = antlrTokentype;
             this.identifier = identifier;
         }
-    }
-    
-    private boolean allowPhpSyntaxParsingForTask(String taskClassL){
-        return !taskClassL.contains("completion")  //NOI18N
-                    && !taskClassL.contains("declaration")  //NOI18N
-                    && !taskClassL.contains(".indexing.repository")  //NOI18N
-                    && !taskClassL.contains("csl.navigation") //NOI18N
-                ;  
     }
 
     public static class Reference {

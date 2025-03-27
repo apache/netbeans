@@ -73,8 +73,8 @@ blockDirective :
     | authStatements
     | D_ONCE directiveArguments? statement* D_ENDONCE
     | D_UNLESS directiveArguments statement* D_ENDUNLESS
-    | D_EMPTY directiveArguments statement* D_ENDEMPTY
-    | D_ISSET directiveArguments statement* D_ENDISSET
+    | D_EMPTY directiveArguments statement* (D_ELSE statement*)? D_ENDEMPTY
+    | D_ISSET directiveArguments statement* (D_ELSE statement*)? D_ENDISSET
     | D_SESSION directiveArguments statement* D_ENDSESSION
     //permission
     | D_CAN directiveArguments statement* (D_ELSECAN directiveArguments statement*)* (D_ELSE statement*)? D_ENDCAN
@@ -119,6 +119,7 @@ bladePhpBlock :
 //
 inlineDirective:
     D_SIMPLE_DIRECTIVE directiveArguments
+    | D_PROPS directiveArguments
     | D_PHP directiveArguments
     | D_DIRECTIVE
     | D_VITE_REFRESH

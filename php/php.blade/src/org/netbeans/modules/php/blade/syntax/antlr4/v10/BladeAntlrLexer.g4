@@ -196,6 +196,8 @@ D_SIMPLE_DIRECTIVE : ('@dd' | '@dump' | '@json' | '@style' | '@class'
 | '@checked'  | '@disabled' | '@selected' | '@required' | '@readonly' 
 | '@when' | '@bool') (' ')* {lookupMode(INSIDE_PHP_EXPRESSION);};
 
+D_PROPS : '@props' (' ')* {lookupMode(INSIDE_PHP_EXPRESSION);};
+
 D_VITE : '@vite' (' ')* {lookupMode(MIXED_STRING_AND_ARRAY_IDENTIFIER);}; 
 D_VITE_REFRESH : '@viteReactRefresh';
 

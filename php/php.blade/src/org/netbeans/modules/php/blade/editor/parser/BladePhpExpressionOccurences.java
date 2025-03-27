@@ -21,12 +21,14 @@ package org.netbeans.modules.php.blade.editor.parser;
 import java.util.Set;
 import java.util.TreeSet;
 import org.netbeans.modules.csl.api.OffsetRange;
+
 /**
  *
  * @author bogdan
  */
 public class BladePhpExpressionOccurences {
 
+    private final Set<OffsetRange> phpRawInlineExpressionLocations = new TreeSet<>();
     private final Set<OffsetRange> phpInlineExpressionLocations = new TreeSet<>();
     private final Set<OffsetRange> phpOutputExpressionLocations = new TreeSet<>();
     private final Set<OffsetRange> phpForeachExpressionLocations = new TreeSet<>();
@@ -43,8 +45,12 @@ public class BladePhpExpressionOccurences {
         phpForeachExpressionLocations.add(range);
     }
 
+    public void markPhpRawInlineExpressionOccurence(OffsetRange range) {
+        phpRawInlineExpressionLocations.add(range);
+    }
+
     public OffsetRange findPhpExpressionLocation(int offset) {
-        
+
         //OUTPUT
         for (OffsetRange range : phpOutputExpressionLocations) {
 
@@ -59,6 +65,18 @@ public class BladePhpExpressionOccurences {
         }
 
         for (OffsetRange range : phpInlineExpressionLocations) {
+
+            if (offset < range.getStart()) {
+                //excedeed the offset range
+                break;
+            }
+
+            if (range.containsInclusive(offset)) {
+                return range;
+            }
+        }
+
+        for (OffsetRange range : phpRawInlineExpressionLocations) {
 
             if (offset < range.getStart()) {
                 //excedeed the offset range
@@ -88,6 +106,10 @@ public class BladePhpExpressionOccurences {
 
     public Set<OffsetRange> getPhpInlineOccurences() {
         return phpInlineExpressionLocations;
+    }
+
+    public Set<OffsetRange> getPhpRawInlineOccurences() {
+        return phpRawInlineExpressionLocations;
     }
 
     public Set<OffsetRange> getPhpOutputOccurences() {

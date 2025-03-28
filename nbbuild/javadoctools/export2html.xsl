@@ -272,7 +272,7 @@
                                 </xsl:attribute>
                                 <a>
                                     <xsl:attribute name="href">
-                                        <xsl:value-of select="substring-before(@target,'/')" />/overview-summary.html</xsl:attribute>
+                                        <xsl:value-of select="substring-before(@target,'/')" />/index.html</xsl:attribute>
                                     <xsl:attribute name="target">classFrame</xsl:attribute>
                                     <xsl:value-of select="@name"/>
                                 </a> -
@@ -305,7 +305,7 @@
                         <li>
                             <xsl:variable name="where" select="substring-before(@target, '/')"/>
                             <b>
-                                <a href="{$where}/overview-summary.html">
+                                <a href="{$where}/index.html">
                                     <xsl:value-of select="$where"/>
                                 </a>
                             </b>

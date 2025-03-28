@@ -115,6 +115,14 @@ public class Arch extends Task implements ErrorHandler, EntityResolver, URIResol
     public void setFooter(String s) {
         footer = s;
     }
+    private String header="";
+    public void setHeader(String s) {
+        header = s;
+    }
+    private boolean deprecatedmenu=false;
+    public void setDeprecatedMenu(boolean b) {
+        deprecatedmenu = b;
+    }
     private File xsl = null;
     public void setXSL (File xsl) {
         this.xsl = xsl;
@@ -480,6 +488,8 @@ public class Arch extends Task implements ErrorHandler, EntityResolver, URIResol
                 if (footer != null) {
                     t.setParameter("arch.footer", footer);
                 }
+                t.setParameter("javadoc-header", header);
+                t.setParameter("deprecated", deprecatedmenu);
                 t.setParameter("arch.answers.date", DateFormat.getDateInstance().format(new Date(questionsFile.lastModified())));
                 
                 String archTarget = output.toString();

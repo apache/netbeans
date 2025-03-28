@@ -97,9 +97,7 @@
                                             <xsl:value-of select="ancestor::module/@name"/>
                                         </a>
                                     </b>
-                                    <p>
-                                        <xsl:apply-templates select="." />
-                                    </p>
+                                    <xsl:apply-templates select="." />
                                 </li>
                             </xsl:for-each>
                         </ul>
@@ -198,7 +196,14 @@
             <xsl:apply-templates select="@*|node()"/>
         </xsl:copy>
     </xsl:template>
-        
+    <xsl:template match="api">
+     <div class="apibloc">
+       <xsl:apply-templates />
+     </div>
+    </xsl:template>
+    <!-- special html 5 rewrite -->
+    <xsl:template match="a/@shape" />
+    <xsl:template match="pre/@space" />
 </xsl:stylesheet>
 
 

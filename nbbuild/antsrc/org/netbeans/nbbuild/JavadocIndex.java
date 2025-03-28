@@ -114,38 +114,40 @@ public class JavadocIndex extends Task {
             }
 
             Document doc = Jsoup.parse(f, "UTF-8", "");
-            Elements ul = doc.getElementsByTag("ul");
+            Element divallclasstable = doc.getElementById("all-classes-table");
             // should be only one list
-            if (ul.size() != 1) {
+            if (divallclasstable == null) {
                 throw new BuildException("File is not valid for parsing classes : " + f);
             }
             int matches = 0;
-            for (Element li : ul.first().getElementsByTag("li")) {
+            for (Element firstcoldiv : divallclasstable.select("div.col-first")) {
                 // class Name is the only text in all the tag
-                String className = li.text();
-                // we need anchor to get the inforation
-                Element anchor = li.getElementsByTag("a").first();
-                // left of title is type of element (interface,annotation,class,enum ....)
-                // right of title is package of element
-                String[] title = anchor.attr("title").split(" in ");
-                if (title.length == 2) {
-                    matches++;
-                    Clazz c = new Clazz(
-                            title[1].trim(),
-                            className,
-                            "interface".equals(title[0].trim()),
-                            urlPrefix + "/" + anchor.attr("href")
-                    );
-                    if (c.name.isEmpty()) {
-                        throw new IllegalStateException("Empty name for " + li.html() + "\nclass: " + c);
+                Element anchor = firstcoldiv.firstElementChild();
+                if (anchor!=null) {
+                    String className = anchor.text();
+                    // we need anchor to get the inforation
+                    // left of title is type of element (interface,annotation,class,enum ....)
+                    // right of title is package of element
+                    String[] title = anchor.attr("title").split(" in ");
+                    if (title.length == 2) {
+                        matches++;
+                        Clazz c = new Clazz(
+                                title[1].trim(),
+                                className,
+                                "interface".equals(title[0].trim()),
+                                urlPrefix + "/" + anchor.attr("href")
+                        );
+                        if (c.name.isEmpty()) {
+                            throw new IllegalStateException("Empty name for " + anchor.html() + "\nclass: " + c);
+                        }
+                        log("Adding class: " + c, Project.MSG_DEBUG);
+                        List<Clazz> l = classes.get(c.pkg);
+                        if (l == null) {
+                            l = new ArrayList<>();
+                            classes.put(c.pkg, l);
+                        }
+                        l.add(c);
                     }
-                    log("Adding class: " + c, Project.MSG_DEBUG);
-                    List<Clazz> l = classes.get(c.pkg);
-                    if (l == null) {
-                        l = new ArrayList<>();
-                        classes.put (c.pkg, l);
-                    }
-                    l.add (c);
                 }
             }
             if (matches == 0) {
@@ -184,7 +186,7 @@ public class JavadocIndex extends Task {
         for (String pkg : new TreeSet<>(classes.keySet())) {
             for (Clazz c : new TreeSet<>(classes.get(pkg))) {
                 ps.print ("<class name=\"");
-                ps.print (c.name);
+                ps.print (c.name.replace("<", "&lt;").replace(">", "&gt;"));
                 ps.print ("\"");
                 ps.print (" url=\"");
                 ps.print (c.url);

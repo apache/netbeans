@@ -413,6 +413,12 @@ bool JvmLauncher::findJava(const char *minJavaVersion) {
     if (findJava(JRE_KEY, "", minJavaVersion)) {
         return true;
     }
+    if (findJavaByJavaHome()) {
+        return true;
+    }
+    if (findJavaByPath()) {
+        return true;
+    }
     javaPath = "";
     javaExePath = "";
     javaClientDllPath = "";
@@ -451,4 +457,39 @@ bool JvmLauncher::findJava(const char *javaKey, const char *prefix, const char *
     } 
     // probably also need to check 32bit registry when launcher becomes 64-bit but is not the case now.   
     return result;    
+}
+
+bool JvmLauncher::findJavaByPath() {
+    logMsg("JvmLauncher::findJavaByPath()");
+    bool result = false;
+    char path[MAX_PATH] = {0};
+    DWORD searchResult = SearchPath(NULL, "javac.exe", NULL, MAX_PATH, (LPSTR)path, NULL);
+    if (searchResult == 0) {
+        logErr(true, false, "JvmLauncher::findJavaByPath(): Failed to find javac.exe on path");
+    } else if ( searchResult > MAX_PATH ) {
+        logErr(true, false, "JvmLauncher::findJavaByPath(): Path exceeds buffer: %d", result);
+    } else {
+        logMsg("JvmLauncher::findJavaByPath(): Path search resulted in %s", path);
+        // Remove filename
+        PathRemoveFileSpec(path);
+        logMsg("JvmLauncher::findJavaByPath(): javac.exe stripped %s", path);
+        // Remove the bin directory
+        PathRemoveFileSpec(path);
+        logMsg("JvmLauncher::findJavaByPath(): bin stripped %s", path);
+        result = checkJava(path, "");
+    }
+    return result;
+}
+
+bool JvmLauncher::findJavaByJavaHome() {
+    logMsg("JvmLauncher::findJavaByJavaHome()");
+    bool result = false;
+    const char* javaHomeValue = getenv("JAVA_HOME");
+    if (javaHomeValue != NULL) {
+        logMsg("JvmLauncher::findJavaByJavaHome(): JAVA_HOME set to %s", javaHomeValue);
+        result = checkJava(javaHomeValue, "");
+    } else {
+        logErr(false, false, "JvmLauncher::findJavaByJavaHome(): Environment variable JAVA_HOME not set");
+    }
+    return result;
 }

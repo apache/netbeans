@@ -145,7 +145,7 @@
                                 </xsl:attribute>
                                 <a>
                                     <xsl:attribute name="href">
-                                        <xsl:value-of select="substring-before(@target,'/')" />/overview-summary.html</xsl:attribute>
+                                        <xsl:value-of select="substring-before(@target,'/')" />/index.html</xsl:attribute>
                                     <xsl:value-of select="@name"/>
                                 </a> -
                                 <!-- XXX the following is crap; e.g. messes up descs of Dialogs API, I/O API, ... -->
@@ -177,7 +177,7 @@
                         <li>
                             <xsl:variable name="where" select="substring-before(@target, '/')"/>
                             <b>
-                                <a href="{$where}/overview-summary.html">
+                                <a href="{$where}/index.html">
                                     <xsl:value-of select="$where"/>
                                 </a>
                             </b>
@@ -201,7 +201,7 @@
             <div>
             <xsl:element name="h3">
                 <xsl:attribute name="id">
-                    <xsl:text>def-api-</xsl:text><xsl:value-of select="$module.name"/>
+                    <xsl:text>def-api-</xsl:text><xsl:value-of select="translate($module.name,' ','-')"/>
                 </xsl:attribute>
                 <xsl:value-of select="$module.name"/>
             </xsl:element>            
@@ -210,7 +210,7 @@
                     <xsl:call-template name="filedirapi" >
                         <xsl:with-param name="arch.target" select="$arch.target" />
                     </xsl:call-template>
-                    <xsl:text>/overview-summary.html</xsl:text>
+                    <xsl:text>/index.html</xsl:text>
                 </xsl:attribute>
                 <xsl:text>javadoc</xsl:text>
             </a>
@@ -234,7 +234,7 @@
                 | <a>
                     <xsl:attribute name="href">
                         <xsl:text>usecases.html#usecase-</xsl:text>
-                        <xsl:value-of select="$module.name" />
+                        <xsl:value-of select="translate($module.name,' ','-')" />
                     </xsl:attribute>
                     <xsl:text>usecases</xsl:text>
                 </a>

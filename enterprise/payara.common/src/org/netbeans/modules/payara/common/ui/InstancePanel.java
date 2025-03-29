@@ -514,7 +514,7 @@ public abstract class InstancePanel extends javax.swing.JPanel {
      * container path if they differ from the values stored in the instance
      * object.
      * <p/>
-     * The instance type can be one of the following: Docker, WSL, or None. If
+     * The instance type can be one of the following: Docker, WSL, or Remote. If
      * Docker is selected, both host path and container path fields are enabled.
      * Otherwise, they are disabled.
      */
@@ -971,7 +971,7 @@ public abstract class InstancePanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private final static String DEFAULT_INSTANCE = "None";
+    private final static String DEFAULT_INSTANCE = "Remote";
     private final static String DOCKER_INSTANCE = "Docker";
     private final static String WSL_INSTANCE = "WSL";
     

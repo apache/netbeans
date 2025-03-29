@@ -21,6 +21,8 @@ package org.netbeans.modules.j2ee.persistence.provider;
 import java.util.Collections;
 import java.util.Map;
 import org.netbeans.modules.j2ee.persistence.dd.common.Persistence;
+import static org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit.JAKARTA_NAMESPACE;
+import static org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit.JAVAX_NAMESPACE;
 import org.openide.util.NbBundle;
 
 /**
@@ -69,26 +71,44 @@ class OpenJPAProvider extends Provider{
     
     @Override
     public String getTableGenerationPropertyName() {
-        return getVersion() != null && 
-                (Persistence.VERSION_2_1.equals(getVersion()) || Persistence.VERSION_2_2.equals(getVersion()))
-                ? super.getTableGenerationPropertyName() 
-                : "openjpa.jdbc.SynchronizeMappings";//NOI18N
+        String result = (getVersion() != null &&
+            (Persistence.VERSION_2_1.equals(getVersion()) || Persistence.VERSION_2_2.equals(getVersion())
+            || Persistence.VERSION_3_0.equals(getVersion()) || Persistence.VERSION_3_1.equals(getVersion())))
+            ? super.getTableGenerationPropertyName()
+            : "openjpa.jdbc.SynchronizeMappings";//NOI18N
+        if (getVersion() != null &&
+            (Persistence.VERSION_3_0.equals(getVersion()) || Persistence.VERSION_3_1.equals(getVersion()))) {
+            result = result.replace(JAVAX_NAMESPACE, JAKARTA_NAMESPACE);
+        }
+        return result;
     }
 
     @Override
     public String getTableGenerationDropCreateValue() {
-        return getVersion() != null && 
-                (Persistence.VERSION_2_1.equals(getVersion()) || Persistence.VERSION_2_2.equals(getVersion()))
-                ? super.getTableGenerationDropCreateValue()
-                : "buildSchema(SchemaAction='add,deleteTableContents',ForeignKeys=true)";//NOI18N
+        String result = (getVersion() != null &&
+            (Persistence.VERSION_2_1.equals(getVersion()) || Persistence.VERSION_2_2.equals(getVersion())
+            || Persistence.VERSION_3_0.equals(getVersion()) || Persistence.VERSION_3_1.equals(getVersion())))
+            ? super.getTableGenerationDropCreateValue()
+            : "buildSchema(SchemaAction='add,deleteTableContents',ForeignKeys=true)";//NOI18N
+        if (getVersion() != null &&
+            (Persistence.VERSION_3_0.equals(getVersion()) || Persistence.VERSION_3_1.equals(getVersion()))) {
+            result = result.replace(JAVAX_NAMESPACE, JAKARTA_NAMESPACE);
+        }
+        return result;
     }
 
     @Override
     public String getTableGenerationCreateValue() {
-        return getVersion() != null && 
-                (Persistence.VERSION_2_1.equals(getVersion()) || Persistence.VERSION_2_2.equals(getVersion()))
-                ? super.getTableGenerationCreateValue()
-                : "buildSchema(ForeignKeys=true)";//NOI18N
+        String result = (getVersion() != null &&
+            (Persistence.VERSION_2_1.equals(getVersion()) || Persistence.VERSION_2_2.equals(getVersion())
+            || Persistence.VERSION_3_0.equals(getVersion()) || Persistence.VERSION_3_1.equals(getVersion())))
+            ? super.getTableGenerationCreateValue()
+            : "buildSchema(ForeignKeys=true)";//NOI18N
+	if (getVersion() != null &&
+            (Persistence.VERSION_3_0.equals(getVersion()) || Persistence.VERSION_3_1.equals(getVersion()))) {
+            result = result.replace(JAVAX_NAMESPACE, JAKARTA_NAMESPACE);
+        }
+        return result;
     }
 
     @Override

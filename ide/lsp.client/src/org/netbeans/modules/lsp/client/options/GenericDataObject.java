@@ -20,9 +20,7 @@ package org.netbeans.modules.lsp.client.options;
 
 import java.awt.Image;
 import java.beans.PropertyVetoException;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
@@ -30,7 +28,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import javax.imageio.ImageIO;
+import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataLoaderPool;
@@ -41,7 +39,7 @@ import org.openide.loaders.MultiFileLoader;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
-import org.openide.util.ImageUtilities;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -57,7 +55,7 @@ public class GenericDataObject extends MultiDataObject {
     public GenericDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(pf, loader);
         this.mimeType = FileUtil.getMIMEType(pf);
-        registerEditor(mimeType, false);
+        registerEditor(mimeType, true);
         synchronized (REGISTRY) {
             REGISTRY.add(new WeakReference<>(this));
         }
@@ -144,5 +142,8 @@ public class GenericDataObject extends MultiDataObject {
             }
         };
     }
-}
 
+    public static MultiViewEditorElement createEditor(Lookup lkp) {
+        return new MultiViewEditorElement(lkp);
+    }
+}

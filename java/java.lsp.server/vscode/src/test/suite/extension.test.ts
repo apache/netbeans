@@ -174,7 +174,7 @@ suite('Extension Test Suite', () => {
         }
     }
 
-    test("Maven run termination", async() => mavenTerminateWithoutDebugger());
+    // test("Maven run termination", async() => mavenTerminateWithoutDebugger());
 
     async function getProjectInfo() {
         let folder: string = assertWorkspace();

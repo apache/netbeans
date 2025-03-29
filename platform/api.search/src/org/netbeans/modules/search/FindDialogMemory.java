@@ -21,7 +21,10 @@ package org.netbeans.modules.search;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import org.netbeans.api.search.SearchPattern.MatchType;
 import org.openide.util.NbBundle;
@@ -138,8 +141,12 @@ public final class FindDialogMemory {
 
     private boolean openInNewTab;
 
+    private final Map<String, Boolean> showPreview = new HashMap<>();
+
     /** Preferences node for storing history info */
     private static Preferences prefs;
+    private static Preferences prefsShowPreview;
+
     /** Name of preferences node where we persist history */
     private static final String PREFS_NODE = "FindDialogMemory";  //NOI18N
     private static final String PROP_WHOLE_WORDS = "whole_words";  //NOI18N
@@ -149,7 +156,6 @@ public final class FindDialogMemory {
     private static final String PROP_SCOPE_TYPE_ID = "scope_type_id"; //NOI18N
     private static final String PROP_FILENAME_PATTERN_SPECIFIED = "filename_specified";  //NOI18N
     private static final String PROP_FILENAME_PATTERN_PREFIX = "filename_pattern_";  //NOI18N
-    private static final String PROP_REPLACE_PATTERN_PREFIX = "replace_pattern_";  //NOI18N
     private static final String PROP_SEARCH_IN_ARCHIVES = "search_in_archives"; //NOI18N
     private static final String PROP_SEARCH_IN_GENERATED = "search_in_generated"; //NOI18N
     private static final String PROP_FILE_PATH_REGEX = "file_path_regex"; //NOI18N
@@ -164,9 +170,11 @@ public final class FindDialogMemory {
     private static final String PROP_RESULTS_VIEW_MODE = "results_view_mode"; //NOI18N
     private static final String PROP_PROVIDER = "provider"; //NOI18N
     private static final String PROP_OPEN_IN_NEW_TAB = "open_in_new_tab"; //NOI18N
+    private static final String SHOW_PREVIEW_NODE = "ShowPreview"; //NOI18N
     /** Creates a new instance of FindDialogMemory */
     private FindDialogMemory() {
         prefs = NbPreferences.forModule(FindDialogMemory.class).node(PREFS_NODE);
+        prefsShowPreview = prefs.node(SHOW_PREVIEW_NODE);
         load();
     }
 
@@ -232,6 +240,14 @@ public final class FindDialogMemory {
                 ignoreList.add(item);
             }
             i++;
+        }
+
+        try {
+            for (String clazz : prefsShowPreview.keys()) {
+                showPreview.put(clazz, prefsShowPreview.getBoolean(clazz, true));
+            }
+        } catch (BackingStoreException ex) {
+            showPreview.clear();
         }
     }
 
@@ -499,5 +515,14 @@ public final class FindDialogMemory {
     public void setOpenInNewTab(boolean openInNewTab) {
         this.openInNewTab = openInNewTab;
         prefs.putBoolean(PROP_OPEN_IN_NEW_TAB, openInNewTab);
+    }
+
+    public boolean isShowPreview(String clazz) {
+        return showPreview.getOrDefault(clazz, true);
+    }
+
+    public void setShowPreview(String clazz, boolean value) {
+        this.showPreview.put(clazz, value);
+        prefsShowPreview.putBoolean(clazz, value);
     }
 }

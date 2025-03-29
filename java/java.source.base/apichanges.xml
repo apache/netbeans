@@ -25,6 +25,18 @@
     <apidef name="javasource_base">Java Source API</apidef>
 </apidefs>
 <changes>
+    <change id="TreeMaker.ClassPermits">
+        <api name="javasource_base" />
+        <summary>Adding TreeMaker.Class overload that takes permitted subclasses</summary>
+        <version major="1" minor="2.76"/>
+        <date day="28" month="11" year="2024"/>
+        <author login="jlahoda"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+                Adding TreeMaker.Class overload that allows to specify the permitted subclasses.
+        </description>
+        <class name="TreeMaker" package="org.netbeans.api.java.source"/>
+    </change>
     <change id="SourceUtils.classNameFor-nestedClass">
         <api name="javasource_base" />
         <summary>SourceUtils.classNameFor nested classes support</summary>

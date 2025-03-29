@@ -19,7 +19,6 @@
 package org.netbeans.modules.javascript2.vue.editor.embedding;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import org.netbeans.api.lexer.Token;
@@ -31,8 +30,6 @@ import org.netbeans.modules.javascript2.vue.editor.lexer.VueTokenId;
 import org.netbeans.modules.parsing.api.Embedding;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.spi.EmbeddingProvider;
-import org.netbeans.modules.parsing.spi.SchedulerTask;
-import org.netbeans.modules.parsing.spi.TaskFactory;
 
 /**
  * this will enable braces matches of html elements

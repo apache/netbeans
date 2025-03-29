@@ -24,7 +24,10 @@
     <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="build-init" description="Regenerate the ANTLRv4 parser" depends="projectized.build-init" extensionOf="-pre-compile">
         <property name="lexer.outdir" location="${src.dir}/org/netbeans/modules/javascript2/vue/grammar/antlr4/coloring"/>
-        
+        <path id="antlr4.tool">
+            <fileset dir="../../ide/libs.antlr4.runtime/external" includes="*.jar"/>
+            <fileset dir="../../ide/libs.antlr3.runtime/external" includes="antlr-runtime-*.jar"/>
+        </path>
         <!--coloring-->
         <java classname="org.antlr.v4.Tool"  fork="true" dir="${lexer.outdir}">
             <arg value="-o"/>

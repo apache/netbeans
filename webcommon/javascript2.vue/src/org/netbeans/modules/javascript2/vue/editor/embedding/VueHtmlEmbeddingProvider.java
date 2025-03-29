@@ -46,34 +46,21 @@ public class VueHtmlEmbeddingProvider extends EmbeddingProvider {
     @Override
     public List<Embedding> getEmbeddings(final Snapshot snapshot) {
         TokenHierarchy<?> tokenHierarchy = snapshot.getTokenHierarchy();
-        TokenSequence<?> sequence = tokenHierarchy.tokenSequence();
+        TokenSequence<?> ts = tokenHierarchy.tokenSequence();
         
-        if (sequence == null || !sequence.isValid()) {
+        if (ts == null || !ts.isValid()) {
             return Collections.emptyList();
         }
-        sequence.moveStart();
+        ts.moveStart();
         List<Embedding> embeddings = new ArrayList<>();
 
-        int offset = 0;
-        int len = 0;
-
-        String fake;
-
         try {
-            while (sequence.moveNext()) {
-                Token<?> t = sequence.token();
-                offset = sequence.offset();
+            while (ts.moveNext()) {
+                Token<?> t = ts.token();
                 TokenId id = t.id();
-                len += t.length();
-                String tText = t.text().toString();
-                if (len == 0) {
-                    continue;
-                }
+
                 if (id.equals(VueTokenId.HTML)) {
-                    embeddings.add(snapshot.create(offset, t.length(), TARGET_MIME_TYPE));
-                } else {
-                    fake = new String(new char[tText.length()]).replace("\0", FILLER); //NOI18N
-                    embeddings.add(snapshot.create(fake, TARGET_MIME_TYPE));
+                    embeddings.add(snapshot.create(ts.offset(), t.length(), TARGET_MIME_TYPE));
                 }
             }
         } catch (Exception ex) {
@@ -81,7 +68,7 @@ public class VueHtmlEmbeddingProvider extends EmbeddingProvider {
         }
         
         if (embeddings.isEmpty()) {
-            return Collections.singletonList(snapshot.create("", TARGET_MIME_TYPE)); //NOI18N
+            return Collections.emptyList();
         } else {
             return Collections.singletonList(Embedding.create(embeddings));
         }

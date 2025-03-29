@@ -19,12 +19,13 @@
 package org.netbeans.modules.javascript2.vue.editor.lexer;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import static junit.framework.TestCase.assertNotNull;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.lib.lexer.test.LexerTestUtilities;
-import org.netbeans.modules.javascript2.vue.editor.StringUtils;
 import org.netbeans.modules.javascript2.vue.editor.VueLanguage;
 import org.netbeans.modules.javascript2.vue.editor.VueTestBase;
 
@@ -60,7 +61,7 @@ public class VueLexerTest extends VueTestBase {
     }
 
     private void checkLexer(final String filePath) throws Exception {
-        String fileContent = VueLexerUtils.getFileContent(new File(getDataDir(), filePath));
+        String fileContent = Files.readString(new File(getDataDir(), filePath).toPath(), StandardCharsets.UTF_8);
         VueLanguage langSettings = new VueLanguage();
         Language<VueTokenId> language;
         language = langSettings.getLexerLanguage();
@@ -75,7 +76,7 @@ public class VueLexerTest extends VueTestBase {
             result.append(ts.index());
             result.append(" ");
             result.append(tokenId.name());
-            String token = StringUtils.replaceLinesAndTabs(tokenText.toString());
+            String token = replaceLinesAndTabs(tokenText.toString());
             if (!token.isEmpty()) {
                 result.append(" ");
                 result.append("[");
@@ -86,5 +87,13 @@ public class VueLexerTest extends VueTestBase {
         }
 
         assertDescriptionMatches(filePath, result.toString(), false, ".lexer");
+    }
+
+    private String replaceLinesAndTabs(String input) {
+        String escapedString = input;
+        escapedString = escapedString.replaceAll("\n", "\\\\n"); // NOI18N
+        escapedString = escapedString.replaceAll("\r", "\\\\r"); // NOI18N
+        escapedString = escapedString.replaceAll("\t", "\\\\t"); // NOI18N
+        return escapedString;
     }
 }

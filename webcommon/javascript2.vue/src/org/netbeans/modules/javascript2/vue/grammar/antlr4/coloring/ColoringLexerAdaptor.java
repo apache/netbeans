@@ -39,6 +39,9 @@ public abstract class ColoringLexerAdaptor extends Lexer {
     @Override
     public void reset() {
         insideTemplateTag = false;
+        insideStyleTag = false;
+        attrQuoteOpened = false;
+        varInterpolationOpened = false;
         super.reset();
     }
 
@@ -49,7 +52,7 @@ public abstract class ColoringLexerAdaptor extends Lexer {
     public boolean isInsideTemplateTag() {
         return insideTemplateTag;
     }
-    
+
     public void setInsideStyleTag(boolean state) {
         insideStyleTag = state;
     }
@@ -57,7 +60,7 @@ public abstract class ColoringLexerAdaptor extends Lexer {
     public boolean isInsideStyleTag() {
         return insideStyleTag;
     }
-    
+
     public void setAttrQuoteState(boolean state) {
         attrQuoteOpened = state;
     }
@@ -65,7 +68,7 @@ public abstract class ColoringLexerAdaptor extends Lexer {
     public boolean getAttrQuoteState() {
         return attrQuoteOpened;
     }
-        
+
     public void setVarInterpolationOpened(boolean state) {
         varInterpolationOpened = state;
     }

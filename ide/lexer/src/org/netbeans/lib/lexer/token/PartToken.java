@@ -83,4 +83,9 @@ public final class PartToken<T extends TokenId> extends PropertyToken<T> {
         return "ParT[" + (partTokenIndex+1) + "/" + joinToken().joinedParts().size() + "]"; // NOI18N
     }
 
+    @Override
+    public String toString() {
+        return dumpInfoTokenType();
+    }
+
 }

@@ -24,7 +24,6 @@ import java.beans.PropertyChangeListener;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.event.CaretEvent;
@@ -41,12 +40,12 @@ import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.editor.settings.AttributesUtilities;
-import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.editor.BaseKit.InsertTabAction;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.editor.indent.api.IndentUtils;
-import org.netbeans.modules.lsp.client.EnhancedTextDocumentService;
+import org.netbeans.modules.lsp.client.EnhancedTextDocumentService.InlineCompletionItem;
+import org.netbeans.modules.lsp.client.EnhancedTextDocumentService.InlineCompletionParams;
 import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.Utils;
 import org.netbeans.spi.editor.AbstractEditorAction;
@@ -85,6 +84,7 @@ public class InlineCompletion {
         private AtomicReference<FileObject> currentFile = new AtomicReference<>();
         private AtomicReference<Document> currentDocument = new AtomicReference<>();
         private AtomicInteger currentCaretPos = new AtomicInteger();
+        private AtomicReference<CompletableFuture<?>> currentQuery = new AtomicReference<>();
         private final Task query = WORKER.create(this::doQuery);
 
         @Override
@@ -140,33 +140,53 @@ public class InlineCompletion {
                     ProposalItem.clearProposal(doc);
                 }
 
+                CompletableFuture<?> currentRunningQuery = currentQuery.get();
+
+                if (currentRunningQuery != null) {
+                    if (!currentRunningQuery.isDone()) {
+                        currentRunningQuery.cancel(true);
+                    }
+
+                    currentQuery.compareAndSet(currentRunningQuery, null);
+                }
+
                 LSPBindings bindings = LSPBindings.getBindings(file);
 
                 if (bindings != null) {
                     //TODO: check if the server has inline completion
                     boolean hasInlineCompletion = true;
                     if (hasInlineCompletion) {
-                        ProgressHandle handle = ProgressHandle.createHandle("Running inline completion."); //TODO: progress should be handle by the server/protocol, forcing a progress here seems very intrusive
-                        boolean proposalFound = false;
+                        ProposalItem.clearProposal(doc); //TODO: is this appropriate time?
+
                         try {
-                            handle.start();
-                            //TODO: cancel
-                            CompletableFuture<EnhancedTextDocumentService.InlineCompletionItem[]> futureProposals = bindings.getTextDocumentService().inlineCompletion(new EnhancedTextDocumentService.InlineCompletionParams(new TextDocumentIdentifier(Utils.toURI(file)), Utils.createPosition(doc, caretPos), null));
-                            EnhancedTextDocumentService.InlineCompletionItem[] proposals = futureProposals.get();
-                            if (proposals != null && proposals.length > 0 && thisVersion == DocumentUtilities.getDocumentVersion(doc)) {
-                                //TODO: more proper re-indent possible?
-                                int indent = IndentUtils.lineIndent(doc, IndentUtils.lineStartOffset(doc, caretPos));
-                                String proposalText = proposals[0].getInsertText().replaceAll("\n", "\n" + IndentUtils.createIndentString(doc, indent));
-                                ProposalItem.putProposal(bindings, doc, caretPos, proposalText);
-                                proposalFound = true;
-                            }
-                        } catch (BadLocationException | ExecutionException | InterruptedException ex) {
+                            InlineCompletionParams inlineCompletionParams = new InlineCompletionParams(new TextDocumentIdentifier(Utils.toURI(file)), Utils.createPosition(doc, caretPos), null);
+                            CompletableFuture<InlineCompletionItem[]> inlineCompletion =
+                                    bindings.getTextDocumentService()
+                                            .inlineCompletion(inlineCompletionParams);
+
+                            currentQuery.set(inlineCompletion);
+
+                            inlineCompletion.handle((proposals, exc) -> {
+                                currentQuery.compareAndSet(inlineCompletion, null);
+
+                                if (exc != null) {
+                                    exc.printStackTrace();
+                                    return null;
+                                }
+                                if (proposals != null && proposals.length > 0 && thisVersion == DocumentUtilities.getDocumentVersion(doc)) {
+                                    //TODO: more proper re-indent possible?
+                                    try {
+                                        int indent = IndentUtils.lineIndent(doc, IndentUtils.lineStartOffset(doc, caretPos));
+                                        String proposalText = proposals[0].getInsertText().replaceAll("\n", "\n" + IndentUtils.createIndentString(doc, indent));
+                                        ProposalItem.putProposal(bindings, doc, caretPos, proposalText);
+                                    } catch (BadLocationException ex) {
+                                        Exceptions.printStackTrace(ex);
+                                    }
+                                }
+                                return null;
+                            });
+                        } catch (BadLocationException ex) {
                             Exceptions.printStackTrace(ex);
-                        } finally {
-                            if (!proposalFound) {
-                                ProposalItem.clearProposal(doc);
-                            }
-                            handle.finish();
                         }
                     }
                 }

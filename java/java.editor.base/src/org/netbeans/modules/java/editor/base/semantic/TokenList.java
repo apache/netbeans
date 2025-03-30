@@ -373,7 +373,7 @@ public class TokenList {
         return ts != null ? ts.index() : -1;
     }
 
-    public void resetToIndex(int index) {
+    public void resetToIndex(int index, int offset) {
         doc.render(() -> {
             if (cancel.get()) {
                 return ;

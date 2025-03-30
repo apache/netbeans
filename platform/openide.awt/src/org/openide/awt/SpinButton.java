@@ -33,7 +33,7 @@ import java.util.Vector;
 *
 * <TABLE>
 * <caption>properties of SpinButton</caption>
-* <TR><TH WIDTH=15%>Property<TH WIDTH=15%>Property Type<TH>Description
+* <TR><TH style="width:15%" >Property<TH style="width:15%" >Property Type<TH>Description
 * <TR><TD> Orientation <TD> boolean <TD> Orientation of SpinButton (Left-right or Up-down)
 * <TR><TD> Minimum     <TD> int     <TD> Minimum value.
 * <TR><TD> Maximum     <TD> int     <TD> Maximum value.

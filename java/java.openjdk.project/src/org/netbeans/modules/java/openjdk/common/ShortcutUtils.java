@@ -89,6 +89,10 @@ public class ShortcutUtils {
     }
 
     private boolean matches(String repoName, String pathInRepo, String key) {
+        if (pathInRepo == null) {
+            return false;
+        }
+
         String include = null;
         String exclude = null;
         try {

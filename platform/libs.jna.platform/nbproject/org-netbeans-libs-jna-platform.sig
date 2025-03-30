@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.21
+#Version 2.22
 
 CLSS public abstract interface com.sun.jna.AltCallingConvention
 

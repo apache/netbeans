@@ -87,10 +87,6 @@ public class SiteOutputProcessor implements OutputProcessor {
         private Listener(Project prj) {
             this.prj = prj;
         }
-        @Override
-        public void outputLineSelected(OutputEvent arg0) {
-            
-        }
         
         @Messages({"# {0} - file name", "SiteOutputProcessor.not_found=No site index created at {0}"})
         @Override
@@ -106,9 +102,6 @@ public class SiteOutputProcessor implements OutputProcessor {
                 StatusDisplayer.getDefault().setStatusText(SiteOutputProcessor_not_found(html));
             }
         }
-        
-        @Override
-        public void outputLineCleared(OutputEvent arg0) {
-        }
+
     }
 }

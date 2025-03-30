@@ -18,7 +18,7 @@
     under the License.
 
 -->
-
+<!DOCTYPE html>
 <html>
 <head>
 <title>Utility Classes</title>
@@ -39,7 +39,7 @@ our sources.
 <ol>
     <li><a href="../NbBundle.html">NbBundle</a> as our specialized support
     for localization and replacement to
-    <a href="@JDK@/java/util/ResourceBundle.html">ResourceBundle</a>.
+    <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/util/ResourceBundle.html">ResourceBundle</a>.
     </li>
 
     <li><a href="../Task.html"><code>Task</code></a> and especially
@@ -59,7 +59,7 @@ our sources.
     <li>
     <a href="../Enumerations.html"><code>Enumerations</code></a> provide
     enhacened support for manipulation with 
-    <a href="@JDK@/java/util/Enumeration.html">Enumeration</a>s and especially
+    <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/util/Enumeration.html">Enumeration</a>s and especially
     their on-demand generation.
     </li>
 </ol>
@@ -95,7 +95,7 @@ and helper implementations in
 </ul>
 
 
-<h2><a name="lookup">Lookup</a></h2>
+<h2 id="lookup">Lookup</h2>
 
 <div class="nonnormative">
 
@@ -130,7 +130,7 @@ explained.
 
 </div>
 
-<h3><a name="instances">Working with Instances</a></h3>
+<h3 id="instances">Working with Instances</h3>
 
 Central to the management of services and many other aspects of
 NetBeans' configuration is the notion of
@@ -225,7 +225,7 @@ For example:</p>
 &lt;/<span class="function-name">file</span>&gt;
 </pre>
 
-<dt><a name="ido-methodvalue"></a><em>Non-default instance - <code>InstanceDataObject</code></em>
+<dt><a id="ido-methodvalue"></a><em>Non-default instance - <code>InstanceDataObject</code></em>
 
 <dd><p>A powerful way of providing instances is to use the expressiveness
 of the XML layer syntax to handle the instance creation. In this case
@@ -282,7 +282,7 @@ JavaBean, into a file with the extension <samp>*.ser</samp>. This is
 not very useful from a layer, because you should avoid putting
 binary data into a layer, but may be useful in some circumstances.</p>
 
-<dt><a name="xml-instances"><em>XML-based instances</em></a></dt>
+<dt><a id="xml-instances"><em>XML-based instances</em></a></dt>
 
 <dd><p><a href="@org-openide-util@/org/openide/xml/EntityCatalog.html"><code>EntityCatalog</code></a></p></dd>
 </dl>
@@ -316,10 +316,10 @@ separator.
 
 </div>
 
-<h3><a name="instance-folders">Folders of Instances</a></h3>
+<h3 id="instance-folders">Folders of Instances</h3>
 
 
-<h4><a name="instancecookie-of"><code>InstanceCookie.Of</code> and lazy class loading</a></h4>
+<h4 id="instancecookie-of"><code>InstanceCookie.Of</code> and lazy class loading</h4>
 
 Now it is time to mention the purpose of
 <code>InstanceCookie.Of</code>. Suppose that there are two generic
@@ -398,7 +398,7 @@ superclasses <em>may or may not</em> succeed. So you should include in
 someone might use in a lookup query, possibly including the actual
 implementation class.</p>
 
-<h3><a name="service-lookup">Lookup and Service Installation</a></h3>
+<h3 id="service-lookup">Lookup and Service Installation</h3>
 
 The client side of the lookup system centers around one class,
 
@@ -428,8 +428,7 @@ This is normally done more easily by using the <code>@ServiceProvider</code> ann
 The lookup infrastructure
 will then load the implementation class and call its default constructor 
 to answer the query in the above example.
-<P>
-
+<br>
 <div class="nonnormative">
     The Lookup supports two small extensions to the 
     <a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jar/jar.html#Service%20Provider">JDK's
@@ -550,7 +549,7 @@ method providing a lookup instance itself; and when you are
 dynamically inside a <code>DataLoader</code> method involved in
 recognizing data objects.
 
-<h3><a name="lookup-ids">Persisting Lookup Information</a></h3>
+<h3 id="lookup-ids">Persisting Lookup Information</h3>
 
 In some circumstances it is necessary to not only find registered
 objects, but to select some of them and make this selection
@@ -592,7 +591,7 @@ the ID is the private knowledge of the implementor of the lookup, but
 typically if the instance has been provided via layer the ID will
 mention the name of the file from which it was derived.
 
-<h3><a name="lookup-impl">Creating Lookups</a></h3>
+<h3 id="lookup-impl">Creating Lookups</h3>
 
 There are a number of reasons to create your own lookup
 implementation. For one thing, the lookup system which scans the
@@ -623,7 +622,7 @@ also changeable later). The results it provides are constructed by
 merging together the results of the delegate lookups.
 
 <p>
-<a name="folderlookup"></a>
+<a id="folderlookup"></a>
 
 If you want to use the common mechanism of finding instances in
 folders (or subfolders) and serving these as the results,
@@ -717,7 +716,7 @@ convertor which really loads the class and instantiates it. This makes
 it easy to set up the lookup, but nothing is really loaded until
 someone asks for it.
 
-<h3><a name="settings">Settings</a></h3>
+<h3 id="settings">Settings</h3>
 
 <em>Settings</em> require special support in the lookup system: these
 are objects (perhaps singletons but not necessarily) which should be
@@ -905,13 +904,13 @@ instead).</p>
 reload of the state and modification of the in-memory bean (or
 creation of a new instance cookie with a new bean).</p>
 
-<h3><a name="lookup-ui">UI for Services</a></h3>
+<h3 id="lookup-ui">UI for Services</h3>
 
 <p>There are several things you can do to not only have services and
 lookup function programmatically but also look good and behave nicely
 within the user's view of configuration options and settings.</p>
 
-<h4><a name="service-templates">Service Templates</a></h4>
+<h4 id="service-templates">Service Templates</h4>
 
 <p>For many kinds of services, especially <code>ServiceType</code>s
 but also others, it is necessary to permit the user to create new
@@ -964,7 +963,7 @@ corresponding options folder, the template will be available.</p>
 
 <!-- XXX is the file attribute 'simple'=false supported? Yarda says it was a hack only -->
 
-<h4><a name="service-mirroring">Services display area and mirroring</a></h4>
+<h4 id="service-mirroring">Services display area and mirroring</h4>
 
 <p>In addition to providing services, it is desirable to display them
 to the user as well. This is done, as is customary in other aspects of
@@ -1097,7 +1096,7 @@ lookup, generally) yet not have them be visible in the UI. In this
 case you should mark the file or subfolder with the file attribute
 <code>hidden</code> (set to boolean <samp>true</samp>).</p>
 
-<h4><a name="services-proped">Property editor for services</a></h4>
+<h4 id="services-proped">Property editor for services</h4>
 
 <p>If you wish to permit the user to select a service as part of the
 Property Sheet (from a node property, or as a

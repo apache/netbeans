@@ -60,6 +60,9 @@ import org.openide.util.lookup.Lookups;
  * Represents an OCI profile. A profile has a user, tenancy and region
  * assigned.
  */
+@NbBundle.Messages({
+    "LBL_HomeRegion=Region: {0}"
+})
 public final class OCIProfile implements OCISessionInitiator {
 
     /**
@@ -178,9 +181,6 @@ public final class OCIProfile implements OCISessionInitiator {
      * @return Optional {@code OCIItem} describing the Tenancy. If
      * Optional.empty() OCI configuration was not found
      */
-    @NbBundle.Messages({
-        "LBL_HomeRegion=Region: {0}"
-    })
     public Optional<TenancyItem> getTenancy() {
         if (configProvider == null) {
             return Optional.empty();

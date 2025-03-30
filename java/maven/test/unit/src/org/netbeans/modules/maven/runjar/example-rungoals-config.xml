@@ -21,7 +21,8 @@
 -->
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
-    <!-- @start region="register-run-goals" -->
+    <!-- // @start region="register-run-goals" 
+    -->
     <folder name="Projects">
         <folder name="org-netbeans-modules-maven">
             <!-- Register in Projects/org-netbeans-modules-maven/RunGoals area -->
@@ -46,5 +47,6 @@
             </folder>
         </folder>
     </folder>
-    <!-- @end region="register-run-goals" -->
+    <!-- // @end region="register-run-goals" 
+    -->
 </filesystem>

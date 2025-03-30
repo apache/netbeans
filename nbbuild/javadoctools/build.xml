@@ -22,6 +22,7 @@
 
 <!DOCTYPE someant [
   <!ENTITY properties SYSTEM "properties.xml">
+  <!ENTITY replacesjdk SYSTEM "replacesjdk.xml">
   <!ENTITY replaces SYSTEM "replaces.xml">
   <!ENTITY disallowed-links SYSTEM "disallowed-links.xml">
 ]>
@@ -153,14 +154,14 @@
                 <equals arg1="${json.version}" arg2="dev"/>
             </not>
         </condition>
-        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/usecases.html" style="export2usecases.xsl">
+        <xslt in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/usecases.html" style="export2usecases.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
             <param name="maturity" expression="${json.maturity}" />
             <param name="version" expression="${json.uversion}" />
             <param name="releaseinfo" expression="${xmlrelease}" />
-        </style>
+        </xslt>
 
-        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/apichanges.html" style="export2apichanges.xsl">
+        <xslt in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/apichanges.html" style="export2apichanges.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
             <param name="changes-since-year" expression="${previous.release.year}"/>
             <param name="changes-since-day" expression="${previous.release.day}"/>
@@ -170,12 +171,12 @@
             <param name="version" expression="${json.uversion}" />
             <param name="releaseinfo" expression="${xmlrelease}" />
             <param name="allmodule" expression="${netbeans.javadoc.dir}/modules.xml" />
-        </style>
+        </xslt>
 
-        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/apichanges.atom" style="export2apichanges-atom.xsl">
+        <xslt in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/apichanges.atom" style="export2apichanges-atom.xsl">
             <param name="date" expression="${atom-date}"/>
             <param name="maturity" expression="${json.maturity}" />
-        </style>
+        </xslt>
         <!-- copy some assets to apidoc root -->
         <copy file="netbeans.css" tofile="${netbeans.javadoc.dir}/netbeans.css"/>
         <copy file="siteresource/apache-netbeans.svg" tofile="${netbeans.javadoc.dir}/apache-netbeans.svg" overwrite="true"/>
@@ -194,45 +195,45 @@
             the export*.xsl templates.
         </fail>
 <!--
-        <style in="${netbeans.javadoc.dir}/allclasses.xml" out="${netbeans.javadoc.dir}/allclasses-frame.html" style="export2allclasses.xsl"/>
+        <xslt in="${netbeans.javadoc.dir}/allclasses.xml" out="${netbeans.javadoc.dir}/allclasses-frame.html" style="export2allclasses.xsl"/>
 
-        <style in="${netbeans.javadoc.dir}/modules.xml" out="${netbeans.javadoc.dir}/overview-frame.html" style="export2allmodules.xsl">
+        <xslt in="${netbeans.javadoc.dir}/modules.xml" out="${netbeans.javadoc.dir}/overview-frame.html" style="export2allmodules.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
-        </style>
+        </xslt>
 -->
-        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/layers.html" style="export2layer.xsl">
+        <xslt in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/layers.html" style="export2layer.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
             <param name="maturity" expression="${json.maturity}" />
             <param name="version" expression="${json.uversion}" />
             <param name="releaseinfo" expression="${xmlrelease}" />
-        </style>
+        </xslt>
 
-        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/properties.html" style="export2property.xsl">
+        <xslt in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/properties.html" style="export2property.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
              <param name="maturity" expression="${json.maturity}" />
             <param name="version" expression="${json.uversion}" />
             <param name="releaseinfo" expression="${xmlrelease}" />
-        </style>
+        </xslt>
 
-        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/branding.html" style="export2branding.xsl">
+        <xslt in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/branding.html" style="export2branding.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
             <param name="maturity" expression="${json.maturity}" />
             <param name="version" expression="${json.uversion}" />
             <param name="releaseinfo" expression="${xmlrelease}" />
-        </style>
+        </xslt>
 
         <!-- at the end generate the index.html so people know where to start -->
-        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/index.html" style="export2index.xsl">
+        <xslt in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/index.html" style="export2index.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
             <param name="maturity" expression="${json.maturity}" />
             <param name="version" expression="${json.uversion}" />
             <param name="releaseinfo" expression="${xmlrelease}" />
-        </style>
+        </xslt>
         &properties;
 
         <replace dir="${netbeans.javadoc.dir}">
             <include name="*.html"/>
-            <replacefilter token="@JDK@" value="${javaapidocurl}"/>
+            &replacesjdk;
             &replaces;
             <replacefilter token="http://root/" value="."/>
             <replacefilter token="$${javadoc.web.root}" value="."/>

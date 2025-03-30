@@ -261,10 +261,6 @@ public class SQLExecutionLoggerImpl implements SQLExecutionLogger {
         }
 
         @Override
-        public void outputLineCleared(OutputEvent ev) {
-        }
-
-        @Override
         public void outputLineAction(OutputEvent ev) {
             goToLine(true);
         }

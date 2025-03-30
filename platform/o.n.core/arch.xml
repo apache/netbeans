@@ -1191,8 +1191,9 @@
   <p>
       The core module use NbPreferences for storring properties describe current settings
       of Network Proxy.
-      <api group="preferences" name="org.netbeans.core" type="export" category="friend" url="">
+      <api group="preferences" name="org.netbeans.core" type="export" category="friend">
           <table>
+              <caption>properties for NetWorks Proxy</caption>
               <tbody>
                   <tr>
                       <th>key</th>

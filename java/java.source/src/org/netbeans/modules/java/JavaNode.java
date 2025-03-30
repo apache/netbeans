@@ -101,7 +101,9 @@ public final class JavaNode extends DataNode implements ChangeListener {
     private static final long serialVersionUID = -7396485743899766258L;
 
     private static final String JAVA_ICON_BASE = "org/netbeans/modules/java/resources/class.png"; // NOI18N
+    private static final String JAVA_ICON_BASE_SVG = "org/netbeans/modules/java/resources/class.svg"; // NOI18N
     private static final String CLASS_ICON_BASE = "org/netbeans/modules/java/resources/clazz.gif"; // NOI18N
+    private static final String CLASS_ICON_BASE_SVG = "org/netbeans/modules/java/resources/clazz.svg"; // NOI18N
     private static final String ABSTRACT_CLASS_ICON_BASE = "org/netbeans/modules/java/resources/abstract_class_file.png"; //NOI18N
     private static final String INTERFACE_ICON_BASE = "org/netbeans/modules/java/resources/interface_file.png"; //NOI18N
     private static final String ENUM_ICON_BASE = "org/netbeans/modules/java/resources/enum_file.png";   //NOI18N
@@ -566,7 +568,9 @@ public final class JavaNode extends DataNode implements ChangeListener {
             final Object attrValue = parent.getProperty("url", null);   //NOI18N
             if (attrValue instanceof URL) {
                 final String url = attrValue.toString();
-                if (!(isJavaSource ? url.endsWith(JAVA_ICON_BASE) : url.endsWith(CLASS_ICON_BASE))) {
+                if (!(url.endsWith(isJavaSource ? JAVA_ICON_BASE : CLASS_ICON_BASE) ||
+                    url.endsWith(isJavaSource ? JAVA_ICON_BASE_SVG : CLASS_ICON_BASE_SVG)))
+                {
                     return parent;
                 }
             }

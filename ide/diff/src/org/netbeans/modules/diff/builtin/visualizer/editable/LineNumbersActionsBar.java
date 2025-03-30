@@ -25,7 +25,6 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Stroke;
@@ -43,6 +42,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.Map;
+import javax.swing.Icon;
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
 import javax.swing.SwingUtilities;
@@ -59,6 +59,7 @@ import org.netbeans.editor.Coloring;
 import org.netbeans.editor.EditorUI;
 import org.netbeans.editor.Utilities;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
+import org.openide.util.ImageUtilities;
 
 /**
  * Draws both line numbers and diff actions for a decorated editor pane.
@@ -71,11 +72,11 @@ class LineNumbersActionsBar extends JPanel implements Scrollable, MouseMotionLis
     private static final int LINES_BORDER_WIDTH = 4;
     private static final Point POINT_ZERO = new Point(0, 0);
     
-    private final Image insertImage = org.openide.util.Utilities.loadImage("org/netbeans/modules/diff/builtin/visualizer/editable/insert.png"); // NOI18N
-    private final Image removeImage = org.openide.util.Utilities.loadImage("org/netbeans/modules/diff/builtin/visualizer/editable/remove.png"); // NOI18N
+    private final Icon insertIcon = ImageUtilities.loadIcon("org/netbeans/modules/diff/builtin/visualizer/editable/insert.png"); // NOI18N
+    private final Icon removeIcon = ImageUtilities.loadIcon("org/netbeans/modules/diff/builtin/visualizer/editable/remove.png"); // NOI18N
 
-    private final Image insertActiveImage = org.openide.util.Utilities.loadImage("org/netbeans/modules/diff/builtin/visualizer/editable/insert_active.png"); // NOI18N
-    private final Image removeActiveImage = org.openide.util.Utilities.loadImage("org/netbeans/modules/diff/builtin/visualizer/editable/remove_active.png"); // NOI18N
+    private final Icon insertActiveIcon = ImageUtilities.loadIcon("org/netbeans/modules/diff/builtin/visualizer/editable/insert_active.png"); // NOI18N
+    private final Icon removeActiveIcon = ImageUtilities.loadIcon("org/netbeans/modules/diff/builtin/visualizer/editable/remove_active.png"); // NOI18N
     
     private final DiffContentPanel master;
     private final boolean actionsEnabled;
@@ -100,8 +101,8 @@ class LineNumbersActionsBar extends JPanel implements Scrollable, MouseMotionLis
         this.master = master;
         this.actionsEnabled = actionsEnabled;
         actionsWidth = actionsEnabled ? ACTIONS_BAR_WIDTH : 0;
-        actionIconsHeight = insertImage.getHeight(this);
-        actionIconsWidth = insertImage.getWidth(this);
+        actionIconsHeight = insertIcon.getIconHeight();
+        actionIconsWidth = insertIcon.getIconWidth();
         setOpaque(true);
         setToolTipText(""); // NOI18N
         master.getMaster().addPropertyChangeListener(this);
@@ -340,13 +341,13 @@ class LineNumbersActionsBar extends JPanel implements Scrollable, MouseMotionLis
             if (actionsEnabled && dd.canRollback()) {
                 if (master.isFirst() && dd.getDiff().getType() != Difference.ADD
                         || !master.isFirst() && dd.getDiff().getType() == Difference.ADD) {
-                    Image activeImage = master.isFirst() ? insertActiveImage : removeActiveImage;
-                    Image image = master.isFirst() ? insertImage : removeImage;
+                    Icon activeIcon = master.isFirst() ? insertActiveIcon : removeActiveIcon;
+                    Icon icon = master.isFirst() ? insertIcon : removeIcon;
                     Rectangle hotSpot = new Rectangle((master.isFirst() ? 0 : offset) + 1, top + actionsYOffset, actionIconsWidth, actionIconsHeight);
                     if (hotSpot.contains(lastMousePosition) || idx == currentDifference) {
-                        g.drawImage(activeImage, hotSpot.x, hotSpot.y, this);
+                        activeIcon.paintIcon(null, g, hotSpot.x, hotSpot.y);
                     } else {
-                        g.drawImage(image, hotSpot.x, hotSpot.y, this);
+                        icon.paintIcon(null, g, hotSpot.x, hotSpot.y);
                     }
                     newActionIcons.add(new HotSpot(hotSpot, dd.getDiff()));
                 }

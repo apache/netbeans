@@ -25,9 +25,9 @@ import java.io.OutputStream;
 import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -48,7 +48,7 @@ final class ConnectionSpec implements Closeable {
     private final Boolean listen;
     private final int port;
     // @GuardedBy (this)
-    private final List<Closeable> close = new ArrayList<>();
+    private final List<Closeable> close = new CopyOnWriteArrayList<>();
     // @GuardedBy (this)
     private final List<Closeable> closed = new ArrayList<>();
 

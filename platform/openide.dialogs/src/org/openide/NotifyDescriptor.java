@@ -329,7 +329,7 @@ public class NotifyDescriptor extends Object {
     * usage, the message is just a <code>String</code>.  However, the type
     * of this parameter is actually <code>Object</code>.  Its interpretation depends on
     * its type:
-    * <dl compact>
+    * <dl>
     * <dt><code>Object[]</code><dd> A recursively interpreted series of messages.
     * <dt>{@link Component}<dd> The <code>Component</code> is displayed in the dialog.
     * <dt>{@link javax.swing.Icon}<dd> The <code>Icon</code> is wrapped in a {@link JLabel} and displayed in the dialog.
@@ -481,7 +481,7 @@ public class NotifyDescriptor extends Object {
     * The usual value for the options parameter is an array of
     * <code>String</code>s.  But the parameter type is an array of <code>Object</code>s.  Its
     * interpretation depends on its type:
-    * <dl compact>
+    * <dl>
     * <dt>{@link Component}<dd>The component is added to the button row directly.
     * <dt>{@link javax.swing.Icon}<dd>A {@link javax.swing.JButton} is created with this icon as its label.
     * <dt>anything else<dd>The <code>Object</code> is {@link Object#toString converted} to a string and the result is used to
@@ -521,7 +521,7 @@ public class NotifyDescriptor extends Object {
     * The usual value for the options parameter is an array of
     * <code>String</code>s.  But the parameter type is an array of <code>Object</code>s.  Its
     * interpretation depends on its type:
-    * <dl compact>
+    * <dl>
     * <dt>{@link Component}<dd>The component is added to the button row directly.
     * <dt>{@link javax.swing.Icon}<dd>A {@link javax.swing.JButton} is created with this icon as its label.
     * <dt>anything else<dd>The <code>Object</code> is {@link Object#toString converted} to a string and the result is used to

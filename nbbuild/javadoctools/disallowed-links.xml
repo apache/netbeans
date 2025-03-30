@@ -70,6 +70,8 @@
     <filter pattern="https://docs\.oracle\.com/javase.*" accept="true" />
     <filter pattern="https://docs\.oracle\.com/javaee.*" accept="true" />
     <filter pattern="https://docs\.microsoft\.com/.*" accept="true" />
+    <!-- new jdk above 8 documentation pattern -->
+    <filter pattern="https://docs\.oracle\.com/en/java/javase.*" accept="true" />
     
     <filter pattern="https://www\.graalvm\.org/truffle/javadoc/.*" accept="true" />
     <filter pattern="https://openjfx\.io/javadoc/.*" accept="true" />

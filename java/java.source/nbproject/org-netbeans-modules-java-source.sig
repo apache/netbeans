@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.191.0
+#Version 0.192.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -1006,7 +1006,7 @@ meth public javax.lang.model.element.TypeElement enclosingTypeElement(javax.lang
 meth public javax.lang.model.element.TypeElement outermostTypeElement(javax.lang.model.element.Element)
 meth public static java.lang.String getBinaryName(javax.lang.model.element.TypeElement)
 supr java.lang.Object
-hfds ALL_ACCEPTOR,NOT_OVERRIDABLE,ctx,delegate,info
+hfds ALL_ACCEPTOR,LOG,NOT_OVERRIDABLE,ORDINARY_SCOPE_TYPE,ctx,delegate,info
 hcls ElementNameVisitor
 
 CLSS public abstract interface static org.netbeans.api.java.source.ElementUtilities$ElementAcceptor
@@ -1240,6 +1240,7 @@ meth public static boolean isMainClass(java.lang.String,org.netbeans.api.java.so
 meth public static boolean isMainMethod(javax.lang.model.element.ExecutableElement)
 meth public static boolean isScanInProgress()
 meth public static java.lang.Object getDiagnosticParam(javax.tools.Diagnostic<?>,int)
+meth public static java.lang.String classNameFor(org.netbeans.api.java.source.ClasspathInfo,java.lang.String,org.netbeans.spi.project.NestedClass)
 meth public static java.lang.String findSourceFileName(javax.lang.model.element.Element)
 meth public static java.lang.String getModuleName(java.net.URL)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()

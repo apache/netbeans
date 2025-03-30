@@ -30,7 +30,7 @@ This document details a few ways in which the Property Sheet can be customized
 or affected by system properties, UI manager keys, non-normative hints from
 Nodes and such.
 
-<h2><a name="jvmflags">System properties that affect the behavior of the Property Sheet</a></h2>
+<h2 id="jvmflags">System properties that affect the behavior of the Property Sheet</h2>
 <p>Note that generally these flags may or may not be supported in
 future versions.  The following flags may be passed to the JVM
 in the form <code>runide -J-Dsome.property=true</code> which
@@ -59,9 +59,8 @@ is the most effective.
 <LI><b>netbeans.ps.forcetabs</b> - debugging flag which forces the property
     sheet to use tabs instead of expandable sets for all property sets</LI>
 </UL>
-</div>
 
-<h2><a name="uimanager">UIManager settings that affect Property Sheet display characteristics</a></h2>
+<h2 id="uimanager">UIManager settings that affect Property Sheet display characteristics</h2>
 <div class="nonnormative">
 <p>The Property Sheet will look for a number of custom values in UIManager,
 which may be supplied to affect its appearance, either by a themes.xml file
@@ -91,7 +90,7 @@ enhancing the presentation of the Property Sheet:
 </UL>
 </div>
 
-<h2><a name="customps">Customization of PropertyPanel</a></h2>
+<h2 id="custompspsr">Customization of PropertyPanel</h2>
 <div class="nonnormative">
 <P>The PropertyPanel component is a generic component which will display a 
 property editor for a single property - rather like a single cell of the 
@@ -112,7 +111,7 @@ be set on it to change its behavior, via <code>putClientProperty()</code>.</P>
 </ul>
 </div>  
 
-<h2><a name="tabs">Using Tabs in a Property Sheet in a stand-alone application</a></h2>
+<h2 id="tabs">Using Tabs in a Property Sheet in a stand-alone application</h2>
 The Property Sheet can display different property sets in different tabs -
 all sets that return the same value from <code>PropertySet.getValue("tabName")</code>
 will be aggregated together on the same tab.

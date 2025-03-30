@@ -439,7 +439,7 @@ public class MainWindowOperator extends JFrameOperator {
         
         /** Checks whether given text equals to any of messages in the history
          * array. Comparator of this MainWindowOperator instance is used.
-         * If <tt>removeCompared</tt> parameter is set to <tt>true</tt>,
+         * If <code>removeCompared</code> parameter is set to <code>true</code>,
          * messages already compared are removed from history array. Otherwise
          * messages are not removed until {@link #clear} or {@link #start} are
          * called.
@@ -482,11 +482,11 @@ public class MainWindowOperator extends JFrameOperator {
         
         /** Waits for text to be shown in the Main Window status bar.
          * Comparator of this MainWindowOperator instance is used.
-         * If <tt>removeCompared</tt> parameter is set to <tt>true</tt>,
+         * If <code>removeCompared</code> parameter is set to <code>true</code>,
          * messages already compared are removed from history array. It satisfies
          * that order of messages is significant when this method is called
          * more than once.
-         * If <tt>removeCompared</tt> parameter is set to <tt>false</tt>,
+         * If <code>removeCompared</code> parameter is set to <code>false</code>,
          * messages are not removed until {@link #clear} or {@link #start} are
          * called and its order is not taken into account.
          * @param text a text to wait for
@@ -515,8 +515,8 @@ public class MainWindowOperator extends JFrameOperator {
         }
 
         /** Returns list of elements collected from the moment method 
-         * {@link #start} was called. Remember, if <tt>removeCompared</tt> 
-         * parameter is set to <tt>true</tt> in some of methods,
+         * {@link #start} was called. Remember, if <code>removeCompared</code> 
+         * parameter is set to <code>true</code> in some of methods,
          * messages already compared are removed from history array.
          * @return ArrayList of elements representing status text messages
          */
@@ -525,8 +525,8 @@ public class MainWindowOperator extends JFrameOperator {
         }
 
         /** Prints list of elements collected from the moment method 
-         * {@link #start} was called. Remember, if <tt>removeCompared</tt> 
-         * parameter is set to <tt>true</tt> in some of methods,
+         * {@link #start} was called. Remember, if <code>removeCompared</code> 
+         * parameter is set to <code>true</code> in some of methods,
          * messages already compared are removed from history array.
          * @param outputPrintStream stream to print output in
          */

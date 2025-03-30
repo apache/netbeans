@@ -1517,6 +1517,11 @@ public final class DocumentViewOp
         }
        
         JTextComponent textComponent = docView.getTextComponent();
+        if (textComponent == null) {
+            /* May occur in some cases where the editor was closed while scroll events are still
+            coming in from trackpad "momentum" on MacOS. */
+            return;
+        }
         Keymap keymap = textComponent.getKeymap();
         double wheelRotation = evt.getPreciseWheelRotation();
         if (wheelRotation < 0) {

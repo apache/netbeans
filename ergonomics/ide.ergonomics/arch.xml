@@ -584,13 +584,13 @@
   <ul>
    <li>
       <api name="org.netbeans.ui.ergonomics.ERGO_QUESTION" category="friend" group="logger" type="export">
-      Logged to <a href="@JDK@/java/util/logging/Logger.html">
+      Logged to <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">
       Logger.getLogger("org.netbeans.ui.ergonomics")
       </a> to signal that a user of the system has been faced with: <q>
       Activate this functonality?</q> question. The structure of the
-      <a href="@JDK@/java/util/logging/LogRecord.html">LogRecord</a>
+      <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">LogRecord</a>
       composes of message <code>ERGO_QUESTION</code>,
-      <code>FINE</code> <a href="@JDK@/java/util/logging/LogRecord.html">level</a>
+      <code>FINE</code> <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">level</a>
       and paramerters:
       <ul>
           <li>{<b>0</b>} cluster name to install</li>
@@ -602,7 +602,7 @@
     </li>
    <li>
       <api name="org.netbeans.ui.ergonomics.ERGO_DOWNLOAD" category="friend" group="logger" type="export">
-      Logged to <a href="@JDK@/java/util/logging/Logger.html">
+      Logged to <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">
       Logger.getLogger("org.netbeans.ui.ergonomics")
       </a> to signal that a user of the system agreed to download or activate
       the functionality.
@@ -610,20 +610,20 @@
     </li>
    <li>
       <api name="org.netbeans.ui.ergonomics.ERGO_CLOSE" category="friend" group="logger" type="export">
-      Logged to <a href="@JDK@/java/util/logging/Logger.html">
+      Logged to <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">
       Logger.getLogger("org.netbeans.ui.ergonomics")
       </a> to signal that all user interaction with ergonomics subsystem is over.
       </api>
     </li>
    <li>
       <api name="org.netbeans.ui.ergonomics.ERGO_OPEN_PROJECT" category="friend" group="logger" type="export">
-      Logged to <a href="@JDK@/java/util/logging/Logger.html">
+      Logged to <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">
       Logger.getLogger("org.netbeans.ui.ergonomics")
       </a> to signal that a user of the system activated new functionality
       by opening an existing project.The structure of the
-      <a href="@JDK@/java/util/logging/LogRecord.html">LogRecord</a>
+      <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">LogRecord</a>
       composes of message <code>ERGO_OPEN_PROJECT</code>,
-      <code>FINE</code> <a href="@JDK@/java/util/logging/LogRecord.html">level</a>
+      <code>FINE</code> <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">level</a>
       and paramerters:
       <ul>
           <li>{<b>0</b>} cluster name to install</li>

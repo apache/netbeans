@@ -55,6 +55,7 @@ import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
 import javax.swing.Action;
 import javax.accessibility.*;
+import javax.swing.Icon;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.text.AbstractDocument;
@@ -99,7 +100,7 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
     private Annotations annos;
     
     /** Cycling button image */
-    private Image gutterButton;
+    private Icon gutterButton;
     
     /** Background color of the gutter */
     private Color backgroundColor;
@@ -252,7 +253,7 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
         if (editorUI == null)
             return ;
 
-        gutterButton = ImageUtilities.icon2Image(ImageUtilities.loadImageIcon("org/netbeans/editor/resources/glyphbutton.gif", false));
+        gutterButton = ImageUtilities.loadIcon("org/netbeans/editor/resources/glyphbutton.gif", false);
 
         setToolTipText ("");
         getAccessibleContext().setAccessibleName(NbBundle.getBundle(BaseKit.class).getString("ACSN_Glyph_Gutter")); // NOI18N
@@ -603,22 +604,18 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
                                     // draw the glyph only when the annotation type has its own icon (no the default one)
                                     // or in case there is more than one annotations on the line
                                     if (!(annoCount == 1 && annoDesc.isDefaultGlyph())) {
-                                        g.drawImage(
-                                                annoGlyph,
+                                        // Draw as Icon to get full resolution for SVG icons.
+                                        Icon annoGlyphIcon = ImageUtilities.image2Icon(annoGlyph);
+                                        annoGlyphIcon.paintIcon(null, g,
                                                 xPos,
-                                                (int) Math.round(pViewRect.y + (rowHeight - glyphHeight) / 2 + 1),
-                                                null
-                                        );
+                                                (int) Math.round(pViewRect.y + (rowHeight - glyphHeight) / 2 + 1));
                                     }
 
                                     // draw cycling button if there is more than one annotations on the line
                                     if (annoCount > 1) {
-                                        g.drawImage(
-                                                gutterButton,
+                                        gutterButton.paintIcon(null, g,
                                                 xPos + glyphWidth - 1,
-                                                (int) Math.round(pViewRect.y + (rowHeight - glyphHeight) / 2),
-                                                null
-                                        );
+                                                (int) Math.round(pViewRect.y + (rowHeight - glyphHeight) / 2));
                                     }
                                 }
                                 lineWithAnno = -1;

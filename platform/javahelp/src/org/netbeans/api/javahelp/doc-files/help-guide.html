@@ -69,7 +69,7 @@ help into the IDE and correctly setting
   </li>
 </ul>
 
-<h2><a name="intro">Introduction</a></h2>
+<h2 id="intro">Introduction</h2>
 <p>The IDE's architecture enables you to:</p>
 <ul>
   <li> Create separate help sets and associate them with given modules.</li>
@@ -94,13 +94,13 @@ the order in which topics appear within the table of contents.</li>
   <li> How to specify how the help set is built during the IDE's build process </li>
 </ul>
 
-<h2><a name="adding">Adding Help to GUI components</a></h2>
+<h2 id="adding">Adding Help to GUI components</h2>
 <p>There is an overview of adding help to various GUI NetBeans components in the
 <a href="api.html#helpctx-context-help">JavaHelp Integration API</a>.
 This section expands a bit on the information 
 provided there.</p>
 
-<h3><a name="nodes">Explorer Nodes</a></h3>
+<h3 id="nodes">Explorer Nodes</h3>
 <p>If your node extends <code>AbstractNode</code> or one of its subclasses, you should 
   implement the <code>getHelpCtx</code> method to return a <a href="@org-openide-util-ui@/org/openide/util/HelpCtx.html"> 
   <code>HelpCtx</code></a> for the node. The <code>HelpCtx</code> includes the specific 
@@ -117,7 +117,7 @@ provided there.</p>
 </span>}
 </pre>
 
-<h3><a name="wizards">Wizards</a></h3>
+<h3 id="wizards">Wizards</h3>
 <p>Wizards are basically a series of Swing Components that are displayed via a 
   <a href="@org-openide-dialogs@/org/openide/WizardDescriptor.Iterator.html"> 
   <code>WizardDescriptor.Iterator</code></a> object. The object that the developer 
@@ -149,7 +149,7 @@ provided there.</p>
 </span>}
 </pre>
 
-<h3><a name="dialogs">Dialogs</a></h3>
+<h3 id="dialogs">Dialogs</h3>
 <p>There are two different ways in which you can set help on a NetBeans dialog. 
   If you wish to display a dialog of some sort, you typically create the Swing 
   components you wish to display and then create a <a href="@org-openide-dialogs@/org/openide/DialogDescriptor.html"> 
@@ -194,7 +194,7 @@ dd.setHelpCtx(<span class="keyword">new</span> <span class="type">HelpCtx</span>
 <p>If you do not supply a <code>HelpCtx</code> object for the <code>DialogDescriptor</code>
 or set the help ID string for the displayed Swing Component, then no <i>Help</i> 
 button will be displayed on the <code>JDialog</code> that is displayed for this <code>DialogDescriptor</code>.</p>
-<h3><a name="propsheets"></a>Property Sheets </h3>
+<h3 id="propsheets">Property Sheets </h3>
 <p>When creating a Property Sheet, the developer creates a <a href="@org-openide-nodes@/org/openide/nodes/Sheet.Set.html"> 
   <code>Sheet.Set</code></a> object. To populate the <code>Sheet.Set</code> the developer 
   creates and adds a number of <a href="@org-openide-nodes@/org/openide/nodes/Node.Property.html"> 
@@ -208,7 +208,7 @@ button will be displayed on the <code>JDialog</code> that is displayed for this 
 ps.setValue(<span class="string">"helpID"</span>, <span class="string">"org.netbeans.modules.xml.tree.nodes.XMLDataNode.Properties"</span>);  
 </pre>
 
-<h3><a name="tabpropsheets">Tabbed Property Sheets</a></h3>
+<h3 id="tabpropsheets">Tabbed Property Sheets</h3>
 <p> Property sheets can actually contain multiple tabs, each having their own 
   help associated with them. The method described above to set the help id of 
   a Property Sheet still applies, the only difference is the way in which the 
@@ -222,12 +222,12 @@ referenceTab.setName(<span class="string">"referenceTab"</span>); <span class="c
 </span>sheet.put(referenceTab);
 </pre>
 
-<h3><a name="props">Individual Properties</a></h3>
+<h3 id="props">Individual Properties</h3>
 <p> You can also set an individual help ID for each property (<code>Node.Property</code>) 
   in a property sheet. Presently Sun Java Studio and NetBeans help is not provided on a per-property 
   basis - help on individual properties is provided in the form of a tooltip. 
 </p>
-<h3><a name="propeditor"></a>Custom Property Editors</h3>
+<h3 id="propeditor">Custom Property Editors</h3>
 <p>Some Properties displayed on a Property Sheet require a custom editor. The 
   user accesses the editor by selecting the "..." button on an entry for a specific 
   Property when the user selects that Property. The developer of the custom editor 
@@ -247,7 +247,7 @@ referenceTab.setName(<span class="string">"referenceTab"</span>); <span class="c
 </span>}
 </pre>
 
-<h3><a name="tabpropeditors"><b>Tabbed Custom Property Editor</b>s</a></h3>
+<h3 id="tabpropeditors"><b>Tabbed Custom Property Editor</b>s</h3>
 <p>Some Custom Property Editors display a number of tabs. Depending on the tab 
   that is displayed, different Help may need to be displayed. In this case, you 
   should set the help ID on the property editor's JTabbedPane. If you want the 
@@ -289,7 +289,7 @@ referenceTab.setName(<span class="string">"referenceTab"</span>); <span class="c
 }
 </pre>
 
-<h2><a name="toc-index">Merge Hints for TOC and Index</a></h2>
+<h2 id="toc-index">Merge Hints for TOC and Index</h2>
 <p>In NetBeans IDE 3.6, the help system has been upgraded to use v. 2.0 of JavaHelp 
 software. The most visible benefit of the upgrade is better merging of TOC and index. 
 NetBeans IDE uses the Unite-Append merge type for the table of contents and the Sort 
@@ -351,7 +351,7 @@ look like the following:
  </li>
 </ul>
 
-<h2><a name="makeknown">Making the Help Set Known to the IDE</a></h2>
+<h2 id="makeknown">Making the Help Set Known to the IDE</h2>
 <p>In order to use the result help set within the IDE at runtime, a couple of things
 need to be added to various files associated with the module. These are outlined 
 in part in the <a href="api.html#helpctx-layer">reference documentation</a>.
@@ -361,7 +361,7 @@ This description assumes you are using a NetBeans module project.</p>
     and adding the <code>@HelpSetRegistration</code> annotation to it. You will want to specify a position for the help set;
     this mainly affects the order into which help sets are merged into the table of contents.
 
-<h2><a name="putfiles">Where to Put Help Files in the Module Source</a></h2>
+<h2 id="putfiles">Where to Put Help Files in the Module Source</h2>
 <p>Help files should be kept under the regular <samp>src</samp> subdirectory
   off of the module root directory. Like source code, all JavaHelp documentation 
   must be placed into a globally unique package to avoid conflicts. If two modules 
@@ -371,12 +371,12 @@ This description assumes you are using a NetBeans module project.</p>
   e.g. for a module named <code>org.netbeans.modules.foo</code>, place the JavaHelp
   into <code>org.netbeans.modules.foo.docs</code> (plus perhaps subpackages).
 
-<h2><a name="notes">Additional Notes</a></h2>
+<h2 id="notes">Additional Notes</h2>
 <p>This section includes any additional comments or issues regarding Help for IDE
 modules.</p>
 <ul>
 
-  <li><a name="helpids"></a> <b>Making Help IDs Unique</b> - When a Help request 
+  <li id="helpids"> <b>Making Help IDs Unique</b> - When a Help request 
     is initiated with a specific Help ID, the code that looks for the corresponding 
     html file to display starts checking the help sets that have been loaded. As 
     soon as a match is made, the html file is loaded in the JavaHelp viewer. There 
@@ -395,7 +395,7 @@ modules.</p>
       <br>
   </li>
 
-  <li><a name="i18n"></a><b>I18N of Help IDs -</b> All of the <code>HelpCtx</code> 
+  <li id="i18n"><b>I18N of Help IDs -</b> All of the <code>HelpCtx</code> 
     methods that take strings as parameters are included in the IDE's list of 
     NOI18N patterns and therefore are not internationalized. You do not need to 
     add <samp>//&nbsp;NOI18N</samp> to lines containing these strings.

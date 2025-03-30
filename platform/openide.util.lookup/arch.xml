@@ -326,14 +326,14 @@ org.my.netbeans.extramodule.ExtraTip
         has public constructor, that should be instantiated and returned from 
         <a href="@TOP@/org/openide/util/Lookup.html#getDefault--">Lookup.getDefault()</a>
         the class will be loaded by 
-        <a href="@JDK@/java/lang/Thread.html#getContextClassLoader--">
+        <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/Thread.html#getContextClassLoader--">
         Thread.currentThread().getContextClassLoader()</a>
         classloader the first time <code>Lookup.getDefault</code> is invoked.
-        <p/>
+        <p>
         The property can also contain value <code>"-"</code> which means to completely
         disable the lookup instantiation and return <a href="@TOP@/org/openide/util/Lookup.html#EMPTY">Lookup.EMPTY</a>
         from <a href="@TOP@/org/openide/util/Lookup.html#getDefault--">Lookup.getDefault()</a>.
-        <p/>
+        </p>
         If the property is unspecified, the default <code>MetaInfServicesLookup</code>
         is constructed for <code>Thread.currentThread().getContextclassLoader()</code>
         that implements the <a href="architecture-summary.html#answer-compat-standards">JDK's standard</a>. If, by 
@@ -428,7 +428,7 @@ org.my.netbeans.extramodule.ExtraTip
             
     <li><api name="LookupClassLoader" category="devel" group="lookup" type="export">
     Nearly all resource looking functions and reflective code
-    uses <a href="@JDK@/java/lang/ClassLoader.html">ClassLoader</a>
+    uses <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/ClassLoader.html">ClassLoader</a>
     obtained from <a href="@TOP@/org/openide/util/Lookup.html#getDefault--">Lookup.getDefault()</a>
     for loading system wide resources.
     </api>.</li>

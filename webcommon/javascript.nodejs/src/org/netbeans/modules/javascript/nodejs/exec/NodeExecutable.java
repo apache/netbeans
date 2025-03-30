@@ -653,11 +653,6 @@ public class NodeExecutable {
         }
 
         @Override
-        public void outputLineSelected(OutputEvent ev) {
-            // noop
-        }
-
-        @Override
         public void outputLineAction(OutputEvent ev) {
             RequestProcessor.getDefault().post(new Runnable() {
                 @Override
@@ -665,11 +660,6 @@ public class NodeExecutable {
                     FileUtils.openFile(file, line);
                 }
             });
-        }
-
-        @Override
-        public void outputLineCleared(OutputEvent ev) {
-            // noop
         }
 
     }

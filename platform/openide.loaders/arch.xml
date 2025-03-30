@@ -64,7 +64,7 @@
             processing
         </a>
         do some advanced changes to it using either 
-        <a name="loaders-script">scripting or templating</a> languages.
+        <a id="loaders-script">scripting or templating</a> languages.
         </p>
         
         <p>
@@ -850,17 +850,17 @@ about used templates.
         The main menu of the application is composed by reading <code>Menu/</code>
         folder in the layer. A sub folder is treated as a sub menu. 
         Instances of individual files (usually <code>.instance</code> 
-        or <code>.shadow</code>) may then represent <a href="@JDK@/javax/swing/Action.html">Action</a>
-        or <a href="@JDK@/javax/swing/JMenuItem.html">JMenuItem</a>
-        or <a href="@JDK@/javax/swing/JSeparator.html">JSeparator</a>.
+        or <code>.shadow</code>) may then represent <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/Action.html">Action</a>
+        or <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JMenuItem.html">JMenuItem</a>
+        or <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JSeparator.html">JSeparator</a>.
     </p>
     <p>
         Since version 7.44 one can attach <code>property-prefix</code> attribute
         to every folder. Then all the file attributes are scanned and if some 
         of them start with the specified prefix they are placed a 
-        <a href="@JDK@/javax/swing/JComponent.html#putClientProperty-java.lang.Object-java.lang.Object-">
+        <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JComponent.html#putClientProperty-java.lang.Object-java.lang.Object-">
         client
-        properties</a> on the <a href="@JDK@/javax/swing/JMenu.html">JMenu</a>
+        properties</a> on the <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JMenu.html">JMenu</a>
         instance (after stripping the prefix off).
     </p>
     </api><p></p>

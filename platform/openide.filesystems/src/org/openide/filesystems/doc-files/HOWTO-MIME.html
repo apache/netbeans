@@ -109,33 +109,33 @@ project files.</p>
 <samp>org/nb/modules/ant/mime-resolver.xml</samp>:</p>
 
 <pre>
-&lt;?<font class="keyword">xml</font> <font class="variable-name">version</font>=<font class="string">"1.0"</font> <font class="variable-name">encoding</font>=<font class="string">"UTF-8"</font>?&gt;
-&lt;!<font class="keyword">DOCTYPE</font> <font class="type">MIME-resolver</font> <font class="keyword">PUBLIC</font>
-          <font class="string">"-//NetBeans//DTD MIME Resolver 1.0//EN"</font> 
-          <font class="string">"http://www.netbeans.org/dtds/mime-resolver-1_0.dtd"</font>&gt;
-&lt;<font class="function-name">MIME-resolver</font>&gt;
-    <font class="comment">&lt;!-- Skip anything marked as definitely not ours. --&gt;</font>
-    &lt;<font class="function-name">file</font>&gt;
-        &lt;<font class="function-name">fattr</font> <font class="variable-name">name</font>=<font class="string">"known-ant-project-file"</font> <font class="variable-name">text</font>=<font class="string">"false"</font>/&gt;
-        &lt;<font class="function-name">exit</font>/&gt;
-    &lt;/<font class="function-name">file</font>&gt;
-    <font class="comment">&lt;!-- Accept immediately anything known as definitely ours. --&gt;</font>
-    &lt;<font class="function-name">file</font>&gt;
-        &lt;<font class="function-name">fattr</font> <font class="variable-name">name</font>=<font class="string">"known-ant-project-file"</font> <font class="variable-name">text</font>=<font class="string">"true"</font>/&gt;
-        &lt;<font class="function-name">resolver</font> <font class="variable-name">mime</font>=<font class="string">"text/x-ant+xml"</font>/&gt;
-    &lt;/<font class="function-name">file</font>&gt;
-    <font class="comment">&lt;!-- For other XML, look for &lt;project default="..."/&gt; --&gt;</font>
-    &lt;<font class="function-name">file</font>&gt;
-        &lt;<font class="function-name">ext</font> <font class="variable-name">name</font>=<font class="string">"xml"</font>/&gt;
-        &lt;<font class="function-name">resolver</font> <font class="variable-name">mime</font>=<font class="string">"text/x-ant+xml"</font>&gt;
-            &lt;<font class="function-name">xml-rule</font>&gt;
-                &lt;<font class="function-name">element</font> <font class="variable-name">name</font>=<font class="string">"project"</font>&gt;
-                    &lt;<font class="function-name">attr</font> <font class="variable-name">name</font>=<font class="string">"default"</font>/&gt;
-                &lt;/<font class="function-name">element</font>&gt;
-            &lt;/<font class="function-name">xml-rule</font>&gt;
-        &lt;/<font class="function-name">resolver</font>&gt;
-    &lt;/<font class="function-name">file</font>&gt;
-&lt;/<font class="function-name">MIME-resolver</font>&gt;
+&lt;?<span class="keyword">xml</span> <span class="variable-name">version</span>=<span class="string">"1.0"</span> <span class="variable-name">encoding</span>=<span class="string">"UTF-8"</span>?&gt;
+&lt;!<span class="keyword">DOCTYPE</span> <span class="type">MIME-resolver</span> <span class="keyword">PUBLIC</span>
+          <span class="string">"-//NetBeans//DTD MIME Resolver 1.0//EN"</span> 
+          <span class="string">"http://www.netbeans.org/dtds/mime-resolver-1_0.dtd"</span>&gt;
+&lt;<span class="function-name">MIME-resolver</span>&gt;
+    <span class="comment">&lt;!-- Skip anything marked as definitely not ours. --&gt;</span>
+    &lt;<span class="function-name">file</span>&gt;
+        &lt;<span class="function-name">fattr</span> <span class="variable-name">name</span>=<span class="string">"known-ant-project-file"</span> <span class="variable-name">text</span>=<span class="string">"false"</span>/&gt;
+        &lt;<span class="function-name">exit</span>/&gt;
+    &lt;/<span class="function-name">file</span>&gt;
+    <span class="comment">&lt;!-- Accept immediately anything known as definitely ours. --&gt;</span>
+    &lt;<span class="function-name">file</span>&gt;
+        &lt;<span class="function-name">fattr</span> <span class="variable-name">name</span>=<span class="string">"known-ant-project-file"</span> <span class="variable-name">text</span>=<span class="string">"true"</span>/&gt;
+        &lt;<span class="function-name">resolver</span> <span class="variable-name">mime</span>=<span class="string">"text/x-ant+xml"</span>/&gt;
+    &lt;/<span class="function-name">file</span>&gt;
+    <span class="comment">&lt;!-- For other XML, look for &lt;project default="..."/&gt; --&gt;</span>
+    &lt;<span class="function-name">file</span>&gt;
+        &lt;<span class="function-name">ext</span> <span class="variable-name">name</span>=<span class="string">"xml"</span>/&gt;
+        &lt;<span class="function-name">resolver</span> <span class="variable-name">mime</span>=<span class="string">"text/x-ant+xml"</span>&gt;
+            &lt;<span class="function-name">xml-rule</span>&gt;
+                &lt;<span class="function-name">element</span> <span class="variable-name">name</span>=<span class="string">"project"</span>&gt;
+                    &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"default"</span>/&gt;
+                &lt;/<span class="function-name">element</span>&gt;
+            &lt;/<span class="function-name">xml-rule</span>&gt;
+        &lt;/<span class="function-name">resolver</span>&gt;
+    &lt;/<span class="function-name">file</span>&gt;
+&lt;/<span class="function-name">MIME-resolver</span>&gt;
 </pre>
 
 <p>First, the DOCTYPE ensures that the XML file will be recognized as

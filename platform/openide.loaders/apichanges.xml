@@ -274,7 +274,7 @@ is the proper place.
           <compatibility addition="yes"/>
           <description>
              <p>Layer declaration of a menu can influence what client properties
-                 the actual <a href="@JDK@/javax/swing/JMenu.html">JMenu</a> 
+                 the actual <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JMenu.html">JMenu</a> 
                  instances will have. More 
                  <a href="architecture-summary.html#layer-Menu">details</a>.
               </p>

@@ -1097,9 +1097,9 @@ public final class SourcesHelper {
      * Creates new {@link SourceGroupModifierImplementation} that can be put into project lookup.
      * <p>
      * Only source roots added with a {@link SourceRootConfig#hint(String) hint} can be created
-     * with this <tt>SourceGroupModifierImplementation</tt>.
+     * with this <code>SourceGroupModifierImplementation</code>.
      * </p>
-     * @return <tt>SourceGroupModifierImplementation</tt> implementation.
+     * @return <code>SourceGroupModifierImplementation</code> implementation.
      * @see #sourceRoot(String)
      * @since org.netbeans.modules.project.ant/1 1.33
      */

@@ -34,8 +34,9 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -45,22 +46,32 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import org.netbeans.api.java.source.ElementUtilities;
+import javax.lang.model.util.ElementFilter;
+
+import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.ElementUtilities.ElementAcceptor;
 import org.netbeans.api.java.source.GeneratorUtilities;
+import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.java.source.WorkingCopy;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
 import org.netbeans.modules.java.hints.errors.ErrorFixesFakeHint.FixKind;
 import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
@@ -179,7 +190,7 @@ final class MagicSurroundWithTryCatchFix extends JavaFix {
         
         return null;
     }
-    
+
     private final class TransformerImpl extends ErrorAwareTreePathScanner<Void, Void> {
         
         private WorkingCopy info;
@@ -368,7 +379,11 @@ final class MagicSurroundWithTryCatchFix extends JavaFix {
     }
 
     private static StatementTree createLogStatement(CompilationInfo info, TreeMaker make, TreePath statement, String name) {
-        if (!ErrorFixesFakeHint.isUseLogger(ErrorFixesFakeHint.getPreferences(info.getFileObject(), FixKind.SURROUND_WITH_TRY_CATCH))) {
+        boolean isSystemLogger = false;
+        if (ErrorFixesFakeHint.isUseSystemLogger(ErrorFixesFakeHint.getPreferences(info.getFileObject(), FixKind.SURROUND_WITH_TRY_CATCH))
+                && info.getSourceVersion().compareTo(SourceVersion.RELEASE_9) >= 0) {
+            isSystemLogger = true;
+        } else if (!ErrorFixesFakeHint.isUseLogger(ErrorFixesFakeHint.getPreferences(info.getFileObject(), FixKind.SURROUND_WITH_TRY_CATCH))) {
             return null;
         }
 
@@ -376,8 +391,14 @@ final class MagicSurroundWithTryCatchFix extends JavaFix {
             return null;
         }
 
-        TypeElement logger = info.getElements().getTypeElement("java.util.logging.Logger");
-        TypeElement level = info.getElements().getTypeElement("java.util.logging.Level");
+        String loggerFQN = isSystemLogger ? "java.lang.System.Logger" : "java.util.logging.Logger";
+        String loggerFactoryFQN = isSystemLogger ? "java.lang.System" : loggerFQN;
+        String loggerLevelFQN = isSystemLogger ? "java.lang.System.Logger.Level" : "java.util.logging.Level";
+        String levelName = isSystemLogger ? "ERROR" : "SEVERE";
+
+        TypeElement logger = info.getElements().getTypeElement(loggerFQN);
+        TypeElement level = info.getElements().getTypeElement(loggerLevelFQN);
+        TypeElement loggerFactory = info.getElements().getTypeElement(loggerFactoryFQN);
 
         if (logger == null || level == null) {
             return null;
@@ -396,22 +417,51 @@ final class MagicSurroundWithTryCatchFix extends JavaFix {
         boolean useFQN = false;
         for (ImportTree dovoz : info.getCompilationUnit().getImports()) {
             MemberSelectTree id = (MemberSelectTree) dovoz.getQualifiedIdentifier();
-            if ("Logger".equals(id.getIdentifier()) && !"java.util.logging.Logger".equals(id.toString())) {
+            if ("Logger".equals(id.getIdentifier()) && !loggerFQN.equals(id.toString())) {
                 useFQN = true;
             }
         }
-        // finally, make the invocation
-        ExpressionTree etExpression = make.MethodInvocation(
-                Collections.<ExpressionTree>emptyList(),
-                make.MemberSelect(
-                useFQN ? make.Identifier(logger.toString()) : make.QualIdent(logger),
-                "getLogger"),
-                Collections.<ExpressionTree>singletonList(arg));
-        ExpressionTree levelExpression = make.MemberSelect(make.QualIdent(level), "SEVERE");
 
-        return make.ExpressionStatement(make.MethodInvocation(Collections.<ExpressionTree>emptyList(), make.MemberSelect(etExpression, "log"), Arrays.asList(levelExpression, make.Literal(null), make.Identifier(name))));
-    }
+        // check if there's a declared logger to use
+        VariableElement existingLogger = null;
+        if (info instanceof CompilationController controller
+                && ErrorFixesFakeHint.isUseExistingLogger(ErrorFixesFakeHint.getPreferences(info.getFileObject(), FixKind.SURROUND_WITH_TRY_CATCH))) {
+            try {
+                controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                TreePath typePath = info.getTrees().getPath(info.getCompilationUnit(), containingTopLevel);
+                TypeElement typeElement = (TypeElement) info.getTrees().getElement(typePath);
+                for (VariableElement ve : ElementFilter.fieldsIn(typeElement.getEnclosedElements())) {
+                    TypeMirror type = ve.asType();
+                    // System.Logger.class.getName() is "java.lang.System$Logger", note '$',
+                    // and "contentEquals" fails, so HACK! use litteral class name.
+                    if (type.getKind() == TypeKind.DECLARED && ((TypeElement)((DeclaredType)type).asElement()).getQualifiedName().contentEquals(loggerFQN)) {
+                        existingLogger = ve;
+                    }
+                }
+            } catch(IOException ex) {
+            }
+        }
+
+        // finally, make the invocation
+        ExpressionTree etExpression;
+        if (existingLogger != null) {
+            etExpression = make.Identifier(existingLogger);
+        } else {
+            etExpression = make.MethodInvocation(
+                    Collections.<ExpressionTree>emptyList(),
+                    make.MemberSelect(
+                        useFQN ? make.Identifier(loggerFactory.toString()) : make.QualIdent(loggerFactory),
+                        "getLogger"),
+                    Collections.<ExpressionTree>singletonList(arg));
+        }
+        ExpressionTree levelExpression = make.MemberSelect(make.QualIdent(level), levelName);
+        ExpressionTree nullMsgArg = isSystemLogger
+                ? (ExpressionTree)org.netbeans.modules.java.hints.spiimpl.Utilities.parseAndAttribute(info, "(String)null", null)
+                : make.Literal(null);
         
+        return make.ExpressionStatement(make.MethodInvocation(Collections.<ExpressionTree>emptyList(), make.MemberSelect(etExpression, "log"), Arrays.asList(levelExpression, nullMsgArg, make.Identifier(name))));
+    }
+    
     private static StatementTree createRethrowAsRuntimeExceptionStatement(WorkingCopy info, TreeMaker make, String name) {
         if (!ErrorFixesFakeHint.isRethrowAsRuntimeException(ErrorFixesFakeHint.getPreferences(info.getFileObject(), FixKind.SURROUND_WITH_TRY_CATCH))) {
             return null;

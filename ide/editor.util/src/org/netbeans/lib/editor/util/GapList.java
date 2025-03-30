@@ -80,7 +80,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
     /**
      * Constructs a list containing the elements of the specified
      * collection, in the order they are returned by the collection's
-     * iterator.  The <tt>GapList</tt> instance has an initial capacity of
+     * iterator.  The <code>GapList</code> instance has an initial capacity of
      * 110% the size of the specified collection.
      *
      * @param c the collection whose elements are to be placed into this list.
@@ -104,9 +104,9 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
     }
     
     /**
-     * Trims the capacity of this <tt>GapList</tt> instance to be the
+     * Trims the capacity of this <code>GapList</code> instance to be the
      * list's current size.  An application can use this operation to minimize
-     * the storage of an <tt>GapList</tt> instance.
+     * the storage of an <code>GapList</code> instance.
      */
     public void trimToSize() {
         modCount++;
@@ -121,7 +121,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
     }
     
     /**
-     * Increases the capacity of this <tt>GapList</tt> instance, if
+     * Increases the capacity of this <code>GapList</code> instance, if
      * necessary, to ensure  that it can hold at least the number of elements
      * specified by the minimum capacity argument.
      *
@@ -158,15 +158,15 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
     /**
      * Tests if this list has no elements.
      *
-     * @return  <tt>true</tt> if this list has no elements;
-     *          <tt>false</tt> otherwise.
+     * @return  <code>true</code> if this list has no elements;
+     *          <code>false</code> otherwise.
      */
     public boolean isEmpty() {
         return (elementData.length == gapLength);
     }
     
     /**
-     * Returns <tt>true</tt> if this list contains the specified element.
+     * Returns <code>true</code> if this list contains the specified element.
      *
      * @param elem element whose presence in this List is to be tested.
      * @return  <code>true</code> if the specified element is present;
@@ -178,11 +178,11 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
     
     /**
      * Searches for the first occurence of the given argument, testing
-     * for equality using the <tt>equals</tt> method.
+     * for equality using the <code>equals</code> method.
      *
      * @param   elem   an object.
      * @return  the index of the first occurrence of the argument in this
-     *          list; returns <tt>-1</tt> if the object is not found.
+     *          list; returns <code>-1</code> if the object is not found.
      * @see     Object#equals(Object)
      */
     public int indexOf(Object elem) {
@@ -272,10 +272,10 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
     }
     
     /**
-     * Returns a shallow copy of this <tt>GapList</tt> instance.  (The
+     * Returns a shallow copy of this <code>GapList</code> instance.  (The
      * elements themselves are not copied.)
      *
-     * @return  a clone of this <tt>GapList</tt> instance.
+     * @return  a clone of this <code>GapList</code> instance.
      */
     public Object clone() {
         try {
@@ -415,9 +415,9 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      * If the list fits in the specified array with room to spare (i.e., the
      * array has more elements than the list), the element in the array
      * immediately following the end of the collection is set to
-     * <tt>null</tt>.  This is useful in determining the length of the list
+     * <code>null</code>.  This is useful in determining the length of the list
      * <i>only</i> if the caller knows that the list does not contain any
-     * <tt>null</tt> elements.
+     * <code>null</code> elements.
      *
      * @param a the array into which the elements of the list are to
      *		be stored, if it is big enough; otherwise, a new array of the
@@ -448,8 +448,8 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      *
      * @param  index index of element to return.
      * @return the element at the specified position in this list.
-     * @throws    IndexOutOfBoundsException if index is out of range <tt>(index
-     * 		  &lt; 0 || index &gt;= size())</tt>.
+     * @throws    IndexOutOfBoundsException if index is out of range <code>(index
+     * 		  &lt; 0 || index &gt;= size())</code>.
      */
     public E get(int index) {
         // rangeCheck(index) not necessary - would fail with AIOOBE anyway
@@ -464,7 +464,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      * @param element element to be stored at the specified position.
      * @return the element previously at the specified position.
      * @throws    IndexOutOfBoundsException if index out of range
-     *		  <tt>(index &lt; 0 || index &gt;= size())</tt>.
+     *		  <code>(index &lt; 0 || index &gt;= size())</code>.
      */
     public E set(int index, E element) {
         // rangeCheck(index) not necessary - would fail with AIOOBE anyway
@@ -497,7 +497,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      * Appends the specified element to the end of this list.
      *
      * @param element non-null element to be appended to this list.
-     * @return <tt>true</tt> (as per the general contract of Collection.add).
+     * @return <code>true</code> (as per the general contract of Collection.add).
      */
     public boolean add(E element) {
         int size = size();
@@ -514,7 +514,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      * @param index index at which the specified element is to be inserted.
      * @param element element to be inserted.
      * @throws    IndexOutOfBoundsException if index is out of range
-     *		  <tt>(index &lt; 0 || index &gt; size())</tt>.
+     *		  <code>(index &lt; 0 || index &gt; size())</code>.
      */
     public void add(int index, E element) {
         int size = size();
@@ -542,7 +542,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      * list is nonempty.)
      *
      * @param c the elements to be inserted into this list.
-     * @return <tt>true</tt> if this list changed as a result of the call.
+     * @return <code>true</code> if this list changed as a result of the call.
      * @throws    NullPointerException if the specified collection is null.
      */
     public boolean addAll(Collection<? extends E> c) {
@@ -561,7 +561,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      * @param c collection containing the elements to be inserted into this list.
      * @param off offset in the collection pointing to first element to copy.
      * @param len number of elements to copy from the collection.
-     * @return <tt>true</tt> if this list changed as a result of the call.
+     * @return <code>true</code> if this list changed as a result of the call.
      * @throws    NullPointerException if the specified Collection is null.
      * @since 1.64
      */
@@ -580,9 +580,9 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      * @param index index at which to insert first element
      *		    from the specified collection.
      * @param c elements to be inserted into this list.
-     * @return <tt>true</tt> if this list changed as a result of the call.
-     * @throws    IndexOutOfBoundsException if index out of range <tt>(index
-     *		  &lt; 0 || index &gt; size())</tt>.
+     * @return <code>true</code> if this list changed as a result of the call.
+     * @throws    IndexOutOfBoundsException if index out of range <code>(index
+     *		  &lt; 0 || index &gt; size())</code>.
      * @throws    NullPointerException if the specified Collection is null.
      */
     public boolean addAll(int index, Collection<? extends E> c) {
@@ -602,9 +602,9 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      * @param c collection containing the elements to be inserted into this list.
      * @param off offset in the collection pointing to first element to copy.
      * @param len number of elements to copy from the collection.
-     * @return <tt>true</tt> if this list changed as a result of the call.
-     * @throws    IndexOutOfBoundsException if index out of range <tt>(index
-     *		  &lt; 0 || index &gt; size())</tt>.
+     * @return <code>true</code> if this list changed as a result of the call.
+     * @throws    IndexOutOfBoundsException if index out of range <code>(index
+     *		  &lt; 0 || index &gt; size())</code>.
      * @throws    NullPointerException if the specified Collection is null.
      * @since 1.64
      */
@@ -616,7 +616,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      * Inserts all elements of the given array at the end of this list.
      *
      * @param elements array of elements to insert.
-     * @return <tt>true</tt> if this list changed as a result of the call.
+     * @return <code>true</code> if this list changed as a result of the call.
      * @since 1.64
      */
     public boolean addArray(Object[] elements) {
@@ -629,7 +629,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      *
      * @param index index at which to insert first element from the array.
      * @param elements array of elements to insert.
-     * @return <tt>true</tt> if this list changed as a result of the call.
+     * @return <code>true</code> if this list changed as a result of the call.
      */
     public boolean addArray(int index, Object[] elements) {
         return addArray(index, elements, 0, elements.length);
@@ -643,7 +643,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      * @param elements array of elements from which to insert elements.
      * @param off offset in the elements pointing to first element to copy.
      * @param len number of elements to copy from the elements array.
-     * @return <tt>true</tt> if this list changed as a result of the call.
+     * @return <code>true</code> if this list changed as a result of the call.
      */
     public boolean addArray(int index, Object[] elements, int off, int len) {
         int size = size();
@@ -677,8 +677,8 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      *
      * @param index the index of the element to removed.
      * @return the element that was removed from the list.
-     * @throws    IndexOutOfBoundsException if index out of range <tt>(index
-     * 		  &lt; 0 || index &gt;= size())</tt>.
+     * @throws    IndexOutOfBoundsException if index out of range <code>(index
+     * 		  &lt; 0 || index &gt;= size())</code>.
      */
     public E remove(int index) {
         int size = size();
@@ -716,8 +716,8 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
      * Removes from this List all of the elements whose index is between
      * fromIndex, inclusive and toIndex, exclusive.  Shifts any succeeding
      * elements to the left (reduces their index).
-     * This call shortens the list by <tt>(toIndex - fromIndex)</tt> elements.
-     * (If <tt>toIndex==fromIndex</tt>, this operation has no effect.)
+     * This call shortens the list by <code>(toIndex - fromIndex)</code> elements.
+     * (If <code>toIndex==fromIndex</code>, this operation has no effect.)
      *
      * @param fromIndex index of first element to be removed.
      * @param toIndex index after last element to be removed.
@@ -818,12 +818,12 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
     }
     
     /**
-     * Save the state of the <tt>GapList</tt> instance to a stream (that
+     * Save the state of the <code>GapList</code> instance to a stream (that
      * is, serialize it).
      *
-     * @serialData The length of the array backing the <tt>GapList</tt>
+     * @serialData The length of the array backing the <code>GapList</code>
      *             instance is emitted (int), followed by all of its elements
-     *             (each an <tt>Object</tt>) in the proper order.
+     *             (each an <code>Object</code>) in the proper order.
      */
     private void writeObject(java.io.ObjectOutputStream s)
     throws java.io.IOException{
@@ -848,7 +848,7 @@ implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
     }
     
     /**
-     * Reconstitute the <tt>GapList</tt> instance from a stream (that is,
+     * Reconstitute the <code>GapList</code> instance from a stream (that is,
      * deserialize it).
      */
     private void readObject(java.io.ObjectInputStream s)

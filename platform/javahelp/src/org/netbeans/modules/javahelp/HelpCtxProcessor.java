@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.util.logging.Level;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.ImageIcon;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.loaders.DataObject;
@@ -43,6 +42,7 @@ import org.openide.nodes.NodeEvent;
 import org.openide.nodes.NodeListener;
 import org.openide.nodes.NodeMemberEvent;
 import org.openide.nodes.NodeReorderEvent;
+import org.openide.util.ImageUtilities;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
@@ -211,7 +211,7 @@ public final class HelpCtxProcessor implements Environment.Provider {
             if (obj.isValid()) {
                 Image icon = obj.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16);
                 if (icon != null) {
-                    putValue(Action.SMALL_ICON, new ImageIcon(icon));
+                    putValue(Action.SMALL_ICON, ImageUtilities.image2Icon(icon));
                 }
             }
         }

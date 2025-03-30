@@ -52,13 +52,13 @@ import org.openide.util.*;
  * it is possible to chain invocations to simplify setting up a file chooser.
  * Example usage:
  * <pre>
- *      <font color="gray">//The default dir to use if no value is stored</font>
+ *      <span style="color:gray">//The default dir to use if no value is stored</span>
  *      File home = new File (System.getProperty("user.home") + File.separator + "lib");
- *      <font color="gray">//Now build a file chooser and invoke the dialog in one line of code</font>
- *      <font color="gray">//&quot;libraries-dir&quot; is our unique key</font>
+ *      <span style="color:gray">//Now build a file chooser and invoke the dialog in one line of code</span>
+ *      <span style="color:gray">//&quot;libraries-dir&quot; is our unique key</span>
  *      File toAdd = new FileChooserBuilder ("libraries-dir").setTitle("Add Library").
  *              setDefaultWorkingDirectory(home).setApproveText("Add").showOpenDialog();
- *      <font color="gray">//Result will be null if the user clicked cancel or closed the dialog w/o OK</font>
+ *      <span style="color:gray">//Result will be null if the user clicked cancel or closed the dialog w/o OK</span>
  *      if (toAdd != null) {
  *          //do something
  *      }

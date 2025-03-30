@@ -45,10 +45,13 @@ abstract class AbstractNavigatorPanel<K> extends Children.Keys<K> implements Nav
     private View view;
     private Lookup.Result<FileObject> result;
     private FileObject file;
+    private String displayName;
 
+    @Messages("DN_Symbols=Symbols")
     public AbstractNavigatorPanel() {
         manager = new ExplorerManager();
         manager.setRootContext(new AbstractNode(this));
+        this.displayName = Bundle.DN_Symbols();
     }
 
     abstract void addBackgroundTask(FileObject fo);
@@ -69,11 +72,18 @@ abstract class AbstractNavigatorPanel<K> extends Children.Keys<K> implements Nav
     }
 
     @Override
-    @Messages("DN_Symbols=Symbols")
-    public final String getDisplayName() {
-        return Bundle.DN_Symbols();
+    public synchronized final String getDisplayName() {
+        return displayName;
     }
 
+    public synchronized final void setDisplayName(String displayName) {
+        if (displayName == null) {
+            displayName = Bundle.DN_Symbols();
+        }
+        if (!Objects.equals(this.displayName, displayName)) {
+            this.displayName = displayName;
+        }
+    }
     @Override
     public final String getDisplayHint() {
         return "symbols";

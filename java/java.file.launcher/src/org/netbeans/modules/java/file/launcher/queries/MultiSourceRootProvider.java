@@ -22,7 +22,6 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.IOException;
-import java.lang.ref.Reference;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +29,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -65,7 +65,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
-import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 import org.openide.util.RequestProcessor.Task;
 import org.openide.util.Utilities;
@@ -84,9 +83,8 @@ public class MultiSourceRootProvider implements ClassPathProvider {
     public static boolean DISABLE_MULTI_SOURCE_ROOT = Boolean.getBoolean("java.disable.multi.source.root");
     public static boolean SYNCHRONOUS_UPDATES = false;
 
-    private static final Set<String> MODULAR_DIRECTORY_OPTIONS = new HashSet<>(Arrays.asList(
-        "--module-path", "-p"
-    ));
+    private static final Set<String> MODULAR_DIRECTORY_OPTIONS = Set.of("--module-path", "-p");
+    private static final Set<String> CLASSPATH_OPTIONS = Set.of("--class-path", "-cp", "-classpath");
 
     //TODO: the cache will probably be never cleared, as the ClassPath/value refers to the key(?)
     private Map<FileObject, ClassPath> file2SourceCP = new WeakHashMap<>();
@@ -108,10 +106,10 @@ public class MultiSourceRootProvider implements ClassPathProvider {
             return true;
         }
 
-        Set<FileObject> registeredRootsCopy;
+        List<FileObject> registeredRootsCopy;
 
         synchronized (registeredRoots) {
-            registeredRootsCopy = registeredRoots;
+            registeredRootsCopy = new ArrayList<>(registeredRoots);
         }
 
         for (FileObject existingRoot : registeredRootsCopy) {
@@ -125,6 +123,9 @@ public class MultiSourceRootProvider implements ClassPathProvider {
 
     @Override
     public ClassPath findClassPath(FileObject file, String type) {
+        if (SYNCHRONOUS_UPDATES) {
+            WORKER.post(() -> {}).waitFinished(); // flush tasks for tests (assumes threadpool size == 1)
+        }
         if (!isSupportedFile(file)) {
             return null;
         }
@@ -341,6 +342,19 @@ public class MultiSourceRootProvider implements ClassPathProvider {
 
                 if (optionKeys.contains(currentOption)) {
                     for (String piece : parsed.get(i + 1).split(File.pathSeparator)) {
+                        boolean hasStar = false;
+                        boolean isClassPath = CLASSPATH_OPTIONS.contains(currentOption);
+
+                        if (isClassPath && piece.endsWith("*") && piece.length() > 1) {
+                            char sep = piece.charAt(piece.length() - 2);
+
+                            if (sep == File.separatorChar ||
+                                sep == '/') {
+                                hasStar = true;
+                                piece = piece.substring(0, piece.length() - 2);
+                            }
+                        }
+
                         File pieceFile = new File(piece);
 
                         if (!pieceFile.isAbsolute()) {
@@ -364,6 +378,23 @@ public class MultiSourceRootProvider implements ClassPathProvider {
 
                             if (children != null) {
                                 expandedPaths = Arrays.asList(children);
+                            } else {
+                                expandedPaths = Collections.emptyList();
+                            }
+                        } else if (hasStar && isClassPath) {
+                            if (!toRemoveFSListeners.remove(f.getAbsolutePath()) &&
+                                addedFSListeners.add(f.getAbsolutePath())) {
+                                FileUtil.addFileChangeListener(this, f);
+                            }
+
+                            File[] children = f.listFiles();
+
+                            if (children != null) {
+                                expandedPaths = Arrays.stream(children)
+                                                      .filter(c -> c.getName()
+                                                                    .toLowerCase(Locale.ROOT)
+                                                                    .endsWith(".jar"))
+                                                      .toList();
                             } else {
                                 expandedPaths = Collections.emptyList();
                             }

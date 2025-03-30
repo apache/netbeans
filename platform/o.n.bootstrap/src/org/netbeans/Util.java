@@ -25,6 +25,8 @@ import java.util.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.openide.util.*;
 import org.openide.modules.*;
 
@@ -217,6 +219,12 @@ public final class Util {
             // Satisfied sample class.
             return true;
         }
+    }
+
+    static List<Class<?>> getStack() {
+        return StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(
+                stream -> stream.map(frame -> frame.getDeclaringClass())
+                                .collect(Collectors.toList()));
     }
 
     /** 

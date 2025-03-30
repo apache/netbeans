@@ -66,6 +66,7 @@ import { validateJDKCompatibility } from './jdk/validation/validation';
 import * as sshGuide from './panels/SshGuidePanel';
 import * as runImageGuide from './panels/RunImageGuidePanel';
 import { shouldHideGuideFor } from './panels/guidesUtil';
+import { SSHSession } from './ssh/ssh';
 
 const API_VERSION : string = "1.0";
 export const COMMAND_PREFIX : string = "nbls";
@@ -595,7 +596,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         if (jdkOK) {
             log.appendLine(`Verifying java: ${javaExecPath}`);
             // let the shell interpret PATH and .exe extension
-            let javaCheck = spawnSync(`${javaExecPath} -version`, { shell : true });
+            let javaCheck = spawnSync(`"${javaExecPath}" -version`, { shell : true });
             if (javaCheck.error || javaCheck.status) {
                 jdkOK = false;
             } else {
@@ -1040,6 +1041,14 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         }
     ));
 
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.cloud.openInBrowser',
+        async (node) => {
+            const portForward = getValueAfterPrefix(node.contextValue, 'portForward:');
+            const url = vscode.Uri.parse(portForward);
+            vscode.env.openExternal(url);
+        }
+    ));
+
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.cloud.imageUrl.copy',
         async (node) => {
             const imageUrl = getValueAfterPrefix(node.contextValue, 'imageUrl:');
@@ -1058,8 +1067,8 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
                     ocid
                 });
             }
-
-            openSSHSession("opc", publicIp, node.label);
+            const sshSession = new SSHSession("opc", publicIp);
+            sshSession.open(node.label);
         }
     ));
 
@@ -1080,7 +1089,8 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
                 });
             }
 
-            runDockerSSH("opc", publicIp, imageUrl, isRepositoryPrivate);
+            const sshSession = new SSHSession("opc", publicIp);
+            sshSession.runDocker(context, imageUrl, isRepositoryPrivate);
         }
     ));
 
@@ -1151,117 +1161,6 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
             doActivateWithJDK(clientPromise, specifiedJDK, context, log, notifyKill, setClient);
         });
     }
-}
-
-function runCommandInTerminal(command: string, name: string) {
-    const isWindows = process.platform === 'win32';
-
-    const shell = process.env.SHELL || '/bin/bash';
-    const shellName = shell.split('/').pop();
-    const isZsh = shellName === 'zsh';
-
-    const defaultShell = isWindows
-      ? process.env.ComSpec || 'cmd.exe'
-      : shell;
-
-    const pauseCommand = isWindows
-      ? 'pause'
-      : 'echo "Press any key to close..."; ' + (isZsh
-        ? 'read -rs -k1'
-        : 'read -rsn1');
-
-    const commandWithPause = `${command} && ${pauseCommand}`;
-
-    const terminal = vscode.window.createTerminal({
-      name: name,
-      shellPath: defaultShell,
-      shellArgs: isWindows ? ['/c', commandWithPause] : ['-c', commandWithPause],
-    });
-    terminal.show();
-}
-
-function openSSHSession(username: string, host: string, name?: string) {
-    let sessionName;
-    if (name === undefined) {
-        sessionName =`${username}@${host}`;
-    } else {
-        sessionName = name;
-    }
-
-    const sshCommand = `ssh ${username}@${host}`;
-
-    runCommandInTerminal(sshCommand, `SSH: ${username}@${host}`);
-}
-
-interface ConfigFiles {
-    applicationProperties : string | null;
-    bootstrapProperties: string | null;
-}
-
-async function runDockerSSH(username: string, host: string, dockerImage: string, isRepositoryPrivate: boolean) {
-    const configFiles: ConfigFiles = await vscode.commands.executeCommand('nbls.config.file.path') as ConfigFiles;
-    const { applicationProperties, bootstrapProperties } = configFiles;
-
-    const applicationPropertiesRemotePath = `/home/${username}/application.properties`;
-    const bootstrapPropertiesRemotePath = `/home/${username}/bootstrap.properties`;
-    const bearerTokenRemotePath = `/home/${username}/token.txt`;
-    const applicationPropertiesContainerPath = "/home/app/application.properties";
-    const bootstrapPropertiesContainerPath = "/home/app/bootstrap.properties";
-    const ocirServer = dockerImage.split('/')[0];
-
-    let sshCommand = "";
-    let mountVolume = "";
-    let micronautConfigFilesEnv = "";
-    if (isRepositoryPrivate) {
-        const bearerTokenFile = await commands.executeCommand(COMMAND_PREFIX + '.cloud.assets.createBearerToken', ocirServer);
-        sshCommand = `scp "${bearerTokenFile}" ${username}@${host}:${bearerTokenRemotePath} && `;
-    }
-
-    if (bootstrapProperties) {
-        sshCommand += `scp "${bootstrapProperties}" ${username}@${host}:${bootstrapPropertiesRemotePath} && `;
-        mountVolume = `-v ${bootstrapPropertiesRemotePath}:${bootstrapPropertiesContainerPath}:Z `;
-        micronautConfigFilesEnv = `${bootstrapPropertiesContainerPath}`;
-    }
-
-    if (applicationProperties) {
-        sshCommand += `scp "${applicationProperties}" ${username}@${host}:${applicationPropertiesRemotePath} && `;
-        mountVolume += ` -v ${applicationPropertiesRemotePath}:${applicationPropertiesContainerPath}:Z`;
-        micronautConfigFilesEnv += `${bootstrapProperties ? "," : ""}${applicationPropertiesContainerPath}`;
-    } 
-
-    let script = `#!/bin/sh\n`;
-    script += `set -e\n`;
-    script += `CONTAINER_ID_FILE="/home/${username}/.vscode.container.id"\n`;
-    script += `if [ -f "$CONTAINER_ID_FILE" ]; then\n`;
-    script += `  CONTAINER_ID=$(cat "$CONTAINER_ID_FILE")\n`;
-    script += `  if [ ! -z "$CONTAINER_ID" ] && docker ps -q --filter "id=$CONTAINER_ID" | grep -q .; then\n`;
-    script += `    echo "Stopping existing container with ID $CONTAINER_ID..."\n`;
-    script += `    docker stop "$CONTAINER_ID"\n`;
-    script += `  fi\n`;
-    script += `  rm -f "$CONTAINER_ID_FILE"\n`;
-    script += `fi\n`;
-
-    if (isRepositoryPrivate) {
-        script += `cat ${bearerTokenRemotePath} | docker login --username=BEARER_TOKEN --password-stdin ${ocirServer} \n`;
-    }
-    script += `docker pull ${dockerImage} \n`;
-
-    script += `NEW_CONTAINER_ID=$(docker run -p 8080:8080 ${mountVolume} -e MICRONAUT_CONFIG_FILES=${micronautConfigFilesEnv} -d ${dockerImage})\n`;
-
-    script += `if [ -n "$NEW_CONTAINER_ID" ]; then\n`
-    script += `  echo $NEW_CONTAINER_ID > $CONTAINER_ID_FILE\n`
-    script += `fi\n`
-    script += `docker logs -f "$NEW_CONTAINER_ID"\n`
-
-    const tempDir = process.env.TEMP || process.env.TMP || '/tmp';
-    const runContainerScript = path.join(tempDir, `run-container-${Date.now()}.sh`);
-    fs.writeFileSync(runContainerScript, script);
-
-    sshCommand += `scp "${runContainerScript}" ${username}@${host}:run-container.sh && `
-    
-    sshCommand += `ssh ${username}@${host} "chmod +x run-container.sh && ./run-container.sh" `
-
-    runCommandInTerminal(sshCommand, `Container: ${username}@${host}`)
 }
 
 function killNbProcess(notifyKill : boolean, log : vscode.OutputChannel, specProcess?: ChildProcess) : Promise<void> {

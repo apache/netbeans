@@ -53,6 +53,9 @@ extends ActionsProviderSupport implements PropertyChangeListener {
     private static final Map<String, BreakpointInfo> mimeType2BreakpointInfo = new HashMap<>();
 
     private static boolean hasMimeTypeDAPBreakpoints(String mimeType) {
+        if(mimeType == null) {
+            return false;
+        }
         synchronized (mimeType2BreakpointInfo) {
             return mimeType2BreakpointInfo.computeIfAbsent(mimeType, mt -> {
                 Result<RegisterDAPBreakpoints> result = MimeLookup.getLookup(mimeType).lookupResult(RegisterDAPBreakpoints.class);

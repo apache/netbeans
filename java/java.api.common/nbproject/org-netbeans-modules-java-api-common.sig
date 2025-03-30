@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.149
+#Version 1.150
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -2437,6 +2437,7 @@ fld public final static java.lang.String COMMAND_RENAME = "rename"
 fld public final static java.lang.String COMMAND_RUN = "run"
 fld public final static java.lang.String COMMAND_RUN_SINGLE = "run.single"
 fld public final static java.lang.String COMMAND_TEST = "test"
+fld public final static java.lang.String COMMAND_TEST_PARALLEL = "test.parallel"
 fld public final static java.lang.String COMMAND_TEST_SINGLE = "test.single"
 meth public abstract boolean isActionEnabled(java.lang.String,org.openide.util.Lookup)
 meth public abstract java.lang.String[] getSupportedActions()

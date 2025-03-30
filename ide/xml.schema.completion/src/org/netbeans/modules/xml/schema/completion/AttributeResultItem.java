@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.xml.schema.completion;
 
-import javax.swing.ImageIcon;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenId;
@@ -27,6 +26,7 @@ import org.netbeans.api.xml.lexer.XMLTokenId;
 import org.netbeans.modules.xml.axi.AbstractAttribute;
 import org.netbeans.modules.xml.schema.completion.spi.CompletionContext;
 import org.netbeans.modules.xml.schema.completion.CompletionPaintComponent.AttributePaintComponent;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -42,8 +42,7 @@ public class AttributeResultItem extends CompletionResultItem {
     public AttributeResultItem(AbstractAttribute attribute, CompletionContext context) {
         super(attribute, context);
         itemText = attribute.getName();
-        icon = new ImageIcon(CompletionResultItem.class.
-                getResource(ICON_LOCATION + ICON_ATTRIBUTE));
+        icon = ImageUtilities.loadIcon(ICON_LOCATION + ICON_ATTRIBUTE);
     }
     
     /**
@@ -52,8 +51,7 @@ public class AttributeResultItem extends CompletionResultItem {
     public AttributeResultItem(AbstractAttribute attribute, String prefix, CompletionContext context) {
         super(attribute, context);
         itemText = prefix + ":" + attribute.getName();
-        icon = new ImageIcon(CompletionResultItem.class.
-                getResource(ICON_LOCATION + ICON_ATTRIBUTE));
+        icon = ImageUtilities.loadIcon(ICON_LOCATION + ICON_ATTRIBUTE);
     }
     
     private int caretOffset = -1;

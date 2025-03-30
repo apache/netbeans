@@ -42,8 +42,8 @@ to some Session</span>: {@link
 org.netbeans.spi.debugger.DebuggerEngineProvider}, {@link
 org.netbeans.spi.debugger.DelegatingDebuggerEngineProvider}</li>
   <li><b>install new watch evaluation engine:</b> You can register a
-new evaluator for watches - {@link
-org.netbeans.spi.debugger.WatchesProvider} and {@link
+new evaluator for watches - {@code
+org.netbeans.spi.debugger.WatchesProvider} and {@code
 org.netbeans.spi.debugger.WatchImpl}. </li>
   <li><b>add a new actions:</b> A support for some new debugger action
 (like Step Into Action) can be installed to some {@link
@@ -114,22 +114,23 @@ org.netbeans.modules.ant.debugger.ColumnModels.createBuiltInColumn()<br>
 <span style="font-weight: bold; text-decoration: underline;">List of
 all default service providers:</span><br>
 <br>
-<table cellpadding="3" cellspacing="0" border="1"
+<table border="1"
  style="text-align: left; width: 100%;">
+<caption>List of all default service providers</caption>
   <tbody>
     <tr>
       <td
- style="vertical-align: top; background-color: rgb(204, 204, 255); font-weight: bold;"><big><big>Service
+ style="vertical-align: top; background-color: rgb(204, 204, 255); font-weight: bold;">Service
 provider interface<br>
-      </big></big></td>
+      </td>
       <td
- style="vertical-align: top; background-color: rgb(204, 204, 255); font-weight: bold;"><big><big>Should
+ style="vertical-align: top; background-color: rgb(204, 204, 255); font-weight: bold;">Should
 be registerred to:<br>
-      </big></big></td>
+      </td>
       <td
- style="vertical-align: top; background-color: rgb(204, 204, 255); font-weight: bold;"><big><big>File
+ style="vertical-align: top; background-color: rgb(204, 204, 255); font-weight: bold;">File
 names:<br>
-      </big></big></td>
+      </td>
     </tr>
     <tr>
       <td style="vertical-align: top;">{@link
@@ -171,7 +172,7 @@ Meta-inf/debugger/{Session type name}<br>
 file name: org.netbeans.spi.debugger.DelegatingDebuggerEngineProvider </td>
     </tr>
     <tr>
-      <td style="vertical-align: top;">{@link
+      <td style="vertical-align: top;">{@code
 org.netbeans.spi.debugger.WatchesProvider}&nbsp;</td>
       <td style="vertical-align: top;">{@link
 org.netbeans.api.debugger.DebuggerEngine}&nbsp;</td>

@@ -82,12 +82,12 @@ public class GitCommitPanel extends VCSCommitPanel<GitLocalFileNode> {
 
     static final GitCommitFilter FILTER_HEAD_VS_WORKING = new GitCommitFilter(
                 "HEAD_VS_WORKING", 
-                org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/head_vs_working.png", false),
+                org.openide.util.ImageUtilities.loadIcon("org/netbeans/modules/git/resources/icons/head_vs_working.png"),
                 NbBundle.getMessage(GitCommitPanel.class, "ParametersPanel.tgbHeadVsWorking.toolTipText"),
                 true); 
     static final GitCommitFilter FILTER_HEAD_VS_INDEX = new GitCommitFilter(
                 "HEAD_VS_INDEX", 
-                org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/head_vs_index.png", false),
+                org.openide.util.ImageUtilities.loadIcon("org/netbeans/modules/git/resources/icons/head_vs_index.png"),
                 NbBundle.getMessage(GitCommitPanel.class, "ParametersPanel.tgbHeadVsIndex.toolTipText"),
                 false);
     

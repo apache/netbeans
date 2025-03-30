@@ -60,7 +60,7 @@ for the relevant classes.
 
 <h1>Options API</h1>
 
-<h2><a name="intro">What are Options?</a></h2>
+<h2 id="intro">What are Options?</h2>
 
 NetBeans <em>system options</em> are groupings of user-settable
 properties which a module author desires to make available
@@ -72,12 +72,12 @@ it is easy for an administrator to see where all NetBeans settings reside).
 <p>Options installed into the system are automatically saved to disk
 when changed.
 
-<h2><a name="make-opt">Creating a System Option</a></h2>
+<h2 id="make-opt">Creating a System Option</h2>
 
 Creating a new system option is generally quite easy. In simple cases,
 the entire source for a system option can fit on one page.
 
-<h3><a name="make-singleton">Creating the singleton class</a></h3>
+<h3 id="make-singleton">Creating the singleton class</h3>
 
 First you must subclass
 
@@ -109,13 +109,13 @@ class is discouraged as it forces the system to load the stored
 option's settings as soon as that class is resolved, when otherwise
 loading the settings might never have been required.</p>
 
-<h3><a name="props">Providing getters and setters for properties</a></h3>
+<h3 id="props">Providing getters and setters for properties</h3>
 
 First of all, it is a good idea to make static variables containing
 the event name of each property you are exposing, e.g.:
 
 <pre>
-/** Property name for foreground color of my module, of type {@link Color}. */
+/** Property name for foreground color of my module, of type {@link java.awt.Color}. */
 public static final String PROPERTY_FOREGROUND = "foreground";
 </pre>
 
@@ -163,17 +163,17 @@ which you need the setter to immediately modify: your setter will not be used at
 restore time. To make sure the setter is used, just manually store the property without
 using <code>putProperty</code>.
 
-<h3><a name="beaninfo">Providing more advanced bean info</a></h3>
+<h3 id="beaninfo">Providing more advanced bean info</h3>
 
 <p>By default,
 
-<a href="@JDK@/java/beans/Introspector.html">JavaBeans introspection</a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/Introspector.html">JavaBeans introspection</a>
 
 is used to find the properties associated with a system option, and to
 read and write them. You may want to have more control over this
 process. If so, you should create a valid
 
-<a href="@JDK@/java/beans/BeanInfo.html"><code>BeanInfo</code></a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/BeanInfo.html"><code>BeanInfo</code></a>
 
 class for the option. The easiest way to do this is of course to
 create a class named e.g. <code>MyModuleSettingsBeanInfo</code>.</p>
@@ -205,9 +205,9 @@ once in a more intuitive fashion.
 course should make public constants representing these values, and
 provide e.g. a tagged
 
-<a href="@JDK@/java/beans/PropertyEditorSupport.html">property editor</a>.</p>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/PropertyEditorSupport.html">property editor</a>.</p>
 
-<h3><a name="cluster">Making an option cluster</a></h3>
+<h3 id="cluster">Making an option cluster</h3>
 
 If
 
@@ -226,7 +226,7 @@ parent's constructor) using
 property list would be unwieldy; or if it makes sense to have multiple
 and separate customizer components.
 
-<h3><a name="veto">Vetoable options</a></h3>
+<h3 id="veto">Vetoable options</h3>
 
 The superclass
 
@@ -243,7 +243,7 @@ other part of the module.
 
 and be prepared to revoke the change if a veto occurs.
 
-<h3><a name="module">Option installation</a></h3>
+<h3 id="module">Option installation</h3>
 
 <p>Options can be installed via module manifest, but are better
 installed as settings using the
@@ -252,7 +252,7 @@ installed as settings using the
 
 <div class="nonnormative">
 
-<h2><a name="access">Accessing Existing System Options</a></h2>
+<h2 id="access">Accessing Existing System Options</h2>
 
 For the most part, options and their properties are only accessed
 directly from within the module providing them; in this case, a new
@@ -273,7 +273,7 @@ You may also use this method to obtain the default instance for local use.
 
 <div class="nonnormative">
 
-<h2><a name="diagram">UML class diagram</a></h2>
+<h2 id="diagram">UML class diagram</h2>
 
 <img src="options.gif" alt="options UML">
 

@@ -340,7 +340,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 }
                 ExecutableFilesIndex.DEFAULT.setMainClass(context.getRoot().toURL(), active.indexable.getURL(), main[0]);
                 dropMethodsAndErrors(jt.getContext(), unit.getKey(), dc);
-                JavaCustomIndexer.setErrors(context, active, dc);
+                JavaCustomIndexer.setErrors(context, active, unit.getKey(), dc);
             }
             if (context.isCancelled()) {
                 return null;

@@ -30,7 +30,6 @@ import java.util.Comparator;
 import java.util.List;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListModel;
@@ -211,7 +210,7 @@ public class IsOverriddenPopup extends JPanel implements FocusListener {
             g.setColor(fgColor);
 
             // Render the item
-            CompletionUtilities.renderHtml(new ImageIcon(ImageUtilities.icon2Image(getIcon())), getText(), null, g, getFont(), fgColor, getWidth(), getHeight(), selected);
+            CompletionUtilities.renderHtml(ImageUtilities.icon2ImageIcon(getIcon()), getText(), null, g, getFont(), fgColor, getWidth(), getHeight(), selected);
         }
     }
     

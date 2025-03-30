@@ -38,16 +38,9 @@ public class UrlListener implements OutputListener {
         this.handler = handler;
     }
 
+    @Override
     public void outputLineAction(OutputEvent ev) {
         handler.open(url);
-    }
-
-    public void outputLineCleared(OutputEvent ev) {
-        // noop
-    }
-
-    public void outputLineSelected(OutputEvent ev) {
-        // noop
     }
 
 }

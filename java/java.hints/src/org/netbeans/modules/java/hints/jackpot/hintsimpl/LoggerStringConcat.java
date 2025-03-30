@@ -27,31 +27,33 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
+
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.ElementFilter;
+
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.java.hints.errors.Utilities;
+import org.netbeans.spi.editor.hints.ErrorDescription;
+import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.java.hints.ConstraintVariableType;
+import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
 import org.netbeans.spi.java.hints.Hint;
-import org.netbeans.spi.java.hints.TriggerPattern;
-import org.netbeans.spi.java.hints.TriggerPatterns;
 import org.netbeans.spi.java.hints.HintContext;
 import org.netbeans.spi.java.hints.JavaFix;
-import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
-import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.java.hints.JavaFixUtilities;
-import org.openide.util.NbBundle;
+import org.netbeans.spi.java.hints.TriggerPattern;
+import org.netbeans.spi.java.hints.TriggerPatterns;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
@@ -62,12 +64,18 @@ public class LoggerStringConcat {
 
     private static final Logger LOG = Logger.getLogger(LoggerStringConcat.class.getName());
 
-    @TriggerPattern(value = "$logger.log($level, $message)",
-                    constraints = {
-                        @ConstraintVariableType(variable="$logger", type="java.util.logging.Logger"),
-                        @ConstraintVariableType(variable="$level", type="java.util.logging.Level"),
-                        @ConstraintVariableType(variable="$message", type="java.lang.String")
-                    })
+    @TriggerPatterns({
+        @TriggerPattern(value = "$logger.log($level, $message)", constraints = {
+            @ConstraintVariableType(variable="$logger", type="java.util.logging.Logger"),
+            @ConstraintVariableType(variable="$level", type="java.util.logging.Level"),
+            @ConstraintVariableType(variable="$message", type="java.lang.String")
+        }),
+        @TriggerPattern(value = "$logger.log($level, $message)", constraints = {
+            @ConstraintVariableType(variable="$logger", type="java.lang.System.Logger"),
+            @ConstraintVariableType(variable="$level", type="java.lang.System.Logger.Level"),
+            @ConstraintVariableType(variable="$message", type="java.lang.String")
+        })
+    })
     public static ErrorDescription hint1(HintContext ctx) {
         return compute(ctx, null);
     }
@@ -159,6 +167,11 @@ public class LoggerStringConcat {
         }
     }
 
+    @Messages({
+            "MSG_LoggerStringConcat_fix=Convert string concatenation to a message template",
+            "MSG_LoggerStringConcat_fixLambda=Put string concatenation in lambda",
+            "MSG_LoggerStringConcat=Inefficient use of string concatenation in logger",
+    })
     private static ErrorDescription compute(HintContext ctx, String methodName) {
         TreePath message = ctx.getVariables().get("$message");
         List<List<TreePath>> sorted = Utilities.splitStringConcatenationToElements(ctx.getInfo(), message);
@@ -172,9 +185,16 @@ public class LoggerStringConcat {
             for (TreePath tp : tps)
                 if (tp.getLeaf().getKind() == Kind.ERRONEOUS) return null;
 
-        FixImpl fix = new FixImpl(NbBundle.getMessage(LoggerStringConcat.class, "MSG_LoggerStringConcat_fix"), methodName, TreePathHandle.create(ctx.getPath(), ctx.getInfo()), TreePathHandle.create(message, ctx.getInfo()));
+        // fixMessageTemplate
+        FixImpl fix = new FixImpl(Bundle.MSG_LoggerStringConcat_fix(), methodName, TreePathHandle.create(ctx.getPath(), ctx.getInfo()), TreePathHandle.create(message, ctx.getInfo()));
 
-        return ErrorDescriptionFactory.forTree(ctx, message, NbBundle.getMessage(LoggerStringConcat.class, "MSG_LoggerStringConcat"), fix.toEditorFix());
+        if (ctx.getInfo().getSourceVersion().compareTo(SourceVersion.RELEASE_8) >= 0) {
+            // Starting with JDK8 loggers accept MessageSupplier.
+            Fix fixMessageSupplier = JavaFixUtilities.rewriteFix(ctx, Bundle.MSG_LoggerStringConcat_fixLambda(), message, "() -> $message");
+            return ErrorDescriptionFactory.forTree(ctx, message, Bundle.MSG_LoggerStringConcat(), fixMessageSupplier, fix.toEditorFix());
+        } else {
+            return ErrorDescriptionFactory.forTree(ctx, message, Bundle.MSG_LoggerStringConcat(), fix.toEditorFix());
+        }
     }
     
     private static String literalToMessageFormat(String v) {

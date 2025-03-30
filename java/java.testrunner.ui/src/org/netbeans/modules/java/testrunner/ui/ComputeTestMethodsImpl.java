@@ -84,14 +84,14 @@ public class ComputeTestMethodsImpl extends EditorAwareJavaSourceTaskFactory {
             List<TestMethod> methods = new ArrayList<>();
 
             for (Factory factory : Lookup.getDefault().lookupAll(Factory.class)) {
+                if (cancel.get()) {
+                    return ;
+                }
+
                 try {
                     ComputeTestMethods ctm = factory.create();
 
                     currentProvider.set(ctm);
-
-                    if (cancel.get()) {
-                        return ;
-                    }
 
                     List<TestMethod> currentMethods = ctm.computeTestMethods(info);
 
@@ -102,10 +102,11 @@ public class ComputeTestMethodsImpl extends EditorAwareJavaSourceTaskFactory {
                     currentProvider.set(null);
                 }
 
-                if (!cancel.get()) {
-                    List<TestMethod> updateMethods = new ArrayList<>(methods);
-                    WORKER.post(() -> TestMethodController.setTestMethods(doc, updateMethods));
-                }
+            }
+
+            if (!cancel.get()) {
+                List<TestMethod> updateMethods = new ArrayList<>(methods);
+                WORKER.post(() -> TestMethodController.setTestMethods(doc, updateMethods));
             }
         }
     }

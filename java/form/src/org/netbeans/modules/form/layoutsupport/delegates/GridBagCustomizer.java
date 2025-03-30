@@ -57,8 +57,8 @@ public final class GridBagCustomizer extends JPanel implements Customizer
     static final int PLUS = 1;
     static final int MINUS = -1;
 
-    private static final ImageIcon REMAINDER_ICON = new ImageIcon(
-        GridBagCustomizer.class.getResource("/org/netbeans/modules/form/layoutsupport/resources/remainder.gif")); // NOI18N
+    private static final Icon REMAINDER_ICON = ImageUtilities.loadIcon(
+        "org/netbeans/modules/form/layoutsupport/resources/remainder.gif"); // NOI18N
 
 //    private DesignGridBagLayout designLayout;
     private GridBagLayoutSupport layoutSupport;

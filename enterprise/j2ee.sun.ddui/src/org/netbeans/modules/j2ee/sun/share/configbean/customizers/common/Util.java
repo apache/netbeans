@@ -20,10 +20,7 @@
 package org.netbeans.modules.j2ee.sun.share.configbean.customizers.common;
 
 import java.awt.Color;
-import javax.swing.ImageIcon;
 import javax.swing.UIManager;
-import org.netbeans.modules.j2ee.sun.share.configbean.Utils;
-import org.openide.ErrorManager;
 
 
 /**
@@ -34,34 +31,6 @@ public class Util {
 
     private Util() {
     }
-
-    /** Error/warning message icons.
-     */
-    private static final String errorIconPath =
-            "org/netbeans/modules/j2ee/sun/share/configbean/customizers/common/resources/errorIcon.png"; // NOI18N
-    private static final String warningIconPath =
-            "org/netbeans/modules/j2ee/sun/share/configbean/customizers/common/resources/warningIcon.png"; // NOI18N
-
-    public static ImageIcon errorMessageIcon;
-    public static ImageIcon warningMessageIcon;
-
-    static {
-        // Diagnostic test code to try to get more information about a suspicious intermittant exception
-        // (This is circa NB 4.1, so it may not be necessary anymore).
-        try {
-            errorMessageIcon = new ImageIcon(Utils.getResourceURL(errorIconPath, InputDialog.class));
-        } catch(NullPointerException ex) {
-            ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ex);
-            errorMessageIcon = null;
-        }
-        try {
-            warningMessageIcon = new ImageIcon(Utils.getResourceURL(warningIconPath, InputDialog.class));
-        } catch(NullPointerException ex) {
-            ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ex);
-            warningMessageIcon = null;
-        }
-    }
-
 
     /** !PW Foreground color for error message text when in the NetBeans IDE.
      *  See http://ui.netbeans.org/docs/inline_errors/index.html, about

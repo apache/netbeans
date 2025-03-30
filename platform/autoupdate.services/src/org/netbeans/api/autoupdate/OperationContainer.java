@@ -200,11 +200,13 @@ public final class OperationContainer<Support> {
     }
     
     /**
+     * <p>See the difference between {@link #createForInstall} and {@link #createForDirectInstall} for example</p>
+     * 
      * @return either {@link OperationSupport} or {@link InstallSupport} depending on type parameter of <code>OperationContainer&lt;Support&gt;</code> or
      * <code>null</code> if the <code>OperationContainer</code> is empty or contains any invalid elements
      * @see #listAll
      * @see #listInvalid
-     * <br><p>See the difference between {@link #createForInstall} and {@link #createForDirectInstall} for example</p>
+     *
      */                        
     public Support getSupport() {
         if (upToDate != null && upToDate) {
@@ -227,7 +229,7 @@ public final class OperationContainer<Support> {
      * Check if <code>updateElement</code> can be added ({@link #add})
      * @param updateUnit
      * @param updateElement to be inserted.
-     * @return <tt>true</tt> if chosen operation upon <code>updateElement</code> is allowed
+     * @return <code>true</code> if chosen operation upon <code>updateElement</code> is allowed
      */
     public boolean canBeAdded(UpdateUnit updateUnit, UpdateElement updateElement) {
         return impl.isValid(updateUnit, updateElement);
@@ -295,7 +297,7 @@ public final class OperationContainer<Support> {
     /**
      * Removes <code>updateElement</code>
      * @param updateElement
-     * @return <tt>true</tt> if successfully added
+     * @return <code>true</code> if successfully added
      */
     public boolean remove(UpdateElement updateElement) {
         if (upToDate != null) {
@@ -307,7 +309,7 @@ public final class OperationContainer<Support> {
     
     /**
      * @param updateElement
-     * @return <tt>true</tt> if this instance of <code>OperationContainer</code> 
+     * @return <code>true</code> if this instance of <code>OperationContainer</code> 
      * contains the specified <code>updateElement</code>.     
      */
     public boolean contains(UpdateElement updateElement) {

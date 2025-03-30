@@ -64,7 +64,6 @@ extide/gradle/external/gradle-7.4-bin.zip platform/libs.junit4/external/junit-4.
 extide/gradle/external/gradle-7.4-bin.zip platform/libs.testng/external/jcommander-1.78.jar
 extide/gradle/external/gradle-7.4-bin.zip enterprise/cloud.oracle/external/httpclient-4.5.13.jar
 extide/gradle/external/gradle-7.4-bin.zip platform/o.apache.commons.codec/external/commons-codec-1.17.0.jar
-extide/gradle/external/gradle-7.4-bin.zip platform/libs.batik.read/external/xml-apis-1.4.01.jar
 
 # These are the endorsed version of the javaee apis and create libraries, so they are better kept separate
 enterprise/javaee.api/external/javax.annotation-api-1.2.jar enterprise/javaee7.api/external/javax.annotation-api-1.2.jar
@@ -96,8 +95,8 @@ nb/ide.launcher/external/launcher-external-binaries-2-6c17cc6.zip platform/o.n.b
 nb/ide.launcher/external/launcher-external-binaries-2-6c17cc6.zip harness/apisupport.harness/external/launcher-external-binaries-2-6c17cc6.zip
 
 # only one is part of the product:
-java/libs.javacapi/external/nb-javac-jdk-24+29-api.jar java/libs.nbjavacapi/external/nb-javac-jdk-24+29-api.jar
-java/libs.javacapi/external/nb-javac-jdk-24+29.jar java/libs.nbjavacapi/external/nb-javac-jdk-24+29.jar
+java/libs.javacapi/external/nb-javac-jdk-24-ga-api.jar java/libs.nbjavacapi/external/nb-javac-jdk-24-ga-api.jar
+java/libs.javacapi/external/nb-javac-jdk-24-ga.jar java/libs.nbjavacapi/external/nb-javac-jdk-24-ga.jar
 
 # Used only in unittests for mysql db specific tests
 ide/db.metadata.model/external/mysql-connector-j-8.0.31.jar ide/db.mysql/external/mysql-connector-j-8.0.31.jar

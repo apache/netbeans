@@ -1267,7 +1267,13 @@ public final class VariousUtils {
         } else if (varBase instanceof StaticConstantAccess) {
             StaticConstantAccess constantAccess = (StaticConstantAccess) varBase;
             if (!constantAccess.isDynamicName()) {
-                String clsName = CodeUtils.extractUnqualifiedName(constantAccess.getDispatcher());
+                Expression dispatcher = constantAccess.getDispatcher();
+                String clsName = null;
+                if (dispatcher instanceof NamespaceName) {
+                    clsName = CodeUtils.extractQualifiedName(dispatcher);
+                } else {
+                    clsName = CodeUtils.extractUnqualifiedName(dispatcher);
+                }
                 String constName = CodeUtils.extractQualifiedName(constantAccess.getConstant());
                 if (constName != null) {
                     if (clsName != null) {

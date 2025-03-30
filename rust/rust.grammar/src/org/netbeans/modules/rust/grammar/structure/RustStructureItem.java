@@ -71,7 +71,7 @@ public final class RustStructureItem implements StructureItem {
 
     @Override
     public ImageIcon getCustomIcon() {
-        return new ImageIcon(ImageUtilities.loadImage(getIconBase(node)));
+        return ImageUtilities.loadImageIcon(getIconBase(node), false);
     }
 
     @Override

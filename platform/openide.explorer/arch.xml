@@ -400,7 +400,7 @@ No.
         </question>
 -->
 <answer id="exec-property">
-    <api name="netbeans.dnd.enabled" group="systemproperty" category="private" type="export" url="">
+    <api name="netbeans.dnd.enabled" group="systemproperty" category="private" type="export">
     Checks by Drag &amp; Drop support for views. True is regard as default
     (no matter what jdk's version). False value disallows Drag &amp; Drop in
     all views.

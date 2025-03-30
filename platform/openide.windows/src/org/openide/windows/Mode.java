@@ -40,7 +40,7 @@ import java.io.Serializable;
  * Each mode must have a unique name.
  *
  * <p>
- * <b><font color="red"><em>Important note: Do not provide implementation of this interface unless you are window system provider!</em></font></b>
+ * <b><span style="color:red"><em>Important note: Do not provide implementation of this interface unless you are window system provider!</em></span></b>
  */
 public interface Mode extends Serializable {
     /** Name of property for bounds of the mode */

@@ -22,7 +22,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.prefs.Preferences;
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.modules.rust.project.api.RustProjectAPI;
@@ -139,7 +139,7 @@ public final class CargoOptionsImpl {
         NotificationDisplayer.Priority priority = NotificationDisplayer.Priority.HIGH;
         String title = NbBundle.getMessage(CargoOptionsImpl.class, "MISSING_CARGO_TITLE"); // NOI18N
         String details = NbBundle.getMessage(CargoOptionsImpl.class, "MISSING_CARGO_DETAILS"); // NOI18N
-        ImageIcon icon = new ImageIcon(ImageUtilities.loadImage(RustProjectAPI.ICON));
+        Icon icon = ImageUtilities.loadIcon(RustProjectAPI.ICON);
         NotificationDisplayer.getDefault().notify(title, icon, details, (actionEvent) -> {
             showRustCargoOptions();
         });

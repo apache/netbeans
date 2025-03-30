@@ -97,6 +97,7 @@
        that represent archetypes. The archetypes are defined by the following file attributes:
      </p>
        <table>
+           <caption>Archetype attributes</caption>
            <tbody>
                <tr><td>groupId</td><td>mandatory</td><td></td></tr>
                <tr><td>artifactId</td><td>mandatory</td><td></td></tr>

@@ -65,7 +65,7 @@ public class NodeJsUtils {
     
     public static ImageIcon getNodeJsIcon () {
         if (NODEJS_ICON == null) {
-            NODEJS_ICON = new ImageIcon(ImageUtilities.loadImage(NODEJS_ICON_PATH)); //NOI18N
+            NODEJS_ICON = ImageUtilities.loadImageIcon(NODEJS_ICON_PATH, false); //NOI18N
         }
         return NODEJS_ICON;
     }

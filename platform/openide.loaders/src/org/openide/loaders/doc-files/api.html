@@ -90,7 +90,7 @@ implements some extensions to the clipboard.
 
 <h1>Datasystems API</h1>
 
-<h2><a name="loader-do">Loaders and Data Objects</a></h2>
+<h2 id="loader-do">Loaders and Data Objects</h2>
 
 <div class="nonnormative">
 
@@ -117,7 +117,7 @@ to recognize a file takes ownership of it, and creates a matching
 
 to represent it to the rest of NetBeans.
 
-<h3><a name="intro-loader">What is a loader used for?</a></h3>
+<h3 id="intro-loader">What is a loader used for?</h3>
 
 There are a few reasons why loaders are used in NetBeans, rather than
 just accessing raw files (and perhaps typing them by extension or MIME
@@ -162,7 +162,7 @@ are interpreted using Datasystems, not Filesystems.
 
 </div>
 
-<h3><a name="multi">Multiple-file loaders</a></h3>
+<h3 id="multi">Multiple-file loaders</h3>
 
 These typically subclass
 
@@ -196,7 +196,7 @@ When other files in the cluster are passed to the loader, it must
 create new entries in the <em>same</em> multi data object, to indicate
 their association.
 
-<h3><a name="single">Single-file loaders</a></h3>
+<h3 id="single">Single-file loaders</h3>
 
 These typically subclass
 
@@ -225,7 +225,7 @@ you had some reason to avoid using this kind of data object, you could
 of course subclass <code>DataLoader</code> and <code>DataObject</code>
 directly.
 
-<h3><a name="entry">Entries</a></h3>
+<h3 id="entry">Entries</h3>
 
 Entries represent a single file in a <code>MultiDataObject</code>, and
 thus are commonly used in all loaders (even single-file
@@ -253,7 +253,7 @@ templates such as this is to make the entry a
 
 <a href="../FileEntry.Format.html"><code>FileEntry.Format</code></a>.)
 
-<h3><a name="do-get">Getting a data object</a></h3>
+<h3 id="do-get">Getting a data object</h3>
 
 Normally you do not need to explicitly retrieve a data object - the
 loader pool will create them on demand, present them to the user in
@@ -270,7 +270,7 @@ otherwise will return the existing one. (Catch
 
 in case the file is not recognizable to any loader.)
 
-<h3><a name="delegate">Node Delegates</a></h3>
+<h3 id="delegate">Node Delegates</h3>
 
 Data objects have separate, but associated,
 
@@ -283,7 +283,7 @@ interface to the user. You may use
 
 to retrieve the node delegate for a data object, if necessary.
 
-<h3><a name="write-loader">Writing a loader and data object</a></h3>
+<h3 id="write-loader">Writing a loader and data object</h3>
 
 This section is the most important for most people: after a loader has
 been correctly written and installed, the system takes care of
@@ -291,8 +291,7 @@ providing files for it to recognize; constructing nodes for the files;
 etc.; and most further implementation of a module will be callbacks
 run in response to some aspect of the objects created here.
 
-<h4>Module installation</h4>
-<a name="register"></a>
+<h4 id="register">Module installation</h4>
 <p>First of all, you must be able to register your loader in the
 module so that NetBeans knows about it. The preferred way since version
 7.0 of <code>org.openide.loaders</code> module is to assign the loader
@@ -659,7 +658,7 @@ and if true, provide
 
 as the result.
 
-<h4><a name="create-delegate">Creating a node delegate</a></h4>
+<h4 id="create-delegate">Creating a node delegate</h4>
 
 You must create a
 
@@ -688,7 +687,7 @@ structure of the form (as displayed in the Component Inspector).
 special node subclass for the delegate, as you may provide an icon,
 cookies, and common actions without doing so.
 
-<h3><a name="sys-loaders">System loaders</a></h3>
+<h3 id="sys-loaders">System loaders</h3>
 
 NetBeans installs a few extra "hidden" loaders into the loader pool, as
 are returned by
@@ -753,7 +752,7 @@ cooperate with the loader in this regard).
 -->
 
 
-<h2><a name="cookie">Cookies</a></h2>
+<h2 id="cookie">Cookies</h2>
 
 <!-- XXX this ss should maybe be in Services/Lookup API -->
 
@@ -762,7 +761,7 @@ NetBeans in a flexible fashion what types of (usually user-initiated)
 operations they are capable of supporting, and even to dynamically add
 and remove these capabilities.
 
-<h3><a name="intro-cookie">What is a cookie?</a></h3>
+<h3 id="intro-cookie">What is a cookie?</h3>
 
 A <em>cookie</em> is a design pattern used to separate the
 presentation of implementation of some interface from the actual
@@ -804,7 +803,7 @@ that looks inside
 
 <a href="../MultiDataObject.html#getCookieSet--"><code>MultiDataObject.getCookieSet()</code></a>.
 
-<h4><a name="attach-retrieve">Attaching and retrieving cookies</a></h4>
+<h4 id="attach-retrieve">Attaching and retrieving cookies</h4>
 
 <p>In short, there are a number of ways to attach cookies to either a
 node or data object (and you may listen for changes in the set of
@@ -854,19 +853,19 @@ which demonstrate their flexibility. In the examples that follow,
 this:</p>
 
 <pre>
-<font class="keyword">public</font> <font class="keyword">interface</font> C {
-    <font class="type">void</font> foo();
+<span class="keyword">public</span> <span class="keyword">interface</span> C {
+    <span class="type">void</span> foo();
 }
-<font class="keyword">public</font> <font class="keyword">class</font> S <font class="keyword">implements</font> C {
-    <font class="keyword">private</font> <font class="type">String</font> param;
-    <font class="keyword">public</font> S(<font class="type">String</font> param) {
-        <font class="keyword">this</font>.param = param;
+<span class="keyword">public</span> <span class="keyword">class</span> S <span class="keyword">implements</span> C {
+    <span class="keyword">private</span> <span class="type">String</span> param;
+    <span class="keyword">public</span> S(<span class="type">String</span> param) {
+        <span class="keyword">this</span>.param = param;
     }
-    <font class="keyword">public</font> <font class="type">void</font> foo() {
-        System.out.println(<font class="string">"foo: "</font> + param);
+    <span class="keyword">public</span> <span class="type">void</span> foo() {
+        System.out.println(<span class="string">"foo: "</span> + param);
     }
 }
-<font class="keyword">public</font> <font class="keyword">class</font> O <font class="keyword">extends</font> <font class="type">DataObject</font> {<font class="comment">/* ... */</font>}
+<span class="keyword">public</span> <span class="keyword">class</span> O <span class="keyword">extends</span> <span class="type">DataObject</span> {<span class="comment">/* ... */</span>}
 </pre>
 
 
@@ -877,21 +876,21 @@ this:</p>
 <dd><p>Using cookies in the common way is pretty easy.</p>
 
 <pre>
-<font class="keyword">public</font> <font class="keyword">class</font> O <font class="keyword">extends</font> <font class="type">DataObject</font> {
-    <font class="keyword">public</font> O(<font class="type">FileObject</font> fo) {
-        <font class="comment">// super...
-</font>        getCookieSet().assign(C1.class, <font class="keyword">new</font> S1(fo));
-        getCookieSet().assign(C2.class, <font class="keyword">new</font> S2(<font class="keyword">this</font>));
+<span class="keyword">public</span> <span class="keyword">class</span> O <span class="keyword">extends</span> <span class="type">DataObject</span> {
+    <span class="keyword">public</span> O(<span class="type">FileObject</span> fo) {
+        <span class="comment">// super...
+</span>        getCookieSet().assign(C1.class, <span class="keyword">new</span> S1(fo));
+        getCookieSet().assign(C2.class, <span class="keyword">new</span> S2(<span class="keyword">this</span>));
     }
 }
-<font class="keyword">public</font> <font class="keyword">class</font> S1 <font class="keyword">implements</font> C1 {<font class="comment">/* ... */</font>}
-<font class="keyword">public</font> <font class="keyword">class</font> S2 <font class="keyword">implements</font> C2 {<font class="comment">/* ... */</font>}
-<font class="comment">// ...
-</font><font class="type">DataObject</font> o = DataObject.find(someFileObject);
-<font class="comment">// o instanceof O, in fact
-</font>C1 c1 = o.getLookup().lookup(C1.<font class="keyword">class</font>);
-<font class="comment">// c1 instanceof S1
-</font><font class="keyword">if</font> (c1 != <font class="constant">null</font>) {
+<span class="keyword">public</span> <span class="keyword">class</span> S1 <span class="keyword">implements</span> C1 {<span class="comment">/* ... */</span>}
+<span class="keyword">public</span> <span class="keyword">class</span> S2 <span class="keyword">implements</span> C2 {<span class="comment">/* ... */</span>}
+<span class="comment">// ...
+</span><span class="type">DataObject</span> o = DataObject.find(someFileObject);
+<span class="comment">// o instanceof O, in fact
+</span>C1 c1 = o.getLookup().lookup(C1.<span class="keyword">class</span>);
+<span class="comment">// c1 instanceof S1
+</span><span class="keyword">if</span> (c1 != <span class="constant">null</span>) {
     c1.foo();
 }
 </pre>
@@ -904,61 +903,61 @@ this:</p>
 inheritance, you can use subclassing naturally on supports.</p>
 
 <pre>
-<font class="keyword">public</font> <font class="keyword">class</font> S1 <font class="keyword">implements</font> C1 {
-    <font class="keyword">private</font> <font class="type">String</font> param;
-    <font class="keyword">public</font> S1(<font class="type">String</font> param) {
-        <font class="keyword">this</font>.param = param;
+<span class="keyword">public</span> <span class="keyword">class</span> S1 <span class="keyword">implements</span> C1 {
+    <span class="keyword">private</span> <span class="type">String</span> param;
+    <span class="keyword">public</span> S1(<span class="type">String</span> param) {
+        <span class="keyword">this</span>.param = param;
     }
-    <font class="keyword">public</font> <font class="type">void</font> foo1() {
-        System.out.println(<font class="string">"foo: "</font> + transform(param));
+    <span class="keyword">public</span> <span class="type">void</span> foo1() {
+        System.out.println(<span class="string">"foo: "</span> + transform(param));
     }
-    <font class="comment">/** Subclasses may customize. */</font>
-    <font class="keyword">protected</font> <font class="type">String</font> transform(<font class="type">String</font> in) {
-        <font class="keyword">return</font> in;
-    }
-}
-<font class="keyword">public</font> <font class="keyword">abstract</font> <font class="keyword">class</font> S2 <font class="keyword">implements</font> C2 {
-    <font class="keyword">private</font> <font class="type">String</font> param;
-    <font class="keyword">public</font> S2(<font class="type">String</font> param) {
-        <font class="keyword">this</font>.param = param;
-    }
-    <font class="keyword">public</font> <font class="type">void</font> foo2() {
-        <font class="keyword">if</font> (active()) {
-            System.out.println(<font class="string">"foo: "</font> + param);
-        }
-    }
-    <font class="comment">/** Subclasses must implement. */</font>
-    <font class="keyword">protected</font> <font class="keyword">abstract</font> <font class="type">boolean</font> active();
-}
-<font class="keyword">public</font> <font class="keyword">class</font> O {
-    <font class="keyword">private</font> <font class="type">int</font> state;
-    <font class="keyword">public</font> O(<font class="type">String</font> p) {
-        state = INACTIVE; <font class="comment">// initially
-</font>        getCookieSet().assign(C1.class, <font class="keyword">new</font> <font class="type">MyS1</font>(p));
-        getCookieSet().assign(C2.class, <font class="keyword">new</font> <font class="type">MyS2</font>(p));
-    }
-    <font class="keyword">private</font> <font class="keyword">static</font> <font class="keyword">final</font> <font class="keyword">class</font> <font class="type">MyS1</font> <font class="keyword">extends</font> S1 {
-        <font class="keyword">public</font> <font class="type">MyS1</font>(<font class="type">String</font> p) {<font class="keyword">super</font>(p);}
-        <font class="keyword">protected</font> <font class="type">String</font> transform(<font class="type">String</font> in) {
-            <font class="keyword">return</font> in.toLowerCase();
-        }
-    }
-    <font class="keyword">private</font> <font class="keyword">final</font> <font class="keyword">class</font> <font class="type">MyS2</font> <font class="keyword">extends</font> S2 {
-        <font class="keyword">public</font> <font class="type">MyS2</font>(<font class="type">String</font> p) {<font class="keyword">super</font>(p);}
-        <font class="keyword">protected</font> <font class="type">boolean</font> active() {
-            <font class="keyword">return</font> O.<font class="keyword">this</font>.state == ACTIVE;
-        }
+    <span class="comment">/** Subclasses may customize. */</span>
+    <span class="keyword">protected</span> <span class="type">String</span> transform(<span class="type">String</span> in) {
+        <span class="keyword">return</span> in;
     }
 }
-<font class="comment">// ...
-</font>O o = <font class="keyword">new</font> O(<font class="string">"Hello"</font>);
-C1 c1 = o.getLookup().lookup(C1.<font class="keyword">class</font>);
-<font class="keyword">if</font> (c1 != <font class="constant">null</font>) c1.foo1();
-<font class="comment">// prints "foo: hello"
-</font>C2 c2 = o.getLookup().lookup(C2.<font class="keyword">class</font>);
-<font class="keyword">if</font> (c2 != <font class="constant">null</font>) c2.foo2();
-<font class="comment">// does nothing: o is not yet active
-</font></pre>
+<span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> S2 <span class="keyword">implements</span> C2 {
+    <span class="keyword">private</span> <span class="type">String</span> param;
+    <span class="keyword">public</span> S2(<span class="type">String</span> param) {
+        <span class="keyword">this</span>.param = param;
+    }
+    <span class="keyword">public</span> <span class="type">void</span> foo2() {
+        <span class="keyword">if</span> (active()) {
+            System.out.println(<span class="string">"foo: "</span> + param);
+        }
+    }
+    <span class="comment">/** Subclasses must implement. */</span>
+    <span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="type">boolean</span> active();
+}
+<span class="keyword">public</span> <span class="keyword">class</span> O {
+    <span class="keyword">private</span> <span class="type">int</span> state;
+    <span class="keyword">public</span> O(<span class="type">String</span> p) {
+        state = INACTIVE; <span class="comment">// initially
+</span>        getCookieSet().assign(C1.class, <span class="keyword">new</span> <span class="type">MyS1</span>(p));
+        getCookieSet().assign(C2.class, <span class="keyword">new</span> <span class="type">MyS2</span>(p));
+    }
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="type">MyS1</span> <span class="keyword">extends</span> S1 {
+        <span class="keyword">public</span> <span class="type">MyS1</span>(<span class="type">String</span> p) {<span class="keyword">super</span>(p);}
+        <span class="keyword">protected</span> <span class="type">String</span> transform(<span class="type">String</span> in) {
+            <span class="keyword">return</span> in.toLowerCase();
+        }
+    }
+    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="type">MyS2</span> <span class="keyword">extends</span> S2 {
+        <span class="keyword">public</span> <span class="type">MyS2</span>(<span class="type">String</span> p) {<span class="keyword">super</span>(p);}
+        <span class="keyword">protected</span> <span class="type">boolean</span> active() {
+            <span class="keyword">return</span> O.<span class="keyword">this</span>.state == ACTIVE;
+        }
+    }
+}
+<span class="comment">// ...
+</span>O o = <span class="keyword">new</span> O(<span class="string">"Hello"</span>);
+C1 c1 = o.getLookup().lookup(C1.<span class="keyword">class</span>);
+<span class="keyword">if</span> (c1 != <span class="constant">null</span>) c1.foo1();
+<span class="comment">// prints "foo: hello"
+</span>C2 c2 = o.getLookup().lookup(C2.<span class="keyword">class</span>);
+<span class="keyword">if</span> (c2 != <span class="constant">null</span>) c2.foo2();
+<span class="comment">// does nothing: o is not yet active
+</span></pre>
 
 </dd>
 
@@ -968,30 +967,30 @@ C1 c1 = o.getLookup().lookup(C1.<font class="keyword">class</font>);
 after its creation.</p>
 
 <pre>
-<font class="keyword">public</font> <font class="keyword">class</font> <font class="type">O</font> {
-    <font class="keyword">private</font> <font class="type">boolean</font> <font class="variable-name">modified</font>;
-    <font class="keyword">public</font> <font class="function-name">O</font>(<font class="type">String</font> <font class="variable-name">param</font>) {
-        modified = <font class="constant">false</font>;
-        <font class="comment">// ...
-</font>    }
-    <font class="keyword">private</font> <font class="keyword">synchronized</font> <font class="type">void</font> <font class="function-name">markModified</font>() {
-        <font class="keyword">if</font> (!modified) {
-            <font class="comment">// Newly modified, make it possible to save.
-</font>            <font class="comment">// Note this will automatically fire a cookie change.
-</font>            getCookieSet().assign(SaveCookie.class, <font class="keyword">new</font> <font class="type">SaveCookie</font>() {
-                <font class="keyword">public</font> <font class="type">void</font> <font class="function-name">save</font>() {
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="type">O</span> {
+    <span class="keyword">private</span> <span class="type">boolean</span> <span class="variable-name">modified</span>;
+    <span class="keyword">public</span> <span class="function-name">O</span>(<span class="type">String</span> <span class="variable-name">param</span>) {
+        modified = <span class="constant">false</span>;
+        <span class="comment">// ...
+</span>    }
+    <span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="type">void</span> <span class="function-name">markModified</span>() {
+        <span class="keyword">if</span> (!modified) {
+            <span class="comment">// Newly modified, make it possible to save.
+</span>            <span class="comment">// Note this will automatically fire a cookie change.
+</span>            getCookieSet().assign(SaveCookie.class, <span class="keyword">new</span> <span class="type">SaveCookie</span>() {
+                <span class="keyword">public</span> <span class="type">void</span> <span class="function-name">save</span>() {
                     doSave();
                 }
             });
-            modified = <font class="constant">true</font>;
+            modified = <span class="constant">true</span>;
         }
     }
-    <font class="keyword">private</font> <font class="keyword">synchronized</font> <font class="type">void</font> <font class="function-name">doSave</font>() {
-        <font class="keyword">if</font> (modified) {
-            <font class="comment">// actually save...then:
-</font>            
+    <span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="type">void</span> <span class="function-name">doSave</span>() {
+        <span class="keyword">if</span> (modified) {
+            <span class="comment">// actually save...then:
+</span>            
             getCookieSet().assign(SaveCookie.class);
-            modified = <font class="constant">false</font>;
+            modified = <span class="constant">false</span>;
         }
     }
 }
@@ -1002,9 +1001,8 @@ after its creation.</p>
 
 </dl>
 
-</div>
 
-<h3><a name="std-cookie">Standard cookies and supports</a></h3>
+<h3 id="std-cookie">Standard cookies and supports</h3>
 
 Most standard cookies you would want to use exist in the
 
@@ -1052,7 +1050,7 @@ according to the needs of its subclass and holders.
 for instance, uses only <code>OpenCookie</code> and
 <code>CloseCookie</code>.
 
-<h3><a name="write-cookie">Writing a cookie</a></h3>
+<h3 id="write-cookie">Writing a cookie</h3>
 
 Writing a new cookie requires no special knowledge - just extend create
 an interface and add its methods according to whatever you need done.
@@ -1065,7 +1063,7 @@ the current selection provides the cookie.</p>
 
 <div class="nonnormative">
 
-<h3><a name="write-support">Writing a support for an existing cookie</a></h3>
+<h3 id="write-support">Writing a support for an existing cookie</h3>
 
 Writing a support also does not require anything non-apparent. It should
 be a concrete class, its name conventionally ending in
@@ -1091,7 +1089,7 @@ prerequisites.
 
 </div>
 
-<h3><a name="use-support">Using an existing support</a></h3>
+<h3 id="use-support">Using an existing support</h3>
 
 Using an existing support is generally straightforward - assuming your
 data object is a subclass of <code>MultiDataObject</code>, you may
@@ -1105,12 +1103,12 @@ in the constructor, passing in the primary entry (most likely) from
 
 
 
-<h2><a name="clipboard">Extended Clipboard</a></h2>
+<h2 id="clipboard">Extended Clipboard</h2>
 
 NetBeans implements an extended clipboard, which enhances the functions
 provided in the
 
-<a href="@JDK@/java/awt/datatransfer/package-summary.html"><code>java.awt.datatransfer</code></a>
+<a href="@JDK@@JDKMODULE_JAVA_DATATRANSFER@/java/awt/datatransfer/package-summary.html"><code>java.awt.datatransfer</code></a>
 
 package. This implementation is to be found in
 
@@ -1124,7 +1122,7 @@ can be confusing; the
 contains a detailed description of these operations as they pertain to
 nodes, which may be helpful.
 
-<h3><a name="convertor">Convertors</a></h3>
+<h3 id="convertor">Convertors</h3>
 
 The extended clipboard,
 
@@ -1144,7 +1142,7 @@ of it to
 
 <a href="@org-openide-util-ui@/org/openide/util/doc-files/api.html#instance-folders">lookup</a>.
 
-<h3><a name="clipboard-ev">Event notification</a></h3>
+<h3 id="clipboard-ev">Event notification</h3>
 
 The extended clipboard supports Java Event-based notification of
 changes in the contents of the clipboard. Just register your listener
@@ -1152,7 +1150,7 @@ with
 
 <a href="@org-openide-util-ui@/org/openide/util/datatransfer/ExClipboard.html#addClipboardListener-org.openide.util.datatransfer.ClipboardListener-"><code>ExClipboard.addClipboardListener(...)</code></a>.
 
-<h3><a name="multi-transfer">Multi-transfers</a></h3>
+<h3 id="multi-transfer">Multi-transfers</h3>
 
 <a href="@org-openide-util-ui@/org/openide/util/datatransfer/ExTransferable.Multi.html"><code>ExTransferable.Multi</code></a>
 
@@ -1173,13 +1171,13 @@ It is designed to permit access to its constituent real
 
 <div class="nonnormative">
 
-<h2><a name="diagrams">UML Diagrams</a></h2>
+<h2 id="diagrams">UML Diagrams</h2>
 
-<h3><a name="diagram_data_objects">Data objects</a></h3>
+<h3 id="diagram_data_objects">Data objects</h3>
 
 <img src="data_objects.gif" alt="DataObject UML">
 
-<h3><a name="diagram_data_loaders">Data loaders</a></h3>
+<h3 id="diagram_data_loaders">Data loaders</h3>
 
 <img src="data_loaders.gif" alt="DataLoader UML">
 

@@ -30,7 +30,7 @@
   in order to manipulate the editor carets.
   </p>
   
-  <h3>Key parts of the SPI</h3>
+  <h2>Key parts of the SPI</h2>
   
   <p>
   <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/caret/CaretMoveHandler.html">CaretMoveHandler</a></code>
@@ -50,25 +50,25 @@
   </code>
   </pre>
   
-  <h3><a name="navigation-filters">Navigation Filters</a></h3>
+  <h2 id="navigation-filters">Navigation Filters</h2>
   <p>
   A boilerplate <a href="CascadingNavigationFilter.html">CascadingNavigationFilter</a> is provided to 
-  make implementation of <a href="@JDK@/javax/swing/text/NavigationFilter.html">NavigationFilters</a> easier. The boilerplate
+  make implementation of <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/NavigationFilter.html">NavigationFilters</a> easier. The boilerplate
   remembers the preceding filter and will delegate to it. If you create a subclass, you may call <code>super</code> methods 
   <code>moveDot</code> and <code>setDot</code> to delegate to that previous filter and ultimately perform the action. Calling
-  methods of <a href="@JDK@/javax/swing/text/NavigationFilter.FilterBypass.html">FilterBypass</a> will perform the caret action
+  methods of <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/NavigationFilter.FilterBypass.html">FilterBypass</a> will perform the caret action
   directly.
   </p>
   <p>
   The filter can find out the <a href="../../../api/editor/caret/package-summary.html#movement-origins">origin of the movement</a> or
   the <a href="../../../api/editor/caret/CaretInfo.html"><code>CaretInfo</code> for actual caret</a> being moved. The 
-  <a href="@JDK@/javax/swing/text/NavigationFilter.FilterBypass.html">FilterBypass</a> implementation passed to 
-  <a href="@JDK@/javax/swing/text/NavigationFilter.html">NavigationFilter</a> can be downcasted to <a href="NavigationFilterBypass.html">NavigationFilterBypass</a>,
+  <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/NavigationFilter.FilterBypass.html">FilterBypass</a> implementation passed to 
+  <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/NavigationFilter.html">NavigationFilter</a> can be downcasted to <a href="NavigationFilterBypass.html">NavigationFilterBypass</a>,
   which provides this extended information.
   </p>
-  <h3><a name="compatibilty">Backwards compatibility</a></h3>
+  <h2 id="compatibilty">Backwards compatibility</h2>
   
-  <h3><a name="usecases">Use cases</a></h3>
+  <h2 id="usecases">Use cases</h2>
   <p>
   Use cases are shown in javadoc documentation of particular methods.
   </p>

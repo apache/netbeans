@@ -45,10 +45,10 @@ public class ObjectArrayUtilities {
      * @param  objectArray object array to be searched.
      * @param  key the key to be searched for.
      * @return index of the search key, if it is contained in the object array;
-     *	       otherwise, <tt>(-(<i>insertion point</i>) - 1)</tt>.  The
+     *	       otherwise, <code>(-(<i>insertion point</i>) - 1)</code>.  The
      *	       <i>insertion point</i> is defined as the point at which the
      *	       key would be inserted into the object array: the index of the first
-     *	       element greater than the key, or <tt>objectArray.getItemCount()</tt>, if all
+     *	       element greater than the key, or <code>objectArray.getItemCount()</code>, if all
      *	       elements in the object array are less than the specified key.  Note
      *	       that this guarantees that the return value will be &gt;= 0 if
      *	       and only if the key is found.
@@ -85,7 +85,7 @@ public class ObjectArrayUtilities {
      * @param key key to search for.
      * @param c comparator to be used to compare the items.
      * @return index of the search key, if it is contained in the object array;
-     *	       otherwise, <tt>(-(<i>insertion point</i>) - 1)</tt>.
+     *	       otherwise, <code>(-(<i>insertion point</i>) - 1)</code>.
      * @see #binarySearch(ObjectArray, Object)
      */
     public static int binarySearch(ObjectArray objectArray, Object key, Comparator c) {

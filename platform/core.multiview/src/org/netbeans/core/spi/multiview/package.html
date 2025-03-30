@@ -27,8 +27,8 @@ MultiView SPI provides infrastructure for creating components that dock
 multiple views into one consistent component. Developers define what
 shall be included into the component and are given opportunity to
 influence the overall behaviour of the component.<br>
-This SPI handles the lifecycle of a multiview component.<p>
-<h3>Creation</h3>
+This SPI handles the lifecycle of a multiview component.
+<h2>Creation</h2>
 New instance of MultiView TopComponent can be created by calling
 <a href="@TOP@/org/netbeans/core/spi/multiview/MultiViewFactory.html#createMultiView-org.netbeans.core.spi.multiview.MultiViewDescription:A-org.netbeans.core.spi.multiview.MultiViewDescription-">
     MultiViewFactory.createMultiView
@@ -48,7 +48,7 @@ The multiview component is cloneable by default. If any of your
 embedded elements cannot be cloned, or you don't intend to allow the
 users to clone the component, please use the appropriate factory method
 to create a non-cloneable instance.
-<h3>Lifecycle</h3>
+<h2>Lifecycle</h2>
 Once the multiview component is opened, the element for the default
 MultiViewDescription is created. Creation of other Elements is delayed
 to the moment these are required.<br>
@@ -82,7 +82,7 @@ by asking the user) in
   </li>
 </ul>
 <br>
-<h3>Persistence</h3>
+<h2>Persistence</h2>
 TopComponents decide about persistence based on the <a
  href="@org-openide-windows@/org/openide/windows/TopComponent.html">TopComponent.getPersistenceType()</a>&nbsp;
 return values. Possible values are:
@@ -133,7 +133,7 @@ MultiViewElements are deserialized.&nbsp; These are kept and the
 createElement() method is not called on the matching
 MultiViewDescription.<br>
 <br>
-<h3>Manipulating the multiview</h3>
+<h2>Manipulating the multiview</h2>
 MultiViewElements get a chance to manipulate the enclosed topcomponent.
 Each of them is passed an instance of 
 {@link org.netbeans.core.spi.multiview.MultiViewElementCallback} on
@@ -147,8 +147,7 @@ lifecycle of the element. <br>
 contruct the Element's getActions() array).</li>
   <li>To change the title for the topcomponent.</li>
 </ul>
-<span style="font-weight: bold;"><br>
-</span>
+
 If your MultiViewElement is a TopComponent or provides a TopComponent
 in getVisualRepresentation(), you can manipulate
 the activatedNodes of the whole multiview component by setting the
@@ -156,7 +155,7 @@ appropriate nodes on your own TopComponent.
 when elements are switched, the activated nodes get updated as well
 according to the shown element.
 <br>
-<h3><span style="font-weight: bold;"></span>Embedding editors</h3>
+<h2><span style="font-weight: bold;"></span>Embedding editors</h2>
 A typical MultiViewElement for embedding editor extends 
 <a href="@org-openide-text@/org/openide/text/CloneableEditor.html">CloneableEditor</a>
 and delegates some of the functionality to the multiview component. <br>

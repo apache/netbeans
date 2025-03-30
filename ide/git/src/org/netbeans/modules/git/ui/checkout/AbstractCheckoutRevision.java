@@ -34,6 +34,7 @@ import org.netbeans.modules.git.GitModuleConfig;
 import org.netbeans.modules.git.ui.repository.RepositoryInfo;
 import org.netbeans.modules.git.ui.repository.RevisionDialogController;
 import org.netbeans.modules.git.utils.GitUtils;
+import org.netbeans.modules.versioning.util.DialogBoundsPreserver;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.util.HelpCtx;
@@ -55,7 +56,7 @@ public abstract class AbstractCheckoutRevision implements DocumentListener, Acti
     private boolean branchNameRecommended = true;
     private String branchName;
     private final Map<String, GitBranch> branches;
-    private final Icon ICON_ERROR = org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/info.png", false); //NOI18N
+    private final Icon ICON_ERROR = org.openide.util.ImageUtilities.loadIcon("org/netbeans/modules/git/resources/icons/info.png"); //NOI18N
     private boolean autoSelectedCreateBranch = true;
 
     protected AbstractCheckoutRevision (RepositoryInfo info, RevisionDialogController revisionPicker) {
@@ -89,21 +90,19 @@ public abstract class AbstractCheckoutRevision implements DocumentListener, Acti
         org.openide.awt.Mnemonics.setLocalizedText(okButton, okButton.getText());
         dd = new DialogDescriptor(panel, getDialogTitle(), true, new Object[] { okButton, DialogDescriptor.CANCEL_OPTION }, okButton, DialogDescriptor.DEFAULT_ALIGN, helpCtx, null);
         validateBranchCB();
-        revisionPicker.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange (PropertyChangeEvent evt) {
-                if (evt.getPropertyName() == RevisionDialogController.PROP_VALID) {
-                    setRevisionValid(Boolean.TRUE.equals(evt.getNewValue()));
-                } else if (evt.getPropertyName() == RevisionDialogController.PROP_REVISION_ACCEPTED) {
-                    if (dd.isValid()) {
-                        okButton.doClick();
-                    }
+        revisionPicker.addPropertyChangeListener(evt -> {
+            if (evt.getPropertyName() == RevisionDialogController.PROP_VALID) {
+                setRevisionValid(Boolean.TRUE.equals(evt.getNewValue()));
+            } else if (evt.getPropertyName() == RevisionDialogController.PROP_REVISION_ACCEPTED) {
+                if (dd.isValid()) {
+                    okButton.doClick();
                 }
             }
         });
         panel.branchNameField.getDocument().addDocumentListener(this);
         panel.cbCheckoutAsNewBranch.addActionListener(this);
         Dialog d = DialogDisplayer.getDefault().createDialog(dd);
+        DialogBoundsPreserver.preserveAndRestore(d, GitModuleConfig.getDefault().getPreferences(), this.getClass().getName());
         d.setVisible(true);
         return okButton == dd.getValue();
     }
@@ -233,17 +232,14 @@ public abstract class AbstractCheckoutRevision implements DocumentListener, Acti
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void propertyChange (final PropertyChangeEvent evt) {
         if (RepositoryInfo.PROPERTY_BRANCHES.equals(evt.getPropertyName())) {
-            Mutex.EVENT.readAccess(new Runnable() {
-                @Override
-                @SuppressWarnings("unchecked")
-                public void run () {
-                    branches.clear();
-                    branches.putAll((Map<String, GitBranch>) evt.getNewValue());
-                    validateName();
-                    validateBranchCB();
-                }
+            Mutex.EVENT.readAccess(() -> {
+                branches.clear();
+                branches.putAll((Map<String, GitBranch>) evt.getNewValue());
+                validateName();
+                validateBranchCB();
             });
         }
     }

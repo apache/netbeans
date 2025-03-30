@@ -19,7 +19,6 @@
 package org.netbeans.modules.java.file.launcher.queries;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.URI;
@@ -34,15 +33,12 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.java.file.launcher.SingleSourceFileUtil;
 import org.netbeans.modules.java.file.launcher.spi.SingleFileOptionsQueryImplementation;
 import org.netbeans.modules.java.file.launcher.spi.SingleFileOptionsQueryImplementation.Result;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
-import org.openide.util.NbBundle;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
@@ -308,6 +304,48 @@ public class MultiSourceRootProviderTest extends NbTestCase {
         assertNull(provider.findClassPath(FileUtil.toFileObject(wd), ClassPath.SOURCE));
         assertSame(cp, provider.findClassPath(FileUtil.toFileObject(testDir), ClassPath.SOURCE));
         assertSame(cp, provider.findClassPath(FileUtil.toFileObject(packDir), ClassPath.SOURCE));
+    }
+
+    public void testExpandClassPath() throws Exception {
+        FileObject wd = FileUtil.toFileObject(getWorkDir());
+        FileObject test = FileUtil.createData(wd, "src/pack/Test1.java");
+        FileObject libsDir = FileUtil.createFolder(wd, "libs");
+        FileObject lib1Jar = FileUtil.createData(libsDir, "lib1.jar");
+        FileObject lib2Jar = FileUtil.createData(libsDir, "lib2.jar");
+        FileObject lib3Dir = FileUtil.createFolder(libsDir, "lib3");
+        FileObject lib4Zip = FileUtil.createData(libsDir, "lib4.zip");
+
+        TestUtilities.copyStringToFile(test, "package pack;");
+
+        testResult.setOptions("--class-path " + FileUtil.getRelativePath(wd, libsDir) + "/*");
+        testResult.setWorkDirectory(FileUtil.toFileObject(getWorkDir()).toURI());
+
+        MultiSourceRootProvider provider = new MultiSourceRootProvider();
+        ClassPath compileCP = provider.findClassPath(test, ClassPath.COMPILE);
+
+        assertEquals(new HashSet<>(Arrays.asList(FileUtil.getArchiveRoot(lib1Jar),
+                                                 FileUtil.getArchiveRoot(lib2Jar))),
+                     new HashSet<>(Arrays.asList(compileCP.getRoots())));
+
+        lib4Zip.delete();
+
+        assertEquals(new HashSet<>(Arrays.asList(FileUtil.getArchiveRoot(lib1Jar),
+                                                 FileUtil.getArchiveRoot(lib2Jar))),
+                     new HashSet<>(Arrays.asList(compileCP.getRoots())));
+
+        FileObject lib5Jar = FileUtil.createData(libsDir, "lib5.jar");
+
+        assertEquals(new HashSet<>(Arrays.asList(FileUtil.getArchiveRoot(lib1Jar),
+                                                 FileUtil.getArchiveRoot(lib2Jar),
+                                                 FileUtil.getArchiveRoot(lib5Jar))),
+                     new HashSet<>(Arrays.asList(compileCP.getRoots())));
+
+        lib1Jar.delete();
+
+        assertEquals(new HashSet<>(Arrays.asList(FileUtil.getArchiveRoot(lib2Jar),
+                                                 FileUtil.getArchiveRoot(lib5Jar))),
+                     new HashSet<>(Arrays.asList(compileCP.getRoots())));
+
     }
 
     @Override

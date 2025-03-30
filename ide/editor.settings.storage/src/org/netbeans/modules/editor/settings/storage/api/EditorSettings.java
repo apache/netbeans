@@ -207,11 +207,11 @@ public abstract class EditorSettings {
     );
     
     /**
-     * Returns annotations properties for given profile or null, if the 
+     * Returns annotations properties for given profile or an empty Map, if the 
      * profile is not known.
      *
      * @param profile a profile name
-     * @return annotations properties for given profile or null
+     * @return annotations properties for given profile or an empty map
      */
     public abstract Map<String, AttributeSet> getAnnotations (
 	String profile
@@ -219,10 +219,10 @@ public abstract class EditorSettings {
     
     /**
      * Returns defaults for annotation properties for given profile,
-     * or null if the profile is not known.
+     * or an empty Map if the profile is not known.
      *
      * @param profile a profile name
-     * @return annotation properties for given profile or null
+     * @return annotation properties for given profile or an empty map
      */
     public abstract Map<String, AttributeSet> getAnnotationDefaults (
 	String profile

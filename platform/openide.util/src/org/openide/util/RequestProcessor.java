@@ -58,12 +58,12 @@ import org.openide.util.lookup.Lookups;
 
 /** Request processor is {@link Executor} (since version 7.16) capable to
  * perform asynchronous requests in a dedicated thread pool.
- * <A name="use_cases">There are several use cases for RequestProcessor</A>,
+ * <a id="use_cases">There are several use cases for RequestProcessor</a>,
  * most of them start with creating own <code>RequestProcessor</code>
  * instance (which by itself is quite lightweight).
  * <p>
  * <strong>Do something later</strong>
- * <p>
+ * </p>
  * In case you want something to be done later in some background thread,
  * create an instance of <code>RequestProcessor</code> and post tasks to it.
  * <pre>

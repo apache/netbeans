@@ -213,7 +213,11 @@ public class CompletionProviderImpl implements CompletionProvider {
                         String rightLabel;
                         if (i.getLabelDetails() != null) {
                             leftLabel = encode(i.getLabel() + (i.getLabelDetails().getDetail() != null ? i.getLabelDetails().getDetail() : ""));
-                            rightLabel = encode(i.getLabelDetails().getDescription());
+                            if (i.getLabelDetails().getDescription() != null) {
+                                rightLabel = encode(i.getLabelDetails().getDescription());
+                            } else {
+                                rightLabel = null;
+                            }
                         } else {
                             leftLabel = encode(i.getLabel());
                             if (i.getDetail() != null) {
@@ -341,7 +345,7 @@ public class CompletionProviderImpl implements CompletionProvider {
 
                             @Override
                             public void render(Graphics grphcs, Font font, Color color, Color color1, int i, int i1, boolean bln) {
-                                CompletionUtilities.renderHtml(icon, leftLabel, rightLabel, grphcs, font, color, i, i1, bln);
+                                COMPLETION_ITEM_RENDERER.renderCompletionItem(icon, leftLabel, rightLabel, grphcs, font, color, i, i1, bln);
                             }
 
                             @Override
@@ -566,4 +570,17 @@ public class CompletionProviderImpl implements CompletionProvider {
 
         return template.toString();
     }
+
+    //for tests:
+    static IndirectCompletionItemRenderer COMPLETION_ITEM_RENDERER = new IndirectCompletionItemRenderer() {
+        @Override
+        public void renderCompletionItem(ImageIcon icon, String leftLabel, String rightLabel, Graphics grphcs, Font font, Color color, int i, int i1, boolean bln) {
+            CompletionUtilities.renderHtml(icon, leftLabel, rightLabel, grphcs, font, color, i, i1, bln);
+        }
+    };
+
+    interface IndirectCompletionItemRenderer {
+        public void renderCompletionItem(ImageIcon icon, String leftLabel, String rightLabel, Graphics grphcs, Font font, Color color, int i, int i1, boolean bln);
+    }
+
 }

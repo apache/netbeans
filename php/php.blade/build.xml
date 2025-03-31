@@ -61,7 +61,7 @@
         
         <!--php-->
         <property name="php.outdir" location="${src.dir}/org/netbeans/modules/php/blade/syntax/antlr4/php"/>
-        <java classname="org.antlr.v4.Tool" fork="true" dir="${php.outdir}">
+        <java classname="org.antlr.v4.Tool" classpathref="antlr4.tool" fork="true" dir="${php.outdir}">
             <arg value="-o"/>
             <arg value="${php.outdir}"/>
             <arg value="BladePhpAntlrLexer.g4"/>
@@ -72,7 +72,7 @@
                 
         <!--html-->
         <property name="html_components.outdir" location="${src.dir}/org/netbeans/modules/php/blade/syntax/antlr4/html_components"/>
-        <java classname="org.antlr.v4.Tool" fork="true" dir="${html_components.outdir}">
+        <java classname="org.antlr.v4.Tool" classpathref="antlr4.tool" fork="true" dir="${html_components.outdir}">
             <arg value="-o"/>
             <arg value="${html_components.outdir}"/>
             <arg value="BladeHtmlAntlrLexer.g4"/>

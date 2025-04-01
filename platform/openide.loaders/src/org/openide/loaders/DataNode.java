@@ -604,7 +604,7 @@ public class DataNode extends AbstractNode {
         }
         
         public Long getValue() {
-            return new Long(getDataObject().getPrimaryFile().getSize());
+            return getDataObject().getPrimaryFile().getSize();
         }
         
     }

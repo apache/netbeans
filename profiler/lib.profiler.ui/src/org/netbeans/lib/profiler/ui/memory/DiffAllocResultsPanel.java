@@ -189,13 +189,13 @@ public class DiffAllocResultsPanel extends SnapshotAllocResultsPanel {
     }
 
     protected Object computeValueAt(int row, int col) {
-        int index = ((Integer) filteredToFullIndexes.get(row)).intValue();
+        int index = (Integer) filteredToFullIndexes.get(row);
 
         switch (col) {
             case 0:
                 return sortedClassNames[index];
             case 1:
-                return new Long(totalAllocObjectsSize[index]);
+                return totalAllocObjectsSize[index];
             case 2:
                 return ((totalAllocObjectsSize[index] > 0) ? "+" : "") + intFormat.format(totalAllocObjectsSize[index]) + " B"; // NOI18N
             case 3:

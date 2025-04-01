@@ -371,7 +371,7 @@ private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
     private List createBlankElement(String val) {
         List t = new ArrayList();
-        t.add(new Boolean(false));
+        t.add(false);
         t.add(new SchemaObject(val));
         t.add((String) " ");        
         t.add((String) " ");
@@ -458,7 +458,7 @@ private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             //if its the first row, then select it as primary
             if(row == 0) {
                // System.out.println("added first row");
-                tblModel.setValueAt(new Boolean(true), 0, 0);
+                tblModel.setValueAt(true, 0, 0);
             }
         } 
     }
@@ -604,7 +604,7 @@ private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 
 		    for (int i = 0; i < getRowCount(); i++) {
 			if (i != row) {
-		            setValueAt(new Boolean(false), i, 0);
+		            setValueAt(false, i, 0);
                         }
                     }
                     rowVector.set(col, value);
@@ -717,9 +717,9 @@ private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 			return theRadioButton;
 		}
  
-      public Object getCellEditorValue() {
-			return new Boolean(theRadioButton.isSelected());
-		}
+        public Object getCellEditorValue() {
+            return theRadioButton.isSelected();
+        }
     }
     
     class RadioColumnRenderer extends JRadioButton implements TableCellRenderer {

@@ -1744,6 +1744,9 @@ jobs:
       - name: webcommon/javascript2.requirejs
         run: ant $OPTS -f webcommon/javascript2.requirejs test-unit
 
+      - name: webcommon/javascript2.vue
+        run: ant $OPTS -f webcommon/javascript2.vue test
+
       - name: webcommon/javascript2.sdoc
         run: ant $OPTS -f webcommon/javascript2.sdoc test
 

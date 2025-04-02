@@ -243,7 +243,7 @@ public abstract class MonitorTestCase extends CommonProfilerTestCase {
                     assertTrue("Error in threadData.clearStates", (td.size() == 0));
                     names.add(td.getName());
                     threads.put(n, states);
-                    timestamps.put(n, new Long(td.getFirstTimeStamp()));
+                    timestamps.put(n, td.getFirstTimeStamp());
                 }
             }
 

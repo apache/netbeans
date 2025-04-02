@@ -37,6 +37,7 @@
           <title>Overview</title><!-- note this is ignored -->
          </head>
          <body>
+          <main>
           <h1>Overview of <xsl:value-of select="api-answers/@module" /><xsl:text> module</xsl:text></h1>
           <xsl:apply-templates select="api-answers/answer[@id='arch-overall']/node()" mode="description"/>
           
@@ -93,6 +94,7 @@
                     <xsl:with-param name="generate-group" select="'java'" />
                 </xsl:call-template>
             -->
+          </main>
          </body>
         </html>
          

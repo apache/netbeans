@@ -121,7 +121,7 @@
         </taskdef>
         <javadoc-index target="${netbeans.javadoc.dir}/allclasses.xml">
             <packageslist dir="${netbeans.javadoc.dir}">
-                <include name="**/allclasses-noframe.html"/>
+                <include name="**/allclasses-index.html"/>
             </packageslist>
         </javadoc-index>
 
@@ -186,7 +186,7 @@
             </fileset>
         </copy>
         <condition property="javadoc.style.sheet.exists">
-            <available file="${netbeans.javadoc.dir}/org-openide-util/javadoc.css"/>
+            <available file="${netbeans.javadoc.dir}/org-openide-util/resource-files/javadoc.css"/>
         </condition>
 
         <fail unless="javadoc.style.sheet.exists">

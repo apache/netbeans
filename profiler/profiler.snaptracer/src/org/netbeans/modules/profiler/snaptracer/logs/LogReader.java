@@ -59,7 +59,7 @@ public final class LogReader {
     }
 
     public LogRecord getRecordFor(long time) {
-        Map.Entry<Long,LogRecord> entry = recordList.floorEntry(new Long(time));
+        Map.Entry<Long,LogRecord> entry = recordList.floorEntry(time);
         
         if (entry != null) {
             return entry.getValue();
@@ -79,7 +79,7 @@ public final class LogReader {
 //                System.out.println("Time: "+(record.getMillis()-startTime));
 //            }
 //            System.out.println(record.getMessage());
-            recordList.put(new Long(record.getMillis()), record);
+            recordList.put(record.getMillis(), record);
         }
 
         @Override

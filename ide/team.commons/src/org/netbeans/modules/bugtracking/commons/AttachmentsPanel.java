@@ -773,11 +773,11 @@ public class AttachmentsPanel extends JPanel {
                         if(file.length() > 1024 * 1024) {
                             long size = file.length();
                             Object[] arr = {
-                                getFilename(),                                
-                                new Long (size), // bytes
-                                new Long (size / 1024 + 1), // kilobytes
-                                new Long (size / (1024 * 1024)), // megabytes
-                                new Long (size / (1024 * 1024 * 1024)), // gigabytes
+                                getFilename(),
+                                Long.valueOf(size), // bytes
+                                Long.valueOf(size / 1024 + 1), // kilobytes
+                                Long.valueOf(size / (1024 * 1024)), // megabytes
+                                Long.valueOf(size / (1024 * 1024 * 1024)) // gigabytes
                             };
                             DialogDescriptor c = new DialogDescriptor(
                                     NbBundle.getMessage(AttachmentPanel.class, "MSG_ObjectIsTooBig", arr), 

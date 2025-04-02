@@ -63,7 +63,7 @@ class StackTraceSegment extends TagBounds {
         initSerialNumToFrame();
         initialOffset = (Long) serialNumToStackTrace.get(stackTraceSerialNumber / SERIALNUM_DIV);
         if (initialOffset == null) {
-            initialOffset = new Long(startOffset);
+            initialOffset = Long.valueOf(startOffset);
         }
         offset = new long[] {initialOffset};
         while (offset[0] < endOffset) {

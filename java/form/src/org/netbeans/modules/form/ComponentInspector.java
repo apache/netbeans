@@ -112,6 +112,7 @@ public class ComponentInspector extends JPanel
 
     private void createComponents() {
         treeView = new BeanTreeView();
+        treeView.setAutoWaitCursor(false);
         treeView.setDragSource(true);
         treeView.setDropTarget(true);
         treeView.getAccessibleContext().setAccessibleName(

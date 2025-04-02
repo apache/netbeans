@@ -3425,7 +3425,7 @@ public class S2bConfig {
 		if ("indent".equals(name))
 			return getIndent();
 		if ("indentAmount".equals(name))
-			return new java.lang.Integer(getIndentAmount());
+			return getIndentAmount();
 		if ("mddFile".equals(name))
 			return getMddFile();
 		if ("mddIn".equals(name))
@@ -3503,7 +3503,7 @@ public class S2bConfig {
 		if ("generateHasChanged".equals(name))
 			return (isGenerateHasChanged() ? java.lang.Boolean.TRUE : java.lang.Boolean.FALSE);
 		if ("newestSourceTime".equals(name))
-			return new java.lang.Long(getNewestSourceTime());
+			return getNewestSourceTime();
 		if ("writeBeanGraphFile".equals(name))
 			return getWriteBeanGraphFile();
 		if ("readBeanGraphFiles[]".equals(name))

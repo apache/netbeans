@@ -479,7 +479,7 @@ public class MeasureStartupTimeTestCase extends org.netbeans.junit.NbPerformance
                             }
 
                             value = readLine.substring(begin + str.length(), end);
-                            measuredValues.put(str, new Long(value));
+                            measuredValues.put(str, Long.valueOf(value));
                             startup_data.remove(str);
                             break;
                         }

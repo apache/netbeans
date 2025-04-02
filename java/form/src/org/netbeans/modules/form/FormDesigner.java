@@ -2104,7 +2104,7 @@ public class FormDesigner {
                 hasExplPrefSize = visual.isPreferredSizeSet();
             }
             if (getLayoutDesigner().logTestCode()) {
-                getLayoutDesigner().testCode.add("  hasExplicitPrefSize.put(\"" + componentId + "\", new Boolean(" + hasExplPrefSize + "));"); //NOI18N
+                getLayoutDesigner().testCode.add("  hasExplicitPrefSize.put(\"" + componentId + "\", " + hasExplPrefSize + ");"); //NOI18N
             }
             return hasExplPrefSize;
         }

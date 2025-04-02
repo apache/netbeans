@@ -136,8 +136,7 @@ public class CommentsPanel extends JPanel {
         } catch (ParseException pex) {
             Bugzilla.LOG.log(Level.INFO, null, pex);
         }
-        sections.add(addSection(layout,
-            new Long(0),    
+        sections.add(addSection(layout, Long.valueOf(0),    
             issue.getFieldValue(IssueField.DESCRIPTION),
             issue.getFieldValue(IssueField.REPORTER),
             issue.getFieldValue(IssueField.REPORTER_NAME),

@@ -129,7 +129,7 @@ class TaskGroupCondition extends FilterCondition {
                         break;
                     }
                 }
-                panel.putClientProperty( FilterCondition.PROP_VALUE_VALID, new Boolean( atLeastOneGroupSelected ) );
+                panel.putClientProperty(FilterCondition.PROP_VALUE_VALID, atLeastOneGroupSelected);
             }
         });
         

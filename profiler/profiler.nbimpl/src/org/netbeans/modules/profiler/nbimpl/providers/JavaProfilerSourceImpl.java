@@ -636,7 +636,7 @@ public class JavaProfilerSourceImpl implements AbstractJavaProfilerSource {
                             @Override
                             public Void visitMethod(MethodTree node, Void p) {
                                 Element e = cc.getTrees().getElement(getCurrentPath());
-                                if (e.getKind() == ElementKind.METHOD) {
+                                if (e != null && e.getKind() == ElementKind.METHOD) {
                                     ExecutableElement ee = (ExecutableElement)e;
                                     if (ee.getSimpleName().contentEquals("suite") && // NOI18N
                                         (ee.getReturnType().toString().equals(JUNIT_TEST) ||

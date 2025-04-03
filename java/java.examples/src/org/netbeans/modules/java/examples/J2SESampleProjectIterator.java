@@ -143,7 +143,7 @@ public class J2SESampleProjectIterator implements WizardDescriptor.AsynchronousI
             NbBundle.getMessage(PanelConfigureProject.class, "LBL_NWP1_ProjectTitleName"), // NOI18N
         };
         component.putClientProperty (WizardDescriptor.PROP_CONTENT_DATA, list); // NOI18N
-        component.putClientProperty (WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer (currentIndex)); // NOI18N
+        component.putClientProperty (WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, currentIndex); // NOI18N
     }
     
 }

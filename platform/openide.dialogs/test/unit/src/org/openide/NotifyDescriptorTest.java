@@ -21,7 +21,12 @@ package org.openide;
 import java.awt.GraphicsEnvironment;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import junit.framework.Test;
@@ -133,5 +138,32 @@ public class NotifyDescriptorTest extends NbTestCase {
         assertEquals(events.toString(), 1, events.size());
 
         events.clear();
+    }
+
+    // post migration from boxed type constructors
+    public void testVerifyReturnOptionCompatibility() {
+        // used to be new Integer(int)
+        Object YES_OPTION = NotifyDescriptor.YES_OPTION;
+        Object NO_OPTION = NotifyDescriptor.NO_OPTION;
+        Object CANCEL_OPTION = NotifyDescriptor.CANCEL_OPTION;
+        Object OK_OPTION = NotifyDescriptor.OK_OPTION;
+        Object CLOSED_OPTION = NotifyDescriptor.CLOSED_OPTION;
+
+        // all distinct instances
+        Set<Object> identitySet = Collections.newSetFromMap(new IdentityHashMap<>());
+        identitySet.add(YES_OPTION);
+        identitySet.add(NO_OPTION);
+        identitySet.add(CANCEL_OPTION);
+        identitySet.add(OK_OPTION);
+        identitySet.add(CLOSED_OPTION);
+        assertEquals(5, identitySet.size());
+
+        // same int value
+        assertEquals(YES_OPTION, OK_OPTION);
+
+        // distinct int value
+        assertNotSame(YES_OPTION, NO_OPTION);
+        assertNotSame(YES_OPTION, CANCEL_OPTION);
+        assertNotSame(YES_OPTION, CLOSED_OPTION);
     }
 }

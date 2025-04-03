@@ -66,9 +66,9 @@ public class LabelBeanInfo extends ComponentBeanInfo.Support {
         public void setAsText(String s) {
             Integer i;
             getTags();
-            if (s.equals(tags[0])) i = new Integer(java.awt.Label.LEFT);
-            else if (s.equals(tags[1])) i = new Integer(java.awt.Label.CENTER);
-            else i = new Integer(java.awt.Label.RIGHT);
+            if (s.equals(tags[0])) i = java.awt.Label.LEFT;
+            else if (s.equals(tags[1])) i = java.awt.Label.CENTER;
+            else i = java.awt.Label.RIGHT;
             setValue(i);
         }
 

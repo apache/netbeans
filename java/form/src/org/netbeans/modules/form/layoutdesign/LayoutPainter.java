@@ -187,8 +187,8 @@ public class LayoutPainter implements LayoutConstants {
         if ((component.isLinkSized(HORIZONTAL)) && (component.isLinkSized(VERTICAL))) {
             Map<Integer,List<String>> linkGroupsH = layoutModel.getLinkSizeGroups(HORIZONTAL);            
             Map<Integer,List<String>> linkGroupsV = layoutModel.getLinkSizeGroups(VERTICAL);
-            Integer linkIdH = new Integer(component.getLinkSizeId(HORIZONTAL));
-            Integer linkIdV = new Integer(component.getLinkSizeId(VERTICAL));
+            Integer linkIdH = component.getLinkSizeId(HORIZONTAL);
+            Integer linkIdV = component.getLinkSizeId(VERTICAL);
             
             List<String> lH = linkGroupsH.get(linkIdH);
             List<String> lV = linkGroupsV.get(linkIdV);
@@ -226,7 +226,7 @@ public class LayoutPainter implements LayoutConstants {
             int dimension = (component.isLinkSized(HORIZONTAL)) ? HORIZONTAL : VERTICAL;
             Map map =  layoutModel.getLinkSizeGroups(dimension);
             
-            Integer linkId = new Integer(component.getLinkSizeId(dimension));
+            Integer linkId = component.getLinkSizeId(dimension);
             List l = (List)map.get(linkId);
             Iterator mergedIt = l.iterator();
             

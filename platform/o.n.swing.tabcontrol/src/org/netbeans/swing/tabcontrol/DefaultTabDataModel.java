@@ -380,11 +380,11 @@ public class DefaultTabDataModel implements TabDataModel {
     public void addTabs(int[] indices, TabData[] data) {
         Map<Integer,TabData> m = new HashMap<>(data.length);
         for (int i = 0; i < data.length; i++) {
-            m.put(new Integer(indices[i]), data[i]);
+            m.put(indices[i], data[i]);
         }
         Arrays.sort(indices);
         for (int i = 0; i < indices.length; i++) {
-            Integer key = new Integer(indices[i]);
+            Integer key = indices[i];
             TabData currData = m.get(key);
             list.add(indices[i], currData);
         }
@@ -567,7 +567,7 @@ public class DefaultTabDataModel implements TabDataModel {
     private Integer[] toObjectArray(int[] o) {
         Integer[] result = new Integer[o.length];
         for (int i = 0; i < o.length; i++) {
-            result[i] = new Integer(o[i]);
+            result[i] = Integer.valueOf(o[i]);
         }
         return result;
     }

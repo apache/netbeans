@@ -365,7 +365,7 @@ public class TabbedContainer extends JComponent implements Accessible {
         updateUI();
         //A few borders and such will check this
         //@see org.netbeans.swing.plaf.gtk.AdaptiveMatteBorder
-        putClientProperty ("viewType", new Integer(type)); //NOI18N
+        putClientProperty ("viewType", type); //NOI18N
     }
     
     /**

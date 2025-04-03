@@ -243,11 +243,6 @@ public final class FileObjectFactory {
         return true;
     }
 
-    private Integer initRealExists(int initTouch) {
-        final Integer retval = new Integer(initTouch);
-        return retval;
-    }
-
     private void printWarning(File file) {
         StringBuilder sb = new StringBuilder("WARNING(please REPORT):  Externally ");
         sb.append(file.exists() ? "created " : "deleted "); //NOI18N
@@ -263,7 +258,7 @@ public final class FileObjectFactory {
     private BaseFileObj issueIfExist(File file, Caller caller, final FileObject parent, FileNaming child, int initTouch, boolean asyncFire, boolean onlyExisting) {
         boolean exist = false;
         BaseFileObj foForFile = null;
-        Integer realExists = initRealExists(initTouch);
+        Integer realExists = initTouch;
         final FileChangedManager fcb = FileChangedManager.getInstance();
 
         //use cached info as much as possible + do refresh if something is wrong

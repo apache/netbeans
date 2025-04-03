@@ -766,8 +766,7 @@ public class TemplateWizard extends WizardDescriptor {
         lastComp.addPropertyChangeListener(propL());
         
         // compoun steps pane info
-        putProperty(PROP_CONTENT_SELECTED_INDEX,
-            new Integer(getContentSelectedIndex()));
+        putProperty(PROP_CONTENT_SELECTED_INDEX, getContentSelectedIndex());
         if (getContentData() != null) {
             putProperty(PROP_CONTENT_DATA, getContentData());
         }
@@ -830,8 +829,7 @@ public class TemplateWizard extends WizardDescriptor {
             pcl = new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent ev) {
                     if (PROP_CONTENT_SELECTED_INDEX.equals(ev.getPropertyName())) {
-                        putProperty(PROP_CONTENT_SELECTED_INDEX,
-                            new Integer(getContentSelectedIndex()));
+                        putProperty(PROP_CONTENT_SELECTED_INDEX, getContentSelectedIndex());
                     } else { 
                         if ((PROP_CONTENT_DATA.equals(ev.getPropertyName())) && (getContentData() != null)) {
                             putProperty(PROP_CONTENT_DATA, getContentData());

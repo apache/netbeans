@@ -433,7 +433,7 @@ public class Toolbar extends ToolbarWithOverflow /*implemented by patchsuperclas
                         }
                         if (obj instanceof javax.swing.JComponent) {
                             if (ToolbarPool.getDefault().getPreferredIconSize() == 24) {
-                                ((JComponent) obj).putClientProperty("PreferredIconSize", new Integer(24));
+                                ((JComponent) obj).putClientProperty("PreferredIconSize", 24);
                             }
                             ((JComponent) obj).putClientProperty("file", file);
                         }
@@ -450,7 +450,7 @@ public class Toolbar extends ToolbarWithOverflow /*implemented by patchsuperclas
                         }
 
                         if (ToolbarPool.getDefault().getPreferredIconSize() == 24) {
-                            b.putClientProperty("PreferredIconSize", new Integer(24));
+                            b.putClientProperty("PreferredIconSize", 24);
                         }
                         if (null == a.getValue(Action.SMALL_ICON)
                             && (null == a.getValue(Action.NAME) || a.getValue(Action.NAME).toString().length() == 0)) {

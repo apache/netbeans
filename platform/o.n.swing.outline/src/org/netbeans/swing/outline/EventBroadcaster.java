@@ -633,7 +633,7 @@ final class EventBroadcaster implements TableModelListener, TreeModelListener, E
             }            
         }
         log ("translateEvent", e);
-        log ("generated table events", new Integer(result.length));
+        log ("generated table events", result.length);
         if (log) {
             for (int i=0; i < result.length; i++) {
                 log ("  Event " + i, result[i]);
@@ -775,8 +775,8 @@ final class EventBroadcaster implements TableModelListener, TreeModelListener, E
         int firstRow = indices[0];
         int lastRow = indices[indices.length - 1];
 
-        log("TableModelEvent: fromRow: ", new Integer(firstRow));
-        log(" toRow: ", new Integer(lastRow));
+        log("TableModelEvent: fromRow: ", firstRow);
+        log(" toRow: ", lastRow);
 
         result = new TableModelEvent(getModel(), firstRow, lastRow,
                 TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE);
@@ -863,7 +863,7 @@ final class EventBroadcaster implements TableModelListener, TreeModelListener, E
     private static Integer[] toArrayOfInteger (int[] ints) {
         Integer[] result = new Integer[ints.length];
         for (int i=0; i < ints.length; i++) {
-            result[i] = new Integer(ints[i]);
+            result[i] = Integer.valueOf(ints[i]);
         }
         return result;
     }

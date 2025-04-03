@@ -280,9 +280,7 @@ NodeActionsProviderFilter, Constants {
                 if ("char".equals(type)) {
                     return var.getValue ();
                 }
-                return "'" + new Character (
-                    (char) Integer.parseInt (var.getValue ())
-                ) + "'";
+                return "'" + Character.toString((char) Integer.parseInt(var.getValue())) + "'";
             case TIME:
                 if ("long".equals(type)) {
                     return new Date(Long.parseLong(var.getValue ())).toString();

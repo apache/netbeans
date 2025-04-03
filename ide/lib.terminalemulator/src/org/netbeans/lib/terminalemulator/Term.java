@@ -829,7 +829,7 @@ public class Term extends JComponent implements Accessible {
      * Be careful with control characters you need to create the keystroke
      * as follows (note the - 64):
      * <pre>
-     * KeyStroke.getKeyStroke(new Character((char)('T'-64)), Event.CTRL_MASK)
+     * KeyStroke.getKeyStroke(Character.valueOf((char)('T'-64)), Event.CTRL_MASK)
      * </pre>
      * @return Property value.
      */

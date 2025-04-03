@@ -1105,7 +1105,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
             else if (lRowType.equals("boolean")  || lRowType.equals("java.lang.Boolean"))
                 this.pushObject(Boolean.valueOf(lRowValue));
             else if (lRowType.equals("char")  || lRowType.equals("java.lang.Character"))
-                this.pushObject(new Character(lRowValue.charAt(0)));
+                this.pushObject(lRowValue.charAt(0));
             else
             {
                 System.out.println("Found and unknown type in a row");
@@ -1190,7 +1190,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
                                { return Short.valueOf(s); } });
             converters.put(Character.class,
                            new Converter() { public Object valueOf(String s) 
-                               { return new Character(s.charAt(0)); } });
+                               { return Character.valueOf(s.charAt(0)); } });
             converters.put(Integer.class,
                            new Converter() { public Object valueOf(String s) 
                                { return Integer.valueOf(s); } });

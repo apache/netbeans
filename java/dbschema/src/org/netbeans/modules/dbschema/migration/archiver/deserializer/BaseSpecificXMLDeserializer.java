@@ -119,7 +119,7 @@ public  class BaseSpecificXMLDeserializer extends BaseXMLDeserializer
         this.StateStack.push( this.State );
 
         // and now set the state to the new state
-        this.State = new Integer(newState);
+        this.State = newState;
     } /*Method-End*/
 
     public   void addActiveAlias(String name, String alias)

@@ -69,11 +69,11 @@ public class TableChildren extends Children.Keys {
 
     static {
         propToFilter = new HashMap ();
-        propToFilter.put (DBElementProperties.PROP_TABLES, new Integer (TableElementFilter.TABLE | TableElementFilter.VIEW));
-        propToFilter.put (DBElementProperties.PROP_COLUMNS, new Integer (TableElementFilter.COLUMN));
-        propToFilter.put (DBElementProperties.PROP_COLUMN_PAIRS, new Integer (TableElementFilter.COLUMN_PAIR));
-        propToFilter.put (DBElementProperties.PROP_INDEXES, new Integer (TableElementFilter.INDEX));
-        propToFilter.put (DBElementProperties.PROP_KEYS, new Integer (TableElementFilter.FK));
+        propToFilter.put (DBElementProperties.PROP_TABLES, TableElementFilter.TABLE | TableElementFilter.VIEW);
+        propToFilter.put (DBElementProperties.PROP_COLUMNS, TableElementFilter.COLUMN);
+        propToFilter.put (DBElementProperties.PROP_COLUMN_PAIRS, TableElementFilter.COLUMN_PAIR);
+        propToFilter.put (DBElementProperties.PROP_INDEXES, TableElementFilter.INDEX);
+        propToFilter.put (DBElementProperties.PROP_KEYS, TableElementFilter.FK);
     }
  
     /** Create class children with the default factory.

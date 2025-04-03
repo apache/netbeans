@@ -248,7 +248,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
 
                         String tableTmp;
                         if (bridge != null)
-                            tableTmp = bridge.getDriverSpecification().getRow().get(new Integer(3));
+                            tableTmp = bridge.getDriverSpecification().getRow().get(3);
                         else
                             tableTmp = rs.getString("TABLE_NAME").trim(); //NOI18N
                         
@@ -277,7 +277,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                         }
 
                         if (bridge != null)
-                            viewsTmp.add(bridge.getDriverSpecification().getRow().get(new Integer(3)));
+                            viewsTmp.add(bridge.getDriverSpecification().getRow().get(3));
                         else
                             viewsTmp.add(rs.getString("TABLE_NAME").trim()); //NOI18N
                     }
@@ -302,7 +302,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                 
                 // the tables are included twice because for each table
                 // the progress is incremented twice (once for the table itself and once for the keys)
-                propertySupport.firePropertyChange("totalCount", null, new Integer(2 * tables.size() + views.size())); //NOI18N
+                propertySupport.firePropertyChange("totalCount", null, 2 * tables.size() + views.size()); //NOI18N
                 
                 initTables(cp, tables, allTables);
                 initViews(cp, views, bridge);
@@ -349,10 +349,10 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                         rset = bridge.getDriverSpecification().getRow();
                         
                         //test references between two schemas
-                        c1 = rset.get(new Integer(1));
-                        s1 = rset.get(new Integer(2));
-                        c2 = rset.get(new Integer(5));
-                        s2 = rset.get(new Integer(6));
+                        c1 = rset.get(1);
+                        s1 = rset.get(2);
+                        c2 = rset.get(5);
+                        s2 = rset.get(6);
                         
                         if (comp(c1, c2)) {
                             if (! comp(s1, s2))
@@ -360,10 +360,10 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                         } else
                             continue;                            
                         
-                        pkSchema = rset.get(new Integer(2));
-                        fkSchema = rset.get(new Integer(6));
+                        pkSchema = rset.get(2);
+                        fkSchema = rset.get(6);
                         if (Objects.equals(pkSchema, fkSchema)) {
-                            refTable = rset.get(new Integer(3));
+                            refTable = rset.get(3);
                             if (! tables.contains(refTable))
                                 tables.add(refTable);
                         }
@@ -421,7 +421,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
             changeTables(te, DBElement.Impl.ADD);
 
             progress++;
-            propertySupport.firePropertyChange("progress", null, new Integer(progress)); //NOI18N
+            propertySupport.firePropertyChange("progress", null, progress); //NOI18N
         }
 
         TableElement te;
@@ -439,7 +439,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
             }
 
             progress++;
-            propertySupport.firePropertyChange("progress", null, new Integer(progress)); //NOI18N
+            propertySupport.firePropertyChange("progress", null, progress); //NOI18N
         }
     }
     
@@ -506,7 +506,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                                 while (rs.next()) {
                                     if (bridge != null) {
                                         rset = bridge.getDriverSpecification().getRow();
-                                        colName = rset.get(new Integer(4));
+                                        colName = rset.get(4);
                                         rset.clear();
                                     } else
                                         colName = rs.getString("COLUMN_NAME").trim(); //NOI18N                                    
@@ -591,10 +591,10 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                                     rset = bridge.getDriverSpecification().getRow();
                                     
                                     //test references between two schemas
-                                    c1 = rset.get(new Integer(1));
-                                    s1 = rset.get(new Integer(2));
-                                    c2 = rset.get(new Integer(5));
-                                    s2 = rset.get(new Integer(6));
+                                    c1 = rset.get(1);
+                                    s1 = rset.get(2);
+                                    c2 = rset.get(5);
+                                    s2 = rset.get(6);
 
                                     if (comp(c1, c2)) {
                                         if (! comp(s1, s2))
@@ -602,14 +602,14 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                                     } else
                                         continue;                            
                                     
-                                    fkName = rset.get(new Integer(12));
+                                    fkName = rset.get(12);
                                     if (fkName == null)
                                         continue;
                                     else
                                         fkName = fkName.trim();
 //                                    schemas = ((rset.get(new Integer(6)) == rset.get(new Integer(2))) || rset.get(new Integer(6)).equals(rset.get(new Integer(2)))) ? true : false;                                    
-                                    local.add(fkName + "." + rset.get(new Integer(7)) + "." + rset.get(new Integer(8))); //NOI18N
-                                    ref.add(fkName + "." + rset.get(new Integer(3)) + "." + rset.get(new Integer(4))); //NOI18N
+                                    local.add(fkName + "." + rset.get(7) + "." + rset.get(8)); //NOI18N
+                                    ref.add(fkName + "." + rset.get(3) + "." + rset.get(4)); //NOI18N
                                     if (! fk.contains(fkName))
                                         fk.add(fkName);
                                     rset.clear();
@@ -708,7 +708,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
             changeTables(new TableElement[] {te}, DBElement.Impl.ADD);
 
             progress++;
-            propertySupport.firePropertyChange("progress", null, new Integer(progress)); //NOI18N
+            propertySupport.firePropertyChange("progress", null, progress); //NOI18N
         }
     }
     

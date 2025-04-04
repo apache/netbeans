@@ -977,6 +977,7 @@ public class OAuthHelper {
                 Collections.<TypeParameterTree>emptyList(),
                 extendsTree,
                 Collections.<Tree>emptyList(),
+                Collections.<Tree>emptyList(),
                 Collections.<Tree>emptyList());
 
         ModifiersTree methodModifiers =  maker.Modifiers(Collections.<Modifier>singleton(Modifier.PROTECTED));
@@ -1032,6 +1033,7 @@ public class OAuthHelper {
                 className,
                 Collections.<TypeParameterTree>emptyList(),
                 extendsTree,
+                Collections.<Tree>emptyList(),
                 Collections.<Tree>emptyList(),
                 Collections.<Tree>emptyList());
 

@@ -1009,6 +1009,10 @@ public class CasualDiff {
             moveToSrcRelevant(tokenSequence, Direction.FORWARD);
             // it can be > (GT) or >> (SHIFT)
             insertHint = tokenSequence.offset() + tokenSequence.token().length();
+            if (newT.typarams.isEmpty()) {
+                //skip the final '>':
+                localPointer = insertHint;
+            }
         }
         //TODO: class to record and vice versa!
         if (oldT.getKind() == Kind.RECORD && newT.getKind() == Kind.RECORD) {
@@ -1072,6 +1076,7 @@ public class CasualDiff {
                 localPointer = endPos(oldT.extending);
                 break;
         }
+        {
         // TODO (#pf): there is some space for optimization. If the new list
         // is also empty, we can skip this computation.
         if (oldT.implementing.isEmpty()) {
@@ -1099,6 +1104,39 @@ public class CasualDiff {
         if (!newT.implementing.isEmpty())
             copyTo(localPointer, insertHint);
         localPointer = diffList2(oldT.implementing, newT.implementing, insertHint, estimator);
+        }
+
+        {
+        // TODO (#pf): there is some space for optimization. If the new list
+        // is also empty, we can skip this computation.
+        if (oldT.permitting.isEmpty()) {
+            // if there is not any permits part, we need to adjust position
+            // from different place. Look at the examples in all if branches.
+            // | represents current adjustment and ! where we want to point to
+            if (oldT.implementing.nonEmpty()) {
+                // public class Yerba<E>| implements Runnable! { ...
+                insertHint = endPos(oldT.implementing);
+            } else if (oldT.extending != null)
+                // public class Yerba<E>| extends Object! { ...
+                insertHint = endPos(oldT.extending);
+            else {
+                // currently no need to adjust anything here:
+                // public class Yerba<E>|! { ...
+            }
+        } else {
+            // we already have any permits, adjust position to first
+            // public class Yerba<E>| permits !Mate { ...
+            // Note: in case of all permits classes are removed,
+            // diffing mechanism will solve the permits keyword.
+            insertHint = oldT.permitting.iterator().next().getStartPosition();
+        }
+        PositionEstimator estimator =
+            EstimatorFactory.permits(oldT.getPermitsClause(), newT.getPermitsClause(), diffContext);
+        if (!newT.permitting.isEmpty())
+            copyTo(localPointer, insertHint);
+        localPointer = diffList2(oldT.permitting, newT.permitting, insertHint, estimator);
+        }
+
         insertHint = endPos(oldT) - 1;
 
         if (filteredOldTDefs.isEmpty()) {

@@ -370,6 +370,7 @@ public class ClientJavaSourceHelper {
                 Collections.<TypeParameterTree>emptyList(),
                 null,
                 Collections.<Tree>emptyList(),
+                Collections.<Tree>emptyList(),
                 Collections.<Tree>emptyList());
 
         ClassTree modifiedInnerClass =

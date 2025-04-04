@@ -225,6 +225,7 @@ public class MoveClassTransformer extends RefactoringVisitor {
                                     newClass.getTypeParameters(),
                                     newClass.getExtendsClause(),
                                     newClass.getImplementsClause(),
+                                    newClass.getPermitsClause(),
                                     newClass.getMembers());
                             break;
                         case INTERFACE:
@@ -233,6 +234,7 @@ public class MoveClassTransformer extends RefactoringVisitor {
                                     newClass.getSimpleName(),
                                     newClass.getTypeParameters(),
                                     newClass.getImplementsClause(),
+                                    newClass.getPermitsClause(),
                                     newClass.getMembers());
                             break;
                         case ENUM:

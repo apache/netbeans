@@ -599,7 +599,8 @@ public class JavaSourceHelper {
         return maker.Class(modifiersTree, className,
                 Collections.<TypeParameterTree>emptyList(),
                 createIdentifierTree(copy, classToExtend),
-                Collections.<Tree>emptyList(), Collections.<Tree>emptyList());
+                Collections.<Tree>emptyList(), Collections.<Tree>emptyList(),
+                Collections.<Tree>emptyList());
     }
 
      public static ClassTree createInnerClass(WorkingCopy copy, 

@@ -406,14 +406,14 @@ public class CodeGenerator {
 
                 switch (e.getKind()) {
                     case CLASS:
-                        return addDeprecated(e, make.Class(mods, e.getSimpleName(), constructTypeParams(e.getTypeParameters()), computeSuper(e.getSuperclass()), computeSuper(e.getInterfaces()), members));
+                        return addDeprecated(e, make.Class(mods, e.getSimpleName(), constructTypeParams(e.getTypeParameters()), computeSuper(e.getSuperclass()), computeSuper(e.getInterfaces()), computeSuper(e.getPermittedSubclasses()), members));
                     case INTERFACE:
-                        return addDeprecated(e, make.Interface(mods, e.getSimpleName(), constructTypeParams(e.getTypeParameters()), computeSuper(e.getInterfaces()), members));
+                        return addDeprecated(e, make.Interface(mods, e.getSimpleName(), constructTypeParams(e.getTypeParameters()), computeSuper(e.getInterfaces()), computeSuper(e.getPermittedSubclasses()), members));
                     case ENUM:
                         return addDeprecated(e, make.Enum(mods, e.getSimpleName(), computeSuper(e.getInterfaces()), members));
                     case RECORD:
                         // TODO generates final class atm
-                        return addDeprecated(e, make.Class(mods, e.getSimpleName(), constructTypeParams(e.getTypeParameters()), null, computeSuper(e.getInterfaces()), members));
+                        return addDeprecated(e, make.Class(mods, e.getSimpleName(), constructTypeParams(e.getTypeParameters()), null, computeSuper(e.getInterfaces()), List.of(), members));
 //                        return addDeprecated(e, make.Record(mods, e.getSimpleName(), computeSuper(e.getInterfaces()), members));
                     case ANNOTATION_TYPE:
                         return addDeprecated(e, make.AnnotationType(mods, e.getSimpleName(), members));

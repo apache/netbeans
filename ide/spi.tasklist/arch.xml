@@ -165,11 +165,11 @@
     <usecase id="task-scanners" name="Task Scanners">
         <p>The main feature of the Task List SPI is the ability to 'plug-in' additional task providing 
         modules that generate tasks for the task list window.</p>
-        <p>The plugable task scanners can either <a href="@TOP@/org/netbeans/spi/tasklist/PushTaskScanner.Callback.html#setTasks-org.openide.filesystems.FileObject-java.util.List-">push</a> 
+        <p>The plugable task scanners can either <a href="@TOP@/org/netbeans/spi/tasklist/PushTaskScanner.Callback.html#setTasks(org.openide.filesystems.FileObject,java.util.List)">push</a> 
         new <a href="@TOP@/org/netbeans/spi/tasklist/Task.html">Task</a>s to the Task List window whenever they want - 
         <a href="@TOP@/org/netbeans/spi/tasklist/PushTaskScanner.html">PushTaskScanner</a> - or they
         can inherit from <a href="@TOP@/org/netbeans/spi/tasklist/FileTaskScanner.html">FileTaskScanner</a>
-        and the Task List framework will actively <a href="@TOP@/org/netbeans/spi/tasklist/FileTaskScanner.html#scan-org.openide.filesystems.FileObject-">poll</a> 
+        and the Task List framework will actively <a href="@TOP@/org/netbeans/spi/tasklist/FileTaskScanner.html#scan(org.openide.filesystems.FileObject)">poll</a> 
         them for new tasks for each file under the current scanning scope (see below).</p>
         <p>Scanner instances are registered in XML layer in folder "/TaskList/Scanners". The framework keeps track of modified files
         and notifies the scanners whenever a file under the scanning scope needs to be rescanned.</p>

@@ -22,12 +22,12 @@
 <html>
 <head>
 <title>NetBeans JavaHelp Integration API</title>
-<link rel="stylesheet" href="../../../../../prose.css" type="text/css">
+<link rel="stylesheet" href="@TOP@/resource-files/prose.css" type="text/css">
 </head>
 
 <body>
-<p class="overviewlink"><a href="../package-summary.html">Overview</a></p>
-
+    {@link org.netbeans.api.javahelp Overview }
+    
 <h1>NetBeans JavaHelp Integration API</h1>
 
 <p>It is possible to add JavaHelp and context help capabilities to modules.
@@ -139,25 +139,25 @@ specify a <code>HelpCtx</code> in this fashion:
 
 <ul>
 
-<li> <a href="@org-openide-nodes@/org/openide/nodes/Node.html#getHelpCtx--"><code>Node.getHelpCtx()</code></a>
+<li> <a href="@org-openide-nodes@/org/openide/nodes/Node.html#getHelpCtx()"><code>Node.getHelpCtx()</code></a>
 
-<li> <a href="@org-openide-loaders@/org/openide/loaders/DataObject.html#getHelpCtx--"><code>DataObject.getHelpCtx()</code></a>
+<li> <a href="@org-openide-loaders@/org/openide/loaders/DataObject.html#getHelpCtx()"><code>DataObject.getHelpCtx()</code></a>
 
-<li> <a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getHelpCtx--"><code>TopComponent.getHelpCtx()</code></a>
+<li> <a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getHelpCtx()"><code>TopComponent.getHelpCtx()</code></a>
 
-<li> <a href="@org-openide-util-ui@/org/openide/util/actions/SystemAction.html#getHelpCtx--"><code>SystemAction.getHelpCtx()</code></a>
+<li> <a href="@org-openide-util-ui@/org/openide/util/actions/SystemAction.html#getHelpCtx()"><code>SystemAction.getHelpCtx()</code></a>
 
-<li> <a href="@org-openide-util-ui@/org/openide/util/datatransfer/NewType.html#getHelpCtx--"><code>NewType.getHelpCtx()</code></a>
+<li> <a href="@org-openide-util-ui@/org/openide/util/datatransfer/NewType.html#getHelpCtx()"><code>NewType.getHelpCtx()</code></a>
 
-<li> <a href="@org-openide-util-ui@/org/openide/util/datatransfer/PasteType.html#getHelpCtx--"><code>PasteType.getHelpCtx()</code></a>
+<li> <a href="@org-openide-util-ui@/org/openide/util/datatransfer/PasteType.html#getHelpCtx()"><code>PasteType.getHelpCtx()</code></a>
 
-<li> <a href="@org-openide-dialogs@/org/openide/DialogDescriptor.html#getHelpCtx--"><code>DialogDescriptor.getHelpCtx()</code></a>
+<li> <a href="@org-openide-dialogs@/org/openide/DialogDescriptor.html#getHelpCtx()"><code>DialogDescriptor.getHelpCtx()</code></a>
 
-<li> <a href="@org-openide-dialogs@/org/openide/WizardDescriptor.Panel.html#getHelp--"><code>WizardDescriptor.Panel.getHelpCtx()</code></a>
+<li> <a href="@org-openide-dialogs@/org/openide/WizardDescriptor.Panel.html#getHelp()"><code>WizardDescriptor.Panel.getHelpCtx()</code></a>
 
-<!-- deprecated <li> <a href="@org-openide-options@/org/openide/options/SystemOption.html#getHelpCtx--"><code>SystemOption.getHelpCtx()</code></a> -->
+<!-- deprecated <li> <a href="@org-openide-options@/org/openide/options/SystemOption.html#getHelpCtx()"><code>SystemOption.getHelpCtx()</code></a> -->
 
-<li> <a href="@org-openide-util-ui@/org/openide/ServiceType.html#getHelpCtx--"><code>ServiceType.getHelpCtx()</code></a>
+<li> <a href="@org-openide-util-ui@/org/openide/ServiceType.html#getHelpCtx()"><code>ServiceType.getHelpCtx()</code></a>
 
 (applies equally to executors and compiler types)
 
@@ -170,7 +170,7 @@ specify a <code>HelpCtx</code> in this fashion:
 <li> On any (Swing lightweight) component you use in a GUI, by
 means of
 
-<a href="@org-openide-util-ui@/org/openide/util/HelpCtx.html#setHelpIDString-javax.swing.JComponent-java.lang.String-"><code>HelpCtx.setHelpIDString(...)</code></a>.
+<a href="@org-openide-util-ui@/org/openide/util/HelpCtx.html#setHelpIDString(javax.swing.JComponent,java.lang.String)"><code>HelpCtx.setHelpIDString(...)</code></a>.
 
 This is especially useful for custom property editor components.
 
@@ -190,7 +190,7 @@ or <code>*.ser</code> files)
 
 that uses
 
-<a href="@org-openide-loaders@/org/openide/loaders/InstanceSupport.html#findHelp-org.openide.cookies.InstanceCookie-"><code>InstanceSupport.findHelp(...)</code></a>.
+<a href="@org-openide-loaders@/org/openide/loaders/InstanceSupport.html#findHelp(org.openide.cookies.InstanceCookie)"><code>InstanceSupport.findHelp(...)</code></a>.
 
 <p>This technique may also be used to add context help support to
 the editor kits used in the
@@ -212,7 +212,7 @@ the <code>PropertyDescriptor</code>.
 
 <li> As the <code>helpID</code>
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/FeatureDescriptor.html#getValue-java.lang.String-">value</a>
+{@link java.beans.FeatureDescriptor#getValue(java.lang.String) value }
 
 of a
 
@@ -248,8 +248,7 @@ custom windows using
 
 Programmatically, you may also display help by using
 the
-
-<a href="../Help.html">JavaHelp module API</a>:</p>
+{@link org.netbeans.api.javahelp.Help JavaHelp module API }:</p>
 
 <pre>
 <span class="type">String</span> <span class="variable-name">id</span> = ...;
@@ -262,7 +261,7 @@ the
 </pre>
 
 <p>However for most purposes you can use the simpler
-<a href="@org-openide-util-ui@/org/openide/util/HelpCtx.html#display--"><code>HelpCtx.display</code></a>
+<a href="@org-openide-util-ui@/org/openide/util/HelpCtx.html#display()"><code>HelpCtx.display</code></a>
 method and avoid a direct dependency on this API entirely:</p>
 
 <pre>

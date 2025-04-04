@@ -47,7 +47,7 @@ public final class CreateDescriptor {
      * include an extension (<code>*.*</code>), the handler should not append
      * any extension from the template.
      * @since org.openide.loaders 7.16
-     * @see <a href="@org-netbeans-modules-projectuiapi@/org/netbeans/spi/project/ui/templates/support/Templates.SimpleTargetChooserBuilder.html#freeFileExtension--"><code>Templates.SimpleTargetChooserBuilder.freeFileExtension</code></a>
+     * @see <a href="@org-netbeans-modules-projectuiapi@/org/netbeans/spi/project/ui/templates/support/Templates.SimpleTargetChooserBuilder.html#freeFileExtension()"><code>Templates.SimpleTargetChooserBuilder.freeFileExtension</code></a>
      */
     public static final String FREE_FILE_EXTENSION = "freeFileExtension"; // NOI18N
     

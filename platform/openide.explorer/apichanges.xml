@@ -111,9 +111,9 @@
         <author login="mentlicher"/>
         <compatibility binary="compatible" source="compatible" deprecation="no" deletion="no" addition="yes"/>
         <description>
-            Added <a href="@TOP@/org/openide/explorer/view/OutlineView.html#isQuickSearchAllowed--">OutlineView.isQuickSearchAllowed()</a>,
-            <a href="@TOP@/org/openide/explorer/view/OutlineView.html#setQuickSearchAllowed-boolean-">OutlineView.setQuickSearchAllowed()</a>
-            and <a href="@TOP@/org/openide/explorer/view/OutlineView.html#setQuickSearchTableFilter-org.openide.explorer.view.QuickSearchTableFilter-boolean-">OutlineView.setQuickSearchTableFilter()</a>
+            Added <a href="@TOP@/org/openide/explorer/view/OutlineView.html#isQuickSearchAllowed()">OutlineView.isQuickSearchAllowed()</a>,
+            <a href="@TOP@/org/openide/explorer/view/OutlineView.html#setQuickSearchAllowed(boolean)">OutlineView.setQuickSearchAllowed()</a>
+            and <a href="@TOP@/org/openide/explorer/view/OutlineView.html#setQuickSearchTableFilter(org.openide.explorer.view.QuickSearchTableFilter,boolean)">OutlineView.setQuickSearchTableFilter()</a>
             methods to control quick search functionality on OutlineView.
             Interface <a href="@TOP@/org/openide/explorer/view/QuickSearchTableFilter.html">QuickSearchTableFilter</a>
             introduced to provide custom table cell data for quick search.
@@ -130,7 +130,7 @@
         <author login="tpavek"/>
         <compatibility binary="compatible" source="compatible" deprecation="no" deletion="no" addition="yes"/>
         <description>
-            Added <a href="@TOP@/org/openide/explorer/propertysheet/PropertyEnv.html#create-java.beans.FeatureDescriptor-java.lang.Object...-">PropertyEnv.create</a>
+            Added <a href="@TOP@/org/openide/explorer/propertysheet/PropertyEnv.html#create(java.beans.FeatureDescriptor,java.lang.Object...)">PropertyEnv.create</a>
             method for creating an instance of PropertyEnv for given property and beans (nodes).
             To be used when there is a need to initialize an ExPropertyEditor instance independently from
             PropertySheet or PropertyPanel infrastructure (e.g. before the property appears in UI).
@@ -226,7 +226,7 @@
         <compatibility binary="compatible" source="compatible" deprecation="no" deletion="no" addition="yes"/>
         <description>
             To simplify navigation "up" in the <code>ListView</code> one
-            can turn on <a href="@TOP@/org/openide/explorer/view/ListView.html#setShowParentNode-boolean-">showParentNode</a>
+            can turn on <a href="@TOP@/org/openide/explorer/view/ListView.html#setShowParentNode(boolean)">showParentNode</a>
             property.
         </description>
         <class package="org.openide.explorer.view" name="ListView"/>
@@ -300,7 +300,7 @@
         <description>Nodes can be removed outside of AWT thread while e.g. view can
         try to select them. This generated IllegalArgumentException during checking if
         such a node is under root context. Now
-        <a href="@TOP@/org/openide/explorer/ExplorerManager.html#setSelectedNodes-org.openide.nodes.Node:A-"><code>setSelectedNodes()</code></a>.
+        <a href="@TOP@/org/openide/explorer/ExplorerManager.html#setSelectedNodes(org.openide.nodes.Node%5B%5D)"><code>setSelectedNodes()</code></a>.
         does partial selection
         of valid nodes instead of throwing IllegalArgumentException.
         </description>

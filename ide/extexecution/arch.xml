@@ -236,10 +236,10 @@
     The both default printing processors provide factory method accepting
     <a href="@TOP@org/netbeans/api/extexecution/print/LineConvertor.html">LineConvertor</a>.
     Namely
-    <a href="@TOP@org/netbeans/api/extexecution/print/InputProcessors.html#printing-org.openide.windows.OutputWriter-org.netbeans.api.extexecution.print.LineConvertor-boolean-">
+    <a href="@TOP@org/netbeans/api/extexecution/print/InputProcessors.html#printing(org.openide.windows.OutputWriter,org.netbeans.api.extexecution.print.LineConvertor,boolean)">
      InputProcessors.printing(org.openide.windows.OutputWriter out, LineConvertor convertor, boolean resetEnabled)</a>
     and
-    <a href="@TOP@org/netbeans/api/extexecution/print/LineProcessors.html#printing-org.openide.windows.OutputWriter-org.netbeans.api.extexecution.print.LineConvertor-boolean-">
+    <a href="@TOP@org/netbeans/api/extexecution/print/LineProcessors.html#printing(org.openide.windows.OutputWriter,org.netbeans.api.extexecution.print.LineConvertor,boolean)">
      LineProcessors.printing(org.openide.windows.OutputWriter out, LineConvertor convertor, boolean resetEnabled)</a>.
 
     Convertor is then used to convert received lines to printed ones.
@@ -268,7 +268,7 @@
       <span style="text-decoration:line-through;">Client wants to destroy the process, trying to kill whole process tree.</span>
       This usecase should be solved by External Execution Base API.
       Method
-      <a href="@TOP@org/netbeans/api/extexecution/ExternalProcessSupport.html#destroy-java.lang.Process-java.util.Map-">
+      <a href="@TOP@org/netbeans/api/extexecution/ExternalProcessSupport.html#destroy(java.lang.Process,java.util.Map)">
        ExternalProcessSupport.destroy(java.lang.Process process, Map&lt;String,String&gt; env)</a>
       is designed for that. It will use a
       <a href="@TOP@org/netbeans/spi/extexecution/destroy/ProcessDestroyPerformer.html">ProcessDestroyPerformer</a>

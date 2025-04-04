@@ -89,7 +89,7 @@
   <usecase id="wizard" name="HTML and Java Wizard">
       It is possible to use this technology to
       create a wizard. See 
-      <a href="@org-netbeans-api-templates@/overview-summary.html#html-and-java">
+      <a href="@org-netbeans-api-templates@/index.html#html-and-java">
       HTML and Java Wizard
       </a> howto.
   </usecase>

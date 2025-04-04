@@ -67,7 +67,7 @@ of frequently asked questions and their answers:
   </em>
   <p>
   <b>A:</b> You can change the format of your wizard's title by 
-  <a href="@TOP@org/openide/WizardDescriptor.html#setTitleFormat-java.text.MessageFormat-">WizardDescriptor.setTitleFormat(MessageFormat format)</a>
+  <a href="@TOP@org/openide/WizardDescriptor.html#setTitleFormat(java.text.MessageFormat)">WizardDescriptor.setTitleFormat(MessageFormat format)</a>
   and rid of 'wizard' word in the default wizard's title.  
   </p>
 </usecase>

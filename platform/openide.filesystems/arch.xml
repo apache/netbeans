@@ -442,7 +442,7 @@ Periodic refresh can be set.
         </question>
 -->
 <answer id="exec-reflection">
-<api type="export" group="layer" category="stable" name="methodvalue-newvalue" url="@TOP@/org/openide/filesystems/FileObject.html#setAttribute-java.lang.String-java.lang.Object-">
+<api type="export" group="layer" category="stable" name="methodvalue-newvalue" url="@TOP@/org/openide/filesystems/FileObject.html#setAttribute(java.lang.String,java.lang.Object)">
 When special form of <code>setAttribute</code> is supported by the filesystem, the 
 <code>getAttribute</code> can behave like 
 <a href="@TOP@/org/openide/filesystems/XMLFileSystem.html">XMLFileSystem</a>'s

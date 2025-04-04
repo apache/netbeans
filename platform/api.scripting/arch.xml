@@ -547,7 +547,7 @@
  <answer id="exec-component">
   <p>
       <api group="property" category="stable" name="allowAllAccess" type="export" url="@TOP@/org/netbeans/api/scripting/Scripting.html">
-          If <a href="@TOP@/org/netbeans/api/scripting/Scripting.html#allowAllAccess-boolean-">Scripting.allowAllAccess</a>
+          If <a href="@TOP@/org/netbeans/api/scripting/Scripting.html#allowAllAccess(boolean)">Scripting.allowAllAccess</a>
           is used, then a property <code>allowAllAccess</code> is placed into the
           <code>ScriptManager.getBindings()</code> with value <code>true</code>.
       </api>

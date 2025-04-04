@@ -92,7 +92,7 @@ class with its static methods that provide its instance for the given input sour
 
 <h2>TokenSequence and Token</h2>
 <p>
-<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenHierarchy.html#tokenSequence--">TokenHierarchy.tokenSequence()</a>
+<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenHierarchy.html#tokenSequence()">TokenHierarchy.tokenSequence()</a>
    allows to iterate over a list of
 <a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/Token.html">Token</a>
     instances.
@@ -100,21 +100,21 @@ class with its static methods that provide its instance for the given input sour
     The token carries a token identification
 <a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenId.html">TokenId</a>
     (returned by
-<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/Token.html#id--">Token.id()</a>
+<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/Token.html#id()">Token.id()</a>
     ) and a text (aka token body) represented as
 <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/CharSequence.html">CharSequence</a>
     (returned by
-<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/Token.html#text--">Token.text()</a>
+<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/Token.html#text()">Token.text()</a>
     ).
     <br/>
 <a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenUtilities.html">TokenUtilities</a>
     contains many useful methods related to operations with the token's text such as
-<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenUtilities.html#equals-java.lang.CharSequence-java.lang.Object-">TokenUtilities.equals(CharSequence text, Object o)</a>,
-<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenUtilities.html#startsWith-java.lang.CharSequence-java.lang.CharSequence-">TokenUtilities.startsWith(CharSequence text, CharSequence prefix)</a>,
+<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenUtilities.html#equals(java.lang.CharSequence,java.lang.Object)">TokenUtilities.equals(CharSequence text, Object o)</a>,
+<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenUtilities.html#startsWith(java.lang.CharSequence,java.lang.CharSequence)">TokenUtilities.startsWith(CharSequence text, CharSequence prefix)</a>,
    etc.
     <br/>
    It is also possible to debug the text of the token (replace special chars by escapes) by
-<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenUtilities.html#debugText-java.lang.CharSequence-">TokenUtilities.equals(CharSequence text)</a>.
+<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenUtilities.html#debugText(java.lang.CharSequence)">TokenUtilities.equals(CharSequence text)</a>.
     <br/>
     A typical token also carries offset of its occurrence in the input text.
 </p>
@@ -129,25 +129,25 @@ class with its static methods that provide its instance for the given input sour
     in all the inputs.
     <br/>
     Flyweight tokens can be determined by
-<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/Token.html#isFlyweight--">Token.isFlyweight()</a>.
+<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/Token.html#isFlyweight()">Token.isFlyweight()</a>.
     <br/>
     The flyweight tokens do not carry a valid offset (their internal offset is -1).
     <br/>
     Therefore
  <a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenSequence.html">TokenSequence</a>
     is used for iteration through the tokens (instead of a regular iterator) and it provides 
-<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenSequence.html#offset--">TokenSequence.offset()</a>
+<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenSequence.html#offset()">TokenSequence.offset()</a>
     which returns the proper offset even when positioned over a flyweight token.
     <br/>
     When holding a reference to the token's instance its offset can also be determined by
-<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/Token.html#offset-org.netbeans.api.lexer.TokenHierarchy-">Token.offset(TokenHierarchy tokenHierarchy)</a>.
+<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/Token.html#offset(org.netbeans.api.lexer.TokenHierarchy)">Token.offset(TokenHierarchy tokenHierarchy)</a>.
     The <code>tokenHierarchy</code> parameter should be always <code>null</code> and it will be used
     for the token hierarchy snapshot support in future releases.
     <br/>
     For flyweight tokens the 
-<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/Token.html#offset-org.netbeans.api.lexer.TokenHierarchy-">Token.offset(TokenHierarchy tokenHierarchy)</a>
+<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/Token.html#offset(org.netbeans.api.lexer.TokenHierarchy)">Token.offset(TokenHierarchy tokenHierarchy)</a>
     returns -1 and for regular tokens it gives the same value like 
-<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenSequence.html#offset--">TokenSequence.offset()</a>.
+<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenSequence.html#offset()">TokenSequence.offset()</a>.
 </p>
 
 <p>
@@ -158,7 +158,7 @@ class with its static methods that provide its instance for the given input sour
     could not generally be determined from the tokens only.
     <br/>
     Therefore there is a possibility to de-flyweight a token by using
-<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenSequence.html#offsetToken--">TokenSequence.offsetToken()</a>
+<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenSequence.html#offsetToken()">TokenSequence.offsetToken()</a>
     which checks the current token
     and if it's flyweight then it replaces it with a non-flyweight token instance
     with a valid offset and with the same properties as the original flyweight token.
@@ -180,13 +180,13 @@ class with its static methods that provide its instance for the given input sour
     tokens of the same type (e.g. keywords or operators).
     <br/>
     Each token id may define its primary category
-<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenId.html#primaryCategory--">TokenId.primaryCategory()</a>
+<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenId.html#primaryCategory()">TokenId.primaryCategory()</a>
     and
-<a href="@org-netbeans-modules-lexer@/org/netbeans/spi/lexer/LanguageHierarchy.html#createTokenCategories--">LanguageHierarchy.createTokenCategories()</a>
+<a href="@org-netbeans-modules-lexer@/org/netbeans/spi/lexer/LanguageHierarchy.html#createTokenCategories()">LanguageHierarchy.createTokenCategories()</a>
     may provide additional categories for the token ids for the given language.
     <br/>
     Each language description has a mandatory mime-type specification
-<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/Language.html#mimeType--">Language.mimeType()</a>
+<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/Language.html#mimeType()">Language.mimeType()</a>
     <br/>
     Although it's a bit non-related information it brings many benefits
     because with the mime-type the language can be accompanied
@@ -200,9 +200,9 @@ class with its static methods that provide its instance for the given input sour
     first need to define its SPI counterpart
 <a href="@org-netbeans-modules-lexer@/org/netbeans/spi/lexer/LanguageHierarchy.html">LanguageHierarchy</a>.
     It mainly needs to define token ids in
-<a href="@org-netbeans-modules-lexer@/org/netbeans/spi/lexer/LanguageHierarchy.html#createTokenIds--">LanguageHierarchy.createTokenIds()</a>
+<a href="@org-netbeans-modules-lexer@/org/netbeans/spi/lexer/LanguageHierarchy.html#createTokenIds()">LanguageHierarchy.createTokenIds()</a>
     and lexer in
-<a href="@org-netbeans-modules-lexer@/org/netbeans/spi/lexer/LanguageHierarchy.html#createLexer-org.netbeans.spi.lexer.LexerRestartInfo-">
+<a href="@org-netbeans-modules-lexer@/org/netbeans/spi/lexer/LanguageHierarchy.html#createLexer(org.netbeans.spi.lexer.LexerRestartInfo)">
     LanguageHierarchy.createLexer(LexerInput lexerInput, TokenFactory tokenFactory, Object state, LanguagePath languagePath, InputAttributes inputAttributes)</a>.
     <br/>
 <a href="@org-netbeans-modules-lexer@/org/netbeans/spi/lexer/Lexer.html">Lexer</a>
@@ -227,12 +227,12 @@ class with its static methods that provide its instance for the given input sour
 <a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenHierarchy.html">TokenHierarchy</a>
     class. Each token can potentially be broken into a sequence of embedded tokens.
     <br/>The 
-<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenSequence.html#embedded--">TokenSequence.embedded()</a>
+<a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenSequence.html#embedded()">TokenSequence.embedded()</a>
     method can be called to obtain the embedded tokens (when positioned on the branch token).
     <br/>
     There are two ways of specifying what language is embedded in a token. The language
     can either be specified explicitly (hardcoded) in the
-<a href="@org-netbeans-modules-lexer@/org/netbeans/spi/lexer/LanguageHierarchy.html#embedding-org.netbeans.api.lexer.Token-org.netbeans.api.lexer.LanguagePath-org.netbeans.api.lexer.InputAttributes-">LanguageHierarchy.embedding()</a>
+<a href="@org-netbeans-modules-lexer@/org/netbeans/spi/lexer/LanguageHierarchy.html#embedding(org.netbeans.api.lexer.Token,org.netbeans.api.lexer.LanguagePath,org.netbeans.api.lexer.InputAttributes)">LanguageHierarchy.embedding()</a>
     method or there can be a
 <a href="@org-netbeans-modules-lexer@/org/netbeans/spi/lexer/LanguageProvider.html">LanguageProvider</a>
     registered in the default Lookup, which will create a

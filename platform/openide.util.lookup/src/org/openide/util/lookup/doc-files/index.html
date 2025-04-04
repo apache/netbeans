@@ -22,7 +22,7 @@
 <HTML>
 <HEAD>
 <TITLE>Lookup Library</TITLE>
-<link rel="Stylesheet" href="@TOP@/prose.css" type="text/css" title="NetBeans Open APIs Style">
+<link rel="Stylesheet" href="@TOP@/resource-files/prose.css" type="text/css" title="NetBeans Open APIs Style">
 </HEAD>
 <BODY>
 <H1>Lookup library HomePage</H1>
@@ -104,7 +104,7 @@ the search algorithm with an easy interface. Just write:
 <pre>
     <span class="keyword">import</span> <span class="type">java.awt.Toolkit</span>;
     <span class="keyword">import</span> <span class="type">org.openide.util.Lookup;</span>;
-    <span class="type">Toolkit</span> <span class="variable-name">t</span> = (<span class="type">Toolkit</span>)Lookup.getDefault().<a href="@TOP@org/openide/util/Lookup.html#lookup-java.lang.Class-">lookup</a>(Toolkit.<span class="keyword">class</span>);
+    <span class="type">Toolkit</span> <span class="variable-name">t</span> = (<span class="type">Toolkit</span>)Lookup.getDefault().<a href="@TOP@org/openide/util/Lookup.html#lookup(java.lang.Class)">lookup</a>(Toolkit.<span class="keyword">class</span>);
 </PRE>
 and if the JAR with <code>MyToolkit</CODE> is in the class path, the simple call 
 above will do the rest.
@@ -150,7 +150,7 @@ whether the object supports a given interface like this:
 <span class="type">MorphingObject</span> <span class="variable-name">morph</span> = ...
 <span class="type">AnInterface</span> <span class="variable-name">impl</span> = (<span
 class="type">AnInterface</span>)morph.getLookup().<a
-href="@TOP@org/openide/util/Lookup.html#lookup-java.lang.Class-">lookup</a>(AnInterface.<span class="keyword">class</span>);
+href="@TOP@org/openide/util/Lookup.html#lookup(java.lang.Class)">lookup</a>(AnInterface.<span class="keyword">class</span>);
 <span class="keyword">if</span> (impl == <span class="constant">null</span>) {
     <span class="keyword">return;</span><span class="comment">/* AnInterface not supported now! */</span>
 }

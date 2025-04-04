@@ -724,7 +724,7 @@
             <author login="dkaspar"/>
             <compatibility addition="yes"/>
             <description>
-                <a href="@TOP@/org/netbeans/api/visual/action/ActionFactory.html#createContiguousSelectAction-org.netbeans.api.visual.action.ContiguousSelectProvider-">
+                <a href="@TOP@/org/netbeans/api/visual/action/ActionFactory.html#createContiguousSelectAction(org.netbeans.api.visual.action.ContiguousSelectProvider)">
                     <code>ActionFactory.createContiguousSelectAction</code></a> creates contiguous selection action.
                 <a href="@TOP@/org/netbeans/api/visual/action/ContiguousSelectProvider.html"><code>ContiguousSelectProvider</code></a>
                 provides logic for selection action. 

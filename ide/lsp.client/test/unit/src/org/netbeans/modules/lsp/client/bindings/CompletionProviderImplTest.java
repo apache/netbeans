@@ -19,18 +19,24 @@
 package org.netbeans.modules.lsp.client.bindings;
 
 import com.google.common.base.Function;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JEditorPane;
 import javax.swing.text.JTextComponent;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import javax.swing.ImageIcon;
 import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.CompletionItem;
+import org.eclipse.lsp4j.CompletionItemLabelDetails;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionOptions;
 import org.eclipse.lsp4j.CompletionParams;
@@ -65,6 +71,7 @@ import org.netbeans.modules.editor.completion.CompletionResultSetImpl;
 import org.netbeans.modules.lsp.client.TestUtils.MimeDataProviderImpl;
 import org.netbeans.modules.lsp.client.TestUtils.MockLSP;
 import org.netbeans.modules.lsp.client.TestUtils.MockMimeResolver;
+import org.netbeans.modules.lsp.client.bindings.CompletionProviderImpl.IndirectCompletionItemRenderer;
 import org.netbeans.spi.editor.completion.CompletionProvider;
 import org.netbeans.spi.editor.completion.CompletionTask;
 import org.openide.cookies.EditorCookie;
@@ -215,6 +222,68 @@ public class CompletionProviderImplTest extends NbTestCase {
                 """);
     }
 
+    public void testLabelDetails() throws IOException {
+        List<String> actualItems = new ArrayList<>();
+
+        runCompletionTest(
+                """
+                foo.ins|
+                """,
+                new TestTextDocumentService() {
+                    @Override
+                    public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams position) {
+                        List<CompletionItem> result = new ArrayList<>();
+
+                        {
+                            CompletionItem resultItem = new CompletionItem("label1");
+                            CompletionItemLabelDetails details = new CompletionItemLabelDetails();
+
+                            details.setDetail("(detail)");
+                            details.setDescription("description");
+                            resultItem.setLabelDetails(details);
+                            result.add(resultItem);
+                        }
+
+                        {
+                            CompletionItem resultItem = new CompletionItem("label2");
+                            CompletionItemLabelDetails details = new CompletionItemLabelDetails();
+
+                            details.setDetail("(detail)");
+                            details.setDescription(null);
+                            resultItem.setLabelDetails(details);
+                            result.add(resultItem);
+                        }
+
+                        {
+                            CompletionItem resultItem = new CompletionItem("label3");
+                            CompletionItemLabelDetails details = new CompletionItemLabelDetails();
+
+                            details.setDetail(null);
+                            details.setDescription("description");
+                            resultItem.setLabelDetails(details);
+                            result.add(resultItem);
+                        }
+
+                        {
+                            CompletionItem resultItem = new CompletionItem("label4");
+
+                            resultItem.setLabelDetails(null);
+                            result.add(resultItem);
+                        }
+
+                        return CompletableFuture.completedFuture(Either.forLeft(result));
+                    }
+                },
+                (c, items) -> {
+                    actualItems.addAll(printCompletionItems(items));
+                });
+        assertEquals(List.of("label1(detail)\tdescription",
+                             "label2(detail)",
+                             "label3\tdescription",
+                             "label4"),
+                     actualItems);
+    }
+
     public void testNoCompletionWhenNotEnabled() throws IOException {
         AtomicBoolean notInvoked = new AtomicBoolean();
 
@@ -316,6 +385,15 @@ public class CompletionProviderImplTest extends NbTestCase {
 
     private void runCompletionTest(String testCodeWithCaret,
                                    TextDocumentService documentService,
+                                   CompletionValidator validator) throws IOException {
+        runCompletionTest(testCodeWithCaret, documentService, init -> {
+            init.getCapabilities().setCompletionProvider(new CompletionOptions(true, List.of()));
+            return init;
+        }, validator);
+    }
+
+    private void runCompletionTest(String testCodeWithCaret,
+                                   TextDocumentService documentService,
                                    Function<InitializeResult, InitializeResult> adjustInitializeResult,
                                    CompletionValidator validator) throws IOException {
         runAnyCompletionTest(testCodeWithCaret, documentService, adjustInitializeResult, c -> {
@@ -390,6 +468,31 @@ public class CompletionProviderImplTest extends NbTestCase {
         c.setDocument(doc);
         c.setCaretPosition(4);
         runCompletion.accept(c);
+    }
+
+    private static List<String> printCompletionItems(List<? extends org.netbeans.spi.editor.completion.CompletionItem> items) {
+        IndirectCompletionItemRenderer prevRenderer = CompletionProviderImpl.COMPLETION_ITEM_RENDERER;
+
+        try {
+            List<String> result = new ArrayList<>();
+
+            CompletionProviderImpl.COMPLETION_ITEM_RENDERER = new IndirectCompletionItemRenderer() {
+                @Override
+                public void renderCompletionItem(ImageIcon icon, String leftLabel, String rightLabel, Graphics grphcs, Font font, Color color, int i, int i1, boolean bln) {
+                    if (rightLabel != null) {
+                        result.add(leftLabel + "\t" + rightLabel);
+                    } else {
+                        result.add(leftLabel);
+                    }
+                }
+            };
+
+            items.forEach(item -> item.render(null, null, null, null, -1, -1, false));
+
+            return result;
+        } finally {
+            CompletionProviderImpl.COMPLETION_ITEM_RENDERER = prevRenderer;
+        }
     }
 
     @Override

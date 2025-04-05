@@ -46,6 +46,7 @@
             <goal>process-classes</goal>
             <goal>io.micronaut.maven:micronaut-maven-plugin:run</goal>
         </goals>
+        <reactor>am</reactor>
         <properties>
             <!-- will not be used by MN plugin -->
             <exec.args>-classpath %classpath</exec.args>
@@ -64,6 +65,7 @@
             <goal>process-classes</goal>
             <goal>io.micronaut.maven:micronaut-maven-plugin:run</goal>
         </goals>
+        <reactor>am</reactor>
         <properties>
             <!-- will not be used by MN plugin -->
             <exec.args>-classpath %classpath</exec.args>
@@ -101,6 +103,7 @@
             <goal>process-classes</goal>
             <goal>io.micronaut.maven:micronaut-maven-plugin:run</goal>
         </goals>
+        <reactor>am</reactor>
         <properties>
             <!-- will not be used by MN plugin -->
             <exec.args>-classpath %classpath</exec.args>
@@ -121,6 +124,7 @@
             <goal>process-test-classes</goal>
             <goal>io.micronaut.maven:micronaut-maven-plugin:run</goal>
         </goals>
+        <reactor>am</reactor>
         <properties>
             <!-- will not be used by MN plugin -->
             <exec.args>-classpath %classpath</exec.args>

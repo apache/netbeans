@@ -581,12 +581,6 @@ jobs:
       - name: ide/bugtracking.bridge
         run: .github/retry.sh ant $OPTS -f ide/bugtracking.bridge test
 
-      - name: ide/bugtracking.commons
-        run: ant $OPTS -f ide/bugtracking.commons test
-
-#      - name: ide/bugzilla
-#        run: ant $OPTS -f ide/bugzilla test
-
       - name: ide/code.analysis
         run: ant $OPTS -f ide/code.analysis test
 

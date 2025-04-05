@@ -27,6 +27,7 @@ import java.util.*;
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 import org.openide.util.*;
 import org.openide.windows.*;
 
@@ -45,6 +46,7 @@ public class LogViewerSupport implements Runnable {
     String ioName;
     int lines;
     Ring ring;
+    TopComponent outputTopComponent;
     private final RequestProcessor.Task task = RP.create(this);
     
     /** Connects a given process to the output window. Returns immediately, but threads are started that
@@ -103,7 +105,20 @@ public class LogViewerSupport implements Runnable {
             }catch (IOException e) {
                 Logger.getLogger(LogViewerSupport.class.getName()).log(Level.INFO, null, e);
             }
-            task.schedule(10000);
+            /* If the user closes the entire Output pane, rather than the specific IDE Log tab
+            within the Output pane, the InputOutput will not actually end up being closed. Detect
+            this situation and close the InputOutput explicitly in this case. */
+            SwingUtilities.invokeLater(() -> {
+                TopComponent tc = outputTopComponent;
+                if (tc == null) {
+                    tc = WindowManager.getDefault().findTopComponent("output"); // NOI18N
+                    outputTopComponent = tc;
+                }
+                if (tc == null || !tc.isOpened()) {
+                    io.closeInputOutput();
+                }
+            });
+            task.schedule(1000);
         }
         else {
             ///System.out.println("end of infinite loop for log viewer\n\n\n\n");

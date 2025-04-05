@@ -66,6 +66,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.swing.text.Document;
 import org.netbeans.api.java.lexer.JavaTokenId;
+import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaParserResultTask;
 import org.netbeans.api.java.source.JavaSource.Phase;
@@ -74,15 +75,22 @@ import org.netbeans.api.java.source.support.CancellableTreePathScanner;
 import org.netbeans.api.lexer.PartType;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
+import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.modules.java.editor.base.imports.UnusedImports;
 import org.netbeans.modules.java.editor.base.semantic.ColoringAttributes.Coloring;
 import org.netbeans.modules.java.editor.base.semantic.UnusedDetector.UnusedDescription;
+import org.netbeans.modules.parsing.api.Embedding;
+import org.netbeans.modules.parsing.api.ParserManager;
+import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.modules.parsing.api.UserTask;
+import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.Scheduler;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
 import org.netbeans.modules.parsing.spi.TaskIndexingMode;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
 import org.openide.util.NbPreferences;
 import org.openide.util.Pair;
 
@@ -138,7 +146,6 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
 
     @Override
     public void run(Result result, SchedulerEvent event) {
-
         CompilationInfo info = CompilationInfo.get(result);
         
         if (info == null) {
@@ -191,7 +198,66 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
     protected boolean process(CompilationInfo info, final Document doc, ErrorDescriptionSetter setter) {
         updateFromPreferences();
 
-        DetectorVisitor v = new DetectorVisitor(info, doc, cancel);
+        boolean isTopLevelJava = "text/x-java".equals(FileUtil.getMIMEType(info.getFileObject()));
+        if (isTopLevelJava && info.getSnapshot().getMimePath().size() > 1) {
+            return false;
+        }
+        Collection<Pair<int[], Coloring>> completeHighlights = new ArrayList<>();
+        Map<int[], String> completePreText = new HashMap<>();
+        Map<Token, Coloring> completeColorings = new HashMap<>();
+        ErrorDescriptionSetter completingSetter = new ErrorDescriptionSetter() {
+            @Override
+            public void setHighlights(Document doc, Collection<Pair<int[], Coloring>> highlights, Map<int[], String> preText) {
+                completeHighlights.addAll(highlights);
+                completePreText.putAll(preText);
+            }
+
+            @Override
+            public void setColorings(Document doc, Map<Token, Coloring> colorings) {
+                completeColorings.putAll(colorings);
+            }
+        };
+        TokenHierarchy<Document> hierarchy = TokenHierarchy.get(doc);
+        processInternal(info, doc, false, completingSetter);
+        try {
+            //XXX: keep record in embedded highlightlayer is needed!
+            ParserManager.parse(Collections.singletonList(info.getSnapshot().getSource()), new UserTask() {
+                @Override
+                public void run(ResultIterator resultIterator) throws Exception {
+                    if (cancel.get())
+                        return ;
+                    for (Embedding embedding : resultIterator.getEmbeddings()) {
+                        if (cancel.get())
+                            return ;
+                        if ("text/x-java".equals(embedding.getMimeType())) {
+                            ResultIterator it = resultIterator.getResultIterator(embedding);
+                            CompilationController info = CompilationController.get(it.getParserResult());
+                            info.toPhase(Phase.RESOLVED);
+                            processInternal(info, doc, true, completingSetter);
+                        }
+                    }
+                }
+            });
+        } catch (ParseException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+        if (cancel.get())
+            return true;
+
+
+        if (isTopLevelJava) {
+            setter.setHighlights(doc, completeHighlights, completePreText);
+        }
+
+        setter.setColorings(doc, completeColorings);
+
+        return false;
+
+    }
+
+    private void processInternal(CompilationInfo info, final Document doc, boolean nested, ErrorDescriptionSetter setter) {
+        DetectorVisitor v = new DetectorVisitor(info, doc, nested, cancel);
         
         Map<Token, Coloring> newColoring = new IdentityHashMap<>();
 
@@ -200,7 +266,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         v.scan(cu, null);
         
         if (cancel.get())
-            return true;
+            return ;
         
         boolean computeUnusedImports = "text/x-java".equals(FileUtil.getMIMEType(info.getFileObject()));
         
@@ -209,13 +275,13 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         if (computeUnusedImports) {
             Collection<TreePath> unusedImports = UnusedImports.process(info, cancel);
 
-            if (unusedImports == null) return true;
+            if (unusedImports == null) return ;
             
             Coloring unused = collection2Coloring(Arrays.asList(ColoringAttributes.UNUSED));
 
             for (TreePath tree : unusedImports) {
                 if (cancel.get()) {
-                    return true;
+                    return ;
                 }
 
                 //XXX: finish
@@ -231,7 +297,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                                                                              .collect(Collectors.groupingBy(ud -> ud.unusedElement));
         for (Map.Entry<Element, List<Use>> entry : v.type2Uses.entrySet()) {
             if (cancel.get())
-                return true;
+                return ;
             
             Element decl = entry.getKey();
             List<Use> uses = entry.getValue();
@@ -264,8 +330,8 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         }
         
         if (cancel.get())
-            return true;
-        
+            return ;
+
         if (computeUnusedImports) {
             Map<int[], String> preTextWithSpans = new HashMap<>();
             v.preText.forEach((pos, text) -> preTextWithSpans.put(new int[] {pos, pos + 1}, text));
@@ -273,8 +339,6 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         }
 
         setter.setColorings(doc, newColoring);
-
-        return false;
     }
     
     private static Coloring collection2Coloring(Collection<ColoringAttributes> attr) {
@@ -316,7 +380,6 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
     private static class DetectorVisitor extends CancellableTreePathScanner<Void, Void> {
         
         private org.netbeans.api.java.source.CompilationInfo info;
-        private Document doc;
         private Map<Element, List<Use>> type2Uses;        
         private Map<Tree, List<Token>> tree2Tokens;
         private List<Token> contextKeywords;
@@ -327,18 +390,17 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         private SourcePositions sourcePositions;
         private ExecutableElement recursionDetector;
         
-        private DetectorVisitor(org.netbeans.api.java.source.CompilationInfo info, final Document doc, AtomicBoolean cancel) {
+        private DetectorVisitor(org.netbeans.api.java.source.CompilationInfo info, final Document doc, boolean nested, AtomicBoolean cancel) {
             super(cancel);
             
             this.info = info;
-            this.doc  = doc;
             type2Uses = new HashMap<Element, List<Use>>();
             tree2Tokens = new IdentityHashMap<Tree, List<Token>>();
             contextKeywords = new ArrayList<>();
             extraColoring = new ArrayList<>();
             preText = new HashMap<>();
 
-            tl = new TokenList(info, doc, cancel);
+            tl = new TokenList(info, doc, nested, cancel);
             
             this.sourcePositions = info.getTrees().getSourcePositions();
 //            this.pos = pos;
@@ -733,6 +795,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         @Override
         public Void visitMethodInvocation(MethodInvocationTree tree, Void p) {
             int startTokenIndex = tl.index();
+            int startTokenOffset = tl.embeddedOffset();
             Tree possibleIdent = tree.getMethodSelect();
             
             if (possibleIdent.getKind() == Kind.IDENTIFIER) {
@@ -778,9 +841,10 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 parentParent.getKind() != Kind.METHOD_INVOCATION ||
                 ((MemberSelectTree) parent).getExpression() != tree) {
                 int afterInvocation = tl.index();
-                tl.resetToIndex(startTokenIndex);
+                int afterInvocationOffset = tl.embeddedOffset();
+                tl.resetToIndex(startTokenIndex, startTokenOffset);
                 addChainedTypes(getCurrentPath());
-                tl.resetToIndex(afterInvocation);
+                tl.resetToIndex(afterInvocation, afterInvocationOffset);
             }
 
             return null;
@@ -834,7 +898,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                     } else {
                         typeName = "";
                     }
-                    int preTextPos = tl.offset() + pos;
+                    int preTextPos = tl.originalOffset()+ pos;
                     if (typeToPosition.isEmpty() || !typeName.equals(typeToPosition.get(typeToPosition.size() - 1).first()) || preText.containsKey(preTextPos)) {
                         typeToPosition.add(Pair.of(typeName, preTextPos));
                     }
@@ -964,7 +1028,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             tl.moveNext();
             
             if (info.getTreeUtilities().isVarType(getCurrentPath()) && isJavaInlineHintVarType()) {
-                int afterName = tl.offset();
+                int afterName = tl.originalOffset();
                 TypeMirror type = info.getTrees().getTypeMirror(new TreePath(getCurrentPath(), tree.getType()));
 
                 this.preText.put(afterName, " : " + info.getTypeUtilities().getTypeName(type));

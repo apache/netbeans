@@ -156,6 +156,7 @@ public final class ElementHandle<T extends Element> {
             case CLASS:
             case INTERFACE:
             case ENUM:
+            case RECORD:
             case ANNOTATION_TYPE: {
                 assert signatures.length == 1;
                 final Element type = getTypeElementByBinaryName (module, signatures[0], jt);

@@ -713,6 +713,7 @@ public final class TreePathHandle {
                     return Kind.COMPILATION_UNIT;
                     
                 case ENUM:
+                case RECORD:
                 case CLASS:
                 case ANNOTATION_TYPE:
                 case INTERFACE:

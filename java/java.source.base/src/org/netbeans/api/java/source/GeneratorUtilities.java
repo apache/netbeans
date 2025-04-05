@@ -1453,7 +1453,10 @@ public final class GeneratorUtilities {
                         break;
                     }
                    switch (p2.getLeaf().getKind()) {
-                       case CLASS: case INTERFACE: case ENUM: case RECORD:
+                       case CLASS:
+                       case INTERFACE:
+                       case ENUM:
+                       case RECORD:
                        case METHOD:
                        case BLOCK:
                        case VARIABLE:

@@ -1236,6 +1236,7 @@ public class Reindenter implements IndentTask {
                 case CLASS:
                 case INTERFACE:
                 case ENUM:
+                case RECORD:
                 case ANNOTATION_TYPE:
                 case VARIABLE:
                 case METHOD:

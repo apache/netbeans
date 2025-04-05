@@ -745,6 +745,7 @@ public class GeneratorUtilitiesTest extends NbTestCase {
                 case ANNOTATION_TYPE:
                 case CLASS:
                 case ENUM:
+                case RECORD:
                 case INTERFACE:
                     name = ((ClassTree)t).getSimpleName();
                     break;

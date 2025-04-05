@@ -170,6 +170,7 @@ public class TreeMakerDemo extends GeneratorTestMDRCompat {
             case ANNOTATION_TYPE:
             case CLASS:
             case ENUM:
+            case RECORD:
             case INTERFACE:
                 builder.append("make.Class(");
                 ClassTree classTree = (ClassTree) tree;

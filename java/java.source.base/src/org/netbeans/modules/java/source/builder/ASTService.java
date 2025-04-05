@@ -70,6 +70,7 @@ public final class ASTService {
             case ANNOTATION_TYPE:
             case CLASS:
             case ENUM:
+            case RECORD:
             case INTERFACE:
                 return ((JCClassDecl)tree).sym;
             case METHOD:           return ((JCMethodDecl)tree).sym;

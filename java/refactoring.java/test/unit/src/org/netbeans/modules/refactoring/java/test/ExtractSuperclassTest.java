@@ -48,6 +48,8 @@ public class ExtractSuperclassTest extends RefactoringTestBase {
 
     public ExtractSuperclassTest(String name) {
         super(name);
+        RETRIES=1;
+//        show
     }
 
     public void test235246() throws Exception {

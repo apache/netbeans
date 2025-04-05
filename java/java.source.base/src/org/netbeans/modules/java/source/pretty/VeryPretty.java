@@ -2147,6 +2147,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             case ANNOTATION_TYPE:
             case CLASS:
             case ENUM:
+            case RECORD:
             case INTERFACE:
                 n = before ? cs.getBlankLinesBeforeClass() : cs.getBlankLinesAfterClass();
         	if (((JCClassDecl) tree).defs.nonEmpty() && !before) {

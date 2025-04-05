@@ -166,6 +166,7 @@ public class APIIsSelfContainedTest extends NbTestCase {
             case CLASS:
             case INTERFACE:
             case ENUM:
+            case RECORD:
                 verifySelfContainedAPI((TypeElement) e);
                 break;
             case CONSTRUCTOR:

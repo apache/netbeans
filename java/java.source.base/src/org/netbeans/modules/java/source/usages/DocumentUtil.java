@@ -391,6 +391,8 @@ public class DocumentUtil {
                 return isLocal ? EK_LOCAL_INTERFACE : EK_INTERFACE;
             case ENUM:
                 return isLocal ? EK_LOCAL_ENUM : EK_ENUM;
+            case RECORD:
+                return isLocal ? EK_LOCAL_RECORD : EK_ENUM;
             case ANNOTATION_TYPE:
                 return isLocal ? EK_LOCAL_ANNOTATION : EK_ANNOTATION;
             case MODULE:

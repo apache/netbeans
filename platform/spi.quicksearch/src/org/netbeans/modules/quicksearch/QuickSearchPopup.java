@@ -384,7 +384,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
             return;
         }
         if (!isDisplayable()) {
-            lPane.add(this, new Integer(JLayeredPane.POPUP_LAYER + 1) );
+            lPane.add(this, Integer.valueOf(JLayeredPane.POPUP_LAYER + 1));
         }
 
         boolean statusVisible = updateStatusPanel(isInProgress);

@@ -155,7 +155,7 @@ final class ColorUtil {
         int hash = ((((int) bits) ^ ((int) (bits >> 32)))
                 ^ upper.hashCode() ^ (lower.hashCode() * 17)) * (repeats ? 31 : 1);
 
-        Integer key = new Integer(hash);
+        Integer key = Integer.valueOf(hash);
         GradientPaint result = (GradientPaint) gpCache.get(key);
         if (result == null) {
             result =
@@ -189,7 +189,7 @@ final class ColorUtil {
     
     private static final boolean gtkShouldAntialias() {
         Object o = Toolkit.getDefaultToolkit().getDesktopProperty("gnome.Xft/Antialias"); //NOI18N
-        return new Integer(1).equals(o);
+        return Integer.valueOf(1).equals(o);
     }
 
     //**************Some static utility methods for color manipulation**********

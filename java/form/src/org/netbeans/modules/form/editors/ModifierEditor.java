@@ -48,15 +48,15 @@ public class ModifierEditor extends JPanel implements ExPropertyEditor {
     /** if it is set as feature descriptor's attribute value in the environment then the getCustomComponent returns 
      * the combo box for access modifiers
      */
-    public static final Integer ACCESS_MODIFIERS_CUSTOM_EDITOR = new Integer(0);
+    public static final Integer ACCESS_MODIFIERS_CUSTOM_EDITOR = 0;
     /** if it is set as feature descriptor's attribute value in the environment then the getCustomComponent returns
      * the panel containing other modifiers than the access modifiers. 
      */
-    public static final Integer OTHERS_MODIFIERS_CUSTOM_EDITOR = new Integer(1);
+    public static final Integer OTHERS_MODIFIERS_CUSTOM_EDITOR = 1;
     /** if it is set as feature descriptor's attribute value in the environment then the getCustomComponent returns
      * the panel containing full range of modifiers 
      */
-    public static final Integer FULL_CUSTOM_EDITOR = new Integer(2);
+    public static final Integer FULL_CUSTOM_EDITOR = 2;
 
     /** Instance of custom property editor - visual panel. */
     private ModifierPanel panel;
@@ -96,9 +96,9 @@ public class ModifierEditor extends JPanel implements ExPropertyEditor {
         setLayout(new BorderLayout());
         panel = new ModifierPanel(this);
         Object type = getType();
-        if (ACCESS_MODIFIERS_CUSTOM_EDITOR == type) {
+        if (ACCESS_MODIFIERS_CUSTOM_EDITOR.equals(type)) {
             customComponent = panel.getAccessComponent();
-        } else if (OTHERS_MODIFIERS_CUSTOM_EDITOR == type) {
+        } else if (OTHERS_MODIFIERS_CUSTOM_EDITOR.equals(type)) {
             customComponent = panel.getModifiersComponent();
         } else {
             customComponent = panel.getCompactComponent();
@@ -131,7 +131,7 @@ public class ModifierEditor extends JPanel implements ExPropertyEditor {
         if (this.mask != mask) {
             int oldMask = this.mask;
             this.mask = mask & ModifierPanel.EDITABLE_MASK;
-            firePropertyChange (ModifierPanel.PROP_MASK, new Integer (oldMask), new Integer (mask));
+            firePropertyChange (ModifierPanel.PROP_MASK, Integer.valueOf(oldMask), Integer.valueOf(mask));
             setModifier(modifier & mask);
         }
     }
@@ -151,9 +151,9 @@ public class ModifierEditor extends JPanel implements ExPropertyEditor {
             int oldModifier = this.modifier;
             this.modifier = modifier;
             // for our panel
-            firePropertyChange (ModifierPanel.PROP_MODIFIER, new Integer (oldModifier), new Integer (modifier));
+            firePropertyChange (ModifierPanel.PROP_MODIFIER, Integer.valueOf(oldModifier), Integer.valueOf(modifier));
             // for the outside world
-            firePropertyChange(PROP_MODIFIERS, new Integer (oldModifier), new Integer (modifier));
+            firePropertyChange(PROP_MODIFIERS, Integer.valueOf(oldModifier), Integer.valueOf(modifier));
         }
     }
     
@@ -187,13 +187,13 @@ public class ModifierEditor extends JPanel implements ExPropertyEditor {
     */
     @Override
     public String getJavaInitializationString() {
-        return new Integer(getModifier()).toString();
+        return Integer.toString(getModifier());
     }
 
     /** Get the value */
     @Override
     public Object getValue() {
-        return new Integer(getModifier());
+        return getModifier();
     }
 
     /** @return <CODE>false</CODE> */
@@ -259,8 +259,7 @@ public class ModifierEditor extends JPanel implements ExPropertyEditor {
         }
         if (oldValue != newValue) {
             modifier = newValue;
-            firePropertyChange(ModifierPanel.PROP_MODIFIER,
-                    new Integer(oldValue), new Integer(modifier));
+            firePropertyChange(ModifierPanel.PROP_MODIFIER, Integer.valueOf(oldValue), Integer.valueOf(modifier));
         }
     }
 

@@ -78,7 +78,7 @@ public class DBSchemaTablesPanel extends JPanel implements ListDataListener {
         views = new LinkedList<String>();
         cp = null;
 
-        putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(2)); //NOI18N
+        putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 2); //NOI18N
         setName(bundle.getString("TablesChooser")); //NOI18N
 
         initComponents();

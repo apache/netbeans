@@ -626,7 +626,7 @@ public abstract class SharedClassObject extends Object implements Externalizable
 
         synchronized (instancesBeingCreated) {
             Integer i =  instancesBeingCreated.get(name);
-            instancesBeingCreated.put(name, (i == null) ? new Integer(1) : new Integer(i.intValue() + 1));
+            instancesBeingCreated.put(name, i == null ? 1 : i + 1);
         }
 
         try {
@@ -635,10 +635,10 @@ public abstract class SharedClassObject extends Object implements Externalizable
             synchronized (instancesBeingCreated) {
                 Integer i = instancesBeingCreated.get(name);
 
-                if (i.intValue() == 1) {
+                if (i == 1) {
                     instancesBeingCreated.remove(name);
                 } else {
-                    instancesBeingCreated.put(name, new Integer(i.intValue() - 1));
+                    instancesBeingCreated.put(name, i - 1);
                 }
             }
 

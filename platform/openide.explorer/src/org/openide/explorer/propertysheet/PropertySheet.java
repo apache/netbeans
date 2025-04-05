@@ -737,7 +737,7 @@ public class PropertySheet extends JPanel {
         } catch (IllegalArgumentException iae) {
             throw new PropertyVetoException(
                 NbBundle.getMessage(PropertySheet.class, "EXC_Unknown_sorting_mode"),
-                new PropertyChangeEvent(this, PROPERTY_SORTING_MODE, new Integer(0), new Integer(sortingMode))
+                new PropertyChangeEvent(this, PROPERTY_SORTING_MODE, 0, sortingMode)
             ); //NOI18N
         }
     }

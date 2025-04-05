@@ -19,7 +19,6 @@
 package org.netbeans.modules.payara.common.ui;
 
 import java.awt.event.ActionEvent;
-import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.Iterator;
@@ -31,16 +30,11 @@ import org.netbeans.modules.payara.common.PayaraInstance;
 import org.netbeans.modules.payara.common.utils.JavaUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import org.netbeans.modules.payara.spi.PayaraModule;
 
 public class VmCustomizer extends javax.swing.JPanel {
-
-    ////////////////////////////////////////////////////////////////////////////
-    // Inner classes methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
 
     /**
      * Action to invoke Java SE platforms customizer.
@@ -147,7 +141,7 @@ public class VmCustomizer extends javax.swing.JPanel {
      */
     private void setAddressValue(String number) {
         try {
-        addressValue.setValue(new Integer(number));
+            addressValue.setValue(Integer.valueOf(number));
         } catch (NumberFormatException nfe) {
             addressValue.setValue(0);
         }
@@ -163,7 +157,7 @@ public class VmCustomizer extends javax.swing.JPanel {
      * <code>addressValue</code> field.
      */
     private void setAddressValue(Integer number) {
-        addressValue.setValue(number != null ? number : new Integer(0));
+        addressValue.setValue(number != null ? number : Integer.valueOf(0));
     }
 
     private void persistFields() {

@@ -551,11 +551,11 @@ public class FontEditor extends ResourceWrapperEditor implements XMLPropertyEdit
             absoluteSize.setEnabled(propertyValue.absoluteSize);
             relativeSize.setEnabled(!propertyValue.absoluteSize);
             if (propertyValue.absoluteSize) {
-                absoluteSize.setValue(new Integer(propertyValue.size));
+                absoluteSize.setValue(propertyValue.size);
                 absoluteChoice.setSelected(true);
                 synchronizeSizeControls(propertyValue);
             } else {
-                relativeSize.setValue(new Integer(propertyValue.size));
+                relativeSize.setValue(propertyValue.size);
                 relativeChoice.setSelected(true);
                 synchronizeSizeControls(propertyValue);
             }
@@ -566,11 +566,11 @@ public class FontEditor extends ResourceWrapperEditor implements XMLPropertyEdit
             if (propertyValue.absoluteSize) {
                 Font defaultFont = (Font)property.getDefaultValue();
                 if (defaultFont != null) {
-                    relativeSize.setValue(new Integer(propertyValue.size - defaultFont.getSize()));
+                    relativeSize.setValue(propertyValue.size - defaultFont.getSize());
                 }
             } else {
                 Font font = (Font)propertyValue.getDesignValue();
-                absoluteSize.setValue(new Integer(font == null ? 12 : font.getSize()));   
+                absoluteSize.setValue(font == null ? 12 : font.getSize());   
             }
         }
 

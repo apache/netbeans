@@ -1029,11 +1029,11 @@ public class WizardDescriptor extends DialogDescriptor {
 
             if (defaultSize == null) {
                 //Plastic look and feel...
-                defaultSize = new Integer(11);
+                defaultSize = 11;
             }
 
             // enable auto-resizing policy only for fonts bigger thne default
-            if ((controlFont != null) && (controlFont.getSize() > defaultSize.intValue())) { //NOI18N
+            if ((controlFont != null) && (controlFont.getSize() > defaultSize)) { //NOI18N
 
                 Window parentWindow = SwingUtilities.getWindowAncestor((Component) getMessage());
 
@@ -1400,7 +1400,7 @@ public class WizardDescriptor extends DialogDescriptor {
             ((contentSelectedIndex - 1) < contentData.length)) ? contentData[contentSelectedIndex - 1] : ""; // NOI18N
         try {
             previousButton.getAccessibleContext().setAccessibleDescription(
-                NbBundle.getMessage(WizardDescriptor.class, "ACSD_PREVIOUS", new Integer(contentSelectedIndex), stepName)
+                NbBundle.getMessage(WizardDescriptor.class, "ACSD_PREVIOUS", contentSelectedIndex, stepName)
             );
         } catch (IllegalArgumentException iae) {
             err.log (Level.INFO, iae.getLocalizedMessage() + " while setting ACSD_PREVIOUS with params " + stepName + ", " + contentSelectedIndex, iae); // NOI18N
@@ -1409,7 +1409,7 @@ public class WizardDescriptor extends DialogDescriptor {
             ((contentSelectedIndex + 1) >= 0)) ? contentData[contentSelectedIndex + 1] : ""; // NOI18N
         try {
             nextButton.getAccessibleContext().setAccessibleDescription(
-                NbBundle.getMessage(WizardDescriptor.class, "ACSD_NEXT", new Integer(contentSelectedIndex + 2), stepName)
+                NbBundle.getMessage(WizardDescriptor.class, "ACSD_NEXT", contentSelectedIndex + 2, stepName)
             );
         } catch (IllegalArgumentException iae) {
             err.log (Level.INFO, iae.getLocalizedMessage() + " while setting ACSD_NEXT with params " + stepName + ", " + (contentSelectedIndex + 2), iae); // NOI18N
@@ -3111,8 +3111,7 @@ public class WizardDescriptor extends DialogDescriptor {
                         return null;
                     }
 
-                    return NbBundle.getMessage(
-                        WizardDescriptor.class, "ACSD_WizardPanel", new Integer(selectedIndex + 1), panelName.getText(),
+                    return NbBundle.getMessage(WizardDescriptor.class, "ACSD_WizardPanel", selectedIndex + 1, panelName.getText(),
                         rightComponent.getAccessibleContext().getAccessibleDescription()
                     );
                 }

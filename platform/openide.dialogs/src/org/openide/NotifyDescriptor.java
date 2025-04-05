@@ -129,24 +129,45 @@ public class NotifyDescriptor extends Object {
      */
     public static final String PROP_INFO_NOTIFICATION = "infoNotification"; // NOI18N
 
+    /**
+     * Used to be a <code>new Integer(JOptionPane.FOO_OPTION)</code> instance.
+     *
+     * For compatibility reasons the public Object constants must have distinct
+     * identity, but equals must behave like Integer's equals and compare only
+     * the wrapped int like a Record.
+     */
+    private record ReturnValue(int option) {
+
+        @Override
+        public String toString() {
+            return String.valueOf(option);
+        }
+
+        @Override
+        public int hashCode() {
+            return Integer.hashCode(option);
+        }
+
+    }
+
     //
     // Return values
     //
 
     /** Return value if YES is chosen. */
-    public static final Object YES_OPTION = new Integer(JOptionPane.YES_OPTION);
+    public static final Object YES_OPTION = new ReturnValue(JOptionPane.YES_OPTION);
 
     /** Return value if NO is chosen. */
-    public static final Object NO_OPTION = new Integer(JOptionPane.NO_OPTION);
+    public static final Object NO_OPTION = new ReturnValue(JOptionPane.NO_OPTION);
 
     /** Return value if CANCEL is chosen. */
-    public static final Object CANCEL_OPTION = new Integer(JOptionPane.CANCEL_OPTION);
+    public static final Object CANCEL_OPTION = new ReturnValue(JOptionPane.CANCEL_OPTION);
 
     /** Return value if OK is chosen. */
-    public static final Object OK_OPTION = new Integer(JOptionPane.OK_OPTION);
+    public static final Object OK_OPTION = new ReturnValue(JOptionPane.OK_OPTION);
 
     /** Return value if user closes the window without pressing any button. */
-    public static final Object CLOSED_OPTION = new Integer(JOptionPane.CLOSED_OPTION);
+    public static final Object CLOSED_OPTION = new ReturnValue(JOptionPane.CLOSED_OPTION);
 
     //
     // Option types
@@ -414,7 +435,7 @@ public class NotifyDescriptor extends Object {
 
         int oldType = messageType;
         messageType = newType;
-        firePropertyChange(PROP_MESSAGE_TYPE, new Integer(oldType), new Integer(messageType));
+        firePropertyChange(PROP_MESSAGE_TYPE, oldType, messageType);
     }
 
     /**
@@ -460,7 +481,7 @@ public class NotifyDescriptor extends Object {
 
         int oldType = optionType;
         optionType = newType;
-        firePropertyChange(PROP_OPTION_TYPE, new Integer(oldType), new Integer(optionType));
+        firePropertyChange(PROP_OPTION_TYPE, oldType, optionType);
     }
 
     /**

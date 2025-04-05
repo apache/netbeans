@@ -541,7 +541,7 @@ public class CloneableEditor extends CloneableTopComponent implements CloneableE
             }
         }
 
-        out.writeObject(new Integer(pos));
+        out.writeObject(pos);
         out.writeBoolean(getLookup() == support.getLookup());
     }
 

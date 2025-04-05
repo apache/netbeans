@@ -159,6 +159,7 @@ class OSGiProcess {
         fs.setDir(platformDir);
         fs.createInclude().setName("lib/*.jar");
         fs.createInclude().setName("core/*.jar");
+        fs.createInclude().setName("agent/*.jar");
         fs.createInclude().setName("modules/org-netbeans-core-osgi.jar");
         for (String module : modules) {
             fs.createInclude().setName("modules/" + module.replace('.', '-') + ".jar");

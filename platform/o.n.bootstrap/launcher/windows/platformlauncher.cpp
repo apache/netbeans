@@ -56,6 +56,7 @@ const char *PlatformLauncher::OPT_KEEP_WORKING_SET_ON_MINIMIZE = "-Dsun.awt.keep
 const char *PlatformLauncher::OPT_CLASS_PATH = "-Djava.class.path=";
 const char *PlatformLauncher::OPT_SPLASH = "-splash:";
 const char *PlatformLauncher::OPT_SPLASH_PATH = "\\var\\cache\\splash.png";
+const char *PlatformLauncher::OPT_JAVA_AGENT = "-javaagent:";
 
 const char *PlatformLauncher::HEAP_DUMP_PATH =  "\\var\\log\\heapdump.hprof";
 const char *PlatformLauncher::RESTART_FILE_PATH =  "\\var\\restart";
@@ -153,6 +154,17 @@ bool PlatformLauncher::run(bool updater, DWORD *retCode) {
     option = OPT_CLASS_PATH;
     option += classPath;
     javaOptions.push_back(option);
+
+    string agent = platformDir;
+    agent += "/agent/org-netbeans-agent.jar";
+
+    if ( PathFileExists( agent.c_str() ) ) {
+        option = OPT_JAVA_AGENT;
+        option += agent;
+        javaOptions.push_back(option);
+    } else {
+        logMsg("org-netbeans-agent.jar not found at expected location: %s", agent.c_str());
+    }
 
     jvmLauncher.setSuppressConsole(suppressConsole);
     bool rc = jvmLauncher.start(mainClass, progArgs, javaOptions, separateProcess, retCode);

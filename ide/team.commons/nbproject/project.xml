@@ -217,7 +217,6 @@
                 <friend>org.netbeans.modules.odcs</friend>
                 <friend>org.netbeans.modules.team.ide</friend>
                 <friend>org.netbeans.modules.team.server</friend>                
-                <friend>org.netbeans.modules.mylyn.util</friend>
                 <!-- https://github.com/matthiasblaesing/netbeans-mantis-integration -->
                 <friend>eu.doppel_helix.netbeans.MantisIntegration</friend>
                 <!-- https://github.com/junichi11/netbeans-github-issues-plugin -->

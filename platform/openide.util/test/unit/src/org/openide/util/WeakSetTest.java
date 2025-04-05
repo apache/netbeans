@@ -21,6 +21,7 @@ package org.openide.util;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
@@ -41,7 +42,7 @@ public class WeakSetTest extends NbTestCase {
     public void testPutTwice() {
         Object obj = new Object();
         
-        WeakSet<Object> ws = new WeakSet<Object>();
+        WeakSet<Object> ws = new WeakSet<>();
         assertTrue("Object added", ws.add(obj));
         assertFalse("No change", ws.add(obj));
         assertEquals("size", 1, ws.size());
@@ -49,7 +50,7 @@ public class WeakSetTest extends NbTestCase {
     }
 
     public void testPutNullTwice() {
-        WeakSet<Object> ws = new WeakSet<Object>();
+        WeakSet<Object> ws = new WeakSet<>();
         assertEquals("Returns null on first try", null, ws.putIfAbsent(null));
         assertFalse("No change", ws.add(null));
         assertEquals("size", 1, ws.size());
@@ -66,17 +67,15 @@ public class WeakSetTest extends NbTestCase {
                 int cnt = 10;
                 arr = new Object[cnt];
                 for (int i = 0; i < cnt; i++) {
-                    arr[i] = new Integer(i); // autoboxing makes test fail!
+                    arr[i] = new BigInteger(String.valueOf(i)); // autoboxing makes test fail!
                 }
             }
             
-            
+            @Override
             public void run () {
                 
-                Reference<?> r = new WeakReference<Object>(last);
-                for (int i = 0; i < arr.length; i++) {
-                    arr[i] = null;
-                }
+                Reference<?> r = new WeakReference<>(last);
+                Arrays.fill(arr, null);
                 arr = null;
                 last = null;
                 assertGC ("Last item has to disappear", r);
@@ -110,7 +109,7 @@ public class WeakSetTest extends NbTestCase {
     }
     
     private static final class NotifyWhenIteratedSet extends WeakSet<Object> {
-        private Runnable run;
+        private final Runnable run;
         private int cnt;
         
         public NotifyWhenIteratedSet (Runnable run, int cnt) {
@@ -126,10 +125,12 @@ public class WeakSetTest extends NbTestCase {
         public Iterator<Object> iterator() {
             final Iterator<Object> it = super.iterator();
             class I implements Iterator<Object> {
+                @Override
                 public boolean hasNext() {
                     return it.hasNext ();
                 }
 
+                @Override
                 public Object next() {
                     if (--cnt == 0) {
                         run.run ();
@@ -147,7 +148,7 @@ public class WeakSetTest extends NbTestCase {
     }
     
     private static final class TestObj {
-        static final Set<TestObj> testObjs = new WeakSet<TestObj>();
+        static final Set<TestObj> testObjs = new WeakSet<>();
         private final String name;
         TestObj(String name) {
             this.name = name;
@@ -165,6 +166,7 @@ public class WeakSetTest extends NbTestCase {
     
     private static final class GC implements Runnable {
 
+        @Override
         public void run() {
             try {
                 for (int i = 0; i < 5; i++) {
@@ -176,11 +178,10 @@ public class WeakSetTest extends NbTestCase {
         }
 
         static void gc() throws InterruptedException {
-            List<byte[]> alloc = new ArrayList<byte[]>();
+            List<byte[]> alloc = new ArrayList<>();
             int size = 100000;
             for (int i = 0; i < 50; i++) {
                 System.gc();
-                System.runFinalization();
                 try {
                     alloc.add(new byte[size]);
                     size = (int) (((double) size) * 1.3);
@@ -201,12 +202,12 @@ public class WeakSetTest extends NbTestCase {
     @RandomlyFails // OOME in NB-Core-Build #1908
     public void testWeakSetIntegrity() throws Exception {
         //CharSequence log = Log.enable(WeakSet.class.getName(), Level.FINE);
-        ArrayList<WeakReference<TestObj>> awr = new ArrayList<WeakReference<TestObj>>();
+        ArrayList<WeakReference<TestObj>> awr = new ArrayList<>();
         ExecutorService exec = Executors.newFixedThreadPool(5);
         exec.execute(new GC());
         for (int i = 0; i < 1000; i++) {
             TestObj to = new TestObj("T" + i);
-            awr.add(new WeakReference<TestObj>(to));
+            awr.add(new WeakReference<>(to));
             Thread.yield();
             for (WeakReference<TestObj> wro : awr) {
                 TestObj wroo = wro.get();
@@ -230,10 +231,10 @@ public class WeakSetTest extends NbTestCase {
     }    
     
     public void testAddRemove() {
-        Set<Object> set = new WeakSet<Object>();
-        Object obj = new Integer(1);
+        Set<Object> set = new WeakSet<>();
+        Object obj = new BigInteger("1");
         assertTrue("have to be new object", set.add(obj));
-        Object obj2 = new Integer(1);
+        Object obj2 = new BigInteger("1");
         assertFalse("object have to be already in set", set.add(obj2));
         assertTrue("object have to be removed correctly", set.remove(obj2));
         assertFalse("set have to be empty", set.remove(obj));
@@ -241,19 +242,20 @@ public class WeakSetTest extends NbTestCase {
 
     }
 
+    @SuppressWarnings("UnnecessaryBoxing")
     public void testConcurrentExceptions() {
-        Object[] arr = new Object[]{new Integer(1), new Long(2), new Double(3)};
-        Set<Object> set = new WeakSet<Object>();
+        Object[] arr = new Object[]{Integer.valueOf(1), Long.valueOf(2), Double.valueOf(3)};
+        Set<Object> set = new WeakSet<>();
         set.addAll(Arrays.asList(arr));
 
         for (Object object : set) {
-            set.remove(new Boolean(true));
+            set.remove(Boolean.valueOf(true));
         }
 
         boolean gotException = false;
         try {
             for (Object object : set) {
-                set.remove(new Long(2));
+                set.remove(Long.valueOf(2));
             }
             fail("concurrent exception is expected");
         } catch (ConcurrentModificationException ex) {
@@ -263,10 +265,12 @@ public class WeakSetTest extends NbTestCase {
     }
 
     @RandomlyFails // NB-Core-Build #8344: after assertGC: expected:<[2, 3.0]> but was:<[2, 3.0]>
+    @SuppressWarnings("UnnecessaryBoxing")
     public void testClone() {
-        Object[] arr = new Object[]{new Integer(1), new Long(2), new Double(3)};
-        WeakSet<Object> set = new WeakSet<Object>();
+        Object[] arr = new Object[]{new BigInteger("1"), new BigInteger("2"), new BigInteger("3")};
+        WeakSet<Object> set = new WeakSet<>();
         set.addAll(Arrays.asList(arr));
+        @SuppressWarnings("unchecked")
         Set<Object> second = (Set<Object>) set.clone();
         assertEquals(second, set);
         assertTrue(second.size() == 3);
@@ -279,9 +283,8 @@ public class WeakSetTest extends NbTestCase {
         assertEquals(second, set);
         assertTrue(second.size() == 2);
         
-        class MySet extends WeakSet {
-            
-        }
+        class MySet extends WeakSet<Object> {}
+
         WeakSet<Object> cloningSet = new MySet();
         cloningSet.addAll(set);
         Object clone = cloningSet.clone();

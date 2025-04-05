@@ -53,11 +53,10 @@ import java.util.Set;
  */
 @SuppressWarnings("unchecked")
 public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializable {
-    private transient SharedKeyWeakHashMap<E, Boolean> m;  // The backing map
+    private transient SharedKeyWeakHashMap<E, boolean[]> m;  // The backing map
     private transient Set<E> s;       // Its keySet
     // Dummy value to associate with an Object in the backing Map
-    @SuppressWarnings("BooleanConstructorCall")
-    private static final Object PRESENT = new Boolean(true);
+    private static final Object PRESENT = new boolean[] {true};
     
     /** load factor */
     private final float loadFactor;
@@ -72,7 +71,7 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
      *         or if the load factor is nonpositive.
      */
     public WeakSet(int initialCapacity, float loadFactor) {
-        m = new SharedKeyWeakHashMap<E, Boolean>(initialCapacity, loadFactor);
+        m = new SharedKeyWeakHashMap<>(initialCapacity, loadFactor);
         this.loadFactor = loadFactor;
         s = m.keySet();
     }
@@ -195,7 +194,7 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
     throws IOException, ClassNotFoundException {
         stream.defaultReadObject();
         Object[] arr = (Object[]) stream.readObject();
-        m = new SharedKeyWeakHashMap<E, Boolean>(arr.length, loadFactor);
+        m = new SharedKeyWeakHashMap<>(arr.length, loadFactor);
         for (Object object : arr) {
             m.putIfAbsent((E)object, (boolean[]) null);
         }
@@ -208,7 +207,7 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
             WeakSet<E> nws = (WeakSet<E>) super.clone();
             // sharing load factor is ok
             // but we can not share maps, recreate them
-            nws.m = new SharedKeyWeakHashMap<E, Boolean>(size(), loadFactor);
+            nws.m = new SharedKeyWeakHashMap<>(size(), loadFactor);
             nws.s = nws.m.keySet();
             nws.addAll(this);
             return nws;
@@ -264,7 +263,7 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
         /**
          * Reference queue for cleared WeakEntries
          */
-        private final ReferenceQueue<K> queue = new ReferenceQueue<K>();
+        private final ReferenceQueue<K> queue = new ReferenceQueue<>();
 
         /**
          * The number of times this SharedKeyWeakHashMap has been structurally modified.
@@ -1185,9 +1184,9 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
             }
 
             private List<Map.Entry<K,V>> deepCopy() {
-                List<Map.Entry<K,V>> list = new ArrayList<Map.Entry<K,V>>(size());
+                List<Map.Entry<K,V>> list = new ArrayList<>(size());
                 for (Map.Entry<K,V> e : this) {
-                    list.add(new SimpleEntry<K,V>(e));
+                    list.add(new SimpleEntry<>(e));
                 }
                 return list;
             }
@@ -1203,7 +1202,6 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
             }
         }
 
-        ////////////////////////////////////////////////////////////////////////////
         // new changes
 
         /**
@@ -1259,7 +1257,7 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
 
             modCount++;
             e = tab[i];
-            tab[i] = new Entry<K,V>(k, queue, h, e);
+            tab[i] = new Entry<>(k, queue, h, e);
             if (++size >= threshold) {
                 resize(tab.length * 2);
             }

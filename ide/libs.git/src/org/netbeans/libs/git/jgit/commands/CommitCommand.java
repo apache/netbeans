@@ -170,9 +170,9 @@ public class CommitCommand extends GitCommand {
         PersonIdent lastAuthor = lastCommit.getAuthorIdent();
         if (lastAuthor != null) {
             PersonIdent author = commit.getAuthor();
-            commit.setAuthor(lastAuthor.getTimeZone() == null
-                    ? new PersonIdent(author, lastAuthor.getWhen())
-                    : new PersonIdent(author, lastAuthor.getWhen(), lastAuthor.getTimeZone()));
+            commit.setAuthor(lastAuthor.getZoneId() == null
+                    ? new PersonIdent(author, lastAuthor.getWhenAsInstant())
+                    : new PersonIdent(author, lastAuthor.getWhenAsInstant(), lastAuthor.getZoneId()));
         }
     }
 
@@ -197,7 +197,7 @@ public class CommitCommand extends GitCommand {
                 treeWalk.addTree(new DirCacheIterator(cache));
                 final int T_HEAD = 0;
                 final int T_INDEX = 1;
-                List<DirCacheEntry> toAdd = new LinkedList<DirCacheEntry>();
+                List<DirCacheEntry> toAdd = new LinkedList<>();
                 while (treeWalk.next() && !monitor.isCanceled()) {
                     String path = treeWalk.getPathString();
                     int mHead = treeWalk.getRawMode(T_HEAD);

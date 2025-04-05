@@ -1,8 +1,8 @@
-Name: Guava
-Version: 33.2.1
+Name: Guava - Failure Access Library
+Version: 1.0.3
 License: Apache-2.0
 Origin: https://github.com/google/guava
-Description: Guava is a set of core libraries that includes new collection types (such as multimap and multiset), immutable collections, a graph library, and utilities for concurrency, I/O, hashing, primitives, strings, and more.
+Description: A Guava subproject
 
 
                                  Apache License

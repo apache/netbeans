@@ -277,10 +277,10 @@ question-version="1.25"
           <p>
               When an item is selected in the palette and user clicks into the editor window
               then the module can ask for selected item by calling 
-              <a href="@TOP@/org/netbeans/spi/palette/PaletteController.html#getSelectedItem--">PaletteController.getSelectedItem()</a>.
+              <a href="@TOP@/org/netbeans/spi/palette/PaletteController.html#getSelectedItem()">PaletteController.getSelectedItem()</a>.
               This method returns a Lookup that holds object(s) representing the selected item.
               After the item is inserted into the editor window the module may clear palette's selection
-              (<a href="@TOP@/org/netbeans/spi/palette/PaletteController.html#clearSelection--">PaletteController.clearSelection()</a>)
+              (<a href="@TOP@/org/netbeans/spi/palette/PaletteController.html#clearSelection()">PaletteController.clearSelection()</a>)
               or leave the item selected to implement 'multi drop' insertion scenario.
           </p>
       </usecase>
@@ -321,7 +321,7 @@ question-version="1.25"
                 PaletteController controller = PaletteFactory.createPalette( "MyPalette", new MyPaletteActions(), filter, null );
           </pre>
           <p>It is necessary to call 
-          <a href="@TOP@/org/netbeans/spi/palette/PaletteController.html#refresh--">PaletteController.refresh()</a>
+          <a href="@TOP@/org/netbeans/spi/palette/PaletteController.html#refresh()">PaletteController.refresh()</a>
           to refresh and repaint the palette window whenever the filtering condition has changed:</p>
           <pre>
               myPaletteFilter.setShowSomeSpecialCategories( false );

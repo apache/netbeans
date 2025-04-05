@@ -447,10 +447,10 @@
  <answer id="exec-component">
   <ul>
    <li>
-    <api name="menuText" category="stable" type="export" group="property" url="@TOP@/org/openide/awt/Actions.html#connect-javax.swing.JMenuItem-javax.swing.Action-boolean-"/>
+    <api name="menuText" category="stable" type="export" group="property" url="@TOP@/org/openide/awt/Actions.html#connect(javax.swing.JMenuItem,javax.swing.Action,boolean)"/>
    </li>
    <li>
-    <api name="popupText" category="stable" type="export" group="property" url="@TOP@/org/openide/awt/Actions.html#connect-javax.swing.JMenuItem-javax.swing.Action-boolean-"/>
+    <api name="popupText" category="stable" type="export" group="property" url="@TOP@/org/openide/awt/Actions.html#connect(javax.swing.JMenuItem,javax.swing.Action,boolean)"/>
    </li>
    <li> 
     <api name="org.openide.awt.USE_MNEMONICS" category="stable" type="export" group="branding">
@@ -965,11 +965,11 @@
    <api name="Actions.factories" type="export" group="layer" category="stable"
       url="@TOP@/org/openide/awt/Actions.html">
       Many action factories 
-      (<a href="org/openide/awt/Actions.html#alwaysEnabled-java.awt.event.ActionListener-java.lang.String-java.lang.String-boolean-">alwaysEnabled</a>,
-        <a href="org/openide/awt/Actions.html#context-java.lang.Class-boolean-boolean-org.openide.util.ContextAwareAction-java.lang.String-java.lang.String-java.lang.String-boolean-">
+      (<a href="org/openide/awt/Actions.html#alwaysEnabled(java.awt.event.ActionListener,java.lang.String,java.lang.String,boolean)">alwaysEnabled</a>,
+        <a href="org/openide/awt/Actions.html#context(java.lang.Class,boolean,boolean,org.openide.util.ContextAwareAction,java.lang.String,java.lang.String,java.lang.String,boolean)">
         context</a>
         and
-        <a href="org/openide/awt/Actions.html#callback-java.lang.String-javax.swing.Action-boolean-java.lang.String-java.lang.String-boolean-">
+        <a href="org/openide/awt/Actions.html#callback(java.lang.String,javax.swing.Action,boolean,java.lang.String,java.lang.String,boolean)">
             callback</a>,
         etc.)
 

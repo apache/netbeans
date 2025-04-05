@@ -22,23 +22,17 @@
 <html>
 <head>
 <title>Nodes API</title>
-<link rel="Stylesheet" href="../../../../prose.css" type="text/css" title="NetBeans Open APIs Style">
+<link rel="Stylesheet" href="../../../../resource-files/prose.css" type="text/css" title="NetBeans Open APIs Style">
 </head>
 <body>
 
-<p class="overviewlink"><a href="../../../../overview-summary.html">Overview</a></p>
+<p class="overviewlink"><a href="../../../../index.html">Overview</a></p>
 
 <h1>Javadoc</h1>
 
-The Javadoc for this API resides in
+The Javadoc for this API resides in {@link org.openide.nodes}.
 
-<a href="../package-summary.html"><code>org.openide.nodes</code></a>.
-
-In particular, the class
-
-<a href="../Node.html"><code>Node</code></a>
-
-is the logical starting point.
+In particular, the class {@link org.openide.nodes.Node Node} is the logical starting point.
 
 
 <h1>Contents</h1>
@@ -119,9 +113,7 @@ key components that were missing from the
 
 <ul>
 
-<li>Full hierarchy support. The Java 2
-
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/beancontext/package-summary.html">Bean Context API</a>
+<li>Full hierarchy support. The Java 2 {@link java.beans.beancontext Bean Context API }
 
 provides basic support for hierarchies of Beans in a tree structure,
 but not enough to handle the requirements of NetBeans, such as special
@@ -250,21 +242,14 @@ subclassing existing supports.
 
 <h3 id="create-genl">General Aspects</h3>
 
-All nodes must subclass the general
-
-<a href="../Node.html"><code>Node</code></a>
+All nodes must subclass the general {@link org.openide.nodes.Node Node}
 
 abstract class. However, in practice it is most common to actually
-subclass a convenient base class,
-
-<a href="../AbstractNode.html"><code>AbstractNode</code></a>,
-
+subclass a convenient base class, {@link org.openide.nodes.AbstractNode AbstractNode},
 or one of its subclasses. Your node class needs to specify a list of
 child nodes in the constructor (the contents of which may be changed
 later, but not the identity of the <code>Children</code> object
-itself); for the case of a leaf node, just pass in
-
-<a href="../Children.html#LEAF"><code>Children.LEAF</code></a>.
+itself); for the case of a leaf node, just pass in {@link org.openide.nodes.Children#LEAF Children.LEAF }.
 
 <p>As this class is not abstract, there are no strict requirements on
 what needs to be overridden. However, the following general methods
@@ -272,8 +257,7 @@ you are likely to want to override:
 
 <ul>
 
-<li><a href="../AbstractNode.html#canCopy--"><code>AbstractNode.canCopy()</code></a>
-
+<li>{@link org.openide.nodes.AbstractNode#canCopy() AbstractNode.canCopy() }
 and related methods (for cutting, renaming, and destroying) are all
 true by default, so that the node may be moved around somewhat
 arbitrarily (though to paste requires the permission of the new
@@ -926,10 +910,7 @@ arbitrary Node A.
 <a href="@org-openide-actions@/org/openide/actions/CopyAction.html">Copy</a>
 
 is enabled (from a context menu, the Edit menu, etc.), because node A
-indicated it could be copied using
-
-<a href="../Node.html#canCopy--"><code>Node.canCopy()</code></a>
-
+indicated it could be copied using {@link org.openide.nodes.Node#canCopy() Node.canCopy() }
 (turned on in <code>AbstractNode</code>).
 
 Note that

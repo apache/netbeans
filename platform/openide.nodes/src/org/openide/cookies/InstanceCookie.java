@@ -61,7 +61,7 @@ public interface InstanceCookie/*<T>*/ extends Node.Cookie {
 
     /**
      * Create or obtain an instance. For example 
-     * <a href="@org-openide-loaders@/org/openide/loaders/InstanceDataObject.html#instanceCreate--">InstanceDataObject</a>
+     * <a href="@org-openide-loaders@/org/openide/loaders/InstanceDataObject.html#instanceCreate()">InstanceDataObject</a>
      * (one of the most often used implementations of {@link InstanceCookie}) caches
      * previously returned instances.
      * 

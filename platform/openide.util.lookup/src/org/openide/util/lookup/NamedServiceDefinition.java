@@ -33,8 +33,8 @@ import java.lang.annotation.Target;
  * The above instructs the annotation processor that handles {@link NamedServiceDefinition}s
  * to verify the annotated type is subclass of <code>URLStreamHandler</code> and
  * if so, register it into <code>URLStreamHandler/@protocol</code> where the
- * value of <code>@protocol()</code> is replaced by the value of annotation's
- * <a href="@org-openide-util@/org/openide/util/URLStreamHandlerRegistration.html#protocol--">
+ * value of <code>@protocol()</code> is replaced by the value of annotation's 
+ * <a href="@org-openide-util@/org/openide/util/URLStreamHandlerRegistration.html#protocol()">
  * protocol attribute</a>. The registration can later be found by using
  * {@link Lookups#forPath(java.lang.String) Lookups.forPath("URLStreamHandler/ftp")}
  * (in case the protocol was ftp).

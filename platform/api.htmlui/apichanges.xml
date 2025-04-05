@@ -128,7 +128,7 @@
 </head>
 <body>
 <p class="overviewlink">
-<a href="overview-summary.html">Overview</a>
+<a href="index.html">Overview</a>
 </p>
 <standard-changelists module-code-name="$codebase"/>
 <hr/>

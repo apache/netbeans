@@ -22,7 +22,7 @@
 <HTML>
 <HEAD>
 <TITLE>Lookup Library API</TITLE>
-<link rel="Stylesheet" href="@TOP@/prose.css" type="text/css" title="NetBeans Open APIs Style">
+<link rel="Stylesheet" href="@TOP@/resource-files/prose.css" type="text/css" title="NetBeans Open APIs Style">
 </HEAD>
 <BODY>
 <H1>Lookup library API</H1>
@@ -38,13 +38,9 @@ The first question you might ask is this: how can I get hold of a
 lookup instance? There are basically two ways how you can get it.
 
 <H3> Global lookup </H3>
-As you can see in the
+As you can see in the {@link org.openide.util.Lookup Lookup } Javadoc there is a static method
 
-<a href="@TOP@org/openide/util/Lookup.html">Lookup</a>
-
-Javadoc there is a static method
-
-<pre><a href="@TOP@org/openide/util/Lookup.html#getDefault--">public static Lookup getDefault()</a></pre>
+{@link org.openide.util.Lookup#getDefault() public static Lookup getDefault() }
 
 The object returned from this method is
 a global lookup that can serve as a central place for registering services.

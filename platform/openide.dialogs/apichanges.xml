@@ -63,8 +63,8 @@
          <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
          <description>
              <p>
-                 <a href="@TOP@/org/openide/DialogDisplayer.html#notifyFuture-T-">DialogDisplayer.notifyFuture</a> now allows to chain processing after user closes the 
-                 dialog without blocking a thread as with <a href="@TOP@/org/openide/DialogDisplayer.html#notify-org.openide.NotifyDescriptor-">DialogDisplayer.notify</a>.
+                 <a href="@TOP@/org/openide/DialogDisplayer.html#notifyFuture(T)">DialogDisplayer.notifyFuture</a> now allows to chain processing after user closes the 
+                 dialog without blocking a thread as with <a href="@TOP@/org/openide/DialogDisplayer.html#notify(org.openide.NotifyDescriptor)">DialogDisplayer.notify</a>.
              </p>
          </description>
          <class package="org.openide" name="DialogDisplayer"/>
@@ -355,7 +355,7 @@
              Now it is simple to display a message box described by
              <a href="@TOP@/org/openide/NotifyDescriptor.html">NotifyDescriptor</a>
              asynchronously using
-             <a href="@TOP@/org/openide/DialogDisplayer.html#notifyLater-org.openide.NotifyDescriptor-">
+             <a href="@TOP@/org/openide/DialogDisplayer.html#notifyLater(org.openide.NotifyDescriptor)">
                  DialogDisplayer.notifyLater
              </a>.
            </description>

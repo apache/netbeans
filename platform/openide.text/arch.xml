@@ -462,7 +462,7 @@ in methods
         </question>
 -->
 <answer id="exec-reflection">
-Yes, it calls protected method <a href="@org-openide-loaders@/org/openide/loaders/MultiDataObject.html#getCookieSet--">MultiDataObject.getCookieSet()</a>.
+Yes, it calls protected method <a href="@org-openide-loaders@/org/openide/loaders/MultiDataObject.html#getCookieSet()">MultiDataObject.getCookieSet()</a>.
 The class which calls this is deprecated, but it is still in use by clients.
 <p/>
 Another reflection is used in QuietEditorPane, where DelegatingTransferHandler delegates
@@ -783,7 +783,7 @@ No.
 The Editor module operate with plain Swing <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/Document.html">Document</a> in 
 its APIs and checks whether the document does not implement some of the Netbeans extensions defined in
 <a href="@org-openide-text@/org/openide/text/NbDocument.html">NbDocument</a>.
-It also tries to retype <a href="@org-openide-windows@/org/openide/windows/CloneableTopComponent.Ref.html#getComponents--">CloneableTopComponent.Ref.getComponents()</a>
+It also tries to retype <a href="@org-openide-windows@/org/openide/windows/CloneableTopComponent.Ref.html#getComponents()">CloneableTopComponent.Ref.getComponents()</a>
 to its <a href="@org-openide-text@/org/openide/text/CloneableEditor.html">CloneableEditor</a>. If some document does not implement 
 <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/StyledDocument.html">StyledDocument</a>,
 it is wrapped into <a href="@org-openide-text@/org/openide/text/FilterDocument.html">FilterDocument</a> which implements limited StyledDocument functionality.

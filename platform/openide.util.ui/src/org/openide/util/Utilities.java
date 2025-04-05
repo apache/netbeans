@@ -1420,7 +1420,7 @@ public final class Utilities {
      * frequently does the wrong thing in a multi-screen setup.
      * <p>
      * The use of the NetBeans API
-     * <a href="@org-openide-dialogs@/org/openide/DialogDisplayer.html#getDefault--">DialogDisplayer.getDefault*</a>
+     * <a href="@org-openide-dialogs@/org/openide/DialogDisplayer.html#getDefault()">DialogDisplayer.getDefault*</a>
      * is encouraged to display a dialog.
      *
      * @return A suitable parent component for swing dialogs

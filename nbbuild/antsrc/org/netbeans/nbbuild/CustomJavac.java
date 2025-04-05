@@ -78,7 +78,7 @@ public class CustomJavac extends Javac {
             if (tgr.matches("\\d+")) {
                 tgr = "1." + tgr;
             }
-            if (!isBootclasspathOptionUsed()) {
+            if (!canUseRelease()) {
                 setRelease(tgr.substring(2));
             }
             String src = getSource();
@@ -135,9 +135,10 @@ public class CustomJavac extends Javac {
         super.compile();
     }
 
-    private boolean isBootclasspathOptionUsed() {
+    private boolean canUseRelease() {
+        // 'error: exporting a package from system module java.desktop is not allowed with --release'
         for (String arg : getCurrentCompilerArgs()) {
-            if (arg.contains("-Xbootclasspath")) {
+            if (arg.contains("-Xbootclasspath") || arg.contains("--add-exports=java.")) {
                 return true;
             }
         }

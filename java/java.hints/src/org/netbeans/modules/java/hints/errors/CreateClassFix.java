@@ -204,9 +204,9 @@ public abstract class CreateClassFix extends ModificationResultBasedFix implemen
         
         switch (kind) {
             case CLASS:
-                return make.Class(nueModifiers, targetTree.getSimpleName(), typeParameters, extendsClause, implementsClause, targetTree.getMembers());
+                return make.Class(nueModifiers, targetTree.getSimpleName(), typeParameters, extendsClause, implementsClause, targetTree.getPermitsClause(), targetTree.getMembers());
             case INTERFACE:
-                return make.Interface(nueModifiers, targetTree.getSimpleName(), typeParameters, implementsClause, targetTree.getMembers());
+                return make.Interface(nueModifiers, targetTree.getSimpleName(), typeParameters, implementsClause, targetTree.getPermitsClause(), targetTree.getMembers());
             case ANNOTATION_TYPE:
                 return make.AnnotationType(nueModifiers, targetTree.getSimpleName(), targetTree.getMembers());
             case ENUM:
@@ -353,10 +353,10 @@ public abstract class CreateClassFix extends ModificationResultBasedFix implemen
                     ClassTree source;
                     switch (kind) {
                         case CLASS:
-                            source = make.Class(nueModifiers, simpleName, typeParameters, extendsClause, implementsClause, members);
+                            source = make.Class(nueModifiers, simpleName, typeParameters, extendsClause, implementsClause, Collections.emptyList(), members);
                             break;
                         case INTERFACE:
-                            source = make.Interface(nueModifiers, simpleName, typeParameters, implementsClause, members);
+                            source = make.Interface(nueModifiers, simpleName, typeParameters, implementsClause, Collections.emptyList(), members);
                             break;
                         case ANNOTATION_TYPE:
                             source = make.AnnotationType(nueModifiers, simpleName, members);
@@ -403,6 +403,7 @@ public abstract class CreateClassFix extends ModificationResultBasedFix implemen
                                                     simpleName,
                                                     Collections.<TypeParameterTree>emptyList(),
                                                     null,
+                                                    Collections.<Tree>emptyList(),
                                                     Collections.<Tree>emptyList(),
                                                     Collections.<Tree>emptyList());
                     ClassTree nue = createConstructor(parameter, new TreePath(new TreePath(cut), source));
@@ -513,7 +514,7 @@ public abstract class CreateClassFix extends ModificationResultBasedFix implemen
                     
                     TreeMaker make = working.getTreeMaker();
                     MethodTree constr = make.Method(make.Modifiers(EnumSet.of(Modifier.PUBLIC)), "<init>", null, Collections.<TypeParameterTree>emptyList(), Collections.<VariableTree>emptyList(), Collections.<ExpressionTree>emptyList(), "{}" /*XXX*/, null); // NOI18N
-                    ClassTree innerClass = make.Class(make.Modifiers(modifiers), name, Collections.<TypeParameterTree>emptyList(), null, Collections.<Tree>emptyList(), Collections.<Tree>singletonList(constr));
+                    ClassTree innerClass = make.Class(make.Modifiers(modifiers), name, Collections.<TypeParameterTree>emptyList(), null, Collections.<Tree>emptyList(), Collections.<Tree>emptyList(), Collections.<Tree>singletonList(constr));
                     
                     innerClass = createConstructor(working, new TreePath(targetTree, innerClass));
                     

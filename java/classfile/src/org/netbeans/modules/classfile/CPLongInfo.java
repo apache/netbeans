@@ -32,7 +32,7 @@ public final class CPLongInfo extends CPEntry {
 
     CPLongInfo(ConstantPool pool, long v) {
 	super(pool);
-        value = new Long(v);
+        value = v;
     }
 
     /* The VM doesn't allow the next constant pool slot to be used
@@ -43,6 +43,7 @@ public final class CPLongInfo extends CPEntry {
 	return true;
     }
 
+    @Override
     public final int getTag() {
 	return ConstantPool.CONSTANT_Long;
     }

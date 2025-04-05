@@ -39,7 +39,9 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
 import org.eclipse.lsp4j.DocumentSymbol;
+import org.eclipse.lsp4j.DocumentSymbolOptions;
 import org.eclipse.lsp4j.DocumentSymbolParams;
+import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
@@ -82,6 +84,13 @@ public class BreadcrumbsImpl implements BackgroundTask {
 
     @Override
     public void run(LSPBindings bindings, FileObject file) {
+        ServerCapabilities capa = bindings.getInitResult().getCapabilities();
+        Either<Boolean, DocumentSymbolOptions> documentSymbolProviderOpt = capa != null ? capa.getDocumentSymbolProvider() : null;
+
+        if (documentSymbolProviderOpt == null || (documentSymbolProviderOpt.isLeft() && documentSymbolProviderOpt.getLeft() == Boolean.FALSE)) {
+            return ;
+        }
+
         try {
             //TODO: modified while the query is running?
             List<Either<SymbolInformation, DocumentSymbol>> symbols = bindings.getTextDocumentService().documentSymbol(new DocumentSymbolParams(new TextDocumentIdentifier(Utils.toURI(file)))).get();

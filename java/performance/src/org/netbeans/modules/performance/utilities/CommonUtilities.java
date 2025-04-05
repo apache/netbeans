@@ -806,7 +806,7 @@ public class CommonUtilities {
                 perfDataTag=allPerfDoc.createElement("PerformanceData");
                 if (i==1) perfDataTag.setAttribute("runOrder", "1");
                     else perfDataTag.setAttribute("runOrder", "2");
-                perfDataTag.setAttribute("value", new Long(results[i]).toString());
+                perfDataTag.setAttribute("value", Long.toString(results[i]));
                 testTag.appendChild(perfDataTag);
             }
         }
@@ -815,13 +815,13 @@ public class CommonUtilities {
             testTag.setAttribute("name", name);
             testTag.setAttribute("unit", unit);
             testTag.setAttribute("results", pass);
-            testTag.setAttribute("threshold", new Long(threshold).toString());
+            testTag.setAttribute("threshold", Long.toString(threshold));
             testTag.setAttribute("classname", classname);
             for (int i=1;i<=repeat;i++) {
                 perfDataTag=allPerfDoc.createElement("PerformanceData");
                 if (i==1) perfDataTag.setAttribute("runOrder", "1");
                     else perfDataTag.setAttribute("runOrder", "2");
-                perfDataTag.setAttribute("value", new Long(results[i]).toString());
+                perfDataTag.setAttribute("value", Long.toString(results[i]));
                 testTag.appendChild(perfDataTag);
             }
         }

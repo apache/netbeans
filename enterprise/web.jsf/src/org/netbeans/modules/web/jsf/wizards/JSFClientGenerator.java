@@ -1680,18 +1680,17 @@ public class JSFClientGenerator {
         return controllerFileObject;
     }
 
-    private static HashSet<String> CONVERTED_TYPES = new HashSet<String>();
+    private static final HashSet<String> BOXED_TYPES = new HashSet<>();
     static {
-        CONVERTED_TYPES.add("Boolean");
-        CONVERTED_TYPES.add("Byte");
-        CONVERTED_TYPES.add("Double");
-        CONVERTED_TYPES.add("Float");
-        CONVERTED_TYPES.add("Integer");
-        CONVERTED_TYPES.add("Long");
-        CONVERTED_TYPES.add("Short");
-        CONVERTED_TYPES.add("StringBuffer");
+        BOXED_TYPES.add("Boolean");
+        BOXED_TYPES.add("Byte");
+        BOXED_TYPES.add("Double");
+        BOXED_TYPES.add("Float");
+        BOXED_TYPES.add("Integer");
+        BOXED_TYPES.add("Long");
+        BOXED_TYPES.add("Short");
     }
-    private static HashMap<String,String> PRIMITIVE_TYPES = new HashMap<String, String>();
+    private static final HashMap<String,String> PRIMITIVE_TYPES = new HashMap<>();
     static {
         PRIMITIVE_TYPES.put("boolean", "Boolean");
         PRIMITIVE_TYPES.put("byte", "Byte");
@@ -1735,12 +1734,13 @@ public class JSFClientGenerator {
         } else if (idPropertyType.equals("java.lang.String") || "String".equals(idPropertyType)) {
             idField = valueVar;
         } else if (idPropertyType.equals("java.lang.Character") || "Character".equals(idPropertyType)) {
-            idField = "new Character(" + valueVar + ".charAt(0))";
+            idField = "Character.valueOf(" + valueVar + ".charAt(0))";
+        } else if (BOXED_TYPES.contains(idPropertyType)
+                || (idPropertyType.startsWith("java.lang.") && BOXED_TYPES.contains(idPropertyType.substring(10)))) {
+            idField = idPropertyType + ".valueOf(" + valueVar + ")";
         } else if (idPropertyType.startsWith("java.lang.")) {
             String shortName = idPropertyType.substring(10);
             idField = "new " + shortName + "(" + valueVar + ")";
-        } else if (CONVERTED_TYPES.contains(idPropertyType)) {
-            idField = "new " + idPropertyType + "(" + valueVar + ")";
         } else {
             if(jakartaJsfPackages) {
                 idField = "(" + idPropertyType + ") jakarta.faces.context.FacesContext.getCurrentInstance().getApplication().\n"

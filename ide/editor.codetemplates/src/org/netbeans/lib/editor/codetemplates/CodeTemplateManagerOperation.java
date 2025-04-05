@@ -452,7 +452,7 @@ public final class CodeTemplateManagerOperation
         String expandKeyStrokeText;
         if (keyStroke.equals(KeyStroke.getKeyStroke(' '))) { //NOI18N
             expandKeyStrokeText = "SPACE"; // NOI18N
-        } else if (keyStroke.equals(KeyStroke.getKeyStroke(new Character(' '), InputEvent.SHIFT_MASK))) { //NOI18N
+        } else if (keyStroke.equals(KeyStroke.getKeyStroke(Character.valueOf(' '), InputEvent.SHIFT_MASK))) { //NOI18N
             expandKeyStrokeText = "Shift-SPACE"; // NOI18N
         } else if (keyStroke.equals(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0))) {
             expandKeyStrokeText = "TAB"; // NOI18N
@@ -469,7 +469,7 @@ public final class CodeTemplateManagerOperation
         if (eks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0))) {
             eks = KeyStroke.getKeyStroke(' ');
         } else if (eks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, InputEvent.SHIFT_MASK))) {
-            eks = KeyStroke.getKeyStroke(new Character(' '), InputEvent.SHIFT_MASK);
+            eks = KeyStroke.getKeyStroke(Character.valueOf(' '), InputEvent.SHIFT_MASK);
         } else if (eks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0))) {
         } else if (eks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0))) {
         }

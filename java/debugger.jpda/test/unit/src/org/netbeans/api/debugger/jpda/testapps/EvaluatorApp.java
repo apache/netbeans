@@ -990,7 +990,7 @@ public class EvaluatorApp extends BaseClass {
     // Constructors
     
     public static boolean testConstructor1() {
-        return new Boolean(true).booleanValue();
+        return true;
     }
 
     public static int testConstructor2() {

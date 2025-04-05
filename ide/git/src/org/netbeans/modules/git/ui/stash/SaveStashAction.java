@@ -23,7 +23,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.concurrent.Callable;
+import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.libs.git.GitException;
 import org.netbeans.modules.git.FileInformation;
 import org.netbeans.modules.git.Git;
@@ -43,6 +43,7 @@ import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 
 /**
+ * Git stash action, currently only repo wide.
  *
  * @author Ondra Vrabec
  */
@@ -56,7 +57,20 @@ import org.openide.util.NbBundle;
     "MSG_SaveStashAction.noModifications=There are no uncommitted changes to stash."
 })
 public class SaveStashAction extends SingleRepositoryAction {
-    
+        
+    // TODO pick/create better icon
+    @StaticResource
+    private static final String ICON_RESOURCE = "org/netbeans/modules/git/resources/icons/get_clean.png"; //NOI18N
+
+    public SaveStashAction() {
+        super(ICON_RESOURCE);
+    }
+
+    @Override
+    protected String iconResource() {
+        return ICON_RESOURCE;
+    }
+
     @Override
     protected void performAction (File repository, File[] roots, VCSContext context) {
         saveStash(repository, roots);
@@ -75,20 +89,16 @@ public class SaveStashAction extends SingleRepositoryAction {
                 NotifyDescriptor.DEFAULT_OPTION,
                 NotifyDescriptor.INFORMATION_MESSAGE,
                 new Object[]{NotifyDescriptor.OK_OPTION},
-                NotifyDescriptor.OK_OPTION);
+                NotifyDescriptor.OK_OPTION
+            );
             DialogDisplayer.getDefault().notifyLater(nd);
             return;
         }
-        Mutex.EVENT.readAccess(new Runnable () {
-
-            @Override
-            public void run () {
-                SaveStash saveStash = new SaveStash(repository, roots, RepositoryInfo.getInstance(repository).getActiveBranch());
-                if (saveStash.show()) {
-                    start(repository, modifications, saveStash);
-                }
+        Mutex.EVENT.readAccess(() -> {
+            SaveStash saveStash = new SaveStash(repository, roots, RepositoryInfo.getInstance(repository).getActiveBranch());
+            if (saveStash.show()) {
+                start(repository, modifications, saveStash);
             }
-            
         });
     }
 
@@ -98,13 +108,9 @@ public class SaveStashAction extends SingleRepositoryAction {
             protected void perform () {
                 try {
                     final GitClient client = getClient();
-                    GitUtils.runWithoutIndexing(new Callable<Void>() {
-
-                        @Override
-                        public Void call () throws Exception {
-                            client.stashSave(saveStash.getMessage(), saveStash.isIncludeUncommitted(), getProgressMonitor());
-                            return null;
-                        }
+                    GitUtils.runWithoutIndexing(() -> {
+                        client.stashSave(saveStash.getMessage(), saveStash.isIncludeUncommitted(), getProgressMonitor());
+                        return null;
                     }, new File[] { repository });
                     RepositoryInfo.getInstance(repository).refreshStashes();
                 } catch (GitException ex) {

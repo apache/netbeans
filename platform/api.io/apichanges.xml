@@ -104,9 +104,9 @@ is the proper place.
               and new methods into class <a href="@TOP@/org/netbeans/spi/io/support/Hyperlinks.html">Hyperlinks</a>:
           </p>
           <ul>
-              <li><a href="@TOP@/org/netbeans/spi/io/support/Hyperlinks.html#getType-org.netbeans.api.io.Hyperlink-">Hyperlinks.getType(Hyperlink)</a></li>
-              <li><a href="@TOP@/org/netbeans/spi/io/support/Hyperlinks.html#getIntent-org.netbeans.api.io.Hyperlink-">Hyperlinks.getIntent(Hyperlink)</a></li>
-              <li><a href="@TOP@/org/netbeans/spi/io/support/Hyperlinks.html#getRunnable-org.netbeans.api.io.Hyperlink-">Hyperlinks.getRunnable(Hyperlink)</a></li>
+              <li><a href="@TOP@/org/netbeans/spi/io/support/Hyperlinks.html#getType(org.netbeans.api.io.Hyperlink)">Hyperlinks.getType(Hyperlink)</a></li>
+              <li><a href="@TOP@/org/netbeans/spi/io/support/Hyperlinks.html#getIntent(org.netbeans.api.io.Hyperlink)">Hyperlinks.getIntent(Hyperlink)</a></li>
+              <li><a href="@TOP@/org/netbeans/spi/io/support/Hyperlinks.html#getRunnable(org.netbeans.api.io.Hyperlink)">Hyperlinks.getRunnable(Hyperlink)</a></li>
           </ul>
       </description>
       <issue number="249321" />
@@ -127,8 +127,8 @@ is the proper place.
               Added new static methods into class <a href="@TOP@/org/netbeans/api/io/Hyperlink.html">Hyperlink</a>:
           </p>
           <ul>
-              <li><a href="@TOP@/org/netbeans/api/io/Hyperlink.html#from-org.netbeans.api.intent.Intent-">Hyperlink.from(Intent)</a></li>
-              <li><a href="@TOP@/org/netbeans/api/io/Hyperlink.html#from-org.netbeans.api.intent.Intent-boolean-">Hyperlink.from(Intent, boolean)</a></li>
+              <li><a href="@TOP@/org/netbeans/api/io/Hyperlink.html#from(org.netbeans.api.intent.Intent)">Hyperlink.from(Intent)</a></li>
+              <li><a href="@TOP@/org/netbeans/api/io/Hyperlink.html#from(org.netbeans.api.intent.Intent,boolean)">Hyperlink.from(Intent, boolean)</a></li>
           </ul>
       </description>
       <issue number="249321" />

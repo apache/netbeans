@@ -32,7 +32,7 @@ import javax.swing.Action;
  * presenter for the generic action, the menu will contain a presenter for the
  * context-aware instance. The context will then be taken from the GUI
  * environment where the context menu was shown; for example it may be a
- * <a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getLookup--">TopComponent's context</a>,
+ * <a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getLookup()">TopComponent's context</a>,
  * often taken from an activated node selection. The context action might be
  * enabled only if a certain "cookie" is present in that selection. When invoked,
  * the action need not search for an object to act on, since it can use the context.

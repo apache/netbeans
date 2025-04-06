@@ -24,7 +24,7 @@
 <link rel="stylesheet" href="../../../../prose.css" type="text/css">
 </head><body>
 
-<p class="overviewlink"><a href="../../../../overview-summary.html">Overview</a></p>
+<p class="overviewlink"><a href="../../../../index.html">Overview</a></p>
 
 <h1>Javadoc</h1>
 
@@ -32,8 +32,7 @@ There are three packages in this API:
 
 <ul>
 
-<li><a href="../package-summary.html"><code>org.openide.loaders</code></a>
-
+<li>{@link org.openide.loaders org.openide.loaders}
 handles the association of files together into groups and assigning
 types to data.
 
@@ -99,22 +98,15 @@ creation of structured, high-level data based on files found on a
 
 <a href="@org-openide-filesystems@/org/openide/filesystems/FileSystem.html">filesystem</a>.
 
-In summary, the system
-
-<a href="../DataLoaderPool.html">loader pool</a>
-
+In summary, the system {@link org.openide.loaders.DataLoaderPool loader pool}
 is responsible for scanning files in a directory on disk, weeding out
 irrelevant files of no interest, and grouping the rest into
 logical chunks, or just determining what type of data each represents.
 It does this scanning by asking each registered
-
-<a href="../DataLoader.html">data loader</a>
-
+{@link org.openide.loaders.DataLoader data loader}
 whether or not the given file(s) should be handled. The first loader
 to recognize a file takes ownership of it, and creates a matching
-
-<a href="../DataObject.html">data object</a>
-
+{@link org.openide.loaders.DataObject data object}
 to represent it to the rest of NetBeans.
 
 <h3 id="intro-loader">What is a loader used for?</h3>

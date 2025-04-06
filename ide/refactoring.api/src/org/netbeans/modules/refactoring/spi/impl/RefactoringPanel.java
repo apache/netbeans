@@ -29,7 +29,6 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringBufferInputStream;
 import java.io.StringReader;
-import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.Map.Entry;
@@ -80,7 +79,10 @@ import org.openide.windows.TopComponent;
  */
 public class RefactoringPanel extends JPanel implements FiltersManagerImpl.FilterChangeListener {
     private static final RequestProcessor RP = new RequestProcessor(RefactoringPanel.class.getName(), 1, false, false);
-    
+
+    private static final String PREF_KEY_SHOW_PREVIEW = "showPreview";
+    private static final String PREF_KEY_DIVIDER_LOCATION = "dividerLocation";
+
     // PRIVATE FIELDS
     /* tree contains elements which will be changed by refactoring action */
     private transient JTree tree = null;
@@ -94,26 +96,26 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
     private transient ButtonL buttonListener = null;
     private transient JButton rerunButton = null;
 
-    private final RefactoringUI ui;
+    private final RefactoringUI refactoringUI;
     private final boolean isQuery;
-    
+
     private transient boolean isVisible = false;
     private transient RefactoringSession session = null;
     private transient ParametersPanel parametersPanel = null;
     private transient JScrollPane scrollPane = null;
     private transient JPanel southPanel;
-    public JSplitPane splitPane;
+    private JSplitPane splitPane;
     private JPanel left;
+    private Component right;
     private Action callback = null;
-    
+
     private static final int MAX_ROWS = 50;
     private static final int MIN_DIVIDER_LOCATION = 250;
-    /* last user modified divider position shared between all instances */
-    private static int dividerPosMemory = -1; 
-    
+
     private transient JToggleButton logicalViewButton = null;
     private transient JToggleButton physicalViewButton = null;
     private transient JToggleButton customViewButton = null;
+    private transient JToggleButton previewButton = null;
     private JButton stopButton;
 
     private transient ProgressListener progressListener;
@@ -121,51 +123,47 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
 
     private transient JButton prevMatch = null;
     private transient JButton nextMatch = null;
-    private WeakReference<TopComponent> refCallerTC;
     private boolean inited = false;
     private Component customComponent;
-    private AtomicBoolean cancelRequest = new AtomicBoolean();
+    private final AtomicBoolean cancelRequest = new AtomicBoolean();
     private FiltersManagerImpl filtersManager;
     private JComponent filterBar;
     private JPanel toolbars;
-    
-    static Image PACKAGE_BADGE = ImageUtilities.loadImage( "org/netbeans/spi/java/project/support/ui/packageBadge.gif" ); // NOI18N
-    
+
     public RefactoringPanel(RefactoringUI ui) {
         this(ui,null);
     }
-    
+
     public RefactoringPanel(RefactoringUI ui, TopComponent caller) {
-        if (caller!=null) {
-            refCallerTC = new WeakReference<TopComponent>(caller);
-        }
-        this.ui = ui;
+        this.refactoringUI = ui;
         this.isQuery = ui.isQuery();
         if (isQuery) {
-            ui.getRefactoring().addProgressListener(fuListener = new FUListener());
+            fuListener = new FUListener();
+            ui.getRefactoring().addProgressListener(fuListener);
         }
         refresh(true);
     }
-    
+
     public RefactoringPanel(RefactoringUI ui, RefactoringSession session, Action callback) {
         this.session = session;
-        this.ui = ui;
+        this.refactoringUI = ui;
         this.isQuery = ui.isQuery();
         this.callback = callback;
         if (isQuery) {
-            ui.getRefactoring().addProgressListener(fuListener = new FUListener());
+            fuListener = new FUListener();
+            ui.getRefactoring().addProgressListener(fuListener);
         }
         initialize();
         updateFilters(false);
         refresh(false);
     }
-    
+
     public static void checkEventThread() {
         if (!SwingUtilities.isEventDispatchThread()) {
             ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, new IllegalStateException("This must happen in event thread!")); //NOI18N
         }
     }
-    
+
     /* initializes all the ui */
     private void initialize() {
         if (inited) {
@@ -179,11 +177,14 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         left.setLayout(new BorderLayout());
         setLayout(new BorderLayout());
         add(splitPane, BorderLayout.CENTER);
-        splitPane.setRightComponent(new JLabel(org.openide.util.NbBundle.getMessage(RefactoringPanel.class, "LBL_Preview_not_Available"), SwingConstants.CENTER));
+        right = new JLabel(org.openide.util.NbBundle.getMessage(RefactoringPanel.class, "LBL_Preview_not_Available"), SwingConstants.CENTER);
+        splitPane.setRightComponent(right);
         splitPane.setBorder(null);
         splitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, evt -> {
-            if (evt.getNewValue() instanceof Integer pos && pos > MIN_DIVIDER_LOCATION) {
-                RefactoringPanel.dividerPosMemory = pos;
+            if (previewButton.isSelected() && splitPane.getRightComponent() != null) {
+                if (evt.getNewValue() instanceof Integer pos && pos > MIN_DIVIDER_LOCATION) {
+                    getPreferences().putInt(preferencesKeyForUI(PREF_KEY_DIVIDER_LOCATION), pos);
+                }
             }
         });
         // add panel with buttons
@@ -210,21 +211,19 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         if ("Aqua".equals(UIManager.getLookAndFeel().getID())) { //NOI18N
             southPanel.setBackground(UIManager.getColor("NbExplorerView.background"));
         }
-        // put the toolbar to the panel. If the getToolBar() returns null,
-        // suppose the toolbar does not exist.
+
         JToolBar toolbar = getToolBar();
-        if (toolbar != null) {
-            if ("Aqua".equals(UIManager.getLookAndFeel().getID())) { //NOI18N
-                toolbar.setBackground(UIManager.getColor("NbExplorerView.background"));
-            }
-            toolbars = new JPanel(new BorderLayout());
-            toolbars.add(toolbar, BorderLayout.WEST);
-            left.add(toolbars, BorderLayout.WEST);
+        if ("Aqua".equals(UIManager.getLookAndFeel().getID())) { //NOI18N
+            toolbar.setBackground(UIManager.getColor("NbExplorerView.background"));
         }
+        toolbars = new JPanel(new BorderLayout());
+        toolbars.add(toolbar, BorderLayout.WEST);
+        left.add(toolbars, BorderLayout.WEST);
+        updatePreviewVisibility();
         validate();
         inited=true;
     }
-    
+
     @Override
     public boolean requestFocusInWindow() {
         boolean value = super.requestFocusInWindow();
@@ -248,9 +247,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
      * Returns the toolbar. In this default implementation, toolbar is
      * oriented vertically in the west and contains 'expand tree' toggle
      * button and refresh button.
-     * Override this method and return null if you do not want toolbar
-     * in your panel.
-     * 
+     *
      * @return  toolBar with actions for refactoring panel
      */
     private JToolBar getToolBar() {
@@ -280,10 +277,10 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         );
         expandButton.setBorderPainted(false);
         expandButton.addActionListener(getButtonListener());
-        
+
         logicalViewButton = new JToggleButton(
             ImageUtilities.loadImageIcon("org/netbeans/modules/refactoring/api/resources/logical_view.png", false));
-        
+
         logicalViewButton.setMaximumSize(dim);
         logicalViewButton.setMinimumSize(dim);
         logicalViewButton.setPreferredSize(dim);
@@ -296,7 +293,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
 
         physicalViewButton = new JToggleButton(
             ImageUtilities.loadImageIcon("org/netbeans/modules/refactoring/api/resources/file_view.png", false));
-        
+
         physicalViewButton.setMaximumSize(dim);
         physicalViewButton.setMinimumSize(dim);
         physicalViewButton.setPreferredSize(dim);
@@ -309,34 +306,29 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
 
         if (!Utilities.isMac()) {
             refreshButton.setMnemonic(
-                    NbBundle.getMessage(RefactoringPanel.class, "MNEM_refresh").charAt(0));
-
+                    NbBundle.getMessage(RefactoringPanel.class, "MNEM_refresh").charAt(0)); // NOI18N
             expandButton.setMnemonic(
-                    NbBundle.getMessage(RefactoringPanel.class, "MNEM_expandAll").charAt(0) // NOI18N
-                    );
-
+                    NbBundle.getMessage(RefactoringPanel.class, "MNEM_expandAll").charAt(0)); // NOI18N
             logicalViewButton.setMnemonic(
-                    NbBundle.getMessage(RefactoringPanel.class, "MNEM_logicalView").charAt(0) // NOI18N
-                    );
+                    NbBundle.getMessage(RefactoringPanel.class, "MNEM_logicalView").charAt(0)); // NOI18N
             physicalViewButton.setMnemonic(
-                    NbBundle.getMessage(RefactoringPanel.class, "MNEM_physicalView").charAt(0) // NOI18N
-                    );
+                    NbBundle.getMessage(RefactoringPanel.class, "MNEM_physicalView").charAt(0)); // NOI18N
         }
 
-        if (ui instanceof RefactoringCustomUI) {
-            customViewButton = new JToggleButton(((RefactoringCustomUI)ui).getCustomIcon());
+        if (refactoringUI instanceof RefactoringCustomUI refactoringCustomUI) {
+            customViewButton = new JToggleButton(refactoringCustomUI.getCustomIcon());
             customViewButton.setMaximumSize(dim);
             customViewButton.setMinimumSize(dim);
             customViewButton.setPreferredSize(dim);
             customViewButton.setSelected(currentView==GRAPHICAL);
-            customViewButton.setToolTipText(((RefactoringCustomUI)ui).getCustomToolTip());
+            customViewButton.setToolTipText(refactoringCustomUI.getCustomToolTip());
             customViewButton.setBorderPainted(false);
             customViewButton.addActionListener(getButtonListener());
         }
-        
+
         nextMatch = new JButton(
             ImageUtilities.loadImageIcon("org/netbeans/modules/refactoring/api/resources/nextmatch.png", false));
-        
+
         nextMatch.setMaximumSize(dim);
         nextMatch.setMinimumSize(dim);
         nextMatch.setPreferredSize(dim);
@@ -348,7 +340,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
 
         prevMatch = new JButton(
             ImageUtilities.loadImageIcon("org/netbeans/modules/refactoring/api/resources/prevmatch.png", false));
-        
+
         prevMatch.setMaximumSize(dim);
         prevMatch.setMinimumSize(dim);
         prevMatch.setPreferredSize(dim);
@@ -358,9 +350,9 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         prevMatch.setBorderPainted(false);
         prevMatch.addActionListener(getButtonListener());
 
-                stopButton = new JButton(
-            ImageUtilities.loadImageIcon("org/netbeans/modules/refactoring/api/resources/stop.png", false));
-        
+        stopButton = new JButton(
+                ImageUtilities.loadImageIcon("org/netbeans/modules/refactoring/api/resources/stop.png", false));
+
         stopButton.setMaximumSize(dim);
         stopButton.setMinimumSize(dim);
         stopButton.setPreferredSize(dim);
@@ -369,7 +361,19 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         );
         stopButton.setBorderPainted(false);
         stopButton.addActionListener(getButtonListener());
-        
+
+        previewButton = new JToggleButton(
+                ImageUtilities.loadImageIcon("org/netbeans/modules/refactoring/api/resources/preview.png", false));
+        previewButton.setMaximumSize(dim);
+        previewButton.setMinimumSize(dim);
+        previewButton.setPreferredSize(dim);
+        previewButton.setToolTipText(
+                NbBundle.getMessage(RefactoringPanel.class, "HINT_showPreview") // NOI18N
+        );
+        previewButton.setBorderPainted(false);
+        previewButton.addActionListener(getButtonListener());
+        previewButton.setSelected(getPreferences().getBoolean(preferencesKeyForUI(PREF_KEY_SHOW_PREVIEW), true));
+
         // create toolbar
         JToolBar toolbar = new ToolbarWithOverflow(JToolBar.VERTICAL);
         toolbar.setFloatable(false);
@@ -381,16 +385,25 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         toolbar.add(expandButton);
         toolbar.add(logicalViewButton);
         toolbar.add(physicalViewButton);
-        if (ui instanceof RefactoringCustomUI) {
+        toolbar.add(previewButton);
+        if (refactoringUI instanceof RefactoringCustomUI) {
             toolbar.add(customViewButton);
         }
         return toolbar;
     }
-    
+
+    private Preferences getPreferences() {
+        return NbPreferences.forModule(RefactoringPanel.class);
+    }
+
+    private String preferencesKeyForUI(String uiPreference) {
+        return RefactoringPanel.class.getName() + "_" + (isQuery ? "query" : "refactoring") + "." + uiPreference;
+    }
+
     /**
      * Returns array of available buttons. Initially, it returns only
-     * basic "do refactoring/cancel refactoring" button. Override this method, 
-     * if you want to provide any other buttons with different action to be 
+     * basic "do refactoring/cancel refactoring" button. Override this method,
+     * if you want to provide any other buttons with different action to be
      * performed.
      *
      * @return  array of available buttons.
@@ -402,7 +415,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
             if (callback==null) {
                 return new JButton[] {};
             } else {
-                rerunButton = new JButton((String) callback.getValue(callback.NAME)); // NOI18N
+                rerunButton = new JButton((String) callback.getValue(Action.NAME)); // NOI18N
                 rerunButton.addActionListener(getButtonListener());
                 return new JButton[] {rerunButton};
             }
@@ -418,7 +431,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
             return new JButton[] {refactorButton, cancelButton};
         }
     }
-    
+
     private static final byte LOGICAL = 0;
     private static final byte PHYSICAL = 1;
     private static final byte GRAPHICAL = 2;
@@ -442,7 +455,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         storePrefViewType();
         refresh(false);
     }
-    
+
     void switchToPhysicalView() {
         physicalViewButton.setSelected(true);
         if (currentView == PHYSICAL) {
@@ -474,59 +487,70 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         refresh(false);
     }
 
+    private void updatePreviewVisibility() {
+        getPreferences().putBoolean(preferencesKeyForUI(PREF_KEY_SHOW_PREVIEW), previewButton.isSelected());
+        if (previewButton.isSelected()) {
+            boolean initDivider = splitPane.getRightComponent() == null;
+            if (initDivider) {
+                splitPane.setRightComponent(right);
+                initDivider();
+            } else {
+                int oldLocation = splitPane.getDividerLocation();
+                splitPane.setRightComponent(right);
+                splitPane.setDividerLocation(oldLocation);
+            }
+        } else {
+            splitPane.setRightComponent(null);
+        }
+    }
+
     private CheckNode createNode(TreeElement representedObject, Map<Object, CheckNode> nodes, CheckNode root) {
         //checkEventThread();
         boolean isLogical = currentView == LOGICAL;
-        
-        CheckNode node = null;
-        if (representedObject instanceof SourceGroup) {
+
+        CheckNode node;
+        if (representedObject instanceof SourceGroup sourceGroup) {
             //workaround for issue 52541
-            node = nodes.get(((SourceGroup) representedObject).getRootFolder());
+            node = nodes.get(sourceGroup.getRootFolder());
         } else {
             node = nodes.get(representedObject);
         }
         if (node != null) {
             return node;
         }
-        
+
         TreeElement parent = representedObject.getParent(isLogical);
         String displayName = representedObject.getText(isLogical);
         Icon icon = representedObject.getIcon();
-        
+
         node = new CheckNode(representedObject, displayName, icon, isQuery);
         final CheckNode parentNode = parent == null ? root : createNode(parent, nodes, root);
- 
+
         parentNode.add(node);
-        
+
         if (isQuery) {
             final int childCount = parentNode.getChildCount();
             try {
-                SwingUtilities.invokeAndWait(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        if (tree!=null) {
-                            ((DefaultTreeModel) tree.getModel()).nodesWereInserted(parentNode, new int[]{childCount-1});
-                            tree.expandPath(new TreePath(parentNode.getPath()));
-                        }
+                SwingUtilities.invokeAndWait(() -> {
+                    if (tree!=null) {
+                        ((DefaultTreeModel) tree.getModel()).nodesWereInserted(parentNode, new int[]{childCount-1});
+                        tree.expandPath(new TreePath(parentNode.getPath()));
                     }
                 });
-            } catch (InterruptedException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (InvocationTargetException ex) {
+            } catch (InterruptedException | InvocationTargetException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }
-        
-        if (representedObject instanceof SourceGroup) {
+
+        if (representedObject instanceof SourceGroup sourceGroup) {
             //workaround for issue 52541
-            nodes.put(((SourceGroup) representedObject).getRootFolder(), node);
+            nodes.put(sourceGroup.getRootFolder(), node);
         } else {
             nodes.put(representedObject, node);
         }
         return node;
     }
-    
+
     /**
      * Method is responsible for making changes in sources.
      */
@@ -540,29 +564,21 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
                     JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
                 refresh(true);
                 return;
-            }   else {
-            return;
+            } else {
+                return;
             }
         }
         disableComponents();
         progressListener = new ProgressL();
-        RP.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    session.addProgressListener(progressListener);
-                    session.doRefactoring(true);
-                } finally {
-                    session.removeProgressListener(progressListener);
-                    progressListener.stop(null);
-                    progressListener = null;
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            RefactoringPanel.this.close();
-                        }
-                    });
-                }
+        RP.post(() -> {
+            try {
+                session.addProgressListener(progressListener);
+                session.doRefactoring(true);
+            } finally {
+                session.removeProgressListener(progressListener);
+                progressListener.stop(null);
+                progressListener = null;
+                SwingUtilities.invokeLater(RefactoringPanel.this::close);
             }
         });
     }
@@ -579,7 +595,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         this.close();
         return 0;
     }
-    
+
     void close() {
         if (isQuery) {
             RefactoringPanelContainer.getUsagesComponent().removePanel(this);
@@ -594,8 +610,8 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         }
         closeNotify();
     }
-    
-    
+
+
     /*
      * Initializes button listener. The subclasses must not need this listener.
      * This is the reason of lazy initialization.
@@ -604,14 +620,12 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         if (buttonListener == null) {
             buttonListener = new ButtonL();
         }
-        
+
         return buttonListener;
     }
 
-    RequestProcessor rp = new RequestProcessor();
-
     /* expandAll nodes in the tree */
-    public void expandAll() { 
+    public void expandAll() {
         checkEventThread();
         final Cursor old = getCursor();
         expandButton.setEnabled(false);
@@ -628,7 +642,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         expandButton.setToolTipText(
             NbBundle.getMessage(RefactoringPanel.class, "HINT_collapseAll") // NOI18N
         );
-    } 
+    }
 
     /* collapseAll nodes in the tree */
     public void collapseAll() {
@@ -649,7 +663,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
             NbBundle.getMessage(RefactoringPanel.class, "HINT_expandAll") // NOI18N
         );
     }
-    
+
     private void refresh(final boolean showParametersPanel) {
         checkEventThread();
         boolean scanning = IndexingManager.getDefault().isIndexing();
@@ -657,7 +671,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         if (showParametersPanel) {
             // create parameters panel for refactoring
             if (parametersPanel == null) {
-                parametersPanel = new ParametersPanel(ui);
+                parametersPanel = new ParametersPanel(refactoringUI);
                 resetFilters = false;
             }
             // show parameters dialog
@@ -672,20 +686,20 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
                 return;
             } else if (tempSession.getRefactoringElements().isEmpty() && !scanning && !isQuery) {
                 DialogDescriptor nd = new DialogDescriptor(NbBundle.getMessage(ParametersPanel.class, "MSG_NoPatternsFound"),
-                                        ui.getName(),
+                                        refactoringUI.getName(),
                                         true,
                                         new Object[] {DialogDescriptor.OK_OPTION},
                                         DialogDescriptor.OK_OPTION,
                                         DialogDescriptor.DEFAULT_ALIGN,
-                                        ui.getHelpCtx(),
+                                        refactoringUI.getHelpCtx(),
                                         null);
-                                DialogDisplayer.getDefault().notifyLater(nd);
+                DialogDisplayer.getDefault().notifyLater(nd);
                 return;
             }
-            
+
             session = tempSession;
         }
-        
+
         final RefactoringPanelContainer cont = isQuery ? RefactoringPanelContainer.getUsagesComponent() : RefactoringPanelContainer.getRefactoringComponent();
         cont.makeBusy(true);
         final AtomicInteger size = new AtomicInteger();
@@ -699,19 +713,19 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         stopButton.setVisible(isQuery && showParametersPanel);
         refreshButton.setVisible(!isQuery || !showParametersPanel);
         stopButton.setEnabled(showParametersPanel);
-        final String description = ui.getDescription();
+        final String description = refactoringUI.getDescription();
         setToolTipText("<html>" + description + "</html>"); // NOI18N
         final Collection<RefactoringElement> elements = session.getRefactoringElements();
-        setName(ui.getName());
-        if (ui instanceof RefactoringCustomUI) {
+        setName(refactoringUI.getName());
+        if (refactoringUI instanceof RefactoringCustomUI refactoringCustomUI) {
             if (customComponent==null) {
-                customComponent = ((RefactoringCustomUI) ui).getCustomComponent(elements);
+                customComponent = refactoringCustomUI.getCustomComponent(elements);
             }
             this.left.remove(customComponent);
         }
         final ProgressHandle progressHandle = ProgressHandleFactory.createHandle(NbBundle.getMessage(RefactoringPanel.class, isQuery ? "LBL_PreparingUsagesTree":"LBL_PreparingRefactoringTree"));
         if (currentView == GRAPHICAL) {
-            assert ui instanceof RefactoringCustomUI;
+            assert refactoringUI instanceof RefactoringCustomUI;
             assert customComponent != null;
             this.left.remove(scrollPane);
             this.left.add(customComponent, BorderLayout.CENTER);
@@ -723,13 +737,10 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
             RP.post(new Runnable() {
                 @Override
                 public void run() {
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            setTreeControlsEnabled(false);
-                        }
+                    SwingUtilities.invokeLater(() -> {
+                        setTreeControlsEnabled(false);
                     });
-                    Set<FileObject> fileObjects = new HashSet<FileObject>();
+                    Set<FileObject> fileObjects = new HashSet<>();
                     int errorsNum = 0;
                     if (!isQuery) {
                         for (Iterator iter = elements.iterator(); iter.hasNext(); ) {
@@ -740,13 +751,13 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
                         }
                     }
                     StringBuffer errorsDesc = getErrorDesc(errorsNum, isQuery?size.get():elements.size(), 0, isQuery && sizeIsApproximate.get());
-                    final CheckNode root = new CheckNode(ui, description + errorsDesc.toString() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",ImageUtilities.loadImageIcon("org/netbeans/modules/refactoring/api/resources/" + (isQuery ? "findusages.png" : "refactoring.gif"), false), isQuery);
-                    final Map<Object, CheckNode> nodes = new HashMap<Object, CheckNode>();
-                    
+                    final CheckNode root = new CheckNode(refactoringUI, description + errorsDesc.toString() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",ImageUtilities.loadImageIcon("org/netbeans/modules/refactoring/api/resources/" + (isQuery ? "findusages.png" : "refactoring.gif"), false), isQuery);
+                    final Map<Object, CheckNode> nodes = new HashMap<>();
+
                     if (isQuery && showParametersPanel) {
                         setupInstantTree(root);
                     }
-                    
+
                     if (!isQuery) {
                         progressHandle.start(elements.size()/10);
                     } else {
@@ -780,14 +791,11 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
                                     final boolean finished = session!= null? APIAccessor.DEFAULT.isFinished(session) : true;
                                     final boolean last = !it.hasNext();
                                     if ((occurrences % 10 == 0 && !finished) || last) {
-                                        SwingUtilities.invokeLater(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                if (tree!=null) {
-                                                    root.setNodeLabel(description + getErrorDesc(0, occurrences, hiddenOccurrences, isQuery && sizeIsApproximate.get()));
-                                                    if (last) {
-                                                        tree.repaint();
-                                                    }
+                                        SwingUtilities.invokeLater(() -> {
+                                            if (tree!=null) {
+                                                root.setNodeLabel(description + getErrorDesc(0, occurrences, hiddenOccurrences, isQuery && sizeIsApproximate.get()));
+                                                if (last) {
+                                                    tree.repaint();
                                                 }
                                             }
                                         });
@@ -795,7 +803,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
                                 }
 //                                PositionBounds pb = e.getPosition();
                                 fileObjects.add(e.getParentFile());
-                                
+
                                 if (!isQuery) {
                                     if (i % 10 == 0) {
                                         progressHandle.progress(i / 10);
@@ -805,39 +813,33 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
                         } finally {
                             //[retouche]                        JavaModel.getJavaRepository().endTrans();
                         }
-                       
+
                         //UndoManager.getDefault().watch(editorSupports, RefactoringPanel.this);
                         storeTimeStamps(fileObjects);
-                    } catch (RuntimeException t) {
+                    } catch (RuntimeException | Error t) {
                         cleanupTreeElements();
                         throw t;
-                    } catch (Error e) {
-                        cleanupTreeElements();
-                        throw e;
                     } finally {
                         progressHandle.finish();
                         cont.makeBusy(false);
-                        SwingUtilities.invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                setTreeControlsEnabled(true);
-                                stopButton.setEnabled(false);
-                                stopButton.setVisible(false);
-                                refreshButton.setVisible(true);
-                                if(showParametersPanel) {
-                                    updateFilters(false);
-                                }
+                        SwingUtilities.invokeLater(() -> {
+                            setTreeControlsEnabled(true);
+                            stopButton.setEnabled(false);
+                            stopButton.setVisible(false);
+                            refreshButton.setVisible(true);
+                            if(showParametersPanel) {
+                                updateFilters(false);
                             }
                         });
                     }
-                    
+
                     if (!(isQuery && showParametersPanel)) {
                         root.setNodeLabel(description + getErrorDesc(errorsNum, elements.size(), hidden, false).toString());
                         setupTree(root, showParametersPanel, elements.size());
                     } else if (isQuery && showParametersPanel) {
                         SwingUtilities.invokeLater(() -> expandTreeIfNeeded(showParametersPanel, size.get()));
                     }
-                    
+
                 }
 
                 private StringBuffer getErrorDesc(int errorsNum, int occurencesNum, int hiddenNum, boolean occurencesNumApproximate) throws MissingResourceException {
@@ -886,7 +888,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
             setRefactoringEnabled(false, true);
         }
     }
-    
+
     private void setTreeControlsEnabled(final boolean b) {
         expandButton.setEnabled(b);
         logicalViewButton.setEnabled(b);
@@ -895,33 +897,28 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
             customViewButton.setEnabled(b);
         }
     }
-    
-    
+
+
     private void setupTree(final CheckNode root, final boolean showParametersPanel, final int size) {
-        SwingUtilities.invokeLater(new Runnable() {
+        SwingUtilities.invokeLater(() -> {
+            createTree(root);
+            initDivider();
+            expandTreeIfNeeded(showParametersPanel, size);
 
-            @Override
-            public void run() {
-                createTree(root);
-                initDivider();
-                expandTreeIfNeeded(showParametersPanel, size);
-
-                tree.setSelectionRow(0);
-                setRefactoringEnabled(true, true);
-                if (parametersPanel != null && (Boolean) parametersPanel.getClientProperty(ParametersPanel.JUMP_TO_FIRST_OCCURENCE)) {
-                    selectNextUsage();
-                }
+            tree.setSelectionRow(0);
+            setRefactoringEnabled(true, true);
+            if (parametersPanel != null && (Boolean) parametersPanel.getClientProperty(ParametersPanel.JUMP_TO_FIRST_OCCURENCE)) {
+                selectNextUsage(false);
             }
         });
     }
 
     private void initDivider() {
-        if (splitPane.getDividerLocation() < MIN_DIVIDER_LOCATION) {
-            if (dividerPosMemory > MIN_DIVIDER_LOCATION) {
-                splitPane.setDividerLocation(dividerPosMemory);
-            } else {
-                splitPane.setDividerLocation(0.3);
-            }
+        int dividerLocation = getPreferences().getInt(preferencesKeyForUI(PREF_KEY_DIVIDER_LOCATION), MIN_DIVIDER_LOCATION);
+        if (dividerLocation > MIN_DIVIDER_LOCATION) {
+            splitPane.setDividerLocation(dividerLocation);
+        } else {
+            splitPane.setDividerLocation(0.3);
         }
     }
 
@@ -929,29 +926,29 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         if (showParametersPanel) {
             if (size < MAX_ROWS) {
                 expandAll();
-                selectNextUsage();
+                selectNextUsage(false);
             } else {
                 expandButton.setSelected(false);
             }
         } else {
             if (expandButton.isSelected()) {
                 expandAll();
-                selectNextUsage();
+                selectNextUsage(false);
             } else {
                 expandButton.setSelected(false);
             }
         }
     }
-    
-     private Map<FileObject, Long> timeStamps = new HashMap<FileObject, Long>();
-     
+
+     private final Map<FileObject, Long> timeStamps = new HashMap<>();
+
      private void storeTimeStamps(Set<FileObject> fileObjects) {
          timeStamps.clear();
          for (FileObject fo:fileObjects) {
              timeStamps.put(fo, fo.lastModified().getTime());
          }
      }
-     
+
     /**
      * @return true if timestamps are OK
      */
@@ -967,7 +964,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
             }
         return true;
     }
-     
+
      private Set<FileObject> getModifiedFileObjects() {
          Set<FileObject> result = new HashSet<>();
          for (DataObject dob: DataObject.getRegistry().getModified()) {
@@ -975,7 +972,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
          }
          return result;
      }
-    
+
     private void createTree(TreeNode root) throws MissingResourceException {
         if (tree == null) {
             // add panel with appropriate content
@@ -999,7 +996,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
                 javax.swing.UIManager.getDefaults().getColor("Separator.background")),
                 javax.swing.BorderFactory.createMatteBorder(0, 1, 1, 1,
                 javax.swing.UIManager.getDefaults().getColor("Separator.foreground"))));
-        
+
             RefactoringPanel.this.left.add(scrollPane, BorderLayout.CENTER);
             RefactoringPanel.this.validate();
         } else {
@@ -1011,8 +1008,8 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
             @Override public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
                 Object last = event.getPath().getLastPathComponent();
 
-                if (last instanceof CheckNode) {
-                    ((CheckNode) last).ensureChildrenFilled((DefaultTreeModel) RefactoringPanel.this.tree.getModel());
+                if (last instanceof CheckNode checkNode) {
+                    checkNode.ensureChildrenFilled((DefaultTreeModel) RefactoringPanel.this.tree.getModel());
                 }
             }
 
@@ -1021,22 +1018,18 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
     }
 
     private void setupInstantTree(final CheckNode root) {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                createTree(root);
-                tree.setSelectionRow(0);
-                initDivider();
-                if (refactorButton != null) {
-                    refactorButton.requestFocusInWindow();
-                } else if (tree != null) {
-                    tree.requestFocusInWindow();
-                }
+        SwingUtilities.invokeLater(() -> {
+            createTree(root);
+            tree.setSelectionRow(0);
+            initDivider();
+            if (refactorButton != null) {
+                refactorButton.requestFocusInWindow();
+            } else if (tree != null) {
+                tree.requestFocusInWindow();
             }
         });
-    }    
-    
+    }
+
     void setRefactoringEnabled(boolean enabled, boolean isRefreshing) {
         checkEventThread();
         if (tree != null) {
@@ -1068,7 +1061,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
             jc.setEnabled(false);
         }
     }
-        
+
     private void disableComponents() {
         disableComponent(cancelButton);
         disableComponent(expandButton);
@@ -1081,28 +1074,41 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         disableComponent(refreshButton);
         disableComponent(rerunButton);
         disableComponent(stopButton);
+        disableComponent(previewButton);
         disableComponent(tree);
     }
-    
-    void selectNextUsage() {
-        CheckNodeListener.selectNextPrev(true, isQuery, tree);
+
+    /**
+     * @param enableSourceJump if true and preview is disabled, the
+     * next/previous actions shall jump to the corresponding code location,
+     * this should not happen when the initial tree is opened.
+     */
+    void selectNextUsage(boolean enableSourceJump) {
+        CheckNodeListener.selectNextPrev(true, enableSourceJump && !previewButton.isSelected(), tree);
     }
-    
-    void selectPrevUsage() {
-        CheckNodeListener.selectNextPrev(false, isQuery, tree);
+
+    /**
+     * @param enableSourceJump if true and preview is disabled, the
+     * next/previous actions shall jump to the corresponding code location,
+     * this should not happen when the initial tree is opened.
+     */
+    void selectPrevUsage(boolean enableSourceJump) {
+        CheckNodeListener.selectNextPrev(false, enableSourceJump && !previewButton.isSelected(), tree);
     }
-    
-    private int location;
-    public void storeDividerLocation() {
-        if (splitPane.getRightComponent()!=null) {
-            location = splitPane.getDividerLocation();
+
+    public boolean setPreviewComponent(Component component) {
+        if (component == null) {
+            if (right == null) {
+                return false;
+            }
         }
-    }
-    
-    public void restoreDeviderLocation() {
-        if (splitPane.getRightComponent()!=null) {
-            splitPane.setDividerLocation(location);
+        if (component == null) {
+            right = new JLabel(org.openide.util.NbBundle.getMessage(RefactoringPanel.class, "LBL_Preview_not_Available"), SwingConstants.CENTER);
+        } else {
+            right = component;
         }
+        updatePreviewVisibility();
+        return true;
     }
 
     public boolean isQuery() {
@@ -1121,7 +1127,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
     }
 
     private void updateFilters(boolean reset) {
-        if(!ui.isQuery() || callback != null) {
+        if(!refactoringUI.isQuery() || callback != null) {
             if(filterBar != null) {
                 toolbars.remove(filterBar);
                 filterBar = null;
@@ -1135,7 +1141,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
             filterBar = null;
             filtersManager = null;
         }
-        AbstractRefactoring refactoring = ui.getRefactoring();
+        AbstractRefactoring refactoring = refactoringUI.getRefactoring();
         if(reset) {
             APIAccessor.DEFAULT.resetFiltersDescription(refactoring);
         }
@@ -1156,8 +1162,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
     public static RefactoringPanel getCurrentRefactoringPanel() {
         TopComponent activated = TopComponent.getRegistry().getActivated();
         RefactoringPanel refactoringPanel = null;
-        if (activated instanceof RefactoringPanelContainer) {
-            RefactoringPanelContainer panel = (RefactoringPanelContainer) activated;
+        if (activated instanceof RefactoringPanelContainer panel) {
             refactoringPanel = panel.getCurrentPanel();
         }
         if (refactoringPanel == null) {
@@ -1208,11 +1213,13 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
             } else if (o == customViewButton) {
                 switchToCustomView();
             } else if (o == nextMatch) {
-                selectNextUsage();
+                selectNextUsage(true);
             } else if (o == prevMatch) {
-                selectPrevUsage();
+                selectPrevUsage(true);
             } else if (o == stopButton) {
                 stopSearch();
+            } else if (o == previewButton) {
+                updatePreviewVisibility();
             }
         }
 
@@ -1226,7 +1233,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
             refreshButton.setVisible(true);
         }
         cancelRequest.set(true);
-        ui.getRefactoring().cancelRequest();
+        refactoringUI.getRefactoring().cancelRequest();
     }
 
     /** Processes returned problems from refactoring operations and notifies
@@ -1245,7 +1252,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
                 return false;
             } else {
                 if (JOptionPane.showConfirmDialog(
-                    null, 
+                    null,
                     problem.getMessage() + ' ' + NbBundle.getMessage(ParametersPanel.class, "QST_Continue"),
                     NbBundle.getMessage(ParametersPanel.class, "LBL_Warning"),
                     JOptionPane.YES_NO_OPTION,
@@ -1258,11 +1265,11 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         }
         return true;
     } */
-    
+
     protected void closeNotify() {
         if (fuListener!=null) {
             stopSearch();
-            ui.getRefactoring().removeProgressListener(fuListener);
+            refactoringUI.getRefactoring().removeProgressListener(fuListener);
             fuListener.stop(null);
             fuListener = null;
         }
@@ -1287,7 +1294,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         parametersPanel = null;
         //super.closeNotify();
     }
-    
+
     private void cleanupTreeElements() {
         for (TreeElementFactoryImplementation tefi: Lookup.getDefault().lookupAll(TreeElementFactoryImplementation.class)) {
             tefi.cleanUp();
@@ -1295,7 +1302,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
     }
 
     private static class ProgressL implements ProgressListener {
-        
+
         private final ProgressHandle handle;
         private final Dialog d;
 
@@ -1315,48 +1322,38 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
             d = DialogDisplayer.getDefault().createDialog(desc);
             ((JDialog) d).setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         }
-        
+
         @Override
         public void start(final ProgressEvent event) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    handle.start(event.getCount());
-                    d.setVisible(true);
-                }
-
+            SwingUtilities.invokeLater(() -> {
+                handle.start(event.getCount());
+                d.setVisible(true);
             });
         }
-        
+
         @Override
         public void step(final ProgressEvent event) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        handle.progress(event.getCount());
-                    } catch (Throwable e) {
-                        ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, e);
-                    }
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    handle.progress(event.getCount());
+                } catch (Throwable e) {
+                    ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, e);
                 }
             });
         }
-        
+
         @Override
         public void stop(final ProgressEvent event) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    if (event!=null) {
-                        handle.finish();
-                    }
-                    d.setVisible(false);
-                    d.dispose();
+            SwingUtilities.invokeLater(() -> {
+                if (event!=null) {
+                    handle.finish();
                 }
+                d.setVisible(false);
+                d.dispose();
             });
         }
     }
-   
+
     private class FUListener implements ProgressListener, Cancellable {
 
         private ProgressHandle handle;
@@ -1420,8 +1417,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
     private static class TransferHandlerImpl extends TransferHandler {
         @Override
         protected Transferable createTransferable(JComponent c) {
-            if (c instanceof JTree) {
-                JTree tree = (JTree) c;
+            if (c instanceof JTree tree) {
                 TreePath[] paths = tree.getSelectionPaths();
 
                 if (paths == null || paths.length == 0) {
@@ -1440,8 +1436,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
                         html.append("</ul>"); // NOI18N
                     }
                     Object o = path.getLastPathComponent();
-                    if(o instanceof CheckNode) {
-                        CheckNode node = (CheckNode) o;
+                    if(o instanceof CheckNode node) {
                         String label = node.getLabel();
                         try {
                             html2Text.parse(new StringReader(label));

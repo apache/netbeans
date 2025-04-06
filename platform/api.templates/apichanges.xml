@@ -79,7 +79,7 @@
           <description>
               One can now create project wizards that create new projects
               from Maven archetypes. See the
-              <a href="@TOP@overview-summary.html#html-and-maven">how-to</a>
+              <a href="@TOP@index.html#html-and-maven">how-to</a>
               for more details.
           </description>
           <class package="org.netbeans.api.templates" name="TemplateRegistration"/>
@@ -130,7 +130,7 @@
           <compatibility addition="yes" deletion="no" binary="compatible"
                          source="compatible" deprecation="yes"/>
           <description>
-              One can use <a href="@TOP@/overview-summary.html#javaTargetChooser">targetChooser:java</a>
+              One can use <a href="@TOP@/index.html#javaTargetChooser">targetChooser:java</a>
               to request Java-like target chooser showing java packages.
           </description>
           <issue number="249891"/>
@@ -145,7 +145,7 @@
                          source="compatible" deprecation="yes"/>
           <description>
               One new attribute
-              <a href="@org-netbeans-api-templates@/org/netbeans/api/templates/TemplateRegistration.html#page--">
+              <a href="@org-netbeans-api-templates@/org/netbeans/api/templates/TemplateRegistration.html#page()">
 page()</a>
               to allow usage of HTML based UI driven by Java or JavaScript.
           </description>
@@ -208,7 +208,7 @@ page()</a>
     </head>
     <body>
 
-<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+<p class="overviewlink"><a href="index.html">Overview</a></p>
 
 <h1>Introduction</h1>
 

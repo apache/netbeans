@@ -55,7 +55,7 @@ import org.netbeans.api.java.queries.SourceForBinaryQuery;
  * </div>
  * @see org.netbeans.api.java.queries.SourceForBinaryQuery
  * @see <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/FileOwnerQuery.html">FileOwnerQuery</a>
- * @see <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/Project.html#getLookup--">org.netbeans.api.project.Project#getLookup</a>
+ * @see <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/Project.html#getLookup()">org.netbeans.api.project.Project#getLookup</a>
  * @since org.netbeans.api.java/1 1.4
  */
 public interface SourceForBinaryQueryImplementation {

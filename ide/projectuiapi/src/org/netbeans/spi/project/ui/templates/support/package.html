@@ -57,10 +57,10 @@ or <b>New Project...</b> wizard.
 it's <b>recommended</b> to use the standardized target chooser exposed in
 {@link org.netbeans.spi.project.ui.templates.support.Templates#buildSimpleTargetChooser},
 a similar target chooser offers
-<a href="@org-netbeans-modules-java-project-ui@/org/netbeans/spi/java/project/support/ui/templates/JavaTemplates.html#createPackageChooser-org.netbeans.api.project.Project-org.netbeans.api.project.SourceGroup:A-"><code>JavaTemplates.createPackageChooser(...)</code></a>
+<a href="@org-netbeans-modules-java-project-ui@/org/netbeans/spi/java/project/support/ui/templates/JavaTemplates.html#createPackageChooser(org.netbeans.api.project.Project,org.netbeans.api.project.SourceGroup[])"><code>JavaTemplates.createPackageChooser(...)</code></a>
 for Java-oriented projects.
 The project type also can use a <code>InstantiatingIterator</code> published by other module,
-i.e. <a href="@org-netbeans-modules-java-project-ui@/org/netbeans/spi/java/project/support/ui/templates/JavaTemplates.html#createJavaTemplateIterator--"><code>JavaTemplates.createJavaTemplateIterator()</code></a>
+i.e. <a href="@org-netbeans-modules-java-project-ui@/org/netbeans/spi/java/project/support/ui/templates/JavaTemplates.html#createJavaTemplateIterator()"><code>JavaTemplates.createJavaTemplateIterator()</code></a>
 useful for Java-oriented templates in case of no needs to own customization.
 The last possibility is declaration no iterator, in this case will be used a generic iterator
 useful for simple file types without any specific needs, i.e. <code>properties file</code>.<br>

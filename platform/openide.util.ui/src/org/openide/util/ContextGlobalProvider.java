@@ -28,7 +28,7 @@ package org.openide.util;
  * in current state it is reasonable to put there all currently active
  * <a href="@org-openide-nodes@/org/openide/nodes/Node.html">Node</a>, their cookies and {@link javax.swing.ActionMap}.
  * By default this interface is implemented by window system to delegate
- * to currently activated <a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getLookup--">TopComponent's  lookup</a>.
+ * to currently activated <a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getLookup()">TopComponent's  lookup</a>.
  * <p>
  * There is an external FAQ entry describing how to
  * <a href="https://netbeans.apache.org/wiki/DevFaqAddGlobalContext">add content to

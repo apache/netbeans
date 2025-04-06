@@ -87,7 +87,7 @@
         <p>
             Often many people require ability to create a "clever" template - e.g.
             write piece of simple text and at the time of its 
-            <a href="@TOP@/org/netbeans/api/templates/FileBuilder.html#createFromTemplate-org.openide.filesystems.FileObject-org.openide.filesystems.FileObject-java.lang.String-java.util.Map-org.netbeans.api.templates.FileBuilder.Mode-">
+            <a href="@TOP@/org/netbeans/api/templates/FileBuilder.html#createFromTemplate(org.openide.filesystems.FileObject,org.openide.filesystems.FileObject,java.lang.String,java.util.Map,org.netbeans.api.templates.FileBuilder.Mode)">
                 processing
             </a> 
             do some advanced changes to it using either 
@@ -128,7 +128,7 @@
      <usecase id="script" name="Using Scripting and Templating Languages" >
         <a id="script"></a>
         <p>
-        There is a built in <a href="@org-netbeans-api-scripting@/overview-summary.html">support for scripting languages</a>
+        There is a built in <a href="@org-netbeans-api-scripting@/index.html">support for scripting languages</a>
         in the NetBeans Platform. If a template is annotated with
         <api name="javax.script.ScriptEngine" category="official" group="property" type="export">
             a property that can be associated to templates that either should

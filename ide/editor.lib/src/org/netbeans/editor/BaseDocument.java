@@ -615,7 +615,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
 // XXX: formatting cleanup
 //    /**
 //     * @deprecated Please use Editor Indentation API instead, for details see
-//     *   <a href="@org-netbeans-modules-editor-indent@/overview-summary.html">Editor Indentation</a>.
+//     *   <a href="@org-netbeans-modules-editor-indent@/index.html">Editor Indentation</a>.
 //     */
 //    public Formatter getLegacyFormatter() {
 //        if (formatter == null) {
@@ -631,7 +631,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
 //     * Gets the formatter for this document.
 //     *
 //     * @deprecated Please use Editor Indentation API instead, for details see
-//     *   <a href="@org-netbeans-modules-editor-indent@/overview-summary.html">Editor Indentation</a>.
+//     *   <a href="@org-netbeans-modules-editor-indent@/index.html">Editor Indentation</a>.
 //     */
 //    public Formatter getFormatter() {
 //        Formatter f = getLegacyFormatter();
@@ -641,7 +641,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
 
     /**
      * @deprecated Please use Lexer instead, for details see
-     *   <a href="@org-netbeans-modules-lexer@/overview-summary.html">Lexer</a>.
+     *   <a href="@org-netbeans-modules-lexer@/index.html">Lexer</a>.
      */
     @Deprecated
     public SyntaxSupport getSyntaxSupport() {
@@ -1565,7 +1565,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
      *
      * @see #getTabSize()
      * @deprecated Please use Editor Indentation API instead, for details see
-     *   <a href="@org-netbeans-modules-editor-indent@/overview-summary.html">Editor Indentation</a>.
+     *   <a href="@org-netbeans-modules-editor-indent@/index.html">Editor Indentation</a>.
      */
     @Deprecated
     public int getShiftWidth() {

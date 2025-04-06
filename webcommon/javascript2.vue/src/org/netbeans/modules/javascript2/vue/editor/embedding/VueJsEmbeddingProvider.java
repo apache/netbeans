@@ -26,65 +26,58 @@ import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.javascript2.vue.editor.VueLanguage;
+import static org.netbeans.modules.javascript2.vue.editor.embedding.VueJsEmbeddingProvider.TARGET_MIME_TYPE;
 import org.netbeans.modules.javascript2.vue.editor.lexer.VueTokenId;
 import org.netbeans.modules.parsing.api.Embedding;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.spi.EmbeddingProvider;
 
 /**
- * this will enable braces matches of html elements
- *
+ * 
+ * 
  * @author bhaidu
  */
 @EmbeddingProvider.Registration(
         mimeType = VueLanguage.MIME_TYPE,
-        targetMimeType = "text/html")
-public class VueHtmlEmbeddingProvider extends EmbeddingProvider {
-
-    public static final String FILLER = " "; //NOI18N
-    public static final String TARGET_MIME_TYPE = "text/html"; //NOI18N
+        targetMimeType = TARGET_MIME_TYPE)
+public class VueJsEmbeddingProvider extends EmbeddingProvider {
+    public static final String TARGET_MIME_TYPE = "text/javascript"; //NOI18N
 
     @Override
-    public List<Embedding> getEmbeddings(final Snapshot snapshot) {
+    public List<Embedding> getEmbeddings(Snapshot snapshot) {
         TokenHierarchy<?> tokenHierarchy = snapshot.getTokenHierarchy();
         TokenSequence<?> ts = tokenHierarchy.tokenSequence();
-
+        
         if (ts == null || !ts.isValid()) {
             return Collections.emptyList();
         }
+        
         ts.moveStart();
+        
         List<Embedding> embeddings = new ArrayList<>();
-
-        try {
-            while (ts.moveNext()) {
-                Token<?> t = ts.token();
-                TokenId id = t.id();
-
-                if (id.equals(VueTokenId.HTML)) {
-                    embeddings.add(snapshot.create(ts.offset(), t.length(), TARGET_MIME_TYPE));
-                } else if (t.text() != null) {
-                    //issue with bracematcher
-                    String fake = new String(new char[t.text().toString().length()]).replace("\0", FILLER); //NOI18N
-                    embeddings.add(snapshot.create(fake, TARGET_MIME_TYPE));
-                }
+        
+        while (ts.moveNext()) {
+            Token<?> token = ts.token();
+            TokenId id = token.id();
+            if (id.equals(VueTokenId.JAVASCRIPT)) {
+                embeddings.add(snapshot.create(ts.offset(), token.length(), TARGET_MIME_TYPE));
             }
-        } catch (Exception ex) {
-            return Collections.emptyList();
         }
 
         if (embeddings.isEmpty()) {
             return Collections.emptyList();
-        } else {
-            return Collections.singletonList(Embedding.create(embeddings));
         }
+        return Collections.singletonList(Embedding.create(embeddings));
+        
     }
 
     @Override
     public int getPriority() {
-        return 210;
+        return 220;
     }
 
     @Override
     public void cancel() {
+        // nothing so far
     }
 }

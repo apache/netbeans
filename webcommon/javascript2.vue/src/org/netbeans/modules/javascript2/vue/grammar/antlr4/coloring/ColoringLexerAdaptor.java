@@ -27,10 +27,11 @@ import org.antlr.v4.runtime.Lexer;
  */
 public abstract class ColoringLexerAdaptor extends Lexer {
 
-    private boolean insideTemplateTag = false;
-    private boolean insideStyleTag = false;
+    public static final String LANG_ATTR = "lang";  //NOI18N
     private boolean attrQuoteOpened = false;
     private boolean varInterpolationOpened = false;
+    private String scriptLanguage = null;
+    private String styleLanguage = null;
 
     public ColoringLexerAdaptor(CharStream input) {
         super(input);
@@ -38,27 +39,11 @@ public abstract class ColoringLexerAdaptor extends Lexer {
 
     @Override
     public void reset() {
-        insideTemplateTag = false;
-        insideStyleTag = false;
         attrQuoteOpened = false;
         varInterpolationOpened = false;
+        scriptLanguage = null;
+        styleLanguage = null;
         super.reset();
-    }
-
-    public void setInsideTemplateTag(boolean state) {
-        insideTemplateTag = state;
-    }
-
-    public boolean isInsideTemplateTag() {
-        return insideTemplateTag;
-    }
-
-    public void setInsideStyleTag(boolean state) {
-        insideStyleTag = state;
-    }
-
-    public boolean isInsideStyleTag() {
-        return insideStyleTag;
     }
 
     public void setAttrQuoteState(boolean state) {
@@ -75,5 +60,44 @@ public abstract class ColoringLexerAdaptor extends Lexer {
 
     public boolean isVarInterpolationOpened() {
         return varInterpolationOpened;
+    }
+
+    public void setScriptLanguage(String lang) {
+        scriptLanguage = lang;
+    }
+
+    public void setScriptLanguage() {
+        scriptLanguage = extractLangFromInput();
+    }
+
+    public String getScriptLanguage() {
+        return scriptLanguage;
+    }
+
+    public void setStyleLanguage(String lang) {
+        styleLanguage = lang;
+    }
+
+    public void setStyleLanguage() {
+        styleLanguage = extractLangFromInput();
+    }
+
+    public String getStyleLanguage() {
+        return styleLanguage;
+    }
+
+    private String extractLangFromInput() {
+        String input = this.getText();
+        String langAttrEq = LANG_ATTR + "=";  //NOI18N
+        if (input == null || !input.startsWith(langAttrEq)) {
+            return null;
+        }
+        String langValue = input.substring(langAttrEq.length());
+        //check if only quotes
+        if (langValue.length() == 2) {
+            return null;
+        }
+
+        return langValue.substring(1, langValue.length() - 1);
     }
 }

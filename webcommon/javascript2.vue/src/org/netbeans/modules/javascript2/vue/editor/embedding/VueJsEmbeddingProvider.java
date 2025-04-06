@@ -26,7 +26,7 @@ import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.javascript2.vue.editor.VueLanguage;
-import static org.netbeans.modules.javascript2.vue.editor.embedding.VueCssEmbeddingProvider.TARGET_MIME_TYPE;
+import static org.netbeans.modules.javascript2.vue.editor.embedding.VueJsEmbeddingProvider.TARGET_MIME_TYPE;
 import org.netbeans.modules.javascript2.vue.editor.lexer.VueTokenId;
 import org.netbeans.modules.parsing.api.Embedding;
 import org.netbeans.modules.parsing.api.Snapshot;
@@ -36,9 +36,9 @@ import org.netbeans.modules.parsing.spi.EmbeddingProvider;
 @EmbeddingProvider.Registration(
         mimeType = VueLanguage.MIME_TYPE,
         targetMimeType = TARGET_MIME_TYPE)
-public class VueCssEmbeddingProvider extends EmbeddingProvider {
+public class VueJsEmbeddingProvider extends EmbeddingProvider {
 
-    public static final String TARGET_MIME_TYPE = "text/css"; //NOI18N
+    public static final String TARGET_MIME_TYPE = "text/javascript"; //NOI18N
 
     @Override
     public List<Embedding> getEmbeddings(Snapshot snapshot) {
@@ -56,7 +56,7 @@ public class VueCssEmbeddingProvider extends EmbeddingProvider {
         while (ts.moveNext()) {
             Token<?> token = ts.token();
             TokenId id = token.id();
-            if (id.equals(VueTokenId.CSS)) {
+            if (id.equals(VueTokenId.JAVASCRIPT)) {
                 embeddings.add(snapshot.create(ts.offset(), token.length(), TARGET_MIME_TYPE));
             }
         }

@@ -1,0 +1,21 @@
+
+    //the less file that produced the above//variables
+    @size: 1em;
+    p{
+        background-color: red;
+        &.greeting {
+            padding: @size;
+            background-color: blue;
+            a {
+              padding: @size * 5
+            }
+        }
+        &.footer {
+            padding: @size * 4;
+            background-color: yellow;
+            a {
+              text-decoration: none;
+              padding: @size / 2;
+            }
+        }
+    }

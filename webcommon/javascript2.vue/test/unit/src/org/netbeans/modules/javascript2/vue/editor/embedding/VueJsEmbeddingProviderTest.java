@@ -18,21 +18,11 @@
  */
 package org.netbeans.modules.javascript2.vue.editor.embedding;
 
-import java.util.List;
-import org.netbeans.lib.lexer.test.TestLanguageProvider;
-import org.netbeans.modules.javascript2.vue.editor.VueTestBase;
-import org.netbeans.modules.parsing.api.Embedding;
-import org.netbeans.modules.parsing.api.Source;
-import org.netbeans.modules.parsing.spi.EmbeddingProvider;
-import org.openide.util.test.MockLookup;
-
 /**
  *
- * @author Ondrej Brejla <obrejla@netbeans.org>
+ * @author bhaidu
  */
-public class VueJsEmbeddingProviderTest extends VueTestBase {
-
-    public static final String JS_SOURCE_ID = "classpath/js-source"; // NOI18N
+public class VueJsEmbeddingProviderTest extends EmbeddingTestBase {
 
     public VueJsEmbeddingProviderTest(String testName) {
         super(testName);
@@ -47,22 +37,6 @@ public class VueJsEmbeddingProviderTest extends VueTestBase {
 
     private void checkJsEmbedding(final String relFilePath) throws Exception {
         checkEmbedding(relFilePath, new VueJsEmbeddingProvider());
-    }
-
-    private void checkEmbedding(final String relFilePath, EmbeddingProvider embeddingProvider) throws Exception {
-        assertNotNull(embeddingProvider);
-        String testedFilePath = "testfiles/embedding/" + relFilePath + ".vue";
-        Source testSource = getTestSource(getTestFile(testedFilePath));
-        List<Embedding> embeddings = embeddingProvider.getEmbeddings(testSource.createSnapshot());
-        assertDescriptionMatches(testedFilePath, serializableEmbeddings(embeddings), true, ".embedding");
-    }
-
-    private String serializableEmbeddings(List<Embedding> embeddings) {
-        StringBuilder sb = new StringBuilder();
-        for (Embedding embedding : embeddings) {
-            sb.append(embedding.getSnapshot().getText());
-        }
-        return sb.toString();
     }
 
     public void testJsEmbedding_01() throws Exception {

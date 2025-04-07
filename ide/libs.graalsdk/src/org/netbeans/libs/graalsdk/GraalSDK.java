@@ -25,7 +25,7 @@ import org.graalvm.polyglot.Engine;
 import org.graalvm.polyglot.HostAccess;
 
 /**
- * Integration of <a href="@org-netbeans-api-scripting@/overview-summary.html">NetBeans Scripting</a>
+ * Integration of <a href="@org-netbeans-api-scripting@/index.html">NetBeans Scripting</a>
  * API and GraalVM; see the {@link org.netbeans.libs.graalsdk tutorial} for more details.
  * <h2>Security</h2>
  * <p>
@@ -58,7 +58,7 @@ import org.graalvm.polyglot.HostAccess;
  * {@link org.graalvm.polyglot} package directly. Consult {@link Context} and {@link Engine}
  * classes as a starting points when
  * accessing the Graal SDK directly. Preferably use only if the 
- * <a href="@org-netbeans-api-scripting@/overview-summary.html">NetBeans Scripting</a>
+ * <a href="@org-netbeans-api-scripting@/index.html">NetBeans Scripting</a>
  * API wrapper isn't good enough.
  */
 public final class GraalSDK {

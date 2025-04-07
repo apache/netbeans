@@ -858,7 +858,7 @@ about used templates.
         Since version 7.44 one can attach <code>property-prefix</code> attribute
         to every folder. Then all the file attributes are scanned and if some 
         of them start with the specified prefix they are placed a 
-        <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JComponent.html#putClientProperty-java.lang.Object-java.lang.Object-">
+        <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JComponent.html#putClientProperty(java.lang.Object,java.lang.Object)">
         client
         properties</a> on the <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JMenu.html">JMenu</a>
         instance (after stripping the prefix off).

@@ -854,7 +854,7 @@
  <answer id="lookup-lookup">
   <p>
    Yes.
-   <a href="@org-openide-util-lookup@/org/openide/util/lookup/Lookups.html#forPath-java.lang.String-">Lookups.forPath--</a>.
+   <a href="@org-openide-util-lookup@/org/openide/util/lookup/Lookups.html#forPath(java.lang.String)">Lookups.forPath--</a>.
    The module search for all classes implementing
    <a href="@TOP@org/netbeans/spi/server/ServerInstanceProvider.html">ServerInstanceProvider</a>
    and

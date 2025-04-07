@@ -74,7 +74,7 @@ public final class J2eeArchetypeFactory {
         // Such situation might happened if user wants to create project with server that
         // doesn't support any of EE version we supported in NetBeans (e.g. Tomcat 5.5)
         if (profile == null) {
-            profile = Profile.J2EE_14;
+            profile = Profile.JAKARTA_EE_8_FULL;
         }
         return getProvider(projectType).getArchetypeFor(profile);
     }

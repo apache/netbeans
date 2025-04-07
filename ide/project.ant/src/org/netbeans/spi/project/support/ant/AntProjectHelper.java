@@ -1052,7 +1052,7 @@ public final class AntProjectHelper {
      * A file is considered out of date if there is no file represented by the
      * matching target pattern (which has the same format), or the target file is older
      * than the source file, or the source file is modified as per
-     * <a href="@org-openide-loaders@/org/openide/loaders/DataObject.html#isModified--" >DataObject#isModified()</a>.
+     * <a href="@org-openide-loaders@/org/openide/loaders/DataObject.html#isModified()" >DataObject#isModified()</a>.
      * An attempt is made to fire changes from the status object whenever the result
      * should change from one call to the next.
      * <p>

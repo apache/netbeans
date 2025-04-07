@@ -42,24 +42,24 @@ our sources.
     {@link java.util.ResourceBundle ResourceBundle}.
     </li>
 
-    <li><a href="../Task.html"><code>Task</code></a> and especially
-    <a href="../RequestProcessor.html"><code>RequestProcessor</code></a> which
+    <li>{@link org.openide.util.Task Task} and especially
+    {@link org.openide.util.RequestProcessor RequestProcessor} which
     is our way to manage pools of thread workers and execute asynchronous
     computations.
     </li>
 
     <li>
-    <a href="../BaseUtilities.html"><code>BaseUtilities</code></a> which contain
+    {@link org.openide.util.BaseUtilities BaseUtilities} which contain
     a lot of methods of possible interest. For example
-    <a href="../BaseUtilities.html#topologicalSort-java.util.Collection-java.util.Map-"><code>topologicalSort</code></a>,
-    <a href="../BaseUtilities.html#activeReferenceQueue--"><code>activeReferenceQueue</code></a>,
-    <a href="../BaseUtilities.html#translate-java.lang.String-"><code>translate</code></a>.
+    {@link org.openide.util.BaseUtilities#topologicalSort(java.util.Collection,java.util.Map) topologicalSort },
+    {@link org.openide.util.BaseUtilities#activeReferenceQueue() activeReferenceQueue },
+    {@link org.openide.util.BaseUtilities#translate(java.lang.String) translate }.
     </li>
 
     <li>
-    <a href="../Enumerations.html"><code>Enumerations</code></a> provide
+    {@link org.openide.util.Enumerations Enumerations} provide
     enhacened support for manipulation with 
-    <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/util/Enumeration.html">Enumeration</a>s and especially
+    {@link java.util.Enumeration Enumeration}s and especially
     their on-demand generation.
     </li>
 </ol>
@@ -69,11 +69,11 @@ our sources.
 
 <p>For lookup, this centers around
 
-<a href="@org-openide-util-lookup@/org/openide/util/Lookup.html"><code>Lookup</code></a>
+{@link org.openide.util.Lookup Lookup }
 
 and helper implementations in
 
-<a href="@org-openide-util-lookup@/org/openide/util/lookup/package-summary.html"><code>org.openide.util.lookup</code></a>.
+{@link org.openide.util.lookup org.openide.util.lookup }.
 
 
 
@@ -402,7 +402,7 @@ implementation class.</p>
 
 The client side of the lookup system centers around one class,
 
-<a href="@org-openide-util-lookup@/org/openide/util/Lookup.html"><code>Lookup</code></a>.
+{@link org.openide.util.Lookup Lookup }.
 
 In the simplest usage, all that is needed is to get some single
 instance of a given class (or subclass). For example, if some kind of
@@ -411,7 +411,7 @@ wish to find the implementation of it, you
 may simply use:
 
 <pre>
-<span class="type">MyService</span> <span class="variable-name">impl</span> = (<span class="type">MyService</span>)Lookup.getDefault().<a href="@org-openide-util-lookup@/org/openide/util/Lookup.html#lookup-java.lang.Class-">lookup</a>(MyService.<span class="keyword">class</span>);
+<span class="type">MyService</span> <span class="variable-name">impl</span> = (<span class="type">MyService</span>)Lookup.getDefault().{@link org.openide.util.Lookup#lookup(java.lang.Class) lookup }(MyService.<span class="keyword">class</span>);
 <span class="keyword">if</span> (impl == <span class="constant">null</span>) <span class="comment">/* nothing registered */</span> ...
 impl.useIt();
 </pre>
@@ -498,7 +498,7 @@ system options).
 
 However for this purpose it is simpler to use the static finder method
 
-<a href="@org-openide-util-ui@/org/openide/util/SharedClassObject.html#findObject-java.lang.Class-boolean-"><code>SharedClassObject.findObject(Class,&nbsp;true)</code></a>
+<a href="@org-openide-util-ui@/org/openide/util/SharedClassObject.html#findObject(java.lang.Class,boolean)"><code>SharedClassObject.findObject(Class,&nbsp;true)</code></a>
 
 which is guaranteed to find the singleton whether it was registered in
 lookup or not (if necessary it will first
@@ -512,12 +512,12 @@ registered implementation of a service. In such a case you use a more
 general method:
 
 <pre>
-<span class="type"><a href="@org-openide-util-lookup@/org/openide/util/Lookup.Template.html">Lookup.Template</a></span> <span class="variable-name">templ</span> = <span class="keyword">new</span> <span class="type">Lookup.Template</span>(MyService.<span class="keyword">class</span>);
-<span class="keyword">final</span> <span class="type"><a href="@org-openide-util-lookup@/org/openide/util/Lookup.Result.html">Lookup.Result</a></span> <span class="variable-name">result</span> = Lookup.getDefault().lookup(templ);
+<span class="type">{@link org.openide.util.Lookup.Template Lookup.Template }</span> <span class="variable-name">templ</span> = <span class="keyword">new</span> <span class="type">Lookup.Template</span>(MyService.<span class="keyword">class</span>);
+<span class="keyword">final</span> <span class="type">{@link org.openide.util.Lookup.Result Lookup.Result }</span> <span class="variable-name">result</span> = Lookup.getDefault().lookup(templ);
 <span class="type">Collection</span> <span class="variable-name">impls</span> = result.allInstances(); <span class="comment">// Collection&lt;MyService&gt;
 // use Java Collections API to get iterator, ...
 // Pay attention to subsequent changes in the result.
-</span>result.addLookupListener(<span class="keyword">new</span> <span class="type"><a href="@org-openide-util-lookup@/org/openide/util/LookupListener.html">LookupListener</a></span>() {
+</span>result.addLookupListener(<span class="keyword">new</span> <span class="type">{@link org.openide.util.LookupListener LookupListener }</span>() {
     <span class="keyword">public</span> <span class="type">void</span> <span class="function-name">resultChanged</span>(<span class="type">LookupEvent</span> <span class="variable-name">ev</span>) {
         <span class="comment">// Now it is different.
 </span>        <span class="type">Collection</span> <span class="variable-name">impls2</span> = result.allInstances();
@@ -565,7 +565,7 @@ full state of the instance itself, which must be stored.
 <span class="type">Lookup.Result</span> <span class="variable-name">result</span> = Lookup.getDefault().lookup(templ);
 <span class="type">Iterator</span> <span class="variable-name">it</span> = result.allItems().iterator();
 <span class="keyword">while</span> (it.hasNext()) {
-    <span class="type"><a href="@org-openide-util-lookup@/org/openide/util/Lookup.Item.html">Lookup.Item</a></span> <span class="variable-name">item</span> = (<span class="type">Lookup.Item</span>)it.next();
+    <span class="type">{@link org.openide.util.Lookup.Item Lookup.Item }</span> <span class="variable-name">item</span> = (<span class="type">Lookup.Item</span>)it.next();
     <span class="type">String</span> <span class="variable-name">displayName</span> = item.getDisplayName();
     <span class="keyword">if</span> (<span class="comment">/* user accepts displayName as the right one */</span>) {
         <span class="type">MyService</span> <span class="variable-name">instance</span> = (<span class="type">MyService</span>)item.getInstance();
@@ -577,7 +577,7 @@ full state of the instance itself, which must be stored.
 }
 <span class="comment">// later...
 </span><span class="type">String</span> <span class="variable-name">storedID</span> = someSettings.getChosenService();
-<span class="type">Lookup.Template</span> <span class="variable-name">templ</span> = <span class="keyword">new</span> <span class="type"><a href="@org-openide-util-lookup@/org/openide/util/Lookup.Template.html#Template-java.lang.Class-java.lang.String-java.lang.Object-">Lookup.Template</a></span>(MyService.<span class="keyword">class</span>, storedID, <span class="constant">null</span>);
+<span class="type">Lookup.Template</span> <span class="variable-name">templ</span> = <span class="keyword">new</span> <span class="type">{@link org.openide.util.Lookup.Template#Template(java.lang.Class,java.lang.String,java.lang.Object) Lookup.Template }</span>(MyService.<span class="keyword">class</span>, storedID, <span class="constant">null</span>);
 <span class="type">Iterator</span> <span class="variable-name">it</span> = Lookup.getDefault().lookup(templ).allInstances().iterator();
 <span class="keyword">if</span> (! it.hasNext()) <span class="comment">/* failed to find it... */</span>
 <span class="type">MyService</span> <span class="variable-name">instance</span> = (<span class="type">MyService</span>)it.next();
@@ -615,7 +615,7 @@ with XML files</a>.
 <p>The simplest way to create a fresh lookup is to base it on other
 existing ones.
 
-<a href="@org-openide-util-lookup@/org/openide/util/lookup/ProxyLookup.html"><code>ProxyLookup</code></a>
+{@link org.openide.util.lookup.ProxyLookup ProxyLookup }
 
 accepts a list of other lookup implementations (in the constructor and
 also changeable later). The results it provides are constructed by
@@ -627,7 +627,7 @@ merging together the results of the delegate lookups.
 If you want to use the common mechanism of finding instances in
 folders (or subfolders) and serving these as the results,
 
-<a href="@org-openide-util-lookup@/org/openide/util/lookup/Lookups.html#forPath-java.lang.String-">Lookups.forPath(String)</a>
+[@link org.openide.util.lookup.Lookups#forPath(java.lang.String Lookups.forPath(String) }
 
 makes this possible: you need only provide a name of a folder to look in, and
 use
@@ -677,7 +677,7 @@ implementation into <code>META-INF/namedservices/my/xml/app/data/javax.xml.parse
 <p>The most powerful way to provide a lookup is to directly define
 what instances and items it should provide, by subclassing. For this,
 
-<a href="@org-openide-util-lookup@/org/openide/util/lookup/AbstractLookup.html"><code>AbstractLookup</code></a>
+{@link org.openide.util.lookup.AbstractLookup AbstractLookup }
 
 is recommended as it is easiest to use.
 
@@ -685,18 +685,18 @@ is recommended as it is easiest to use.
 public constructor (in which case you need not subclass it). Here you
 provide an
 
-<a href="@org-openide-util-lookup@/org/openide/util/lookup/AbstractLookup.Content.html"><code>AbstractLookup.Content</code></a>
+{@link org.openide.util.lookup.AbstractLookup.Content AbstractLookup.Content }
 
 object which you have created and hold on to privately, and which
 keeps track of instances and permits them to be registered and
 deregistered. Often
 
-<a href="@org-openide-util-lookup@/org/openide/util/lookup/InstanceContent.html"><code>InstanceContent</code></a>
+{@link org.openide.util.lookup.InstanceContent InstanceContent }
 
 is used as the content implementation. To add something to the lookup,
 simply use
 
-<a href="@org-openide-util-lookup@/org/openide/util/lookup/InstanceContent.html#add-java.lang.Object-"><code>add(Object)</code></a>
+{@link org.openide.util.lookup.InstanceContent#add(java.lang.Object) add(Object) }
 
 (and <code>remove(Object)</code> for the reverse). These may be called
 at any time and will update the set of registered instances (firing
@@ -706,7 +706,7 @@ result changes as needed).
 lookup, but there is some cheap "key" which can easily generate it,
 you may instead register the key by passing in an
 
-<a href="@org-openide-util-lookup@/org/openide/util/lookup/InstanceContent.Convertor.html"><code>InstanceContent.Convertor</code></a>.
+{@link org.openide.util.lookup.InstanceContent.Convertor InstanceContent.Convertor }.
 
 This convertor translates the key to the real instance that the lookup
 client sees, if and when needed. For example, if you have a long list
@@ -867,7 +867,7 @@ instead).</p>
 <li>In the common case of <code>SystemOption</code>, you may simply
 call
 
-<a href="@org-openide-util-ui@/org/openide/util/SharedClassObject.html#findObject-java.lang.Class-boolean-"><code>SharedClassObject.findObject(Class,&nbsp;true)</code></a>
+<a href="@org-openide-util-ui@/org/openide/util/SharedClassObject.html#findObject(java.lang.Class,boolean)"><code>SharedClassObject.findObject(Class,&nbsp;true)</code></a>
 
 which will either provide a previously initialized singleton, or find
 the setting in lookup if possible and read any customized state before

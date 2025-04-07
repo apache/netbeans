@@ -81,7 +81,7 @@ public abstract class ProjectOpenedHook {
      * Update build scripts using
      * <a href="@org-netbeans-modules-project-ant@/org/netbeans/spi/project/support/ant/GeneratedFilesHelper.html#refreshBuildScript(java.lang.String,java.net.URL,boolean)"><code>GeneratedFilesHelper.refreshBuildScript(...)</code></a>.
      * </p></li>
-     * <li><p>Call <a href="@org-netbeans-api-java-classpath@/org/netbeans/api/java/classpath/GlobalPathRegistry.html#register(java.lang.String,org.netbeans.api.java.classpath.ClassPath[])"><code>GlobalPathRegistry.register(...)</code></a>
+     * <li><p>Call <a href="@org-netbeans-api-java-classpath@/org/netbeans/api/java/classpath/GlobalPathRegistry.html#register(java.lang.String,org.netbeans.api.java.classpath.ClassPath%5B%5D)"><code>GlobalPathRegistry.register(...)</code></a>
      * with source, compile, and boot paths known to the project.</p></li>
      * <li><p>Write property <code>user.properties.file</code> to <code>private.properties</code>
      * with absolute file path of the <code>build.properties</code> from 
@@ -105,7 +105,7 @@ public abstract class ProjectOpenedHook {
      * way (e.g. using
      * {@link org.netbeans.spi.project.AuxiliaryConfiguration}).
      * </p></li>
-     * <li><p>Call <a href="@org-netbeans-api-java-classpath@/org/netbeans/api/java/classpath/GlobalPathRegistry.html#unregister(java.lang.String,org.netbeans.api.java.classpath.ClassPath[])"><code>GlobalPathRegistry.unregister(...)</code></a>
+     * <li><p>Call <a href="@org-netbeans-api-java-classpath@/org/netbeans/api/java/classpath/GlobalPathRegistry.html#unregister(java.lang.String,org.netbeans.api.java.classpath.ClassPath%5B%5D)"><code>GlobalPathRegistry.unregister(...)</code></a>
      * with the same paths are were previously registered.</p></li>
      * </ul>
      * </div>

@@ -22,11 +22,11 @@
 <html>
 <head>
 <title>Modules API</title>
-<link rel="stylesheet" href="../../../../prose.css" type="text/css">
+<link rel="stylesheet" href="@TOP@/resource-files/prose.css" type="text/css">
 </head>
 <body>
 
-<p class="overviewlink"><a href="../../../../overview-summary.html">Overview</a></p>
+<p class="overviewlink"><a href="@TOP@/index.html">Overview</a></p>
 
 <h1>Javadoc</h1>
 
@@ -36,7 +36,7 @@ Javadoc,
 
 particularly that for the
 
-<a href="../ModuleInstall.html"><code>ModuleInstall</code></a>
+{@link org.openide.modules.ModuleInstall ModuleInstall }
 
 class. Other classes in the package are generally not useful to module
 authors.
@@ -293,11 +293,11 @@ only handle the exceptional parts.
 
 <p>To use a main install class, just extend the
 
-<a href="../ModuleInstall.html"><code>ModuleInstall</code></a>
+{@link org.openide.modules.ModuleInstall ModuleInstall }
 
 base class. Your class must be able to be
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/Beans.html#instantiate-java.lang.ClassLoader-java.lang.String-">instantiated as a JavaBean</a>.
+{@link java.beans.Beans#instantiate(java.lang.ClassLoader,java.lang.String) instantiated as a JavaBean}.
 
 There are several methods which you may override, and may do anything
 which is required to make the module cleanly enter and exit NetBeans.</p>
@@ -312,8 +312,8 @@ import org.openide.modules.ModuleInstall;
 import org.openide.filesystems.FileUtil;
 import java.net.*;
 
-public class ModuleHandler extends <a href="../ModuleInstall.html">ModuleInstall</a> {
-  public void <a href="../ModuleInstall.html#installed--">installed</a>() {
+public class ModuleHandler extends {@link org.openide.modules.ModuleInstall ModuleInstall } {
+  public void {@link org.openide.modules.ModuleInstall#installed() installed }() {
     // This module has been installed for the first time! Notify authors.
     HttpURLConnection conn = (HttpURLConnection)
       (new URL ("http://www.modulemakers.com/clip_disp/installed.cgi").openConnection ());
@@ -324,15 +324,15 @@ public class ModuleHandler extends <a href="../ModuleInstall.html">ModuleInstall
   }
 
   // Nothing special required here.
-  // public void <a href="../ModuleInstall.html#restored--">restored</a>() {
+  // public void {@link org.openide.modules.ModuleInstall#restored() restored }() {
   // }
 
   // Do not need to do anything special on uninstall.
   // Tools action will be removed automatically.
-  // public void <a href="../ModuleInstall.html#uninstalled--">uninstalled</a>() {
+  // public void {@link org.openide.modules.ModuleInstall#uninstalled() uninstalled }() {
   // }
 
-  public boolean <a href="../ModuleInstall.html#closing--">closing</a>() {
+  public boolean {@link org.openide.modules.ModuleInstall#closing() closing}() {
     // Ask the user to save any open, modified clipboard contents.
     // If the user selects "Cancel" on one of these dialogs, don't exit yet!
     return DisplayClipboardAction.askAboutExiting ();
@@ -354,7 +354,7 @@ acceptable to use in <code>restored</code>, including
 
 <p>The
 
-<a href="../ModuleInstall.html#updated-int-java.lang.String-"><code>ModuleInstall.updated(...)</code></a>
+{@link org.openide.modules.ModuleInstall#updated(int,java.lang.String) ModuleInstall.updated(...) }
 
 method will be called just once when
 a module is updated to a new version - when the new version is loaded
@@ -370,7 +370,7 @@ in order for it to be used. For example, an external application may need
 to be installed in order for it to do anything. Or it may require a valid
 license key. In such cases, the
 
-<a href="../ModuleInstall.html#validate--"><code>ModuleInstall.validate()</code></a>
+{@link org.openide.modules.ModuleInstall#validate() ModuleInstall.validate() }
 
 method may be overridden to check for this external resource and throw
 a (preferably politely localized) <code>IllegalStateException</code>
@@ -470,7 +470,7 @@ understood by <code>XMLFileSystem</code>.
 
 Its contents specify some files that the module will add to the
 
-<a href="@org-openide-filesystems@/org/openide/filesystems/Repository.html#getDefaultFileSystem--">system filesystem</a>
+<a href="@org-openide-filesystems@/org/openide/filesystems/Repository.html#getDefaultFileSystem()">system filesystem</a>
 
 controlling much of NetBeans' configuration. This filesystem is composed of many read-only XML layer filesystems
 as well as a writable layer corresponding to the <code>config</code> subdirectory of the user directory.</p>
@@ -555,7 +555,7 @@ for example, menus are
 in the order the instance-bearing data objects occur in the data
 folder. The call
 
-<a href="@org-openide-loaders@/org/openide/loaders/DataFolder.html#setOrder-org.openide.loaders.DataObject:A-"><code>DataFolder.setOrder(DataObject[])</code></a>
+<a href="@org-openide-loaders@/org/openide/loaders/DataFolder.html#setOrder(org.openide.loaders.DataObject%5B%5D)"><code>DataFolder.setOrder(DataObject[])</code></a>
 
 suffices to arbitrarily change folder order, but usually it is
 desirable to create the proper order declaratively in the XML. For
@@ -564,7 +564,7 @@ this reason, <code>DataFolder</code> understands special attributes
 Specifically: if there are data objects A and B in the folder,
 represented by
 
-<a href="@org-openide-loaders@/org/openide/loaders/DataObject.html#getPrimaryFile--">primary files</a>
+<a href="@org-openide-loaders@/org/openide/loaders/DataObject.html#getPrimaryFile()">primary files</a>
 
 <samp>afile</samp> and <samp>bfile</samp>,
 and <samp>afile</samp> has an attribute named <code>position</code> whose numeric value is less
@@ -599,7 +599,7 @@ any bearing on the ordering.
 
 <p>There is also an older, now-deprecated system based on relative ordering attributes.</p>
 
-<p>More details are available in <a href="@org-openide-filesystems@/org/openide/filesystems/FileUtil.html#getOrder-java.util.Collection-boolean-"><code>FileUtil.getOrder</code></a>.</p>
+<p>More details are available in <a href="@org-openide-filesystems@/org/openide/filesystems/FileUtil.html#getOrder(java.util.Collection,boolean)"><code>FileUtil.getOrder</code></a>.</p>
 
 <p>The resource path pointing to the layer is automatically localized
 by NetBeans every time the module is installed or restored; if there
@@ -621,7 +621,7 @@ files installed by the core.
 <p>NetBeans recognizes several special file attributes, typically set in layers, which can control UI.
 For example, the labels of menus created from folders beneath <samp>Menu/</samp>
 are derived from the "localized display name" of the layer folder, when defined.
-See <a href="@org-openide-filesystems@/org/openide/filesystems/FileSystem.html#getDecorator--"><code>FileSystem.getDecorator()</code></a> 
+See <a href="@org-openide-filesystems@/org/openide/filesystems/FileSystem.html#getDecorator()"><code>FileSystem.getDecorator()</code></a> 
 (formerly <code>getStatus()</code>)for details.</p>
 
 <h4>Reverting user's modifications</h4>
@@ -890,7 +890,7 @@ This includes information about provided tokens.
 
 <li>For packages, use the Java
 
-<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/Package.html"><code>Package</code></a>
+{@link java.lang.Package Package }
 
 class, or examine the manifest of the JAR you depend upon.
 
@@ -1078,7 +1078,7 @@ module JAR alongside it. No concrete mechanism for doing so is
 specified in the Modules API. However, if there is such a mechanism,
 then it is possible for the module to find these other files.
 
-<a href="../InstalledFileLocator.html"><code>InstalledFileLocator</code></a>
+{@link org.openide.modules.InstalledFileLocator InstalledFileLocator}
 
 permits such packaging mechanisms to let modules find their associated
 files, as of 3.21.</p>
@@ -1178,7 +1178,7 @@ is desirable to obtain the list of all modules in the system. This can
 be easily accomplished as follows:
 
 <pre>
-Collection&lt;ModuleInfo&gt; modules = Lookup.getDefault().lookupAll(<a href="../ModuleInfo.html">ModuleInfo</a>.class);
+Collection&lt;ModuleInfo&gt; modules = Lookup.getDefault().lookupAll({@link org.openide.modules.ModuleInfo ModuleInfo}.class);
 </pre>
 
 The resulting <code>ModuleInfo</code> objects give basic information
@@ -1233,7 +1233,7 @@ missing a valid license key), simply use
 
 <p>When rewriting the module XML be sure to use
 
-<a href="@org-openide-filesystems@/org/openide/filesystems/FileSystem.html#runAtomicAction-org.openide.filesystems.FileSystem.AtomicAction-"><code>FileSystem.runAtomic(FileSystem.AtomicAction)</code></a>
+<a href="@org-openide-filesystems@/org/openide/filesystems/FileSystem.html#runAtomicAction(org.openide.filesystems.FileSystem.AtomicAction)"><code>FileSystem.runAtomic(FileSystem.AtomicAction)</code></a>
 
 to wrap the reading of the old XML and the writing of the new, to
 prevent file changes from being fired halfway through.</p>

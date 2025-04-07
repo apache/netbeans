@@ -88,8 +88,10 @@ public class DefaultCssEditorModule extends CssEditorModule {
         module("text", "http://www.w3.org/TR/css-text-4"), //NOI18N
         module("writing_modes", "http://www.w3.org/TR/css3-writing-modes"), //NOI18N
         module("generated_content_for_paged_media", "http://www.w3.org/TR/css3-gcpm"), //NOI18N
+        module("filter_effects", "http://www.w3.org/TR/filter-effects-1"), //NOI18N
         module("fonts", "http://www.w3.org/TR/css3-fonts"), //NOI18N
         module("basic_box_model", "http://www.w3.org/TR/css3-box"), //NOI18N
+        module("logical", "https://www.w3.org/TR/css-logical-1"), //NOI18N
         module("speech", "http://www.w3.org/TR/css3-speech"), //NOI18N
         module("grid", "http://www.w3.org/TR/css3-grid"), //NOI18N
         module("flexible_box_layout", "http://www.w3.org/TR/css3-flexbox"), //NOI18N
@@ -105,6 +107,8 @@ public class DefaultCssEditorModule extends CssEditorModule {
         module("alignment", "http://www.w3.org/TR/css-align-3"), //NOI18N
         module("fragmentation", "http://www.w3.org/TR/css-break-3"), //NOI18N
         module("positioning", "http://www.w3.org/TR/css-position-3"), //NOI18N
+        module("overflow", "http://www.w3.org/TR/css-overflow-3"), //NOI18N
+        module("scroll_snap", "http://www.w3.org/TR/css-scroll-snap-1"), //NOI18N
         module("sizing", "http://www.w3.org/TR/css-sizing-3"), //NOI18N
         module("contain", "http://www.w3.org/TR/css-contain-3"), //NOI18N
         module("other", null) //NOI18N

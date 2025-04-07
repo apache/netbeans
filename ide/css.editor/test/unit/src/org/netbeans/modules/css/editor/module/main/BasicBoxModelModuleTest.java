@@ -59,4 +59,27 @@ public class BasicBoxModelModuleTest extends CssModuleTestBase {
         
     }
     
+    public void testMarginBlock() {
+        assertPropertyDeclaration("margin-block: 1px");
+        assertPropertyDeclaration("margin-block-start: 1px");
+        assertPropertyDeclaration("margin-block-end: 2px");
+    }
+    
+    public void testMarginInline() {
+        assertPropertyDeclaration("margin-inline: 1px");
+        assertPropertyDeclaration("margin-inline-start: 1px");
+        assertPropertyDeclaration("margin-inline-end: 2px");
+    }
+    
+    public void testPaddingBlock() {
+        assertPropertyDeclaration("padding-block: 1px");
+        assertPropertyDeclaration("padding-block-start: 1px");
+        assertPropertyDeclaration("padding-block-end: 2px");
+    }
+    
+    public void testPaddingInline() {
+        assertPropertyDeclaration("padding-inline: 1px");
+        assertPropertyDeclaration("padding-inline-start: 1px");
+        assertPropertyDeclaration("padding-inline-end: 2px");
+    }
 }

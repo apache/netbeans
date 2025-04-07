@@ -46,9 +46,10 @@ public class ListsAndCountersModuleTest extends CssModuleTestBase {
                 "repeating-radial-gradient","disc","lower-alpha","lower-roman",
                 "!identifier","georgian","element","upper-alpha","armenian",
                 "upper-latin","linear-gradient","!string","image","decimal",
-                "upper-roman","!uri","cross-fade","radial-gradient","inside",
-                "decimal-leading-zero","square", "circle","none","symbols",
-                "outside", "initial", "inherit", "unset", "revert", "var");
+                "upper-roman","!uri","cross-fade","radial-gradient", "conic-gradient",
+                "inside", "decimal-leading-zero","square", "circle","none",
+                "symbols", "outside", "initial", "inherit", "unset", "revert",
+                "var");
     }
     
     public void testListStyleType() {
@@ -73,7 +74,7 @@ public class ListsAndCountersModuleTest extends CssModuleTestBase {
             "repeating-linear-gradient", "element", "numeric", "linear-gradient",
             "!string", "alphabetic", "image", "symbolic", "repeating-radial-gradient",
             "!uri", "repeating", "cross-fade", "non-repeating", "radial-gradient",
-            "var");
+            "conic-gradient", "var");
     }
     
     public void testListStyleImage() {

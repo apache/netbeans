@@ -20,7 +20,11 @@ package org.netbeans.modules.maven.j2ee.utils;
 
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
@@ -28,11 +32,15 @@ import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.SwingUtilities;
+import org.apache.maven.model.Dependency;
 import org.apache.maven.project.MavenProject;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.j2ee.core.Profile;
+import org.netbeans.api.java.project.JavaProjectConstants;
+import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.j2ee.common.dd.DDHelper;
 import org.netbeans.modules.j2ee.common.ui.BrokenServerLibrarySupport;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment;
@@ -279,7 +287,7 @@ public class MavenProjectSupport {
     /**
      * Store given property pair <name, value> to pom.xml file of the given project
      * 
-     * @param projectFile project to which pom.xml should be updated
+     * @param project project to which pom.xml should be updated
      * @param name property name
      * @param value property value
      */
@@ -482,7 +490,8 @@ public class MavenProjectSupport {
                 public void run() {
                     final String newOne = ServerManager.showAddServerInstanceWizard();
                     final String serverType = newOne != null ? obtainServerID(newOne) : null;
-                    Utilities.performPOMModelOperations(prj.getProjectDirectory().getFileObject("pom.xml"), Collections.singletonList(new ModelOperation<POMModel>() { //NOI18N
+                    final FileObject fileObject = prj.getProjectDirectory().getFileObject("pom.xml"); //NOI18N
+                    Utilities.performPOMModelOperations(fileObject, Collections.singletonList(new ModelOperation<POMModel>() {
                         @Override public void performOperation(POMModel model) {
                             if (newOne != null) {
                                 Properties props = model.getProject().getProperties();
@@ -523,4 +532,186 @@ public class MavenProjectSupport {
             });
         }
     }
+    
+    /**
+     * Trying to guess the Java/Jakarta EE version based on the dependency in pom.xml
+     * - See issue #230447
+     * @param project
+     * @return Profile
+     */
+    public static Profile getProfileFromPOM(final Project project) {
+        NbMavenProject nbMavenProject = project.getLookup().lookup(NbMavenProject.class);
+        if (nbMavenProject != null) {
+            MavenProject mavenProject = nbMavenProject.getMavenProject();
+            List<Dependency> dependencies = mavenProject.getDependencies();
+
+            for (Map.Entry<Profile, List<DependencyDesc>> entry : JAKARTA_EE_MAP.entrySet()) {
+                for (DependencyDesc dependencyDesc : entry.getValue()) {
+                    Dependency dependency = checkForDependency(dependencies, dependencyDesc);
+                    if (dependency != null) {
+                        String version = dependency.getVersion();
+                        if (dependencyDesc.version() == null || (version != null && version.startsWith(dependencyDesc.version()))) {
+                            return entry.getKey();
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * {@link List} containing Java/Jakarta EE implementations described by {@link DependencyDesc}.
+     *
+     * Fore more information see this <a href="https://netbeans.org/bugzilla/show_bug.cgi?id=230447">link</a>.
+     * <p>
+     * In more detail:
+     * <ul>
+     *   GlassFish:
+     *   <li>5.1 supports Jakarta EE 8</li>
+     *   <li>6.1 supports Jakarta EE 9.1</li>
+     *   <li>7.X supports Jakarta EE 10</li>
+     *   <li>8.X supports Jakarta EE 11</li>
+     *   WebLogic:
+     *   <li>10.X supports Java EE 5</li>
+     *   <li>12.X supports Java EE 6</li>
+     *   <li>No support for Java EE 7 yet</li>
+     * </ul>
+     * </p>
+     */
+    private static final Map<Profile, List<DependencyDesc>> JAKARTA_EE_MAP = new LinkedHashMap<>();
+    static {
+        List<DependencyDesc> javaEE5 = new ArrayList<>();
+        List<DependencyDesc> javaEE6Web = new ArrayList<>();
+        List<DependencyDesc> javaEE6Full = new ArrayList<>();
+        List<DependencyDesc> javaEE7Web = new ArrayList<>();
+        List<DependencyDesc> javaEE7Full = new ArrayList<>();
+        List<DependencyDesc> javaEE8Web = new ArrayList<>();
+        List<DependencyDesc> javaEE8Full = new ArrayList<>();
+        List<DependencyDesc> jakartaEE8Web = new ArrayList<>();
+        List<DependencyDesc> jakartaEE8Full = new ArrayList<>();
+        List<DependencyDesc> jakartaEE9Web = new ArrayList<>();
+        List<DependencyDesc> jakartaEE9Full = new ArrayList<>();
+        List<DependencyDesc> jakartaEE91Web = new ArrayList<>();
+        List<DependencyDesc> jakartaEE91Full = new ArrayList<>();
+        List<DependencyDesc> jakartaEE10Web = new ArrayList<>();
+        List<DependencyDesc> jakartaEE10Full = new ArrayList<>();
+        List<DependencyDesc> jakartaEE11Web = new ArrayList<>();
+        List<DependencyDesc> jakartaEE11Full = new ArrayList<>();
+
+        // Java/Jakarta EE specification
+        javaEE5.add(new DependencyDesc("javaee", "javaee-api", "5.0"));
+        javaEE5.add(new DependencyDesc("javax", "javaee-web-api", "5.0"));
+        javaEE6Full.add(new DependencyDesc("javax", "javaee-api", "6.0"));
+        javaEE6Web.add(new DependencyDesc("javax", "javaee-web-api", "6.0"));
+        javaEE7Full.add(new DependencyDesc("javax", "javaee-api", "7.0"));
+        javaEE7Web.add(new DependencyDesc("javax", "javaee-web-api", "7.0"));
+        javaEE8Full.add(new DependencyDesc("javax", "javaee-api", "8.0"));
+        javaEE8Web.add(new DependencyDesc("javax", "javaee-web-api", "8.0"));
+        jakartaEE8Web.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-api","8.0.0"));
+        jakartaEE8Full.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-web-api","8.0.0"));
+        jakartaEE9Web.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-api","9.0.0"));
+        jakartaEE9Full.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-web-api","9.0.0"));
+        jakartaEE91Web.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-api","9.1.0"));
+        jakartaEE91Full.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-web-api","9.1.0"));
+        jakartaEE10Web.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-api","10.0.0"));
+        jakartaEE10Full.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-web-api","10.0.0"));
+        jakartaEE11Web.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-api","11.0.0-RC1"));
+        jakartaEE11Full.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-web-api","11.0.0-RC1"));
+
+        // GlassFish implementations
+        javaEE5.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "2"));
+        javaEE5.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "2"));
+        javaEE6Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "3"));
+        javaEE6Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "3"));
+        javaEE7Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "4.0"));
+        javaEE7Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "4.0.1"));
+        javaEE7Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "4.1.2"));
+        javaEE7Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "4.1.2"));
+        javaEE8Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "5.1.0"));
+        javaEE8Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "5.1.0"));
+        jakartaEE8Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "5.1.0"));
+        jakartaEE8Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "5.1.0"));
+        jakartaEE9Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "6.0.0"));
+        jakartaEE9Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "6.0.0"));
+        jakartaEE91Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "6.2.5"));
+        jakartaEE91Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "6.2.5"));
+        jakartaEE10Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "7.0.23"));
+        jakartaEE10Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "7.0.23"));
+        jakartaEE11Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "8.0.0-M10"));
+        jakartaEE11Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "8.0.0-M10"));
+        
+
+        // WebLogic implementations
+//        javaEE5.add(new DependencyDesc("weblogic", "weblogic", "10"));
+//        javaEE6Full.add(new DependencyDesc("weblogic", "weblogic", "12"));
+
+        // JBoss implementations
+        javaEE5.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-5.0", "1.0.0.GA"));
+        javaEE5.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-all-5.0", "1.0.0.GA"));
+        javaEE6Full.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-6.0", "3.0.3.Final"));
+        javaEE6Full.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-all-6.0", "3.0.3.Final"));
+        javaEE6Web.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-web-6.0", "3.0.3.Final"));
+        javaEE7Full.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-7.0", "1.1.1.Final"));
+        javaEE7Full.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-all-7.0", "1.1.1.Final"));
+        javaEE7Web.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-web-7.0", "1.1.1.Final"));
+        javaEE8Full.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-8.0", "1.0.4.Final"));
+        javaEE8Full.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-all-8.0", "1.0.4.Final"));
+        javaEE8Web.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-web-8.0", "1.0.4.Final"));
+        jakartaEE8Full.add(new DependencyDesc("org.jboss.spec", "jboss-jakartaee-8.0", "1.0.1.Final"));
+        jakartaEE8Full.add(new DependencyDesc("org.jboss.spec", "jboss-jakartaee-all-8.0", "1.0.0.Final"));
+        jakartaEE8Web.add(new DependencyDesc("org.jboss.spec", "jboss-jakartaee-web-8.0", "1.0.0.Final"));
+
+        JAKARTA_EE_MAP.put(Profile.JAKARTA_EE_11_FULL, jakartaEE11Full);
+        JAKARTA_EE_MAP.put(Profile.JAKARTA_EE_11_WEB, jakartaEE11Web);
+        JAKARTA_EE_MAP.put(Profile.JAKARTA_EE_10_FULL, jakartaEE10Full);
+        JAKARTA_EE_MAP.put(Profile.JAKARTA_EE_10_WEB, jakartaEE10Web);
+        JAKARTA_EE_MAP.put(Profile.JAKARTA_EE_9_1_FULL, jakartaEE91Full);
+        JAKARTA_EE_MAP.put(Profile.JAKARTA_EE_9_1_WEB, jakartaEE91Web);
+        JAKARTA_EE_MAP.put(Profile.JAKARTA_EE_9_FULL, jakartaEE9Full);
+        JAKARTA_EE_MAP.put(Profile.JAKARTA_EE_9_WEB, jakartaEE9Web);
+        JAKARTA_EE_MAP.put(Profile.JAKARTA_EE_8_FULL, jakartaEE8Full);
+        JAKARTA_EE_MAP.put(Profile.JAKARTA_EE_8_WEB, jakartaEE8Web);
+        JAKARTA_EE_MAP.put(Profile.JAVA_EE_8_FULL, javaEE8Full);
+        JAKARTA_EE_MAP.put(Profile.JAVA_EE_8_WEB, javaEE8Web);
+        JAKARTA_EE_MAP.put(Profile.JAVA_EE_7_FULL, javaEE7Full);
+        JAKARTA_EE_MAP.put(Profile.JAVA_EE_7_WEB, javaEE7Web);
+        JAKARTA_EE_MAP.put(Profile.JAVA_EE_6_FULL, javaEE6Full);
+        JAKARTA_EE_MAP.put(Profile.JAVA_EE_6_WEB, javaEE6Web);
+        JAKARTA_EE_MAP.put(Profile.JAVA_EE_5, javaEE5);
+    }
+    
+    private static record DependencyDesc (
+            String groupID, 
+            String artifactID, 
+            String version) {
+    }
+    
+    private static Dependency checkForDependency(List<Dependency> dependencies, DependencyDesc dependencyDesc) {
+        if (dependencies != null) {
+            for (Dependency dependency : dependencies) {
+                if (dependency.getArtifactId().equals(dependencyDesc.artifactID()) && dependency.getGroupId().equals(dependencyDesc.groupID())) {
+                    return dependency;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get the string representation of the source level.
+     * @param project
+     * @return a source level of the Java file, e.g. "1.8", "11", "21"
+     * or null if the source level is unknown.
+     */
+    public static String getSourceLevel(Project project) {
+        SourceGroup[] srcGroups = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+        String sl = SourceLevelQuery.getSourceLevel2(srcGroups[0].getRootFolder()).getSourceLevel();
+        int index = sl.indexOf('.'); // NOI18N
+        if (index > 0) {
+            sl = sl.substring(index + 1);
+        }
+        return sl;
+    }
+    
 }

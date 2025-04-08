@@ -43,6 +43,7 @@ import org.netbeans.modules.maven.jaxws.MavenJAXWSSupportImpl;
 import org.netbeans.modules.maven.model.ModelOperation;
 import org.netbeans.modules.maven.model.Utilities;
 import org.netbeans.modules.maven.model.pom.POMModel;
+import org.netbeans.modules.maven.model.pom.Plugin;
 import org.netbeans.modules.websvc.jaxws.light.api.JAXWSLightSupport;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -95,8 +96,7 @@ public class JaxWsClientCreator implements ClientCreator {
         }
         
         if (localWsdlFolder != null) {
-            FileObject wsdlFo = retrieveWsdl(wsdlUrl, localWsdlFolder,
-                    hasSrcFolder);
+            FileObject wsdlFo = retrieveWsdl(wsdlUrl, localWsdlFolder, hasSrcFolder);
             if (wsdlFo != null) {
                 final boolean isJaxWsLibrary = MavenModelUtils.hasJaxWsAPI(project, isJakartaEENameSpace);
                 final String relativePath = FileUtil.getRelativePath(localWsdlFolder, wsdlFo);
@@ -125,14 +125,11 @@ public class JaxWsClientCreator implements ClientCreator {
                     public void performOperation(POMModel model) {
 
                         String packageName = (String) wiz.getProperty(WizardProperties.WSDL_PACKAGE_NAME);
-                        org.netbeans.modules.maven.model.pom.Plugin plugin =
-                                isEJB ?
-                                    MavenModelUtils.addJaxWSPlugin(model, "2.0") : //NOI18N
-                                    MavenModelUtils.addJaxWSPlugin(model);
+                        Plugin plugin = MavenModelUtils.addJaxWSPlugin(model);
 
                         MavenModelUtils.addWsimportExecution(plugin, clientName, 
                                 relativePath,wsdlLocation, packageName);
-                        if (isEJB) { // expecting web project
+                        if (isWeb) { // expecting web project
                             MavenModelUtils.addWarPlugin(model, true);
                         } else { // J2SE Project
                             MavenModelUtils.addWsdlResources(model);

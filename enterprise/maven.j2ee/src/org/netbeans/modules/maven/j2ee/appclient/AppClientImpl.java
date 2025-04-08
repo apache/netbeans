@@ -65,12 +65,17 @@ public class AppClientImpl extends BaseEEModuleImpl implements CarImplementation
         return getArchive(Constants.GROUP_APACHE_PLUGINS, "maven-acr-plugin", "acr", "jar"); // NOI18N
     }
     
+    @Override
     public Profile getJ2eeProfile() {
         Profile profile = JavaEEProjectSettings.getProfile(project);
         if (profile != null) {
             return profile;
         }
-        return Profile.JAVA_EE_7_FULL;
+        Profile pomProfile = MavenProjectSupport.getProfileFromPOM(project);
+        if (pomProfile != null) {
+            return pomProfile;
+        }
+        return Profile.JAKARTA_EE_8_FULL;
     }
     
     @Override

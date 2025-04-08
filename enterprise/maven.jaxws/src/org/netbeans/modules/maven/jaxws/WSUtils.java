@@ -41,10 +41,12 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.java.project.JavaProjectConstants;
+import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
+import org.netbeans.modules.j2ee.api.ejbjar.Car;
 import org.netbeans.modules.j2ee.api.ejbjar.EjbJar;
 import org.netbeans.modules.j2ee.common.dd.DDHelper;
 import org.netbeans.modules.j2ee.dd.api.common.NameAlreadyUsedException;
@@ -54,7 +56,6 @@ import org.netbeans.modules.j2ee.dd.api.web.Servlet;
 import org.netbeans.modules.j2ee.dd.api.web.ServletMapping;
 import org.netbeans.modules.j2ee.dd.api.web.ServletMapping25;
 import org.netbeans.modules.j2ee.dd.api.web.WebApp;
-import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
 import org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider;
 import org.netbeans.modules.javaee.specs.support.api.JaxWs;
 import org.netbeans.modules.maven.api.NbMavenProject;
@@ -296,48 +297,56 @@ public class WSUtils {
     }
 
     public static boolean isEJB(Project project) {
-        J2eeModuleProvider j2eeModuleProvider = project.getLookup().lookup(J2eeModuleProvider.class);
-        if (j2eeModuleProvider != null) {
-            J2eeModule.Type moduleType = j2eeModuleProvider.getJ2eeModule().getType();
-            if (J2eeModule.Type.EJB.equals(moduleType)) {
-                return true;
-            }
-        }
-        return false;
+        String packaging = project.getLookup().lookup(NbMavenProject.class).getPackagingType();
+        return packaging != null && packaging.equals(NbMavenProject.TYPE_EJB);
     }
 
     public static boolean isWeb(Project project) {
-        J2eeModuleProvider j2eeModuleProvider = project.getLookup().lookup(J2eeModuleProvider.class);
-        if (j2eeModuleProvider != null) {
-            J2eeModule.Type moduleType = j2eeModuleProvider.getJ2eeModule().getType();
-            if (J2eeModule.Type.WAR.equals(moduleType)) {
-                return true;
-            }
-        }
-        return false;
+        String packaging = project.getLookup().lookup(NbMavenProject.class).getPackagingType();
+        return packaging != null && packaging.equals(NbMavenProject.TYPE_WAR);
+    }
+    
+    public static boolean isCar(Project project) {
+        String packaging = project.getLookup().lookup(NbMavenProject.class).getPackagingType();
+        return packaging != null && packaging.equals(NbMavenProject.TYPE_APPCLIENT);
+    }
+    
+    public static boolean isJar(Project project) {
+        String packaging = project.getLookup().lookup(NbMavenProject.class).getPackagingType();
+        return packaging != null && packaging.equals(NbMavenProject.TYPE_JAR);
     }
     
     /**
      * Check if this project is at least Jakarta EE 9 and will use the 
-     * {@code jakarta.*} namespace.
+     * {@code jakarta.*} namespace. Java SE projects that use source level 
+     * equal or greater than 11 should use jakarta namespace.
      * @param project 
      * @return True if this project use jakarta namespace {@code false} otherwise
      */
     public static boolean isJakartaEENameSpace(Project project) {
-        J2eeModuleProvider j2eeModuleProvider = project.getLookup().lookup(J2eeModuleProvider.class);
-        if (j2eeModuleProvider != null) {
-            J2eeModule.Type moduleType = j2eeModuleProvider.getJ2eeModule().getType();
-            FileObject projectDirectory = project.getProjectDirectory();
-            if (J2eeModule.Type.WAR.equals(moduleType)) {
-                WebModule wm = WebModule.getWebModule(projectDirectory);
-                Profile profile = wm.getJ2eeProfile();
-                boolean isJakarta = profile.isAtLeast(Profile.JAKARTA_EE_9_WEB);
-                return isJakarta;
-            } else if (J2eeModule.Type.WAR.equals(moduleType)) {
-                EjbJar ejbm = EjbJar.getEjbJar(projectDirectory);
-                Profile profile = ejbm.getJ2eeProfile();
-                boolean isJakarta = profile.isAtLeast(Profile.JAKARTA_EE_9_WEB);
-                return isJakarta;
+        
+        FileObject projectDirectory = project.getProjectDirectory();
+        boolean isJakarta;
+        Profile profile;
+        if(isWeb(project)) {
+            WebModule wm = WebModule.getWebModule(projectDirectory);
+            profile = wm.getJ2eeProfile();
+            isJakarta = profile.isAtLeast(Profile.JAKARTA_EE_9_WEB);
+            return isJakarta;
+        } else if (isEJB(project)) {
+            EjbJar ejbm = EjbJar.getEjbJar(projectDirectory);
+            profile = ejbm.getJ2eeProfile();
+            isJakarta = profile.isAtLeast(Profile.JAKARTA_EE_9_WEB);
+            return isJakarta;
+        } else if (isCar(project)) {
+            Car cm = Car.getCar(projectDirectory);
+            profile = cm.getJ2eeProfile();
+            isJakarta = profile.isAtLeast(Profile.JAKARTA_EE_9_WEB);
+            return isJakarta;
+        } else if (isJar(project)) {
+            int sourceLevel = Integer.parseInt(getSourceLevel(project));
+            if (sourceLevel >= 11) {
+                return true;
             }
         }
         return false;
@@ -1046,6 +1055,22 @@ public class WSUtils {
 
         }
         return false;
+    }
+    
+    /**
+     * Get the string representation of the source level from a project.
+     * @param project
+     * @return a source level of the Java file, e.g. "8", "11", "21"
+     * or null if the source level is unknown.
+     */
+    public static String getSourceLevel(Project project) {
+        SourceGroup[] srcGroups = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+        String sl = SourceLevelQuery.getSourceLevel2(srcGroups[0].getRootFolder()).getSourceLevel();
+        int index = sl.indexOf('.'); // NOI18N
+        if (index > 0) {
+            sl = sl.substring(index + 1);
+        }
+        return sl;
     }
     
 }

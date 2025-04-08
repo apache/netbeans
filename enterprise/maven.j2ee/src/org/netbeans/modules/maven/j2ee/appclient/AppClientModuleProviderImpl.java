@@ -26,8 +26,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.j2ee.api.ejbjar.Car;
 import org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider;
+import org.netbeans.modules.j2ee.spi.ejbjar.CarFactory;
+import org.netbeans.modules.j2ee.spi.ejbjar.CarProvider;
+import org.netbeans.modules.j2ee.spi.ejbjar.CarsInProject;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.api.classpath.ProjectSourcesClassPathProvider;
 import org.netbeans.modules.maven.j2ee.BaseEEModuleProvider;
@@ -35,27 +40,61 @@ import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
-@ProjectServiceProvider(service = {AppClientModuleProviderImpl.class, J2eeModuleProvider.class}, projectType = {"org-netbeans-modules-maven/" + NbMavenProject.TYPE_APPCLIENT})
-public class AppClientModuleProviderImpl extends BaseEEModuleProvider {
+/**
+ * Application Client module provider implementation for maven2 project type.
+ * @author  Milos Kleint 
+ */
+@ProjectServiceProvider(
+        service = {
+            CarProvider.class,
+            CarsInProject.class,
+            J2eeModuleProvider.class
+        },
+        projectType = {
+            "org-netbeans-modules-maven/" + NbMavenProject.TYPE_APPCLIENT
+        }
+)
+public class AppClientModuleProviderImpl extends BaseEEModuleProvider implements CarProvider, CarsInProject {
     
     private AppClientImpl appClientImpl;
-
+    private Car apiCarJar;
+    
     
     public AppClientModuleProviderImpl(Project project) {
         super(project);
-        appClientImpl = new AppClientImpl(project, this);
     }
 
     @Override
     public AppClientImpl getModuleImpl() {
+        if (appClientImpl == null) {
+            appClientImpl = new AppClientImpl(project, this);
+        }
         return appClientImpl;
+    }
+    
+    @Override
+    public Car findCar(FileObject file) {
+        getModuleImpl();
+        Project proj = FileOwnerQuery.getOwner(file);
+        if (proj != null) {
+            proj = proj.getLookup().lookup(Project.class);
+        }
+        if (proj != null && project == proj) {
+            if (appClientImpl.isValid()) {
+                if (apiCarJar == null) {
+                    apiCarJar = CarFactory.createCar(appClientImpl);
+                }
+                return apiCarJar;
+            }
+        }
+        return null;
     }
     
     @Override
     public FileObject[] getSourceRoots() {
         ProjectSourcesClassPathProvider cppImpl = project.getLookup().lookup(ProjectSourcesClassPathProvider.class);
         ClassPath cp = cppImpl.getProjectSourcesClassPath(ClassPath.SOURCE);
-        List<URL> resUris = new ArrayList<URL>();
+        List<URL> resUris = new ArrayList<>();
         for (URI uri : project.getLookup().lookup(NbMavenProject.class).getResources(false)) {
             try {
                 resUris.add(uri.toURL());
@@ -64,7 +103,7 @@ public class AppClientModuleProviderImpl extends BaseEEModuleProvider {
             }
         }
         Iterator<ClassPath.Entry> en = cp.entries().listIterator();
-        List<FileObject> toRet = new ArrayList<FileObject>();
+        List<FileObject> toRet = new ArrayList<>();
         int index = 0;
         while (en.hasNext()) {
             ClassPath.Entry ent = en.next();
@@ -77,7 +116,7 @@ public class AppClientModuleProviderImpl extends BaseEEModuleProvider {
                 toRet.add(ent.getRoot());
             }
         }
-        return toRet.toArray(new FileObject[0]);
+        return toRet.toArray(FileObject[]::new);
     }
 
     @Override
@@ -86,7 +125,7 @@ public class AppClientModuleProviderImpl extends BaseEEModuleProvider {
         // do not use COMPILE classpath here because it contains dependencies
         // with *provided* scope which should not be deployed
         ClassPath cp = cppImpl.getProjectSourcesClassPath(ClassPath.EXECUTE);
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         for (FileObject fo : cp.getRoots()) {
             fo = FileUtil.getArchiveFile(fo);
             if (fo == null) {
@@ -94,6 +133,19 @@ public class AppClientModuleProviderImpl extends BaseEEModuleProvider {
             }
             files.add(FileUtil.toFile(fo));
         }
-        return files.toArray(new File[0]);
+        return files.toArray(File[]::new);
     }
+
+    @Override
+    public Car[] getCars() {
+        getModuleImpl();
+        if (appClientImpl.isValid()) {
+            if (apiCarJar == null) {
+                apiCarJar =  CarFactory.createCar(appClientImpl);
+            }
+            return new Car[] {apiCarJar};
+        }
+        return new Car[0];
+    }
+
 }

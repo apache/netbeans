@@ -51,12 +51,11 @@ import org.openide.util.Exceptions;
  */
 @ProjectServiceProvider(
     service = {
-        WebModuleProviderImpl.class,
         WebModuleProvider.class,
         J2eeModuleProvider.class
     },
     projectType = {
-        "org-netbeans-modules-maven/" + NbMavenProject.TYPE_WAR,
+        "org-netbeans-modules-maven/" + NbMavenProject.TYPE_WAR
     }
 )
 public class WebModuleProviderImpl extends BaseEEModuleProvider implements WebModuleProvider {

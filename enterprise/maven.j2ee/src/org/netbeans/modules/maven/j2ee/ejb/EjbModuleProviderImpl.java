@@ -40,7 +40,20 @@ import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
-@ProjectServiceProvider(service = {EjbModuleProviderImpl.class, J2eeModuleProvider.class, EjbJarProvider.class, EjbJarsInProject.class}, projectType = {"org-netbeans-modules-maven/" + NbMavenProject.TYPE_EJB})
+/**
+ * EJB module provider implementation for maven2 project type.
+ * @author  Milos Kleint 
+ */
+@ProjectServiceProvider(
+        service = {
+            J2eeModuleProvider.class,
+            EjbJarProvider.class,
+            EjbJarsInProject.class
+        }, 
+        projectType = {
+            "org-netbeans-modules-maven/" + NbMavenProject.TYPE_EJB
+        }
+)
 public class EjbModuleProviderImpl extends BaseEEModuleProvider implements EjbJarProvider, EjbJarsInProject  {
     
     private EjbJarImpl ejbimpl;

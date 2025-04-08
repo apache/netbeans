@@ -32,9 +32,11 @@ import org.netbeans.modules.j2ee.dd.spi.MetadataUnit;
 import org.netbeans.modules.j2ee.dd.spi.client.AppClientMetadataModelFactory;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModel;
+import org.netbeans.modules.j2ee.spi.ejbjar.CarImplementation2;
 import org.netbeans.modules.javaee.project.api.JavaEEProjectSettings;
 import org.netbeans.modules.maven.api.classpath.ProjectSourcesClassPathProvider;
 import org.netbeans.modules.maven.j2ee.BaseEEModuleImpl;
+import org.netbeans.modules.maven.j2ee.utils.MavenProjectSupport;
 import org.openide.ErrorManager;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -44,7 +46,7 @@ import org.openide.filesystems.FileUtil;
  * 
  * @author Martin Janicek
  */
-public class AppClientImpl extends BaseEEModuleImpl {
+public class AppClientImpl extends BaseEEModuleImpl implements CarImplementation2 {
     
     private MetadataModel<AppClientMetadata> appClientMetadataModel;
     
@@ -52,7 +54,6 @@ public class AppClientImpl extends BaseEEModuleImpl {
     AppClientImpl(Project project, AppClientModuleProviderImpl provider) {
         super(project, provider, "application-client.xml", J2eeModule.CLIENT_XML); // NOI18N
     }
-    
        
     @Override
     public J2eeModule.Type getModuleType() {
@@ -85,8 +86,7 @@ public class AppClientImpl extends BaseEEModuleImpl {
                 ErrorManager.getDefault().notify(exc);
             }
         }
-
-        return AppClient.VERSION_6_0;
+        return AppClient.VERSION_8_0;
     }
 
     @Override

@@ -40,6 +40,8 @@ import org.openide.filesystems.FileObject;
 import javax.xml.namespace.QName;
 import org.apache.maven.project.MavenProject;
 import org.netbeans.api.j2ee.core.Profile;
+import org.netbeans.modules.j2ee.api.ejbjar.Car;
+import org.netbeans.modules.j2ee.api.ejbjar.EjbJar;
 import org.netbeans.modules.javaee.specs.support.api.JaxWs;
 import org.netbeans.modules.maven.model.pom.Build;
 import org.netbeans.modules.maven.model.pom.Configuration;
@@ -59,6 +61,8 @@ import org.netbeans.modules.websvc.wsstack.api.WSStack;
 public final class MavenModelUtils {
 
     private static Profile profile;
+    
+    // Maven coordinates
     private static final String WSIPMORT_GENERATE_PREFIX = "wsimport-generate-"; //NOI18N
     private static final String STALE_FILE_DIRECTORY = "${project.build.directory}/jaxws/stale/"; //NOI18N
     private static final String STALE_FILE_EXTENSION = ".stale"; //NOI18N
@@ -79,7 +83,7 @@ public final class MavenModelUtils {
     
     public static final String MAVEN_PLUGINS_GROUP_ID = "org.apache.maven.plugins"; //NOI18N
     public static final String WAR_PLUGIN_ARTIFACT_ID = "maven-war-plugin"; //NOI18N
-    public static final String WAR_PLUGIN_VERSION = "2.3.4"; //NOI18N
+    public static final String WAR_PLUGIN_VERSION = "3.4.0"; //NOI18N
 
     /**
      * adds jaxws plugin, requires the model to have a transaction started,
@@ -127,9 +131,6 @@ public final class MavenModelUtils {
         config.setSimpleParameter("verbose", "true"); //NOI18N
         config.setSimpleParameter("extension", "true"); //NOI18N
         config.setSimpleParameter("catalog", "${basedir}/" + MavenJAXWSSupportImpl.CATALOG_PATH);
-        if (jaxWsVersion != null) {
-            config.setSimpleParameter("target", jaxWsVersion); //NOI18N
-        }
         Dependency webservicesDep = model.getFactory().createDependency();
         webservicesDep.setGroupId(WEBSERVICES_METRO_GROUP_ID);
         webservicesDep.setArtifactId(WEBSERVICES_API_ARTIFACT_ID);
@@ -427,19 +428,12 @@ public final class MavenModelUtils {
      * @return true if library was detected
      */
     public static boolean hasJaxWsAPI(Project project, boolean isJakartaEENameSpace) {
-        SourceGroup[] srcGroups = ProjectUtils.getSources(project).getSourceGroups(
-                JavaProjectConstants.SOURCES_TYPE_JAVA);
-        
-        final boolean isWeb = WSUtils.isWeb(project);
-        if(isWeb) {
-            WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
-            profile = wm.getJ2eeProfile();
-        }
-        // TODO: Add support for EJB modules
-        
+        SourceGroup[] srcGroups = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+        getProfile(project);
         if (srcGroups.length > 0) {
             ClassPath classPath = ClassPath.getClassPath(srcGroups[0].getRootFolder(), ClassPath.BOOT);
-            final String wsfClazz = isJakartaEENameSpace ? "jakarta/xml/ws/WebServiceFeature.class" : "javax/xml/ws/WebServiceFeature.class"; // NOI18N
+            String wsfClazz = isJakartaEENameSpace ? 
+                    "jakarta/xml/ws/WebServiceFeature.class" : "javax/xml/ws/WebServiceFeature.class"; // NOI18N
             FileObject wsFeature = classPath.findResource(wsfClazz);
             if (wsFeature == null) {
                 classPath = ClassPath.getClassPath(srcGroups[0].getRootFolder(), ClassPath.COMPILE);
@@ -693,5 +687,50 @@ public final class MavenModelUtils {
             return JAXWS_JAKARTAEE_8_PLUGIN_VERSION;
         }
     }
+    
+    /**
+     * Get {@code Profile} to use when generating the web service client, the
+     * {@code Profile} will be computed every time there is a call to 
+     * {@code hasJaxWsAPI}.
+     * @param project 
+     * @see hasJaxWsAPI
+     */
+    private static void getProfile(Project project) {
+        FileObject projectDirectory = project.getProjectDirectory();
+        if(WSUtils.isWeb(project)) {
+            WebModule wm = WebModule.getWebModule(projectDirectory);
+            profile = wm.getJ2eeProfile();
+        } else if (WSUtils.isEJB(project)) {
+            EjbJar ejbm = EjbJar.getEjbJar(projectDirectory);
+            profile = ejbm.getJ2eeProfile();
+        } else if (WSUtils.isCar(project)) {
+            Car cm = Car.getCar(projectDirectory);
+            profile = cm.getJ2eeProfile();
+        } else if (WSUtils.isJar(project)) {
+            String sourceLevel = WSUtils.getSourceLevel(project);
+            profile = getJarProfile(sourceLevel);
+        } else {
+            profile = Profile.JAKARTA_EE_8_WEB;
+        }
+    }
+    
+    /**
+     * Given the source level return an appropriate {@code Profile} to use
+     * with JSE projects to generate web services clients.
+     * @param jseVersion sourceLevel
+     * @return Profile
+     */
+    private static Profile getJarProfile(String jseVersion) {
+        int sourceLevel = Integer.parseInt(jseVersion);
+        if (sourceLevel >= 17) {
+            return Profile.JAKARTA_EE_11_WEB;
+        } else if (sourceLevel >= 11) {
+            return Profile.JAKARTA_EE_10_WEB;
+        } else if (sourceLevel >= 8) {
+            return Profile.JAKARTA_EE_8_WEB;
+        }
+        return Profile.JAKARTA_EE_8_WEB;
+    }
+    
     
 }

@@ -62,7 +62,7 @@ public class EjbModuleProviderImpl extends BaseEEModuleProvider implements EjbJa
     @Override
     public EjbJar findEjbJar(FileObject file) {
         getModuleImpl();
-        Project proj = FileOwnerQuery.getOwner (file);
+        Project proj = FileOwnerQuery.getOwner(file);
         if (proj != null) {
             proj = proj.getLookup().lookup(Project.class);
         }
@@ -81,7 +81,7 @@ public class EjbModuleProviderImpl extends BaseEEModuleProvider implements EjbJa
     public FileObject[] getSourceRoots() {
         ProjectSourcesClassPathProvider cppImpl = project.getLookup().lookup(ProjectSourcesClassPathProvider.class);
         ClassPath cp = cppImpl.getProjectSourcesClassPath(ClassPath.SOURCE);
-        List<URL> resUris = new ArrayList<URL>();
+        List<URL> resUris = new ArrayList<>();
         for (URI uri : project.getLookup().lookup(NbMavenProject.class).getResources(false)) {
             try {
                 resUris.add(uri.toURL());
@@ -90,7 +90,7 @@ public class EjbModuleProviderImpl extends BaseEEModuleProvider implements EjbJa
             }
         }
         Iterator<ClassPath.Entry> en = cp.entries().listIterator();
-        List<FileObject> toRet = new ArrayList<FileObject>();
+        List<FileObject> toRet = new ArrayList<>();
         int index = 0;
         while (en.hasNext()) {
             ClassPath.Entry ent = en.next();
@@ -124,7 +124,7 @@ public class EjbModuleProviderImpl extends BaseEEModuleProvider implements EjbJa
         // do not use COMPILE classpath here because it contains dependencies
         // with *provided* scope which should not be deployed
         ClassPath cp = cppImpl.getProjectSourcesClassPath(ClassPath.EXECUTE);
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         for (FileObject fo : cp.getRoots()) {
             fo = FileUtil.getArchiveFile(fo);
             if (fo == null) {
@@ -132,6 +132,6 @@ public class EjbModuleProviderImpl extends BaseEEModuleProvider implements EjbJa
             }
             files.add(FileUtil.toFile(fo));
         }
-        return files.toArray(new File[0]);
+        return files.toArray(File[]::new);
     }
 }

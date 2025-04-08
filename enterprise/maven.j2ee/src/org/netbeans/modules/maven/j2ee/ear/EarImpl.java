@@ -239,7 +239,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
                 "generateApplicationXml", //NOI18N
                 "generate-application-xml", null);//NOI18N
         //either the default or explicitly set generation of application.xml file
-        return (str == null || Boolean.valueOf(str));
+        return (str == null || Boolean.parseBoolean(str));
     }
 
     boolean isValid() {
@@ -359,15 +359,16 @@ public class EarImpl implements EarImplementation, EarImplementation2,
                 FileObject content = getDeploymentDescriptor();
                 if (content == null) {
 //                    System.out.println("getDeploymentDescriptor.application dd is null");
-                    StringInputStream str = new StringInputStream(
-                            "<application xmlns=\"http://java.sun.com/xml/ns/j2ee\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/application_1_4.xsd\" version=\"1.4\">" +//NOI18N
+                    String str = 
+                            "<application xmlns=\"http://xmlns.jcp.org/xml/ns/javaee\" " + //NOI18N
+                            "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" " + //NOI18N
+                            "xsi:schemaLocation=\"http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/application-client_8.xsd\" version=\"8\">" + //NOI18N
                             "<description>description</description>" +//NOI18N
-                            "<display-name>" + mavenproject().getMavenProject().getArtifactId() + "</display-name></application>");//NOI18N
+                            "<display-name>" + mavenproject().getMavenProject().getArtifactId() + "</display-name></application>";//NOI18N
                     try {
-                        return DDProvider.getDefault().getDDRoot(new InputSource(str));
-                    } catch (SAXException ex) {
-                        ex.printStackTrace();
-                    } catch (IOException ex) {
+                        ByteArrayInputStream bais = new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8));
+                        return DDProvider.getDefault().getDDRoot(new InputSource(bais));
+                    } catch (SAXException | IOException ex) {
                         ex.printStackTrace();
                     }
                 } else {
@@ -397,7 +398,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
             fileNameMapping = "standard"; //NOI18N
         }
 
-        List<J2eeModule> toRet = new ArrayList<J2eeModule>();
+        List<J2eeModule> toRet = new ArrayList<>();
         EarImpl.MavenModule[] mm = readPomModules();
         //#162173 order by dependency list, artifacts is unsorted set.
         for (Dependency d : deps) {
@@ -405,7 +406,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
                 for (Artifact a : artifactSet) {
                     if (a.getGroupId().equals(d.getGroupId()) &&
                             a.getArtifactId().equals(d.getArtifactId()) &&
-                            StringUtils.equals(a.getClassifier(), d.getClassifier())) {
+                            Objects.equals(a.getClassifier(), d.getClassifier())) {
                         URI uri = Utilities.toURI(FileUtil.normalizeFile(a.getFile()));
                         //#174744 - it's of essence we use the URI based method. items in local repo might not be available yet.
                         Project owner = FileOwnerQuery.getOwner(uri);
@@ -443,7 +444,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
                 }
             }
         }
-        return toRet.toArray(new J2eeModule[0]);
+        return toRet.toArray(J2eeModule[]::new);
     }
 
     @Override
@@ -453,7 +454,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
         Set<Artifact> artifactSet = mp.getArtifacts();
         @SuppressWarnings("unchecked")
         List<Dependency> deps = mp.getRuntimeDependencies();
-        List<Project> toRet = new ArrayList<Project>();
+        List<Project> toRet = new ArrayList<>();
         EarImpl.MavenModule[] mm = readPomModules();
         //#162173 order by dependency list, artifacts is unsorted set.
         for (Dependency d : deps) {
@@ -461,7 +462,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
                 for (Artifact a : artifactSet) {
                     if (a.getGroupId().equals(d.getGroupId()) &&
                             a.getArtifactId().equals(d.getArtifactId()) &&
-                            StringUtils.equals(a.getClassifier(), d.getClassifier())) {
+                            Objects.equals(a.getClassifier(), d.getClassifier())) {
                         URI uri = Utilities.toURI(FileUtil.normalizeFile(a.getFile()));
                         //#174744 - it's of essence we use the URI based method. items in local repo might not be available yet.
                         Project owner = FileOwnerQuery.getOwner(uri);
@@ -769,7 +770,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
                 }
             }
         }
-        return toRet.toArray(new MavenModule[0]);
+        return toRet.toArray(MavenModule[]::new);
     }
 
     private static class MavenModule {

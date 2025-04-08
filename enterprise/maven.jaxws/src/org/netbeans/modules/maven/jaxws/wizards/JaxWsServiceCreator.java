@@ -88,6 +88,7 @@ import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.maven.api.execute.RunConfig;
 import org.netbeans.modules.maven.api.execute.RunUtils;
 import org.netbeans.modules.maven.jaxws.MavenModelUtils;
+import org.netbeans.modules.maven.model.pom.Plugin;
 import org.netbeans.modules.websvc.api.support.java.GenerationUtils;
 import org.netbeans.modules.websvc.api.support.java.SourceUtils;
 import org.netbeans.modules.websvc.jaxws.light.api.JAXWSLightSupport;
@@ -302,19 +303,14 @@ public class JaxWsServiceCreator implements ServiceCreator {
                             MavenModelUtils.addMetroLibrary(project);
                             MavenModelUtils.addJavadoc(project);
                         } catch (Exception ex) {
-                            Logger.getLogger(
-                                JaxWsServiceCreator.class.getName()).log(
-                                    Level.INFO, "Cannot add Metro libbrary to pom file", ex); //NOI18N
+                            LOG.log(Level.INFO, "Cannot add Metro libbrary to pom file", ex); //NOI18N
                         }
                     }
 
                     ModelOperation<POMModel> operation = new ModelOperation<POMModel>() {
                         @Override
                         public void performOperation(POMModel model) {
-                            org.netbeans.modules.maven.model.pom.Plugin plugin =
-                                    isEJB ?
-                                        MavenModelUtils.addJaxWSPlugin(model, "2.0") : //NOI18N
-                                        MavenModelUtils.addJaxWSPlugin(model);
+                            Plugin plugin = MavenModelUtils.addJaxWSPlugin(model);
                             MavenModelUtils.addWsimportExecution(plugin, 
                                     serviceName, relativePath,null );
                             if (isWeb) { // expecting web project

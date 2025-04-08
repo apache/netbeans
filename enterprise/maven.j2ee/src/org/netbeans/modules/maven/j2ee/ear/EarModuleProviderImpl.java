@@ -19,7 +19,6 @@
 package org.netbeans.modules.maven.j2ee.ear;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -32,7 +31,6 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.j2ee.api.ejbjar.Ear;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.ModuleChangeReporter;
@@ -51,7 +49,6 @@ import org.netbeans.modules.maven.j2ee.utils.MavenProjectSupport;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
 
 /**
  * provider for ear specific functionality
@@ -59,10 +56,8 @@ import org.openide.util.Exceptions;
  */
 @ProjectServiceProvider(
     service = {
-        EarModuleProviderImpl.class,
         EarProvider.class,
-        J2eeModuleProvider.class,
-        J2eeApplicationProvider.class
+        J2eeModuleProvider.class
     },
     projectType = {
         "org-netbeans-modules-maven/" + NbMavenProject.TYPE_EAR
@@ -76,6 +71,7 @@ public class EarModuleProviderImpl extends J2eeApplicationProvider implements Ea
     private J2eeModule j2eemodule;
     
     private final DeployOnSaveSupport deployOnSaveSupport = new DeployOnSaveSupportProxy();
+    private static final Logger LOGGER = Logger.getLogger(EarModuleProviderImpl.class.getName());
 
     
     public EarModuleProviderImpl(Project proj) {
@@ -125,10 +121,10 @@ public class EarModuleProviderImpl extends J2eeApplicationProvider implements Ea
      */
     @Override
     public J2eeModuleProvider[] getChildModuleProviders() {
-        List<J2eeModuleProvider> provs = new ArrayList<J2eeModuleProvider>();
+        List<J2eeModuleProvider> provs = new ArrayList<>();
         for (Project prj : earimpl.getProjects()) {
             if(prj.getProjectDirectory().equals(project.getProjectDirectory())) {
-                Logger.getLogger(EarModuleProviderImpl.class.getName()).log(Level.WARNING, "EarImpl.getProjects() for project {0} returns itself as a child project!", project.getProjectDirectory());
+                LOGGER.log(Level.WARNING, "EarImpl.getProjects() for project {0} returns itself as a child project!", project.getProjectDirectory());
                 continue;
             }
             J2eeModuleProvider prv = prj.getLookup().lookup(J2eeModuleProvider.class);
@@ -136,7 +132,7 @@ public class EarModuleProviderImpl extends J2eeApplicationProvider implements Ea
                 provs.add(prv);
             }
         }
-        return provs.toArray(new J2eeModuleProvider[0]);
+        return provs.toArray(J2eeModuleProvider[]::new);
     }
 
     @Override
@@ -161,7 +157,7 @@ public class EarModuleProviderImpl extends J2eeApplicationProvider implements Ea
      * Returns source deployment configuration file path for the given deployment 
      * configuration file name. 
      * 
-     * @param name file name of the deployement configuration file.
+     * @param name file name of the deployment configuration file.
      * @return non-null absolute path to the deployment configuration file.
      */
     public File getDeploymentConfigurationFile(String name) {
@@ -176,13 +172,11 @@ public class EarModuleProviderImpl extends J2eeApplicationProvider implements Ea
         return earimpl.getDDFile(path);
     }
 
-
-
     /**
      * Finds source deployment configuration file object for the given deployment 
      * configuration file name.  
      * 
-     * @param name file name of the deployement configuration file.
+     * @param name file name of the deployment configuration file.
      * @return FileObject of the configuration descriptor file; null if the file does not exists.
      */
     public FileObject findDeploymentConfigurationFile(String name) {
@@ -295,7 +289,7 @@ public class EarModuleProviderImpl extends J2eeApplicationProvider implements Ea
             boolean register = listeners.isEmpty();
             if (listener != null) {
                 if(listener == DeployOnSaveSupportProxy.this) {
-                    Logger.getLogger(EarModuleProviderImpl.class.getName()).log(Level.WARNING, "DeployOnSaveSupportProxy.addArtifactListener for project {0} was about to register itself as a listener!", project.getProjectDirectory());
+                    LOGGER.log(Level.WARNING, "DeployOnSaveSupportProxy.addArtifactListener for project {0} was about to register itself as a listener!", project.getProjectDirectory());
                 } else {                
                     listeners.add(listener);
                 }
@@ -341,7 +335,6 @@ public class EarModuleProviderImpl extends J2eeApplicationProvider implements Ea
             }
             return false;
         }
-
         
         @Override
         public void artifactsUpdated(Iterable<Artifact> artifacts) {

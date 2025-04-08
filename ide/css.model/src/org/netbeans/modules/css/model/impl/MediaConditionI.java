@@ -23,82 +23,44 @@ import java.util.Collection;
 import org.netbeans.modules.css.lib.api.Node;
 import org.netbeans.modules.css.model.api.MediaCondition;
 import org.netbeans.modules.css.model.api.MediaExpression;
-import org.netbeans.modules.css.model.api.MediaQuery;
-import org.netbeans.modules.css.model.api.MediaQueryOperator;
-import org.netbeans.modules.css.model.api.MediaType;
+import org.netbeans.modules.css.model.api.MediaInParens;
 import org.netbeans.modules.css.model.api.Model;
 
-/**
- *
- * @author marekfukala
- */
-public class MediaQueryI extends ModelElement implements MediaQuery {
+public class MediaConditionI extends ModelElement implements MediaCondition {
 
-    private MediaQueryOperator mediaQueryOperator;
-    private MediaType mediaType;
     private Collection<MediaExpression> mediaExpressions = new ArrayList<>();
-    
+    private Collection<MediaInParens> mediaInParens = new ArrayList<>();
     private final ModelElementListener elementListener = new ModelElementListener.Adapter() {
-
-        @Override
-        public void elementAdded(MediaQueryOperator value) {
-            mediaQueryOperator = value;
-        }
-
-        @Override
-        public void elementAdded(MediaType value) {
-            mediaType = value;
-        }
 
         @Override
         public void elementAdded(MediaExpression value) {
             mediaExpressions.add(value);
         }
-      
+
         @Override
-        public void elementAdded(MediaCondition value) {
-            mediaExpressions.addAll(value.getMediaExpressions());
+        public void elementAdded(MediaInParens value) {
+            mediaInParens.add(value);
+            mediaExpressions.add(value.getMediaExpression());
         }
-        
     };
-    
-    public MediaQueryI(Model model) {
+
+    public MediaConditionI(Model model) {
         super(model);
-        
-        addEmptyElement(MediaQueryOperator.class);
-        addTextElement(" ");
-        addEmptyElement(MediaType.class);
-        addTextElement(" ");
     }
 
-    public MediaQueryI(Model model, Node node) {
+    public MediaConditionI(Model model, Node node) {
         super(model, node);
         initChildrenElements();
     }
 
     @Override
     protected Class getModelClass() {
-        return MediaQuery.class;
+        return MediaCondition.class;
     }
 
     @Override
-    public MediaQueryOperator getMediaQueryOperator() {
-        return mediaQueryOperator;
-    }
-
-    @Override
-    public void setMediaQueryOperator(MediaQueryOperator mediaQueryOperator) {
-        setElement(mediaQueryOperator);
-    }
-
-    @Override
-    public MediaType getMediaType() {
-        return mediaType;
-    }
-
-    @Override
-    public void setMediaType(MediaType mediaType) {
-        setElement(mediaType);
+    protected ModelElementListener getElementListener() {
+        return elementListener;
     }
 
     @Override
@@ -108,14 +70,16 @@ public class MediaQueryI extends ModelElement implements MediaQuery {
 
     @Override
     public void addMediaExpression(MediaExpression mediaExpression) {
-        addTextElement("AND");
-        addTextElement(" ");
         addElement(mediaExpression);
     }
 
     @Override
-    protected ModelElementListener getElementListener() {
-        return elementListener;
+    public Collection<MediaInParens> getMediaInParens() {
+        return mediaInParens;
     }
 
+    @Override
+    public void addMediaInParens(MediaInParens mediaExpression) {
+        addElement(mediaExpression);
+    }
 }

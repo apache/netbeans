@@ -471,16 +471,13 @@ public class LayoutModel implements LayoutConstants {
             LayoutComponent comp = interval.getComponent();
             boolean horizontal = (interval == comp.getLayoutInterval(HORIZONTAL));
             if (oldMin != min) {
-                comp.firePropertyChange(horizontal ? PROP_HORIZONTAL_MIN_SIZE : PROP_VERTICAL_MIN_SIZE,
-                    new Integer(oldMin), new Integer(min));
+                comp.firePropertyChange(horizontal ? PROP_HORIZONTAL_MIN_SIZE : PROP_VERTICAL_MIN_SIZE, oldMin, min);
             }
             if (oldPref != pref) {
-                comp.firePropertyChange(horizontal ? PROP_HORIZONTAL_PREF_SIZE : PROP_VERTICAL_PREF_SIZE,
-                    new Integer(oldPref), new Integer(pref));
+                comp.firePropertyChange(horizontal ? PROP_HORIZONTAL_PREF_SIZE : PROP_VERTICAL_PREF_SIZE, oldPref, pref);
             }
             if (oldMax != max) {
-                comp.firePropertyChange(horizontal ? PROP_HORIZONTAL_MAX_SIZE : PROP_VERTICAL_MAX_SIZE,
-                    new Integer(oldMax), new Integer(max));
+                comp.firePropertyChange(horizontal ? PROP_HORIZONTAL_MAX_SIZE : PROP_VERTICAL_MAX_SIZE, oldMax, max);
             }
         }
 
@@ -734,9 +731,9 @@ public class LayoutModel implements LayoutConstants {
             for (Rectangle bounds : compToBounds.values()) {
                 // Leading lines are sufficient
                 int leading = (dimension == HORIZONTAL) ? bounds.x : bounds.y;
-                cutSet.add(new Integer(leading));
+                cutSet.add(leading);
             }
-            cutSet.add(new Integer((dimension == HORIZONTAL) ? maxx : maxy));
+            cutSet.add((dimension == HORIZONTAL) ? maxx : maxy);
             return cutSet;
         }
         
@@ -928,7 +925,7 @@ public class LayoutModel implements LayoutConstants {
     }
 
     public Object getChangeMark() {
-        return new Integer(changeMark);
+        return changeMark;
     }
 
     public boolean endUndoableEdit() {
@@ -964,10 +961,10 @@ public class LayoutModel implements LayoutConstants {
             if (undoMap.isEmpty())
                 oldestMark = changeMark;
 
-            undoMap.put(new Integer(changeMark++), change);
+            undoMap.put(changeMark++, change);
 
             while (undoMap.size() > changeCountHardLimit) {
-                undoMap.remove(new Integer(oldestMark++));
+                undoMap.remove(Integer.valueOf(oldestMark++));
             }
         }
     }
@@ -975,11 +972,11 @@ public class LayoutModel implements LayoutConstants {
     boolean undo(Object startMark, Object endMark) {
         assert !undoRedoInProgress;
         boolean undone = false;
-        int start = ((Integer)startMark).intValue();
-        int end = ((Integer)endMark).intValue();
+        int start = (Integer)startMark;
+        int end = (Integer)endMark;
         undoRedoInProgress = true;
         while (end > start) {
-            Integer key = new Integer(--end);
+            Integer key = --end;
             LayoutEvent change = undoMap.remove(key);
             if (change != null) {
                 change.undo();
@@ -994,12 +991,12 @@ public class LayoutModel implements LayoutConstants {
 
     boolean redo(Object startMark, Object endMark) {
         assert !undoRedoInProgress;
-        int start = ((Integer)startMark).intValue();
-        int end = ((Integer)endMark).intValue();
+        int start = (Integer)startMark;
+        int end = (Integer)endMark;
         undoRedoInProgress = true;
 
         while (start < end) {
-            Integer key = new Integer(start++);
+            Integer key = start++;
             LayoutEvent change = redoMap.remove(key);
             if (change != null) {
                 change.redo();
@@ -1014,11 +1011,11 @@ public class LayoutModel implements LayoutConstants {
     boolean revert(Object startMark, Object endMark) {
         assert !undoRedoInProgress;
         boolean reverted = false;
-        int start = ((Integer)startMark).intValue();
-        int end = ((Integer)endMark).intValue();
+        int start = (Integer)startMark;
+        int end = (Integer)endMark;
         undoRedoInProgress = true;
         while (end > start) {
-            Integer key = new Integer(--end);
+            Integer key = --end;
             LayoutEvent change = undoMap.remove(key);
             if (change != null) {
                 change.undo();
@@ -1033,11 +1030,11 @@ public class LayoutModel implements LayoutConstants {
     }
 
     void releaseChanges(Object fromMark, Object toMark) {
-        int m1 = ((Integer)fromMark).intValue();
-        int m2 = ((Integer)toMark).intValue();
+        int m1 = (Integer)fromMark;
+        int m2 = (Integer)toMark;
 
         while (m1 < m2) {
-            Integer m = new Integer(m1);
+            Integer m = m1;
             undoMap.remove(m);
             redoMap.remove(m);
             m1++;
@@ -1238,7 +1235,7 @@ public class LayoutModel implements LayoutConstants {
         if (maxLinkGroupId < groupId) {
             maxLinkGroupId=groupId;
         }
-        Integer groupIdInt = new Integer(groupId);
+        Integer groupIdInt = groupId;
         Map<Integer,List<String>> linkSizeGroups = (dimension == HORIZONTAL) ? linkSizeGroupsH : linkSizeGroupsV;
         List<String> l = linkSizeGroups.get(groupIdInt);
         if ((l != null) && (l.contains(compId) || !sameContainer(compId, l.get(0)))) {
@@ -1249,7 +1246,7 @@ public class LayoutModel implements LayoutConstants {
 
     void addComponentToLinkSizedGroupImpl(int groupId, String compId, int dimension) {
         LayoutComponent lc = getLayoutComponent(compId);
-        Integer groupIdInt = new Integer(groupId);
+        Integer groupIdInt = groupId;
         Map<Integer,List<String>> linkSizeGroups = (dimension == HORIZONTAL) ? linkSizeGroupsH : linkSizeGroupsV;
         List<String> l = linkSizeGroups.get(groupIdInt);
         if (l != null) {
@@ -1284,7 +1281,7 @@ public class LayoutModel implements LayoutConstants {
         if (linkId != NOT_EXPLICITLY_DEFINED) {
 
             Map<Integer,List<String>> map = (dimension == HORIZONTAL) ? linkSizeGroupsH : linkSizeGroupsV;
-            Integer linkIdInt = new Integer(linkId);
+            Integer linkIdInt = linkId;
             
             List<String> l = map.get(linkIdInt);
             l.remove(comp.getId());
@@ -1333,7 +1330,7 @@ public class LayoutModel implements LayoutConstants {
         while (i.hasNext()) {
             String cid = (String)i.next();
             LayoutComponent lc = getLayoutComponent(cid);
-            Integer linkSizeId =  new Integer(lc.getLinkSizeId(dimension));
+            Integer linkSizeId =  lc.getLinkSizeId(dimension);
             if (!idsFound.contains(linkSizeId)) {
                 idsFound.add(linkSizeId);
             }
@@ -1342,12 +1339,12 @@ public class LayoutModel implements LayoutConstants {
             }
         }
         if (idsFound.size() == 1) {
-            if (idsFound.contains(new Integer(NOT_EXPLICITLY_DEFINED))) {
+            if (idsFound.contains(NOT_EXPLICITLY_DEFINED)) {
                 return FALSE;
             }
             return TRUE;
         }
-        if (idsFound.contains(new Integer(NOT_EXPLICITLY_DEFINED))) { // == 2 elements
+        if (idsFound.contains(NOT_EXPLICITLY_DEFINED)) { // == 2 elements
             return FALSE;
         } else {
             return INVALID;

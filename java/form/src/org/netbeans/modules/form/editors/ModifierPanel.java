@@ -371,7 +371,7 @@ final class ModifierPanel {
         int comboIndex = accessCombo.getSelectedIndex();
         Object type = myEditor.getType();
         int mask = 0;
-        if (ModifierEditor.FULL_CUSTOM_EDITOR == type || ModifierEditor.ACCESS_MODIFIERS_CUSTOM_EDITOR == type) {
+        if (ModifierEditor.FULL_CUSTOM_EDITOR.equals(type) || ModifierEditor.ACCESS_MODIFIERS_CUSTOM_EDITOR.equals(type)) {
             mask |= ACCESS_MASK;
             if (comboIndex == -1) {
                 newValue = myEditor.getModifier() & ACCESS_MASK;
@@ -379,7 +379,7 @@ final class ModifierPanel {
                 newValue |= currentAccessValues[comboIndex];
             }
         }
-        if (ModifierEditor.FULL_CUSTOM_EDITOR == type || ModifierEditor.OTHERS_MODIFIERS_CUSTOM_EDITOR == type) {
+        if (ModifierEditor.FULL_CUSTOM_EDITOR.equals(type) || ModifierEditor.OTHERS_MODIFIERS_CUSTOM_EDITOR.equals(type)) {
             mask |= OTHERS_MASK;
             for (int i = 0; i < MODIFIER_COUNT; i++) {
                 if (checks[i].isSelected() && checks[i].isEnabled())
@@ -389,9 +389,9 @@ final class ModifierPanel {
         
         int oldValue = myEditor.getModifier(); 
         if ((oldValue & mask) != newValue) {
-            if (ModifierEditor.ACCESS_MODIFIERS_CUSTOM_EDITOR == type) {
+            if (ModifierEditor.ACCESS_MODIFIERS_CUSTOM_EDITOR.equals(type)) {
                 newValue |= (oldValue & ~ACCESS_MASK);
-            } else if (ModifierEditor.OTHERS_MODIFIERS_CUSTOM_EDITOR == type) {
+            } else if (ModifierEditor.OTHERS_MODIFIERS_CUSTOM_EDITOR.equals(type)) {
                 newValue |= (oldValue & ~OTHERS_MASK);
             }
             myEditor.setModifier(newValue);

@@ -456,7 +456,7 @@ public abstract class PageInfo {
 	    if (value == null || !value.endsWith("kb"))
 		throw new JspException(value);
 	    try {
-		Integer k = new Integer(value.substring(0, value.length()-2));
+		Integer k = Integer.valueOf(value.substring(0, value.length()-2));
 		buffer = k * 1024;
 	    } catch (NumberFormatException e) {
                 throw new JspException(value);

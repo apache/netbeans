@@ -94,13 +94,13 @@ public class SplittedPanel extends JComponent implements Accessible {
     public static final int HORIZONTAL = 2;
 
     /** constraints constant for adding a splitter */
-    public static final Object ADD_SPLITTER = new Integer(0);
+    public static final Object ADD_SPLITTER = 0;
 
     /** constraints constant for adding a component to the first (left/top) pane */
-    public static final Object ADD_FIRST = new Integer(1);
+    public static final Object ADD_FIRST = 1;
 
     /** constraints constant for adding a component to the second (right/bottom) pane */
-    public static final Object ADD_SECOND = new Integer(2);
+    public static final Object ADD_SECOND = 2;
 
     /** constraints constant for adding a component to the left(top) pane (an alias for the ADD_FIRST constant) */
     public static final Object ADD_LEFT = ADD_FIRST;

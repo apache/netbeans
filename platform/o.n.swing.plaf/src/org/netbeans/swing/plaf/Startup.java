@@ -240,12 +240,12 @@ public final class Startup {
         if (curCustoms != null) {
             Integer in = (Integer) UIManager.get(LFCustoms.CUSTOM_FONT_SIZE); //NOI18N
             if (in == null && UIManager.getLookAndFeel().getClass() == MetalLookAndFeel.class) {
-                in = new Integer (11);
+                in = 11;
             }
 
             //#161761: Do not want to use font size param for GTK L&F because it causes mixed font size
             if ((in != null) && !UIUtils.isGtkLF()) {
-                AllLFCustoms.initCustomFontSize (in.intValue());
+                AllLFCustoms.initCustomFontSize (in);
             }
             installLFCustoms (curCustoms);
             if (isLFChange) {
@@ -546,7 +546,7 @@ public final class Startup {
         if (instance == null) {
           // Modify default font size to the font size passed as a command-line parameter
             if(uiFontSize>0) {
-                Integer customFontSize = new Integer (uiFontSize);
+                Integer customFontSize = Integer.valueOf(uiFontSize);
                 UIManager.put (LFCustoms.CUSTOM_FONT_SIZE, customFontSize);
             }
             Startup.uiClass = uiClass;

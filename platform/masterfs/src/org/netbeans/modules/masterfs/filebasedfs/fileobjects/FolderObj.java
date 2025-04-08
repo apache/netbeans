@@ -465,12 +465,12 @@ public final class FolderObj extends BaseFileObj {
             final FileNaming child = entry.getKey();
             final Integer operationId = entry.getValue();
 
-            BaseFileObj newChild = (operationId == ChildrenCache.ADDED_CHILD) ? 
+            BaseFileObj newChild = (ChildrenCache.ADDED_CHILD.equals(operationId)) ? 
                 factory.getFileObject(new FileInfo(child.getFile()), FileObjectFactory.Caller.Refresh, true) 
                 : 
                 factory.getCachedOnly(child.getFile());
             newChild = (BaseFileObj) ((newChild != null) ? newChild : getFileObject(child.getName()));
-            if (operationId == ChildrenCache.ADDED_CHILD && newChild != null) {
+            if (ChildrenCache.ADDED_CHILD.equals(operationId) && newChild != null) {
 
                 if (newChild.isFolder()) {
                     if (fire) {
@@ -484,7 +484,7 @@ public final class FolderObj extends BaseFileObj {
                     }
                 }
 
-            } else if (operationId == ChildrenCache.REMOVED_CHILD) {
+            } else if (ChildrenCache.REMOVED_CHILD.equals(operationId)) {
                 if (newChild != null) {
                     if (newChild.isValid()) {
                         if (newChild instanceof FolderObj) {

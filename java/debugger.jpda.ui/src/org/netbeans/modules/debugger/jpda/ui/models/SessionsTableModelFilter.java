@@ -153,8 +153,7 @@ PropertyChangeListener {
             ((ModelListener) v.get (i)).modelChanged (null);
     }
     
-    private static final Integer SD = new Integer 
-        (JPDADebugger.STATE_DISCONNECTED);
+    private static final Integer SD = JPDADebugger.STATE_DISCONNECTED;
     
     public void propertyChange (PropertyChangeEvent e) {
         fireTreeChanged ();

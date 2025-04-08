@@ -499,11 +499,11 @@ public class AbsoluteLayoutSupport extends AbstractLayoutSupport {
 
                     @Override
                     public Object getTargetValue() {
-                        return new Integer(x);
+                        return x;
                     }
                     @Override
                     public void setTargetValue(Object value) {
-                        x = ((Integer)value).intValue();
+                        x = (Integer)value;
                     }
                     @Override
                     public void setPropertyContext(
@@ -519,11 +519,11 @@ public class AbsoluteLayoutSupport extends AbstractLayoutSupport {
 
                     @Override
                     public Object getTargetValue() {
-                        return new Integer(y);
+                        return y;
                     }
                     @Override
                     public void setTargetValue(Object value) {
-                        y = ((Integer)value).intValue();
+                        y = (Integer)value;
                     }
                     @Override
                     public void setPropertyContext(
@@ -539,11 +539,11 @@ public class AbsoluteLayoutSupport extends AbstractLayoutSupport {
 
                     @Override
                     public Object getTargetValue() {
-                        return new Integer(w);
+                        return w;
                     }
                     @Override
                     public void setTargetValue(Object value) {
-                        w = ((Integer)value).intValue();
+                        w = (Integer)value;
                     }
                     @Override
                     public boolean supportsDefaultValue () {
@@ -551,7 +551,7 @@ public class AbsoluteLayoutSupport extends AbstractLayoutSupport {
                     }
                     @Override
                     public Object getDefaultValue() {
-                        return new Integer(-1);
+                        return -1;
                     }
                     @Override
                     public PropertyEditor getExpliciteEditor() {
@@ -584,11 +584,11 @@ public class AbsoluteLayoutSupport extends AbstractLayoutSupport {
 
                     @Override
                     public Object getTargetValue() {
-                        return new Integer(h);
+                        return h;
                     }
                     @Override
                     public void setTargetValue(Object value) {
-                        h = ((Integer)value).intValue();
+                        h = (Integer)value;
                     }
                     @Override
                     public boolean supportsDefaultValue () {
@@ -596,7 +596,7 @@ public class AbsoluteLayoutSupport extends AbstractLayoutSupport {
                     }
                     @Override
                     public Object getDefaultValue() {
-                        return new Integer(-1);
+                        return -1;
                     }
                     @Override
                     public PropertyEditor getExpliciteEditor() {
@@ -694,7 +694,7 @@ public class AbsoluteLayoutSupport extends AbstractLayoutSupport {
      */
     public static final class SizeEditor extends PropertyEditorSupport {
 
-        final Integer prefValue = new Integer(-1);
+        final Integer prefValue = -1;
         final String prefTag = getBundle().getString("VALUE_preferred"); // NOI18N
 
         @Override
@@ -715,7 +715,7 @@ public class AbsoluteLayoutSupport extends AbstractLayoutSupport {
                 setValue(prefValue);
             else
                 try {
-                    setValue(new Integer(Integer.parseInt(str)));
+                    setValue(Integer.valueOf(str));
                 } 
                 catch (NumberFormatException e) {} // ignore
         }

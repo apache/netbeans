@@ -328,9 +328,7 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                  *
                  * @author junit
                  */
-                 record F(int id, String name, LocalDate dob) {
-
-                }
+                 record F(int id, String name, LocalDate dob) {}
                 """;
         innerOuterSetupAndTest(source, newOuter, newInner);
     }

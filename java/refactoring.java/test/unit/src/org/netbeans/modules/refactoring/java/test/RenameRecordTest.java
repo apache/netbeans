@@ -41,6 +41,7 @@ public class RenameRecordTest extends RefactoringTestBase {
 
     public RenameRecordTest(String name) {
         super(name, "17");
+        sideBySideCompare=true;
     }
 
     public void testRenameComponent1() throws Exception {
@@ -388,7 +389,7 @@ public class RenameRecordTest extends RefactoringTestBase {
     public void testRenameRecordGenVar() throws Exception {
 //        RETRIES=1;
         sideBySideCompare=true;
-//        showOutputOnPass=true;
+        showOutputOnPass=true;
 
         String testCode = """
                           package test;

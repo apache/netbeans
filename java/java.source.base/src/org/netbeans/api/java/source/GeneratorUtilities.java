@@ -632,7 +632,7 @@ public final class GeneratorUtilities {
             // ignore type
             Tree parent = getCurrentPath().getParentPath().getLeaf();
             Tree.Kind k = parent.getKind();
-            if (k == Tree.Kind.CLASS || k == Tree.Kind.INTERFACE || k == Tree.Kind.ENUM) {
+            if (k == Tree.Kind.CLASS || k == Tree.Kind.INTERFACE || k == Tree.Kind.ENUM || k == Tree.Kind.RECORD) {
                 member = node;
             }
             Object o = scan(node.getInitializer(), p);
@@ -643,7 +643,7 @@ public final class GeneratorUtilities {
         @Override public Object visitBlock(BlockTree node, Object p) { 
             Tree parent = getCurrentPath().getParentPath().getLeaf();
             Tree.Kind k = parent.getKind();
-            if (k == Tree.Kind.CLASS || k == Tree.Kind.INTERFACE || k == Tree.Kind.ENUM) {
+            if (k == Tree.Kind.CLASS || k == Tree.Kind.INTERFACE || k == Tree.Kind.ENUM || k == Tree.Kind.RECORD) {
                 member = node;
                 return super.visitBlock(node, p);
             }

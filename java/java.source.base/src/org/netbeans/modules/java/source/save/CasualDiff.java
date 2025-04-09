@@ -143,6 +143,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import static java.util.logging.Level.*;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -1016,10 +1017,14 @@ public class CasualDiff {
         }
         //TODO: class to record and vice versa!
         if (oldT.getKind() == Kind.RECORD && newT.getKind() == Kind.RECORD) {
-            ComponentsAndOtherMembers oldParts = splitOutRecordComponents(filteredOldTDefs);
-            ComponentsAndOtherMembers newParts = splitOutRecordComponents(filteredNewTDefs);
+            ComponentsAndOtherMembers oldParts = splitOutRecordComponents(filteredOldTDefs, oldT);
+            ComponentsAndOtherMembers newParts = splitOutRecordComponents(filteredNewTDefs, newT);
+            List<JCVariableDecl> oldCanonicalParameters = oldParts.canonicalParameters();
+            List<JCVariableDecl> newCanonicalParameters = newParts.canonicalParameters();
+            System.err.println("CD oldT "+oldT);
+            System.err.println("CD newT "+newT);
             int posHint;
-            if (oldParts.components().isEmpty()) {
+            if (oldCanonicalParameters.isEmpty()) {
                 // compute the position. Find the parameters closing ')', its
                 // start position is important for us. This is used when
                 // there was not any parameter in original tree.
@@ -1029,21 +1034,21 @@ public class CasualDiff {
                 posHint = tokenSequence.offset();
             } else {
                 // take the position of the first old parameter
-                posHint = oldParts.components.iterator().next().getStartPosition();
+                posHint = oldCanonicalParameters.iterator().next().getStartPosition();
             }
-            if (!listsMatch(oldParts.components, newParts.components)) {
+            if (!listsMatch(oldCanonicalParameters, newCanonicalParameters)) {
                 copyTo(localPointer, posHint);
                 int old = printer.setPrec(TreeInfo.noPrec);
                 parameterPrint = true;
                 JCClassDecl oldEnclClass = printer.enclClass;
                 printer.enclClass = null;
-                localPointer = diffParameterList(oldParts.components, newParts.components, null, posHint, Measure.MEMBER);
+                localPointer = diffParameterList(oldCanonicalParameters, newCanonicalParameters, null, posHint, Measure.MEMBER);
                 printer.enclClass = oldEnclClass;
                 parameterPrint = false;
                 printer.setPrec(old);
             }
             //make sure the ')' is printed:
-            moveFwdToToken(tokenSequence, oldParts.components.isEmpty() ? posHint : endPos(oldParts.components.get(oldParts.components.size() - 1)), JavaTokenId.RPAREN);
+            moveFwdToToken(tokenSequence, oldCanonicalParameters.isEmpty() ? posHint : endPos(oldCanonicalParameters.get(oldCanonicalParameters.size() - 1)), JavaTokenId.RPAREN);
             tokenSequence.moveNext();
             posHint = tokenSequence.offset();
             if (localPointer < posHint)
@@ -1054,7 +1059,7 @@ public class CasualDiff {
             moveToSrcRelevant(tokenSequence, Direction.FORWARD);
             // it can be > (GT) or >> (SHIFT)
             insertHint = tokenSequence.offset() + tokenSequence.token().length();
-        }
+        }  // end both record
         switch (getChangeKind(oldT.extending, newT.extending)) {
             case NOCHANGE:
                 insertHint = oldT.extending != null ? endPos(oldT.extending) : insertHint;
@@ -1200,24 +1205,44 @@ public class CasualDiff {
         return bounds[1];
     }
     
-    private ComponentsAndOtherMembers splitOutRecordComponents(List<JCTree> defs) {
-        ListBuffer<JCTree> components = new ListBuffer<>();
+    private ComponentsAndOtherMembers splitOutRecordComponents(List<JCTree> defs, JCClassDecl recordTree) {
+        ListBuffer<JCVariableDecl> components = new ListBuffer<>();
         ListBuffer<JCTree> filteredDefs = new ListBuffer<>();
-
+        JCModifiers mods = make.Modifiers(0L);
         for (JCTree t : defs) {
             if (t.getKind() == Kind.VARIABLE &&
                 (((JCVariableDecl) t).mods.flags & RECORD) != 0) {
-                components.add(t);
+                JCVariableDecl vt =(JCVariableDecl) t;
+                JCVariableDecl nt = make.VarDef(mods, vt.name, vt.vartype, null);
+                components.add(nt);
             } else {
                 filteredDefs.add(t);
             }
         }
+        int compCount= components.size();
+        List<JCVariableDecl> params = recordTree.getMembers().stream()
+                .filter(t -> t.getKind() == Kind.METHOD && ((JCMethodDecl) t).getReturnType()==null)
+                .map(JCMethodDecl.class::cast)
+                .filter(mt -> mt.getParameters().size()==compCount)
+                .flatMap(mt->mt.getParameters().stream())
+                .collect(Collectors.toList());
+        
+        Iterator<JCVariableDecl> iterator = components.toList().iterator();
+        // apply possible renames
+        for (int i = 0; i < params.size(); i++) {
+            JCVariableDecl comp = iterator.next();
+            JCVariableDecl p = params.get(i);
+            if (!p.name.toString().equals(comp.name.toString())) {
+                JCVariableDecl vardef = make.VarDef(mods, p.name, comp.vartype,  null);
+                params.set(i, vardef);
+            }
+        }
 
         return new ComponentsAndOtherMembers(components.toList(),
-                                             filteredDefs.toList());
+                                             filteredDefs.toList(), components.toList());
     }
 
-    record ComponentsAndOtherMembers(List<JCTree> components, List<JCTree> defs) {}
+    record ComponentsAndOtherMembers(List<JCVariableDecl> components, List<JCTree> defs, List<JCVariableDecl> canonicalParameters) {}
 
     /**
      * When the enumeration contains just methods, it is necessary to preced them with single ;. If a constant is

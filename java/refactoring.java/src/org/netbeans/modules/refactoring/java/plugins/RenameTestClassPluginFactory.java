@@ -37,7 +37,7 @@ public class RenameTestClassPluginFactory implements RefactoringPluginFactory {
     @Override
     public RefactoringPlugin createInstance(AbstractRefactoring refactoring) {
         if (refactoring instanceof RenameRefactoring) {
-            EnumSet<Tree.Kind> supported = EnumSet.of(Tree.Kind.CLASS, Tree.Kind.ENUM, Tree.Kind.INTERFACE, Tree.Kind.METHOD);
+            EnumSet<Tree.Kind> supported = EnumSet.of(Tree.Kind.CLASS, Tree.Kind.ENUM, Tree.Kind.RECORD, Tree.Kind.INTERFACE, Tree.Kind.METHOD);
             TreePathHandle handle = refactoring.getRefactoringSource().lookup(TreePathHandle.class);
             if (handle!=null && supported.contains(handle.getKind())) {
                 return new RenameTestClassRefactoringPlugin((RenameRefactoring) refactoring);

@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -134,6 +135,9 @@ import org.eclipse.lsp4j.FoldingRangeRequestParams;
 import org.eclipse.lsp4j.Hover;
 import org.eclipse.lsp4j.HoverParams;
 import org.eclipse.lsp4j.ImplementationParams;
+import org.eclipse.lsp4j.InlayHint;
+import org.eclipse.lsp4j.InlayHintLabelPart;
+import org.eclipse.lsp4j.InlayHintParams;
 import org.eclipse.lsp4j.InsertTextFormat;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
@@ -251,6 +255,7 @@ import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.lsp.CallHierarchyProvider;
 import org.netbeans.spi.lsp.CodeLensProvider;
 import org.netbeans.spi.lsp.ErrorProvider;
+import org.netbeans.spi.lsp.InlayHintsProvider;
 import org.netbeans.spi.lsp.StructureProvider;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectConfiguration;
@@ -289,6 +294,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     
     private static final String COMMAND_RUN_SINGLE = "nbls.run.single";         // NOI18N
     private static final String COMMAND_DEBUG_SINGLE = "nbls.debug.single";     // NOI18N
+    private static final String NETBEANS_INLAY_HINT = "inlay.enabled";   // NOI18N
     private static final String NETBEANS_JAVADOC_LOAD_TIMEOUT = "javadoc.load.timeout";// NOI18N
     private static final String NETBEANS_COMPLETION_WARNING_TIME = "completion.warning.time";// NOI18N
     private static final String NETBEANS_JAVA_ON_SAVE_ORGANIZE_IMPORTS = "java.onSave.organizeImports";// NOI18N
@@ -2800,6 +2806,63 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
         };
         return t.processRequest();
+    }
+
+    @Override
+    public CompletableFuture<List<InlayHint>> inlayHint(InlayHintParams params) {
+        String uri = params.getTextDocument().getUri();
+        ConfigurationItem conf = new ConfigurationItem();
+        conf.setScopeUri(uri);
+        conf.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_INLAY_HINT);
+        return client.configuration(new ConfigurationParams(Collections.singletonList(conf))).thenCompose(c -> {
+            FileObject file;
+            try {
+                file = Utils.fromUri(uri);
+            } catch (MalformedURLException ex) {
+                return CompletableFuture.failedFuture(ex);
+            }
+            Set<String> enabled = null;
+            if (c != null && !c.isEmpty()) {
+                enabled = new HashSet<>();
+
+                JsonArray actualSettings = ((JsonArray) c.get(0));
+
+                for (JsonElement el : actualSettings) {
+                    enabled.add(((JsonPrimitive) el).getAsString());
+                }
+            }
+            org.netbeans.api.lsp.Range range = new org.netbeans.api.lsp.Range(Utils.getOffset(file, params.getRange().getStart()),
+                                                                              Utils.getOffset(file, params.getRange().getEnd()));
+            CompletableFuture<List<InlayHint>> result = CompletableFuture.completedFuture(List.of());
+            for (InlayHintsProvider p : MimeLookup.getLookup(FileUtil.getMIMEType(file)).lookupAll(InlayHintsProvider.class)) {
+                Set<String> currentTypes = new HashSet<>(p.supportedHintTypes());
+
+                if (enabled != null) {
+                    currentTypes.retainAll(enabled);
+                }
+
+                if (!currentTypes.isEmpty()) {
+                    InlayHintsProvider.Context ctx = new InlayHintsProvider.Context(file, range, currentTypes);
+                    result = result.thenCombine(p.inlayHints(ctx).thenApply(lspHints -> {
+                        List<InlayHint> hints = new ArrayList<>();
+
+                        for (org.netbeans.api.lsp.InlayHint h : lspHints) {
+                            hints.add(new InlayHint(Utils.createPosition(file, h.getPosition().getOffset()), Either.forRight(List.of(new InlayHintLabelPart(h.getText())))));
+                        }
+
+                        return hints;
+                    }), (l1, l2) -> {
+                        List<InlayHint> combined = new ArrayList<>();
+
+                        combined.addAll(l1);
+                        combined.addAll(l2);
+
+                        return combined;
+                    });
+                }
+            }
+            return result;
+        });
     }
 
 }

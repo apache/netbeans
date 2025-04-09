@@ -97,39 +97,6 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
     public static final String JAVA_INLINE_HINT_CHAINED_TYPES = "javaInlineHintChainedTypes"; //NOI18N
     public static final String JAVA_INLINE_HINT_VAR_TYPE = "javaInlineHintVarType"; //NOI18N
 
-    private static final Map<String, Boolean> DEFAULT_VALUES;
-
-    static {
-        Map<String, Boolean> defaultValuesBuilder = new HashMap<>();
-        defaultValuesBuilder.put(JAVA_INLINE_HINT_PARAMETER_NAME, true);
-        defaultValuesBuilder.put(JAVA_INLINE_HINT_CHAINED_TYPES, false);
-        defaultValuesBuilder.put(JAVA_INLINE_HINT_VAR_TYPE, false);
-        DEFAULT_VALUES = Collections.unmodifiableMap(defaultValuesBuilder);
-    }
-
-    private static boolean javaInlineHintParameterName;
-    private static boolean javaInlineHintChainedTypes;
-    private static boolean javaInlineHintVarType;
-
-    private static boolean isJavaInlineHintParameterName() {
-        return javaInlineHintParameterName;
-    }
-
-    private static boolean isJavaInlineHintChainedTypes() {
-        return javaInlineHintChainedTypes;
-    }
-
-    private static boolean isJavaInlineHintVarType() {
-        return javaInlineHintVarType;
-    }
-
-    private static void updateFromPreferences() {
-        Preferences preferences = NbPreferences.root().node("/org/netbeans/modules/java/editor/InlineHints/default");
-        javaInlineHintParameterName = preferences.getBoolean(JAVA_INLINE_HINT_PARAMETER_NAME, DEFAULT_VALUES.get(JAVA_INLINE_HINT_PARAMETER_NAME));
-        javaInlineHintChainedTypes = preferences.getBoolean(JAVA_INLINE_HINT_CHAINED_TYPES, DEFAULT_VALUES.get(JAVA_INLINE_HINT_CHAINED_TYPES));
-        javaInlineHintVarType = preferences.getBoolean(JAVA_INLINE_HINT_VAR_TYPE, DEFAULT_VALUES.get(JAVA_INLINE_HINT_VAR_TYPE));
-    }
-
     private AtomicBoolean cancel = new AtomicBoolean();
 
     protected SemanticHighlighterBase() {
@@ -189,9 +156,11 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
     protected abstract boolean process(CompilationInfo info, final Document doc);
     
     protected boolean process(CompilationInfo info, final Document doc, ErrorDescriptionSetter setter) {
-        updateFromPreferences();
+        return process(info, doc, Settings.getDefault(), setter);
+    }
 
-        DetectorVisitor v = new DetectorVisitor(info, doc, cancel);
+    protected boolean process(CompilationInfo info, final Document doc, Settings settings, ErrorDescriptionSetter setter) {
+        DetectorVisitor v = new DetectorVisitor(info, doc, settings, cancel);
         
         Map<Token, Coloring> newColoring = new IdentityHashMap<>();
 
@@ -315,8 +284,9 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
     
     private static class DetectorVisitor extends CancellableTreePathScanner<Void, Void> {
         
-        private org.netbeans.api.java.source.CompilationInfo info;
-        private Document doc;
+        private final org.netbeans.api.java.source.CompilationInfo info;
+        private final Document doc;
+        private final Settings settings;
         private Map<Element, List<Use>> type2Uses;        
         private Map<Tree, List<Token>> tree2Tokens;
         private List<Token> contextKeywords;
@@ -327,11 +297,12 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         private SourcePositions sourcePositions;
         private ExecutableElement recursionDetector;
         
-        private DetectorVisitor(org.netbeans.api.java.source.CompilationInfo info, final Document doc, AtomicBoolean cancel) {
+        private DetectorVisitor(org.netbeans.api.java.source.CompilationInfo info, final Document doc, Settings settings, AtomicBoolean cancel) {
             super(cancel);
             
             this.info = info;
             this.doc  = doc;
+            this.settings = settings;
             type2Uses = new HashMap<Element, List<Use>>();
             tree2Tokens = new IdentityHashMap<Tree, List<Token>>();
             contextKeywords = new ArrayList<>();
@@ -787,7 +758,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         }
 
         private void addChainedTypes(TreePath current) {
-            if(! isJavaInlineHintChainedTypes()) {
+            if (!settings.javaInlineHintChainedTypes) {
                 return;
             }
             List<TreePath> chain = new ArrayList<>(); //TODO: avoid creating an instance if possible!
@@ -963,7 +934,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             
             tl.moveNext();
             
-            if (info.getTreeUtilities().isVarType(getCurrentPath()) && isJavaInlineHintVarType()) {
+            if (info.getTreeUtilities().isVarType(getCurrentPath()) && settings.javaInlineHintVarType) {
                 int afterName = tl.offset();
                 TypeMirror type = info.getTrees().getTypeMirror(new TreePath(getCurrentPath(), tree.getType()));
 
@@ -1156,7 +1127,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         }
 
         private void addParameterInlineHint(Tree tree) {
-            if(! isJavaInlineHintParameterName()) {
+            if (!settings.javaInlineHintParameterName) {
                 return;
             }
             TreePath pp = getCurrentPath().getParentPath();
@@ -1197,5 +1168,35 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         
         public void setHighlights(Document doc, Collection<Pair<int[], Coloring>> highlights, Map<int[], String> preText);
         public void setColorings(Document doc, Map<Token, Coloring> colorings);
-    }    
+    }
+
+    public static class Settings {
+        private static final Map<String, Boolean> DEFAULT_VALUES;
+
+        static {
+            Map<String, Boolean> defaultValuesBuilder = new HashMap<>();
+            defaultValuesBuilder.put(JAVA_INLINE_HINT_PARAMETER_NAME, true);
+            defaultValuesBuilder.put(JAVA_INLINE_HINT_CHAINED_TYPES, false);
+            defaultValuesBuilder.put(JAVA_INLINE_HINT_VAR_TYPE, false);
+            DEFAULT_VALUES = Collections.unmodifiableMap(defaultValuesBuilder);
+        }
+
+        public final boolean javaInlineHintParameterName;
+        public final boolean javaInlineHintChainedTypes;
+        public final boolean javaInlineHintVarType;
+
+        public Settings(boolean javaInlineHintParameterName, boolean javaInlineHintChainedTypes, boolean javaInlineHintVarType) {
+            this.javaInlineHintParameterName = javaInlineHintParameterName;
+            this.javaInlineHintChainedTypes = javaInlineHintChainedTypes;
+            this.javaInlineHintVarType = javaInlineHintVarType;
+        }
+
+        public static Settings getDefault() {
+            Preferences preferences = NbPreferences.root().node("/org/netbeans/modules/java/editor/InlineHints/default");
+            return new Settings(preferences.getBoolean(JAVA_INLINE_HINT_PARAMETER_NAME, DEFAULT_VALUES.get(JAVA_INLINE_HINT_PARAMETER_NAME)),
+                                preferences.getBoolean(JAVA_INLINE_HINT_CHAINED_TYPES, DEFAULT_VALUES.get(JAVA_INLINE_HINT_CHAINED_TYPES)),
+                                preferences.getBoolean(JAVA_INLINE_HINT_VAR_TYPE, DEFAULT_VALUES.get(JAVA_INLINE_HINT_VAR_TYPE)));
+        }
+
+    }
 }

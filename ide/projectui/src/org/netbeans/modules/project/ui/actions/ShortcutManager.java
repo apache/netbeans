@@ -19,12 +19,13 @@
 
 package org.netbeans.modules.project.ui.actions;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import javax.swing.Action;
-import org.openide.util.WeakSet;
 
 /**
  * Manages shortcuts based on the action's command.
@@ -45,7 +46,7 @@ class ShortcutManager {
         synchronized (this) {
             Set<Action> commandActions = actions.get(command);
             if (commandActions == null) {
-                commandActions = new WeakSet<Action>();
+                commandActions = Collections.newSetFromMap(new WeakHashMap<>());
                 actions.put(command, commandActions);
             }
             commandActions.add(action);

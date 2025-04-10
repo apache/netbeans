@@ -27,6 +27,7 @@ import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -59,7 +60,6 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 import org.openide.util.lookup.Lookups;
 
 /**
@@ -483,7 +483,7 @@ public class SnippetNodes extends Children.Keys implements ShellListener, Consum
     }
     
     static class NF {
-        private Set<N>                    nodes = new WeakSet<>();
+        private Set<N>                    nodes = Collections.newSetFromMap(new WeakHashMap<>());
         private java.util.Map<SnippetHandle, Reference<N>> handledNodes = new WeakHashMap<>();
         
         public void register(SnippetHandle h, N n) {

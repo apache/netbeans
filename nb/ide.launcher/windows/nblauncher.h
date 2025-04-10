@@ -50,6 +50,8 @@ private:
     static const char *REG_DEFAULT_USERDIR_ROOT;
     static const char *REG_DEFAULT_CACHEDIR_ROOT;
     static const char* staticOptions[];
+    static const char *BASEDIR_TOKEN;
+    static const char *USERDIR_TOKEN;
 
     typedef int (*StartPlatform)(int argc, char *argv[]);
 
@@ -82,8 +84,11 @@ private:
     bool getOption(char *&str, const char *opt);
     void addCluster(const char *cl);
     void addExtraClusters();
-    std::string getDefaultUserDirRoot();
-    std::string getDefaultCacheDirRoot();
+    void getDefaultUserDirRoot();
+    void getDefaultCacheDirRoot();
+    void getUserHome();
+    void replaceToken(std::string& str);
+    void replaceString(std::string& str, const std::string& from, const std::string& to);
 
 protected:
     std::string baseDir;

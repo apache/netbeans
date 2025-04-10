@@ -57,6 +57,12 @@ public class TokenAcceptorsTest extends NbTestCase {
         assertTrue(ta.accepts(getToken("1rem")));
         assertTrue(ta.accepts(getToken("2em")));
         assertTrue(ta.accepts(getToken("8vmin")));
+        assertTrue(ta.accepts(getToken("1cqw")));
+        assertTrue(ta.accepts(getToken("2cqh")));
+        assertTrue(ta.accepts(getToken("3cqi")));
+        assertTrue(ta.accepts(getToken("4cqb")));
+        assertTrue(ta.accepts(getToken("5cqmin")));
+        assertTrue(ta.accepts(getToken("6cqmax")));
     }
     
     private Token getToken(String tokenImg) {

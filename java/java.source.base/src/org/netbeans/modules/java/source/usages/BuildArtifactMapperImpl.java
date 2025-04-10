@@ -32,6 +32,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -80,7 +81,6 @@ import org.openide.util.RequestProcessor;
 import org.openide.util.BaseUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -125,7 +125,7 @@ public class BuildArtifactMapperImpl {
         }
     }
 
-    private static final Set<Object> alreadyWarned = new WeakSet<Object>();
+    private static final Set<Object> alreadyWarned = Collections.newSetFromMap(new WeakHashMap<>());
 
     private static boolean protectAgainstErrors(URL targetFolder, FileObject[][] sources, Object context) throws MalformedURLException {
         Preferences pref = NbPreferences.forModule(BuildArtifactMapperImpl.class).node(BuildArtifactMapperImpl.class.getSimpleName());
@@ -589,7 +589,7 @@ public class BuildArtifactMapperImpl {
 
         private RequestProcessor NOTIFY = new RequestProcessor(FileChangeListenerImpl.class.getName());
         
-        private Set<ChangeListener> notify = new WeakSet<ChangeListener>();
+        private Set<ChangeListener> notify = Collections.newSetFromMap(new WeakHashMap<>());
         
         public void fileCreated(FileChangeSupportEvent event) {
             notifyListeners();

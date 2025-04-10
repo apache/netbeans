@@ -86,7 +86,6 @@ import org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl;
 
 import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakSet;
 
 /**
  * Upload backend classed to the JVM.
@@ -111,7 +110,7 @@ public final class RemoteServices {
     
     private static final RequestProcessor AUTORESUME_AFTER_SUSPEND_RP = new RequestProcessor("Autoresume after suspend", 1);    // NOI18N
     
-    private static final Set<PropertyChangeListener> serviceListeners = new WeakSet<>();
+    private static final Set<PropertyChangeListener> serviceListeners = Collections.newSetFromMap(new WeakHashMap<>());
 
     private RemoteServices() {}
     

@@ -21,7 +21,9 @@ package org.netbeans.swing.tabcontrol.plaf;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.util.Set;
+import java.util.WeakHashMap;
 import javax.swing.Icon;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
@@ -29,7 +31,6 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.swing.tabcontrol.TabDataModel;
 import org.netbeans.swing.tabcontrol.customtabs.Tabbed;
 import org.openide.util.Lookup;
-import org.openide.util.WeakSet;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.TopComponent;
 
@@ -60,8 +61,8 @@ public abstract class BusyTabsSupport {
         }
     };
 
-    private final Set<Tabbed> containers = new WeakSet<Tabbed>(10);
-    private final Set<Tabbed> busyContainers = new WeakSet<Tabbed>(10);
+    private final Set<Tabbed> containers = Collections.newSetFromMap(new WeakHashMap<>(10));
+    private final Set<Tabbed> busyContainers = Collections.newSetFromMap(new WeakHashMap<>(10));
 
     /**
      * @return The default implementation registered in global Lookup.

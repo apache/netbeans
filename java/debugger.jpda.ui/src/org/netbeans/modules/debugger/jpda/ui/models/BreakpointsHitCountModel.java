@@ -18,8 +18,10 @@
  */
 package org.netbeans.modules.debugger.jpda.ui.models;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.JToolTip;
 import org.netbeans.api.debugger.LazyActionsManagerListener;
@@ -37,7 +39,6 @@ import org.netbeans.spi.viewmodel.TableModel;
 import org.netbeans.spi.viewmodel.TableModelFilter;
 import org.netbeans.spi.viewmodel.UnknownTypeException;
 import org.openide.util.NbBundle;
-import org.openide.util.WeakSet;
 
 /**
  * Displays the breakpoints hit count.
@@ -52,7 +53,7 @@ public class BreakpointsHitCountModel implements TableModelFilter, BreakpointImp
     private final List<ModelListener> listeners = new CopyOnWriteArrayList<ModelListener>();
     private final ContextProvider lookupProvider;
     private BreakpointsEngineListener breakpointsEngineListener;
-    private final Set<BreakpointImpl> bpImplListeningOn = new WeakSet<BreakpointImpl>();
+    private final Set<BreakpointImpl> bpImplListeningOn = Collections.newSetFromMap(new WeakHashMap<>());
     
     public BreakpointsHitCountModel(ContextProvider lookupProvider) {
         this.lookupProvider = lookupProvider;

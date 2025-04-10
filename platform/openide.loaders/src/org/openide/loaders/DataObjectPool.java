@@ -61,7 +61,7 @@ implements ChangeListener {
     private Map<FileObject,List<Item>> children = new HashMap<FileObject, List<Item>>();
     
     /** covers all FileSystems we're listening on */
-    private final Set<FileSystem> knownFileSystems = new WeakSet<FileSystem>();
+    private final Set<FileSystem> knownFileSystems = Collections.newSetFromMap(new WeakHashMap<>());
     
     /** error manager to log what is happening here */
     private static final Logger err = Logger.getLogger("org.openide.loaders.DataObject.find"); // NOI18N

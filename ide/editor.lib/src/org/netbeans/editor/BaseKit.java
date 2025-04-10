@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.prefs.PreferenceChangeEvent;
 import javax.swing.Action;
 import javax.swing.InputMap;
@@ -63,12 +64,14 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.TextUI;
 import javax.swing.text.AbstractDocument;
+
 import static javax.swing.text.DefaultEditorKit.selectionBackwardAction;
 import static javax.swing.text.DefaultEditorKit.selectionBeginLineAction;
 import static javax.swing.text.DefaultEditorKit.selectionDownAction;
 import static javax.swing.text.DefaultEditorKit.selectionEndLineAction;
 import static javax.swing.text.DefaultEditorKit.selectionForwardAction;
 import static javax.swing.text.DefaultEditorKit.selectionUpAction;
+
 import javax.swing.text.EditorKit;
 import javax.swing.text.Position;
 import javax.swing.text.View;
@@ -111,7 +114,6 @@ import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 
 /**
 * Editor kit implementation for base document
@@ -4049,7 +4051,7 @@ public class BaseKit extends DefaultEditorKit {
         private final String mimeType;
         private final Lookup.Result<KeyBindingSettings> lookupResult;
         private final Preferences prefs;
-        private final Set<JTextComponent> components = new WeakSet<JTextComponent>();
+        private final Set<JTextComponent> components = Collections.newSetFromMap(new WeakHashMap<>());
         
         public KeybindingsAndPreferencesTracker(String mimeType) {
             this.mimeType = mimeType;

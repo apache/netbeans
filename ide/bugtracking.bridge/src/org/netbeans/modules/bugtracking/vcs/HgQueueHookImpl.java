@@ -26,8 +26,10 @@ import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import javax.swing.JPanel;
 import org.netbeans.modules.bugtracking.api.Issue;
@@ -42,7 +44,6 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakSet;
 
 /**
  * Mercurial queue hook implementation
@@ -60,7 +61,7 @@ public class HgQueueHookImpl extends HgQueueHook {
     private final String name;
     private static final String HOOK_NAME = "HG"; //NOI18N
     private final VCSHooksConfig globalConfig;
-    private static final Set<Issue> cachedIssues = new WeakSet<Issue>();
+    private static final Set<Issue> cachedIssues = Collections.newSetFromMap(new WeakHashMap<>());
     private Format issueMessageTemplate;
 
     public HgQueueHookImpl() {

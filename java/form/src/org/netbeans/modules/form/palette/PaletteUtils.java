@@ -553,8 +553,8 @@ public final class PaletteUtils {
 
         ClassPathFilter(ClassPath cp) {
             if (cp != null) {
-                validItems = new WeakSet<PaletteItem>();
-                invalidItems = new WeakSet<PaletteItem>();
+                validItems = Collections.newSetFromMap(new WeakHashMap<>());
+                invalidItems = Collections.newSetFromMap(new WeakHashMap<>());
             }
             classPath = cp;
         }

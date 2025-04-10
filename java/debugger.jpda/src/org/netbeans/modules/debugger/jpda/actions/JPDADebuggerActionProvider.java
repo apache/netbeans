@@ -27,10 +27,12 @@ import com.sun.jdi.request.StepRequest;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.WeakHashMap;
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.JPDAThread;
@@ -46,7 +48,6 @@ import org.netbeans.modules.debugger.jpda.jdi.request.StepRequestWrapper;
 import org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl;
 import org.netbeans.spi.debugger.ActionsProviderSupport;
 
-import org.openide.util.WeakSet;
 
 
 /**
@@ -60,7 +61,7 @@ implements PropertyChangeListener {
     
     protected JPDADebuggerImpl debugger;
     
-    private static final Set<JPDADebuggerActionProvider> providersToDisableOnLazyActions = new WeakSet<JPDADebuggerActionProvider>();
+    private static final Set<JPDADebuggerActionProvider> providersToDisableOnLazyActions = Collections.newSetFromMap(new WeakHashMap<>());
     
     private volatile boolean disabled;
     

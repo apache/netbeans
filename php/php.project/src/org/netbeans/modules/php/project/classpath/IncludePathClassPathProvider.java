@@ -20,8 +20,10 @@ package org.netbeans.modules.php.project.classpath;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -30,7 +32,6 @@ import org.netbeans.modules.php.project.api.PhpSourcePath;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
-import org.openide.util.WeakSet;
 
 /**
  * Provides ClassPath for php files on include path or without a project.
@@ -41,7 +42,7 @@ public class IncludePathClassPathProvider implements ClassPathProvider {
     private static final boolean RUNNING_IN_TEST = Boolean.getBoolean("nb.php.test.run"); // NOI18N
 
     // @GuardedBy(PROJECT_INCLUDES_LOCK)
-    private static final Set<ClassPath> PROJECT_INCLUDES = new WeakSet<>();
+    private static final Set<ClassPath> PROJECT_INCLUDES = Collections.newSetFromMap(new WeakHashMap<>());
     private static final ReadWriteLock PROJECT_INCLUDES_LOCK = new ReentrantReadWriteLock();
 
     // @GuardedBy("IncludePathClassPathProvider.class")

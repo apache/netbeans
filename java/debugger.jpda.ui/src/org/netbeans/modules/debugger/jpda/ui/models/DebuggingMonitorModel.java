@@ -29,12 +29,14 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
@@ -70,7 +72,6 @@ import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 import org.openide.util.datatransfer.PasteType;
 
 
@@ -109,8 +110,8 @@ NodeActionsProviderFilter, TableModel, Constants {
 
         private final JPDADebugger debugger;
         private final DebuggingViewSupportImpl dvSupport;
-        private final Set<JPDAThread> threadsAskedForMonitors = new WeakSet<JPDAThread>();
-        private final Set<CallStackFrame> framesAskedForMonitors = new WeakSet<CallStackFrame>();
+        private final Set<JPDAThread> threadsAskedForMonitors = Collections.newSetFromMap(new WeakHashMap<>());
+        private final Set<CallStackFrame> framesAskedForMonitors = Collections.newSetFromMap(new WeakHashMap<>());
         private final DeadlockDetector deadlockDetector;
         private Preferences preferences = DebuggingViewSupportImpl.getFilterPreferences();
         private PreferenceChangeListener prefListener;

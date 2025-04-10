@@ -35,6 +35,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -61,7 +62,6 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Parameters;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 
 // XXX should perhaps be legal to call add* methods at any time (should update things)
 // and perhaps also have remove* methods
@@ -871,7 +871,7 @@ public final class SourcesHelper {
     }
 
     // #143633: notify Sources impls that new source group has been created
-    private WeakSet<SourcesImpl> knownSources = new WeakSet<SourcesImpl>();
+    private Set<SourcesImpl> knownSources = Collections.newSetFromMap(new WeakHashMap<>());
 
     /**
      * Create a source list object.

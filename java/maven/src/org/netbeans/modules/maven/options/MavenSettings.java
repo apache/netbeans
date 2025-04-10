@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
@@ -51,7 +52,6 @@ import org.openide.filesystems.URLMapper;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
-import org.openide.util.WeakSet;
 
 /**
  * a netbeans settings for global options that cannot be put into the settings file.
@@ -91,7 +91,7 @@ public final class MavenSettings  {
 
     private static final MavenSettings INSTANCE = new MavenSettings();
     
-    private final Set<PropertyChangeListener> listeners = new WeakSet<>();
+    private final Set<PropertyChangeListener> listeners = Collections.newSetFromMap(new WeakHashMap<>());
     
     /**
      * Specifies how should be proxies handled by default, if no setting is given.

@@ -22,6 +22,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.Set;
+import java.util.WeakHashMap;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JEditorPane;
@@ -32,7 +33,6 @@ import org.netbeans.editor.BaseAction;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
-import org.openide.util.WeakSet;
 import org.openide.util.actions.Presenter;
 
 /**
@@ -44,8 +44,8 @@ public class ToggleDebuggingAction extends BaseAction implements Presenter.Toolb
     public static final String toggleDebuggingAction = "toggle-debugging-action";
     static final long serialVersionUID = 0L;
 
-    static final Set<Document> debuggingEnabled = Collections.synchronizedSet(new WeakSet<>());
-    static final Set<ToggleDebuggingAction> actions = Collections.synchronizedSet(new WeakSet<>());
+    static final Set<Document> debuggingEnabled = Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
+    static final Set<ToggleDebuggingAction> actions = Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
     
     private JEditorPane pane;
 

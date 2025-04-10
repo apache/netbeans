@@ -24,11 +24,13 @@ import java.beans.PropertyChangeListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
@@ -54,7 +56,6 @@ import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 
 
 /**
@@ -68,7 +69,7 @@ public class BreakpointAnnotationProvider implements AnnotationProvider {
 
     private final Map<JPDABreakpoint, Set<Annotation>> breakpointToAnnotations =
             new IdentityHashMap<JPDABreakpoint, Set<Annotation>>();
-    private final Set<FileObject> annotatedFiles = new WeakSet<FileObject>();
+    private final Set<FileObject> annotatedFiles = Collections.newSetFromMap(new WeakHashMap<>());
     private Set<PropertyChangeListener> dataObjectListeners;
     private volatile boolean breakpointsActive = true;
     private RequestProcessor annotationProcessor = new RequestProcessor("Annotation Refresh", 1);
@@ -126,7 +127,7 @@ public class BreakpointAnnotationProvider implements AnnotationProvider {
                     int[] lines = getAnnotationLines(b, fo);
                     if (lines != null && lines.length > 0) {
                         removeAnnotations(b);   // Remove any staled breakpoint annotations
-                        breakpointToAnnotations.put(b, new WeakSet<Annotation>());
+                        breakpointToAnnotations.put(b, Collections.newSetFromMap(new WeakHashMap<>()));
                         if (b instanceof LineBreakpoint) {
                             LineBreakpoint lb = (LineBreakpoint) b;
                             LineTranslations.getTranslations().unregisterFromLineUpdates(lb); // To be sure
@@ -185,7 +186,7 @@ public class BreakpointAnnotationProvider implements AnnotationProvider {
                 }
             }
             if (add) {
-                breakpointToAnnotations.put(b, new WeakSet<Annotation>());
+                breakpointToAnnotations.put(b, Collections.newSetFromMap(new WeakHashMap<>()));
                 for (FileObject fo : annotatedFiles) {
                     addAnnotationTo(b, fo);
                 }
@@ -430,7 +431,9 @@ public class BreakpointAnnotationProvider implements AnnotationProvider {
         synchronized (breakpointToAnnotations) {
             Set<Annotation> bpAnnotations = breakpointToAnnotations.get(b);
             if (bpAnnotations == null) {
-                breakpointToAnnotations.put(b, new WeakSet<Annotation>(annotations));
+                Set<Annotation> set = Collections.newSetFromMap(new WeakHashMap<>());
+                set.addAll(annotations);
+                breakpointToAnnotations.put(b, set);
             } else {
                 bpAnnotations.addAll(annotations);
                 breakpointToAnnotations.put(b, bpAnnotations);

@@ -27,10 +27,13 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 import java.util.logging.Logger;
@@ -47,7 +50,6 @@ import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
-import org.openide.util.WeakSet;
 
 /**
  *
@@ -59,7 +61,7 @@ public final class TestMethodFinderImpl extends EmbeddingIndexer {
     public static final int VERSION = 2;
     public static final TestMethodFinderImpl INSTANCE = new TestMethodFinderImpl();
 
-    private final WeakSet<BiConsumer<FileObject, Collection<TestMethodController.TestMethod>>> listeners = new WeakSet<>();
+    private final Set<BiConsumer<FileObject, Collection<TestMethodController.TestMethod>>> listeners = Collections.newSetFromMap(new WeakHashMap<>());
 
     @Override
     protected void index(Indexable indexable, Parser.Result parserResult, Context context) {
@@ -80,7 +82,9 @@ public final class TestMethodFinderImpl extends EmbeddingIndexer {
 
     public void addListener(BiConsumer<FileObject, Collection<TestMethodController.TestMethod>> listener) {
         synchronized(listeners) {
-            listeners.putIfAbsent(listener);
+            if (!listeners.contains(listener)) {
+                listeners.add(listener);
+            }
             Logger.getLogger(TestMethodFinderImpl.class.getName()).info("Listener added: " + listener);
         }
     }

@@ -67,6 +67,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -275,7 +276,6 @@ import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakSet;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 import org.openide.util.lookup.ServiceProvider;
@@ -324,7 +324,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @ServiceProvider(service=IndexingAware.class, position=0)
     public static final class RefreshDocument implements IndexingAware {
 
-        private final Set<TextDocumentServiceImpl> delegates = new WeakSet<>();
+        private final Set<TextDocumentServiceImpl> delegates = Collections.newSetFromMap(new WeakHashMap<>());
 
         public synchronized void register(TextDocumentServiceImpl delegate) {
             delegates.add(delegate);

@@ -856,7 +856,7 @@ public class InstanceDataObject extends MultiDataObject implements InstanceCooki
         return superName;
     }
 
-    private static final Set<FileObject> warnedAboutBrackets = new WeakSet<FileObject>();
+    private static final Set<FileObject> warnedAboutBrackets = Collections.newSetFromMap(new WeakHashMap<>());
     /** Make sure people stop using this syntax eventually.
      * It is better to use the file attribute, not least because some VMs
      * do not much like [] in file names (OpenVMS had problems at one point, e.g.).

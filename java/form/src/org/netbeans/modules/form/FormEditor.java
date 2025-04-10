@@ -53,7 +53,6 @@ import org.netbeans.modules.form.project.ClassSource;
 import org.netbeans.modules.form.project.ClassPathUtils;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
-import org.openide.util.WeakSet;
 
 /**
  * Form editor.
@@ -1237,7 +1236,7 @@ public class FormEditor {
 
     void registerNodeWithPropertiesWindow(FormNode node) {
         if (nodesWithPropertiesWindows == null) {
-            nodesWithPropertiesWindows = new WeakSet<FormNode>();
+            nodesWithPropertiesWindows = Collections.newSetFromMap(new WeakHashMap<>());
         }
         nodesWithPropertiesWindows.add(node);
     }

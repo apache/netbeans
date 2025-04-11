@@ -26,8 +26,11 @@ import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.jvm.Target;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Name;
+import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import javax.lang.model.element.Element;
@@ -47,7 +50,6 @@ import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.ElementUtils;
 import org.netbeans.modules.java.source.usages.ClassFileUtil;
 import org.openide.util.Parameters;
-import org.openide.util.WeakSet;
 
 /**
  * Represents a handle for {@link Element} which can be kept and later resolved
@@ -422,7 +424,7 @@ public final class ElementHandle<T extends Element> {
         return this.kind;
     }
     
-    private static final WeakSet<ElementHandle<?>> NORMALIZATION_CACHE = new WeakSet<ElementHandle<?>>();
+    private static final Map<ElementHandle<?>, WeakReference<ElementHandle<?>>> NORMALIZATION_CACHE = new WeakHashMap<>();
 
     /**
      * Factory method for creating {@link ElementHandle}.
@@ -437,8 +439,8 @@ public final class ElementHandle<T extends Element> {
      */
     public static @NonNull <T extends Element> ElementHandle<T> create (@NonNull final T element) throws IllegalArgumentException {
         ElementHandle<T> eh = createImpl(element);
-
-        return (ElementHandle<T>) NORMALIZATION_CACHE.putIfAbsent(eh);
+        ElementHandle<?> normalized = NORMALIZATION_CACHE.computeIfAbsent(eh, WeakReference::new).get();
+        return normalized != null ? (ElementHandle<T>) normalized : eh;
     }
     
     /**

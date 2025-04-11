@@ -46,10 +46,12 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Objects;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
@@ -127,10 +129,10 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
     private static Object defaultLookupLock = new Object();
 
     /** Classes that have been warned about overriding preferredID() */
-    private static final Set<Class> warnedTCPIClasses = new WeakSet<Class>();
+    private static final Set<Class> warnedTCPIClasses = Collections.newSetFromMap(new WeakHashMap<>());
 
     /** Used to print warning about getPersistenceType */
-    private static final Set<Class> warnedClasses = new WeakSet<Class>();
+    private static final Set<Class> warnedClasses = Collections.newSetFromMap(new WeakHashMap<>());
 
     /** reference to Lookup with default implementation for the
      * component or the lookup associated with the component itself

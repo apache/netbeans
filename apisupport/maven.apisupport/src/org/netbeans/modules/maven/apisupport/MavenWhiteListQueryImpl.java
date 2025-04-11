@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
@@ -61,7 +62,6 @@ import org.netbeans.spi.whitelist.WhiteListQueryImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakSet;
 
 /**
  *
@@ -80,7 +80,7 @@ public class MavenWhiteListQueryImpl implements WhiteListQueryImplementation {
     private static final RequestProcessor RP = new RequestProcessor(MavenWhiteListQueryImpl.class.getName(), 3);
     private static final Logger LOG = Logger.getLogger(MavenWhiteListQueryImpl.class.getName());
 
-    private final Set<MavenWhiteListImplementation> results = Collections.synchronizedSet(new WeakSet<MavenWhiteListImplementation>());
+    private final Set<MavenWhiteListImplementation> results = Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
     
     //TODO add static cache across projects for dependency jar's contents.
     

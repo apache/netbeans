@@ -1329,7 +1329,7 @@ loop:
                     next();
                 }
                 boolean generator = false;
-                if (!async && type == MUL && isAtLeastES6()) {
+                if (type == MUL && isAtLeastES6() && ((!async) || isAtLeastES9())) {
                     generator = true;
                     next();
                 }
@@ -6180,6 +6180,8 @@ loop:
             long token = getToken(k + i);
             TokenType t = Token.descType(token);
             switch (t) {
+            case MUL:
+                continue;
             case COMMENT:
                 continue;
             case FUNCTION:

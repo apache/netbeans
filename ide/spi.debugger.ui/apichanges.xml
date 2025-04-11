@@ -51,6 +51,25 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="inline-values-setting-keys">
+        <api name="DebuggerCoreSPI"/>
+        <summary><code>Constants</code> class enhanced with constants for inline values.</summary>
+        <version major="2" minor="87"/>
+        <date day="8" month="4" year="2025"/>
+        <author login="jlahoda"/>
+        <compatibility binary="compatible" source="compatible" modification="yes" semantic="compatible"/>
+        <description>
+            <p>
+                Two new contants are added to <code>Constants</code>:
+                <ul>
+                    <li><b>KEY_INLINE_VALUES</b>: the <code>Preferences</code> key for the inline value setting.</li>
+                    <li><b>DEF_INLINE_VALUES</b>: the default value of the inline value setting.</li>
+                </ul>
+            </p>
+        </description>
+        <class package="org.netbeans.spi.debugger.ui" name="Constants"/>
+    </change>
+
     <change id="annotation-to-breakpoint">
         <api name="DebuggerCoreSPI"/>
         <summary><code>BreakpointAnnotation</code> class added.</summary>

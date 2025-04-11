@@ -49,11 +49,14 @@ tokens {
  VUE_DIRECTIVE,
  QUOTE_ATTR,
  JAVASCRIPT,
- JAVASCRIPT_ATTR,   
+ JAVASCRIPT_ATTR,
+ JAVASCRIPT_INTERP,
  HTML,
  CSS
 }
-    
+
+//fragments
+
 fragment Identifier 
     : [a-zA-Z_\u0080-\ufffe][a-zA-Z0-9_\u0080-\ufffe]*;
 
@@ -61,9 +64,21 @@ fragment ArgumentExtra
     : (Identifier ('.' Identifier)*) 
       | ('[' Identifier ']');
 
-TEMPLATE_TAG_OPEN : '<template' {this.setInsideTemplateTag(true);} ->pushMode(INSIDE_TEMPLATE);
+fragment DoubleQuoteStringFragment 
+    : '"' ([\\"] | . )*? '"';
 
-STYLE_TAG_OPEN : '<style' (' ')* 'scoped'? '>' {this.setInsideStyleTag(true);} ->type(HTML),pushMode(INSIDE_STYLE);
+fragment SingleQuoteStringFragment 
+    : '\'' (~('\'' | '\\') | '\\' . )* '\'';
+
+fragment StringLiteral : DoubleQuoteStringFragment | SingleQuoteStringFragment;
+
+//TOKENS
+
+SCRIPT_TAG_START : '<script' (' ')* ->type(HTML),pushMode(INSIDE_SCRIPT_TAG_START);
+
+TEMPLATE_TAG_OPEN : '<template' ->pushMode(INSIDE_TEMPLATE);
+
+STYLE_TAG_OPEN : '<style' (' ')* ->type(HTML),pushMode(INSIDE_STYLE_TAG_START);
 
 OTHER : . ->type(HTML);   
     
@@ -85,16 +100,34 @@ SCRIPT_ATTR_QUOTE : '"' {this.setAttrQuoteState(true);}->type(QUOTE_ATTR);
 SCRIPT_ATTR_OTHER : . ->type(JAVASCRIPT_ATTR); 
 EXIT_SCRIPT_ATTR_EOF : EOF->type(HTML),popMode;
 
+mode INSIDE_STYLE_TAG_START;
+
+STYLE_LANG_ATTR : 'lang=' StringLiteral {this.setStyleLanguage();}->type(HTML);
+STYLE_TAG_START_END : '>' ->type(HTML),pushMode(INSIDE_STYLE);
+STYLE_TAG_START_OTHER : . ->type(HTML); 
+EXIT_STYLE_TAG_START_EOF : EOF->type(HTML),popMode;
+
 mode INSIDE_STYLE;
     
-STYLE_TAG_CLOSE : '</style>'->type(HTML),popMode;
+STYLE_TAG_CLOSE : '</style>'->type(HTML),mode(DEFAULT_MODE);
 STYLE_OTHER : . ->type(CSS); 
 EXIT_STYLE_EOF : EOF->type(HTML),popMode;
 
 mode INSIDE_VAR_INTERPOLATION;
 
 VAR_INTERPOLATION_END : {this.isVarInterpolationOpened()}? '}}' {this.setVarInterpolationOpened(false);}->type(VAR_TAG), popMode; 
-VAR_INTERPOLATION_OTHER : . ->type(JAVASCRIPT); 
+VAR_INTERPOLATION_OTHER : . ->type(JAVASCRIPT_INTERP); 
 EXIT_VAR_INTERPOLATION_EOF : EOF->type(HTML),popMode;
 
-    
+mode INSIDE_SCRIPT_TAG_START;
+
+SCRIPT_LANG_ATTR : 'lang=' StringLiteral {this.setScriptLanguage();}->type(HTML);
+SCRIPT_TAG_START_END : '>' ->type(HTML),pushMode(INSIDE_SCRIPT);
+SCRIPT_TAG_START_OTHER : . ->type(HTML); 
+EXIT_SCRIPT_TAG_START_EOF : EOF->type(HTML),popMode;
+
+mode INSIDE_SCRIPT;
+
+SCRIPT_TAG_CLOSE : '</script>'->type(HTML),mode(DEFAULT_MODE);
+SCRIPT_TAG_OTHER : . ->type(JAVASCRIPT); 
+EXIT_SCRIPT_TAG_EOF : EOF->type(HTML),popMode;    

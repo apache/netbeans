@@ -68,9 +68,6 @@ public abstract class MemoryFootprintTestCase extends PerformanceTestCase {
         {"SunOS,x86", UNIX},
         {"Windows_NT,x86", WINDOWS},
         {"Windows_2000,x86", WINDOWS},
-        {"Windows_XP,x86", WINDOWS},
-        {"Windows_95,x86", WINDOWS},
-        {"Windows_98,x86", WINDOWS},
         {"Windows_Me,x86", WINDOWS},
         {"Windows_Vista,x86", WINDOWS},
         {"Mac_OS_X,ppc", MAC}

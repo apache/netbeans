@@ -119,8 +119,8 @@
             </test-dependencies>
             <public-packages/>
             <class-path-extension>
-                <runtime-relative-path>ext/freemarker-2.3.33.jar</runtime-relative-path>
-                <binary-origin>external/freemarker-2.3.33.jar</binary-origin>
+                <runtime-relative-path>ext/freemarker-2.3.34.jar</runtime-relative-path>
+                <binary-origin>external/freemarker-2.3.34.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

@@ -33,9 +33,8 @@ async function main() {
 
         // The path to test runner
         // Passed to --extensionTestsPath
-        const extensionTestsPath = path.resolve(__dirname, './suite/index');
-
-        const workspaceDir = path.join(extensionDevelopmentPath, 'out', 'test', 'ws');
+        let extensionTestsPath = path.resolve(__dirname, './suite/index');
+        let workspaceDir = path.join(extensionDevelopmentPath, 'out', 'test', 'ws');
 
         const outRoot = path.join(extensionDevelopmentPath, "out");
         const extDir = path.join(outRoot, "test", "vscode", "exts");
@@ -62,8 +61,34 @@ async function main() {
                 workspaceDir
             ]
         });
+
+        extensionTestsPath = path.resolve(__dirname, './launcher/index');
+        workspaceDir = path.join(extensionDevelopmentPath, 'out', 'test', 'test-projects', 'test-app');
+        fs.rmdirSync(extDir, { recursive: true });
+        fs.rmdirSync(userDir, { recursive: true });
+
+        if (!fs.statSync(workspaceDir).isDirectory()) {
+            throw `Expecting ${workspaceDir} to be a directory!`;
+        }
+
+        await runTests({
+            vscodeExecutablePath,
+            extensionDevelopmentPath,
+            extensionTestsPath,
+            extensionTestsEnv: {
+                'ENABLE_CONSOLE_LOG' : 'true',
+                "netbeans_extra_options" : `-J-Dproject.limitScanRoot=${outRoot} -J-Dnetbeans.logger.console=true`
+            },
+            launchArgs: [
+                '--disable-extensions',
+                '--disable-workspace-trust',
+                '--extensions-dir', `${extDir}`,
+                '--user-data-dir', `${userDir}`,
+                workspaceDir
+            ]
+        });
     } catch (err) {
-        console.error('Failed to run tests');
+        console.error('Failed to run tests', err);
         process.exit(1);
     }
 }

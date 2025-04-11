@@ -37,6 +37,7 @@ import javax.swing.Icon;
 import com.github.weisj.jsvg.SVGDocument;
 import com.github.weisj.jsvg.geometry.size.FloatSize;
 import com.github.weisj.jsvg.parser.LoaderContext;
+import com.github.weisj.jsvg.parser.ParsedDocument;
 import com.github.weisj.jsvg.parser.ResourceLoader;
 import com.github.weisj.jsvg.parser.SVGLoader;
 import com.github.weisj.jsvg.renderer.awt.NullPlatformSupport;
@@ -128,14 +129,13 @@ final class SVGIcon extends CachedHiDPIIcon {
 
         final SVGDocument svgDocument;
         FloatSize documentSize;
-        InputStream is = url.openStream();
-        try {
+        try (InputStream is = url.openStream()) {
             // Explicitly deny loading of external URLs.
 
             /* Handle e.g. <image href="https://example.com/image.png"> elements. Tested in
             testLoadImageWithExternalImageHref. */
             List<IOException> externalResourceExceptions = new ArrayList<>();
-            ResourceLoader resourceLoader = (URI nnuri) -> {
+            ResourceLoader resourceLoader = (ParsedDocument nnpd, URI nnuri) -> {
               IOException e = new IOException("External resource loading from SVG file not permitted ("+
                   nnuri + " from " + url + ")");
               externalResourceExceptions.add(e);
@@ -168,8 +168,6 @@ final class SVGIcon extends CachedHiDPIIcon {
         } catch (RuntimeException e) {
             /* Rethrow any uncaught exceptions that could be thrown when parsing invalid SVG files. */
             throw new IOException("Error parsing SVG file", e);
-        } finally {
-            is.close();
         }
         if (toSize != null) {
             int width = (int) Math.ceil(documentSize.getWidth());

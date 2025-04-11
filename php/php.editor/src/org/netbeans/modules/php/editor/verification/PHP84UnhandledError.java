@@ -35,6 +35,8 @@ import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.PropertyHookDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
@@ -46,6 +48,7 @@ import org.openide.util.NbBundle;
  * @see <a href="https://wiki.php.net/rfc/deprecated_attribute">#[\Deprecated] Attribute</a>
  * @see <a href="https://wiki.php.net/rfc/asymmetric-visibility-v2">Asymmetric visibility v2</a>
  * @see <a href="https://www.php.net/manual/en/language.oop5.final.php">Final property</a>
+ * @see <a href="https://wiki.php.net/rfc/property-hooks">Property hooks</a>
  */
 public final class PHP84UnhandledError extends UnhandledErrorRule {
 
@@ -142,6 +145,9 @@ public final class PHP84UnhandledError extends UnhandledErrorRule {
             // e.g.
             // __construct(public private(set) int $int) {}
             checkSetVisibility(node);
+            // Property hooks
+            // e.g. public int $example {get; set;}
+            checkPropertyHooks(node);
             super.visit(node);
         }
 
@@ -157,6 +163,42 @@ public final class PHP84UnhandledError extends UnhandledErrorRule {
                     }
                 }
             }
+        }
+
+        private void checkPropertyHooks(MethodDeclaration node) {
+            if (CodeUtils.isConstructor(node)) {
+                FunctionDeclaration function = node.getFunction();
+                for (FormalParameter formalParameter : function.getFormalParameters()) {
+                    if (CancelSupport.getDefault().isCancelled()) {
+                        return;
+                    }
+                    if (formalParameter.getPropertyHooks() != null) {
+                        createError(formalParameter.getPropertyHooks());
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void visit(SingleFieldDeclaration node) {
+            // Property hooks
+            // e.g.
+            // public int $example {
+            //     get => $this->a + $this->b;
+            //     set;
+            // }
+            if (node.isHooked()) {
+                createError(node.getPropertyHooks());
+            }
+            super.visit(node);
+        }
+
+        @Override
+        public void visit(PropertyHookDeclaration propertyHook) {
+            // Property hooks
+            // e.g. get => $this->example;
+            createError(propertyHook);
+            super.visit(propertyHook);
         }
 
         private void createError(ASTNode node) {

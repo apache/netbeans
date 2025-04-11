@@ -1,13 +1,13 @@
 [[824,829]-Syntax error
  unexpected:	match
  after:	function
- expected:	identifier, define, &, (] 824-829:Syntax error
+ expected:	identifier, define, &, (, &] 824-829:Syntax error
  unexpected:	match
  after:	function
- expected:	identifier, define, &, (
+ expected:	identifier, define, &, (, &
 [[830,831]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	)] 830-831:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	)
-[[847,847]-POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	End of File] 847-847:POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	End of File
+[[838,839]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	{] 838-839:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	{

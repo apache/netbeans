@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
 import static junit.framework.TestCase.assertNotNull;
@@ -135,8 +136,96 @@ public class EmbeddingProviderImplTest extends NbTestCase {
                 "a\"a\n");
     }
 
+    public void testPropagateLanguageFromVariableUses() throws Exception {
+        runTest("""
+                public class Test {
+                    public void t() {
+                        String code = \"""
+                                      <html|>
+                                      \""";
+                        new Test(code);
+                    }
+                    public Test(@Language("test") String test) {}
+                    @interface Language { public String value(); }
+                }
+                """,
+                "<html>\n");
+    }
+
+    public void testAssignment() throws Exception {
+        runTest("""
+                public class Test {
+                    public void t() {
+                        @Language("test") String code;
+                        code = \"""
+                               <html|>
+                               \""";
+                    }
+                    @interface Language { public String value(); }
+                }
+                """,
+                "<html>\n");
+    }
+
+    public void testVarargs() throws Exception {
+        runTest("""
+                public class Test {
+                    public void t() {
+                        new Test("",
+                                 \"""
+                                 <html|>
+                                 \""");
+                    }
+                    public Test(@Language("test") String... test) {}
+                    @interface Language { public String value(); }
+                }
+                """,
+                "<html>\n");
+    }
+
+    public void testTooManyParameters() throws Exception {
+        runTest("""
+                public class Test {
+                    public void t() {
+                        test("",
+                             \"""
+                             <html|>
+                             \""");
+                    }
+                    public void test(String test) {}
+                }
+                """);
+    }
+
+    public void testAssignmentNonExistent() throws Exception {
+        runTest("""
+                public class Test {
+                    public void t() {
+                        unknown =
+                             \"""
+                             <html|>
+                             \""";
+                    }
+                }
+                """);
+    }
+
     private void runTest(@org.netbeans.api.annotations.common.Language("Java") String code,
                          String snippet) throws Exception {
+        runTest(code, result -> {
+            assertTrue(result instanceof TestParser.TestParserResult);
+            assertEquals(snippet, result.getSnapshot().getText().toString());
+        });
+    }
+
+    private void runTest(@org.netbeans.api.annotations.common.Language("Java") String code) throws Exception {
+        runTest(code, result -> {
+            assertTrue(!(result instanceof TestParser.TestParserResult));
+        });
+    }
+
+    private void runTest(@org.netbeans.api.annotations.common.Language("Java") String code,
+                         Consumer<Result> verify) throws Exception {
         String fileName = "Test";
         int caretPos = code.indexOf('|');
 
@@ -177,8 +266,7 @@ public class EmbeddingProviderImplTest extends NbTestCase {
             public void run(ResultIterator resultIterator) throws Exception {
                 invoked.set(true);
                 Result result = resultIterator.getParserResult(caretPos);
-                assertTrue(result instanceof TestParser.TestParserResult);
-                assertEquals(snippet, result.getSnapshot().getText().toString());
+                verify.accept(result);
             }
         });
 

@@ -18,10 +18,11 @@
  */
 package org.netbeans.modules.java.editor.base.embedding;
 
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
@@ -29,8 +30,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
@@ -43,6 +46,7 @@ import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.support.CancellableTreePathScanner;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.PartType;
 import org.netbeans.api.lexer.TokenHierarchy;
@@ -104,21 +108,23 @@ public class EmbeddingProviderImpl extends ParserBasedEmbeddingProvider<Parser.R
         if (tp.getLeaf().getKind() != Kind.STRING_LITERAL) {
             return null;
         }
-        VariableElement target = null;
-        switch (tp.getParentPath().getLeaf().getKind()) {
-            case NEW_CLASS: {
-                target = handleParameter(info, tp, ((NewClassTree) tp.getParentPath().getLeaf()).getArguments());
-                break;
-            }
-            case METHOD_INVOCATION: {
-                target = handleParameter(info, tp, ((MethodInvocationTree) tp.getParentPath().getLeaf()).getArguments());
-                break;
-            }
-            case VARIABLE: {
-                target = (VariableElement) info.getTrees().getElement(tp.getParentPath());
-                break;
-            }
-        }
+
+        return findLanguageFromTarget(info, tp);
+    }
+
+    private static String findLanguageFromTarget(CompilationController info, TreePath usePath) {
+        TreePath declarationPath = usePath.getParentPath();
+        VariableElement target = switch (declarationPath.getLeaf().getKind()) {
+            case NEW_CLASS ->
+                handleParameter(info, usePath, ((NewClassTree) declarationPath.getLeaf()).getArguments());
+            case METHOD_INVOCATION ->
+                handleParameter(info, usePath, ((MethodInvocationTree) declarationPath.getLeaf()).getArguments());
+            case VARIABLE ->
+                getVariable(info, declarationPath);
+            case ASSIGNMENT ->
+                getVariable(info, new TreePath(declarationPath, ((AssignmentTree) declarationPath.getLeaf()).getVariable()));
+            default -> null;
+        };
         if (target == null) {
             return null;
         }
@@ -131,7 +137,39 @@ public class EmbeddingProviderImpl extends ParserBasedEmbeddingProvider<Parser.R
                 }
             }
         }
+        if (target.getKind() == ElementKind.LOCAL_VARIABLE) {
+            //if all use-sites use the same language, use that language:
+            Set<String> useSiteLanguages = new HashSet<>();
+            new CancellableTreePathScanner<>() {
+                @Override
+                public Object visitAssignment(AssignmentTree node, Object p) {
+                    //TODO: ignore assignments to the variable!
+                    return super.visitAssignment(node, p);
+                }
+                @Override
+                public Object visitIdentifier(IdentifierTree node, Object p) {
+                    if (target.equals(info.getTrees().getElement(getCurrentPath()))) {
+                        useSiteLanguages.add(findLanguageFromTarget(info, getCurrentPath()));
+                    }
+                    return super.visitIdentifier(node, p);
+                }
+            }.scan(declarationPath.getParentPath(), null);
+            //TODO: OK if useSiteLanguages contains null?
+            if (useSiteLanguages.size() == 1) {
+                return useSiteLanguages.iterator().next();
+            }
+        }
         return target.getSimpleName().toString();
+    }
+
+    private static VariableElement getVariable(CompilationInfo info, TreePath tp) {
+        Element el = info.getTrees().getElement(tp);
+
+        if (el != null && el.getKind().isVariable()) {
+            return (VariableElement) el;
+        }
+
+        return null;
     }
 
     private static VariableElement handleParameter(CompilationInfo info,
@@ -145,7 +183,13 @@ public class EmbeddingProviderImpl extends ParserBasedEmbeddingProvider<Parser.R
         if (el == null || (el.getKind() != ElementKind.METHOD && el.getKind() != ElementKind.CONSTRUCTOR)) {
             return null;
         }
-        return ((ExecutableElement) el).getParameters().get(argPos);
+        ExecutableElement methodEl = (ExecutableElement) el;
+        if (argPos >= methodEl.getParameters().size()) {
+            if (methodEl.isVarArgs()) {
+                argPos = methodEl.getParameters().size() - 1;
+            }
+        }
+        return methodEl.getParameters().get(argPos);
     }
 
     private static String mapLanguageToMimeType(String language) {

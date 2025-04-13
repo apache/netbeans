@@ -598,14 +598,14 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
         String source =
                 """
                 package t;
-                record A(F f) {
+                record A(F f, String... params) {
                     public A {
                         assert f != null;
                     }
                     record F<P>(P first, String... second) {
                         public F {
                             assert null != first;
-                            assert null != second;
+                            assert null != second && second.length > 0;
                         }
                     }
                 }
@@ -613,7 +613,7 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
         String newOuter =
                 """
                 package t;
-                record A(F f) {
+                record A(F f, String... params) {
                     public A {
                         assert f != null;
                     }
@@ -635,7 +635,7 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
 
                     public F {
                         assert null != first;
-                        assert null != second;
+                        assert null != second && second.length > 0;
                     }
 
                 }

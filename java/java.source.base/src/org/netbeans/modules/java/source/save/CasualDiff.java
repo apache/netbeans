@@ -1021,8 +1021,8 @@ public class CasualDiff {
             ComponentsAndOtherMembers newParts = splitOutRecordComponents(filteredNewTDefs, newT);
             List<JCVariableDecl> oldCanonicalParameters = oldParts.canonicalParameters();
             List<JCVariableDecl> newCanonicalParameters = newParts.canonicalParameters();
-            System.err.println("CD oldT "+oldT);
-            System.err.println("CD newT "+newT);
+//            System.err.println("CD oldT "+oldT);
+//            System.err.println("CD newT "+newT);
             int posHint;
             if (oldCanonicalParameters.isEmpty()) {
                 // compute the position. Find the parameters closing ')', its
@@ -1190,7 +1190,12 @@ public class CasualDiff {
                 }
             }
         }
+        try {
+//        System.err.println("CD print REAL MEMBER "+filteredNewTDefs+"/REAL MEMBER");
+        } catch (Throwable ignored){}
+//        System.err.println("CD before "+printer.toString()+"/before");
         localPointer = diffList(filteredOldTDefs, filteredNewTDefs, insertHint, est, Measure.REAL_MEMBER, printer);
+//        System.err.println("CD after "+printer.toString()+"/after");
         printer.enclClass = origClass;
         origClassName = origOuterClassName;
         newClassName = newOuterClassName;
@@ -1322,6 +1327,7 @@ public class CasualDiff {
     }
 
     protected int diffMethodDef(JCMethodDecl oldT, JCMethodDecl newT, int[] bounds) {
+//        System.err.println("CD methodDiff newT "+newT);
         JCExpression oldRestype = oldT.name != names.init ? oldT.restype : null;
         JCExpression newRestype = newT.name != names.init ? newT.restype : null;
 
@@ -4290,6 +4296,7 @@ public class CasualDiff {
                 Name name = printer.fullName(((JCImport)item.element).qualid);
                 group = (name != null ? importGroups.getGroupId(name.toString(), ((JCImport)item.element).staticImport) : -1);
             }
+//            System.err.println("CD diffList op "+item.operation+" item/"+item+"/item");
             switch (item.operation) {
                 case MODIFY: {
                     lastGroup = group;
@@ -4467,7 +4474,7 @@ public class CasualDiff {
 
     /**
      * Retrieves comment set for the specified tree t. The FieldGroupTree is handled specially:
-     * preceding commenst are taken from the FG's first item, following comments from the last item
+     * preceding comments are taken from the FG's first item, following comments from the last item
      * <p/>
      * The return may be NEGATIVE to indicate, that the comment set is the same and should be retained
      * in the output. If the value is POSITIVE, the method has handled the copying.
@@ -5664,7 +5671,7 @@ public class CasualDiff {
                     (lastIndex = tokenSequence.token().text().toString().lastIndexOf('\n')) > -1 ?
                     tokenSequence.offset() + lastIndex + 1 : commentsStart;
         }
-
+//        System.err.println("CD diffTreeImpl0 tag "+ oldT.getTag()+"/tag, tree "+ oldT.toString()+"/tree" );
         switch (oldT.getTag()) {
           case TOPLEVEL:
               diffTopLevel((JCCompilationUnit)oldT, (JCCompilationUnit)newT, elementBounds);

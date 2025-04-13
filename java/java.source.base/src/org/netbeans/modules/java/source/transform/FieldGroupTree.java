@@ -81,7 +81,8 @@ public class FieldGroupTree extends JCTree implements Tree {
     }
 
     public void accept(Visitor arg0) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet for visitor "+arg0
+                + ".");
     }
 
     @Override

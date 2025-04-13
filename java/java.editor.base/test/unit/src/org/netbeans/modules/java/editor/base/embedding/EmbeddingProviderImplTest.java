@@ -75,48 +75,68 @@ public class EmbeddingProviderImplTest extends NbTestCase {
     }
 
     public void testFromAnnotationMethodParameter() throws Exception {
-        runTest("public class Test {\n" +
-                "    public void t() {\n" +
-                "        a(\"\"\"\n" +
-                "          <html|>\n" +
-                "          \"\"\");\n" +
-                "    }\n" +
-                "    public void a(@Language(\"test\") String test) {}\n" +
-                "    }\n" +
-                "    @interface Language { public String value(); }\n" +
-                "}\n",
+        runTest("""
+                public class Test {
+                    public void t() {
+                        a(\"""
+                          <html|>
+                          \""");
+                    }
+                    public void a(@Language("test") String test) {}
+                    @interface Language { public String value(); }
+                }
+                """,
                 "<html>\n");
     }
 
     public void testFromAnnotationVariable() throws Exception {
-        runTest("public class Test {\n" +
-                "    public void t() {\n" +
-                "        @Language(\"test\")\n" +
-                "        String a = \n" +
-                "          \"\"\"\n" +
-                "          <html|>\n" +
-                "          \"\"\");\n" +
-                "    }\n" +
-                "    @interface Language { public String value(); }\n" +
-                "}\n",
+        runTest("""
+                public class Test {
+                    public void t() {
+                        @Language("test")
+                        String a =
+                          \"""
+                          <html|>
+                          \""");
+                    }
+                    @interface Language { public String value(); }
+                }
+                """,
                 "<html>\n");
     }
 
     public void testFromAnnotationConstructorParameter() throws Exception {
-        runTest("public class Test {\n" +
-                "    public void t() {\n" +
-                "        new Test(\"\"\"\n" +
-                "          <html|>\n" +
-                "          \"\"\");\n" +
-                "    }\n" +
-                "    public Test(@Language(\"test\") String test) {}\n" +
-                "    }\n" +
-                "    @interface Language { public String value(); }\n" +
-                "}\n",
+        runTest("""
+                public class Test {
+                    public void t() {
+                        new Test(\"""
+                          <html|>
+                          \""");
+                    }
+                    public Test(@Language("test") String test) {}
+                    @interface Language { public String value(); }
+                }
+                """,
                 "<html>\n");
     }
 
-    private void runTest(String code, String snippet) throws Exception {
+    public void testEscapes() throws Exception {
+        runTest("""
+                public class Test {
+                    public void t() {
+                        new Test(\"""
+                          a\\"a|
+                          \""");
+                    }
+                    public Test(@Language("test") String test) {}
+                    @interface Language { public String value(); }
+                }
+                """,
+                "a\"a\n");
+    }
+
+    private void runTest(@org.netbeans.api.annotations.common.Language("Java") String code,
+                         String snippet) throws Exception {
         String fileName = "Test";
         int caretPos = code.indexOf('|');
 
@@ -140,7 +160,7 @@ public class EmbeddingProviderImplTest extends NbTestCase {
 
         assertNotNull(testSourceFO);
 
-        SourceUtilsTestUtil.setSourceLevel(testSourceFO, "13"); //enable preview
+        SourceUtilsTestUtil.setSourceLevel(testSourceFO, "21");
 
         File testBuildTo = new File(wd, "test-build");
 

@@ -165,9 +165,13 @@ public class EmbeddingProviderImpl extends ParserBasedEmbeddingProvider<Parser.R
 
     private List<Embedding> embeddingsForTextBlockContent(Snapshot snapshot, TokenSequence<?> ts, String mimeType) {
         TokenSequence<?> nested = ts.embedded();
+        List<Integer> escapes = new ArrayList<>();
         while (nested.moveNext()) {
             if (nested.token().id() == JavaStringTokenId.TEXT) {
                 nested.createEmbedding(Language.find(mimeType), 0, 0, true);
+            } else if ("string-escape".equals(nested.token().id().primaryCategory()) &&
+                       nested.token().length() == 2) {
+                escapes.add(nested.offset());
             }
         }
 
@@ -184,8 +188,17 @@ public class EmbeddingProviderImpl extends ParserBasedEmbeddingProvider<Parser.R
         for (int i = 0; i < lines.length; i++) {
             String line = lines[i];
             boolean last = i == lines.length - 1;
-            //XXX: escapes!
-            result.add(snapshot.create(nestedOffset + indent, line.length() - indent + (last ? 0 : 1), mimeType));
+            int embeddingStart = nestedOffset + indent;
+            int embeddingEnd = nestedOffset + line.length() + (last ? 0 : 1);
+
+            while (!escapes.isEmpty() && escapes.get(0) < embeddingEnd) {
+                int escapeStart = escapes.remove(0);
+
+                result.add(snapshot.create(embeddingStart, escapeStart - embeddingStart, mimeType));
+                embeddingStart = escapeStart + 1;
+            }
+
+            result.add(snapshot.create(embeddingStart, embeddingEnd - embeddingStart, mimeType));
             nestedOffset += line.length() + 1;
         }
         return result;

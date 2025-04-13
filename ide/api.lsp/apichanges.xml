@@ -86,7 +86,7 @@
         <author login="sdedic"/>
         <compatibility binary="compatible" source="compatible" addition="yes" deletion="no" />
         <description>
-            Added API to request that a <a href="@TOP@/org/netbeans/api/lsp/WorkspaceEdit.html#applyEdits-java.util.List-boolean-">WorkspaceEdit</a> is applied
+            Added API to request that a <a href="@TOP@/org/netbeans/api/lsp/WorkspaceEdit.html#applyEdits(java.util.List,boolean)">WorkspaceEdit</a> is applied
             to the resources with an optional save.
         </description>
         <class package="org.netbeans.api.lsp" name="WorkspaceEdit"/>
@@ -114,9 +114,9 @@
         <author login="dbalek"/>
         <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
         <description>
-            <a href="@TOP@/org/netbeans/api/lsp/Completion.html#getLabelDetail--">Completion.getLabelDetail()</a>
+            <a href="@TOP@/org/netbeans/api/lsp/Completion.html#getLabelDetail()">Completion.getLabelDetail()</a>
             to get an optional string describing function signatures or type annotations.
-            <a href="@TOP@/org/netbeans/api/lsp/Completion.html#getLabelDescription--">Completion.getLabelDescription()</a>
+            <a href="@TOP@/org/netbeans/api/lsp/Completion.html#getLabelDescription()">Completion.getLabelDescription()</a>
             to get an optional string describing fully qualified names or file path.
         </description>
         <class package="org.netbeans.api.lsp" name="Completion"/>
@@ -185,7 +185,7 @@
         <author login="dbalek"/>
         <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
         <description>
-            <a href="@TOP@/org/netbeans/api/lsp/Completion.html#getCommand--">Completion.getCommand()</a> to get an optional command
+            <a href="@TOP@/org/netbeans/api/lsp/Completion.html#getCommand()">Completion.getCommand()</a> to get an optional command
             that is executed after inserting the completion.
         </description>
         <class package="org.netbeans.api.lsp" name="Completion"/>
@@ -226,7 +226,7 @@
             <a href="@TOP@/org/netbeans/spi/lsp/DiagnosticReporter.html">DiagnosticReporter</a> SPI should be implemented to allow
             alerting the LSP server core that diagnostics for certain file(s) may have changed. The core implementation should then poll 
             <a href="@TOP@/org/netbeans/spi/lsp/ErrorProvider.html">ErrorProviders</a> to collect the diagnostics.
-            API clients should call <a href="@TOP@/org/netbeans/api/lsp/Diagnostic.html#findReporterControl-org.openide.util.Lookup-org.openide.filesystems.FileObject-">Diagnostic.findReporterControl</a>
+            API clients should call <a href="@TOP@/org/netbeans/api/lsp/Diagnostic.html#findReporterControl(org.openide.util.Lookup,org.openide.filesystems.FileObject)">Diagnostic.findReporterControl</a>
             to obtain an accessor which can fire the alert.
         </description>
         <class package="org.netbeans.api.lsp" name="Diagnostic"/>

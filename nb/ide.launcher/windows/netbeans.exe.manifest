@@ -20,7 +20,7 @@
 
 -->
 <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
-<assemblyIdentity version="101.2.0.0"
+<assemblyIdentity version="101.3.0.0"
    processorArchitecture="x86"
    name="netbeans.exe"
    type="win32"/>

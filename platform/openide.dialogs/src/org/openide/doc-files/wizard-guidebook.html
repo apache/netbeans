@@ -24,7 +24,7 @@
 
 <head>
  <title>Wizard guidebook</title>
-    <link rel="stylesheet" href="../../../prose.css" type="text/css"/>
+    <link rel="stylesheet" href="@TOP@/resource-files/prose.css" type="text/css"/>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
     <meta name="topic" content="openide/dialogs"/>
     <meta name="type" content="article"/>
@@ -32,18 +32,13 @@
     <meta name="description" content="Guidebook of using WizardDescriptor API."/>
     <meta name="author" content="jrojcek@netbeans.org,jrechtacek@netbeans.org"/>
     <meta name="indexed" content="y"/>
-    <style type="text/css">
-    </style>
 </head>
 
 <body>
 <h1>Wizard Descriptor API</h1>
-Class <a href="../WizardDescriptor.html"><code>WizardDescriptor</code></a>
-
-allows developer to create wizard from supplied 
-<a href="../WizardDescriptor.Iterator.html"><code>WizardDescriptor.Iterator</code></a>
-or array of 
-<a href="../WizardDescriptor.Panel.html"><code>WizardDesriptor.Panel</code></a>.
+Class {@link org.openide.WizardDescriptor WizardDescriptor }
+allows developer to create wizard from supplied  {@link org.openide.WizardDescriptor.Iterator WizardDescriptor.Iterator}
+or array of {@link org.openide.WizardDescriptor.Panel WizardDesriptor.Panel }.
 
 <br><br>
 
@@ -77,10 +72,8 @@ set initialization properties.
 
 <h2>Wizard panel initialization</h2>
 
-Use 
-<a href="../WizardDescriptor.html#putProperty-java.lang.String-java.lang.Object-">
-<code>WizardDescriptor.putProperty()</code></a> to set following initialization 
-properties.
+Use {@link org.openide.WizardDescriptor#putProperty(java.lang.String,java.lang.Object) WizardDescriptor.putProperty() }
+to set following initialization properties.
 <ul>
 <li>
 Name <b> <code>"WizardPanel_autoWizardStyle"</code></b>, type <b> <code>Boolean</code></b>
@@ -99,18 +92,14 @@ Name <b> <code>"WizardPanel_autoWizardStyle"</code></b>, type <b> <code>Boolean<
 <br>
 <br>
 Also set to <code>Boolean.TRUE</code> to turn on subtitle creation from
-<a href="../WizardDescriptor.Panel.html#getComponent--">
-<code>WizardDesriptor.Panel.getComponent()</code></a><code>.getName()</code>
+{@link org.openide.WizardDescriptor.Panel#getComponent WizardDesriptor.Panel.getComponent() }<code>.getName()</code>
 as first and 
-<a href="../WizardDescriptor.Iterator.html#name--">
-<code>WizardDescriptor.Iterator.name()</code></a> as second parameter in subtitle
+{@link org.openide.WizardDescriptor.Iterator#name() WizardDescriptor.Iterator.name() } as second parameter in subtitle
 format set with 
-<a href="../WizardDescriptor.html#setTitleFormat-java.text.MessageFormat-">
-<code>WizardDesriptor.setTitleFormat()</code></a>. 
+{@link org.openide.WizardDescriptor#setTitleFormat(java.text.MessageFormat) WizardDesriptor.setTitleFormat() }. 
 Default subtitle format is <code>"{0} wizard ({1})"</code> and name of default 
 
-<a href="../WizardDescriptor.ArrayIterator.html">
-<code>WizardDescriptor.ArrayIterator</code></a> is 
+{@link org.openide.WizardDescriptor.ArrayIterator WizardDescriptor.ArrayIterator } is 
 <code>"{0} of {1}"</code>
 where <code>{0}</code> is number of current panel and <code>{1}</code> is size of iterator. 
 <br>
@@ -183,13 +172,10 @@ Set image displayed as background of content.
 </li>
 <li>
 Set subtitle (!!!) format with 
-<a href="../WizardDescriptor.html#setTitleFormat-java.text.MessageFormat-">
-<code>WizardDescriptor.setTitleFormat()</code></a>.
+{@link org.openide.WizardDescriptor#setTitleFormat(java.text.MessageFormat) WizardDescriptor.setTitleFormat() }.
 </li>
 <li>
-Set title of the wizard with 
-<a href="../NotifyDescriptor.html#setTitle-java.lang.String-">
-<code>WizardDescriptor.setTitle()</code></a>. 
+Set title of the wizard with {@link org.openide.NotifyDescriptor#setTitle(java.lang.String) WizardDescriptor.setTitle() }. 
 </li>
 <li>
 Name <b><code>"WizardPanel_errorMessage"</code></b>, type <b> <code>String</code></b>
@@ -225,26 +211,20 @@ Color used as background of content pane.
 <li>
 Set name of panel <code>JComponent.setName("First wizard panel")</code>, 
 used as first part of subtitle, second
-is 
-
-<a href="../WizardDescriptor.Iterator.html#name--">
-<code>WizardDescriptor.Panel.name()</code></a> when you use <code>"{0}{1}"</code> message format.
+is {@link org.openide.WizardDescriptor.Iterator#name() WizardDescriptor.Panel.name() } when you use <code>"{0}{1}"</code> message format.
 </li>
-
 </ul>
 
 All properties could be set with
-both alternatives (<a href="../WizardDescriptor.html#putProperty-java.lang.String-java.lang.Object-"><code>WizardDescriptor.putProperty()</code></a> or 
+both alternatives ({@link org.openide.WizardDescriptor#putProperty(java.lang.String,java.lang.Object) WizardDescriptor.putProperty() } or 
 <code>JComponent.putClientProperty()</code>)
 except <b><code>"WizardPanel_helpURL"</code></b> which can be set only with 
 <code>JComponent.putClientProperty()</code> and the property <b><code>"WizardPanel_errorMessage"</code></b> which can be set only by
-<a href="../WizardDescriptor.html#putProperty-java.lang.String-java.lang.Object-"><code>WizardDescriptor.putProperty()</code></a>.
+{@link org.openide.WizardDescriptor#putProperty(java.lang.String,java.lang.Object) WizardDescriptor.putProperty() }.
 <br>
 If both are used at the same time then 
-<a href="../WizardDescriptor.html#putProperty-java.lang.String-java.lang.Object-">
-<code>WizardDescriptor.putProperty()</code></a> matters.
-<a href="../WizardDescriptor.html">
-<code>WizardDescriptor</code></a> listens on property changes of not initialization properties
+{@link org.openide.WizardDescriptor#putProperty(java.lang.String,java.lang.Object) WizardDescriptor.putProperty() } matters.
+{@link org.openide.WizardDescriptor WizardDescriptor } listens on property changes of not initialization properties
 and makes immediate changes.
 
 </body>

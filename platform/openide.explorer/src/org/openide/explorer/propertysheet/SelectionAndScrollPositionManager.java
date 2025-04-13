@@ -29,7 +29,6 @@ import java.util.Map;
 class SelectionAndScrollPositionManager {
     private static Map<String, String> groupsToNodes = new HashMap<String, String>();
     private static Map<String, Integer> namesToPositions = new HashMap<String, Integer>();
-    private static final Integer zero = new Integer(0);
     private String lastSelectedGroup = "";
     private String nodeName = null;
 
@@ -110,13 +109,10 @@ class SelectionAndScrollPositionManager {
     }
 
     public int getScrollPositionForNodeName(String name) {
-        Integer result = zero;
         Integer found = namesToPositions.get(name);
-
         if (found != null) {
-            result = found;
+            return found;
         }
-
-        return result.intValue();
+        return 0;
     }
 }

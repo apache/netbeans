@@ -1,8 +1,10 @@
-Name: GSon
-Description: JSon serialization/deserialization library
-Origin: GitHub
-Version: 2.11.0
+Name: FlatLaf Look and Feel
+Description: FlatLaf Look and Feel
+Version: 3.6
+Files: flatlaf-3.6.jar
 License: Apache-2.0
+Origin: FormDev Software GmbH.
+URL: https://www.formdev.com/flatlaf/
 
                                  Apache License
                            Version 2.0, January 2004

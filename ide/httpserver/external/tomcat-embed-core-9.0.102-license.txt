@@ -1,5 +1,5 @@
 Name: Apache Tomcat (embedded)
-Version: 9.0.96
+Version: 9.0.102
 License: Apache-2.0-tomcat
 Description: Apache Tomcat (embedded) is a library version of the Apache Tomcat servlet container, which can be used to create embedded servlet containers in other applications.
 Origin: http://tomcat.apache.org

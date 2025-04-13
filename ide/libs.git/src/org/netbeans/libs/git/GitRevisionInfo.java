@@ -114,7 +114,7 @@ public final class GitRevisionInfo {
         if (author == null) {
             return (long) revCommit.getCommitTime() * 1000;
         } else {
-            return author.getWhen().getTime();
+            return author.getWhenAsInstant().toEpochMilli();
         }
     }
 

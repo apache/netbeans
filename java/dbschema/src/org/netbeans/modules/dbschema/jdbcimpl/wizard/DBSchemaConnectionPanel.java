@@ -51,7 +51,7 @@ public class DBSchemaConnectionPanel extends JPanel implements ListDataListener 
         this.list = list;
         this.data = data;
 
-        putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(1)); //NOI18N
+        putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 1); //NOI18N
         setName(bundle.getString("ConnectionChooser")); //NOI18N
 
         initComponents ();

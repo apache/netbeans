@@ -21,7 +21,7 @@
 <html>
 <head>
 <title>Window System API</title>
-<link rel="Stylesheet" href="../../../../prose.css" type="text/css" title="NetBeans Open APIs Style">
+<link rel="Stylesheet" href="@TOP@/resource-files/prose.css" type="text/css" title="NetBeans Open APIs Style">
 </head>
 <body>
 
@@ -31,21 +31,16 @@ changed is major version. Comparing to the older version it has changed its
 laout significantly, introduced group, and released support of workspaces</em>
 <br>
 
-<p class="overviewlink"><a href="../../../../overview-summary.html">Overview</a></p>
+<p class="overviewlink"><a href="@TOP@/index.html">Overview</a></p>
 
 <h1>Javadoc</h1>
 
-The Javadoc is present in the
-
-<a href="../package-summary.html"><code>org.openide.windows</code></a>
-
+The Javadoc is present in the {@link org.openide.windows org.openide.windows }
 package. Most module authors will want to look at
-
-<a href="../TopComponent.html"><code>TopComponent</code></a>
-
+{@link org.openide.windows.TopComponent TopComponent }
 to subclass it, or perhaps at
-
-<a href="../CloneableTopComponent.html"><code>CloneableTopComponent</code></a>.
+{@link org.openide.windows.CloneableTopComponent CloneableTopComponent }
+.
 
 <h1>Contents</h1>
 
@@ -100,9 +95,7 @@ smoothly by the NetBeans window manager implementation.
 <h2 id="overview">Overview of the Window System</h2>
 
 As a rule, modules should not create their own top-level windows
-(e.g.
-
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/awt/Window.html"><code>java.awt.Window</code></a>),
+(e.g. {@link java.awt.Window java.awt.Window }),
 
 since these would exist without the knowledge of NetBeans' window
 manager. This window manager is capable of manipulating application
@@ -170,63 +163,50 @@ proper docking mode, is not generally difficult.
 <h3 id="create-top">Subclassing <code>TopComponent</code></h3>
 
 To create a simple top component, it suffices to subclass
-
-<a href="../TopComponent.html"><code>TopComponent</code></a>.
+{@link org.openide.windows.TopComponent TopComponent }
 
 This is a subclass of
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JComponent.html"><code>JComponent</code></a>,
+{@link javax.swing.JComponent JComponent},
 
 which means that it is possible to draw on it using a variety of
 mechanisms; typically, it is treated as a container, and its layout
-may be
-
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/awt/Container.html#setLayout-java.awt.LayoutManager-">set</a>
-
+may be {@link java.awt.Container#setLayout(java.awt.LayoutManager) set}
 and components
-
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/awt/Container.html#add-java.awt.Component-java.lang.Object-">added</a>
-
-to it. 
+{@link java.awt.Container#add(java.awt.Component,java.lang.Object) added } to it. 
 
 <p>There are a few general ways in which you can customize the
 component besides painting subcomponents on it:
 
 <ul>
 
-<li>You may set a
-
-<a href="../TopComponent.html#setName-java.lang.String-">display name</a>
+<li>You may set a {@link org.openide.windows.TopComponent#setName(java.lang.String) display name }
 
 and
-
-<a href="../TopComponent.html#setIcon-java.awt.Image-">icon</a>
+{@link org.openide.windows.TopComponent#setIcon(java.awt.Image) icon }
 
 for the component, affecting its appearance in window title bars
 and tabs. These ought generally be set in the constructor.
 
-<li><a href="../TopComponent.html#getHelpCtx--"><code>TopComponent.getHelpCtx()</code></a>
+<li>
+{@link org.openide.windows.TopComponent#getHelpCtx() TopComponent.getHelpCtx() }
 
 should be overridden to provide a help link for the component as a
 whole, if you have any context help. Or, subcomponents may have their
 own more specific help. By default, context help is taken from the activated
 node selection, if there is any to be found.
 
-<li><a href="../TopComponent.html#getUndoRedo--"><code>TopComponent.getUndoRedo()</code></a>
-
+<li>{@link org.openide.windows.TopComponent#getUndoRedo() TopComponent.getUndoRedo() }
 allows you to associate undo/redo actions with the component, so
 that these actions will work properly when your component is
 focussed.
 
-<li><a href="../TopComponent.html#getActions--"><code>TopComponent.getActions()</code></a>
-
+<li>{@link org.openide.windows.TopComponent#getActions() TopComponent.getActions() }
 permits you to provide a list of actions which will appear in a
 popup menu, e.g. on a tab for the component. The system should
 provide a few standard actions such as "Close"; you may want to add
 more (for example, "Save" for an Editor pane). The
-
 <a href="@org-openide-actions@/org/openide/actions/doc-files/api.html">Actions API</a>
-
 describes how to write these.
 
 </ul>
@@ -237,16 +217,15 @@ Finding <a href="#overview-top">modes</a> is straightforward.
 
 <p>You cannot create mode directly, however you can specify
 new mode in XML layer. Then you can find such a mode by call
-
-<a href="../WindowManager.html#findMode-java.lang.String-"><code>WindowManager.findMode(String)</code></a>
+{@link org.openide.windows.WindowManager#findMode(java.lang.String) WindowManager.findMode(String) }
 
 . Do not keep references to modes, Rather use the above method to access them.
 Modes could be removed from window system inbetween, thus manipulating with such
 a mode wouldn't achieve desired goal.
 
 <p>To add top components to a mode, just call
-
-<a href="../Mode.html#dockInto-org.openide.windows.TopComponent-"><code>Mode.dockInto(TopComponent)</code></a>.
+{@link org.openide.windows.Mode#dockInto(org.openide.windows.TopComponent) Mode.dockInto(TopComponent) }
+.
 
 For example:
 
@@ -283,19 +262,16 @@ myComponent2.requestActive();
 
 <h3 id="create-clone">Creating a cloneable component</h3>
 
-Just by subclassing
-
-<a href="../CloneableTopComponent.html"><code>CloneableTopComponent</code></a>,
-
+Just by subclassing {@link org.openide.windows.CloneableTopComponent CloneableTopComponent }
 you can create a component which is capable of <em>cloning</em>
 itself, like the Editor does with the popup action "Clone View". If
 
-<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/Object.html#clone--"><code>Object.clone()</code></a>
+{@link java.lang.Object#clone() Object.clone() }
 
 takes care of all of your instance state satisfactorily, then you
 need do little more; otherwise, you can override
+{@link org.openide.windows.CloneableTopComponent#createClonedObject() CloneableTopComponent.createClonedObject() }
 
-<a href="../CloneableTopComponent.html#createClonedObject--"><code>CloneableTopComponent.createClonedObject()</code></a>
 
 to specify exactly what fields should be shared with the original
 top component. Typically all clones of a component should share any
@@ -304,8 +280,7 @@ different display parameters or other noncritical settings.
 
 <p>You may specify how these cloned windows act when they are
 closed, by overriding
-
-<a href="../CloneableTopComponent.html#closeLast--"><code>CloneableTopComponent.closeLast()</code></a>.
+{@link org.openide.windows.CloneableTopComponent#closeLast() CloneableTopComponent.closeLast() }
 
 (There are more general methods for all top components pertaining
 to closing them; this method is specific to cloneable top
@@ -334,17 +309,13 @@ Focus works naturally with top components: the focussed multitabbed
 window has the activated component on its selected tab.
 
 <p>You can explicitly request that a top component be activated by calling
-
-<a href="../TopComponent.html#requestActive--"><code>TopComponent.requestActive()</code></a>.
+{@link org.openide.windows.TopComponent#requestActive() TopComponent.requestActive() }.
 
 (It should be opened first.)
 
-<a href="../TopComponent.html#getRegistry--"><code>TopComponent.getRegistry()</code></a>
-
+{@link org.openide.windows.TopComponent#getRegistry() TopComponent.getRegistry() }
 and then
-
-<a href="../TopComponent.Registry.html#getActivated--"><code>TopComponent.Registry.getActivated()</code></a>
-
+{@link org.openide.windows.TopComponent.Registry#getActivated() TopComponent.Registry.getActivated() }
 correspondingly finds the last-activated component.
 
 <h4>The node selection</h4>
@@ -367,7 +338,7 @@ pay attention to it.
 
 <p>The selection may be set using
 
-<a href="../TopComponent.html#setActivatedNodes-org.openide.nodes.Node:A-"><code>TopComponent.setActivatedNodes(...)</code></a>.
+{@link org.openide.windows.TopComponent#setActivatedNodes(org.openide.nodes.Node[]) TopComponent.setActivatedNodes(...) }.
 
 <p>Explorer views embedded in as described at
 
@@ -557,53 +528,43 @@ A few method calls may be used to find modes, groups and top components:
 
 <li><code>WindowManager</code> instance is obtained by
 
-<a href="../WindowManager.html#getDefault--"><code>WindowManager.getDefault()</code></a>.
+{@link org.openide.windows.WindowManager#getDefault() WindowManager.getDefault() }.
 
-<li>The modes in a window systeme may be gotten
+<li>The modes in a window system may be gotten
 with
-
-<a href="../WindowManager.html#getModes--"><code>WindowManager.getModes()</code></a>
-
+{@link org.openide.windows.WindowManager#getModes() WindowManager.getModes() }
 or
-
-<a href="../WindowManager.html#findMode-java.lang.String-"><code>WindowManager.findMode(String)</code></a>
+{@link org.openide.windows.WindowManager#findMode(java.lang.String) WindowManager.findMode(String) }
 
 (or also
-
-<a href="../WindowManager.html#findMode-org.openide.windows.TopComponent-"><code>WindowManager.findMode(TopComponent)</code></a>).
+{@link org.openide.windows.WindowManager#findMode(org.openide.windows.TopComponent) WindowManager.findMode(TopComponent) }).
 
 
 <li>Each mode has some top components in it, obtainable with
-
-<a href="../Mode.html#getTopComponents--"><code>Mode.getTopComponents()</code></a>.
+{@link org.openide.windows.Mode#getTopComponents() Mode.getTopComponents() }.
 
 <li>Groups can be retrieved via
-
-<a href="../WindowManager.html#findTopComponentGroup-java.lang.String-"><code>WindowManager.findTopComponentGroup(String)</code></a>
+{@link org.openide.windows.WindowManager#findTopComponentGroup(java.lang.String) WindowManager.findTopComponentGroup(String) }
 
 <li>To get the currently selected top component, use
-
-<a href="../TopComponent.html#getRegistry--"><code>TopComponent.getRegistry()</code></a>
+{@link org.openide.windows.TopComponent#getRegistry() TopComponent.getRegistry() }
 
 followed by
+{@link org.openide.windows.TopComponent.Registry#getActivated() TopComponent.Registry.getActivated() }.
 
-<a href="../TopComponent.Registry.html#getActivated--"><code>TopComponent.Registry.getActivated()</code></a>.
 
 You can also get all opened components with
-
-<a href="../TopComponent.Registry.html#getOpened--"><code>TopComponent.Registry.getOpened()</code></a>.
+{@link org.openide.windows.TopComponent.Registry#getOpened() TopComponent.Registry.getOpened() }.
 
 </ul>
 
 <h3 id="manip-misc">Activating and closing</h3>
 
 Any top component may be activated just by calling
-
-<a href="../TopComponent.html#requestActive--"><code>TopComponent.requestActive()</code></a>.
+{@link org.openide.windows.TopComponent#requestActive() TopComponent.requestActive() }.
 
 <p>To close a top component programmatically, call
-
-<a href="../TopComponent.html#close--"><code>TopComponent.close()</code></a>.
+{@link org.openide.windows.TopComponent#close() TopComponent.close() }.
 
 <h3 id="listen">Listening to window system events</h3>
 
@@ -615,13 +576,11 @@ possible too.
 <ul>
 
 <li>All properties of the window manager (i.e. contained modes) may be listened to with
-
-<a href="../WindowManager.html#addPropertyChangeListener-java.beans.PropertyChangeListener-"><code>WindowManager.addPropertyChangeListener(PropertyChangeListener)</code></a>.
+{@link org.openide.windows.WindowManager#addPropertyChangeListener(java.beans.PropertyChangeListener) WindowManager.addPropertyChangeListener(PropertyChangeListener) }.
 
 <li>All properties of the top component registry (i.e. available
 and selected components, and the node selection) may be listened to with
-
-<a href="../TopComponent.Registry.html#addPropertyChangeListener-java.beans.PropertyChangeListener-"><code>TopComponent.Registry.addPropertyChangeListener(PropertyChangeListener)</code></a>.
+{@link org.openide.windows.TopComponent.Registry#addPropertyChangeListener(java.beans.PropertyChangeListener) TopComponent.Registry.addPropertyChangeListener(PropertyChangeListener) }.
 
 
 <!-- No longer exists...why?
@@ -743,7 +702,7 @@ Further, exact format of folders and files which hold layout information is
 specified, together with examples. 
 </P>
 
-<H4>Storage of Configurations</H4>
+<h4>Storage of Configurations</h4>
 
 <P>Physical storage of layout configuration documents is determined by layers
 support. Until modified, layout configuration files lives in modules that defined
@@ -761,7 +720,7 @@ system of the repository is responsible for holding the files and applying
 any changes made.)
 </P>
 
-<H4>Directory structure</H4>
+<h4>Directory structure</h4>
 
 <P>To effectively use XML layers, it's necessary to define directory structure
 for modes layout description. Following directory structure is fixed and
@@ -898,7 +857,7 @@ Modules now can:
 
 </div>
 
-<H4>Global properties</H4>
+<h4>Global properties</h4>
 Window system as a whole stores several properties which have global nature.
 They are always defined by a folder <samp>Windows/WindowManager/</samp> and data file
 <samp>Windows/WindowManager.wswmgr</samp>. Core implementation defines default values
@@ -933,12 +892,12 @@ Modules will typically never need to access these global properties, and
 modules should never try to change them.  
 
 
-<H4>Modes</H4>
+<h4>Modes</h4>
 
 <p class="nonnormative">Modules can either define own mode
 from scratch or reference mode defined by other modules.</p>
 
-<H5>Mode definition</H5>
+<h5>Mode definition</h5>
 
 <p>Module defines mode by creating proper mode folder
 <samp>Windows2/Modes/<em>MODE_UID</em>/</samp> and data file
@@ -969,7 +928,7 @@ from scratch or reference mode defined by other modules.</p>
 
 <div class="nonnormative">
 
-<H5>Mode referencing</H5>
+<h5>Mode referencing</h5>
 
 <p>Module references mode defined by other module in order to place own components
 into such mode to complete its layout. Module specifies
@@ -978,12 +937,12 @@ with own top component reference files. The mode data file should not be given.<
 
 </div>
 
-<H4>Groups</H4>
+<h4>Groups</h4>
 
 <p class="nonnormative">Modules can either define own group
 from scratch or reference grouo defined by other modules.</p>
 
-<H5>Group definition</H5>
+<h5>Group definition</h5>
 
 <p>Module defines group by creating proper group folder
 <samp>Windows2/Groups/<em>GROUP_UID</em>/</samp> and data file
@@ -1007,7 +966,7 @@ from scratch or reference grouo defined by other modules.</p>
 
 <div class="nonnormative">
 
-<H5>Group referencing</H5>
+<h5>Group referencing</h5>
 
 <p>Module references group defined by other module in order to place own components
 into such group to complete its layout. Module specifies
@@ -1017,7 +976,7 @@ with own top component reference files. The group data file should not be given.
 </div>
 
 
-<H4>Top component references in modes</H4>
+<h4>Top component references in modes</h4>
 
 <p>For top component to appear in mode, reference file needs to be put into
 mode folder, for example file <samp>Windows2/Modes/<em>MODE_UID</em>/<em>COMP_UID</em>.wstcref</samp>.
@@ -1042,7 +1001,7 @@ have to provide file <samp><em>COMP_UID</em>.settings</samp> or <samp><em>COMP_U
 &lt;/tc-ref&gt;
 </pre>
 
-<H4>Top component references in groups</H4>
+<h4>Top component references in groups</h4>
 
 <p>For top component to appear in group, reference file needs to be put into
 group folder, for example file
@@ -1069,7 +1028,7 @@ have to provide file <samp><em>COMP_UID</em>.settings</samp> or <samp><em>COMP_U
 </pre>
 
 
-<H4>Top component data</H4>
+<h4>Top component data</h4>
 
 <p>Stored in folder <samp>Windows2/Components/</samp> as <samp>*.settings</samp> or <samp>*.ser</samp> files, which holds
 data of top component. Top components are instantiated using information stored
@@ -1140,7 +1099,7 @@ from template is performed, resulting in creation of new instance with propertie
 and data inherited from template info.
 -->
 
-<H4>Automatic deinstallation support</H4>
+<h4>Automatic deinstallation support</h4>
 
 <p>Modules that define modes, groups or component references can
 "mark" these items so that the system can perform automatic removal of
@@ -1173,7 +1132,7 @@ have been.</p>
 
 <!--<h3 id="xml-visual">Visual Display</h3>
 
-<H4>Defining layout for multiple interfaces of the system</H4>
+<h4>Defining layout for multiple interfaces of the system</h4>
 
 <p>System currently supports both Single Document Interface (SDI) and Multiple Document
 Interface (MDI). It's possible to define special property set for each interface
@@ -1216,7 +1175,7 @@ default layout for the mode of property sheet - property sheet has
 its own mode only in SDI, in MDI it is part of explorer mode.
 </P>
 
-<H4>Playing with bounds of modes</H4>
+<h4>Playing with bounds of modes</h4>
 
 <p>Bounds of modes or mode areas can be specified either in absolute or relative form, and
 coordination space is different for SDI and MDI modes. Absolute bounds are
@@ -1338,7 +1297,7 @@ you might for example retrieve a mode as follows:</p>
 <span class="comment">// now use it as desired...
 </span></pre>
 
-<H4>Writing from the Java-level API</H4>
+<h4>Writing from the Java-level API</h4>
 
 <p>As for reading, you may not write the entire window to disk from
 module code; and handling of top component data is determined by the
@@ -1374,7 +1333,7 @@ component.</p>
 top component references. Whether these have an instance cookie, and
 if so what it is an instance of, is undefined.</p>
 
-<H4>Synchronization issues</h4>
+<h4>Synchronization issues</h4>
 
 <p>Currently there is no defined synchronization mechanism
 guaranteeing when changes made at the Filesystems level will be
@@ -1407,7 +1366,7 @@ modes using the Java-level API.</p>
 features of XML mode layout. Each procedure is detailed into steps which
 module writers are required or supposed to do.
 
-<H4>Creating new mode</H4>
+<h4>Creating new mode</h4>
 Following section shows creation of new mode defined by module.
 
 <OL>
@@ -1454,7 +1413,7 @@ class="string">"my_own_mode"</span>/&gt;
 </OL>
 
 
-<H4>Add components to foreign modes</H4>
+<h4>Add components to foreign modes</h4>
 It's even possible to add own top components into frames defined by other modules
 or core. To add top component "shower" into frame "bathroom", specify layer
 like this (ser or settings file shower.ser or shower.settings is expected in
@@ -1495,7 +1454,7 @@ There are several other notes that developer should be aware of:
     </LI>
 </OL>
 
-<H4>Overriding components and modes defined by other modules</H4>
+<h4>Overriding components and modes defined by other modules</h4>
 In some cases, it's useful to override mode and components layout defined by
 other module. To achieve this, the modules in question must have dependency
 defined.<P>

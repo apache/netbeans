@@ -443,10 +443,10 @@ public class ChildrenSupportTest extends NbTestCase {
             Map.Entry entry = (Map.Entry) it.next();
             FileNaming pItem = (FileNaming)entry.getKey();
             Integer type = (Integer)entry.getValue();
-            if (type == ChildrenCache.ADDED_CHILD) {
+            if (ChildrenCache.ADDED_CHILD.equals(type)) {
                 assertTrue (added.contains(pItem.getName()));
             }
-            if (type == ChildrenCache.REMOVED_CHILD) {
+            if (ChildrenCache.REMOVED_CHILD.equals(type)) {
                 assertTrue (removed.contains(pItem.getName()));
             }
         }

@@ -1,10 +1,8 @@
-Name: Apache Commons IO
-Description: Assist with developing IO functionality
-Origin: Apache Software Foundation
-Version: 2.16.1
+Name: Guava - Failure Access Library
+Version: 1.0.3
 License: Apache-2.0
-URL: https://commons.apache.org/proper/commons-io/
-
+Origin: https://github.com/google/guava
+Description: A Guava subproject
 
 
                                  Apache License
@@ -208,4 +206,3 @@ URL: https://commons.apache.org/proper/commons-io/
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-

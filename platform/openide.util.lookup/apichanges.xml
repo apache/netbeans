@@ -37,14 +37,14 @@
             <p>
                 One of the most common usages of  <a href="@TOP@/org/openide/util/lookup/ProxyLookup.html">ProxyLookup</a>
                 is to dynamically change the set of lookups being delegated to. However the 
-                <a href="@TOP@/org/openide/util/lookup/ProxyLookup.html#setLookups-org.openide.util.Lookup...-">setLookups(...)</a>
+                <a href="@TOP@/org/openide/util/lookup/ProxyLookup.html#setLookups(org.openide.util.Lookup...)">setLookups(...)</a>
                 method is <code>protected</code>. To avoid the need to subclass 
                 <a href="@TOP@/org/openide/util/lookup/ProxyLookup.html">ProxyLookup</a>
                 this change introduces
                 <a href="@TOP@/org/openide/util/lookup/ProxyLookup.Controller.html">ProxyLookup.Controller</a>
                 that gives the creator of <a href="@TOP@/org/openide/util/lookup/ProxyLookup.html">ProxyLookup</a>
                 a way to call 
-                <a href="@TOP@/org/openide/util/lookup/ProxyLookup.Controller.html#setLookups-org.openide.util.Lookup...-">setLookups(...)</a>
+                <a href="@TOP@/org/openide/util/lookup/ProxyLookup.Controller.html#setLookups(org.openide.util.Lookup...)">setLookups(...)</a>
                 without exposing the method to others having just a reference to 
                 the <a href="@TOP@/org/openide/util/lookup/ProxyLookup.html">ProxyLookup</a>.
             </p>
@@ -70,7 +70,7 @@
                 This change changes the default behaviour if NO 
                 <a href="@JDK@@JDKMODULE_JAVA_COMPILER@/javax/annotation/processing/SupportedSourceVersion.html"><code>@SupportedSourceVersion</code></a>
                 annotation is present on subclass. From 8.40, the Processor will report 
-                <a href="@JDK@@JDKMODULE_JAVA_COMPILER@/javax/lang/model/SourceVersion.html#latest--"><code>@SourceVersion.latest()</code></a>.
+                <a href="@JDK@@JDKMODULE_JAVA_COMPILER@/javax/lang/model/SourceVersion.html#latest()"><code>@SourceVersion.latest()</code></a>.
             </p>
         </description>
         <class name="LayerGeneratingProcessor" package="org.openide.filesystems.annotations" link="no" /> <!-- external -->
@@ -87,7 +87,7 @@
             binary="compatible" deletion="no" deprecation="no"
             modification="no" semantic="incompatible" source="compatible"
         >
-            The clients of <a href="@TOP@/org/openide/util/Lookup.html#getDefault--">
+            The clients of <a href="@TOP@/org/openide/util/Lookup.html#getDefault()">
             Lookup.getDefault()</a> are mostly unaffected by this change,
             just they need to be ready for the fact that the return 
             value of the method may no longer be fixed one, but can mutate
@@ -95,10 +95,10 @@
         </compatibility>
         <description>
             <p>
-                One can use <a href="@TOP@/org/openide/util/lookup/Lookups.html#executeWith-org.openide.util.Lookup-java.lang.Runnable-">
+                One can use <a href="@TOP@/org/openide/util/lookup/Lookups.html#executeWith(org.openide.util.Lookup,java.lang.Runnable)">
                 Lookups.execute(yourLookup, yourRunnable)
                 </a> to temporarily influence return value from
-                <a href="@TOP@/org/openide/util/Lookup.html#getDefault--">
+                <a href="@TOP@/org/openide/util/Lookup.html#getDefault()">
                 Lookup.getDefault()</a>. 
             </p>
         </description>
@@ -122,7 +122,7 @@
                 <a href="@TOP@org/openide/util/lookup/NamedServiceDefinition.html">NamedServiceDefinition</a> 
                 for those who define their own annotations that register
                 something into 
-                <a href="@TOP@org/openide/util/lookup/Lookups.html#forPath-java.lang.String-">
+                <a href="@TOP@org/openide/util/lookup/Lookups.html#forPath(java.lang.String)">
                 Lookups.forPath</a> registration area.
             </p>
         </description>
@@ -162,7 +162,7 @@
                 waiting for or creating all of them:
             </p>
            <pre>
-for (<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/net/URLStreamHandlerFactory.html">URLStreamHandlerFactory</a> first : <a href="@TOP@/org/openide/util/Lookup.html#getDefault--">Lookup.getDefault()</a>.lookupAll(<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/net/URLStreamHandlerFactory.html">URLStreamHandlerFactory</a>.class)) {
+for (<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/net/URLStreamHandlerFactory.html">URLStreamHandlerFactory</a> first : <a href="@TOP@/org/openide/util/Lookup.html#getDefault()">Lookup.getDefault()</a>.lookupAll(<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/net/URLStreamHandlerFactory.html">URLStreamHandlerFactory</a>.class)) {
     return first;
 }
            </pre>
@@ -288,7 +288,7 @@ for (<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/net/URLStreamHandlerFactory.html">
         <compatibility addition="yes"/>
         <description>
             <p>
-                New method <a href="@TOP@/org/openide/util/lookup/Lookups.html#forPath-java.lang.String-">Lookups.forPath(String)</a>
+                New method <a href="@TOP@/org/openide/util/lookup/Lookups.html#forPath(java.lang.String)">Lookups.forPath(String)</a>
                 has been added to replace now deprecated <a href="@org-openide-loaders@/org/openide/loaders/FolderLookup.html">FolderLookup</a>
                 and allow modules who wants to read settings from layers
                 to do so with a simpler code, without dependency on DataSystems API.

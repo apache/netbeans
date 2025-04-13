@@ -130,11 +130,11 @@ public class MenuEditLayer extends JPanel {
             }
         };
 
-        layers.add(glassLayer, new Integer(500)); // put the glass layer over the drag layer
+        layers.add(glassLayer, Integer.valueOf(500)); // put the glass layer over the drag layer
         glassLayer.setSize(400,400); //josh: do i need this line? probably can delete it.
         
         dropTargetLayer = new DropTargetLayer(this);
-        layers.add(dropTargetLayer, new Integer(JLayeredPane.DRAG_LAYER-5)); // put the drop target layer just above the drag layer
+        layers.add(dropTargetLayer, Integer.valueOf(JLayeredPane.DRAG_LAYER-5)); // put the drop target layer just above the drag layer
         
         // make the extra layers resize to the main component
         this.addComponentListener(new ComponentAdapter() {
@@ -1007,7 +1007,7 @@ public class MenuEditLayer extends JPanel {
             assert targetParentRad != null;
             
             int index2 = targetParentRad.getIndexOf(targetRad) + offset;
-            creator.addPrecreatedComponent(targetParentRad, new Integer(index2));
+            creator.addPrecreatedComponent(targetParentRad, index2);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

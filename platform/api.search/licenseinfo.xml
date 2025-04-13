@@ -43,6 +43,7 @@
         <file>src/org/netbeans/modules/search/res/warning.gif</file>
         <file>src/org/netbeans/modules/search/res/search.gif</file>
         <file>src/org/netbeans/modules/search/res/logical_view.png</file>
+        <file>src/org/netbeans/modules/search/res/preview.png</file>
         <file>src/org/netbeans/modules/search/doc-files/manager-state-diagram.png</file>
         <file>src/org/netbeans/modules/search/doc-files/results-class-diagram.png</file>
         <license ref="Apache-2.0-ASF" />

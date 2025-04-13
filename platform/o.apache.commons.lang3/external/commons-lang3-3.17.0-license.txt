@@ -1,9 +1,8 @@
-Name: Guava - Failure Access Library
-Version: 1.0.2
+Name: Commons Lang
+Version: 3.17.0
 License: Apache-2.0
-Origin: https://github.com/google/guava
-Description: A Guava subproject
-
+Origin: https://commons.apache.org/proper/commons-lang/
+Description: Provides extra functionality for classes in java.lang.
 
                                  Apache License
                            Version 2.0, January 2004

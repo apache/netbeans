@@ -280,7 +280,7 @@ public class MapFormat extends Format {
                     throw new IllegalArgumentException(
                         MessageFormat.format(
                             NbBundle.getBundle(MapFormat.class).getString("MSG_FMT_ObjectForKey"),
-                            new Object[] { new Integer(key) }
+                            Integer.valueOf(key)
                         )
                     );
                 } else {

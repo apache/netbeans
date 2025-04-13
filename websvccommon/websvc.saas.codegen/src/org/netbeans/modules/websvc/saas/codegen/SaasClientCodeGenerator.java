@@ -408,11 +408,11 @@ public abstract class SaasClientCodeGenerator implements SaasClientCodeGeneratio
     }
     
     protected void addVariablePattern(String pattern, int count) {
-        nFinder.addPattern(pattern, new Integer(count));
+        nFinder.addPattern(pattern, Integer.valueOf(count));
     }
     
     protected void updateVariableNames(List<ParameterInfo> params) {
-        nFinder.addPattern(VAR_NAMES_RESULT_DECL, new Integer(0));
+        nFinder.addPattern(VAR_NAMES_RESULT_DECL, Integer.valueOf(0));
         try {
             String text = getTargetDocument().getText(0, getTargetDocument().getLength());
             nFinder.updateVariableDecl(text, params);
@@ -421,7 +421,7 @@ public abstract class SaasClientCodeGenerator implements SaasClientCodeGeneratio
     }
     
     protected void updateVariableNamesForWS(List<? extends WSParameter> params) {
-        nFinder.addPattern(VAR_NAMES_RESULT_DECL, new Integer(0));
+        nFinder.addPattern(VAR_NAMES_RESULT_DECL, Integer.valueOf(0));
         try {
             String text = getTargetDocument().getText(0, getTargetDocument().getLength());
             nFinder.updateVariableDeclForWS(text, params);

@@ -45,7 +45,7 @@ import org.openide.util.WeakListeners;
 import org.openide.util.WeakSet;
 
 /** Not preferred anymore, the replacement is
-* <a href="@org-openide-awt@/org/openide/awt/Actions.html#callback-java.lang.String-javax.swing.Action-boolean-java.lang.String-java.lang.String-boolean-">Actions.callback</a> factory method.
+* <a href="@org-openide-awt@/org/openide/awt/Actions.html#callback(java.lang.String,javax.swing.Action,boolean,java.lang.String,java.lang.String,boolean)">Actions.callback</a> factory method.
 * To migrate to the new API just remove the definition of your action in
 * <a href="@org-openide-modules@/org/openide/modules/doc-files/api.html#how-layer">
 * layer file</a> and replace it with:

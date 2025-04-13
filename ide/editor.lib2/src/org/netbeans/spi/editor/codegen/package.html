@@ -37,20 +37,20 @@
 
   <p>
   The whole SPI is organized around the
-  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/codegen/CodeGenerator.html">CodeGenerator</a></code>
+  {@link CodeGenerator CodeGenerator}
   interface, which is the ultimate thing that modules need to implement in order to generate
   code snippets and insert them into a document on the Insert Code action invocation.
   The <code>CodeGenerator</code>s are created by
-  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/codegen/CodeGenerator.Factory.html">CodeGenerator.Factory</a></code>
+  {@link CodeGenerator.Factory CodeGenerator.Factory }
   instances.
   </p>
 
   <p>
   Instances of the
-  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/codegen/CodeGeneratorContextProvider.html">CodeGeneratorContextProvider</a></code>
+  {@link CodeGeneratorContextProvider CodeGeneratorContextProvider }
   interface serve for adding an additonal content to the context which is passed
   as a parameter to the
-  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/codegen/CodeGenerator.Factory.html#create-org.openide.util.Lookup-">CodeGenerator.Factory.create</a></code>
+  {@link CodeGenerator.Factory#create(org.openide.util.Lookup) CodeGenerator.Factory.create}
   method.
   </p>
   
@@ -84,7 +84,7 @@
   <p>
   The <code>CGFactory</code> class will simply return a new instance of
   the module's implementation of the <code>CodeGenerator</code> interface from its
-  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/codegen/CodeGenerator.Factory.html#create-org.openide.util.Lookup-">create</a></code>
+  {@link CodeGenerator.Factory#create(org.openide.util.Lookup) create }
   method. The method can create and return multiple <code>CodeGenerator</code>s.
   </p>
 
@@ -117,7 +117,7 @@
 
   <p>
   The <code>CGContextProvider</code> class in its
-  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/codegen/CodeGeneratorContextProvider.html#runTaskWithinContext-org.openide.util.Lookup-org.netbeans.spi.editor.codegen.CodeGeneratorContextProvider.Task-">runTaskWithinContext</a></code>
+  {@link CodeGeneratorContextProvider#runTaskWithinContext(org.openide.util.Lookup,org.netbeans.spi.editor.codegen.CodeGeneratorContextProvider.Task) runTaskWithinContext }
   method creates the new context by merging the original context content
   with the additional data and runs the task obtained as the parameter with the newly
   created context. 

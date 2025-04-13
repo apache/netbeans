@@ -22,26 +22,26 @@
 <html>
 <head>
 <title>Explorer API</title>
-<link rel="Stylesheet" href="../../../../prose.css" type="text/css" title="NetBeans Open APIs Style">
+<link rel="Stylesheet" href="@TOP@/resource-files/prose.css" type="text/css" title="NetBeans Open APIs Style">
 </head>
 <body>
 
-<p class="overviewlink"><a href="../../../../overview-summary.html">Overview</a></p>
+<p class="overviewlink"><a href="@TOP@/index.html">Overview</a></p>
 
 <h1>Javadoc</h1>
 
 The basic management of the Explorer resides in
 
-<a href="../package-summary.html"><code>org.openide.explorer</code></a>.
+{@link org.openide.explorer org.openide.explorer }.
 
 Classes pertaining to the Property Sheet (which displays properties of
 explored nodes) may be found in
 
-<a href="../propertysheet/package-summary.html"><code>org.openide.explorer.propertysheet</code></a>.
+{@link org.openide.explorer.propertysheet org.openide.explorer.propertysheet }.
 
 A set of standard Explorer Views is available in
 
-<a href="../view/package-summary.html"><code>org.openide.explorer.view</code></a>.
+{@link org.openide.explorer.view org.openide.explorer.view }.
 
 <h1>Contents</h1>
 
@@ -104,7 +104,7 @@ window of some type, browsing some set of nodes.
 <h3 id="show-expl">Displaying a new Explorer window</h3>
 
 Probably the easiest way to show an Explorer window is just to call
-<a href="@org-openide-nodes@/org/openide/nodes/NodeOperation.html#explore-org.openide.nodes.Node-"><code>NodeOperation.explore(...)</code></a>.
+{@link org.openide.nodes.NodeOperation#explore(org.openide.nodes.Node) NodeOperation.explore(...) }.
 
 This will simply show a node and its subtree (if any) in a new window
 using the normal tree-style Explorer view. It does not permit any
@@ -119,14 +119,14 @@ understand the structure of a live Explorer instance:
 <li>There is a <em>topmost container</em>, an AWT/Swing container
 component of any sort, which must implement
 
-<a href="../ExplorerManager.Provider.html"><code>ExplorerManager.Provider</code></a>.
+{@link org.openide.explorer.ExplorerManager.Provider ExplorerManager.Provider }.
 Often in NetBeans it will be a subclass of <a href="@org-openide-windows@/org/openide/windows/TopComponent.html">TopComponent</a>.
 
 This topmost container does not really do anything; it just makes sure
 that an <code>ExplorerManager</code> can be found by its
 children. Follow the instructions in 
 
-<a href="../ExplorerUtils.html"><code>ExplorerUtils</code></a>,
+{@link org.openide.explorer.ExplorerUtils ExplorerUtils },
 
 to create such a panel.
 <!-- XXX tboudreau - factor ExplorerPanel into some explorerhelper API that
@@ -140,17 +140,17 @@ hierarchy.
 
 
 
-<a href="../ExplorerManager.html"><code>ExplorerManager</code></a>
+{@link org.openide.explorer.ExplorerManager ExplorerManager }
 
 itself handles the control of the Explorer view or views it is
 attached to. It provides the external interface by which the selection
 of nodes, e.g., can be examined or set, and permits multiple views to
 be synchronized (for example, creating a master/detail view is very easy). 
 
-<li>Usually, actions provided by <a href="../ExplorerUtils.html"><code>ExplorerUtils</code></a>,
+<li>Usually, actions provided by {@link org.openide.explorer.ExplorerUtils ExplorerUtils },
 will be attached to the component to make sure they are correctly enabled
 or disabled according to the current node selection. Follow the example in
-<a href="../ExplorerUtils.html"><code>ExplorerUtils</code></a>.
+{@link org.openide.explorer.ExplorerUtils ExplorerUtil }.
 
 
 
@@ -165,25 +165,25 @@ Once you have created an Explorer component, your code will not typically
 interact directly with it - rather it will call methods on its ExplorerManager
 to set selection, etc.</li>
 
-<li>Lastly you'll call <a href="../ExplorerManager.html#setRootContext-org.openide.nodes.Node-">ExplorerManager.setRootContext</a>
+<li>Lastly you'll call {@link org.openide.explorer.ExplorerManager#setRootContext(org.openide.nodes.Node) ExplorerManager.setRootContext }
 to actually set what node the view will be displaying.
 </li>
 
 </ol>
 
-<a href="../view/package-summary.html"><code>org.openide.explorer.view</code></a>
+{@link org.openide.explorer.view org.openide.explorer.view }
 
 contains a number of prebuilt views which you may use. Of special note
 are the
 
-<a href="../view/BeanTreeView.html"><code>BeanTreeView</code></a>,
+{@link org.openide.explorer.view.BeanTreeView BeanTreeView },
 
 which is the standard tree view used to implement the Explorer window
 proper;
 
 and
 
-<a href="../view/MenuView.html"><code>MenuView</code></a>,
+{@link org.openide.explorer.view.MenuView MenuView },
 
 which is of interest because it actually implements a view using popup
 menus, rather than a static display. The best way to familiarize
@@ -198,7 +198,7 @@ Adding a <em>Property Sheet</em> (which just shows the properties of
 the selected node(s), and may allow editing of those properties) is
 quite easy - all you need to do is to add a
 
-<a href="../propertysheet/PropertySheetView.html"><code>PropertySheetView</code></a>
+{@link org.openide.explorer.propertysheet.PropertySheetView PropertySheetView }
 
 to the container. It is an Explorer view which does not actually
 display any nodes, but rather displays a list of properties for the
@@ -220,52 +220,52 @@ of the represented nodes which are likely to be visually mirrored:
 
 <li>The node's
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/FeatureDescriptor.html#getDisplayName--">display name</a>
+{@link java.beans.FeatureDescriptor#getDisplayName() display name }
 
 and
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/FeatureDescriptor.html#getShortDescription--">short description</a>
+{@link java.beans.FeatureDescriptor#getShortDescription() short description }
 
 ought to be used by views to display the node and provide (e.g.) tool tips.
 
 <li>The
 
-<a href="@org-openide-nodes@/org/openide/nodes/Node.html#getIcon-int-">icon</a>
+{@link org.openide.nodes.Node#getIcon(int) icon}
 
 is used in most views alongside the display name. Non-leaf nodes upon
 expansion will show the
 
-<a href="@org-openide-nodes@/org/openide/nodes/Node.html#getOpenedIcon-int-">opened icon</a>.
+{@link org.openide.nodes.Node#getOpenedIcon(int) opened icon }.
 
 <li>Some or all of the node's
 
-<a href="@org-openide-nodes@/org/openide/nodes/Node.html#getChildren--">children</a>
+{@link org.openide.nodes.Node#getChildren() children}
 
 are typically displayed (except of course if it is a
 
-<a href="@org-openide-nodes@/org/openide/nodes/Node.html#isLeaf--">leaf</a>).
+{@link org.openide.nodes.Node#isLeaf() leaf }).
 
 Normally they will be in the same order as
 the node itself
 
-<a href="@org-openide-nodes@/org/openide/nodes/Children.html#getNodes--">specifies</a>,
+{@link org.openide.nodes.Children#getNodes() specifies },
 
 though a view might provide special display characteristics for
 certain children lists such as
 
-<a href="@org-openide-nodes@/org/openide/nodes/Children.Keys.html"><code>Children.Keys</code></a>.
+{@link org.openide.nodes.Children.Keys Children.Keys }.
 
 Generally nodes may allow their children to be
 
-<a href="@org-openide-nodes@/org/openide/nodes/Index.html">reordered</a>.
+{@link org.openide.nodes.Index reordered }.
 
-<li><a href="@org-openide-nodes@/org/openide/nodes/Node.html#getActions--"><code>Node.getActions()</code></a>,
+<li>{@link org.openide.nodes.Node#getActions() Node.getActions() },
 
-<a href="@org-openide-nodes@/org/openide/nodes/Node.html#getContextActions--"><code>Node.getContextActions()</code></a>,
+{@link org.openide.nodes.Node#getContextActions() Node.getContextActions() },
 
-<a href="@org-openide-nodes@/org/openide/nodes/Node.html#getDefaultAction--"><code>Node.getDefaultAction()</code></a>,
+{@link org.openide.nodes.Node#getDefaultAction() Node.getDefaultAction() },
 
-<a href="@org-openide-nodes@/org/openide/nodes/Node.html#getContextMenu--"><code>Node.getContextMenu()</code></a>,
+{@link org.openide.nodes.Node#getContextMenu() Node.getContextMenu() },
 
 etc. are typically used to build an event-handling system for the
 visual representation of the nodes.
@@ -273,18 +273,18 @@ visual representation of the nodes.
 <li>Standard actions are generally enabled on nodes in the Explorer,
 so that
 
-<a href="@org-openide-nodes@/org/openide/nodes/Node.html#hasCustomizer--"><code>Node.hasCustomizer()</code></a>,
+{@link org.openide.nodes.Node#hasCustomizer() Node.hasCustomizer() },
 
-<a href="@org-openide-nodes@/org/openide/nodes/Node.html#getLookup--"><code>Node.getLookup().lookup(...)</code></a>,
+{@link org.openide.nodes.Node#getLookup() Node.getLookup().lookup(...) },
 
-<a href="@org-openide-nodes@/org/openide/nodes/Node.html#getNewTypes--"><code>Node.getNewTypes()</code></a>,
+{@link org.openide.nodes.Node#getNewTypes() Node.getNewTypes() },
 
-<a href="@org-openide-nodes@/org/openide/nodes/Node.html#getPasteTypes-java.awt.datatransfer.Transferable-"><code>Node.getPasteTypes(...)</code></a>,
+{@link org.openide.nodes.Node#getPasteTypes(java.awt.datatransfer.Transferable) Node.getPasteTypes(...) },
 
 and so on affect other UI components (such as toolbars) which may hold
 action presenters.
 
-<li><a href="@org-openide-nodes@/org/openide/nodes/Node.html#getPropertySets--"><code>Node.getPropertySets()</code></a>
+<li>{@link org.openide.nodes.Node#getPropertySets() Node.getPropertySets() }
 
 is of course used by the Property Sheet view.
 
@@ -293,13 +293,13 @@ system actions present in popup menus, e.g.) for moving nodes,
 renaming them in place, etc. - these will use the standard node hooks
 such as
 
-<a href="@org-openide-nodes@/org/openide/nodes/Node.html#canRename--"><code>Node.canRename()</code></a>,
+{@link org.openide.nodes.Node#canRename() Node.canRename() },
 
-<a href="@org-openide-nodes@/org/openide/nodes/Node.html#cloneNode--"><code>Node.cloneNode()</code></a>,
+{@link org.openide.nodes.Node#cloneNode() Node.cloneNode() },
 
 or
 
-<a href="@org-openide-nodes@/org/openide/nodes/Node.html#clipboardCut--"><code>Node.clipboardCut()</code></a>.
+{@link org.openide.nodes.Node#clipboardCut() Node.clipboardCut() }.
 
 </ul>
 

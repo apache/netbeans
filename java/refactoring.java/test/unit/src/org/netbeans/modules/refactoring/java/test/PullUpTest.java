@@ -1335,7 +1335,10 @@ public class PullUpTest extends RefactoringTestBase {
     }
 
     public void testPullUpVarargRecord() throws Exception {
-       sideBySideCompare=true;
+        sideBySideCompare = true;
+        showOutputOnPass = true;
+        setStringCompareMode(StringsCompareMode.IGNORE_INDENTATION);
+
         writeFilesAndWaitForScan(src,
                 new File("pullup/A.java",
                 """

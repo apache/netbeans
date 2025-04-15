@@ -19,7 +19,6 @@ INSTALLDIR = /dev/null
 
 testit :sh= uname -s
 
-#CFLAGS-Windows_XP := -mno-cygwin
 CFLAGS-Linux := -fPIC -Wl,--hash-style=sysv
 CFLAGS-SunOS := -fPIC
 CFLAGS-Mac_OS_X := -fPIC

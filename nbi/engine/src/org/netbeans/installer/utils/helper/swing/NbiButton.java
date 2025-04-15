@@ -34,19 +34,6 @@ public class NbiButton extends JButton {
     public NbiButton() {
         super();
         
-        if (SystemUtils.isWindows()) {
-            final Object object = Toolkit.
-                    getDefaultToolkit().
-                    getDesktopProperty(WINDOWS_XP_THEME_MARKER_PROPERTY);
-            
-            if (object != null) {
-                boolean xpThemeActive = (Boolean) object;
-                if (xpThemeActive) {
-                    setOpaque(false);
-                }
-            }
-        }
-        
         setText(DEFAULT_TEXT);
         setMnemonic(DEFAULT_MNEMONIC);
     }
@@ -61,12 +48,7 @@ public class NbiButton extends JButton {
     
     /////////////////////////////////////////////////////////////////////////////////
     // Constants
-    public static final String DEFAULT_TEXT = 
-            " "; // NOI18N
+    public static final String DEFAULT_TEXT = " "; // NOI18N
     
-    public static final char DEFAULT_MNEMONIC = 
-            '\u0000';
-    
-    private static final String WINDOWS_XP_THEME_MARKER_PROPERTY = 
-            "win.xpstyle.themeActive"; // NOI18N
+    public static final char DEFAULT_MNEMONIC = '\u0000';
 }

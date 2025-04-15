@@ -38,7 +38,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 public class NBMNativeMWITest extends NbTestCase {
 
-    private static final String EXPECTED_JAVAC_PLUGIN_VERSION = "3.13.0";
+    private static final String EXPECTED_JAVAC_PLUGIN_VERSION = "3.14.0";
 
     private FileObject wd;
 

@@ -33,8 +33,6 @@ import org.netbeans.spi.java.hints.JavaFixUtilities;
 import org.netbeans.spi.java.hints.TriggerTreeKind;
 import org.openide.util.NbBundle.Messages;
 
-import static org.netbeans.api.java.source.CompilationInfo.CacheClearPolicy.ON_TASK_END;
-
 /**
  *
  * @author lahvac
@@ -64,7 +62,7 @@ public class Unused {
         if (unused.isEmpty()) {
             return null;
         }
-        boolean detectUnusedPackagePrivate = getTaskCachedBoolean(ctx, DETECT_UNUSED_PACKAGE_PRIVATE, DETECT_UNUSED_PACKAGE_PRIVATE_DEFAULT);
+        boolean detectUnusedPackagePrivate = ctx.getPreferences().getBoolean(DETECT_UNUSED_PACKAGE_PRIVATE, DETECT_UNUSED_PACKAGE_PRIVATE_DEFAULT);
         for (UnusedDescription ud : unused) {
             if (ctx.isCanceled()) {
                 break;
@@ -82,17 +80,6 @@ public class Unused {
             break;
         }
         return null;
-    }
-
-    // reading from AuxiliaryConfigBasedPreferences in inner loops is not cheap since it needs a mutex
-    private static boolean getTaskCachedBoolean(HintContext ctx, String key, boolean defaultVal) {
-        Object cached = ctx.getInfo().getCachedValue(key);
-        if (cached instanceof Boolean val) {
-            return val;
-        }
-        boolean fromPrefs = ctx.getPreferences().getBoolean(key, defaultVal);
-        ctx.getInfo().putCachedValue(key, fromPrefs, ON_TASK_END);
-        return fromPrefs;
     }
 
     @Messages({

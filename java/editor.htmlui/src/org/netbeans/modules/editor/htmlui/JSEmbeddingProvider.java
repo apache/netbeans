@@ -131,12 +131,9 @@ public final class JSEmbeddingProvider extends JavaParserResultTask<Parser.Resul
     }
 
 
-
-
     private static final class Finder extends TreePathScanner<Void, List<? super LiteralTree>> {
 
         private final Trees trees;
-        private CompilationUnitTree cu;
         private boolean inEmbedding;
 
         Finder(final Trees trees) {
@@ -147,18 +144,15 @@ public final class JSEmbeddingProvider extends JavaParserResultTask<Parser.Resul
         public Void visitCompilationUnit(
                 final CompilationUnitTree unit,
                 final List<? super LiteralTree> p) {
-            this.cu = unit;
             return super.visitCompilationUnit(unit, p);
         }
-
-
 
         @Override
         public Void visitMethod(
                 final MethodTree m,
                 final List<? super LiteralTree> p) {
             for (AnnotationTree a : m.getModifiers().getAnnotations()) {
-                final TypeElement ae = (TypeElement) trees.getElement(TreePath.getPath(cu, a.getAnnotationType()));
+                TypeElement ae = (TypeElement) trees.getElement(new TreePath(getCurrentPath(), a.getAnnotationType()));
                 if (ae != null && JS_ANNOTATION.contentEquals(ae.getQualifiedName())) {
                     final List<? extends ExpressionTree> args =  a.getArguments();
                     for (ExpressionTree kvp : args) {

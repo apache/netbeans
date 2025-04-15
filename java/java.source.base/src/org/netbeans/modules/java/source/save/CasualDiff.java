@@ -176,6 +176,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbCollections;
 import javax.lang.model.type.TypeKind;
+import org.netbeans.api.java.source.RecordUtils;
 import org.netbeans.modules.java.source.transform.TreeHelpers;
 
 public class CasualDiff {
@@ -1108,7 +1109,7 @@ public class CasualDiff {
             EstimatorFactory.extendz(oldT.getImplementsClause(), newT.getImplementsClause(), diffContext);
         if (!newT.implementing.isEmpty())
             copyTo(localPointer, insertHint);
-        localPointer = diffList2(oldT.implementing, newT.implementing, insertHint, estimator);
+            localPointer = diffList2(oldT.implementing, newT.implementing, insertHint, estimator);
         }
 
         {
@@ -1191,11 +1192,11 @@ public class CasualDiff {
             }
         }
         try {
-//        System.err.println("CD print REAL MEMBER "+filteredNewTDefs+"/REAL MEMBER");
+        System.err.println("CD print REAL MEMBER "+filteredNewTDefs+"/REAL MEMBER");
         } catch (Throwable ignored){}
-//        System.err.println("CD before "+printer.toString()+"/before");
+        System.err.println("CD before "+printer.toString()+"/before");
         localPointer = diffList(filteredOldTDefs, filteredNewTDefs, insertHint, est, Measure.REAL_MEMBER, printer);
-//        System.err.println("CD after "+printer.toString()+"/after");
+        System.err.println("CD after "+printer.toString()+"/after");
         printer.enclClass = origClass;
         origClassName = origOuterClassName;
         newClassName = newOuterClassName;
@@ -1224,33 +1225,34 @@ public class CasualDiff {
                 filteredDefs.add(t);
             }
         }
-        int compCount= components.size();
-        List<JCVariableDecl> params = recordTree.getMembers().stream()
-                .filter(t -> t.getKind() == Kind.METHOD && ((JCMethodDecl) t).getReturnType()==null)
-                .map(JCMethodDecl.class::cast)
-                .filter(mt -> mt.getParameters().size()==compCount)
-                .flatMap(mt->mt.getParameters().stream())
-                .collect(Collectors.toList());
-        
-        Iterator<JCVariableDecl> iterator = components.toList().iterator();
-        // apply possible renames
-        for (int i = 0; i < params.size(); i++) {
-            JCVariableDecl comp = iterator.next();
-            JCVariableDecl p = params.get(i);
-            if (!p.name.toString().equals(comp.name.toString())) {
-                JCVariableDecl vardef = make.VarDef(mods, p.name, comp.vartype,  null);
-                params.set(i, vardef);
-            }
-        }
-
+        List<JCVariableDecl> canonicalParameters = RecordUtils.canonicalParameters(recordTree, make);
+//        int compCount= components.size();
+//        List<JCVariableDecl> params = recordTree.getMembers().stream()
+//                .filter(t -> t.getKind() == Kind.METHOD && ((JCMethodDecl) t).getReturnType()==null)
+//                .map(JCMethodDecl.class::cast)
+//                .filter(mt -> mt.getParameters().size()==compCount)
+//                .flatMap(mt->mt.getParameters().stream())
+//                .collect(Collectors.toList());
+//
+//        Iterator<JCVariableDecl> iterator = components.toList().iterator();
+//        // apply possible renames
+//        for (int i = 0; i < params.size(); i++) {
+//            JCVariableDecl comp = iterator.next();
+//            JCVariableDecl p = params.get(i);
+//            if (!p.name.toString().equals(comp.name.toString())) {
+//                JCVariableDecl vardef = make.VarDef(mods, p.name, comp.vartype,  null);
+//                params.set(i, vardef);
+//            }
+//        }
+//        List<JCVariableDecl> canonicalParameters = RecordUtils.canonicalParameters(recordTree);
         return new ComponentsAndOtherMembers(components.toList(),
-                                             filteredDefs.toList(), components.toList());
+                                             filteredDefs.toList(), canonicalParameters);
     }
 
     record ComponentsAndOtherMembers(List<JCVariableDecl> components, List<JCTree> defs, List<JCVariableDecl> canonicalParameters) {}
 
     /**
-     * When the enumeration contains just methods, it is necessary to preced them with single ;. If a constant is
+     * When the enumeration contains just methods, it is necessary to precede them with single ;. If a constant is
      * inserted, it must be inserted first; and the semicolon should be removed. This method will attempt to remove entire 
      * lines of whitespace around the semicolon. Preceding or following comments are preserved.
      * 

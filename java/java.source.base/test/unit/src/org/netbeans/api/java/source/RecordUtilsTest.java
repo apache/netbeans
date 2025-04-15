@@ -172,4 +172,11 @@ public class RecordUtilsTest extends NbTestCase {
 //        System.err.println("cand = " + cand);
         assertFalse(RecordUtils.isCompactConstructor(rec, cand));
     }
+
+    @Test
+    public void testCanonParameters() {
+        System.err.println("RUT record="+records[0]);
+        List<JCTree.JCVariableDecl> canonicalParameters = RecordUtils.canonicalParameters(records[0]);
+        assertEquals(3,canonicalParameters.size());
+    }
 }

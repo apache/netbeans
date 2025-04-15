@@ -24,11 +24,16 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import static com.sun.source.tree.Tree.Kind.RECORD;
 import com.sun.source.tree.VariableTree;
+import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.LinkedHashSet;
 //import java.util.List;
 //import com.sun.tools.javac.util.List;
 import static com.sun.tools.javac.code.Flags.*;
+import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.tree.JCTree.JCModifiers;
+import com.sun.tools.javac.util.Name;
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Set;
@@ -44,7 +49,7 @@ import org.netbeans.api.annotations.common.NonNull;
  */
 public class RecordUtils {
 
-    public static boolean isConStructor(Tree m) {
+    public static boolean isConStructor(JCTree m) {
 
         if (m.getKind() != Kind.METHOD) {
             return false;
@@ -54,6 +59,17 @@ public class RecordUtils {
             return false;
         }
         return met.getReturnType() == null;
+    }
+
+    public static boolean isCanonConStructor(JCTree m) {
+        if (!isConStructor(m)) {
+            return false;
+        }
+        JCTree.JCMethodDecl met = (JCTree.JCMethodDecl) m;
+        if ((met.mods.flags & com.sun.tools.javac.code.Flags.RECORD) == 0) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -117,17 +133,8 @@ public class RecordUtils {
      * @return true if fields of the class/record are of same amount, order and
      * types
      */
-    public static boolean isRecordComponent(Tree t) {
-        if (t.getKind() == Kind.CLASS) {
-            return false;
-        }
-        if (t.getKind() == Kind.METHOD) {
-            return false;
-        }
-        if (t.getKind() == Kind.VARIABLE && t instanceof VariableTree vt) {
-            return !vt.getModifiers().getFlags().contains(Modifier.STATIC);
-        }
-        return false;
+    public static boolean isRecordComponent(JCTree t) {
+        return (t instanceof JCTree.JCVariableDecl vt && ((vt.mods.flags & com.sun.tools.javac.code.Flags.RECORD) != 0));
     }
 
     public static boolean hasAllParameterNames(MethodTree method, Set<String> names) {
@@ -150,63 +157,51 @@ public class RecordUtils {
             System.err.println("RU not a record");
             return List.of();
         }
-        Set<String> expectedNames = record.getMembers().stream()
-                .filter(m -> RecordUtils.isNormalField(m))
-                .map(m -> ((JCTree.JCVariableDecl) m).getName().toString())
-                .collect(Collectors.toCollection(LinkedHashSet::new));
-        System.err.println("RU expected Names="+expectedNames);
-        final int parameterCount=expectedNames.size();
         List<JCTree.JCVariableDecl> result = record.getMembers().stream()
-                .filter(RecordUtils::isConStructor)
-                .peek(l -> System.err.println("RU ctor "+l))
+                .filter(m -> m.getKind() == Kind.METHOD)
                 .map(JCTree.JCMethodDecl.class::cast)
-                .filter(mt -> mt.getParameters().size()==parameterCount)
-//                .filter(t -> RecordUtils.hasAllParameterNames(t, expectedNames))
-                .flatMap(m -> ((JCTree.JCMethodDecl) m).getParameters().stream()).toList();
+                .filter(met -> met.getReturnType() == null)
+                .filter(ctor -> (ctor.mods.flags & com.sun.tools.javac.code.Flags.RECORD) != 0 || (ctor.mods.flags & com.sun.tools.javac.code.Flags.COMPACT_RECORD_CONSTRUCTOR) != 0)
+                .flatMap(mt -> ((JCTree.JCMethodDecl) mt).getParameters().stream())
+                .collect(toCollection(ArrayList::new));
         return result;
     }
 
     /**
-     * Get the canonical parameters of a record.Implementation detail: The method scans the tree
- and looks for a constructor with a matching
- signature.
-     * returns 0 if not a record or no constructor found.
+     * Get the canonical parameters of a record.Implementation detail: The
+     * method scans the tree and looks for a constructor with a matching
+     * signature. returns 0 if not a record or no constructor found.
      *
      * @param aRecord tree presenting the record
      * @param make to fix names
      * @return the list of fields as declared in the record header.
      */
-    public static List<VariableTree> canonicalParameters(ClassTree aRecord, TreeMaker make) {
+    public static List<JCTree.JCVariableDecl> canonicalParameters(JCTree.JCClassDecl aRecord, com.sun.tools.javac.tree.TreeMaker make) {
         // get the names of the RecordComponents
-        Set<String> expectedNames = aRecord.getMembers().stream()
-                .filter(m -> RecordUtils.isNormalField(m))
-                .map(VariableTree.class::cast)
-                .map(vt -> vt.getName().toString())
+        LinkedHashSet<Name> expectedNames = aRecord.getMembers().stream()
+                .filter(m -> RecordUtils.isRecordComponent(m))
+                .map(JCTree.JCVariableDecl.class::cast)
+                .map(vt -> vt.name)
                 .collect(toCollection(LinkedHashSet::new));
 
         // get the constructor that has the expected parameters.
-        List<VariableTree> result = aRecord.getMembers().stream()
-                .filter(RecordUtils::isConStructor)
-                .map(MethodTree.class::cast)
-                .filter(mt -> hasAllParameterNames(mt, expectedNames))
-                .flatMap(mt -> mt.getParameters().stream())
-                .map(VariableTree.class::cast)
-                .toList();
+        List<JCTree.JCVariableDecl> result = RecordUtils.canonicalParameters(aRecord);
+
         // apply possible rename, since we pick the canonical parameters from a most likely
         // synthetic (canoniocal) constructor;
-
         var itr = expectedNames.iterator();
         for (int i = 0; i < result.size(); i++) {
-//            result.set(i, result)
-            VariableTree vt = result.get(0);
-            String name = itr.next();
-            VariableTree variable = make.Variable(vt.getModifiers(), name, vt, vt.getInitializer());
-            result.set(i,variable );
+            JCTree.JCVariableDecl vt = result.get(i);
+            JCTree.JCExpression initializer = vt.init;
+            JCModifiers mods = vt.mods;
+            JCTree.JCExpression type = vt.vartype;
+            Name name = itr.next();
+            if (!name.toString().equals(vt.getName().toString())) { // only replace if needed
+                JCTree.JCVariableDecl newVar = make.VarDef(mods, name, type, initializer);
+                result.set(i, newVar);
+            }
         }
 
-//        if (result.isEmpty()) {
-//            result = components(aRecord);
-//        }
         return result;
     }
 
@@ -228,8 +223,8 @@ public class RecordUtils {
     /**
      * Detect potential compact constructor. A compact constructor is a method
      * that has return-type null, and has a parameter list with all names equal
-     * to the components as defined for the record rec.
-     * If the method mods has the COMPACT_RECORD_CONSTRUCTOR flag set, return true always.
+     * to the components as defined for the record rec. If the method mods has
+     * the COMPACT_RECORD_CONSTRUCTOR flag set, return true always.
      *
      * @param rec the tree to inspect
      * @param met the method to consider
@@ -237,7 +232,7 @@ public class RecordUtils {
      */
     public static boolean isCompactConstructor(Tree rec, Tree met) {
 
-        if (met instanceof JCTree.JCMethodDecl m2 &&  0!=(m2.mods.flags & COMPACT_RECORD_CONSTRUCTOR)) {
+        if (met instanceof JCTree.JCMethodDecl m2 && 0 != (m2.mods.flags & COMPACT_RECORD_CONSTRUCTOR)) {
             return true;
         }
         if (rec.getKind() != Kind.RECORD) {
@@ -255,4 +250,5 @@ public class RecordUtils {
         return hasAllParameterNames(methodTree, componentNames);
 //        return true;
     }
+
 }

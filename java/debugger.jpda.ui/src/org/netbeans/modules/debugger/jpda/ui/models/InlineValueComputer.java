@@ -16,22 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.editor.actions;
+package org.netbeans.modules.debugger.jpda.ui.models;
 
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
-import org.netbeans.api.editor.EditorActionRegistration;
-
-@EditorActionRegistration(name="toggle-lines-view",
-                          menuPath="View",
-                          menuPosition=895,
-                          preferencesKey=ShowLinesAction.KEY_LINES,
-                          preferencesDefault=ShowLinesAction.DEF_LINES)
-public class ShowLinesAction extends AbstractAction {
-    public static final String KEY_LINES = "enable.guide.lines";
-    public static final boolean DEF_LINES = true;
-    @Override
-    public void actionPerformed(ActionEvent e) {
-    }
-    
+public interface InlineValueComputer {
 }

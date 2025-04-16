@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="17" height="16" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 17 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #5d5f61;
+      }
+
+      .st1 {
+        fill: url(#linear-gradient1);
+      }
+
+      .st2 {
+        fill: #939393;
+      }
+
+      .st3 {
+        fill: url(#radial-gradient);
+      }
+
+      .st4 {
+        fill: url(#linear-gradient);
+      }
+
+      .st5 {
+        fill: #794935;
+      }
+
+      .st6 {
+        fill: #f79672;
+      }
+
+      .st7 {
+        fill: #a6654c;
+      }
+
+      .st8 {
+        fill: #e8e8e8;
+      }
+
+      .st9 {
+        fill: #fdfdfd;
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="7.5" y1="2.5" x2="7.5" y2="10.5" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#747576"/>
+      <stop offset="1" stop-color="#424446"/>
+    </linearGradient>
+    <radialGradient id="radial-gradient" cx="10.625" cy="11.125" fx="10.625" fy="11.125" r="3.48" gradientUnits="userSpaceOnUse">
+      <stop offset=".075" stop-color="#fdbca7"/>
+      <stop offset=".271" stop-color="#fcb9a3"/>
+      <stop offset=".435" stop-color="#fbb299"/>
+      <stop offset=".587" stop-color="#f9a588"/>
+      <stop offset=".721" stop-color="#f79672"/>
+    </radialGradient>
+    <linearGradient id="linear-gradient1" x1="6.5" y1="9.438" x2="14.75" y2="9.438" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#a6654c"/>
+      <stop offset="1" stop-color="#a6654c"/>
+    </linearGradient>
+  </defs>
+  <g>
+    <rect class="st8" x=".5" y=".5" width="14" height="12"/>
+    <path class="st2" d="M14,1v11H1V1h13M15,0H0v13h15V0h0Z"/>
+  </g>
+  <g>
+    <rect class="st4" x="2.5" y="2.5" width="10" height="8" rx=".5" ry=".5"/>
+    <path class="st0" d="M12,3v7H3V3h9M12,2H3c-.552,0-1,.448-1,1v7c0,.552.448,1,1,1h9c.552,0,1-.448,1-1V3c0-.552-.448-1-1-1h0Z"/>
+  </g>
+  <rect class="st9" x="6" y="5" width="2" height="1"/>
+  <polygon class="st9" points="5.207 4.5 3.707 3 3 3 3 3.707 3.793 4.5 3 5.293 3 6 3.707 6 5.207 4.5"/>
+  <g>
+    <path class="st6" d="M10.625,15.5c-2.578,0-4.375-1.12-4.375-2.125s1.797-2.125,4.375-2.125,4.375,1.12,4.375,2.125-1.797,2.125-4.375,2.125Z"/>
+    <path class="st7" d="M10.625,11.75c2.329,0,3.875.978,3.875,1.625s-1.546,1.625-3.875,1.625-3.875-.978-3.875-1.625,1.546-1.625,3.875-1.625M10.625,10.75c-2.692,0-4.875,1.175-4.875,2.625s2.183,2.625,4.875,2.625,4.875-1.175,4.875-2.625-2.183-2.625-4.875-2.625h0Z"/>
+  </g>
+  <g>
+    <circle class="st6" cx="14.75" cy="10.75" r="1.75"/>
+    <path class="st7" d="M14.75,9.5c.69,0,1.25.56,1.25,1.25s-.56,1.25-1.25,1.25-1.25-.56-1.25-1.25.56-1.25,1.25-1.25M14.75,8.5c-1.241,0-2.25,1.009-2.25,2.25s1.009,2.25,2.25,2.25,2.25-1.009,2.25-2.25-1.009-2.25-2.25-2.25h0Z"/>
+  </g>
+  <g>
+    <path class="st3" d="M10.625,14c-1.952,0-3.625-1.993-3.625-3.625v-.938c.042-.293,1.393-1.188,3.625-1.188s3.583.895,3.625,1.191v.934c0,1.632-1.673,3.625-3.625,3.625Z"/>
+    <path class="st7" d="M10.625,8.75c1.68,0,2.836.558,3.125.841v.784c0,1.377-1.471,3.125-3.125,3.125s-3.125-1.748-3.125-3.125v-.784c.289-.282,1.445-.841,3.125-.841M10.625,7.75c-2.278,0-4.125.938-4.125,1.688v.938c0,1.864,1.847,4.125,4.125,4.125s4.125-2.261,4.125-4.125v-.938c0-.75-1.847-1.688-4.125-1.688h0Z"/>
+  </g>
+  <g>
+    <path class="st6" d="M10.625,10.625c-2.346,0-3.625-.785-3.625-1.188s1.279-1.188,3.625-1.188,3.625.785,3.625,1.188-1.279,1.188-3.625,1.188Z"/>
+    <path class="st7" d="M10.625,8.75c1.643,0,2.693.422,3.039.688-.345.266-1.396.688-3.039.688s-2.693-.422-3.039-.688c.345-.266,1.396-.688,3.039-.688M10.625,7.75c-2.278,0-4.125.756-4.125,1.688s1.847,1.688,4.125,1.688,4.125-.756,4.125-1.688-1.847-1.688-4.125-1.688h0Z"/>
+  </g>
+  <ellipse class="st5" cx="10.625" cy="10" rx="2.887" ry=".825"/>
+  <path class="st1" d="M10.625,8.75c1.643,0,2.693.422,3.039.688-.345.266-1.396.688-3.039.688s-2.693-.422-3.039-.688c.345-.266,1.396-.688,3.039-.688M10.625,7.75c-2.278,0-4.125.756-4.125,1.688s1.847,1.688,4.125,1.688,4.125-.756,4.125-1.688-1.847-1.688-4.125-1.688h0Z"/>
+  <circle class="st7" cx="14.75" cy="10.75" r=".5"/>
+  <description>Apache NetBeans Logo
+  </description>
+</svg>

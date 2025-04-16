@@ -1,10 +1,10 @@
 Name: JSVG
-Version: 1.6.1
+Version: 1.7.1
 Description: JSVG - A Java SVG implementation
 License: MIT-jsvg
 Origin: JSVG
 URL: https://github.com/weisJ/jsvg
-Files: jsvg-1.6.1.jar
+Files: jsvg-1.7.1.jar
 
 MIT License
 

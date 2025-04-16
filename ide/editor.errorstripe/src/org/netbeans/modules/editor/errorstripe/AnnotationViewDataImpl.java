@@ -27,15 +27,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
@@ -59,6 +64,8 @@ import org.netbeans.spi.editor.mimelookup.MimeLocation;
 import org.openide.cookies.InstanceCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
+import org.openide.text.Annotation;
+import org.openide.util.Lookup;
 import org.openide.util.NbCollections;
 import org.openide.util.WeakListeners;
 
@@ -77,8 +84,8 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
     private Reference<JTextComponent> paneRef;
     private BaseDocument document;
     
-    private List<MarkProvider> markProviders = new ArrayList<MarkProvider>();
-    private List<UpToDateStatusProvider> statusProviders = new ArrayList<UpToDateStatusProvider>();
+    private List<MarkProvider> markProviders = new ArrayList<>();
+    private List<UpToDateStatusProvider> statusProviders = new ArrayList<>();
 
     private List<PropertyChangeListener> markProvidersWeakLs = new ArrayList<>();
     private List<PropertyChangeListener> statusProvidersWeakLs = new ArrayList<>();
@@ -86,8 +93,8 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
     private Collection<Mark> currentMarks = null;
     private SortedMap<Integer, List<Mark>> marksMap = null;
 
-    private static WeakHashMap<String, Collection<? extends MarkProviderCreator>> mime2Creators = new WeakHashMap<String, Collection<? extends MarkProviderCreator>>();
-    private static WeakHashMap<String, Collection<? extends UpToDateStatusProviderFactory>> mime2StatusProviders = new WeakHashMap<String, Collection<? extends UpToDateStatusProviderFactory>>();
+    private static WeakHashMap<String, Collection<? extends MarkProviderCreator>> mime2Creators = new WeakHashMap<>();
+    private static WeakHashMap<String, Collection<? extends UpToDateStatusProviderFactory>> mime2StatusProviders = new WeakHashMap<>();
 
     private static LegacyCrapProvider legacyCrap;
     
@@ -100,6 +107,7 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
         this.document = null;
     }
     
+    @Override
     public void register(BaseDocument document) {
         this.document = document;
         
@@ -118,6 +126,7 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
         clear();
     }
     
+    @Override
     public void unregister() {
         if (document != null && weakL != null) {
             document.getAnnotations().removeAnnotationsListener(weakL);
@@ -149,7 +158,7 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
         long start = System.currentTimeMillis();
 
         // Collect legacy mark providers
-        List<MarkProvider> newMarkProviders = new ArrayList<MarkProvider>();
+        List<MarkProvider> newMarkProviders = new ArrayList<>();
         if (legacyCrap != null) {
             createMarkProviders(legacyCrap.getMarkProviderCreators(), newMarkProviders, pane);
         }
@@ -177,7 +186,7 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
 
         
         // Collect legacy status providers
-        List<UpToDateStatusProvider> newStatusProviders = new ArrayList<UpToDateStatusProvider>();
+        List<UpToDateStatusProvider> newStatusProviders = new ArrayList<>();
         if (legacyCrap != null) {
             createStatusProviders(legacyCrap.getUpToDateStatusProviderFactories(), newStatusProviders, pane);
         }
@@ -269,7 +278,7 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
     }
     
     /*package private*/ static Collection<Mark> createMergedMarks(List<MarkProvider> providers) {
-        Collection<Mark> result = new LinkedHashSet<Mark>();
+        Collection<Mark> result = new LinkedHashSet<>();
         
         for(MarkProvider provider : providers) {
             result.addAll(provider.getMarks());
@@ -283,7 +292,7 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
             currentMarks = createMergedMarks(markProviders);
         }
         
-        return new ArrayList<Mark>(currentMarks);
+        return new ArrayList<>(currentMarks);
     }
     
     /*package private*/ static List<Mark> getStatusesForLineImpl(int line, SortedMap<Integer, List<Mark>> marks) {
@@ -291,6 +300,7 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
         return inside == null ? Collections.<Mark>emptyList() : inside;
     }
     
+    @Override
     public Mark getMainMarkForBlock(int startLine, int endLine) {
         Mark m1;
         synchronized(this) {
@@ -364,6 +374,7 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
             return null;
     }
 
+    @Override
     public int findNextUsedLine(int from) {
         int line1;
         synchronized (this) {
@@ -389,7 +400,7 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
             return Integer.MAX_VALUE;
         }
         
-        return next.firstKey().intValue();
+        return next.firstKey();
     }
     
     private void registerMark(Mark mark) {
@@ -400,14 +411,8 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
         }
         
         for (int line = span[0]; line <= span[1]; line++) {
-            List<Mark> inside = marksMap.get(line);
-            
-            if (inside == null) {
-                inside = new ArrayList<Mark>();
-                marksMap.put(line, inside);
-            }
-            
-            inside.add(mark);
+            marksMap.computeIfAbsent(line, k -> new ArrayList<>())
+                    .add(mark);
         }
     }
     
@@ -424,7 +429,7 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
             if (inside != null) {
                 inside.remove(mark);
                 
-                if (inside.size() == 0) {
+                if (inside.isEmpty()) {
                     marksMap.remove(line);
                 }
             }
@@ -434,7 +439,7 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
     /*package private for tests*/synchronized SortedMap<Integer, List<Mark>> getMarkMap() {
         if (marksMap == null) {
             Collection<Mark> marks = getMergedMarks();
-            marksMap = new TreeMap<Integer, List<Mark>>();
+            marksMap = new TreeMap<>();
             
             for (Mark mark : marks) {
                 registerMark(mark);
@@ -495,8 +500,8 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
                     nue = ((MarkProvider) evt.getSource()).getMarks();
                 
                 if (old != null && nue != null) {
-                    Collection<Mark> added = new LinkedHashSet<Mark>(nue);
-                    Collection<Mark> removed = new LinkedHashSet<Mark>(old);
+                    Collection<Mark> added = new LinkedHashSet<>(nue);
+                    Collection<Mark> removed = new LinkedHashSet<>(old);
                     
                     // own removeAll since indexof on HashSet is faster than on ArrayList and AbstractSet call indexof on smaller collection
                     for (Iterator<Mark> old_it = old.iterator(); old_it.hasNext();) {
@@ -517,7 +522,7 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
                     }
                     
                     if (currentMarks != null) {
-                        LinkedHashSet<Mark> copy = new LinkedHashSet<Mark>(currentMarks);
+                        LinkedHashSet<Mark> copy = new LinkedHashSet<>(currentMarks);
                         copy.removeAll(removed);
                         copy.addAll(added);
                         currentMarks = copy;
@@ -535,25 +540,32 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
         
         if (UpToDateStatusProvider.PROP_UP_TO_DATE.equals(evt.getPropertyName())) {
             view.fullRepaint(false);
-            return ;
         }
     }
 
+    @Override
     public synchronized void clear() {
         currentMarks = null;
         marksMap = null;
     }
     
-    public int[] computeErrorsAndWarnings() {
+    @Override
+    public Stats computeAnnotationStatistics() {
         int errors = 0;
         int warnings = 0;
-        Collection<Mark> marks = getMergedMarks();
+        Map<String, Integer> err_histogram = new HashMap<>();
+        Map<String, Integer> war_histogram = new HashMap<>();
         
-        for(Mark mark : marks) {
+        for (Mark mark : getMergedMarks()) {
             Status s = mark.getStatus();
             
             errors += s == Status.STATUS_ERROR ? 1 : 0;
             warnings += s == Status.STATUS_WARNING ? 1 : 0;
+            if (s == Status.STATUS_ERROR || s == Status.STATUS_WARNING) {
+                increment(err_histogram, mark.getShortDescription());
+            } else if (s == Status.STATUS_WARNING) {
+                increment(war_histogram, mark.getShortDescription());
+            }
         }
         
         for (AnnotationDesc desc : NbCollections.iterable(listAnnotations(-1, Integer.MAX_VALUE))) {
@@ -562,16 +574,40 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
             if (s != null) {
                 errors += s == Status.STATUS_ERROR ? 1 : 0;
                 warnings += s == Status.STATUS_WARNING ? 1 : 0;
+                if (s == Status.STATUS_ERROR || s == Status.STATUS_WARNING) {
+                    if (desc instanceof Lookup.Provider lp) {
+                        Annotation an = lp.getLookup().lookup(Annotation.class);
+                        if (an != null) {
+                            if (s == Status.STATUS_ERROR) {
+                                increment(err_histogram, an.getShortDescription());
+                            } else if (s == Status.STATUS_WARNING) {
+                                increment(war_histogram, an.getShortDescription());
+                            }
+                        }
+                    }
+                }
             }
         }
-        
-        return new int[] {errors, warnings};
+        return new Stats(sortByValue(err_histogram), errors,
+                         sortByValue(war_histogram), warnings);
+    }
+
+    private void increment(Map<String, Integer> histogram, String desc) {
+        histogram.compute(desc, (k, v) -> v == null ? 1 : v + 1);
+    }
+
+    private static LinkedHashMap<String, Integer> sortByValue(Map<String, Integer> map) {
+        return map.entrySet().stream()
+                .sorted(Comparator.comparing(Map.Entry::getValue, Comparator.reverseOrder()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
     
+    @Override
     public void changedLine(int Line) {
         changedAll();
     }
     
+    @Override
     public void changedAll() {
         view.fullRepaint(false);
     }
@@ -595,7 +631,7 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
         final Annotations annotations = document.getAnnotations();
 
         return new Iterator<AnnotationDesc>() {
-            private final List<AnnotationDesc> remaining = new ArrayList<AnnotationDesc>();
+            private final List<AnnotationDesc> remaining = new ArrayList<>();
             private int line = startLine;
             private int last = (-1);
             private int unchagedLoops = 0;
@@ -658,7 +694,7 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
     // that registered stuff in text/base. The artificial text/base
     // mime type is deprecated and should not be used anymore.
     @MimeLocation(subfolderName=UP_TO_DATE_STATUS_PROVIDER_FOLDER_NAME, instanceProviderClass=LegacyCrapProvider.class)
-    public static final class LegacyCrapProvider implements InstanceProvider {
+    public static final class LegacyCrapProvider implements InstanceProvider<LegacyCrapProvider> {
 
         private final List<FileObject> instanceFiles;
         private List<MarkProviderCreator> creators;
@@ -686,18 +722,11 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
             return factories;
         }
         
-        public Object createInstance(List fileObjectList) {
-            ArrayList<FileObject> textBaseFilesList = new ArrayList<FileObject>();
+        @Override
+        public LegacyCrapProvider createInstance(List<FileObject> fileObjectList) {
+            ArrayList<FileObject> textBaseFilesList = new ArrayList<>();
 
-            for(Object o : fileObjectList) {
-                FileObject fileObject = null;
-
-                if (o instanceof FileObject) {
-                    fileObject = (FileObject) o;
-                } else {
-                    continue;
-                }
-
+            for (FileObject fileObject : fileObjectList) {
                 String fullPath = fileObject.getPath();
                 int idx = fullPath.lastIndexOf(UP_TO_DATE_STATUS_PROVIDER_FOLDER_NAME);
                 assert idx != -1 : "Expecting files with '" + UP_TO_DATE_STATUS_PROVIDER_FOLDER_NAME + "' in the path: " + fullPath; //NOI18N
@@ -715,8 +744,8 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
         }
         
         private void computeInstances() {
-            ArrayList<MarkProviderCreator> newCreators = new ArrayList<MarkProviderCreator>();
-            ArrayList<UpToDateStatusProviderFactory> newFactories = new ArrayList<UpToDateStatusProviderFactory>();
+            ArrayList<MarkProviderCreator> newCreators = new ArrayList<>();
+            ArrayList<UpToDateStatusProviderFactory> newFactories = new ArrayList<>();
             
             for(FileObject f : instanceFiles) {
                 if (!f.isValid() || !f.isData()) {

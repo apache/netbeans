@@ -33,15 +33,18 @@ import java.awt.event.MouseMotionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.Field;
-import java.text.MessageFormat;
+import java.util.Map;
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.JToolTip;
 import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -52,13 +55,13 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyledDocument;
 import javax.swing.text.View;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.fold.FoldHierarchy;
 import org.netbeans.api.editor.fold.FoldHierarchyEvent;
 import org.netbeans.api.editor.fold.FoldHierarchyListener;
 
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.BaseTextUI;
-import org.netbeans.editor.Utilities;
 import org.netbeans.lib.editor.util.StringEscapeUtils;
 import org.netbeans.modules.editor.errorstripe.caret.CaretMark;
 import org.netbeans.modules.editor.errorstripe.privatespi.Mark;
@@ -183,7 +186,7 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
             while (position == _modelToView(startLine - 1, componentHeight, usableHeight) && startLine > 0)
                 startLine--;
 
-            while ((endLine + 1) < Utilities.getRowCount(doc) && position == _modelToView(endLine + 1, componentHeight, usableHeight))
+            while ((endLine + 1) < LineDocumentUtils.getLineCount(doc) && position == _modelToView(endLine + 1, componentHeight, usableHeight))
                 endLine++;
 
             return new int[] {startLine, endLine};
@@ -453,36 +456,29 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
             final boolean clearModelToViewCache= readAndDestroyClearModelToViewCache();
             
             //Fix for #54193:
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    synchronized (AnnotationView.this) {
-                        if (clearMarksCache) {
-                            data.clear();
-                        }
-                        if (clearModelToViewCache) {
-                            modelToViewCache = null;
-                        }
+            SwingUtilities.invokeLater(() -> {
+                synchronized (AnnotationView.this) {
+                    if (clearMarksCache) {
+                        data.clear();
                     }
-                    
-                    invalidate();
-                    repaint();
+                    if (clearModelToViewCache) {
+                        modelToViewCache = null;
+                    }
                 }
+                invalidate();
+                repaint();
             });
         }
     }
     
     private void documentChange() {
-        fullRepaint(lines != Utilities.getRowCount(doc));
+        fullRepaint(lines != LineDocumentUtils.getLineCount(doc));
     }
     
     private double getComponentHeight() {
         final double[] ret = new double[1];
-        pane.getDocument().render(new Runnable() {
-            @Override
-            public void run() {
-                ret[0] = pane.getUI().getRootView(pane).getPreferredSpan(View.Y_AXIS);
-            }
+        pane.getDocument().render(() -> {
+            ret[0] = pane.getUI().getRootView(pane).getPreferredSpan(View.Y_AXIS);
         });
         return ret[0];
     }
@@ -533,8 +529,8 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
         
         // For some reason the offset may become -1; uncomment following line to see that
         offset = Math.max(offset, 0);
-        if (ui instanceof BaseTextUI) {
-            result = ((BaseTextUI) ui).getYFromPos(offset);
+        if (ui instanceof BaseTextUI baseTextUI) {
+            result = baseTextUI.getYFromPos(offset);
         } else {
             Rectangle r = pane.modelToView(offset);
             
@@ -549,11 +545,11 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
     }
     
     private synchronized int getModelToViewImpl(int line) throws BadLocationException {
-        int docLines = Utilities.getRowCount(doc);
+        int docLines = LineDocumentUtils.getLineCount(doc);
         
         if (modelToViewCache == null || height != pane.getHeight() || lines != docLines) {
-            modelToViewCache = new int[Utilities.getRowCount(doc) + 2];
-            lines = Utilities.getRowCount(doc);
+            modelToViewCache = new int[LineDocumentUtils.getLineCount(doc) + 2];
+            lines = LineDocumentUtils.getLineCount(doc);
             height = pane.getHeight();
         }
         
@@ -563,7 +559,7 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
         int result = modelToViewCache[line + 1];
         
         if (result == 0) {
-            int lineOffset = Utilities.getRowStartFromLineOffset((BaseDocument) pane.getDocument(), line);
+            int lineOffset = LineDocumentUtils.getLineStartFromIndex((BaseDocument) pane.getDocument(), line);
             
             modelToViewCache[line + 1] = result = getYFromPos(lineOffset);
         }
@@ -619,7 +615,7 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
                 if (positionOffset == -1) {
                     return null;
                 }
-                int line = Utilities.getLineOffset(doc, positionOffset);
+                int line = LineDocumentUtils.getLineIndex(doc, positionOffset);
                 
                 if (ERR.isLoggable(VIEW_TO_MODEL_IMPORTANCE)) {
                     ERR.log(VIEW_TO_MODEL_IMPORTANCE, "AnnotationView.viewToModel: line=" + line); // NOI18N
@@ -643,7 +639,7 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
                 if (positionOffset == -1) {
                     return null;
                 }
-                int    line = Utilities.getLineOffset(doc, positionOffset) + 1;
+                int    line = LineDocumentUtils.getLineIndex(doc, positionOffset) + 1;
                 int[] span = getLinesSpan(line);
                 double normalizedOffset = modelToView(span[0]);
                 
@@ -756,13 +752,24 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
         checkCursor(e);
     }
 
+    private int initialToolTipDelay;
+    private int dismissToolTipDelay;
+
     @Override
     public void mouseExited(MouseEvent e) {
+        ToolTipManager ttm = ToolTipManager.sharedInstance();
+        ttm.setInitialDelay(initialToolTipDelay);
+        ttm.setDismissDelay(dismissToolTipDelay);
         resetCursor();
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
+        ToolTipManager ttm = ToolTipManager.sharedInstance();
+        initialToolTipDelay = ttm.getInitialDelay();
+        dismissToolTipDelay = ttm.getDismissDelay();
+        ttm.setInitialDelay(200);
+        ttm.setDismissDelay(60_000);
         checkCursor(e);
     }
 
@@ -777,7 +784,7 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
         Mark mark = getMarkForPoint(e.getPoint().getY());
         
         if (mark!= null) {
-            pane.setCaretPosition(Utilities.getRowStartFromLineOffset(doc, mark.getAssignedLines()[0]));
+            pane.setCaretPosition(LineDocumentUtils.getLineStartFromIndex(doc, mark.getAssignedLines()[0]));
         }
     }
     
@@ -797,50 +804,106 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
     }
 
     @Override
+    public Point getToolTipLocation(MouseEvent event) {
+        String text = getToolTipText(event);
+        if (text == null) {
+            return null;
+        }
+        // position left from scrollbar
+        JToolTip tt = new JToolTip();
+        tt.setTipText(text);
+        int offset = (int) (tt.getPreferredSize().width + new JScrollBar().getPreferredSize().getWidth());
+        return new Point(-offset, event.getY());
+    }
+    
+    private String lastToolTipText;
+    private MouseEvent lastMouseEvent;
+
+    @Override
     public String getToolTipText(MouseEvent event) {
+        if (event != lastMouseEvent) {
+            lastMouseEvent = event;
+            lastToolTipText = getToolTipTextImpl(event);
+        }
+        return lastToolTipText;
+    }
+
+    private String getToolTipTextImpl(MouseEvent event) {
         if (ERR.isLoggable(ErrorManager.INFORMATIONAL)) {
             ERR.log(ErrorManager.INFORMATIONAL, "getToolTipText: event=" + event); // NOI18N
         }
         int y = event.getY();
         
+        // document status indicator
         if (y <= topOffset()) {
-            int[] errWar = data.computeErrorsAndWarnings();
-            int errors = errWar[0];
-            int warnings = errWar[1];
+            AnnotationViewData.Stats stats = data.computeAnnotationStatistics();
+            int errors = stats.errors();
+            int warnings = stats.warnings();
             
             if (errors == 0 && warnings == 0) {
-                return NbBundle.getBundle(AnnotationView.class).getString("TP_NoErrors"); // NOI18N
+                return NbBundle.getMessage(AnnotationView.class, "TP_NoErrors"); // NOI18N
             }
+            
+            StringBuilder text = new StringBuilder();
+            text.append("<html>");
+            appendHistogram(text, stats.err_histogram(), "#000000", "#ff8888");
+            appendHistogram(text, stats.war_histogram(), "#000000", "#ffff88");
             
             if (errors == 0 && warnings != 0) {
-                return MessageFormat.format(NbBundle.getBundle(AnnotationView.class).getString("TP_X_warning(s)"), new Object[] {Integer.valueOf(warnings)}); // NOI18N
+                text.append(NbBundle.getMessage(AnnotationView.class, "TP_X_warning(s)", warnings)); // NOI18N
+            } else if (errors != 0 && warnings == 0) {
+                text.append(NbBundle.getMessage(AnnotationView.class, "TP_X_error(s)", errors)); // NOI18N
+            } else {
+                text.append(NbBundle.getMessage(AnnotationView.class, "TP_X_error(s)_Y_warning(s)", errors, warnings)); // NOI18N
             }
-            
-            if (errors != 0 && warnings == 0) {
-                return MessageFormat.format(NbBundle.getBundle(AnnotationView.class).getString("TP_X_error(s)"), new Object[] {Integer.valueOf(errors)}); // NOI18N
-            }
-            
-            return MessageFormat.format(NbBundle.getBundle(AnnotationView.class).getString("TP_X_error(s)_Y_warning(s)"), new Object[] {Integer.valueOf(errors), Integer.valueOf(warnings)}); // NOI18N
+            return text.toString();
         }
-        
+
+        // annotation bar
         Mark mark = getMarkForPoint(y);
-        
         if (mark != null) {
             String description = mark.getShortDescription();
-            
             if (description != null) {
-                if (description != null) {
-                    // #122422 - some descriptions are intentionaly a valid HTML and don't want to be escaped
-                    if (description.startsWith(HTML_PREFIX_LOWERCASE) || description.startsWith(HTML_PREFIX_UPPERCASE)) {
-                        return description;
-                    } else {
-                        return "<html><body>" + StringEscapeUtils.escapeHtml(description); // NOI18N
-                    }
+                // #122422 - some descriptions are intentionaly a valid HTML and don't want to be escaped
+                if (description.startsWith(HTML_PREFIX_LOWERCASE) || description.startsWith(HTML_PREFIX_UPPERCASE)) {
+                    return description;
+                } else {
+                    return "<html><body>" + StringEscapeUtils.escapeHtml(description); // NOI18N
                 }
             }
         }
         
         return null;
+    }
+
+    private static void appendHistogram(StringBuilder sb, Map<String, Integer> histogram, String fg, String bg) {
+        if (histogram.isEmpty()) {
+            return;
+        }
+        int n = 0;
+        sb.append("<div style=\"background-color:").append(bg).append(";color:").append(fg).append("\">");
+        for (Map.Entry<String, Integer> annotation : histogram.entrySet()) {
+            sb.append(annotation.getValue()).append(" ")
+              .append(StringEscapeUtils.escapeHtml(toShortLine(annotation.getKey()))).append("<br>");
+            if (n++ > 20) {
+                sb.append("(...)<br>");
+                break;
+            }
+        }
+        sb.append("</div>");
+    }
+
+    @SuppressWarnings("AssignmentToMethodParameter")
+    private static String toShortLine(String desc) {
+        int cut = desc.indexOf("\n");
+        if (cut != -1) {
+            desc = desc.substring(0, cut);
+        }
+        int max = 200;
+        if (desc.length() > max) {
+            desc = desc.substring(0, max) + "...";
+        }
+        return desc;
     }
     
     private static final String HTML_PREFIX_LOWERCASE = "<html"; //NOI18N

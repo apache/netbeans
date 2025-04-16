@@ -1985,7 +1985,14 @@ public abstract class PositionEstimator {
     public enum Direction {
         FORWARD, BACKWARD;
     }
-    
+
+    /**
+     * Moves pointer in tokenSequence to beginning of token with id.
+     * @param tokenSequence to use
+     * @param pos starting position
+     * @param id of token to move to
+     * @return beginning of token text.
+     */
     static int moveFwdToToken(TokenSequence<JavaTokenId> tokenSequence, 
             final int pos,
             JavaTokenId id)

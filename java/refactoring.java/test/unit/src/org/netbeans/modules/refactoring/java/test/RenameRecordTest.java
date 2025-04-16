@@ -42,12 +42,14 @@ public class RenameRecordTest extends RefactoringTestBase {
     public RenameRecordTest(String name) {
         super(name, "17");
         sideBySideCompare=true;
+        showOutputOnPass=true;
+        RETRIES=1;
     }
 
     public void testRenameComponent1() throws Exception {
         String testCode = """
                           package test;
-                          public record Test(int compo|nent) {}
+                          public record Test(int compo|nent, int y) {}
                           """;
         TestInput splitCode = TestUtilities.splitCodeAndPos(testCode);
         writeFilesAndWaitForScan(src,
@@ -66,7 +68,7 @@ public class RenameRecordTest extends RefactoringTestBase {
         verifyContent(src, new File("Test.java",
                                     """
                                     package test;
-                                    public record Test(int newName) {}
+                                    public record Test(int newName, int y) {}
                                     """),
                            new File("Use.java",
                                     """
@@ -83,8 +85,8 @@ public class RenameRecordTest extends RefactoringTestBase {
     public void testRenameComponent2() throws Exception {
         String testCode = """
                           package test;
-                          public record Test(int compo|nent) {
-                              public Test(int component) {
+                          public record Test(int compo|nent, int y) {
+                              public Test(int component, int y) {
                                   component = -1;
                               }
                               public int component() {
@@ -112,8 +114,8 @@ public class RenameRecordTest extends RefactoringTestBase {
         verifyContent(src, new File("Test.java",
                                     """
                                     package test;
-                                    public record Test(int newName) {
-                                        public Test(int newName) {
+                                    public record Test(int newName, int y) {
+                                        public Test(int newName, int y) {
                                             newName = -1;
                                         }
                                         public int newName() {
@@ -139,7 +141,7 @@ public class RenameRecordTest extends RefactoringTestBase {
     public void testRenameComponent3() throws Exception {
         String testCode = """
                           package test;
-                          public record Test(int compo|nent) {
+                          public record Test(int compo|nent, int y) {
                               public Test {
                                   component = -1;
                               }
@@ -168,7 +170,7 @@ public class RenameRecordTest extends RefactoringTestBase {
         verifyContent(src, new File("Test.java",
                                     """
                                     package test;
-                                    public record Test(int newName) {
+                                    public record Test(int newName, int y) {
                                         public Test {
                                             newName = -1;
                                         }
@@ -206,7 +208,7 @@ public class RenameRecordTest extends RefactoringTestBase {
                                  new File("Test.java",
                                           """
                                           package test;
-                                          public record Test(int component) {
+                                          public record Test(int component, int y) {
                                               public Test {
                                                   component = -1;
                                               }
@@ -224,7 +226,7 @@ public class RenameRecordTest extends RefactoringTestBase {
         verifyContent(src, new File("Test.java",
                                     """
                                     package test;
-                                    public record Test(int newName) {
+                                    public record Test(int newName, int y) {
                                         public Test {
                                             newName = -1;
                                         }
@@ -262,7 +264,7 @@ public class RenameRecordTest extends RefactoringTestBase {
                                  new File("Test.java",
                                           """
                                           package test;
-                                          public record Test(int component) {
+                                          public record Test(int y, int component) {
                                           }
                                           """),
                                  new File("Use.java", splitCode.code()));
@@ -271,7 +273,7 @@ public class RenameRecordTest extends RefactoringTestBase {
         verifyContent(src, new File("Test.java",
                                     """
                                     package test;
-                                    public record Test(int newName) {
+                                    public record Test(int y, int newName) {
                                     }
                                     """),
                            new File("Use.java",
@@ -289,7 +291,7 @@ public class RenameRecordTest extends RefactoringTestBase {
     public void testRenameComponentStartFromConstructorArg() throws Exception {
         String testCode = """
                           package test;
-                          public record Test(int component) {
+                          public record Test(int component, int y) {
                               public Test {
                                   compo|nent = -1;
                               }
@@ -318,7 +320,7 @@ public class RenameRecordTest extends RefactoringTestBase {
         verifyContent(src, new File("Test.java",
                                     """
                                     package test;
-                                    public record Test(int newName) {
+                                    public record Test(int newName, int y) {
                                         public Test {
                                             newName = -1;
                                         }

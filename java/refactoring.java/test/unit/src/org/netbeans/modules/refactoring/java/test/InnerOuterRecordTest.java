@@ -307,7 +307,7 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                 import java.time.LocalDate;
 
                 /** Record with compact ctor. */
-                record A(F f){
+                record A(F f) {
                     public A{
                         assert f!=null;
                     }

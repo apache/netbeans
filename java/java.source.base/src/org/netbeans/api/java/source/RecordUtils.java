@@ -79,11 +79,9 @@ public class RecordUtils {
      * @return the count
      */
     public static int countComponents(ClassTree record) {
-        return (int) record.getMembers()
-                .stream()
-                .filter(RecordUtils::isNormalField)
-                .count();
+        return RecordUtils.components(record).size();
     }
+        
 
     public static List<String> componentNames(ClassTree record) {
         List<String> result = components(record).stream()
@@ -92,14 +90,14 @@ public class RecordUtils {
         return result;
     }
 
-    public static List<Tree> components(ClassTree record) {
+    public static List<JCTree.JCVariableDecl> components(ClassTree record) {
 
-        List<Tree> result = record.getMembers()
+        List<JCTree.JCVariableDecl> result = record.getMembers()
                 .stream()
                 .filter(m -> m.getKind() == Kind.VARIABLE)
-                .map(VariableTree.class::cast)
-                .filter(RecordUtils::isNormalField)
-                .map(Tree.class::cast)
+                .map(JCTree.JCVariableDecl.class::cast)
+                .filter(v -> (v.mods.flags & Flags.RECORD)!=0)
+//                .map(Tree.class::cast)
                 .toList();
         return result;
     }
@@ -157,11 +155,16 @@ public class RecordUtils {
             System.err.println("RU not a record");
             return List.of();
         }
+
         List<JCTree.JCVariableDecl> result = record.getMembers().stream()
                 .filter(m -> m.getKind() == Kind.METHOD)
                 .map(JCTree.JCMethodDecl.class::cast)
                 .filter(met -> met.getReturnType() == null)
-                .filter(ctor -> (ctor.mods.flags & com.sun.tools.javac.code.Flags.RECORD) != 0 || (ctor.mods.flags & com.sun.tools.javac.code.Flags.COMPACT_RECORD_CONSTRUCTOR) != 0)
+                .peek(ctor->System.err.println("RU flags "+Long.toHexString(ctor.mods.flags)+ " <ctor>"+ctor+"</ctor>"))
+                .filter(ctor -> (ctor.mods.flags & com.sun.tools.javac.code.Flags.RECORD) != 0
+                        || (ctor.mods.flags & com.sun.tools.javac.code.Flags.COMPACT_RECORD_CONSTRUCTOR) != 0
+                        || (ctor.params.size() == RecordUtils.countComponents(record)))
+                .findFirst().stream()
                 .flatMap(mt -> ((JCTree.JCMethodDecl) mt).getParameters().stream())
                 .collect(toCollection(ArrayList::new));
         return result;

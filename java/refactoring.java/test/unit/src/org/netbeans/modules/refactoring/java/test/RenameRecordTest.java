@@ -138,11 +138,14 @@ public class RenameRecordTest extends RefactoringTestBase {
 
     }
 
+    /*
+     * Show that with compact constructor behaves.
+     */
     public void testRenameComponent3() throws Exception {
         String testCode = """
                           package test;
                           public record Test(int compo|nent, int y) {
-                              public Test {
+                              public Test { //compact
                                   component = -1;
                               }
                               public int component() {
@@ -171,7 +174,7 @@ public class RenameRecordTest extends RefactoringTestBase {
                                     """
                                     package test;
                                     public record Test(int newName, int y) {
-                                        public Test {
+                                        public Test { //compact
                                             newName = -1;
                                         }
                                         public int newName() {

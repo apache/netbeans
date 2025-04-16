@@ -1112,7 +1112,7 @@ public class CasualDiff {
                         ? EstimatorFactory.implementz(oldT.getImplementsClause(), newT.getImplementsClause(), diffContext)
                         : EstimatorFactory.extendz(oldT.getImplementsClause(), newT.getImplementsClause(), diffContext);
                 if (!newT.implementing.isEmpty()) {
-                    showCopyTo("CD  implementing", localPointer,insertHint-1);
+                    showCopyTo("CD  implementing", localPointer,insertHint);
                     copyTo(localPointer, insertHint);
                     localPointer = diffList2(oldT.implementing, newT.implementing, insertHint, estimator);
                 }

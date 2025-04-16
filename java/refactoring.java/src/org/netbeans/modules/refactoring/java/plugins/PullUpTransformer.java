@@ -266,6 +266,14 @@ public class PullUpTransformer extends RefactoringVisitor {
                                 oldOne.getImplementsClause(),
                                 oldOne.getMembers());
                         break;
+                    case RECORD:
+                        newMemberTree = make.Record(
+                                make.addModifiersModifier(make.removeModifiersModifier(oldOne.getModifiers(), Modifier.PRIVATE), Modifier.PROTECTED),
+                                oldOne.getSimpleName(),
+                                oldOne.getTypeParameters(),
+                                oldOne.getImplementsClause(),
+                                oldOne.getMembers());
+                        break;
                 }
             }
             if (newMemberTree != null) {

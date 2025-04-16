@@ -129,7 +129,7 @@ public class RecordUtilsTest extends NbTestCase {
 
     @Test
     public void testGetComponents() throws Exception {
-        List<Tree> recordComponents = RecordUtils.components(records[0]);
+        List<JCTree.JCVariableDecl> recordComponents = RecordUtils.components(records[0]);
         assertEquals(3, recordComponents.size());
     }
 

@@ -404,7 +404,13 @@ public class FaceletsLibrarySupport {
 
             Map<String, Library> libsMap = new HashMap<>();
             for (Library lib : processor.compiler.libraries) {
-                lib.getValidNamespaces().forEach(namespace -> libsMap.put(namespace, lib));
+                for (String namespace : lib.getValidNamespaces()) {
+                    Library currentLibrary = libsMap.get(namespace);
+                    // replace the current library only if the new one supports more namespaces
+                    if (currentLibrary == null || currentLibrary.getValidNamespaces().size() < lib.getValidNamespaces().size()) {
+                        libsMap.put(namespace, lib);
+                    }
+                }
             }
 
             //4. in case of JSF2.2 include pseudo-libraries (http://java.sun.com/jsf/passthrough, http://java.sun.com/jsf)

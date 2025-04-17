@@ -26,6 +26,7 @@ import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.javascript2.vue.editor.VueLanguage;
+import static org.netbeans.modules.javascript2.vue.editor.embedding.VueCssEmbeddingProvider.TARGET_MIME_TYPE;
 import org.netbeans.modules.javascript2.vue.editor.lexer.VueTokenId;
 import org.netbeans.modules.parsing.api.Embedding;
 import org.netbeans.modules.parsing.api.Snapshot;
@@ -38,7 +39,7 @@ import org.netbeans.modules.parsing.spi.EmbeddingProvider;
  */
 @EmbeddingProvider.Registration(
         mimeType = VueLanguage.MIME_TYPE,
-        targetMimeType = "text/css")
+        targetMimeType = TARGET_MIME_TYPE)
 public class VueCssEmbeddingProvider extends EmbeddingProvider {
     public static final String TARGET_MIME_TYPE = "text/css"; //NOI18N
 

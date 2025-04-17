@@ -47,7 +47,7 @@ import org.openide.windows.TopComponent;
  *
  * @author bogdan.haidu
  */
-@LanguageRegistration(mimeType = "text/x-vue", useMultiview = true) //NOI18N
+@LanguageRegistration(mimeType = "text/x-vue", useMultiview = true)
 public class VueLanguage extends DefaultLanguageConfig {
 
     public static final String MIME_TYPE = "text/x-vue"; //NOI18N

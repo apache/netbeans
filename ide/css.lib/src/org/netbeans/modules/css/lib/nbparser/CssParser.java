@@ -93,12 +93,23 @@ public class CssParser extends Parser {
             
             //parse just an empty string in case of an oversize snapshot
             CharSequence source = tooLargeSnapshot ? "" : snapshot.getText();
-            
+
+            String mimePath = snapshot.getMimePath() != null ? snapshot.getMimePath().getPath() : null;
+            if (mimePath != null) {
+                //vue plugin embedding
+                if (mimePath.startsWith("text/x-vue/text/scss")) { //NOI18N
+                    mimeType = "text/scss"; //NOI18N
+                } else if (mimePath.startsWith("text/x-vue/text/less")){ //NOI18N
+                    mimeType = "text/less"; //NOI18N
+                }
+            }
+
             ExtCss3Lexer lexer = new ExtCss3Lexer(source, mimeType);
             TokenStream tokenstream = new ProgressingTokenStream(
                 10_000_000,
                 new CommonTokenStream(lexer));
             NbParseTreeBuilder builder = new NbParseTreeBuilder(source);
+ 
             ExtCss3Parser parser = new ExtCss3Parser(tokenstream, builder, mimeType);
 
             if (cancelled.get()) {

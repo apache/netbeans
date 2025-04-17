@@ -266,6 +266,20 @@
 					"type": "string",
 					"default": "",
 					"description": "Working directory"
+				},
+				"netbeans.inlay.enabled": {
+					"description": "Enable or disable various inline hints.",
+					"type": "array",
+					"default": [],
+                                        "items": {
+                                            "type": "string",
+                                            "enum": ["chained", "parameter", "var"],
+                                            "markdownEnumDescriptions": [
+                                                "show return types of chained methods",
+                                                "show parameter names",
+                                                "show types of `var` variables"
+                                            ]
+                                        }
 				}
 			}
 		},

@@ -456,13 +456,26 @@ mediaType
 
 mediaExpression
     :
-    (LPAREN) => (LPAREN ws? mediaFeature mediaFeatureValue? ws? RPAREN)
+    (LPAREN) => (LPAREN ws? (mediaFeatureRange | mediaFeature mediaFeatureValue?) ws? RPAREN)
     | (HASH) => {isCssPreprocessorSource()}? sass_interpolation_expression_var
     ;
 
+mediaComparisonOperator
+    : OPEQ | LESS | LESS_OR_EQ | GREATER | GREATER_OR_EQ
+    ;    
+
+mediaRangeParameter
+    : LENGTH | EMS | REM | RESOLUTION
+    ;
+
+mediaFeatureRange
+    : 
+    mediaRangeParameter ws? mediaComparisonOperator ws? mediaFeature (ws? mediaComparisonOperator ws? mediaRangeParameter)?
+;
+
 mediaFeatureValue
     :
-    ws? COLON ws?
+    ws? (COLON | mediaComparisonOperator) ws?
     (
         {isCssPreprocessorSource()}? cp_expression
         |

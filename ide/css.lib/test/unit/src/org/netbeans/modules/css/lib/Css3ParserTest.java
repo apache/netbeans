@@ -1940,4 +1940,10 @@ public class Css3ParserTest extends CssTestBase {
         assertNull(NodeUtil.query(result.getParseTree(), "styleSheet/body/bodyItem|3"));
     }
 
+    public void testMediaQueryRangeSyntax() throws Exception {
+        assertParses("@media screen and (color), projection and (color) {}");
+        assertParses("@media (width <= 1250px) {}");
+        assertParses("@media (30em <= width <= 50em) {}");
+        assertParses("@media (width >= 600px) { .element {} }");
+    }
 }

@@ -19,7 +19,6 @@
 
 package org.netbeans;
 
-import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
@@ -30,14 +29,13 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.security.ProtectionDomain;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.openide.util.WeakSet;
 
 /**
  *
@@ -69,7 +67,8 @@ final class NbInstrumentation implements InvocationHandler {
     static void unregisterAgent(NbInstrumentation instr) {
         synchronized (LOCK) {
             if (ACTIVE != null) {
-                Collection<NbInstrumentation> clone = new WeakSet<>(ACTIVE);
+                Collection<NbInstrumentation> clone = Collections.newSetFromMap(new WeakHashMap<>());
+                clone.addAll(ACTIVE);
                 clone.remove(instr);
                 ACTIVE = clone;
             }
@@ -80,9 +79,11 @@ final class NbInstrumentation implements InvocationHandler {
         final NbInstrumentation inst = new NbInstrumentation();
         synchronized (LOCK) {
             if (ACTIVE == null) {
-                ACTIVE = new WeakSet<>();
+                ACTIVE = Collections.newSetFromMap(new WeakHashMap<>());
             } else {
-                ACTIVE = new WeakSet<>(ACTIVE);
+                Set<NbInstrumentation> clone = Collections.newSetFromMap(new WeakHashMap<>());
+                clone.addAll(ACTIVE);
+                ACTIVE = clone;
             }
             ACTIVE.add(inst);
         }

@@ -25,10 +25,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -69,7 +71,6 @@ import org.openide.util.Mutex.Action;
 import org.openide.util.MutexException;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakSet;
 import org.openide.xml.XMLUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -191,7 +192,7 @@ public final class AntProjectHelper {
     
     
     /** Atomic actions in use to save XML files. */
-    private final Set<AtomicAction> saveActions = new WeakSet<AtomicAction>();
+    private final Set<AtomicAction> saveActions = Collections.newSetFromMap(new WeakHashMap<>());
     
     /**
      * Hook waiting to be called. See issue #57794.

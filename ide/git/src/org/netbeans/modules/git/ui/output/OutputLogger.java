@@ -23,6 +23,9 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
@@ -30,7 +33,6 @@ import javax.swing.Action;
 import org.netbeans.modules.git.GitModuleConfig;
 import org.netbeans.modules.versioning.util.OpenInEditorAction;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakSet;
 import org.openide.windows.IOColorPrint;
 import org.openide.windows.IOColors;
 import org.openide.windows.IOProvider;
@@ -50,7 +52,7 @@ public class OutputLogger {
     private boolean writable;
     private static final RequestProcessor rp = new RequestProcessor("GitOutput", 1); //NOI18N
     private static final Logger LOG = Logger.getLogger(OutputLogger.class.getName());
-    private static final WeakSet<InputOutput> openWindows = new WeakSet<InputOutput>(5);
+    private static final Set<InputOutput> openWindows = Collections.newSetFromMap(new WeakHashMap<>(5));
 
     public static OutputLogger getLogger (File repositoryRoot) {
         if (repositoryRoot != null) {

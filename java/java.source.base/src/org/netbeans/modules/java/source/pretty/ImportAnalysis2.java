@@ -31,6 +31,7 @@ import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.tools.javac.comp.Modules;
 import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.util.Context;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -49,6 +50,7 @@ import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
 import org.netbeans.modules.java.source.builder.ASTService;
 import org.netbeans.modules.java.source.builder.TreeFactory;
@@ -65,6 +67,7 @@ public class ImportAnalysis2 {
     private final FQNComputer currentFQN = new FQNComputer();
 
     private Elements elements;
+    private ElementUtilities elementUtils;
     private TreeFactory make;
     private Set<Element> imports;
     private Set<Element> imported;
@@ -84,6 +87,7 @@ public class ImportAnalysis2 {
     public ImportAnalysis2(CompilationInfo info) {
         this(JavaSourceAccessor.getINSTANCE().getJavacTask(info).getContext());
         cs = DiffContext.getCodeStyle(info);
+        elementUtils = info.getElementUtilities();
     }
 
     public ImportAnalysis2(Context env) {
@@ -123,10 +127,29 @@ public class ImportAnalysis2 {
         visibleThroughClasses = new Stack<Set<Element>>();
         usedImplicitlyImportedClassesCache = null;
 
+        List<ImportTree> moduleImports = new ArrayList<>();
+        List<ImportTree> onDemandImports = new ArrayList<>();
+        List<ImportTree> namedImports = new ArrayList<>();
+
         for (ImportTree imp : importsToAdd) {
-            addImport(imp);
+            if (imp.isModule()) {
+                moduleImports.add(imp);
+            } else if (getFQN(imp.getQualifiedIdentifier()).endsWith(".*")) {
+                onDemandImports.add(imp);
+            } else {
+                namedImports.add(imp);
+            }
         }
-        
+
+        //process imports in order to ensure shadowing semantics:
+        Set<String> defined = new HashSet<>();
+        Set<String> clashing = new HashSet<>();
+        moduleImports.forEach(imp -> addImport(imp, defined, clashing));
+        clashing.clear();
+        onDemandImports.forEach(imp -> addImport(imp, defined, clashing));
+        clashing.clear();
+        namedImports.forEach(imp -> addImport(imp, defined, clashing));
+
         implicitlyImportedClassNames = new HashSet<String>();
         javaLang = overlay.resolve(model, elements, "java.lang");
         
@@ -198,15 +221,28 @@ public class ImportAnalysis2 {
         return result.toString();
     }
 
-    private void addImport(ImportTree imp) {
+    private void addImport(ImportTree imp,
+                           Set<String> currentTypeImportedNames,
+                           Set<String> currentTypeClashingNames) {
         String fqn = getFQN(imp);
 
-        if (!imp.isStatic()) {
+        if (imp.isModule()) {
+            Element resolved = overlay.resolve(model, elements, fqn);
+
+            if (resolved != null && resolved.getKind() == ElementKind.MODULE) {
+                for (PackageElement pack : elementUtils.transitivelyExportedPackages((ModuleElement) resolved)) {
+                    for (Element packageContent : pack.getEnclosedElements()) {
+                        addImportedElement(overlay.wrap(model, elements, packageContent),
+                                           currentTypeImportedNames,
+                                           currentTypeClashingNames);
+                    }
+                }
+            }
+        } else  if (!imp.isStatic()) {
             Element resolve = overlay.resolve(model, elements, fqn);
 
             if (resolve != null) {
-                imported.add(resolve);
-                simpleNames2Elements.put(resolve.getSimpleName().toString(), resolve);
+                addImportedElement(resolve, currentTypeImportedNames, currentTypeClashingNames);
             } else {
                 //.*?:
                 if (fqn.endsWith(".*")) {
@@ -220,8 +256,7 @@ public class ImportAnalysis2 {
                     }
 
                     for (TypeElement te : classes) {
-                        imported.add(te);
-                        simpleNames2Elements.put(te.getSimpleName().toString(), te);
+                        addImportedElement(te, currentTypeImportedNames, currentTypeClashingNames);
                     }
                 } else {
                     //cannot resolve - the imports will probably not work correctly...
@@ -243,8 +278,7 @@ public class ImportAnalysis2 {
                             continue;
                         }
                         if (isStarred || memberName.contains(e.getSimpleName().toString())) {
-                            imported.add(e);
-                            simpleNames2Elements.put(e.getSimpleName().toString(), e);
+                            addImportedElement(e, currentTypeImportedNames, currentTypeClashingNames);
                         }
                     }
                 } else {
@@ -254,6 +288,39 @@ public class ImportAnalysis2 {
                 //no dot?
             }
         }
+    }
+
+    private void addImportedElement(Element el,
+                                    Set<String> currentTypeImportedNames,
+                                    Set<String> currentTypeClashingNames) {
+        String simpleName = el.getSimpleName().toString();
+
+        if ("List".equals(simpleName)) {
+            System.err.println("");
+        }
+        if (currentTypeClashingNames.contains(simpleName)) {
+            //there's already a clash for this name, ignore
+            return ;
+        }
+
+        Element existing = simpleNames2Elements.get(simpleName);
+
+        if (existing != null && !existing.equals(el)) {
+            if (!currentTypeImportedNames.contains(simpleName)) {
+                //the element from other import type is shadowed, clear from imported:
+                imported.remove(existing);
+            } else {
+                //clashing simple names inside the same import type:
+                imported.remove(existing);
+                simpleNames2Elements.remove(simpleName);
+                currentTypeClashingNames.add(simpleName);
+                return ;
+            }
+        }
+
+        imported.add(el);
+        simpleNames2Elements.put(simpleName, el);
+        currentTypeImportedNames.add(simpleName);
     }
 
     //Note: this method should return either "orig" or a IdentifierTree or MemberSelectTree
@@ -366,7 +433,7 @@ public class ImportAnalysis2 {
         }
 
         Tree imp = make.Identifier(((QualifiedNameable) element).getQualifiedName());
-        addImport(make.Import(imp, false));
+        addImport(make.Import(imp, false), new HashSet<>(), new HashSet<>());
         
         Element original = overlay.getOriginal(element);
         if (original.getEnclosingElement().getKind() == ElementKind.PACKAGE) {

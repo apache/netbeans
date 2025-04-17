@@ -202,6 +202,10 @@ public class ElementOverlay {
             result = modle != null ? elements.getPackageElement(modle, what) : elements.getPackageElement(what);
         }
 
+        if (result == null && modle == null) {
+            result = elements.getModuleElement(what);
+        }
+
         result = createElement(ast, elements, what, result, modle);
 
         return result;

@@ -947,6 +947,264 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
         assertEquals(golden, res);
     }
 
+    public void testWithModuleImport() throws Exception {
+        testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
+        assertTrue(testFile.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testFile,
+            "package hierbas.del.litoral;\n" +
+            "import module java.base;\n" +
+            "public class Test {\n" +
+            "}\n"
+            );
+        String golden =
+            "package hierbas.del.litoral;\n" +
+            "import module java.base;\n" +
+            "public class Test {\n\n" +
+            "    List test;\n" +
+            "}\n";
+
+        JavaSource src = getJavaSource(testFile);
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+                ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                workingCopy.rewrite(clazz, make.addClassMember(clazz, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "test", make.QualIdent("java.util.List"), null)));
+            }
+
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testWithModuleImportClash1() throws Exception {
+        testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
+        assertTrue(testFile.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testFile,
+            "package hierbas.del.litoral;\n" +
+            "import module java.base;\n" +
+            "public class Test {\n" +
+            "}\n"
+            );
+        String golden =
+            "package hierbas.del.litoral;\n" +
+            "import module java.base;\n" +
+            "public class Test {\n\n" +
+            "    java.awt.List test;\n" +
+            "}\n";
+
+        JavaSource src = getJavaSource(testFile);
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+                ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                workingCopy.rewrite(clazz, make.addClassMember(clazz, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "test", make.QualIdent("java.awt.List"), null)));
+            }
+
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testWithModuleImportClash2() throws Exception {
+        testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
+        assertTrue(testFile.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testFile,
+            "package hierbas.del.litoral;\n" +
+            "import java.awt.List;\n" +
+            "import module java.base;\n" +
+            "public class Test {\n" +
+            "}\n"
+            );
+        String golden =
+            "package hierbas.del.litoral;\n" +
+            "import java.awt.List;\n\n" +
+            "import module java.base;\n" +
+            "public class Test {\n\n" +
+            "    List test1;\n" +
+            "    java.util.List test2;\n" +
+            "}\n";
+
+        JavaSource src = getJavaSource(testFile);
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+                ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                ClassTree newClass = clazz;
+                newClass = make.addClassMember(newClass, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "test1", make.QualIdent("java.awt.List"), null));
+                newClass = make.addClassMember(newClass, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "test2", make.QualIdent("java.util.List"), null));
+                workingCopy.rewrite(clazz, newClass);
+            }
+
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testWithModuleImportClash3() throws Exception {
+        testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
+        assertTrue(testFile.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testFile,
+            "package hierbas.del.litoral;\n" +
+            "import module java.se;\n" +
+            "public class Test {\n" +
+            "}\n"
+            );
+        String golden =
+            "package hierbas.del.litoral;\n" +
+            "import java.awt.List;\n\n" +
+            "import module java.se;\n" +
+            "public class Test {\n\n" +
+            "    List test1;\n" +
+            "    java.util.List test2;\n" +
+            "}\n";
+
+        JavaSource src = getJavaSource(testFile);
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+                ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                ClassTree newClass = clazz;
+                newClass = make.addClassMember(newClass, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "test1", make.QualIdent("java.awt.List"), null));
+                newClass = make.addClassMember(newClass, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "test2", make.QualIdent("java.util.List"), null));
+                workingCopy.rewrite(clazz, newClass);
+            }
+
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testWithModuleImportClash4() throws Exception {
+        beginTx();
+        File testModule = new File(getWorkDir(), "module-info.java");
+        TestUtilities.copyStringToFile(testModule,
+            """
+            module m {
+                requires transitive java.se; //to get java.util.List and java.awt.List:
+                exports api;
+            }
+            """
+            );
+        File testApi = new File(getWorkDir(), "api/List.java");
+        assertTrue(testApi.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testApi,
+            """
+            package api;
+            public class List {}
+            """
+            );
+        testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
+        assertTrue(testFile.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testFile,
+            "package hierbas.del.litoral;\n" +
+            "import module m;\n" +
+            "public class Test {\n" +
+            "}\n"
+            );
+        String golden =
+            "package hierbas.del.litoral;\n" +
+            "import java.awt.List;\n\n" +
+            "import module m;\n" +
+            "public class Test {\n\n" +
+            "    List test1;\n" +
+            "    java.util.List test2;\n" +
+            "    api.List test3;\n" +
+            "}\n";
+
+        ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create (BootClassPathUtil.getBootClassPath(), BootClassPathUtil.getModuleBootPath(), ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(getSourcePath()), ClassPath.EMPTY, null, true, false, false, true, false, null);
+        JavaSource src = JavaSource.create(cpInfo, FileUtil.toFileObject(testFile));
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+                ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                ClassTree newClass = clazz;
+                newClass = make.addClassMember(newClass, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "test1", make.QualIdent("java.awt.List"), null));
+                newClass = make.addClassMember(newClass, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "test2", make.QualIdent("java.util.List"), null));
+                newClass = make.addClassMember(newClass, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "test3", make.QualIdent("api.List"), null));
+                workingCopy.rewrite(clazz, newClass);
+            }
+
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testPackageImportClash() throws Exception {
+        beginTx();
+        File testApi = new File(getWorkDir(), "api/List.java");
+        assertTrue(testApi.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testApi,
+            """
+            package api;
+            public class List {}
+            """
+            );
+        testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
+        assertTrue(testFile.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testFile,
+            "package hierbas.del.litoral;\n" +
+            "import api.*;\n" +
+            "import java.awt.*;\n" +
+            "import java.util.*;\n" +
+            "public class Test {\n" +
+            "}\n"
+            );
+        String golden =
+            "package hierbas.del.litoral;\n" +
+            "import api.*;\n" +
+            "import java.awt.*;\n" +
+            "import java.awt.List;\n" +
+            "import java.util.*;\n" +
+            "public class Test {\n\n" +
+            "    List test1;\n" +
+            "    java.util.List test2;\n" +
+            "    api.List test3;\n" +
+            "}\n";
+
+        ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create (BootClassPathUtil.getBootClassPath(), ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(getSourcePath()), ClassPath.EMPTY, null, true, false, false, true, false, null);
+        JavaSource src = JavaSource.create(cpInfo, FileUtil.toFileObject(testFile));
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+                ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                ClassTree newClass = clazz;
+                newClass = make.addClassMember(newClass, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "test1", make.QualIdent("java.awt.List"), null));
+                newClass = make.addClassMember(newClass, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "test2", make.QualIdent("java.util.List"), null));
+                newClass = make.addClassMember(newClass, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "test3", make.QualIdent("api.List"), null));
+                workingCopy.rewrite(clazz, newClass);
+            }
+
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    //TODO: non-public classes not imported by module imports!
+
     String getGoldenPckg() {
         return "";
     }

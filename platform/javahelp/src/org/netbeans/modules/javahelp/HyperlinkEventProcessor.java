@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.javahelp;
 
+import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.MouseAdapter;
@@ -31,6 +32,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import org.netbeans.modules.javahelp.CopyLinkLocationAction.LinkOwner;
+import org.openide.util.Lookup;
 
 /**
  * Processor for the both <code>MouseEvent</code>s and
@@ -119,8 +121,15 @@ public class HyperlinkEventProcessor extends MouseAdapter
         return url == null ? null : url.toExternalForm(); // #176141
     }
 
+    @Override
     public Clipboard getClipboard() {
-        return pane.getToolkit().getSystemClipboard();
+        Clipboard c = Lookup.getDefault().lookup(Clipboard.class);
+
+        if (c == null) {
+            c = Toolkit.getDefaultToolkit().getSystemClipboard();
+        }
+
+        return c;
     }
 
 }

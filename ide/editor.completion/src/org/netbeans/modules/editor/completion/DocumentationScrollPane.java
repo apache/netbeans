@@ -55,6 +55,7 @@ import org.openide.awt.HtmlBrowser;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 
@@ -461,7 +462,10 @@ public class DocumentationScrollPane extends JScrollPane {
         @Override
         public void hyperlinkUpdate(HyperlinkEvent e) {
             if (e != null && e.getEventType() == HyperlinkEvent.EventType.ACTIVATED && e.getDescription().startsWith("copy.snippet")) {
-                Clipboard systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                Clipboard systemClipboard = Lookup.getDefault().lookup(Clipboard.class);
+                if (systemClipboard == null) {
+                    systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                }
                 String snippetCount = e.getDescription().replaceAll("[^0-9]", "");
                 HTMLDocument HtmlDoc = (HTMLDocument) e.getSourceElement().getDocument();
                 HTMLDocView source = (HTMLDocView) e.getSource();

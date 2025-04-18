@@ -19,6 +19,7 @@
 package org.netbeans.modules.profiler.attach.steps;
 
 import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +35,7 @@ import org.netbeans.lib.profiler.common.integration.IntegrationUtils;
 import org.netbeans.modules.profiler.api.ProfilerDialogs;
 import org.netbeans.modules.profiler.attach.providers.RemotePackExporter;
 import org.netbeans.modules.profiler.attach.spi.AttachStepsProvider;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
@@ -295,8 +297,12 @@ public class BasicAttachStepsProvider extends AttachStepsProvider {
     protected void copyParameters(AttachSettings settings) {
         String parameters = parameters(settings);
         parameters = parameters.replace("&lt;", "<").replace("&gt;", ">"); // NOI18N
+        Clipboard clipboard = Lookup.getDefault().lookup(Clipboard.class);
+        if (clipboard == null) {
+            clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        }
         StringSelection s = new StringSelection(parameters);
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(s, s);
+        clipboard.setContents(s, s);
         ProfilerDialogs.displayInfo(Bundle.AttachDialog_CopiedToClipboard());
     }
     

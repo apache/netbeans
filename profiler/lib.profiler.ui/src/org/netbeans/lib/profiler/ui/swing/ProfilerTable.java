@@ -26,6 +26,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -986,7 +987,15 @@ public class ProfilerTable extends JTable {
     protected void populatePopup(JPopupMenu popup, Object value, Object userValue) {
         // Implementation here
     }
-    
+
+    private Clipboard getClipboard() {
+        Clipboard clipboard = Lookup.getDefault().lookup(Clipboard.class);
+        if (clipboard == null) {
+            clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        }
+        return clipboard;
+    }
+
     public final JMenuItem createCopyMenuItem() {
         final int row = getSelectedRow();
         
@@ -999,7 +1008,7 @@ public class ProfilerTable extends JTable {
                 for (int col = 0; col < columns.size(); col++) if (columns.get(col).getWidth() > 0)
                     val.append("\t").append(getStringValue(row, col)); // NOI118N
                 StringSelection s = new StringSelection(val.toString().trim());
-                Toolkit.getDefaultToolkit().getSystemClipboard().setContents(s, s);
+                getClipboard().setContents(s, s);
             }
         };
         copyItem.add(copyRowItem);
@@ -1017,7 +1026,7 @@ public class ProfilerTable extends JTable {
                 copyItem.add(new JMenuItem(MessageFormat.format(genericItemName, columnName)) {
                     protected void fireActionPerformed(ActionEvent e) {
                         StringSelection s = new StringSelection(getStringValue(row, _col));
-                        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(s, s);
+                        getClipboard().setContents(s, s);
                     }
                 });
             }

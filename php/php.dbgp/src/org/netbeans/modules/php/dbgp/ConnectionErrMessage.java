@@ -40,7 +40,9 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.HtmlBrowser;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.datatransfer.ExClipboard;
 
 /**
  *
@@ -266,8 +268,11 @@ public class ConnectionErrMessage extends JPanel {
     }
 
     private void copyToClipboard(String contents) {
+        Clipboard clipboard = Lookup.getDefault().lookup(Clipboard.class);
+        if (clipboard == null) {
+            clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        }
         StringSelection selection = new StringSelection(contents);
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(selection, selection);
     }
 

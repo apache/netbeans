@@ -40,6 +40,7 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.KeyboardFocusManager;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
@@ -575,7 +576,9 @@ public class InstancesListControllerUI extends JTitledPanel {
         if (instance == null) return;
         
         Clipboard clipboard = Lookup.getDefault().lookup(Clipboard.class);
-
+        if (clipboard == null) {
+            clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        }
         clipboard.setContents(new StringSelection("0x" + Long.toHexString(instance.getInstanceId())), null);  // NOI18N
     }
     

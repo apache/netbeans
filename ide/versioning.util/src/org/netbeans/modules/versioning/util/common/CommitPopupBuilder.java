@@ -19,6 +19,7 @@
 package org.netbeans.modules.versioning.util.common;
 
 import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.event.KeyEvent;
 import javax.swing.Action;
@@ -29,6 +30,7 @@ import javax.swing.KeyStroke;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.JTextComponent;
 import org.openide.awt.Mnemonics;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 /**
@@ -63,9 +65,13 @@ class CommitPopupBuilder {
         
         cutAction.setEnabled(textSelected);
         copyAction.setEnabled(textSelected);
-        
-        boolean hasClipboardText = Toolkit.getDefaultToolkit().getSystemClipboard()
-            .isDataFlavorAvailable(DataFlavor.stringFlavor);
+
+        Clipboard clipboard = Lookup.getDefault().lookup(Clipboard.class);
+        if (clipboard == null) {
+            clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        }
+
+        boolean hasClipboardText = clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor);
         
         pasteAction.setEnabled(hasClipboardText);
         

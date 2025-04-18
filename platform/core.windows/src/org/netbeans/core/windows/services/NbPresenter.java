@@ -88,6 +88,7 @@ import org.openide.WizardDescriptor;
 import org.openide.awt.Mnemonics;
 import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
+import org.openide.util.Lookup;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
@@ -527,8 +528,11 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
                         pm.add(new AbstractAction(NbBundle.getMessage(NbPresenter.class, "Lbl_CopyToClipboard")) { //NOI18N
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
-                                c.setContents(new StringSelection(clipboardText), null);
+                                Clipboard clipboard = Lookup.getDefault().lookup(Clipboard.class);
+                                if (clipboard == null) {
+                                    clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                                }
+                                clipboard.setContents(new StringSelection(clipboardText), null);
                             }
                         });
                         pm.show(e.getComponent(), e.getX(), e.getY());

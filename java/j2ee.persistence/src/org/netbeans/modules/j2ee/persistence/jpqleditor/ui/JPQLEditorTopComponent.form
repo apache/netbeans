@@ -54,7 +54,6 @@
   <SubComponents>
     <Container class="javax.swing.JToolBar" name="toolBar">
       <Properties>
-        <Property name="floatable" type="boolean" value="false"/>
         <Property name="rollover" type="boolean" value="true"/>
       </Properties>
 
@@ -106,9 +105,6 @@
     </Container>
     <Container class="javax.swing.JSplitPane" name="splitPane">
       <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="null"/>
-        </Property>
         <Property name="dividerLocation" type="int" value="180"/>
         <Property name="dividerSize" type="int" value="7"/>
         <Property name="orientation" type="int" value="0"/>
@@ -164,7 +160,6 @@
           <SubComponents>
             <Container class="javax.swing.JToolBar" name="toolBar2">
               <Properties>
-                <Property name="floatable" type="boolean" value="false"/>
                 <Property name="rollover" type="boolean" value="true"/>
               </Properties>
 

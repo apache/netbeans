@@ -21,15 +21,14 @@ package org.netbeans.modules.gsf.testrunner.ui.api;
 
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.io.CharConversionException;
 import java.lang.ref.WeakReference;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
@@ -202,11 +201,15 @@ public class TestMethodNode extends AbstractNode {
 	    }
 	    if (callStack.length() > 0) {
 		final String trace = callStack.toString();
-		actions.add(new AbstractAction(Bundle.LBL_CopyStackTrace()) {
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(trace), null);
-		    }
+                actions.add(new AbstractAction(Bundle.LBL_CopyStackTrace()) {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        Clipboard clipboard = Lookup.getDefault().lookup(Clipboard.class);
+                        if (clipboard == null) {
+                            clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                        }
+                        clipboard.setContents(new StringSelection(trace), null);
+                    }
 		});
 	    }
 	}

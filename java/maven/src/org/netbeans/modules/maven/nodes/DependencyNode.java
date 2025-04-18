@@ -23,6 +23,7 @@ import org.netbeans.modules.maven.ModuleInfoSupport;
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
@@ -98,7 +99,9 @@ import org.netbeans.modules.maven.model.Utilities;
 import org.netbeans.modules.maven.model.pom.Exclusion;
 import org.netbeans.modules.maven.model.pom.POMModel;
 import org.netbeans.spi.project.ui.PathFinder;
+
 import static org.netbeans.modules.maven.nodes.Bundle.*;
+
 import org.netbeans.modules.maven.queries.MavenFileOwnerQueryImpl;
 import org.netbeans.modules.maven.queries.RepositoryForBinaryQueryImpl;
 import org.netbeans.modules.maven.queries.RepositoryForBinaryQueryImpl.Coordinates;
@@ -1238,8 +1241,13 @@ public class DependencyNode extends AbstractNode implements PreferenceChangeList
             super(CopyLocationAction_name());
         }
 
-        @Override public void actionPerformed(ActionEvent e) {
-            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(data.art.getFile().getAbsolutePath()), null);
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Clipboard clipboard = Lookup.getDefault().lookup(Clipboard.class);
+            if (clipboard == null) {
+                clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            }
+            clipboard.setContents(new StringSelection(data.art.getFile().getAbsolutePath()), null);
         }
 
     }

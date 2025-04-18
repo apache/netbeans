@@ -20,6 +20,7 @@
 package org.netbeans.modules.profiler.heapwalk.model;
 
 import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -38,6 +39,7 @@ import org.netbeans.modules.profiler.api.icons.Icons;
 import org.netbeans.modules.profiler.api.icons.LanguageIcons;
 import org.netbeans.modules.profiler.api.ProfilerDialogs;
 import org.netbeans.modules.profiler.heapwalk.ui.icons.HeapWalkerIcons;
+import org.openide.util.Lookup;
 
 
 /**
@@ -299,7 +301,11 @@ public class BrowserUtils {
         performTask(new Runnable() {
             public void run() {
                 StringSelection s = new StringSelection(pathFromRoot(path));
-                Toolkit.getDefaultToolkit().getSystemClipboard().setContents(s, s);
+                Clipboard clipboard = Lookup.getDefault().lookup(Clipboard.class);
+                if (clipboard == null) {
+                    clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                }
+                clipboard.setContents(s, s);
                 ProfilerDialogs.displayInfo(Bundle.BrowserUtils_PathCopiedToClipboard());
             }
         });

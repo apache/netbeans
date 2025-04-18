@@ -6684,6 +6684,49 @@ public class FormatingTest extends NbTestCase {
         reformat(doc, content, golden);
     }
 
+    // generics, implements and varargs, compact ctor
+    public void testRecord5() throws Exception {
+
+        try {
+            SourceVersion.valueOf("RELEASE_16"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip test
+            return;
+        }
+        sourceLevel="16";
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = """
+                         package hierbas.del.litoral;
+
+                         public class Test {
+
+                         public record g3<A,B>(A a, B... b){ g3{ assert a!=null; assert b !=null;}}}
+                         """;
+        String golden
+                = """
+                package hierbas.del.litoral;
+
+                public class Test {
+
+                    public record g3<A, B>(A a, B... b) {
+
+                        g3  {
+                            assert a != null;
+                            assert b != null;
+                        }
+                    }
+                }
+                """;
+        reformat(doc, content, golden);
+    }
+
     // verify closing '}' position during record formatting
     public void testRecordClosingBrace7043() throws Exception {
         try {

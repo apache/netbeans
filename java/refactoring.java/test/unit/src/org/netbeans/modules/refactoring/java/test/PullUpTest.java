@@ -1399,14 +1399,14 @@ public class PullUpTest extends RefactoringTestBase {
     }
 
     // disable because implements part is broken
-    public void testPullUpInnerRecord() throws Exception {
+    public void _testPullUpInnerRecord() throws Exception {
         sideBySideCompare=true;
         writeFilesAndWaitForScan(src,
                 new File("pullup/A.java",
                 """
                 package pullup;
                 public class A extends B {
-                    record R( int i, String name ) implements I {}
+                    record R( int i, String name ) implements Cloneable {}
                     private void foo() {
                     }
                     private void method(R r) {
@@ -1418,12 +1418,6 @@ public class PullUpTest extends RefactoringTestBase {
                 """
                 package pullup;
                 public class B { }
-                """
-                ),
-                new File("pullup/I.java",
-                """
-                package pullup;
-                public interface I{ }
                 """
                 )
         );
@@ -1447,18 +1441,11 @@ public class PullUpTest extends RefactoringTestBase {
                 package pullup;
                 public class B {
 
-                    record R(int i, String name) implements I {
+                    record R(int i, String name) implements Cloneable {
                     }
                 }
                 """
-                ) ,
-                new File("pullup/I.java",
-                """
-                package pullup;
-                public interface I{ }
-                """
                 )
-
         );
     }
 

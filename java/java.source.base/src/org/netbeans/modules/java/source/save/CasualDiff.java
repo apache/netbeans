@@ -1086,7 +1086,8 @@ public class CasualDiff {
                         break;
                 }
             }
-            {
+            showOrigAdvance("CD advance before implements", localPointer, insertHint);
+            { // consider implements
                 // TODO (#pf): there is some space for optimization. If the new list
                 // is also empty, we can skip this computation.
                 if (oldT.implementing.isEmpty()) {
@@ -1095,7 +1096,7 @@ public class CasualDiff {
                     // | represents current adjustment and ! where we want to point to
                     if (oldT.extending != null) // public class Yerba<E>| extends Object! { ...
                     {
-                        insertHint = endPos(oldT.extending);
+                        insertHint = endPos(oldT.extending); //? useless for enum and record?
                     } else {
                         // currently no need to adjust anything here:
                         // public class Yerba<E>|! { ...
@@ -1107,24 +1108,27 @@ public class CasualDiff {
                     // diffing mechanism will solve the implements keyword.
                     insertHint = oldT.implementing.iterator().next().getStartPosition();
                 }
+                showOrigAdvance("CD advance before implements 1", localPointer, insertHint);
                 long flags = oldT.sym != null ? oldT.sym.flags() : oldT.mods.flags;
                 PositionEstimator estimator = (flags & INTERFACE) == 0
                         ? EstimatorFactory.implementz(oldT.getImplementsClause(), newT.getImplementsClause(), diffContext)
                         : EstimatorFactory.extendz(oldT.getImplementsClause(), newT.getImplementsClause(), diffContext);
                 if (!newT.implementing.isEmpty()) {
                     showCopyTo("CD  implementing", localPointer,insertHint);
-                    copyTo(localPointer, insertHint);
+                    if (oldT.implementing.nonEmpty()) copyTo(localPointer, insertHint);
                     localPointer = diffList2(oldT.implementing, newT.implementing, insertHint, estimator);
+//                    printer.wrapTrees(newT.implementing,printer.getIndent());
                 }
                 if ((newT.mods.flags & Flags.RECORD) !=0) {
-                    moveFwdToToken(tokenSequence, NOPOS, JavaTokenId.LBRACE );
-                    // implements is the last part before {
                     printer.print(" {");
+                    int moveFwdToToken = moveFwdToToken(tokenSequence, NOPOS, JavaTokenId.LBRACE );
+                    localPointer= moveFwdToToken+tokenSequence.token().length();
+                    // implements is the last part before {
                     showOrigAdvance("CD after open curly ", localPointer, insertHint);
                 }
             }
-
-            {
+            if ((newT.mods.flags & (Flags.RECORD | Flags.ENUM))==0 )
+            { // record and enum do not do permits
                 // TODO (#pf): there is some space for optimization. If the new list
                 // is also empty, we can skip this computation.
                 if (oldT.permitting.isEmpty()) {
@@ -3518,6 +3522,9 @@ public class CasualDiff {
         List<? extends JCTree> oldList, List<? extends JCTree> newList,
         int initialPos, PositionEstimator estimator)
     {
+        System.err.println("CD diff2List old="+oldList+" new="+ newList+" init pos="+initialPos);
+        showCopyTo("CD diffList tail", initialPos, origText.length());
+        System.err.println("CD diffList printed sofar/\n"+ printer.toString()+"\n/sofar");
         if (oldList == newList)
             return initialPos;
         assert oldList != null && newList != null;

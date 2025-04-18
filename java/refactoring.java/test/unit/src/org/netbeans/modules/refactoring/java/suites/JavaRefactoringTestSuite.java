@@ -30,11 +30,13 @@ import org.netbeans.modules.refactoring.java.ui.JavaRefactoringActionsProviderTe
 public class JavaRefactoringTestSuite {
 
     public static Test suite() throws InterruptedException {
-        Class[] classes = {IntroduceParameterTest.class,
+        Class[] classes = {
+            IntroduceParameterTest.class,
             RenameTest.class,
             CopyClassTest.class,
             InlineTest.class,
             InnerToOutterTest.class,
+            InnerOuterRecordTest.class,
             IntroduceLocalExtensionTest.class,
             ChangeParametersTest.class,
             UseSuperTypeTest.class,
@@ -45,7 +47,8 @@ public class JavaRefactoringTestSuite {
             EncapsulateFieldsTest.class,
             PullUpTest.class,
             PushDownTest.class,
-            JavaRefactoringActionsProviderTest.class};
+            JavaRefactoringActionsProviderTest.class
+        };
         TestSuite testSuite = new TestSuite(classes);
         testSuite.addTest(FindUsagesTest.suite());
         return testSuite;

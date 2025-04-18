@@ -3466,6 +3466,17 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         print(s);
     }
 
+    /**
+     * Wrap a tree according to a current style for method parammeters.
+     * Used to print extends, implements and parameter lists.
+     * @param <T> Tree type
+     * @param trees list of tree
+     * @param wrapIndent the initial indent after wrapping.
+     */
+    public <T extends JCTree> void wrapTrees(List<T> trees, int wrapIndent){
+        wrapTrees(trees, cs.wrapMethodParams(), wrapIndent);
+    }
+
     private <T extends JCTree> void wrapTrees(List<T> trees, WrapStyle wrapStyle, int wrapIndent) {
         wrapTrees(trees, wrapStyle, wrapIndent, false); //TODO: false for "compatibility", with the previous release, but maybe should be true for everyone?
     }

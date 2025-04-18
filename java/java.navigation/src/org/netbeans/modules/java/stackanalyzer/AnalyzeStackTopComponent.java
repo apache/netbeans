@@ -43,6 +43,7 @@ import javax.swing.text.DefaultEditorKit;
 import org.netbeans.modules.java.stackanalyzer.StackLineAnalyser.Link;
 import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -227,7 +228,10 @@ final class AnalyzeStackTopComponent extends TopComponent {
 
     private void insertButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertButtonActionPerformed
         try {
-            Clipboard clipBoard = Toolkit.getDefaultToolkit ().getSystemClipboard ();
+            Clipboard clipBoard = Lookup.getDefault().lookup(Clipboard.class);
+            if (clipBoard == null) {
+                clipBoard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            }
             Transferable transferable = clipBoard.getContents (this);
             if (!transferable.isDataFlavorSupported (DataFlavor.stringFlavor)) {
                 return;

@@ -20,6 +20,7 @@ package org.netbeans.lib.profiler.ui.swing;
 
 import java.awt.Color;
 import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
@@ -36,6 +37,7 @@ import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -180,7 +182,7 @@ public class TextArea extends JTextArea {
                 super.fireActionPerformed(ae);
                 hideHint();
                 try {
-                    replaceSelection(Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this).
+                    replaceSelection(getClipboard().getContents(this).
                                      getTransferData(DataFlavor.stringFlavor).toString());
                     requestFocusInWindow();
                 } catch (Exception ex) {}
@@ -188,7 +190,7 @@ public class TextArea extends JTextArea {
             }
         };
         try {
-            Transferable clipboardContent = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this);
+            Transferable clipboardContent = getClipboard().getContents(this);
             miPaste.setEnabled(editable && clipboardContent != null && clipboardContent.isDataFlavorSupported(
                                                                        DataFlavor.stringFlavor));
             requestFocusInWindow();
@@ -230,7 +232,14 @@ public class TextArea extends JTextArea {
     }
     
     protected void customizePopup(JPopupMenu popup) {}
-    
+
+    private Clipboard getClipboard() {
+        Clipboard clipboard = Lookup.getDefault().lookup(Clipboard.class);
+        if (clipboard == null) {
+            clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        }
+        return clipboard;
+    }
     
     // --- Resize support ------------------------------------------------------
     

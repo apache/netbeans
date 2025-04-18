@@ -48,6 +48,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataFolder;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.datatransfer.PasteType;
 
@@ -74,7 +75,10 @@ public class CreateJavaClassFileFromClipboard extends PasteType {
     @Override
     public Transferable paste() throws IOException {
         try {
-            Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+            Clipboard c = Lookup.getDefault().lookup(Clipboard.class);
+            if (c == null) {
+                c = Toolkit.getDefaultToolkit().getSystemClipboard();
+            }
             if (!c.isDataFlavorAvailable(DataFlavor.stringFlavor)) {
                 return t;
             }

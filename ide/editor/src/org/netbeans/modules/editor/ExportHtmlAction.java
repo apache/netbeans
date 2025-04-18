@@ -19,6 +19,7 @@
 package org.netbeans.modules.editor;
 
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openide.util.Exceptions;
@@ -58,6 +59,7 @@ import org.netbeans.modules.editor.lib2.EditorPreferencesDefaults;
 import org.netbeans.modules.editor.lib2.view.PrintUtils;
 import org.openide.awt.Mnemonics;
 import org.openide.filesystems.FileChooserBuilder;
+import org.openide.util.Lookup;
 import org.openide.util.NbPreferences;
 
 public class ExportHtmlAction extends CookieAction {
@@ -247,7 +249,11 @@ public class ExportHtmlAction extends CookieAction {
                 htmlPrintContainer.addLines(lines);
                 String result = htmlPrintContainer.end();
                 if (toClipboard) {
-                    Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(result), null);
+                    Clipboard clipboard = Lookup.getDefault().lookup(Clipboard.class);
+                    if (clipboard == null) {
+                        clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                    }
+                    clipboard.setContents(new StringSelection(result), null);
                 } else {
                     PrintWriter out = null;
                     try {

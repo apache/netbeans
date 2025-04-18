@@ -49,6 +49,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
+import org.openide.util.Lookup;
 import org.openide.util.Utilities;
 
 /**
@@ -616,7 +617,10 @@ public class CompletionLayoutPopup {
     
     private void pasteContent() throws HeadlessException {
         Transferable transferable = layout.getSelectedValue().getTransferable();
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        Clipboard clipboard = Lookup.getDefault().lookup(Clipboard.class);
+        if (clipboard == null) {
+            clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        }
         if (transferable != null) {
             clipboard.setContents(transferable, layout.getSelectedValue());
         } else {

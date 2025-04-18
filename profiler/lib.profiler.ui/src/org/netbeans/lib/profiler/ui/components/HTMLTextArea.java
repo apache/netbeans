@@ -51,6 +51,7 @@ import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.HTMLWriter;
 import org.netbeans.lib.profiler.ui.UIUtils;
+import org.openide.util.Lookup;
 
 
 /**
@@ -116,7 +117,11 @@ public class HTMLTextArea extends JEditorPane implements HyperlinkListener {
     private class HTMLTextAreaTransferHandler extends TransferHandler {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
-        public void exportToClipboard(JComponent comp, Clipboard clip, int action) {
+        public void exportToClipboard(JComponent comp, Clipboard baseClipboard, int action) {
+            Clipboard clip = Lookup.getDefault().lookup(Clipboard.class);
+            if (clip == null) {
+                clip = baseClipboard;
+            }
             try {
                 int selStart = getSelectionStart();
                 int selLength = getSelectionEnd() - selStart;

@@ -80,6 +80,7 @@ import org.openide.loaders.DataObject;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
+import org.openide.util.Lookup;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
@@ -176,7 +177,6 @@ public final class JPQLEditorTopComponent extends TopComponent {
         private final String COPY_COMMAND = NbBundle.getMessage(JPQLEditorTopComponent.class, "CTL_COPY_COMMAND");
         private final String PASTE_COMMAND = NbBundle.getMessage(JPQLEditorTopComponent.class, "CTL_PASTE_COMMAND");
         private final String SELECT_ALL_COMMAND = NbBundle.getMessage(JPQLEditorTopComponent.class, "CTL_SELECT_ALL_COMMAND");
-        private Clipboard systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
         public JPQLEditorPopupMouseAdapter() {
             super();
@@ -230,7 +230,7 @@ public final class JPQLEditorTopComponent extends TopComponent {
                 copyMenuItem.setEnabled(true);
             }
 
-            Transferable transferable = (Transferable) systemClipboard.getContents(null);
+            Transferable transferable = getClipboard().getContents(null);
             if (transferable.getTransferDataFlavors().length == 0) {
                 pasteMenuItem.setEnabled(false);
             } else {
@@ -251,17 +251,17 @@ public final class JPQLEditorTopComponent extends TopComponent {
                     jpqlEditor.selectAll();
                 } else if (e.getActionCommand().equals(CUT_COMMAND)) {
                     StringSelection stringSelection = new StringSelection(jpqlEditor.getSelectedText());
-                    systemClipboard.setContents(stringSelection, stringSelection);
+                    getClipboard().setContents(stringSelection, stringSelection);
                     jpqlEditor.setText(
                             jpqlEditor.getText().substring(0, jpqlEditor.getSelectionStart())
                             + jpqlEditor.getText().substring(jpqlEditor.getSelectionEnd()));
 
                 } else if (e.getActionCommand().equals(COPY_COMMAND)) {
                     StringSelection stringSelection = new StringSelection(jpqlEditor.getSelectedText());
-                    systemClipboard.setContents(stringSelection, stringSelection);
+                    getClipboard().setContents(stringSelection, stringSelection);
 
                 } else if (e.getActionCommand().equals(PASTE_COMMAND)) {
-                    Transferable transferable = (Transferable) systemClipboard.getContents(null);
+                    Transferable transferable = getClipboard().getContents(null);
                     String clipboardContents = "";
                     try {
                         if (transferable.isDataFlavorSupported(DataFlavor.stringFlavor)) {
@@ -952,5 +952,13 @@ private void runJPQLButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 //
             }
         }
+    }
+
+    private Clipboard getClipboard() {
+        Clipboard c = Lookup.getDefault().lookup(Clipboard.class);
+        if (c == null) {
+            c = Toolkit.getDefaultToolkit().getSystemClipboard();
+        }
+        return c;
     }
 }

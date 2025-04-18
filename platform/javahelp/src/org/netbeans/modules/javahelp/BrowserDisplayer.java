@@ -25,6 +25,7 @@ import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionListener;
@@ -47,6 +48,7 @@ import java.net.URL;
 import javax.swing.JPopupMenu;
 import org.netbeans.modules.javahelp.CopyLinkLocationAction.LinkOwner;
 import org.openide.awt.HtmlBrowser;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 /**
@@ -533,8 +535,15 @@ public class BrowserDisplayer extends JButton
         return getContent();
     }
 
+    @Override
     public Clipboard getClipboard() {
-        return this.getToolkit().getSystemClipboard();
+        Clipboard c = Lookup.getDefault().lookup(Clipboard.class);
+
+        if (c == null) {
+            c = Toolkit.getDefaultToolkit().getSystemClipboard();
+        }
+
+        return c;
     }
 
     public void lostOwnership(Clipboard clipboard, Transferable contents) {

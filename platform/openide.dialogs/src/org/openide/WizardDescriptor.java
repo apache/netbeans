@@ -3240,7 +3240,12 @@ public class WizardDescriptor extends DialogDescriptor {
                         pm.add(new AbstractAction(NbBundle.getMessage(WizardDescriptor.class, "Lbl_CopyToClipboard")) { //NOI18N
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+                                Clipboard c = Lookup.getDefault().lookup(Clipboard.class);
+
+                                if (c == null) {
+                                    c = Toolkit.getDefaultToolkit().getSystemClipboard();
+                                }
+
                                 c.setContents(new StringSelection(getToolTipText()), null);
                             }
                         });

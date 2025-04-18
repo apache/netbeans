@@ -62,6 +62,7 @@ import org.netbeans.modules.db.dataview.table.ResultSetTableModel;
 import org.netbeans.modules.db.dataview.util.DBReadWriteHelper;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import org.openide.windows.WindowManager;
@@ -539,7 +540,6 @@ private void removeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         } else if (KeyStroke.getKeyStrokeForEvent(e).equals(tab)) {
         }
     }
-    private Clipboard clipBoard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
     private void copy() {
         StringBuilder strBuffer = new StringBuilder();
@@ -562,15 +562,22 @@ private void removeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
             strBuffer.append("\n");
         }
         StringSelection stringSelection = new StringSelection(strBuffer.toString());
-        clipBoard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        clipBoard.setContents(stringSelection, stringSelection);
+        Clipboard clipboard = Lookup.getDefault().lookup(Clipboard.class);
+        if (clipboard == null) {
+            clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        }
+        clipboard.setContents(stringSelection, stringSelection);
     }
 
     private void paste() {
         int startRow = (insertRecordTableUI.getSelectedRows())[0];
         int startCol = (insertRecordTableUI.getSelectedColumns())[0];
         try {
-            String trstring = (String) (clipBoard.getContents(this).getTransferData(DataFlavor.stringFlavor));
+            Clipboard clipboard = Lookup.getDefault().lookup(Clipboard.class);
+            if (clipboard == null) {
+                clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            }
+            String trstring = (String) (clipboard.getContents(this).getTransferData(DataFlavor.stringFlavor));
             StringTokenizer st1 = new StringTokenizer(trstring, "\n");
             for (int i = 0; st1.hasMoreTokens(); i++) {
                 int rowIdx = startRow + i;

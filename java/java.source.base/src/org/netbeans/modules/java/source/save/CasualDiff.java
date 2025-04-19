@@ -1208,13 +1208,13 @@ public class CasualDiff {
                 }
             }
         }
-        try {
-            System.err.println("CD print REAL MEMBER " + filteredNewTDefs + "/REAL MEMBER");
-        } catch (Throwable ignored) {
-        }
-        System.err.println("CD before " + printer.toString() + "/before");
+//        try {
+////            System.err.println("CD print REAL MEMBER " + filteredNewTDefs + "/REAL MEMBER");
+//        } catch (Throwable ignored) {
+//        }
+//        System.err.println("CD before " + printer.toString() + "/before");
         localPointer = diffList(filteredOldTDefs, filteredNewTDefs, insertHint, est, Measure.REAL_MEMBER, printer);
-        System.err.println("CD after " + printer.toString() + "/after");
+//        System.err.println("CD after " + printer.toString() + "/after");
         printer.enclClass = origClass;
         origClassName = origOuterClassName;
         newClassName = newOuterClassName;
@@ -3522,9 +3522,9 @@ public class CasualDiff {
         List<? extends JCTree> oldList, List<? extends JCTree> newList,
         int initialPos, PositionEstimator estimator)
     {
-        System.err.println("CD diff2List old="+oldList+" new="+ newList+" init pos="+initialPos);
-        showCopyTo("CD diffList tail", initialPos, origText.length());
-        System.err.println("CD diffList printed sofar/\n"+ printer.toString()+"\n/sofar");
+//        System.err.println("CD diff2List old="+oldList+" new="+ newList+" init pos="+initialPos);
+//        showCopyTo("CD diffList tail", initialPos, origText.length());
+//        System.err.println("CD diffList printed sofar/\n"+ printer.toString()+"\n/sofar");
         if (oldList == newList)
             return initialPos;
         assert oldList != null && newList != null;
@@ -6270,16 +6270,16 @@ public class CasualDiff {
         return copyUpTo(from, to, printer);
     }
 
-    boolean showCopTo=true;
+    boolean showCopyTo=false;
     /**
-     * Prints the part of origText between start  and end.
+     * Prints the part of origText between start and end.
      * For debugging only.
      * @param prefix text to put in front
      * @param start of the sub string
      * @param end of the sub string
      */
     void showCopyTo(String prefix, int start, int end) {
-        if (showCopTo && start<= end) {
+        if (showCopyTo && start<= end) {
             System.err.println(prefix + " start "+start
                     + " end "+end
                             + " '" + origText.substring(start, end)+"'");
@@ -6288,11 +6288,15 @@ public class CasualDiff {
 
     /**
      * Show bounds in origText.
+     * For debugging only.
+     * If origText="Hello World"; and start=3 and end = 5 then
+     * printed to stderr is msg+" '\"Hel<lo> World\"'";
      * @param msg prefix
-     * @param start
-     * @param end
+     * @param start of text
+     * @param end of text
      */
     void showOrigAdvance(String msg, int start, int end) {
+        if (!showCopyTo) return;
         if (start< 0) start=0;
         if (end < start) end=start;
         String s1= origText.substring(0, start);

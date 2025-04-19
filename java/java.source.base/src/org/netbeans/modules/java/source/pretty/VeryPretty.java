@@ -888,7 +888,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	    print(tree.name);
 	    printTypeParameters(tree.typarams);
             if ((flags & RECORD) != 0) {
-                System.err.println("VP printing record params");
+//                System.err.println("VP printing record params");
                 print("(");
                 List<JCVariableDecl> components =
                         List.from(tree.defs

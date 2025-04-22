@@ -83,6 +83,11 @@ let debugPort: number = -1;
 let consoleLog: boolean = !!process.env['ENABLE_CONSOLE_LOG'];
 let specifiedJDKWarned : string[] = [];
 
+type DebugConsoleListener = {
+    callback: (output: string) => void;
+}
+export let debugConsoleListeners: DebugConsoleListener[] = [];
+
 export class NbLanguageClient extends LanguageClient {
     private _treeViewService: TreeViewService;
 
@@ -116,6 +121,10 @@ function handleLogNoNL(log: vscode.OutputChannel, msg: string): void {
     if (consoleLog) {
         process.stdout.write(msg);
     }
+}
+
+export function clearDebugConsoleListeners() {
+    debugConsoleListeners = [];
 }
 
 export function enableConsoleLog() {
@@ -785,6 +794,24 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             throw `Client ${c} doesn't support go to test`;
         }
     }));
+
+    const trackerFactory: vscode.DebugAdapterTrackerFactory = {
+        createDebugAdapterTracker(_session: vscode.DebugSession) {
+            return {
+                onDidSendMessage: (message) => {
+                    if (message.type === "event" && message.event === "output") {
+                        const output = message.body.output;
+                        debugConsoleListeners.forEach((listener) => {
+                            listener?.callback(output);
+                        });
+                    }
+                }
+            };
+        }
+    };
+
+    context.subscriptions.push(vscode.debug.registerDebugAdapterTrackerFactory("*", trackerFactory));
+
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.workspace.compile', () =>
         wrapCommandWithProgress(COMMAND_PREFIX + '.build.workspace', 'Compiling workspace...', log, true)
     ));
@@ -936,7 +963,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
                 debugConfig['projects'] = projects;
             }
 
-            const ret = await vscode.debug.startDebugging(workspaceFolder, debugConfig, debugOptions);
+            const ret = await vscode.debug.startDebugging(workspaceFolder, debugConfig, debugOptions);     
             return ret ? new Promise((resolve) => {
                 const listener = vscode.debug.onDidTerminateDebugSession(() => {
                     listener.dispose();

@@ -346,6 +346,17 @@ public class ParserTest {
         assertParses(12, false, true, "function dummy() {await Promise.resolve(1);}");
     }
 
+    @Test
+    public void testAsyncGenerator() {
+        assertParsesNot(8, "class Demo {\nasync * generator() {\nyield i;\nyield i + 10;\n}\n}");
+        assertParses("class Demo {\nasync * generator() {\nyield 1;\nyield 1 + 10;\n}\n}");
+        assertParses("class Demo {\nasync * generator(i) {\nyield i;\nyield i + 10;\n}\n}");
+        assertParsesNot(8, "class Demo {\nasync * [Symbol.asyncIterator]() {\nyield i;\nyield i + 10;\n}\n}");
+        assertParses("class Demo {\nasync * [Symbol.asyncIterator]() {\nyield 1;\nyield 1 + 10;\n}\n}");
+        assertParses("class Demo {\nasync * [Symbol.asyncIterator](i) {\nyield i;\nyield i + 10;\n}\n}");
+        assertParses("class Demo {\nasync * [Symbol.asyncIterator]() {\nyield await this.next();\n}\n}");
+    }
+
     private Predicate<Node> functionNodeWithName(String name) {
         return n -> n instanceof FunctionNode && name.equals(((FunctionNode) n).getName());
     }

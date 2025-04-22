@@ -1406,23 +1406,24 @@ public class PullUpTest extends RefactoringTestBase {
                 """
                 package pullup;
                 public class A extends B {
-                    record R( int i, String name ) implements Cloneable {}
+                    record R( int age, String name ) {}
                     private void foo() {
                     }
                     private void method(R r) {
                         foo();
                     }
-                 }"""
+                }
+                """
                 ),
                 new File("pullup/B.java",
                 """
                 package pullup;
-                public class B { }
+                public class B {}
                 """
                 )
         );
         String asText = src.getFileObject("pullup/A.java").asText();
-        System.out.println("asText = " + asText);
+//        System.out.println("asText = " + asText);
         performPullUp(src.getFileObject("pullup/A.java"), 1, Boolean.FALSE);
         verifyContent(src,
                 new File("pullup/A.java",
@@ -1434,14 +1435,14 @@ public class PullUpTest extends RefactoringTestBase {
                     private void method(R r) {
                         foo();
                     }
-                 }"""
+                }"""
                 ),
                 new File("pullup/B.java",
                 """
                 package pullup;
                 public class B {
 
-                    record R(int i, String name) implements Cloneable {
+                    record R(int age, String name) {
                     }
                 }
                 """
@@ -1545,7 +1546,7 @@ public class PullUpTest extends RefactoringTestBase {
                 CompilationUnitTree cut = info.getCompilationUnit();
 
                 final ClassTree classTree = (ClassTree) cut.getTypeDecls().get(0);
-                System.err.println("compiled to classTree = " + classTree);
+//                System.err.println("compiled to classTree = " + classTree);
                 final TreePath classPath = info.getTrees().getPath(cut, classTree);
                 TypeElement classEl = (TypeElement) info.getTrees().getElement(classPath);
 

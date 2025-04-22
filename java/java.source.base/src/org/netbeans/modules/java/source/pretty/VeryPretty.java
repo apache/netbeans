@@ -1038,8 +1038,9 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                 if ((tree.mods.flags & Flags.COMPACT_RECORD_CONSTRUCTOR) != 0L) {
                     ListBuffer<JCStatement> nstats= new ListBuffer<>();
                     for (JCStatement stat : stats) {
-                        if (!stat.toString().contains("super();")){}
-                        nstats.append(stat);
+                        if (!stat.toString().contains("super();")){
+                            nstats.append(stat);
+                        }
                     }
                     stats=nstats.toList();
 //                    stats=nstats;

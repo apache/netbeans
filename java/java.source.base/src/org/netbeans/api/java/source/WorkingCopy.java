@@ -893,7 +893,6 @@ public class WorkingCopy extends CompilationController {
             final Tree brandNew = itt.translate(path.getLeaf());
 
             //tagging debug
-            //System.err.println("brandNew=" + brandNew);
             new CommentReplicator(presentInResult.keySet()).process(diffContext.origUnit);
             addCommentsToContext(diffContext);
             for (ClassTree ct : classes) {

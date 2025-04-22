@@ -1276,7 +1276,6 @@ public class Reformatter implements ReformatTask {
         }
 
         private Boolean scanRecord(ClassTree node, Void p) {
-//            System.err.println("REF scanRecord "+node+"/scan");
             boolean old = continuationIndent;
             int oldIndent = indent;
             try {

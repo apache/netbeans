@@ -436,7 +436,6 @@ public class RenameTransformer extends RefactoringVisitor {
     
     private void renameDeclIfMatch(TreePath path, Tree tree, Element elementToFind) {
         if (JavaPluginUtils.isSyntheticPath(workingCopy, path) || (handle != null && handle.getKind() == Tree.Kind.LABELED_STATEMENT)) {
-            System.err.println("RT rename rejected for path "+path.getLeaf());
             return;
         }
 

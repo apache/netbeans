@@ -23,6 +23,7 @@ import com.sun.source.doctree.DocTree;
 import static com.sun.source.doctree.DocTree.Kind.RETURN;
 import com.sun.source.tree.*;
 import com.sun.source.tree.Tree.Kind;
+import static com.sun.source.tree.Tree.Kind.RECORD;
 import com.sun.source.util.DocSourcePositions;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
@@ -144,6 +145,7 @@ import java.util.Map.Entry;
 import static java.util.logging.Level.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toCollection;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -176,7 +178,6 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbCollections;
 import javax.lang.model.type.TypeKind;
-import org.netbeans.api.java.source.RecordUtils;
 import org.netbeans.modules.java.source.transform.TreeHelpers;
 
 public class CasualDiff {
@@ -1023,8 +1024,6 @@ public class CasualDiff {
                 ComponentsAndOtherMembers newParts = splitOutRecordComponents(filteredNewTDefs, newT);
                 List<JCVariableDecl> oldCanonicalParameters = oldParts.canonicalParameters();
                 List<JCVariableDecl> newCanonicalParameters = newParts.canonicalParameters();
-//            System.err.println("CD oldT "+oldT);
-//            System.err.println("CD newT "+newT);
                 int posHint;
                 if (oldCanonicalParameters.isEmpty()) {
                     // compute the position. Find the parameters closing ')', its
@@ -1086,7 +1085,6 @@ public class CasualDiff {
                         break;
                 }
             }
-            showOrigAdvance("CD advance before implements", localPointer, insertHint);
             { // consider implements
                 // TODO (#pf): there is some space for optimization. If the new list
                 // is also empty, we can skip this computation.
@@ -1108,23 +1106,18 @@ public class CasualDiff {
                     // diffing mechanism will solve the implements keyword.
                     insertHint = oldT.implementing.iterator().next().getStartPosition();
                 }
-                showOrigAdvance("CD advance before implements 1", localPointer, insertHint);
                 long flags = oldT.sym != null ? oldT.sym.flags() : oldT.mods.flags;
                 PositionEstimator estimator = (flags & INTERFACE) == 0
                         ? EstimatorFactory.implementz(oldT.getImplementsClause(), newT.getImplementsClause(), diffContext)
                         : EstimatorFactory.extendz(oldT.getImplementsClause(), newT.getImplementsClause(), diffContext);
                 if (!newT.implementing.isEmpty()) {
-                    showCopyTo("CD  implementing", localPointer,insertHint);
                     if (oldT.implementing.nonEmpty()) copyTo(localPointer, insertHint);
                     localPointer = diffList2(oldT.implementing, newT.implementing, insertHint, estimator);
-//                    printer.wrapTrees(newT.implementing,printer.getIndent());
                 }
                 if ((newT.mods.flags & Flags.RECORD) !=0) {
                     printer.print(" {");
                     int moveFwdToToken = moveFwdToToken(tokenSequence, NOPOS, JavaTokenId.LBRACE );
                     localPointer= moveFwdToToken+tokenSequence.token().length();
-                    // implements is the last part before {
-                    showOrigAdvance("CD after open curly ", localPointer, insertHint);
                 }
             }
             if ((newT.mods.flags & (Flags.RECORD | Flags.ENUM))==0 )
@@ -1208,13 +1201,7 @@ public class CasualDiff {
                 }
             }
         }
-//        try {
-////            System.err.println("CD print REAL MEMBER " + filteredNewTDefs + "/REAL MEMBER");
-//        } catch (Throwable ignored) {
-//        }
-//        System.err.println("CD before " + printer.toString() + "/before");
         localPointer = diffList(filteredOldTDefs, filteredNewTDefs, insertHint, est, Measure.REAL_MEMBER, printer);
-//        System.err.println("CD after " + printer.toString() + "/after");
         printer.enclClass = origClass;
         origClassName = origOuterClassName;
         newClassName = newOuterClassName;
@@ -1234,8 +1221,9 @@ public class CasualDiff {
         ListBuffer<JCTree> filteredDefs = new ListBuffer<>();
         JCModifiers mods = make.Modifiers(0L);
         for (JCTree t : defs) {
-            if (t.getKind() == Kind.VARIABLE &&
-                (((JCVariableDecl) t).mods.flags & RECORD) != 0) {
+            if (t.getKind() == Kind.VARIABLE
+                    && t instanceof JCVariableDecl jvd
+                    && (jvd.mods.flags & Flags.RECORD) != 0) {
                 JCVariableDecl vt =(JCVariableDecl) t;
                 JCVariableDecl nt = make.VarDef(mods, vt.name, vt.vartype, null);
                 components.add(nt);
@@ -1243,7 +1231,7 @@ public class CasualDiff {
                 filteredDefs.add(t);
             }
         }
-        List<JCVariableDecl> canonicalParameters = RecordUtils.canonicalParameters(recordTree, make);
+        List<JCVariableDecl> canonicalParameters = canonicalParameters(recordTree, make);
 //        int compCount= components.size();
 //        List<JCVariableDecl> params = recordTree.getMembers().stream()
 //                .filter(t -> t.getKind() == Kind.METHOD && ((JCMethodDecl) t).getReturnType()==null)
@@ -1267,12 +1255,118 @@ public class CasualDiff {
                                              filteredDefs.toList(), canonicalParameters);
     }
 
+     /**
+     * A member is a normal field when not a class, (or enum ...) not a method
+     * and not static. For record that should be a record component then.
+     *
+     * @param t
+     * @return true if fields of the class/record are of same amount, order and
+     * types
+     */
+    public static boolean isRecordComponent(JCTree t) {
+        return (t instanceof JCTree.JCVariableDecl vt && ((vt.mods.flags & com.sun.tools.javac.code.Flags.RECORD) != 0));
+    }
+
+    /**
+     * Get the components of a record.
+     *
+     * @param record to search
+     * @return the components as list
+     */
+    private static List<JCTree.JCVariableDecl> components(ClassTree record) {
+
+        List<JCTree.JCVariableDecl> result = record.getMembers()
+                .stream()
+                .filter(m -> m.getKind() == Kind.VARIABLE)
+                .map(JCTree.JCVariableDecl.class::cast)
+                .filter(v -> (v.mods.flags & Flags.RECORD) != 0)
+                .toList();
+        return result;
+    }
+
+    /**
+     * Count the record components of a record.
+     *
+     * @param record to be counted for its components.
+     * @return the count
+     */
+    private static int countComponents(ClassTree record) {
+        return components(record).size();
+    }
+
+    /**
+     * Get the canonical parameters of a record.
+     *
+     * Implementation detail: The method scans the tree and looks for a
+     * constructor with a matching signature. returns 0 if not a record or no
+     * constructor found.
+     *
+     * @param record tree presenting the record
+     * @return the list of fields as declared in the record header.
+     */
+    private static List<JCTree.JCVariableDecl> canonicalParameters(JCTree.JCClassDecl record) {
+        if (record.getKind() != RECORD) {
+            System.err.println("RU not a record");
+            return List.of();
+        }
+        int cCount=countComponents(record);
+        List<JCTree.JCVariableDecl> result = record.getMembers().stream()
+                .filter(m -> m.getKind() == Kind.METHOD)
+                .map(JCTree.JCMethodDecl.class::cast)
+                .filter(met -> met.getReturnType() == null)
+                .filter(ctor -> (ctor.mods.flags & com.sun.tools.javac.code.Flags.RECORD) != 0
+                        || (ctor.mods.flags & com.sun.tools.javac.code.Flags.COMPACT_RECORD_CONSTRUCTOR) != 0
+                        || (ctor.params.size() == cCount))
+                .findFirst().stream()
+                .flatMap(mt -> ((JCTree.JCMethodDecl) mt).getParameters().stream())
+                .collect(toCollection(ArrayList::new));
+        return result;
+    }
+
+    /**
+     * Get the canonical parameters of a record.Implementation detail: The
+     * method scans the tree and looks for a constructor with a matching
+     * signature. returns 0 if not a record or no constructor found.
+     *
+     * @param aRecord tree presenting the record
+     * @param make to fix names
+     * @return the list of fields as declared in the record header.
+     */
+    private static List<JCTree.JCVariableDecl> canonicalParameters(JCTree.JCClassDecl aRecord, com.sun.tools.javac.tree.TreeMaker make) {
+        // get the names of the RecordComponents
+        LinkedHashSet<Name> expectedNames = aRecord.getMembers().stream()
+                .filter(CasualDiff::isRecordComponent)
+                .map(JCTree.JCVariableDecl.class::cast)
+                .map(vt -> vt.name)
+                .collect(toCollection(LinkedHashSet::new));
+
+        // get the constructor that has the expected parameters.
+        List<JCTree.JCVariableDecl> result = canonicalParameters(aRecord);
+
+        // apply possible rename, since we pick the canonical parameters from a most likely
+        // synthetic (canoniocal) constructor;
+        var itr = expectedNames.iterator();
+        for (int i = 0; i < result.size(); i++) {
+            JCTree.JCVariableDecl vt = result.get(i);
+            JCTree.JCExpression initializer = vt.init;
+            JCModifiers mods = vt.mods;
+            JCTree.JCExpression type = vt.vartype;
+            Name name = itr.next();
+            if (!name.toString().equals(vt.getName().toString())) { // only replace if needed
+                JCTree.JCVariableDecl newVar = make.VarDef(mods, name, type, initializer);
+                result.set(i, newVar);
+            }
+        }
+
+        return result;
+    }
+
     record ComponentsAndOtherMembers(List<JCVariableDecl> components, List<JCTree> defs, List<JCVariableDecl> canonicalParameters) {}
 
     /**
      * When the enumeration contains just methods, it is necessary to precede them with single ;. If a constant is
      * inserted, it must be inserted first; and the semicolon should be removed. This method will attempt to remove entire
-     * lines of whitespace around the semicolon. Preceding or following comments are preserved.
+     * lines of white-space around the semicolon. Preceding or following comments are preserved.
      *
      * @param insertHint the local Pointer value
      * @return new localPointer value
@@ -1347,7 +1441,6 @@ public class CasualDiff {
     }
 
     protected int diffMethodDef(JCMethodDecl oldT, JCMethodDecl newT, int[] bounds) {
-//        System.err.println("CD methodDiff newT "+newT);
         JCExpression oldRestype = oldT.name != names.init ? oldT.restype : null;
         JCExpression newRestype = newT.name != names.init ? newT.restype : null;
 
@@ -3522,9 +3615,6 @@ public class CasualDiff {
         List<? extends JCTree> oldList, List<? extends JCTree> newList,
         int initialPos, PositionEstimator estimator)
     {
-//        System.err.println("CD diff2List old="+oldList+" new="+ newList+" init pos="+initialPos);
-//        showCopyTo("CD diffList tail", initialPos, origText.length());
-//        System.err.println("CD diffList printed sofar/\n"+ printer.toString()+"\n/sofar");
         if (oldList == newList)
             return initialPos;
         assert oldList != null && newList != null;
@@ -4319,7 +4409,6 @@ public class CasualDiff {
                 Name name = printer.fullName(((JCImport)item.element).qualid);
                 group = (name != null ? importGroups.getGroupId(name.toString(), ((JCImport)item.element).staticImport) : -1);
             }
-//            System.err.println("CD diffList op "+item.operation+" item/"+item+"/item");
             switch (item.operation) {
                 case MODIFY: {
                     lastGroup = group;
@@ -5680,9 +5769,6 @@ public class CasualDiff {
         int predComments = diffPrecedingComments(oldT, newT, getOldPos(oldT), elementBounds[0],
                 oldT.getTag() == Tag.TOPLEVEL && diffContext.forceInitialComment);
         int retVal = -1;
-//        if (predComments < 0 && elementBounds[0] < -predComments) {
-//            copyTo(elementBounds[0], -predComments);
-//        }
         elementBounds[0] = Math.abs(predComments);
         int elementEnd = elementBounds[1];
         int commentsStart = Math.min(commentStart(diffContext, comments.getComments(oldT), CommentSet.RelativePosition.INLINE, endPos(oldT)), commentStart(diffContext, comments.getComments(oldT), CommentSet.RelativePosition.TRAILING, endPos(oldT)));
@@ -5694,7 +5780,6 @@ public class CasualDiff {
                     (lastIndex = tokenSequence.token().text().toString().lastIndexOf('\n')) > -1 ?
                     tokenSequence.offset() + lastIndex + 1 : commentsStart;
         }
-//        System.err.println("CD diffTreeImpl0 tag "+ oldT.getTag()+"/tag, tree "+ oldT.toString()+"/tree" );
         switch (oldT.getTag()) {
           case TOPLEVEL:
               diffTopLevel((JCCompilationUnit)oldT, (JCCompilationUnit)newT, elementBounds);
@@ -6268,42 +6353,6 @@ public class CasualDiff {
 
     private int copyUpTo(int from, int to) {
         return copyUpTo(from, to, printer);
-    }
-
-    boolean showCopyTo=false;
-    /**
-     * Prints the part of origText between start and end.
-     * For debugging only.
-     * @param prefix text to put in front
-     * @param start of the sub string
-     * @param end of the sub string
-     */
-    void showCopyTo(String prefix, int start, int end) {
-        if (showCopyTo && start<= end) {
-            System.err.println(prefix + " start "+start
-                    + " end "+end
-                            + " '" + origText.substring(start, end)+"'");
-        }
-    }
-
-    /**
-     * Show bounds in origText.
-     * For debugging only.
-     * If origText="Hello World"; and start=3 and end = 5 then
-     * printed to stderr is msg+" '\"Hel<lo> World\"'";
-     * @param msg prefix
-     * @param start of text
-     * @param end of text
-     */
-    void showOrigAdvance(String msg, int start, int end) {
-        if (!showCopyTo) return;
-        if (start< 0) start=0;
-        if (end < start) end=start;
-        String s1= origText.substring(0, start);
-        String s2= origText.substring(start, end);
-        String s3= origText.substring(end);
-
-        System.err.println(msg+ " '"+s1+"<"+s2+">"+s3+"'");
     }
 
     private void copyTo(int from, int to) {

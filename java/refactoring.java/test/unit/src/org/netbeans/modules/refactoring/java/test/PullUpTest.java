@@ -1546,7 +1546,6 @@ public class PullUpTest extends RefactoringTestBase {
                 CompilationUnitTree cut = info.getCompilationUnit();
 
                 final ClassTree classTree = (ClassTree) cut.getTypeDecls().get(0);
-//                System.err.println("compiled to classTree = " + classTree);
                 final TreePath classPath = info.getTrees().getPath(cut, classTree);
                 TypeElement classEl = (TypeElement) info.getTrees().getElement(classPath);
 

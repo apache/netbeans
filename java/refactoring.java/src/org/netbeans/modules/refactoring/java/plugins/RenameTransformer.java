@@ -397,6 +397,7 @@ public class RenameTransformer extends RefactoringVisitor {
         return super.visitMethod(tree, p);
     }
 
+    private boolean isRecordClass=false;
     @Override
     public Tree visitClass(ClassTree tree, final Element p) {
         final TreePath currentPath = getCurrentPath();

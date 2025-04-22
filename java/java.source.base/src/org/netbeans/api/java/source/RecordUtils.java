@@ -160,7 +160,7 @@ public class RecordUtils {
                 .filter(m -> m.getKind() == Kind.METHOD)
                 .map(JCTree.JCMethodDecl.class::cast)
                 .filter(met -> met.getReturnType() == null)
-                .peek(ctor->System.err.println("RU flags "+Long.toHexString(ctor.mods.flags)+ " <ctor>"+ctor+"</ctor>"))
+                .peek(ctor->System.err.println("RU flags "+FlagsMap.toString(ctor.mods.flags)+ " <ctor>"+ctor+"</ctor>"))
                 .filter(ctor -> (ctor.mods.flags & com.sun.tools.javac.code.Flags.RECORD) != 0
                         || (ctor.mods.flags & com.sun.tools.javac.code.Flags.COMPACT_RECORD_CONSTRUCTOR) != 0
                         || (ctor.params.size() == RecordUtils.countComponents(record)))

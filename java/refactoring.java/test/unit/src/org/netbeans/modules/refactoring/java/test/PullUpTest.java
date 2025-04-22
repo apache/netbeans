@@ -1399,7 +1399,7 @@ public class PullUpTest extends RefactoringTestBase {
     }
 
     // disable because implements part is broken
-    public void _testPullUpInnerRecord() throws Exception {
+    public void testPullUpInnerRecord() throws Exception {
         sideBySideCompare=true;
         writeFilesAndWaitForScan(src,
                 new File("pullup/A.java",

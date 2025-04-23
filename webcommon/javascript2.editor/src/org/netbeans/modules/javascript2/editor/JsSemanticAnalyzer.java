@@ -402,11 +402,11 @@ public class JsSemanticAnalyzer extends SemanticAnalyzer<JsParserResult> {
 
             @Override
             public boolean enterVarNode(VarNode varNode) {
-                if (varNode.isLet()) {
+                if (varNode.isLet() || varNode.isConst()) {
                     TokenSequence<? extends JsTokenId> ts = LexUtilities.getJsPositionedSequence(result.getSnapshot(), varNode.getStart() - 1);
                     if (ts != null) {
                         Token<? extends JsTokenId> token = LexUtilities.findPreviousNonWsNonComment(ts);
-                        if (token != null && token.id() == JsTokenId.RESERVED_LET) {
+                        if (token != null && (token.id() == JsTokenId.RESERVED_LET || token.id() == JsTokenId.KEYWORD_CONST)) {
                             highlights.put(LexUtilities.getLexerOffsets(result,
                                     new OffsetRange(ts.offset(), ts.offset() + token.length())), SEMANTIC_KEYWORD);
                         }

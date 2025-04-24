@@ -952,7 +952,6 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
      * @return the canonical parameters for the record
      */
     private List<JCVariableDecl> getRecordComponents(JCClassDecl tree) {
-        System.err.println("VP getRecordComponents");
         List<JCVariableDecl> components
                 = List.from(tree.defs
                         .stream()

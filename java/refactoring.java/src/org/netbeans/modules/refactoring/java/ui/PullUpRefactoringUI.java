@@ -314,6 +314,7 @@ public class PullUpRefactoringUI implements RefactoringUI, JavaRefactoringUIFact
                 case ANNOTATION_TYPE:
                 case CLASS:
                 case ENUM:
+                case RECORD:
                 case INTERFACE:
                 case NEW_CLASS:
                 case METHOD:

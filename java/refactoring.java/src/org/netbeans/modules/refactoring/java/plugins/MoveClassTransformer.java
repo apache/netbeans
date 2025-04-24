@@ -244,6 +244,14 @@ public class MoveClassTransformer extends RefactoringVisitor {
                                     newClass.getImplementsClause(),
                                     newClass.getMembers());
                             break;
+                        case RECORD:
+                            newClass = make.Record(
+                                    make.Modifiers(flags, modifiers.getAnnotations()),
+                                    newClass.getSimpleName(),
+                                    newClass.getTypeParameters(),
+                                    newClass.getImplementsClause(),
+                                    newClass.getMembers());
+                            break;
                         case ANNOTATION_TYPE:
                             newClass = make.AnnotationType(
                                     make.Modifiers(flags, modifiers.getAnnotations()),

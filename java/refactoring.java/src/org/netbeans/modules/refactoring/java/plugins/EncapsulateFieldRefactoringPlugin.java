@@ -1174,7 +1174,7 @@ public final class EncapsulateFieldRefactoringPlugin extends JavaRefactoringPlug
                     case COMPILATION_UNIT:
                     case ANNOTATION_TYPE:
                     case CLASS:
-                    case ENUM:
+                    case RECORD:
                     case INTERFACE:
                     case NEW_CLASS:
                         return false;
@@ -1209,6 +1209,7 @@ public final class EncapsulateFieldRefactoringPlugin extends JavaRefactoringPlug
                     case ANNOTATION_TYPE:
                     case CLASS:
                     case ENUM:
+                    case RECORD:
                     case INTERFACE:
                     case NEW_CLASS:
                         return false;

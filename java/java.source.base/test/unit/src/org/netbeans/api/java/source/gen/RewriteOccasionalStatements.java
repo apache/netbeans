@@ -252,6 +252,13 @@ public class RewriteOccasionalStatements extends GeneratorTestBase {
                             classTree.getSimpleName(),
                             impls2Add,
                             members2Add);
+                } else if (clazz.getKind() == ElementKind.RECORD) {
+                    nc = maker.Record(
+                            classTree.getModifiers(),
+                            classTree.getSimpleName(),
+                            classTree.getTypeParameters(),
+                            impls2Add,
+                            members2Add);
                 } else {
                     throw new IllegalStateException(classTree.toString());
                 }
@@ -316,6 +323,13 @@ public class RewriteOccasionalStatements extends GeneratorTestBase {
                             classTree.getSimpleName(),
                             impls2Add,
                             members2Add);
+                } else if (clazz.getKind() == ElementKind.RECORD) {
+                    nc = maker.Record(
+                            classTree.getModifiers(),
+                            classTree.getSimpleName(),
+                            classTree.getTypeParameters(),
+                            impls2Add,
+                            members2Add);
                 } else {
                     throw new IllegalStateException(classTree.toString());
                 }
@@ -378,6 +392,13 @@ public class RewriteOccasionalStatements extends GeneratorTestBase {
                     nc = maker.Enum(
                             classTree.getModifiers(),
                             classTree.getSimpleName(),
+                            impls2Add,
+                            members2Add);
+                } else if (clazz.getKind() == ElementKind.RECORD) {
+                    nc = maker.Record(
+                            classTree.getModifiers(),
+                            classTree.getSimpleName(),
+                            classTree.getTypeParameters(),
                             impls2Add,
                             members2Add);
                 } else {

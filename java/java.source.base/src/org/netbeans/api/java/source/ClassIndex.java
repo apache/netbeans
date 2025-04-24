@@ -862,6 +862,7 @@ public final class ClassIndex {
                             result.add(ClassIndexImpl.UsageType.SUPER_CLASS);
                             break;
                         case ENUM:
+                        case RECORD:
                             result.add(ClassIndexImpl.UsageType.SUPER_CLASS);
                             break;
                         case OTHER:

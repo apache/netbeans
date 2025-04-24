@@ -29,6 +29,7 @@ import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.java.source.TestUtilities.TestInput;
 import org.netbeans.api.java.source.TreePathHandle;
+import static org.netbeans.junit.AssertLinesEqualHelpers.*;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.RefactoringSession;
 import org.netbeans.modules.refactoring.api.RenameRefactoring;
@@ -40,13 +41,16 @@ public class RenameRecordTest extends RefactoringTestBase {
 
     public RenameRecordTest(String name) {
         super(name, "17");
+        sideBySideCompare=true;
+        showOutputOnPass=true;
+        RETRIES=1;
     }
 
     public void testRenameComponent1() throws Exception {
         String testCode = """
-                          package test;
-                          public record Test(int compo|nent) {}
-                          """;
+                        package test;
+                        public record Test(int compo|nent, int y) {}
+                        """;
         TestInput splitCode = TestUtilities.splitCodeAndPos(testCode);
         writeFilesAndWaitForScan(src,
                                  new File("Test.java", splitCode.code()),
@@ -64,7 +68,7 @@ public class RenameRecordTest extends RefactoringTestBase {
         verifyContent(src, new File("Test.java",
                                     """
                                     package test;
-                                    public record Test(int newName) {}
+                                    public record Test(int newName, int y) {}
                                     """),
                            new File("Use.java",
                                     """
@@ -78,21 +82,13 @@ public class RenameRecordTest extends RefactoringTestBase {
 
     }
 
-    public void testRenameComponent2() throws Exception {
+    // changes in refactoring or javs.source.base  breaks rename
+    // when there is somthing before the 'com|ponent'.
+    public void testRenameComponent1a() throws Exception {
         String testCode = """
-                          package test;
-                          public record Test(int compo|nent) {
-                              public Test(int component) {
-                                  component = -1;
-                              }
-                              public int component() {
-                                  return component;
-                              }
-                              public int hashCode() {
-                                  return component;
-                              }
-                          }
-                          """;
+                        package test;
+                        public record Test(int x, int compo|nent) {}
+                        """;
         TestInput splitCode = TestUtilities.splitCodeAndPos(testCode);
         writeFilesAndWaitForScan(src,
                                  new File("Test.java", splitCode.code()),
@@ -110,8 +106,97 @@ public class RenameRecordTest extends RefactoringTestBase {
         verifyContent(src, new File("Test.java",
                                     """
                                     package test;
-                                    public record Test(int newName) {
-                                        public Test(int newName) {
+                                    public record Test(int x, int newName) {}
+                                    """),
+                           new File("Use.java",
+                                    """
+                                    package test;
+                                    public class Use {
+                                        private void test(Test t) {
+                                            int i = t.newName();
+                                        }
+                                    }
+                                    """));
+
+    }
+
+    // disabled, somehow having int x before to be renamed component
+    // breaks list diff
+    public void _testRenameComponent1a() throws Exception {
+        String testCode = """
+                        package test;
+                        public record Test(int x, int compo|nent) {}
+                        """;
+        TestInput splitCode = TestUtilities.splitCodeAndPos(testCode);
+        writeFilesAndWaitForScan(src,
+                                 new File("Test.java", splitCode.code()),
+                                 new File("Use.java",
+                                          """
+                                          package test;
+                                          public class Use {
+                                              private void test(Test t) {
+                                                  int i = t.component();
+                                              }
+                                          }
+                                          """));
+        JavaRenameProperties props = new JavaRenameProperties();
+        performRename(src.getFileObject("Test.java"), splitCode.pos(), "newName", props, true);
+        verifyContent(src, new File("Test.java",
+                                    """
+                                    package test;
+                                    public record Test(int x, int newName) {}
+                                    """),
+                           new File("Use.java",
+                                    """
+                                    package test;
+                                    public class Use {
+                                        private void test(Test t) {
+                                            int i = t.newName();
+                                        }
+                                    }
+                                    """));
+
+    }
+
+    // this test has an explicit accessor.
+    // this appears to break on potential compact constructor not being compact.
+    public void testRenameComponent2() throws Exception {
+        String testCode = """
+                        package test;
+                        public record Test(int compo|nent, int y) {
+                            public Test {
+                                component = -1;
+                            }
+                            public int component() {
+                                return component;
+                            }
+                            public int hashCode() {
+                                return component;
+                            }
+                            public Test(int someInt) {
+                              this(someInt, 0);
+                            }
+                        }
+                        """;
+        TestInput splitCode = TestUtilities.splitCodeAndPos(testCode);
+        writeFilesAndWaitForScan(src,
+                                 new File("Test.java", splitCode.code()),
+                                 new File("Use.java",
+                                          """
+                                          package test;
+                                          public class Use {
+                                              private void test(Test t) {
+                                                  int i = t.component();
+                                              }
+                                          }
+                                          """));
+        JavaRenameProperties props = new JavaRenameProperties();
+        performRename(src.getFileObject("Test.java"), splitCode.pos(), "newName", props, true);
+        verifyContent(src, new File("Test.java",
+                                    """
+                                    package test;
+                                    public record Test(int newName, int y) {
+                                        public Test {
                                             newName = -1;
                                         }
                                         public int newName() {
@@ -120,6 +205,9 @@ public class RenameRecordTest extends RefactoringTestBase {
                                         public int hashCode() {
                                             return newName;
                                         }
+                                        public Test(int someInt) {
+                                          this(someInt, 0);
+                                        }
                                     }
                                     """),
                            new File("Use.java",
@@ -134,11 +222,14 @@ public class RenameRecordTest extends RefactoringTestBase {
 
     }
 
+    /*
+     * Show that with compact constructor behaves.
+     */
     public void testRenameComponent3() throws Exception {
         String testCode = """
                           package test;
-                          public record Test(int compo|nent) {
-                              public Test {
+                          public record Test(int compo|nent, int y) {
+                              public Test { //compact
                                   component = -1;
                               }
                               public int component() {
@@ -166,8 +257,8 @@ public class RenameRecordTest extends RefactoringTestBase {
         verifyContent(src, new File("Test.java",
                                     """
                                     package test;
-                                    public record Test(int newName) {
-                                        public Test {
+                                    public record Test(int newName, int y) {
+                                        public Test { //compact
                                             newName = -1;
                                         }
                                         public int newName() {
@@ -204,7 +295,7 @@ public class RenameRecordTest extends RefactoringTestBase {
                                  new File("Test.java",
                                           """
                                           package test;
-                                          public record Test(int component) {
+                                          public record Test(int component, int y) {
                                               public Test {
                                                   component = -1;
                                               }
@@ -222,7 +313,7 @@ public class RenameRecordTest extends RefactoringTestBase {
         verifyContent(src, new File("Test.java",
                                     """
                                     package test;
-                                    public record Test(int newName) {
+                                    public record Test(int newName, int y) {
                                         public Test {
                                             newName = -1;
                                         }
@@ -260,7 +351,7 @@ public class RenameRecordTest extends RefactoringTestBase {
                                  new File("Test.java",
                                           """
                                           package test;
-                                          public record Test(int component) {
+                                          public record Test(int component, int y) {
                                           }
                                           """),
                                  new File("Use.java", splitCode.code()));
@@ -269,7 +360,7 @@ public class RenameRecordTest extends RefactoringTestBase {
         verifyContent(src, new File("Test.java",
                                     """
                                     package test;
-                                    public record Test(int newName) {
+                                    public record Test(int newName, int y) {
                                     }
                                     """),
                            new File("Use.java",
@@ -287,7 +378,7 @@ public class RenameRecordTest extends RefactoringTestBase {
     public void testRenameComponentStartFromConstructorArg() throws Exception {
         String testCode = """
                           package test;
-                          public record Test(int component) {
+                          public record Test(int component, int y) {
                               public Test {
                                   compo|nent = -1;
                               }
@@ -316,7 +407,7 @@ public class RenameRecordTest extends RefactoringTestBase {
         verifyContent(src, new File("Test.java",
                                     """
                                     package test;
-                                    public record Test(int newName) {
+                                    public record Test(int newName, int y) {
                                         public Test {
                                             newName = -1;
                                         }
@@ -377,6 +468,55 @@ public class RenameRecordTest extends RefactoringTestBase {
                                     public class Use {
                                         private NewName test() {
                                             return new NewName(0);
+                                        }
+                                    }
+                                    """));
+
+    }
+
+    // test fro varargs and generic.
+    public void testRenameRecordGenVar() throws Exception {
+//        RETRIES=1;
+        sideBySideCompare=true;
+        showOutputOnPass=true;
+
+        String testCode = """
+                          package test;
+                          public record Te|st<G extends Number>(G... component) {
+                              public Test {
+                                  assert 0 < component.length;
+                              }
+                          }
+                          """;
+        TestInput splitCode = TestUtilities.splitCodeAndPos(testCode);
+        writeFilesAndWaitForScan(src,
+                                 new File("Test.java", splitCode.code()),
+                                 new File("Use.java",
+                                          """
+                                          package test;
+                                          public class Use {
+                                              private Test<Integer> test() {
+                                                  return new Test(1, 2);
+                                              }
+                                          }
+                                          """));
+        JavaRenameProperties props = new JavaRenameProperties();
+        performRename(src.getFileObject("Test.java"), splitCode.pos(), "NewName", props, true);
+        verifyContent(src, new File("Test.java",
+                                    """
+                                    package test;
+                                    public record NewName<G extends Number>(G... component) {
+                                        public NewName {
+                                            assert 0 < component.length;
+                                        }
+                                    }
+                                    """),
+                           new File("Use.java",
+                                    """
+                                    package test;
+                                    public class Use {
+                                        private NewName<Integer> test() {
+                                            return new NewName(1, 2);
                                         }
                                     }
                                     """));

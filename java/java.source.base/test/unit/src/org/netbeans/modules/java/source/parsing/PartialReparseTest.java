@@ -518,7 +518,7 @@ public class PartialReparseTest extends NbTestCase {
     private static final Set<ElementKind> SUPPORTED_ELEMENTS = EnumSet.of(
             ElementKind.PACKAGE, ElementKind.CLASS, ElementKind.INTERFACE,
             ElementKind.ENUM, ElementKind.ANNOTATION_TYPE, ElementKind.METHOD,
-            ElementKind.CONSTRUCTOR, ElementKind.INSTANCE_INIT,
+            ElementKind.CONSTRUCTOR, ElementKind.INSTANCE_INIT,ElementKind.RECORD,
             ElementKind.STATIC_INIT, ElementKind.FIELD, ElementKind.ENUM_CONSTANT);
 
     private static List<DiagnosticDescription> dumpDiagnostics(CompilationInfo info) {

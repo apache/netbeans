@@ -84,6 +84,7 @@ public class LspCallHierarchyProvider implements CallHierarchyProvider {
                     return tp;
                 case CLASS:
                 case ENUM:
+                case RECORD:
                 case INTERFACE:
                     return null;
                     

@@ -1382,7 +1382,7 @@ public final class CodeStyle {
         public int getGroupId(Element element) {
             for (Info info : infos) {
                 ElementKind kind = element.getKind();
-                if (kind == ElementKind.ANNOTATION_TYPE || kind == ElementKind.ENUM || kind == ElementKind.INSTANCE_INIT)
+                if (kind == ElementKind.ANNOTATION_TYPE || kind == ElementKind.ENUM || kind == ElementKind.RECORD || kind == ElementKind.INSTANCE_INIT)
                     kind = ElementKind.CLASS;
                 if (info.check(kind, element.getModifiers()));
                     return info.groupId;

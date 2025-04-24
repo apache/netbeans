@@ -959,6 +959,7 @@ public class CasualDiff {
         moveToSrcRelevant(tokenSequence, Direction.FORWARD);
         insertHint = tokenSequence.offset();
         localPointer = diffModifiers(oldT.mods, newT.mods, oldT, localPointer);
+        boolean newIsRecord = (newT.mods.flags & Flags.RECORD) != 0;
         if (kindChanged(oldT.mods.flags, newT.mods.flags)) {
             int pos = oldT.pos;
             if ((oldT.mods.flags & Flags.ANNOTATION) != 0) {
@@ -973,6 +974,9 @@ public class CasualDiff {
             } else if ((newT.mods.flags & Flags.ENUM) != 0) {
                 copyTo(localPointer, pos);
                 printer.print("enum"); //NOI18N
+            } else if (newIsRecord) {
+                copyTo(localPointer, pos);
+                printer.print("record"); //NOI18N
             } else if ((newT.mods.flags & Flags.INTERFACE) != 0) {
                 copyTo(localPointer, pos);
                 printer.print("interface"); //NOI18N
@@ -1053,9 +1057,11 @@ public class CasualDiff {
             tokenSequence.move(localPointer);
             moveToSrcRelevant(tokenSequence, Direction.FORWARD);
             // it can be > (GT) or >> (SHIFT)
-            insertHint = tokenSequence.offset() + tokenSequence.token().length();
+            // do not print closing { too early
+            insertHint = tokenSequence.offset()-1;// + tokenSequence.token().length()-1;
         }
-        switch (getChangeKind(oldT.extending, newT.extending)) {
+        final ChangeKind changeKind = getChangeKind(oldT.extending, newT.extending);
+        switch (changeKind) {
             case NOCHANGE:
                 insertHint = oldT.extending != null ? endPos(oldT.extending) : insertHint;
                 copyTo(localPointer, localPointer = insertHint);
@@ -1077,33 +1083,34 @@ public class CasualDiff {
                 break;
         }
         {
-        // TODO (#pf): there is some space for optimization. If the new list
-        // is also empty, we can skip this computation.
-        if (oldT.implementing.isEmpty()) {
-            // if there is not any implementing part, we need to adjust position
-            // from different place. Look at the examples in all if branches.
-            // | represents current adjustment and ! where we want to point to
-            if (oldT.extending != null)
-                // public class Yerba<E>| extends Object! { ...
-                insertHint = endPos(oldT.extending);
-            else {
-                // currently no need to adjust anything here:
-                // public class Yerba<E>|! { ...
+            // TODO (#pf): there is some space for optimization. If the new list
+            // is also empty, we can skip this computation.
+            if (oldT.implementing.isEmpty()) {
+                // if there is not any implementing part, we need to adjust position
+                // from different place. Look at the examples in all if branches.
+                // | represents current adjustment and ! where we want to point to
+                if (oldT.extending != null) // public class Yerba<E>| extends Object! { ...
+                {
+                    insertHint = endPos(oldT.extending);
+                } else {
+                    // currently no need to adjust anything here:
+                    // public class Yerba<E>|! { ...
+                }
+            } else {
+                // we already have any implements, adjust position to first
+                // public class Yerba<E>| implements !Mate { ...
+                // Note: in case of all implements classes are removed,
+                // diffing mechanism will solve the implements keyword.
+                insertHint = oldT.implementing.iterator().next().getStartPosition();
             }
-        } else {
-            // we already have any implements, adjust position to first
-            // public class Yerba<E>| implements !Mate { ...
-            // Note: in case of all implements classes are removed,
-            // diffing mechanism will solve the implements keyword.
-            insertHint = oldT.implementing.iterator().next().getStartPosition();
-        }
-        long flags = oldT.sym != null ? oldT.sym.flags() : oldT.mods.flags;
-        PositionEstimator estimator = (flags & INTERFACE) == 0 ?
-            EstimatorFactory.implementz(oldT.getImplementsClause(), newT.getImplementsClause(), diffContext) :
-            EstimatorFactory.extendz(oldT.getImplementsClause(), newT.getImplementsClause(), diffContext);
-        if (!newT.implementing.isEmpty())
-            copyTo(localPointer, insertHint);
-        localPointer = diffList2(oldT.implementing, newT.implementing, insertHint, estimator);
+            long flags = oldT.sym != null ? oldT.sym.flags() : oldT.mods.flags;
+            PositionEstimator estimator = (flags & INTERFACE) == 0
+                    ? EstimatorFactory.implementz(oldT.getImplementsClause(), newT.getImplementsClause(), diffContext)
+                    : EstimatorFactory.extendz(oldT.getImplementsClause(), newT.getImplementsClause(), diffContext);
+            if (!newT.implementing.isEmpty()) {
+                copyTo(localPointer, insertHint);
+            }
+            localPointer = diffList2(oldT.implementing, newT.implementing, insertHint, estimator);
         }
 
         {

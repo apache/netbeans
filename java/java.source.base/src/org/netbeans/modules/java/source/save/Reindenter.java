@@ -372,7 +372,7 @@ public class Reindenter implements IndentTask {
                 break;
             case CLASS:
             case INTERFACE:
-            case ENUM:
+            case ENUM: // RECORD is at the end
             case ANNOTATION_TYPE:
                 token = findFirstNonWhitespaceToken(startOffset, endOffset);
                 nextTokenId = token != null ? token.token().id() : null;
@@ -1236,6 +1236,7 @@ public class Reindenter implements IndentTask {
                 case CLASS:
                 case INTERFACE:
                 case ENUM:
+                case RECORD:
                 case ANNOTATION_TYPE:
                 case VARIABLE:
                 case METHOD:

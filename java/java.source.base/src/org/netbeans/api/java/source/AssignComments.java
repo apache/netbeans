@@ -69,6 +69,7 @@ class AssignComments extends ErrorAwareTreeScanner<Void, Void> {
             Tree.Kind.CLASS,
             Tree.Kind.INTERFACE,
             Tree.Kind.ENUM,
+            Tree.Kind.RECORD,
 
             Tree.Kind.METHOD,
             Tree.Kind.VARIABLE

@@ -97,6 +97,7 @@ public class TreeDuplicator {
             case CLASS:
             case INTERFACE:
             case ENUM:
+            case RECORD:
             case ANNOTATION_TYPE:{
                 ClassTree t = (ClassTree) tree;
                 result = make.setLabel(tree, t.getSimpleName());

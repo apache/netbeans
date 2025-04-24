@@ -561,6 +561,7 @@ public class ElementNode extends AbstractNode {
                     case CLASS:
                     case INTERFACE:
                     case ENUM:
+                    case RECORD:
                     case ANNOTATION_TYPE:
                         return 4;
                     default:

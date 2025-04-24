@@ -332,6 +332,7 @@ public class MoveFileRefactoringPlugin extends JavaRefactoringPlugin {
                 for (Element element : enclosedElements) {
                     switch (element.getKind()) {
                         case ENUM:
+                        case RECORD:
                         case CLASS:
                         case ANNOTATION_TYPE:
                         case INTERFACE:

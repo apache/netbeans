@@ -74,6 +74,7 @@ public class WhereUsedPanel extends JPanel implements CustomRefactoringPanel {
             }
             case CLASS:
             case ENUM:
+            case RECORD:
             case INTERFACE:
             case ANNOTATION_TYPE: {
                 panel = new WhereUsedPanelClass(parent);

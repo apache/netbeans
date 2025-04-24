@@ -182,6 +182,7 @@ public class RefactoringVisitor extends ErrorAwareTreePathScanner<Tree, Element>
                 case ANNOTATION_TYPE:
                 case CLASS:
                 case ENUM:
+                case RECORD:
                 case INTERFACE:
                 case VARIABLE:
                     TreePath path = new TreePath(currentPath, tree);

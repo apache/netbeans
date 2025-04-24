@@ -136,6 +136,7 @@ public final class CreateElementUtilities {
             case ANNOTATION_TYPE:
             case CLASS:
             case ENUM:
+            case RECORD:
             case INTERFACE:
                 return computeClass(types, info, currentPath, unresolved, offset);
                 

@@ -109,6 +109,7 @@ public class FindLocalUsagesQuery extends CancellableTreePathScanner<Void, Void>
                 case ANNOTATION_TYPE:
                 case CLASS:
                 case ENUM:
+                case RECORD:
                 case INTERFACE:
                 case VARIABLE:
                     DocCommentTree docCommentTree = info.getDocTrees().getDocCommentTree(el);

@@ -857,6 +857,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     @Override
     public void visitClassDef(JCClassDecl tree) {
+        System.err.println("VP visit clas/"+tree+"//class");
         JCClassDecl enclClassPrev = enclClass;
 	enclClass = tree;
 	toLeftMargin();

@@ -593,7 +593,7 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
     }
 
     // disable for the time being, varargs not yet implemented
-    public void _test8Varargs() throws Exception {
+    public void test8Varargs() throws Exception {
         RETRIES = 0;
 //        debug = true;
         String source =
@@ -645,7 +645,7 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
     }
 
     // disable for the time being, varargs not yet implemented
-    public void _test8VarargsWithGen() throws Exception {
+    public void test8VarargsWithGen() throws Exception {
         RETRIES = 0;
 //        debug = true;
         String source =

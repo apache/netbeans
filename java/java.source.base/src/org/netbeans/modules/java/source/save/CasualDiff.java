@@ -143,6 +143,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import static java.util.logging.Level.*;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -941,7 +942,15 @@ public class CasualDiff {
     // TODO: should be here printer.enclClassName be used?
     private Name origClassName = null;
     private Name newClassName = null;
-
+    /**
+     * Computes differences between old and new classTree and prints.
+     *
+     * The this.origText is used between bounds[0] and bounds[1].
+     * @param oldT old definition of class tree
+     * @param newT new definition of class tree
+     * @param bounds the bounds of the old classtree in thge original text
+     * @return the end position in the origText.
+     */
     protected int diffClassDef(JCClassDecl oldT, JCClassDecl newT, int[] bounds) {
         int localPointer = bounds[0];
         final Name origOuterClassName = origClassName;
@@ -1020,8 +1029,8 @@ public class CasualDiff {
         }
         //TODO: class to record and vice versa!
         if (oldT.getKind() == Kind.RECORD && newT.getKind() == Kind.RECORD) {
-            ComponentsAndOtherMembers oldParts = splitOutRecordComponents(filteredOldTDefs);
-            ComponentsAndOtherMembers newParts = splitOutRecordComponents(filteredNewTDefs);
+            ComponentsAndOtherMembers oldParts = splitOutRecordComponents(filteredOldTDefs, oldT);
+            ComponentsAndOtherMembers newParts = splitOutRecordComponents(filteredNewTDefs,newT);
             int posHint;
             if (oldParts.components().isEmpty()) {
                 // compute the position. Find the parameters closing ')', its
@@ -1059,7 +1068,8 @@ public class CasualDiff {
             // it can be > (GT) or >> (SHIFT)
             // do not print closing { too early
             insertHint = tokenSequence.offset()-1;// + tokenSequence.token().length()-1;
-        }
+        } // end both recod
+
         final ChangeKind changeKind = getChangeKind(oldT.extending, newT.extending);
         switch (changeKind) {
             case NOCHANGE:
@@ -1206,25 +1216,47 @@ public class CasualDiff {
         }
         return bounds[1];
     }
-    
-    private ComponentsAndOtherMembers splitOutRecordComponents(List<JCTree> defs) {
-        ListBuffer<JCTree> components = new ListBuffer<>();
+
+    /**
+     * Get and split into components and other members from a record.
+     * If the record declares a syntethic or compact constructor, obtain the parameters
+     * from that one, because the 'default' constructor in the classTree of a record is a canonical constructor (specifying all
+     * record components). Same applies for the canonical constuctor.
+     *
+     * @param defs member declarations to consider
+     * @param classTree for this record
+     * @return a record containing the components and the non-component members such as static fields, methods etc.
+     */
+    private ComponentsAndOtherMembers splitOutRecordComponents(List<JCTree> defs, JCClassDecl classTree) {
+        ListBuffer<JCVariableDecl> componentsB = new ListBuffer<>();
         ListBuffer<JCTree> filteredDefs = new ListBuffer<>();
 
         for (JCTree t : defs) {
-            if (t.getKind() == Kind.VARIABLE &&
-                (((JCVariableDecl) t).mods.flags & RECORD) != 0) {
-                components.add(t);
+            if (t.getKind() == Kind.VARIABLE && t instanceof JCVariableDecl decl
+                && (decl.mods.flags & RECORD) != 0) {
+                componentsB.add(decl);
             } else {
                 filteredDefs.add(t);
             }
         }
+        var components = componentsB.toList();
+        final long syntOrCompact= Flags.SYNTHETIC | Flags.COMPACT_RECORD_CONSTRUCTOR;
+        var recordParams = classTree.getMembers()
+                .stream()
+                .filter(m -> m.getKind()==Kind.METHOD && m instanceof JCMethodDecl mdecl && mdecl.getReturnType()==null)
+                .map(JCMethodDecl.class::cast)
+                .filter(met -> (met.mods.flags & syntOrCompact)!=0)
+                .findFirst()
+                .map(m -> m.params);
+        if (recordParams.isPresent()){
+            components = recordParams.get();
+        }
 
-        return new ComponentsAndOtherMembers(components.toList(),
+        return new ComponentsAndOtherMembers(components,
                                              filteredDefs.toList());
     }
 
-    record ComponentsAndOtherMembers(List<JCTree> components, List<JCTree> defs) {}
+    record ComponentsAndOtherMembers(List<? extends JCTree> components, List<JCTree> defs) {}
 
     /**
      * When the enumeration contains just methods, it is necessary to preced them with single ;. If a constant is

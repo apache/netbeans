@@ -945,14 +945,34 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	enclClass = enclClassPrev;
     }
 
+    /**
+     * Get the record components, either by fetching the field-members or
+     * the parameters from a fitting constructor
+     * @param tree of a record
+     * @return the canonical parameters for the record
+     */
     private List<JCVariableDecl> getRecordComponents(JCClassDecl tree) {
-        List<JCVariableDecl> components =
-                List.from(tree.defs
+        System.err.println("VP getRecordComponents");
+        List<JCVariableDecl> components
+                = List.from(tree.defs
                         .stream()
                         .filter(member -> member.getKind() == Kind.VARIABLE)
                         .map(member -> (JCVariableDecl) member)
                         .filter(comp -> (comp.mods.flags & RECORD) != 0)
                         .toList());
+
+        final long syntOrCompact = Flags.SYNTHETIC | Flags.COMPACT_RECORD_CONSTRUCTOR;
+        var recordParams = tree.getMembers()
+                .stream()
+                .filter(m -> m.getKind() == Kind.METHOD && m instanceof JCMethodDecl mdecl && mdecl.getReturnType() == null)
+                .map(JCMethodDecl.class::cast)
+                .filter(met -> (met.mods.flags & syntOrCompact) != 0)
+                .findFirst()
+                .map(m -> m.params);
+        if (recordParams.isPresent()) {
+            components = recordParams.get();
+        }
+
         return components;
     }
 

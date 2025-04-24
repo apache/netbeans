@@ -1059,8 +1059,9 @@ public class CasualDiff {
             moveFwdToToken(tokenSequence, oldParts.components.isEmpty() ? posHint : endPos(oldParts.components.get(oldParts.components.size() - 1)), JavaTokenId.RPAREN);
             tokenSequence.moveNext();
             posHint = tokenSequence.offset();
-            if (localPointer < posHint)
+            if (localPointer < posHint) {
                 copyTo(localPointer, localPointer = posHint);
+            }
             filteredOldTDefs = oldParts.defs;
             filteredNewTDefs = newParts.defs;
             tokenSequence.move(localPointer);
@@ -1219,9 +1220,14 @@ public class CasualDiff {
 
     /**
      * Get and split into components and other members from a record.
-     * If the record declares a syntethic or compact constructor, obtain the parameters
-     * from that one, because the 'default' constructor in the classTree of a record is a canonical constructor (specifying all
-     * record components). Same applies for the canonical constuctor.
+     * If the record declares a synthethic or compact constructor, obtain the parameters
+     * from that one, and see if the last parameter is a varargs parameter. If so, patch the
+     * flags of the last recordComponent such that it also is returned as a varargs parameter.
+     * 
+     * This works because in a record there is a constructor because the 'default' constructor
+     * in the classTree of a record is a canonical constructor (specifying all
+     * record components). Same applies for the canonical constuctor, which in the classtree is normal constructor
+     * with all parameters equal to the record components.
      *
      * @param defs member declarations to consider
      * @param classTree for this record
@@ -1249,42 +1255,24 @@ public class CasualDiff {
                 .findFirst()
                 .map(m -> m.params);
         if (recordParams.isPresent()){
-            System.err.println("CD params in class/"+classTree+"/class");
+
             List<JCVariableDecl> params = recordParams.get();
             assert params.size() == components.size();
-            // the fields may have been subject to rename.
-            // apply that to params too, for they are skipped by the rename refactoring
-            var itrP= params.iterator();
-            var itrC= components.iterator();
-
-            try {
-                JCVariableDecl.class.getField("name").setAccessible(true);
-            } catch (NoSuchFieldException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (SecurityException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-            while(itrP.hasNext()){
-                JCVariableDecl p= itrP.next();
-                JCVariableDecl c = itrC.next();
-                if (!p.name.toString().equals(c.name.toString())) {
-                    try {
-                        System.err.println("CD rename param "+p.name+" to "+c.name);
-                        JCVariableDecl.class.getField("name").set(p, c.name);
-//                    p.name=c.name;
-                    } catch (NoSuchFieldException ex) {
-                        Exceptions.printStackTrace(ex);
-                    } catch (SecurityException ex) {
-                        Exceptions.printStackTrace(ex);
-                    } catch (IllegalArgumentException ex) {
-                        Exceptions.printStackTrace(ex);
-                    } catch (IllegalAccessException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
+            JCVariableDecl lastParam = params.get(params.size()-1);
+            boolean varargsCtor= (lastParam.mods.flags & Flags.VARARGS) !=0;
+            if (varargsCtor) {
+                JCVariableDecl lastComponent = components.get(components.size()-1);
+                long modFlags = lastComponent.mods.flags | Flags.VARARGS;
+                try {
+                    // parch mods flags.
+                    JCModifiers.class.getField("flags").setAccessible(true);
+                    lastComponent.mods.flags= modFlags;
+                } catch (NoSuchFieldException ex) {
+                    Exceptions.printStackTrace(ex);
+                } catch (SecurityException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
             }
-            System.err.println("CD after rename params = " + params);
-//            components=params;
         }
 
         return new ComponentsAndOtherMembers(components,

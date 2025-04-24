@@ -213,7 +213,7 @@ public class ReplaceConstructorWithBuilderTest extends RefTestBase {
     private void performTest(final String builderName, final Setter setter, Problem... expectedProblems) throws Exception {
         final ReplaceConstructorWithBuilderRefactoring[] r = new ReplaceConstructorWithBuilderRefactoring[1];
         FileObject testFile = src.getFileObject("test/Test.java");
-
+        System.err.println("RC test "+testFile.asText());
         JavaSource.forFileObject(testFile).runUserActionTask(new Task<CompilationController>() {
 
             public void run(CompilationController parameter) throws Exception {

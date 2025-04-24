@@ -1221,6 +1221,7 @@ public class WorkingCopy extends CompilationController {
             case INTERFACE: return "Templates/Classes/Interface.java"; // NOI18N
             case ANNOTATION_TYPE: return "Templates/Classes/AnnotationType.java"; // NOI18N
             case ENUM: return "Templates/Classes/Enum.java"; // NOI18N
+            case RECORD: return "Templates/Classes/Record.java"; // NOI18N
             case PACKAGE: return "Templates/Classes/package-info.java"; // NOI18N
             default:
                 Logger.getLogger(WorkingCopy.class.getName()).log(Level.SEVERE, "Cannot resolve template for {0}", kind);
@@ -1247,6 +1248,9 @@ public class WorkingCopy extends CompilationController {
                     break;
                 case ENUM:
                     kind = ElementKind.ENUM;
+                    break;
+                case RECORD:
+                    kind = ElementKind.RECORD;
                     break;
                 default:
                     Logger.getLogger(WorkingCopy.class.getName()).log(Level.SEVERE, "Cannot resolve template for {0}", cut.getTypeDecls().get(0).getKind());

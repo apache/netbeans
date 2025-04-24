@@ -480,6 +480,26 @@ public final class TreeMaker {
     }
     
     /**
+     * Creates a new ClassTree representing record.
+     *
+     * @param modifiers the modifiers declaration
+     * @param simpleName        the name of the class without its package, such
+     *                          as "String" for the class "java.lang.String".
+     * @param implementsClauses the list of the interfaces this class
+     *                          implements, or an empty list.
+     * @param memberDecls       the list of fields defined by this class, or an
+     *                          empty list.
+     * @see com.sun.source.tree.ClassTree
+     */
+    public ClassTree Record(ModifiersTree modifiers,
+             CharSequence simpleName,
+             List<? extends TypeParameterTree> typeParameters,
+             List<? extends Tree> implementsClauses,
+             List<? extends Tree> memberDecls) {
+        return delegate.Record(modifiers, simpleName, typeParameters, implementsClauses, memberDecls);
+    }
+
+    /**
      * Creates a new CompilationUnitTree.
      *
      * @param packageName        a tree representing the package name.

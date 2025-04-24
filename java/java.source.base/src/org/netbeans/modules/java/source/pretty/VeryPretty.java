@@ -104,6 +104,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static java.util.stream.Collectors.toCollection;
 
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.lexer.JavaTokenId;
@@ -932,6 +933,9 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	    blankLines(enclClass.name.isEmpty() ? cs.getBlankLinesAfterAnonymousClassHeader() : (flags & ENUM) != 0 ? cs.getBlankLinesAfterEnumHeader() : cs.getBlankLinesAfterClassHeader());
             boolean firstMember = true;
             for (JCTree t : members) {
+                if (t.getKind()==Kind.VARIABLE && t instanceof JCVariableDecl vardecl && 0!=(vardecl.mods.flags & Flags.RECORD)) {
+                    continue;
+                }
                 printStat(t, true, firstMember, true, true, false);
                 firstMember = false;
             }
@@ -1056,7 +1060,18 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                           true);
             }
             if (tree.body != null) {
-                printBlock(tree.body, tree.body.stats, cs.getMethodDeclBracePlacement(), cs.spaceBeforeMethodDeclLeftBrace(), true);
+                
+                List<JCStatement> stats = tree.body.stats;
+                if ((tree.mods.flags & Flags.COMPACT_RECORD_CONSTRUCTOR) != 0L) {
+                    ListBuffer<JCStatement> nstats= new ListBuffer<>();
+                    for (JCStatement stat : stats) {
+                        if (!stat.toString().contains("super();")){
+                            nstats.append(stat);
+                        }
+                    }
+                    stats=nstats.toList();
+               }
+               printBlock(tree.body, stats, cs.getMethodDeclBracePlacement(), cs.spaceBeforeMethodDeclLeftBrace(), true);
             } else {
                 if (tree.defaultValue != null) {
                     print(" default ");

@@ -480,7 +480,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Creates a new ClassTree representing enum.
+     * Creates a new ClassTree representing record.
      *
      * @param modifiers the modifiers declaration
      * @param simpleName        the name of the class without its package, such

@@ -548,6 +548,7 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
     }
 
     public void test7Generic() throws Exception {
+        AssertLinesEqualHelpers.setStringCompareMode(StringsCompareMode.IGNORE_WHITESPACE_DIFF);
         String source
                 = """
                 package t;
@@ -555,10 +556,15 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     public A {
                         assert f != null;
                     }
-                    record F<P, Q>(P first, Q second) {
+                    record F<P, Q extends Comparable<Q>> (P first, Q second) {
                         public F {
                             assert null != first;
                             assert null != second;
+                        }
+
+                        @Override
+                        public int compare(Q o){
+                          return this.second.compareTo(o.second);
                         }
                     }
                 }
@@ -577,16 +583,24 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                 /*
                  * Refactoring License
                  */
+                  
                 package t;
+                  
                 /**
                  *
                  * @author junit
                  */
-                record F<P, Q>(P first, Q second) {
+                record F<P, Q extends Comparable<Q>>(P first, Q second) {
                     public F {
                         assert null != first;
                         assert null != second;
                     }
+
+                    @Override
+                    public int compare(Q o) {
+                      return this.second.compareTo(o.second);
+                    }
+
                 }
                 """;
         innerOuterSetupAndTest(source, newOuter, newInner);

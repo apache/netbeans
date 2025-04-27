@@ -1264,7 +1264,6 @@ public class CasualDiff {
                 boolean varargsCtor = (lastParam.mods.flags & Flags.VARARGS) != 0;
                 if (varargsCtor) {
                     JCVariableDecl lastComponent = components.get(idx);
-                    long modFlags = lastComponent.mods.flags | Flags.VARARGS;
                     lastComponent.mods.flags |= Flags.VARARGS;
                 }
             }

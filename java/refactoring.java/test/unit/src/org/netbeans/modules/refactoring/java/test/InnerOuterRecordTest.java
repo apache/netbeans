@@ -67,7 +67,6 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
         sideBySideCompare = true;
         showOutputOnPass=true;
 
-        RETRIES=1;
     }
 
     public void test9ApacheNetbeans7044() throws Exception {
@@ -608,8 +607,6 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
 
     // disable for the time being, varargs not yet implemented
     public void test8Varargs() throws Exception {
-        RETRIES = 0;
-//        debug = true;
         AssertLinesEqualHelpers.setStringCompareMode(StringsCompareMode.IGNORE_INDENTATION);
         String source =
                 """
@@ -661,8 +658,6 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
 
     // disable for the time being, varargs not yet implemented
     public void test8VarargsWithGen() throws Exception {
-        RETRIES = 0;
-//        debug = true;
         String source =
                 """
                 package t;
@@ -713,8 +708,6 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
 
     // show that brace comes too early in inner record.
     public void test8RecordImplements1() throws Exception {
-//        debug = true;
-        RETRIES = 0;
         sideBySideCompare = true;
         String source
                 = """
@@ -763,8 +756,6 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
 
     // show that outer record survives casual diff.
     public void test8RecordImplements2() throws Exception {
-//        debug = true;
-        RETRIES = 0;
         sideBySideCompare = true;
 //        showOutputOnPass=true;
         String source
@@ -817,7 +808,6 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
     // Test shows that inner enum does not have the too early brace problem.
     public void test8EnumImplements() throws Exception {
 //        debug = true;
-        RETRIES = 0;
         sideBySideCompare = true;
         String source
                 = """

@@ -53,7 +53,6 @@ public class PullUpTest extends RefactoringTestBase {
 
     public PullUpTest(String name) {
         super(name, "1.8");
-        RETRIES=1;
     }
 
     static {

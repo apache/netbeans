@@ -43,7 +43,6 @@ public class RenameRecordTest extends RefactoringTestBase {
         super(name, "17");
         sideBySideCompare=true;
         showOutputOnPass=true;
-        RETRIES=1;
     }
 
     public void testRenameComponent1() throws Exception {
@@ -476,7 +475,6 @@ public class RenameRecordTest extends RefactoringTestBase {
 
     // test fro varargs and generic.
     public void testRenameRecordGenVar() throws Exception {
-//        RETRIES=1;
         sideBySideCompare=true;
         showOutputOnPass=true;
 

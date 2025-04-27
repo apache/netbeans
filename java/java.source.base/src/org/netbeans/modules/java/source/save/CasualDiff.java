@@ -1234,49 +1234,42 @@ public class CasualDiff {
      * @return a record containing the components and the non-component members such as static fields, methods etc.
      */
     private ComponentsAndOtherMembers splitOutRecordComponents(List<JCTree> defs, JCClassDecl classTree) {
-        ListBuffer<JCVariableDecl> componentsB = new ListBuffer<>();
-        ListBuffer<JCTree> filteredDefs = new ListBuffer<>();
+        List<JCVariableDecl> components = new ArrayList<>();
+        List<JCTree> filteredDefs = new ArrayList<>();
 
         for (JCTree t : defs) {
             if (t.getKind() == Kind.VARIABLE && t instanceof JCVariableDecl decl
-                && (decl.mods.flags & RECORD) != 0) {
-                componentsB.add(decl);
+                    && (decl.mods.flags & RECORD) != 0) {
+                components.add(decl);
             } else {
                 filteredDefs.add(t);
             }
         }
-        var components = List.of(componentsB.toArray(new JCVariableDecl[0]));
-        final long syntOrCompact= Flags.SYNTHETIC | Flags.COMPACT_RECORD_CONSTRUCTOR;
-        var recordParams = classTree.defs
-                .stream()
-                .filter(m -> m.getKind()==Kind.METHOD && m instanceof JCMethodDecl mdecl && mdecl.getReturnType()==null)
-                .map(JCMethodDecl.class::cast)
-                .filter(met -> (met.mods.flags & syntOrCompact)!=0)
-                .findFirst()
-                .map(m -> m.params);
-        if (recordParams.isPresent()){
 
-            List<JCVariableDecl> params = recordParams.get();
-            assert params.size() == components.size();
-            JCVariableDecl lastParam = params.get(params.size()-1);
-            boolean varargsCtor= (lastParam.mods.flags & Flags.VARARGS) !=0;
-            if (varargsCtor) {
-                JCVariableDecl lastComponent = components.get(components.size()-1);
-                long modFlags = lastComponent.mods.flags | Flags.VARARGS;
-                try {
-                    // parch mods flags.
-                    JCModifiers.class.getField("flags").setAccessible(true);
-                    lastComponent.mods.flags= modFlags;
-                } catch (NoSuchFieldException ex) {
-                    Exceptions.printStackTrace(ex);
-                } catch (SecurityException ex) {
-                    Exceptions.printStackTrace(ex);
+        // only if last component is present and is array, we consider varargs for the record param
+        if (!components.isEmpty() && components.get(components.size() - 1).vartype.getKind() == Kind.ARRAY_TYPE) {
+            int idx = components.size() - 1;
+            final long syntOrCompact = Flags.SYNTHETIC | Flags.COMPACT_RECORD_CONSTRUCTOR;
+            var recordParams = classTree.defs
+                    .stream()
+                    .filter(m -> m.getKind() == Kind.METHOD && m instanceof JCMethodDecl mdecl && mdecl.getReturnType() == null)
+                    .map(JCMethodDecl.class::cast)
+                    .filter(met -> (met.mods.flags & syntOrCompact) != 0)
+                    .findFirst()
+                    .map(m -> m.params);
+            if (recordParams.isPresent()) {
+                List<JCVariableDecl> params = recordParams.get();
+                assert params.size() == components.size();
+                JCVariableDecl lastParam = params.get(idx);
+                boolean varargsCtor = (lastParam.mods.flags & Flags.VARARGS) != 0;
+                if (varargsCtor) {
+                    JCVariableDecl lastComponent = components.get(idx);
+                    long modFlags = lastComponent.mods.flags | Flags.VARARGS;
+                    lastComponent.mods.flags |= Flags.VARARGS;
                 }
             }
         }
-
-        return new ComponentsAndOtherMembers(components,
-                                             filteredDefs.toList());
+        return new ComponentsAndOtherMembers(components, filteredDefs);
     }
 
     record ComponentsAndOtherMembers(List<? extends JCTree> components, List<JCTree> defs) {}

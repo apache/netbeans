@@ -608,16 +608,16 @@ public class MavenProjectSupport {
         javaEE7Web.add(new DependencyDesc("javax", "javaee-web-api", "7.0"));
         javaEE8Full.add(new DependencyDesc("javax", "javaee-api", "8.0"));
         javaEE8Web.add(new DependencyDesc("javax", "javaee-web-api", "8.0"));
-        jakartaEE8Web.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-api","8.0.0"));
-        jakartaEE8Full.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-web-api","8.0.0"));
-        jakartaEE9Web.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-api","9.0.0"));
-        jakartaEE9Full.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-web-api","9.0.0"));
-        jakartaEE91Web.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-api","9.1.0"));
-        jakartaEE91Full.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-web-api","9.1.0"));
-        jakartaEE10Web.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-api","10.0.0"));
-        jakartaEE10Full.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-web-api","10.0.0"));
-        jakartaEE11Web.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-api","11.0.0-RC1"));
-        jakartaEE11Full.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-web-api","11.0.0-RC1"));
+        jakartaEE8Web.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-web-api","8.0.0"));
+        jakartaEE8Full.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-api","8.0.0"));
+        jakartaEE9Web.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-web-api","9.0.0"));
+        jakartaEE9Full.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-api","9.0.0"));
+        jakartaEE91Web.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-web-api","9.1.0"));
+        jakartaEE91Full.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-api","9.1.0"));
+        jakartaEE10Web.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-web-api","10.0.0"));
+        jakartaEE10Full.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-api","10.0.0"));
+        jakartaEE11Web.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-web-api","11.0.0-RC1"));
+        jakartaEE11Full.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-api","11.0.0-RC1"));
 
         // GlassFish implementations
         javaEE5.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "2"));
@@ -636,10 +636,10 @@ public class MavenProjectSupport {
         jakartaEE9Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "6.0.0"));
         jakartaEE91Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "6.2.5"));
         jakartaEE91Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "6.2.5"));
-        jakartaEE10Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "7.0.23"));
-        jakartaEE10Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "7.0.23"));
-        jakartaEE11Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "8.0.0-M10"));
-        jakartaEE11Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "8.0.0-M10"));
+        jakartaEE10Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "7.0.24"));
+        jakartaEE10Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "7.0.24"));
+        jakartaEE11Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "8.0.0-M11"));
+        jakartaEE11Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "8.0.0-M11"));
         
 
         // WebLogic implementations

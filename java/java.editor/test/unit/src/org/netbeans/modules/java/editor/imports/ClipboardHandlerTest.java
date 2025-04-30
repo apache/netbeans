@@ -21,26 +21,27 @@ package org.netbeans.modules.java.editor.imports;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.concurrent.Exchanger;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import javax.lang.model.SourceVersion;
 import javax.swing.JEditorPane;
 import javax.swing.SwingUtilities;
+import org.netbeans.NbClipboard;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
-import org.netbeans.api.java.source.SourceUtilsTestUtil2;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.core.startup.Main;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -155,12 +156,12 @@ public class ClipboardHandlerTest extends NbTestCase {
                 try {
                     source.setSelectionStart(start);
                     source.setSelectionEnd(end);
-
                     source.copy();
+                    syncNbClipboard();
 
                     target[0].setCaretPosition(pastePos);
-
                     target[0].paste();
+                    syncNbClipboard();
                 } catch (Exception ex) {
                     fromAWT[0] = ex;
                 }
@@ -177,6 +178,19 @@ public class ClipboardHandlerTest extends NbTestCase {
             }
         });
         assertEquals(golden, actual[0]);
+    }
+
+    // NbClipboard is asynchronoous - this test has to wait for copy/paste to finish
+    private static void syncNbClipboard() {
+        NbClipboard nbclip = Lookup.getDefault().lookup(NbClipboard.class);
+        assertNotNull("active NbClipboard expected", nbclip);
+        try {
+            Method waitFinished = NbClipboard.class.getDeclaredMethod("waitFinished");
+            waitFinished.setAccessible(true);
+            waitFinished.invoke(nbclip);
+        } catch (ReflectiveOperationException ex) {
+            throw new IllegalStateException("code changed?", ex);
+        }
     }
 
     private JEditorPane paneFor(FileObject src, String fileName, String code, String sourceLevel) throws Exception, DataObjectNotFoundException, IOException {

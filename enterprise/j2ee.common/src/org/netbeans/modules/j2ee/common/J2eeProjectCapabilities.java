@@ -68,17 +68,17 @@ public final class J2eeProjectCapabilities {
         Profile ejbJarProfile = null;
         Profile webProfile = null;
         Profile carProfile = null;
-        if (type == J2eeModule.Type.EJB) {
+        if (type == J2eeModule.Type.EJB || type == J2eeModule.Type.WAR) {
             EjbJar[] ejbJars = EjbJar.getEjbJars(project);
             if (ejbJars.length > 0) {
                 // just use first one to test profile:
                 ejbJarProfile =  ejbJars[0].getJ2eeProfile();
             }
-        }
-        if (type == J2eeModule.Type.WAR) {
-            WebModule module = WebModule.getWebModule(project.getProjectDirectory());
-            if (module != null) {
-                webProfile = module.getJ2eeProfile();
+            if (type == J2eeModule.Type.WAR) {
+                WebModule module = WebModule.getWebModule(project.getProjectDirectory());
+                if (module != null) {
+                    webProfile = module.getJ2eeProfile();
+                }
             }
         }
         if (type == J2eeModule.Type.CAR) {

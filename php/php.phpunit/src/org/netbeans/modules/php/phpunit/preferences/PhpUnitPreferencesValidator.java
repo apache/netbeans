@@ -60,11 +60,12 @@ public final class PhpUnitPreferencesValidator {
     }
 
     public PhpUnitPreferencesValidator validatePhpUnit(boolean phpUnitEnabled, String phpUnitPath) {
-        if (phpUnitEnabled) {
-            String warning = PhpUnitUtils.validatePhpUnitPath(phpUnitPath);
-            if (warning != null) {
-                result.addWarning(new ValidationResult.Message("phpUnitPath", warning)); // NOI18N
-            }
+        if (! phpUnitEnabled) {
+            return this;
+        }
+        String warning = PhpUnitUtils.validatePhpUnitPath(phpUnitPath);
+        if (warning != null) {
+            result.addWarning(new ValidationResult.Message("phpUnitPath", warning)); // NOI18N
         }
         return this;
     }

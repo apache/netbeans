@@ -51,6 +51,7 @@ import org.openide.util.Exceptions;
  */
 @ProjectServiceProvider(
     service = {
+        WebModuleProviderImpl.class,
         WebModuleProvider.class,
         J2eeModuleProvider.class
     },

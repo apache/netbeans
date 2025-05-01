@@ -46,6 +46,7 @@ import org.openide.filesystems.FileUtil;
  */
 @ProjectServiceProvider(
         service = {
+            EjbModuleProviderImpl.class,
             J2eeModuleProvider.class,
             EjbJarProvider.class,
             EjbJarsInProject.class

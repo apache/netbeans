@@ -46,6 +46,7 @@ import org.openide.filesystems.FileUtil;
  */
 @ProjectServiceProvider(
         service = {
+            AppClientModuleProviderImpl.class,
             CarProvider.class,
             CarsInProject.class,
             J2eeModuleProvider.class

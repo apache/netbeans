@@ -568,8 +568,11 @@ public class MavenProjectSupport {
      * In more detail:
      * <ul>
      *   GlassFish:
+     *   <li>5.0 supports Java EE 8</li>
      *   <li>5.1 supports Jakarta EE 8</li>
+     *   <li>6.0 supports Jakarta EE 9</li>
      *   <li>6.1 supports Jakarta EE 9.1</li>
+     *   <li>6.2 supports Jakarta EE 9.1</li>
      *   <li>7.X supports Jakarta EE 10</li>
      *   <li>8.X supports Jakarta EE 11</li>
      *   WebLogic:
@@ -598,6 +601,12 @@ public class MavenProjectSupport {
         List<DependencyDesc> jakartaEE10Full = new ArrayList<>();
         List<DependencyDesc> jakartaEE11Web = new ArrayList<>();
         List<DependencyDesc> jakartaEE11Full = new ArrayList<>();
+        
+        // The version field from the DependencyDesc Java Record will be
+        // matched with a String.startsWith(...) method, hence the version
+        // should be declared at is minimum expression. e.g
+        // GlassFish 7.0.24 will be matched to 7.0 and return true for 
+        // Profile.JakartaEE_10
 
         // Java/Jakarta EE specification
         javaEE5.add(new DependencyDesc("javaee", "javaee-api", "5.0"));
@@ -616,8 +625,8 @@ public class MavenProjectSupport {
         jakartaEE91Full.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-api","9.1.0"));
         jakartaEE10Web.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-web-api","10.0.0"));
         jakartaEE10Full.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-api","10.0.0"));
-        jakartaEE11Web.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-web-api","11.0.0-RC1"));
-        jakartaEE11Full.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-api","11.0.0-RC1"));
+        jakartaEE11Web.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-web-api","11.0.0"));
+        jakartaEE11Full.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-api","11.0.0"));
 
         // GlassFish implementations
         javaEE5.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "2"));
@@ -625,42 +634,62 @@ public class MavenProjectSupport {
         javaEE6Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "3"));
         javaEE6Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "3"));
         javaEE7Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "4.0"));
-        javaEE7Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "4.0.1"));
-        javaEE7Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "4.1.2"));
-        javaEE7Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "4.1.2"));
-        javaEE8Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "5.1.0"));
-        javaEE8Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "5.1.0"));
-        jakartaEE8Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "5.1.0"));
-        jakartaEE8Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "5.1.0"));
-        jakartaEE9Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "6.0.0"));
-        jakartaEE9Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "6.0.0"));
-        jakartaEE91Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "6.2.5"));
-        jakartaEE91Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "6.2.5"));
-        jakartaEE10Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "7.0.24"));
-        jakartaEE10Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "7.0.24"));
-        jakartaEE11Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "8.0.0-M11"));
-        jakartaEE11Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "8.0.0-M11"));
+        javaEE7Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "4.0"));
+        javaEE7Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "4.1"));
+        javaEE7Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "4.1"));
+        javaEE8Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "5.0"));
+        javaEE8Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "5.0"));
+        jakartaEE8Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "5.1"));
+        jakartaEE8Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "5.1"));
+        jakartaEE9Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "6.0"));
+        jakartaEE9Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "6.0"));
+        jakartaEE91Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "6.1"));
+        jakartaEE91Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "6.1"));
+        jakartaEE91Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "6.2"));
+        jakartaEE91Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "6.2"));
+        jakartaEE10Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "7.0"));
+        jakartaEE10Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "7.0"));
+        jakartaEE11Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "8.0"));
+        jakartaEE11Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "8.0"));
         
+        // Tomcat implementations
+        javaEE6Web.add(new DependencyDesc("org.apache.tomcat.embed", "tomcat-embed-core", "7"));
+        javaEE7Web.add(new DependencyDesc("org.apache.tomcat.embed", "tomcat-embed-core", "8"));
+        javaEE8Web.add(new DependencyDesc("org.apache.tomcat.embed", "tomcat-embed-core", "9"));
+        jakartaEE8Web.add(new DependencyDesc("org.apache.tomcat.embed", "tomcat-embed-core", "9"));
+        jakartaEE91Web.add(new DependencyDesc("org.apache.tomcat.embed", "tomcat-embed-core", "10.0"));
+        jakartaEE10Web.add(new DependencyDesc("org.apache.tomcat.embed", "tomcat-embed-core", "10.1"));
+        jakartaEE11Web.add(new DependencyDesc("org.apache.tomcat.embed", "tomcat-embed-core", "11"));
+        
+        
+        // TomEE implementations
+        javaEE7Web.add(new DependencyDesc("org.apache.tomee", "tomee-embedded", "7"));
+        javaEE7Full.add(new DependencyDesc("org.apache.tomee", "tomee-embedded", "7"));
+        jakartaEE8Web.add(new DependencyDesc("org.apache.tomee", "tomee-embedded", "8"));
+        jakartaEE91Full.add(new DependencyDesc("org.apache.tomee", "tomee-embedded", "9"));
+        jakartaEE91Web.add(new DependencyDesc("org.apache.tomee", "tomee-embedded", "9"));
+        jakartaEE10Full.add(new DependencyDesc("org.apache.tomee", "tomee-embedded", "10"));
+        jakartaEE10Web.add(new DependencyDesc("org.apache.tomee", "tomee-embedded", "10"));
 
         // WebLogic implementations
-//        javaEE5.add(new DependencyDesc("weblogic", "weblogic", "10"));
-//        javaEE6Full.add(new DependencyDesc("weblogic", "weblogic", "12"));
+        javaEE5.add(new DependencyDesc("weblogic", "weblogic", "10"));
+        javaEE6Full.add(new DependencyDesc("weblogic", "weblogic", "12"));
 
         // JBoss implementations
-        javaEE5.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-5.0", "1.0.0.GA"));
-        javaEE5.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-all-5.0", "1.0.0.GA"));
-        javaEE6Full.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-6.0", "3.0.3.Final"));
-        javaEE6Full.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-all-6.0", "3.0.3.Final"));
-        javaEE6Web.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-web-6.0", "3.0.3.Final"));
-        javaEE7Full.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-7.0", "1.1.1.Final"));
-        javaEE7Full.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-all-7.0", "1.1.1.Final"));
-        javaEE7Web.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-web-7.0", "1.1.1.Final"));
-        javaEE8Full.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-8.0", "1.0.4.Final"));
-        javaEE8Full.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-all-8.0", "1.0.4.Final"));
-        javaEE8Web.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-web-8.0", "1.0.4.Final"));
-        jakartaEE8Full.add(new DependencyDesc("org.jboss.spec", "jboss-jakartaee-8.0", "1.0.1.Final"));
-        jakartaEE8Full.add(new DependencyDesc("org.jboss.spec", "jboss-jakartaee-all-8.0", "1.0.0.Final"));
-        jakartaEE8Web.add(new DependencyDesc("org.jboss.spec", "jboss-jakartaee-web-8.0", "1.0.0.Final"));
+        javaEE5.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-5.0", null));
+        javaEE5.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-all-5.0", null));
+        javaEE6Full.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-6.0", null));
+        javaEE6Full.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-all-6.0", null));
+        javaEE6Web.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-web-6.0", null));
+        javaEE7Full.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-7.0", null));
+        javaEE7Full.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-all-7.0", null));
+        javaEE7Web.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-web-7.0", null));
+        javaEE8Full.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-8.0", null));
+        javaEE8Full.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-all-8.0", null));
+        javaEE8Web.add(new DependencyDesc("org.jboss.spec", "jboss-javaee-web-8.0", null));
+        jakartaEE8Full.add(new DependencyDesc("org.jboss.spec", "jboss-jakartaee-8.0", null));
+        jakartaEE8Full.add(new DependencyDesc("org.jboss.spec", "jboss-jakartaee-all-8.0", null));
+        jakartaEE8Web.add(new DependencyDesc("org.jboss.spec", "jboss-jakartaee-web-8.0", null));
 
         JAKARTA_EE_MAP.put(Profile.JAKARTA_EE_11_FULL, jakartaEE11Full);
         JAKARTA_EE_MAP.put(Profile.JAKARTA_EE_11_WEB, jakartaEE11Web);

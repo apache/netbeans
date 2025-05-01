@@ -59,7 +59,6 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
-import org.openide.util.datatransfer.ExClipboard;
 import org.openide.windows.ExternalDropHandler;
 import org.openide.windows.TopComponent;
 
@@ -352,8 +351,7 @@ final class QuietEditorPane extends JEditorPane {
 
         @Override
         public void exportToClipboard(JComponent comp, Clipboard clip, int action) {
-            ExClipboard clipboard = Lookup.getDefault().lookup(ExClipboard.class);
-            delegator.exportToClipboard(comp, clipboard != null ? clipboard : clip, action);
+            delegator.exportToClipboard(comp, clip, action);
         }
 
         @Override

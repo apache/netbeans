@@ -244,12 +244,7 @@ public class ComputeOverriders {
             fillInMethods(ElementFilter.typesIn(te.getEnclosedElements()), methods);
         }
     }
-    private Set<ElementHandle<TypeElement>> computeUsers(URL source, Set<ElementHandle<TypeElement>> base, long[] classIndexCumulative) {
-        ClasspathInfo cpinfo = ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(source));
-        
-        return computeUsers(cpinfo, ClassIndex.SearchScope.SOURCE, base, classIndexCumulative);
-    }
-    
+
     private Set<ElementHandle<TypeElement>> computeUsers(ClasspathInfo cpinfo, SearchScope scope, Set<ElementHandle<TypeElement>> base, long[] classIndexCumulative) {
         long startTime = System.currentTimeMillis();
 
@@ -365,9 +360,10 @@ public class ComputeOverriders {
             }
 
             binaryRoots.retainAll(binaryDeps.keySet());
+            ClasspathInfo cpinfo = ClasspathInfo.create(ClassPath.EMPTY, ClassPathSupport.createClassPath(binaryRoots.toArray(URL[]::new)), ClassPath.EMPTY);
 
             for (ElementHandle<TypeElement> handle : baseHandles) {
-                Set<ElementHandle<TypeElement>> types = computeUsers(ClasspathInfo.create(ClassPath.EMPTY, ClassPathSupport.createClassPath(binaryRoots.toArray(URL[]::new)), ClassPath.EMPTY), SearchScope.DEPENDENCIES, Set.of(handle), classIndexCumulative);
+                Set<ElementHandle<TypeElement>> types = computeUsers(cpinfo, SearchScope.DEPENDENCIES, Set.of(handle), classIndexCumulative);
 
                 if (types == null/*canceled*/ || cancel.get()) {
                     return null;
@@ -380,6 +376,9 @@ public class ComputeOverriders {
         Map<URL, Map<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>>> result = new LinkedHashMap<>();
 
         for (URL file : sourceRoots) {
+            
+            ClasspathInfo cpinfo = ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(file));
+            
             for (ElementHandle<TypeElement> base : baseHandles) {
                 if (cancel.get()) return null;
                 
@@ -402,7 +401,7 @@ public class ComputeOverriders {
                     }
                 }
 
-                Set<ElementHandle<TypeElement>> types = computeUsers(file, baseTypes, classIndexCumulative);
+                Set<ElementHandle<TypeElement>> types = computeUsers(cpinfo, ClassIndex.SearchScope.SOURCE, baseTypes, classIndexCumulative);
 
                 if (types == null/*canceled*/ || cancel.get()) {
                     return null;

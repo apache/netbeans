@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,12 +47,10 @@ import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClassIndex.SearchKind;
 import org.netbeans.api.java.source.ClassIndex.SearchScope;
 import org.netbeans.api.java.source.ClasspathInfo;
-import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.SourceUtils;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -83,22 +82,16 @@ public class ComputeOverriders {
         try {
             //TODO: from SourceUtils (which filters out source roots that do not belong to open projects):
             //Create inverse dependencies
-            final Map<URL, List<URL>> inverseDeps = new HashMap<URL, List<URL>> ();
-            for (Map.Entry<URL,List<URL>> entry : sourceDeps.entrySet()) {
-                final URL u1 = entry.getKey();
-                final List<URL> l1 = entry.getValue();
-                for (URL u2 : l1) {
-                    List<URL> l2 = inverseDeps.get(u2);
-                    if (l2 == null) {
-                        l2 = new ArrayList<URL>();
-                        inverseDeps.put (u2,l2);
-                    }
-                    l2.add (u1);
+            final Map<URL, List<URL>> inverseDeps = new HashMap<>();
+            for (Map.Entry<URL, List<URL>> entry : sourceDeps.entrySet()) {
+                for (URL url : entry.getValue()) {
+                    inverseDeps.computeIfAbsent(url, k -> new ArrayList<>())
+                               .add(entry.getKey());
                 }
             }
             //Collect dependencies
-            final Set<URL> result = new HashSet<URL>();
-            final LinkedList<URL> todo = new LinkedList<URL> ();
+            final Set<URL> result = new HashSet<>();
+            final LinkedList<URL> todo = new LinkedList<>();
             todo.add (thisSourceRoot);
             List<URL> peers = rootPeers != null ? rootPeers.get(thisSourceRoot) : null;
             if (peers != null)
@@ -130,7 +123,7 @@ public class ComputeOverriders {
 
     private Set<URL> findBinaryRootsForSourceRoot(FileObject sourceRoot, Map<URL, List<URL>> binaryDeps) {
 //      BinaryForSourceQuery.findBinaryRoots(thisSourceRoot).getRoots();
-        Set<URL> result = new HashSet<URL>();
+        Set<URL> result = new HashSet<>();
 
         for (URL bin : binaryDeps.keySet()) {
             if (cancel.get()) return Collections.emptySet();
@@ -179,21 +172,20 @@ public class ComputeOverriders {
 //                }
 
 
-        final Map<ElementHandle<TypeElement>, List<ElementHandle<ExecutableElement>>> methods = new HashMap<ElementHandle<TypeElement>, List<ElementHandle<ExecutableElement>>>();
+        final Map<ElementHandle<TypeElement>, List<ElementHandle<ExecutableElement>>> methods = new HashMap<>();
 
         if (ee == null) {
             if (te == null) {
                 fillInMethods(info.getTopLevelElements(), methods);
             } else {
-                methods.put(ElementHandle.create(te), Collections.<ElementHandle<ExecutableElement>>emptyList());
+                methods.put(ElementHandle.create(te), Collections.emptyList());
             }
         } else {
             TypeElement owner = (TypeElement) ee.getEnclosingElement();
-
-            methods.put(ElementHandle.create(owner), Collections.singletonList(ElementHandle.create(ee)));
+            methods.put(ElementHandle.create(owner), List.of(ElementHandle.create(ee)));
         }
 
-        final Map<ElementHandle<? extends Element>, List<ElementDescription>> overriding = new HashMap<ElementHandle<? extends Element>, List<ElementDescription>>();
+        final Map<ElementHandle<? extends Element>, List<ElementDescription>> overriding = new HashMap<>();
 
         long startTime = System.currentTimeMillis();
         long[] classIndexTime = new long[1];
@@ -241,7 +233,7 @@ public class ComputeOverriders {
 
     private static void fillInMethods(Iterable<? extends TypeElement> types, Map<ElementHandle<TypeElement>, List<ElementHandle<ExecutableElement>>> methods) {
         for (TypeElement te : types) {
-            List<ElementHandle<ExecutableElement>> l = new LinkedList<ElementHandle<ExecutableElement>>();
+            List<ElementHandle<ExecutableElement>> l = new LinkedList<>();
 
             for (ExecutableElement ee : ElementFilter.methodsIn(te.getEnclosedElements())) {
                 l.add(ElementHandle.create(ee));
@@ -262,20 +254,20 @@ public class ComputeOverriders {
         long startTime = System.currentTimeMillis();
 
         try {
-            List<ElementHandle<TypeElement>> l = new LinkedList<ElementHandle<TypeElement>>(base);
-            Set<ElementHandle<TypeElement>> result = new HashSet<ElementHandle<TypeElement>>();
-            Set<ElementHandle<TypeElement>> seen = new HashSet<ElementHandle<TypeElement>>();
+            Deque<ElementHandle<TypeElement>> l = new LinkedList<>(base);
+            Set<ElementHandle<TypeElement>> result = new HashSet<>();
+            Set<ElementHandle<TypeElement>> seen = new HashSet<>();
 
             while (!l.isEmpty()) {
                 if (cancel.get()) return null;
                 
-                ElementHandle<TypeElement> eh = l.remove(0);
+                ElementHandle<TypeElement> eh = l.removeFirst();
 
                 if (!seen.add(eh)) continue;
 
                 result.add(eh);
-                Set<ElementHandle<TypeElement>> typeElements = cpinfo.getClassIndex().getElements(eh, Collections.singleton(SearchKind.IMPLEMENTORS), EnumSet.of(scope));
-                //XXX: Canceling
+                ClassIndex index = cpinfo.getClassIndex();
+                Set<ElementHandle<TypeElement>> typeElements = index.getElements(eh, Set.of(SearchKind.IMPLEMENTORS), EnumSet.of(scope));
                 if (typeElements != null) {
                     l.addAll(typeElements);
                 }
@@ -306,7 +298,7 @@ public class ComputeOverriders {
         }
         List<URL> sourceRoots;
         try {
-            sourceRoots = new LinkedList<URL>(Utilities.topologicalSort(sourceDeps.keySet(), sourceDeps));
+            sourceRoots = new LinkedList<>(Utilities.topologicalSort(sourceDeps.keySet(), sourceDeps));
         } catch (TopologicalSortException ex) {
             if (interactive) {
                 Exceptions.attachLocalizedMessage(ex,NbBundle.getMessage(GoToImplementation.class, "ERR_CycleInDependencies"));
@@ -349,7 +341,7 @@ public class ComputeOverriders {
             return null;
         }
 
-        baseHandles = new HashSet<ElementHandle<TypeElement>>(baseHandles);
+        baseHandles = new HashSet<>(baseHandles);
 
         for (Iterator<ElementHandle<TypeElement>> it = baseHandles.iterator(); it.hasNext(); ) {
             if (cancel.get()) return null;
@@ -359,10 +351,10 @@ public class ComputeOverriders {
             }
         }
 
-        Map<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>> auxHandles = new HashMap<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>>();
+        Map<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>> auxHandles = new HashMap<>();
 
         if (!sourceDeps.containsKey(thisSourceRootURL)) {
-            Set<URL> binaryRoots = new HashSet<URL>();
+            Set<URL> binaryRoots = new HashSet<>();
             
             for (URL sr : sourceRoots) {
                 List<URL> deps = sourceDeps.get(sr);
@@ -375,7 +367,7 @@ public class ComputeOverriders {
             binaryRoots.retainAll(binaryDeps.keySet());
 
             for (ElementHandle<TypeElement> handle : baseHandles) {
-                Set<ElementHandle<TypeElement>> types = computeUsers(ClasspathInfo.create(ClassPath.EMPTY, ClassPathSupport.createClassPath(binaryRoots.toArray(new URL[0])), ClassPath.EMPTY), SearchScope.DEPENDENCIES, Collections.singleton(handle), classIndexCumulative);
+                Set<ElementHandle<TypeElement>> types = computeUsers(ClasspathInfo.create(ClassPath.EMPTY, ClassPathSupport.createClassPath(binaryRoots.toArray(URL[]::new)), ClassPath.EMPTY), SearchScope.DEPENDENCIES, Set.of(handle), classIndexCumulative);
 
                 if (types == null/*canceled*/ || cancel.get()) {
                     return null;
@@ -385,13 +377,13 @@ public class ComputeOverriders {
             }
         }
         
-        Map<URL, Map<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>>> result = new LinkedHashMap<URL, Map<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>>>();
+        Map<URL, Map<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>>> result = new LinkedHashMap<>();
 
         for (URL file : sourceRoots) {
             for (ElementHandle<TypeElement> base : baseHandles) {
                 if (cancel.get()) return null;
                 
-                Set<ElementHandle<TypeElement>> baseTypes = new HashSet<ElementHandle<TypeElement>>();
+                Set<ElementHandle<TypeElement>> baseTypes = new HashSet<>();
 
                 baseTypes.add(base);
 
@@ -417,14 +409,8 @@ public class ComputeOverriders {
                 }
                 
                 types.removeAll(baseTypes);
-
-                Map<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>> currentUsers = result.get(file);
-
-                if (currentUsers == null) {
-                    result.put(file, currentUsers = new LinkedHashMap<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>>());
-                }
-
-                currentUsers.put(base, types);
+                result.computeIfAbsent(file, k -> new LinkedHashMap<>())
+                      .put(base, types);
             }
         }
 
@@ -444,55 +430,43 @@ public class ComputeOverriders {
             JavaSource js = JavaSource.create(cpinfo);
 
             try {
-                js.runUserActionTask(new Task<CompilationController>() {
-                    public void run(CompilationController controller) throws Exception {
-                        controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                        Set<Element> seenElements = new HashSet<Element>();
-                        Element resolvedOriginalType = originalType.resolve(controller);
+                js.runUserActionTask(controller -> {
+                    controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                    Set<Element> seenElements = new HashSet<>();
+                    Element resolvedOriginalType = originalType.resolve(controller);
 
-                        if (resolvedOriginalType == null) {
-                            return ;
+                    if (resolvedOriginalType == null) {
+                        return ;
+                    }
+
+                    for (ElementHandle<TypeElement> typeHandle : users) {
+                        if (cancel.get()) return ;
+                        TypeElement type = typeHandle.resolve(controller);
+
+                        if (type == null || !seenElements.add(type)) {
+                            continue;
                         }
-                        
-                        for (ElementHandle<TypeElement> typeHandle : users) {
-                            if (cancel.get()) return ;
-                            TypeElement type = typeHandle.resolve(controller);
 
-                            if (type == null || !seenElements.add(type)) {
-                                continue;
-                            }
+                        Types types = controller.getTypes();
 
-                            Types types = controller.getTypes();
+                        if (types.isSubtype(types.erasure(type.asType()), types.erasure(resolvedOriginalType.asType()))) {
+                            overriding.computeIfAbsent(originalType, k -> new LinkedList<>())
+                                      .add(new ElementDescription(controller, type, true));
 
-                            if (types.isSubtype(types.erasure(type.asType()), types.erasure(resolvedOriginalType.asType()))) {
-                                List<ElementDescription> classOverriders = overriding.get(originalType);
+                            for (ElementHandle<ExecutableElement> originalMethodHandle : methods) {
+                                ExecutableElement originalMethod = originalMethodHandle.resolve(controller);
 
-                                if (classOverriders == null) {
-                                    overriding.put(originalType, classOverriders = new LinkedList<ElementDescription>());
-                                }
+                                if (originalMethod != null) {
+                                    ExecutableElement overrider = getImplementationOf(controller, originalMethod, type);
 
-                                classOverriders.add(new ElementDescription(controller, type, true));
-
-                                for (ElementHandle<ExecutableElement> originalMethodHandle : methods) {
-                                    ExecutableElement originalMethod = originalMethodHandle.resolve(controller);
-
-                                    if (originalMethod != null) {
-                                        ExecutableElement overrider = getImplementationOf(controller, originalMethod, type);
-
-                                        if (overrider == null) {
-                                            continue;
-                                        }
-
-                                        List<ElementDescription> overriddingMethods = overriding.get(originalMethodHandle);
-
-                                        if (overriddingMethods == null) {
-                                            overriding.put(originalMethodHandle, overriddingMethods = new ArrayList<ElementDescription>());
-                                        }
-
-                                        overriddingMethods.add(new ElementDescription(controller, overrider, true));
-                                    } else {
-                                        Logger.getLogger("global").log(Level.SEVERE, "IsOverriddenAnnotationHandler: originalMethod == null!"); //NOI18N
+                                    if (overrider == null) {
+                                        continue;
                                     }
+
+                                    overriding.computeIfAbsent(originalMethodHandle, k -> new ArrayList<>())
+                                              .add(new ElementDescription(controller, overrider, true));
+                                } else {
+                                    Logger.getLogger("global").log(Level.SEVERE, "IsOverriddenAnnotationHandler: originalMethod == null!"); //NOI18N
                                 }
                             }
                         }
@@ -527,8 +501,8 @@ public class ComputeOverriders {
             return null;
         }
 
-        Class<?> clazz = null;
-        String method = null;
+        Class<?> clazz;
+        String method;
 
         try {
             clazz = l.loadClass("org.netbeans.modules.parsing.impl.indexing.friendapi.IndexingController");
@@ -569,8 +543,8 @@ public class ComputeOverriders {
             return null;
         }
 
-        Class<?> clazz = null;
-        String method = null;
+        Class<?> clazz;
+        String method;
 
         try {
             clazz = l.loadClass("org.netbeans.modules.parsing.impl.indexing.friendapi.IndexingController");

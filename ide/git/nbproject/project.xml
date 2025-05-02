@@ -421,10 +421,7 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <friend-packages>
-                <friend>org.netbeans.modules.odcs.git</friend>
-                <package>org.netbeans.modules.git.api</package>
-            </friend-packages>
+            <public-packages/>
         </data>
     </configuration>
 </project>

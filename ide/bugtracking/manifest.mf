@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-AutoUpdate-Show-In-Client: false
-OpenIDE-Module: org.netbeans.modules.bugtracking
-OpenIDE-Module-Layer: org/netbeans/modules/bugtracking/layer.xml
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/bugtracking/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.140
-Netigso-Export-Package: org.netbeans.modules.bugtracking.api,org.netbeans.modules.bugtracking.spi

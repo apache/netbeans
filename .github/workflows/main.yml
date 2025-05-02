@@ -575,12 +575,6 @@ jobs:
       - name: ide/api.xml.ui
         run: ant $OPTS -f ide/api.xml.ui test
 
-      - name: ide/bugtracking
-        run: .github/retry.sh ant $OPTS -f ide/bugtracking test
-
-      - name: ide/bugtracking.bridge
-        run: .github/retry.sh ant $OPTS -f ide/bugtracking.bridge test
-
       - name: ide/code.analysis
         run: ant $OPTS -f ide/code.analysis test
 

@@ -29,7 +29,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author  Petr Kuzel
  * @version
  */
-@ServiceProvider(service = CatalogProvider.class)
+@ServiceProvider(service = CatalogProvider.class, position = 200)
 public class XCatalogProvider implements CatalogProvider {
 
     @Override

@@ -34,7 +34,7 @@ import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
 
 
-/** 
+/**
  * The pool holding mounted catalogs both at per project basics
  * and at at global basics. Project scope catalogs are always considered a higher
  * priority ones.
@@ -47,9 +47,9 @@ import org.openide.util.lookup.ServiceProvider;
  * <filesystem>
  * <folder name="Plugins"><folder name="XML"><folder name="UserCatalogs">
  *   <file name="org-mycompany-mymodule-MyCatalog.instance">
- *      <attr name="instanceCreate" 
+ *      <attr name="instanceCreate"
  *            methodValue="org.mycompany.mymodule.MyCatalog.createSingleton"/>
- *      <attr name="instanceOf" 
+ *      <attr name="instanceOf"
  *            stringValue="org.netbeans.modules.xml.catalog.spi.CatalogReader"/>
  *   </file>
  * </folder></folder></folder>
@@ -88,21 +88,21 @@ public final class CatalogSettings implements Externalizable {
     // ordered set of mounted catalogs
     private List mountedCatalogs = new ArrayList(5);
 
-    private PropertyChangeSupport listeners = null; 
+    private PropertyChangeSupport listeners = null;
 
     private final CatalogListener catalogListener = new CL();
-    
+
     // the only active instance in current project
     private static CatalogSettings instance = null;
-    
-    /** 
+
+    /**
      * Just for externalization purposes.
      * It MUST NOT be called directly by a user code.
      */
     public CatalogSettings() {
         init();
     }
-    
+
 
     /**
      * Initialized the instance from externalization.
@@ -110,8 +110,8 @@ public final class CatalogSettings implements Externalizable {
     private void init() {
         listeners = new PropertyChangeSupport(this);
     }
-    
-    
+
+
     /**
      * Return active settings <b>instance</b> in the only one active project.
      * @deprecated does not allow multiple opened projects
@@ -122,8 +122,8 @@ public final class CatalogSettings implements Externalizable {
         }
         return instance;
     }
-    
-    /** 
+
+    /**
      * Register mounted catalog at project scope level.
      * @param provider to be registered. Must not be null.
      */
@@ -133,10 +133,10 @@ public final class CatalogSettings implements Externalizable {
                 throw new IllegalArgumentException("null provider not permited"); // NOI18N
             if (mountedCatalogs.contains(provider) == false) {
                 mountedCatalogs.add(provider);
-            }   
+            }
         }
         firePropertyChange(PROP_MOUNTED_CATALOGS, null, null);
-        
+
         // add listener to the catalog
         try {
             provider.addCatalogListener(catalogListener);
@@ -146,23 +146,23 @@ public final class CatalogSettings implements Externalizable {
             // change
         }
     }
-    
-    /** 
-     * Deregister given catalog at project scope level. 
+
+    /**
+     * Deregister given catalog at project scope level.
      */
     public final void removeCatalog(CatalogReader provider) {
         synchronized (this) {
             mountedCatalogs.remove(provider);
         }
         firePropertyChange(PROP_MOUNTED_CATALOGS, null, null);
-        
+
         // remove listener to the catalog
         try {
             provider.removeCatalogListener(catalogListener);
         } catch (UnsupportedOperationException ex) {
             // ignore it
         }
-        
+
     }
 
     /**
@@ -176,7 +176,7 @@ public final class CatalogSettings implements Externalizable {
 
     /**
      * Return iterator of providers of given class.
-     * 
+     *
      * @param providerClasses returned providers will be assignable to it
      *                        e.g. <code>CatalogReader</code> class or <code>null</code>
      *                        as a wildcard.
@@ -186,18 +186,18 @@ public final class CatalogSettings implements Externalizable {
     public final synchronized Iterator getCatalogs(Class[] providerClasses) {
 
         // compose global registrations and local(project) registrations
-        IteratorIterator it = new IteratorIterator();                       
+        IteratorIterator it = new IteratorIterator();
         it.add(mountedCatalogs.iterator());
-        
+
         Lookup.Template template = new Lookup.Template(CatalogReader.class);
         Lookup.Result result = getUserCatalogsLookup().lookup(template);
         it.add(result.allInstances().iterator());
-        
+
         if (providerClasses == null)
             return it;
-        
+
         ArrayList list = new ArrayList();
-        
+
         while (it.hasNext()) {
             Object next = it.next();
             // provider test
@@ -212,7 +212,7 @@ public final class CatalogSettings implements Externalizable {
             if (add) list.add(next);
         }
         return list.iterator();
-    }    
+    }
 
     /**
      * Provide Lookup containing registered module catalogs.
@@ -223,46 +223,46 @@ public final class CatalogSettings implements Externalizable {
         }
         return userCatalogLookup;
     }
-    
+
     // ~~~~~~~~~~~~~~~~~~~~~~ listeners ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
-    
+
+
     public void addPropertyChangeListener(PropertyChangeListener l){
         listeners.addPropertyChangeListener(l);
     }
-    
+
     public void removePropertyChangeListener(PropertyChangeListener l) {
         listeners.removePropertyChangeListener(l);
     }
-    
+
     private void firePropertyChange(String name, Object oldValue, Object newValue) {
         listeners.firePropertyChange(name, oldValue, newValue);
     }
-    
+
     // ~~~~~~~~~~~~~~~~~~ Persistent state ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
-    
+
+
     /**
      * Read persistent catalog settings logging diagnostics information if needed.
      */
     public synchronized void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        //super.readExternal(in);        
+        //super.readExternal(in);
 
         //if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug("CatalogSettings.readExternal()"); // NOI18N
 
         int version = in.readInt();  //IN version
-        
+
         // version switch
-        
+
         if (version != VERSION_1) throw new StreamCorruptedException("Unsupported catalog externalization protocol version (" + version + ").");  // NOI18N
-        
+
         int persistentCount = in.readInt();  //IN count
-        
+
         for (int i = 0; i<persistentCount; i++) {
 
             String catalogClass = (String) in.readObject();  //IN class name
             NbMarshalledObject marshaled = (NbMarshalledObject) in.readObject(); //IN marshalled object
-            try {              
+            try {
                 Object unmarshaled = marshaled.get();
                 if (mountedCatalogs.contains(unmarshaled) == false) {
                     mountedCatalogs.add(unmarshaled);
@@ -294,7 +294,7 @@ public final class CatalogSettings implements Externalizable {
             }
         }
     }
-    
+
     /**
      * Write persistent catalog settings as NbMarshalledObjects with some diagnostics information.
      */
@@ -304,22 +304,22 @@ public final class CatalogSettings implements Externalizable {
         //if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug("CatalogSettings.writeExternal()"); // NOI18N
 
         out.writeInt(VERSION_1);  //OUT version
-        
+
         int persistentCount = 0;
 
         Iterator it = mountedCatalogs.iterator();
-        
+
         while (it.hasNext()) {
             Object next = it.next();
             if (next instanceof Serializable) {
                 persistentCount++;
-            }            
+            }
         }
-        
+
         it = mountedCatalogs.iterator();
-                
+
         out.writeInt(persistentCount);  //OUT count
-        
+
         while (it.hasNext()) {
             Object next = it.next();
             if (next instanceof Serializable) {
@@ -345,26 +345,26 @@ public final class CatalogSettings implements Externalizable {
                     );
                 }
             }
-        }        
-    }    
-        
+        }
+    }
+
     /**
      * For debugging purposes only.
      */
     @Override public String toString() {
         Lookup.Template template = new Lookup.Template<CatalogReader>(CatalogReader.class);
-        Lookup.Result result = getUserCatalogsLookup().lookup(template);        
-        return "CatalogSettings[ global-scope: " + result.allInstances() + 
+        Lookup.Result result = getUserCatalogsLookup().lookup(template);
+        return "CatalogSettings[ global-scope: " + result.allInstances() +
             ", project-scope: " + mountedCatalogs + " ]";
-    }        
-    
-    
+    }
+
+
     /**
      * Private catalog listener exposing all changes at catalogs
      * as a change at this bean, so it get saved later.
      */
     private class CL implements CatalogListener {
-    
+
         /** Given public ID has changed - disappeared.  */
         public void notifyRemoved(String publicID) {
         }
@@ -384,5 +384,5 @@ public final class CatalogSettings implements Externalizable {
             firePropertyChange("settings changed!", null, CatalogSettings.this);
         }
     }
-    
+
 }

@@ -32,6 +32,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = CatalogProvider.class)
 public class XCatalogProvider implements CatalogProvider {
 
+    @Override
     public Class provideClass() throws IOException, ClassNotFoundException {
         return XCatalog.class;
     }

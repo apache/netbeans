@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.xml.catalog.impl.sun;
 
-import java.awt.Image;
 import java.io.*;
 import java.beans.*;
 import java.util.*;
@@ -43,29 +42,29 @@ import org.openide.util.NbBundle;
  *
  * @author  Petr Kuzel
  */
-public final class Catalog 
+public final class Catalog
     implements org.netbeans.modules.xml.catalog.spi.CatalogReader, CatalogDescriptorBase, Serializable, EntityResolver{
 
     private static final long serialVersionUID = 123659121L;
-        
+
     private transient PropertyChangeSupport pchs;
 
     private transient EntityResolver peer;
 
     private transient String desc;
-    
+
     // a catalog source location
     private String location;
-    
+
     // a public preference
     private boolean preference = true;
-    
+
     private static final String PROP_LOCATION = "cat-loc";
-    
+
     private static final String PROP_PREF_PUBLIC = "cat-pref";
 
     private static final String PROP_DESC = CatalogDescriptorBase.PROP_CATALOG_DESC;
-    
+
     /** Creates a new instance of Catalog */
     public Catalog() {
     }
@@ -75,19 +74,19 @@ public final class Catalog
      */
     public void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        
+
         // lazy init transient fields, see getPCHS() and getPeer() methods
         setShortDescription(NbBundle.getMessage(Catalog.class, "MSG_prepared", location));
     }
-    
+
     /**
      * Set Catalog source (a URL).
      */
     public synchronized void setLocation(String location) {
         String old = this.location;
         this.location = location;
-        peer = null;  // lazy init       
-        getPCHS().firePropertyChange(PROP_LOCATION, old, location);        
+        peer = null;  // lazy init
+        getPCHS().firePropertyChange(PROP_LOCATION, old, location);
         updateDisplayName();
     }
 
@@ -97,14 +96,14 @@ public final class Catalog
     public String getLocation() {
         return location;
     }
-    
+
     /**
      * Set public resolving preference.
      */
     public void setPreferPublic(boolean val) {
         boolean old = preference;
         this.preference = val;
-        getPCHS().firePropertyChange(PROP_LOCATION, old, val);
+        getPCHS().firePropertyChange(PROP_PREF_PUBLIC, old, val);
     }
 
     /**
@@ -113,28 +112,31 @@ public final class Catalog
     public boolean isPreferPublic() {
         return preference;
     }
-    
+
     /**
      * Optional operation allowing to listen at catalog for changes.
      * @throws UnsupportedOpertaionException if not supported by the implementation.
      */
+    @Override
     public void addCatalogListener(CatalogListener l) {
         throw new UnsupportedOperationException();
     }
-    
+
     /** Registers new listener.  */
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener l) {
         getPCHS().addPropertyChangeListener(l);
     }
-    
+
     /**
      * @return I18N display name
      */
+    @Override
     public String getDisplayName() {
         String src = location;
         if (src == null || "".equals(src.trim())) {
             return NbBundle.getMessage(Catalog.class, "PROP_missing_location");
-        } else {        
+        } else {
             return NbBundle.getMessage(Catalog.class, "TITLE_catalog", location);
         }
     }
@@ -142,7 +144,7 @@ public final class Catalog
     public String getName() {
         return getClass() + location + preference;
     }
-    
+
     /**
      * Notify listeners that display name have changed.
      */
@@ -150,7 +152,7 @@ public final class Catalog
         String name = getDisplayName();
         getPCHS().firePropertyChange(CatalogDescriptorBase.PROP_CATALOG_NAME, null, name);
     }
-    
+
     /**
      * Return visuaized state of given catalog.
      * @param type of icon defined by JavaBeans specs
@@ -159,11 +161,12 @@ public final class Catalog
     public String getIconResource(int type) {
         return null;
     }
-    
+
     /**
      * Get String iterator representing all public IDs registered in catalog.
      * @return null if cannot proceed, try later.
      */
+    @Override
     public Iterator getPublicIDs() {
         Object p = getPeer();
         if (p instanceof org.apache.xml.resolver.tools.NbCatalogResolver) {
@@ -172,24 +175,26 @@ public final class Catalog
         }
         return null;
     }
-    
+
     /**
      * @return I18N short description
      */
+    @Override
     public String getShortDescription() {
         return desc;
     }
-    
+
     public void setShortDescription(String desc) {
         String old = this.desc;
         this.desc = desc;
         getPCHS().firePropertyChange(PROP_DESC, old, desc);
     }
-    
+
     /**
      * Get registered systemid for given public Id or null if not registered.
      * @return null if not registered
      */
+    @Override
     public String getSystemID(String publicId) {
         Object p = getPeer();
         if (p instanceof org.apache.xml.resolver.tools.NbCatalogResolver)
@@ -199,23 +204,26 @@ public final class Catalog
               catch (java.io.IOException ex) {}
         return null;
     }
-    
+
     /**
      * Refresh content according to content of mounted catalog.
      */
+    @Override
     public synchronized void refresh() {
         peer = createPeer(location, preference);
     }
-    
+
     /**
      * Optional operation couled with addCatalogListener.
      * @throws UnsupportedOpertaionException if not supported by the implementation.
      */
+    @Override
     public void removeCatalogListener(CatalogListener l) {
         throw new UnsupportedOperationException();
     }
-    
+
     /** Unregister the listener.  */
+    @Override
     public void removePropertyChangeListener(PropertyChangeListener l) {
         getPCHS().removePropertyChangeListener(l);
     }
@@ -223,10 +231,11 @@ public final class Catalog
     /**
      * Delegate entity resution process to peer if exists.
      */
-    public InputSource resolveEntity(String publicID, String systemID) throws SAXException, IOException {        
+    @Override
+    public InputSource resolveEntity(String publicID, String systemID) throws SAXException, IOException {
         return getPeer().resolveEntity(publicID, systemID);
     }
-    
+
 /** We are a key and must retain equals immutability
     public boolean equals(Object obj) {
         if (obj instanceof Catalog) {
@@ -237,17 +246,18 @@ public final class Catalog
         }
         return false;
     }
-    
-    
+
+
     public int hashCode() {
         return (location != null ? location.hashCode() : 0) ^ (preference?13:7);
     }
-*/    
+*/
     /**
      * Factory new peer and load data into it.
      * As a side effect set short description.
      * @return EntityResolver never <code>null</code>
      */
+    @SuppressWarnings("Convert2Lambda")
     private EntityResolver createPeer(String location, boolean pref) {
         try {
             NbCatalogManager manager = new NbCatalogManager(null);
@@ -263,15 +273,16 @@ public final class Catalog
             setShortDescription(NbBundle.getMessage(Catalog.class, "DESC_error_loading", ex.getLocalizedMessage()));
             //if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug("I/O error loading catalog " + location, ex);
         }
-        
+
         // return dumb peer
         return new EntityResolver () {
+            @Override
             public InputSource resolveEntity(String p, String s) {
                 return null;
             }
         };
     }
-    
+
     /**
      * Lazy init PropertyChangeSupport and return it.
      */
@@ -284,7 +295,7 @@ public final class Catalog
      * Lazy init peer and return it.
      */
     private synchronized EntityResolver getPeer() {
-        
+
         if (peer == null) peer = createPeer(location, preference);
         return peer;
     }
@@ -293,6 +304,7 @@ public final class Catalog
      * Get registered URI for the given name or null if not registered.
      * @return null if not registered
      */
+    @Override
     public String resolveURI(String name) {
         Object p = getPeer();
         if (p instanceof org.apache.xml.resolver.tools.NbCatalogResolver)
@@ -305,7 +317,8 @@ public final class Catalog
     /**
      * Get registered URI for the given publicId or null if not registered.
      * @return null if not registered
-     */ 
+     */
+    @Override
     public String resolvePublic(String publicId) {
         Object p = getPeer();
         if (p instanceof org.apache.xml.resolver.tools.NbCatalogResolver)
@@ -315,5 +328,5 @@ public final class Catalog
               catch (java.io.IOException ex) {}
         return null;
     }
-    
+
 }

@@ -21,15 +21,21 @@ package org.netbeans.modules.xml.catalog.settings;
 import java.io.*;
 import java.util.*;
 import java.beans.*;
+import java.lang.reflect.Method;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.netbeans.modules.xml.catalog.lib.IteratorIterator;
 
 import org.openide.util.io.NbMarshalledObject;
 
 import org.netbeans.modules.xml.catalog.spi.*;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
+import org.openide.util.RequestProcessor.Task;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -71,6 +77,8 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = CatalogSettings.class)
 public final class CatalogSettings implements Externalizable {
 
+    private static final Logger LOG = Logger.getLogger(CatalogSettings.class.getName());
+
     /** Serial Version UID */
     private static final long serialVersionUID = 7895789034L;
 
@@ -86,11 +94,20 @@ public final class CatalogSettings implements Externalizable {
     private static Lookup userCatalogLookup;
 
     // ordered set of mounted catalogs
-    private List mountedCatalogs = new ArrayList(5);
+    private final List<CatalogReader> mountedCatalogs = new ArrayList<>(5);
 
-    private PropertyChangeSupport listeners = null;
+    private final PropertyChangeSupport listeners = new PropertyChangeSupport(this);
 
-    private final CatalogListener catalogListener = new CL();
+    private final CL catalogListener = new CL();
+
+    private final Task saveTask = RequestProcessor.getDefault().create(() -> {
+        try (OutputStream os = openOrCreateSettings();
+                ObjectOutputStream oos = new ObjectOutputStream(os)) {
+            this.writeExternal(oos);
+        } catch (IOException ex) {
+            LOG.log(Level.WARNING, "Failed to save catalog settings", ex);
+        }
+    });
 
     // the only active instance in current project
     private static CatalogSettings instance = null;
@@ -108,9 +125,18 @@ public final class CatalogSettings implements Externalizable {
      * Initialized the instance from externalization.
      */
     private void init() {
-        listeners = new PropertyChangeSupport(this);
+        FileObject serializedSettings = FileUtil.getConfigFile("xml/catalogs/CatalogSettings.serialized");
+        if(serializedSettings != null) {
+            try (
+                    InputStream is = serializedSettings.getInputStream();
+                    ObjectInputStream ois = new ObjectInputStream(is);
+                ) {
+                readExternal(ois);
+            } catch (IOException | ClassNotFoundException | RuntimeException ex) {
+                LOG.log(Level.WARNING, "Failed to load catalog settings", ex);
+            }
+        }
     }
-
 
     /**
      * Return active settings <b>instance</b> in the only one active project.
@@ -136,6 +162,7 @@ public final class CatalogSettings implements Externalizable {
             }
         }
         firePropertyChange(PROP_MOUNTED_CATALOGS, null, null);
+        storePreferences();
 
         // add listener to the catalog
         try {
@@ -144,6 +171,29 @@ public final class CatalogSettings implements Externalizable {
             // ignore it, we just can not listen at it and save it on change
             // it is fully OK until the catalog instance supports data source
             // change
+        }
+
+        addPropertyChangeListener(provider, catalogListener);
+    }
+
+    private void storePreferences() {
+        saveTask.schedule(1000);
+    }
+
+    private OutputStream openOrCreateSettings() throws IOException {
+        FileObject serializedSettings = FileUtil.getConfigFile("xml/catalogs/CatalogSettings.serialized");
+        if(serializedSettings == null) {
+            FileObject xmlFolder = FileUtil.getConfigRoot().getFileObject("xml");
+            if(xmlFolder == null) {
+                xmlFolder = FileUtil.getConfigRoot().createFolder("xml");
+            }
+            FileObject catalogsFolder = xmlFolder.getFileObject("catalogs");
+            if(catalogsFolder == null) {
+                catalogsFolder = xmlFolder.createFolder("catalogs");
+            }
+            return catalogsFolder.createAndOpen("CatalogSettings.serialized");
+        } else {
+            return serializedSettings.getOutputStream();
         }
     }
 
@@ -155,6 +205,7 @@ public final class CatalogSettings implements Externalizable {
             mountedCatalogs.remove(provider);
         }
         firePropertyChange(PROP_MOUNTED_CATALOGS, null, null);
+        storePreferences();
 
         // remove listener to the catalog
         try {
@@ -163,6 +214,7 @@ public final class CatalogSettings implements Externalizable {
             // ignore it
         }
 
+        removePropertyChangeListener(provider, catalogListener);
     }
 
     /**
@@ -245,6 +297,7 @@ public final class CatalogSettings implements Externalizable {
     /**
      * Read persistent catalog settings logging diagnostics information if needed.
      */
+    @Override
     public synchronized void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         //super.readExternal(in);
 
@@ -264,32 +317,32 @@ public final class CatalogSettings implements Externalizable {
             NbMarshalledObject marshaled = (NbMarshalledObject) in.readObject(); //IN marshalled object
             try {
                 Object unmarshaled = marshaled.get();
-                if (mountedCatalogs.contains(unmarshaled) == false) {
-                    mountedCatalogs.add(unmarshaled);
+                if (unmarshaled instanceof CatalogReader) {
+                    CatalogReader catalogObject = (CatalogReader) unmarshaled;
+                    if (! mountedCatalogs.contains(catalogObject)) {
+                        mountedCatalogs.add(catalogObject);
+
+                        // add listener to the catalog
+                        try {
+                            catalogObject.addCatalogListener(catalogListener);
+                        } catch (UnsupportedOperationException ex) {
+                            // ignore it, we just can not listen at it and save it on change
+                            // it is fully OK until the catalog instance supports data source
+                            // change
+                        }
+
+                        addPropertyChangeListener(catalogObject, catalogListener);
+                    }
                 }
-            } catch (ClassNotFoundException ex) {
+            } catch (ClassNotFoundException | IOException | RuntimeException ex) {
                 //ignore probably missing provider class
-                Exceptions.printStackTrace(
-                    Exceptions.attachSeverity(
-                        Exceptions.attachMessage(ex, NbBundle.getMessage(CatalogSettings.class, "EXC_deserialization_failed", catalogClass)),
-                        Level.INFO
-                    )
-                );
-            } catch (IOException ex) {
                 //ignore incompatible classes
-                Exceptions.printStackTrace(
-                    Exceptions.attachSeverity(
-                        Exceptions.attachMessage(ex, NbBundle.getMessage(CatalogSettings.class, "EXC_deserialization_failed", catalogClass)),
-                        Level.INFO
-                    )
-                );
-            } catch (RuntimeException ex) {
                 //ignore catalog that can not deserialize itself without NPE etc.
                 Exceptions.printStackTrace(
-                    Exceptions.attachSeverity(
-                        Exceptions.attachMessage(ex, NbBundle.getMessage(CatalogSettings.class, "EXC_deserialization_failed", catalogClass)),
-                        Level.INFO
-                    )
+                        Exceptions.attachSeverity(
+                                Exceptions.attachMessage(ex, NbBundle.getMessage(CatalogSettings.class, "EXC_deserialization_failed", catalogClass)),
+                                Level.INFO
+                        )
                 );
             }
         }
@@ -298,11 +351,8 @@ public final class CatalogSettings implements Externalizable {
     /**
      * Write persistent catalog settings as NbMarshalledObjects with some diagnostics information.
      */
+    @Override
     public synchronized void writeExternal(ObjectOutput out) throws IOException  {
-        //super.writeExternal(out);
-
-        //if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug("CatalogSettings.writeExternal()"); // NOI18N
-
         out.writeInt(VERSION_1);  //OUT version
 
         int persistentCount = 0;
@@ -327,16 +377,9 @@ public final class CatalogSettings implements Externalizable {
                     NbMarshalledObject marshaled = new NbMarshalledObject(next);
                     out.writeObject(next.getClass().getName());  //OUT class name
                     out.writeObject(marshaled);  //OUT marshalled object
-                } catch (IOException ex) {
+                } catch (IOException | RuntimeException ex) {
                     // catalog can not be serialized
-                    Exceptions.printStackTrace(
-                        Exceptions.attachSeverity(
-                            Exceptions.attachMessage(ex, NbBundle.getMessage(CatalogSettings.class, "EXC_serialization_failed", next.getClass())),
-                            Level.INFO
-                        )
-                    );
-                } catch (RuntimeException ex) {
-                    //skip this odd catalog
+                    // skip this odd catalog
                     Exceptions.printStackTrace(
                         Exceptions.attachSeverity(
                             Exceptions.attachMessage(ex, NbBundle.getMessage(CatalogSettings.class, "EXC_serialization_failed", next.getClass())),
@@ -351,37 +394,71 @@ public final class CatalogSettings implements Externalizable {
     /**
      * For debugging purposes only.
      */
-    @Override public String toString() {
-        Lookup.Template template = new Lookup.Template<CatalogReader>(CatalogReader.class);
-        Lookup.Result result = getUserCatalogsLookup().lookup(template);
+    @Override
+    public String toString() {
+        Lookup.Template<CatalogReader> template = new Lookup.Template<>(CatalogReader.class);
+        Lookup.Result<CatalogReader> result = getUserCatalogsLookup().lookup(template);
         return "CatalogSettings[ global-scope: " + result.allInstances() +
             ", project-scope: " + mountedCatalogs + " ]";
     }
 
+    private static void addPropertyChangeListener(Object target, PropertyChangeListener pcl) {
+        try {
+            Method addPropertyChangeListener = target.getClass().getMethod("addPropertyChangeListener", PropertyChangeListener.class);
+            addPropertyChangeListener.invoke(target, pcl);
+        } catch (NoSuchMethodException ex) {
+            // Ignore
+            LOG.log(Level.FINE, "Failed to register property change listener for catalog: " + target, ex);
+        } catch (ReflectiveOperationException ex) {
+            LOG.log(Level.WARNING, "Failed to register property change listener for catalog: " + target, ex);
+        }
+    }
+
+    private static void removePropertyChangeListener(Object target, PropertyChangeListener pcl) {
+        try {
+            Method removePropertyChangeListener = target.getClass().getMethod("removePropertyChangeListener", PropertyChangeListener.class);
+            removePropertyChangeListener.invoke(target, pcl);
+        } catch (NoSuchMethodException ex) {
+            // Ignore
+            LOG.log(Level.FINE, "Failed to remove property change listener for catalog: " + target, ex);
+        } catch (ReflectiveOperationException ex) {
+            LOG.log(Level.WARNING, "Failed to remove property change listener for catalog: " + target, ex);
+        }
+    }
 
     /**
      * Private catalog listener exposing all changes at catalogs
      * as a change at this bean, so it get saved later.
      */
-    private class CL implements CatalogListener {
+    private class CL implements CatalogListener, PropertyChangeListener {
 
         /** Given public ID has changed - disappeared.  */
+        @Override
         public void notifyRemoved(String publicID) {
         }
 
         /** Given public ID has changed - created.  */
+        @Override
         public void notifyNew(String publicID) {
         }
 
         /** Given public ID has changed.  */
+        @Override
         public void notifyUpdate(String publicID) {
         }
 
         /*
          * It is typical data source change.
          */
+        @Override
         public void notifyInvalidate() {
             firePropertyChange("settings changed!", null, CatalogSettings.this);
+            storePreferences();
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent pce) {
+            storePreferences();
         }
     }
 

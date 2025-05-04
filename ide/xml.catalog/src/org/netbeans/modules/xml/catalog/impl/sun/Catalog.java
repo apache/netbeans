@@ -260,7 +260,21 @@ public final class Catalog
     @SuppressWarnings("Convert2Lambda")
     private EntityResolver createPeer(String location, boolean pref) {
         try {
-            NbCatalogManager manager = new NbCatalogManager(null);
+            NbCatalogManager manager = new NbCatalogManager(null) {
+                @Override
+                public org.apache.xml.resolver.Catalog getPrivateCatalog() {
+                    try {
+                        org.apache.xml.resolver.Catalog catalog = new NbCatalog();
+                        catalog.setCatalogManager(this);
+                        catalog.setupReaders();
+                        catalog.loadSystemCatalogs();
+                        return catalog;
+                    } catch (IOException | RuntimeException ex) {
+                        ex.printStackTrace();
+                        return super.getPrivateCatalog();
+                    }
+                }
+            };
             manager.setUseStaticCatalog(false);
             manager.setPreferPublic(pref);
 
@@ -329,4 +343,24 @@ public final class Catalog
         return null;
     }
 
+    /**
+     * Check validity of the current entry. Only to be used by GUI!
+     */
+    public boolean isValid() {
+        Object p = getPeer();
+        if (p instanceof org.apache.xml.resolver.tools.NbCatalogResolver) {
+            org.apache.xml.resolver.Catalog catalog = ((NbCatalogResolver) p).getCatalog();
+            if (catalog instanceof NbCatalog) {
+                return !((NbCatalog) catalog).getCatalogEntries().isEmpty();
+            }
+        }
+        return false;
+    }
+
+    public static class NbCatalog extends org.apache.xml.resolver.Catalog {
+        @SuppressWarnings("UseOfObsoleteCollectionType")
+        public Vector getCatalogEntries() {
+            return catalogEntries;
+        }
+    }
 }

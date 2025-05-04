@@ -524,4 +524,13 @@ public final class XCatalog extends AbstractCatalog
 
     }
 
+    /**
+     * Check validity of the current entry. Only to be used by GUI!
+     */
+    public boolean isValid() {
+        return getPublicMappingKeys().hasNext()
+                || getSystemMappingKeys().hasNext()
+                || getDelegateCatalogKeys().hasMoreElements()
+                || (! extenders.isEmpty());
+    }
 }

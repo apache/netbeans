@@ -14,5 +14,5 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-23D2F2EFF7FA0CDA465D86EC9D8BAB53E496D9E6 org.jruby.joni:joni:2.2.1
-9234380A35AD5C0A707E850D24031AAA158D283A https://download.eclipse.org/tm4e/releases/0.14.0/plugins/org.eclipse.tm4e.core_0.14.0.202410282056.jar org.eclipse.tm4e.core-0.14.0.jar
+864217AB7DCECE78AD7BF3C045A602D871FF309A org.jruby.joni:joni:2.2.6
+955A747C51D6C11401ECF46279C630B2757D0264 https://download.eclipse.org/tm4e/releases/0.14.1/plugins/org.eclipse.tm4e.core_0.14.1.202501141527.jar org.eclipse.tm4e.core-0.14.1.jar

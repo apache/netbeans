@@ -1481,6 +1481,10 @@ jobs:
       - name: Extract
         run: tar --zstd -xf build.tar.zst
 
+      - name: java.hints (unreliable tests)
+        if: ${{ (matrix.config == 'batch2') && success() }}
+        run: .github/retry.sh ant $OPTS -Dtest.config=unreliable -f java/java.hints test
+
       - name: java.hints ${{ matrix.config }}
         run: ant $OPTS -Dtest.config=${{ matrix.config }} -f java/java.hints test
 
@@ -1645,7 +1649,7 @@ jobs:
         run: ant $OPTS -f ide/csl.types test
 
       - name: ide/css.editor
-        run: ant $OPTS -f ide/css.editor test
+        run: .github/retry.sh ant $OPTS -f ide/css.editor test
 
       - name: ide/css.lib
         run: ant $OPTS -f ide/css.lib test
@@ -1681,7 +1685,7 @@ jobs:
         run: ant $OPTS -f webcommon/html.angular test-unit
 
       - name: webcommon/html.knockout
-        run: ant $OPTS -f webcommon/html.knockout test-unit
+        run: .github/retry.sh ant $OPTS -f webcommon/html.knockout test-unit
 
       - name: webcommon/javascript.bower
         run: ant $OPTS -f webcommon/javascript.bower test

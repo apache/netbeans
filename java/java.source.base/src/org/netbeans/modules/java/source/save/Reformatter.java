@@ -2565,21 +2565,18 @@ public class Reformatter implements ReformatTask {
             StatementTree elseStat = node.getElseStatement();
             CodeStyle.BracesGenerationStyle redundantIfBraces = cs.redundantIfBraces();
             int eoln = findNewlineAfterStatement(node);
-            Boolean hasErrThenStatement = Optional.ofNullable(node.getThenStatement())
-                    .filter(it-> it instanceof ExpressionStatementTree)
-                    .map(it -> ((ExpressionStatementTree)it).getExpression())
-                    .map(it->  (it instanceof ErroneousTree))
-                    .orElse(false);
+            Boolean hasErrThenStatement = node.getThenStatement() instanceof ExpressionStatementTree thenStatement
+                                          && thenStatement.getExpression() instanceof ErroneousTree;
             if (hasErrThenStatement) {
                 if (getCurrentPath().getParentPath().getLeaf() instanceof BlockTree parentStTree) {
-                    var isPreviousIfTree = false;
-                    var endPositionOfErrThenStatement = endPos;
-                    for (var statment : parentStTree.getStatements()) {
+                    boolean isPreviousIfTree = false;
+                    int endPositionOfErrThenStatement = endPos;
+                    for (StatementTree statement : parentStTree.getStatements()) {
                         if (isPreviousIfTree) {
-                            var startPositionOfNextErrorStatement = (int) sp.getStartPosition(getCurrentPath().getCompilationUnit(), statment);
+                            int startPositionOfNextErrorStatement = (int) sp.getStartPosition(getCurrentPath().getCompilationUnit(), statement);
                             endPositionOfErrThenStatement = startPositionOfNextErrorStatement;
                             break;
-                        } else if (statment == node) {
+                        } else if (statement == node) {
                             isPreviousIfTree = true;
                             endPositionOfErrThenStatement = (int) sp.getEndPosition(getCurrentPath().getCompilationUnit(), parentStTree) - 1;
                         }

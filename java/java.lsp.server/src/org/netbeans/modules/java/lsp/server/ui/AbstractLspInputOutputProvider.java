@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.Objects;
 import java.util.Set;
 import org.netbeans.api.io.Hyperlink;
 import org.netbeans.api.io.OutputColor;
@@ -153,6 +154,9 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
         final LspWriter err;
 
         LspIO(String name, IOContext ioCtx, Lookup lookup) {
+            Objects.requireNonNull(name);
+            Objects.requireNonNull(ioCtx);
+            Objects.requireNonNull(lookup);
             this.name = name;
             this.ctx = ioCtx;
             this.lookup = lookup;

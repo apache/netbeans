@@ -52,7 +52,7 @@ public class UniKit extends NbEditorKit {
     @Override
     public void read(InputStream in, Document doc, int pos) throws IOException, BadLocationException {
 
-        // predetect it to get optimalized XmlReader if utf-8
+        // predetect it to get optimized XmlReader if utf-8
         String enc = EncodingUtil.detectEncoding(in);
         if ( enc == null ) {
             enc = "UTF8"; //!!! // NOI18N

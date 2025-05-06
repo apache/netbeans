@@ -44,7 +44,7 @@ import org.openide.filesystems.FileUtil;
  * Partial implementation of the cache manager using BinaryFS as the layer
  * implementation. Still not fully working because current LayerCacheManager
  * don't support replacing of the layer.
- * Not optimalized yet!
+ * Not optimized yet!
  *
  * @author Petr Nejedly
  */

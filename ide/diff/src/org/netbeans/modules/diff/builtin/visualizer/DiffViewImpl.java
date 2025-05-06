@@ -263,7 +263,7 @@ public class DiffViewImpl extends javax.swing.JPanel implements org.netbeans.api
                     if (i == currentDiffLine) {
                         return currentDiffLine; // current is visible, eliminate hazards use it.
                     }
-                    candidate = i;  // takes last visible, optimalized for Next>
+                    candidate = i;  // takes last visible, optimized for Next>
                 }
             }
         }

@@ -423,7 +423,7 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
 //        SyntaxElement elem = null;
 //
 //        try {
-//            while(true){  //??? optimalize stop on first element
+//            while(true){  //??? optimize stop on first element
 //                elem = getElementChain(offset);
 //                if(elem instanceof SyntaxElement.Declaration || elem == null)
 //                    break;

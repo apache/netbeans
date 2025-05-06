@@ -534,7 +534,7 @@ TOKEN:
 // reused automatons
 
 /** REFERENCE is delimited by "%" | "&" ... ";" | <WS> 
-  It could be optimalized by introcusing just IN_REF state
+  It could be optimized by introcusing just IN_REF state
   shared by GREF & PREF because they can not be nested.
 */
 <IN_DOCTYPE, IN_ELEMENT, IN_COND, IN_ENTITY_DECL>

@@ -60,7 +60,7 @@ public final class PhpUnitPreferencesValidator {
     }
 
     public PhpUnitPreferencesValidator validatePhpUnit(boolean phpUnitEnabled, String phpUnitPath) {
-        if (! phpUnitEnabled) {
+        if (!phpUnitEnabled) {
             return this;
         }
         String warning = PhpUnitUtils.validatePhpUnitPath(phpUnitPath);

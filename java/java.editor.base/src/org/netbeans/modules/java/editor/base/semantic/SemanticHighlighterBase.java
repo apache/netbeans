@@ -91,7 +91,7 @@ import org.openide.util.Pair;
  *
  * @author Jan Lahoda
  */
-public abstract class SemanticHighlighterBase extends JavaParserResultTask {
+public abstract class SemanticHighlighterBase extends JavaParserResultTask<Result> {
 
     public static final String JAVA_INLINE_HINT_PARAMETER_NAME = "javaInlineHintParameterName"; //NOI18N
     public static final String JAVA_INLINE_HINT_CHAINED_TYPES = "javaInlineHintChainedTypes"; //NOI18N
@@ -197,7 +197,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         
         Map<Element, List<UnusedDescription>> element2Unused = UnusedDetector.findUnused(info, () -> cancel.get()) //XXX: unnecessarily ugly
                                                                              .stream()
-                                                                             .collect(Collectors.groupingBy(ud -> ud.unusedElement));
+                                                                             .collect(Collectors.groupingBy(ud -> ud.unusedElement()));
         for (Map.Entry<Element, List<Use>> entry : v.type2Uses.entrySet()) {
             if (cancel.get())
                 return true;

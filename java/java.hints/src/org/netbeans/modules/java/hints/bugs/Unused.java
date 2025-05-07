@@ -67,10 +67,10 @@ public class Unused {
             if (ctx.isCanceled()) {
                 break;
             }
-            if (ud.unusedElementPath.getLeaf() != ctx.getPath().getLeaf()) {
+            if (ud.unusedElementPath().getLeaf() != ctx.getPath().getLeaf()) {
                 continue;
             }
-            if (!detectUnusedPackagePrivate && ud.packagePrivate) {
+            if (!detectUnusedPackagePrivate && ud.packagePrivate()) {
                 continue;
             }
             ErrorDescription err = convertUnused(ctx, ud);
@@ -98,34 +98,34 @@ public class Unused {
     })
     private static ErrorDescription convertUnused(HintContext ctx, UnusedDescription ud) {
         //TODO: switch expression candidate!
-        String name = ud.unusedElement.getSimpleName().toString();
+        String name = ud.unusedElement().getSimpleName().toString();
         String message;
         Fix fix = null;
-        switch (ud.reason) {
+        switch (ud.reason()) {
             case NOT_WRITTEN_READ: message = Bundle.ERR_NeitherReadOrWritten(name);
-                fix = JavaFixUtilities.removeFromParent(ctx, Bundle.FIX_RemoveUsedElement(name), ud.unusedElementPath);
+                fix = JavaFixUtilities.removeFromParent(ctx, Bundle.FIX_RemoveUsedElement(name), ud.unusedElementPath());
                 break;
             case NOT_WRITTEN: message = Bundle.ERR_NotWritten(name);
                 break;
             case NOT_READ: message = Bundle.ERR_NotRead(name);
                 //unclear what can be done with unused binding variables currently (before "_"):
-                if (ud.unusedElementPath.getParentPath().getLeaf().getKind() != Kind.BINDING_PATTERN) {
-                    fix = JavaFixUtilities.safelyRemoveFromParent(ctx, Bundle.FIX_RemoveUsedElement(name), ud.unusedElementPath);
+                if (ud.unusedElementPath().getParentPath().getLeaf().getKind() != Kind.BINDING_PATTERN) {
+                    fix = JavaFixUtilities.safelyRemoveFromParent(ctx, Bundle.FIX_RemoveUsedElement(name), ud.unusedElementPath());
                 }
                 break;
             case NOT_USED:
-                if (ud.unusedElement.getKind() == ElementKind.CONSTRUCTOR) {
+                if (ud.unusedElement().getKind() == ElementKind.CONSTRUCTOR) {
                     message = Bundle.ERR_NotUsedConstructor();
-                    fix = JavaFixUtilities.removeFromParent(ctx, Bundle.FIX_RemoveUsedConstructor(), ud.unusedElementPath);
+                    fix = JavaFixUtilities.removeFromParent(ctx, Bundle.FIX_RemoveUsedConstructor(), ud.unusedElementPath());
                 } else {
                     message = Bundle.ERR_NotUsed(name);
-                    fix = JavaFixUtilities.removeFromParent(ctx, Bundle.FIX_RemoveUsedElement(name), ud.unusedElementPath);
+                    fix = JavaFixUtilities.removeFromParent(ctx, Bundle.FIX_RemoveUsedElement(name), ud.unusedElementPath());
                 }
                 break;
             default:
-                throw new IllegalStateException("Unknown unused type: " + ud.reason);
+                throw new IllegalStateException("Unknown unused type: " + ud.reason());
         }
-        return fix != null ? ErrorDescriptionFactory.forName(ctx, ud.unusedElementPath, message, fix)
-                           : ErrorDescriptionFactory.forName(ctx, ud.unusedElementPath, message);
+        return fix != null ? ErrorDescriptionFactory.forName(ctx, ud.unusedElementPath(), message, fix)
+                           : ErrorDescriptionFactory.forName(ctx, ud.unusedElementPath(), message);
     }
 }

@@ -565,12 +565,7 @@ public abstract class NbLaunchDelegate {
     protected static @CheckForNull Pair<ActionProvider, String> findTarget(Project prj, boolean preferProjActions, FileObject toRun, SingleMethod singleMethod, NestedClass nestedClass, boolean debug, boolean testRun, boolean testInParallel, ContainedProjectFilter projectFilter) {
         ClassPath sourceCP = ClassPath.getClassPath(toRun, ClassPath.SOURCE);
         FileObject fileRoot = sourceCP != null ? sourceCP.findOwnerRoot(toRun) : null;
-        boolean mainSource;
-        if (fileRoot != null) {
-            mainSource = UnitTestForSourceQuery.findUnitTests(fileRoot).length > 0;
-        } else {
-            mainSource = !testRun;
-        }
+        boolean mainSource = !testRun;
         ActionProvider provider = null;
         String command = null;
         Collection<ActionProvider> actionProviders = findActionProviders(prj);

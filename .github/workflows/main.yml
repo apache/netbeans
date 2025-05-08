@@ -133,7 +133,7 @@ jobs:
     timeout-minutes: 40
     strategy:
       matrix:
-        java: [ '17', '21', '24' ]
+        java: [ '17', '21', '25-ea' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false
@@ -238,7 +238,7 @@ jobs:
         java: [ 17 ]
         include:
           - os: ubuntu-latest
-            java: 24
+            java: 25-ea
       fail-fast: false
     steps:
 
@@ -314,16 +314,16 @@ jobs:
           submodules: false
           show-progress: false
 
-      - name: Set up JDK 24 for scripts
+      - name: Set up JDK 25 for scripts
         if: ${{ github.event_name == 'pull_request' && !cancelled() }}
         uses: actions/setup-java@v4
         with:
-          java-version: 24
+          java-version: 25-ea
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Check Commit Headers
         if: ${{ github.event_name == 'pull_request' && !cancelled() }}
-        run: java --enable-preview .github/scripts/CommitHeaderChecker.java ${{ github.server_url }}/${{ github.repository }}/pull/${{ github.event.pull_request.number }}
+        run: java .github/scripts/CommitHeaderChecker.java ${{ github.server_url }}/${{ github.repository }}/pull/${{ github.event.pull_request.number }}
 
       - name: Set up JDK ${{ matrix.java }} 
         if: ${{ !cancelled() }}
@@ -438,11 +438,11 @@ jobs:
         run: ant -quiet -Dcluster.config=$CLUSTER_CONFIG test -Dtest.includes=NoTestsJustBuild
 
       # 13-14 min for javadoc; JDK version must be synced with nb-javac
-      - name: Set up JDK 24 for javadoc
+      - name: Set up JDK 25 for javadoc
         if: env.test_javadoc == 'true' && success()
         uses: actions/setup-java@v4
         with:
-          java-version: 24
+          java-version: 25-ea
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Build javadoc
@@ -848,7 +848,7 @@ jobs:
     timeout-minutes: 50
     strategy:
       matrix:
-        java: [ '17', '21', '24' ]
+        java: [ '17', '21', '25-ea' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false
@@ -1455,6 +1455,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
+        # TODO bump together with nb-javac 25 update
         java: [ '17', '24' ]
         config: [ 'batch1', 'batch2' ]
         exclude:
@@ -1512,7 +1513,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17', '21', '24' ]
+        java: [ '17', '21', '25-ea' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false

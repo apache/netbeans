@@ -25,6 +25,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,6 +33,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,7 +67,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbCollections;
-import org.openide.util.WeakSet;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -329,7 +330,7 @@ public class CodeHintProviderImpl implements HintProvider {
                 boolean newOccurrence;
                 
                 synchronized (this) {
-                    if (exceptionThrownFor == null) exceptionThrownFor = new WeakSet<>();
+                    if (exceptionThrownFor == null) exceptionThrownFor = Collections.newSetFromMap(new WeakHashMap<>());
                     newOccurrence = exceptionThrownFor.add(ctx.getInfo().getFileObject());
                 }
                 

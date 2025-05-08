@@ -26,13 +26,14 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.WeakHashMap;
 import javax.swing.SwingUtilities;
 
 import org.openide.awt.ToolbarPool; // Why is this in open API?
-import org.openide.util.WeakSet;
 import org.openide.windows.TopComponent;
 
 import org.netbeans.core.windows.Constants;
@@ -57,7 +58,7 @@ class DefaultView implements View, Controller, WindowDnDManager.ViewAccessor {
     
     private final ControllerHandler controllerHandler;
     
-    private final Set<TopComponent> showingTopComponents = new WeakSet<TopComponent>(10);
+    private final Set<TopComponent> showingTopComponents = Collections.newSetFromMap(new WeakHashMap<>(10));
 
     /** Debugging flag. */
     private static final boolean DEBUG = Debug.isLoggable(DefaultView.class);

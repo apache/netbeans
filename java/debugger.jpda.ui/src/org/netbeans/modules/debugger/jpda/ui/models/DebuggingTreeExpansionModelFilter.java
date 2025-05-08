@@ -22,6 +22,7 @@ package org.netbeans.modules.debugger.jpda.ui.models;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,7 +39,6 @@ import org.netbeans.spi.viewmodel.ModelListener;
 import org.netbeans.spi.viewmodel.TreeExpansionModel;
 import org.netbeans.spi.viewmodel.TreeExpansionModelFilter;
 import org.netbeans.spi.viewmodel.UnknownTypeException;
-import org.openide.util.WeakSet;
 
 
 /**
@@ -52,9 +52,9 @@ public class DebuggingTreeExpansionModelFilter implements TreeExpansionModelFilt
     
     private static final Map<JPDADebugger, DebuggingTreeExpansionModelFilter> FILTERS = new WeakHashMap<JPDADebugger, DebuggingTreeExpansionModelFilter>();
     
-    private final Set<Object> expandedNodes = new WeakSet<Object>();
-    private final Set<Object> expandedExplicitly = new WeakSet<Object>();
-    private final Set<Object> collapsedExplicitly = new WeakSet<Object>();
+    private final Set<Object> expandedNodes = Collections.newSetFromMap(new WeakHashMap<>());
+    private final Set<Object> expandedExplicitly = Collections.newSetFromMap(new WeakHashMap<>());
+    private final Set<Object> collapsedExplicitly = Collections.newSetFromMap(new WeakHashMap<>());
     private final List<ModelListener> listeners = new ArrayList<ModelListener>();
     private final Reference<JPDADebugger> debuggerRef;
     

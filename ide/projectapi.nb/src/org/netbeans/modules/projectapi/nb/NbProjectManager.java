@@ -57,7 +57,6 @@ import org.openide.util.Mutex.ExceptionAction;
 import org.openide.util.MutexException;
 import org.openide.util.Parameters;
 import org.openide.util.Union2;
-import org.openide.util.WeakSet;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.util.spi.MutexImplementation;
 
@@ -129,7 +128,7 @@ public final class NbProjectManager implements ProjectManagerImplementation {
      */
     private final Set<Project> modifiedProjects = new HashSet<Project>();
     
-    private final Set<Project> removedProjects = Collections.synchronizedSet(new WeakSet<Project>());
+    private final Set<Project> removedProjects = Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
     
     /**
      * Mapping from projects to the factories that created them.

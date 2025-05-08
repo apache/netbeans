@@ -19,10 +19,11 @@
 
 package org.netbeans.lib.lexer;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.logging.Level;
 import org.netbeans.api.lexer.PartType;
 import org.netbeans.api.lexer.TokenId;
-import org.netbeans.lib.editor.util.ArrayUtilities;
 import org.netbeans.spi.lexer.LexerInput;
 import org.netbeans.lib.lexer.token.AbstractToken;
 import org.netbeans.lib.lexer.token.JoinToken;
@@ -39,7 +40,7 @@ import org.netbeans.spi.lexer.TokenPropertyProvider;
  * It can either work over JoinTokenList directly or, during a modification,
  * it simulates that certain token lists are already removed/added to underlying token list.
  * <br/>
- * 
+ *
  * {@link #recognizedTokenLastInTokenList()} gives information whether the lastly
  * produced token ends right at boundary of the activeTokenList.
  *
@@ -48,84 +49,87 @@ import org.netbeans.spi.lexer.TokenPropertyProvider;
  */
 
 public class JoinLexerInputOperation<T extends TokenId> extends LexerInputOperation<T> {
-    
-    CharSequence inputSourceText;
+
+    private final CharSequence inputSourceText;
 
     private TokenListText readText; // For servicing read()
-    
+
     private TokenListText readExistingText;
-    
+
     /**
      * Token list in which the last recognized token started.
      */
     private EmbeddedTokenList<?,T> activeTokenList;
-    
+
     /**
      * Index of activeTokenList in JTL.
      */
     private int activeTokenListIndex;
-    
-    /**
-     * End offset of the active token list.
-     */
-    private int activeTokenListEndOffset;
-    
-    /**
-     * Real token's start offset used to derive the token's offset in ETL.
-     * Since tokenStartOffset is affected by TokenListList.readOffsetShift
-     * it cannot be used for this purpose.
-     */
-    private int realTokenStartOffset;
-    
+
     private boolean recognizedTokenJoined; // Whether recognized token will consist of parts
-    
+
     private int skipTokenListCount;
-    
+
+    private int relexOffset;
 
     public JoinLexerInputOperation(JoinTokenList<T> joinTokenList, int relexJoinIndex, Object lexerRestartState,
             int activeTokenListIndex, int relexOffset
     ) {
         super(joinTokenList, relexJoinIndex, lexerRestartState);
+        LOG.log(Level.FINE, "JoinLexerInputOperation(jtl, relexJoiIndex: {1}, lexerRestartState: {2}, activeTokenListIndex: {3}, releaxOffset: {4})", new Object[] {joinTokenList, relexJoinIndex, lexerRestartState, this.activeTokenListIndex, relexOffset});
         this.inputSourceText = joinTokenList.inputSourceText();
         this.activeTokenListIndex = activeTokenListIndex;
-        tokenStartOffset = relexOffset;
-        readOffset = relexOffset;
+        this.relexOffset = relexOffset;
     }
 
     public final void init() {
+        int tlReadOffset = 0;
+        int lastEndOffset = 0;
+        for (int i = 0; i < tokenListCount(); i++) {
+            TokenList tl = tokenList(i);
+            tlReadOffset += (tl.startOffset() - lastEndOffset);
+            lastEndOffset = tl.endOffset();
+            if(tl.endOffset() >= relexOffset) {
+                break;
+            }
+        }
+        this.readOffset = relexOffset - tlReadOffset;
+        this.tokenStartOffset = this.readOffset;
         // Following code uses tokenList() method overriden in MutableJoinLexerInputOperation
         // so the following code would fail when placed in constructor since the constructor of MJLIO would not yet run.
         fetchActiveTokenList();
         // readOffset contains relex-offset. Skip empty parts (ETLs) to obtain
         // correct start offset of first lexed token
         readText = new TokenListText(activeTokenListIndex);
-
-        // Assign realTokenStartOffset after fetchActiveTokenList() since it would overwrite it
-        realTokenStartOffset = readOffset;
     }
 
     /**
      * Get active ETL into which the last produced token should be added.
      * For join tokens there is an ETL into which a last part of JT should be added.
      */
-    public EmbeddedTokenList<?,T> activeTokenList() {
+    @SuppressWarnings("ReturnOfCollectionOrArrayField")
+    private EmbeddedTokenList<?,T> activeTokenList() {
+//        LOG.log(Level.FINE, "activeTokenList() => {0}", activeTokenList);
         return activeTokenList;
     }
-    
+
     /**
      * Get index of active ETL into which the last produced token should be added.
      * For join tokens there is an index of the last ETL into which a last part of JT should be added.
      */
     public int activeTokenListIndex() {
+        LOG.log(Level.FINE, "activeTokenListIndex() => {0}", activeTokenListIndex);
         return activeTokenListIndex;
     }
 
     public int skipTokenListCount() {
+        LOG.log(Level.FINE, "skipTokenListCount() => {0}", skipTokenListCount);
         return skipTokenListCount;
     }
 
     public void clearSkipTokenListCount() {
         skipTokenListCount = 0;
+        LOG.log(Level.FINE, "clearSkipTokenListCount()");
     }
 
     /**
@@ -133,35 +137,46 @@ public class JoinLexerInputOperation<T extends TokenId> extends LexerInputOperat
      * For join tokens this applies to the last part of join token.
      */
     public boolean recognizedTokenLastInTokenList() {
-        // realTokenStartOffset is set to the end of last recognized token
-        return (realTokenStartOffset == activeTokenListEndOffset);
+        boolean result = toGlobalPosition(readOffset - tokenLength, true) == activeTokenList().endOffset();
+        LOG.log(Level.FINE, "recognizedTokenLastInTokenList() => {0}", result);
+        return result;
     }
 
     @Override
     public int lastTokenEndOffset() {
-        return realTokenStartOffset;
+        int result = toGlobalPosition(super.lastTokenEndOffset(), true);
+//        int result = toGlobalPosition(super.lastTokenEndOffset(), false);
+        LOG.log(Level.FINE, "lastTokenEndOffset() => {0}", result);
+        return result;
     }
 
     @Override
     public int read(int offset) { // index >= 0 is guaranteed by contract
-        return readText.read(offset);
+        int result = readText.read(offset);
+        LOG.log(Level.FINE, "read() => {1} ({2})", new Object[]{offset, result, (char) result});
+        return result;
     }
 
     @Override
     public char readExisting(int offset) {
         if (readText.isInBounds(offset)) {
-            return readText.inBoundsChar(offset);
+            char result = readText.inBoundsChar(offset);
+            LOG.log(Level.FINE, "readExisting() => {1}", new Object[]{offset, result});
+            return result;
         }
         if (readExistingText == null) {
             readExistingText = new TokenListText(readText);
         }
-        return readExistingText.existingChar(offset);
+        char result = readExistingText.existingChar(offset);
+        LOG.log(Level.FINE, "readExisting() => {1}", new Object[]{offset, result});
+        return result;
     }
 
     @Override
     public void assignTokenLength(int tokenLength) {
         super.assignTokenLength(tokenLength);
         // Check whether activeTokenList needs to be changed due to various flags
+        int pos = toGlobalPosition(readOffset - tokenLength, true);
         if (recognizedTokenLastInTokenList()) { // Advance to next token list
             // Since this is done when recognizing a next token it should be ok when recognizing
             // last token in the last ETL (it should not go beyond last ETL).
@@ -171,129 +186,155 @@ public class JoinLexerInputOperation<T extends TokenId> extends LexerInputOperat
                 skipTokenListCount++;
                 activeTokenListIndex++;
                 fetchActiveTokenList();
-            } while (realTokenStartOffset == activeTokenListEndOffset); // Skip empty ETLs
+            } while ((pos == activeTokenList().endOffset() || activeTokenList().startOffset() == activeTokenList().endOffset()) && (activeTokenListIndex + 1) < tokenListCount()); // Skip empty ETLs
         }
-        // Advance to end of currently recognized token
-        realTokenStartOffset += tokenLength;
         // Joined token past ETL's boundary
-        recognizedTokenJoined = (realTokenStartOffset > activeTokenListEndOffset);
+        recognizedTokenJoined = toGlobalPosition(readOffset, true) > activeTokenList().endOffset();
+        LOG.log(Level.FINE, "assignTokenLength(tokenLength: {0} / recognizedTokenJoined: {1} / skipTokenListCount: {2} / activeTokenListIndex: {3})", new Object[]{tokenLength, recognizedTokenJoined, skipTokenListCount, activeTokenListIndex});
     }
-    
+
     private void fetchActiveTokenList() {
         activeTokenList = tokenList(activeTokenListIndex);
         activeTokenList.updateModCount();
-        realTokenStartOffset = activeTokenList.startOffset();
-        activeTokenListEndOffset = activeTokenList.endOffset();
     }
-    
+
     public EmbeddedTokenList<?,T> tokenList(int tokenListIndex) { // Also used by JoinTokenListChange
-        return ((JoinTokenList<T>) tokenList).tokenList(tokenListIndex);
+        EmbeddedTokenList<?,T> result = ((JoinTokenList<T>) tokenList).tokenList(tokenListIndex);
+//        LOG.log(Level.FINE, "tokenList({0}) => {1}", new Object[]{tokenListIndex, result});
+        return result;
     }
 
     protected int tokenListCount() {
-        return ((JoinTokenList<T>) tokenList).tokenListCount();
+        int result = ((JoinTokenList<T>) tokenList).tokenListCount();
+//        LOG.log(Level.FINE, "tokenListCount() => {0}", new Object[]{result});
+        return result;
     }
 
+    @Override
     protected void fillTokenData(AbstractToken<T> token) {
         if (!recognizedTokenJoined) {
             // Subtract tokenLength since this is already advanced to end of token
-            token.setRawOffset(realTokenStartOffset - tokenLength);
+            token.setRawOffset(toGlobalPosition(readOffset, true) - tokenLength);
+            LOG.log(Level.FINE, "fillTokenData#setRawOffset({0})", new Object[]{toGlobalPosition(readOffset, true) - tokenLength});
         }
+        LOG.log(Level.FINE, "fillTokenData()", new Object[]{});
     }
-    
+
     @Override
     protected boolean isFlyTokenAllowed() {
-        return super.isFlyTokenAllowed() && !recognizedTokenJoined;
+        boolean result = super.isFlyTokenAllowed() && !recognizedTokenJoined;
+        LOG.log(Level.FINE, "isFlyTokenAllowed() => {0}", new Object[]{result});
+        return result;
     }
-    
+
     @Override
     protected AbstractToken<T> createDefaultTokenInstance(T id) {
+        AbstractToken<T> result;
         if (recognizedTokenJoined) {
-            return createJoinToken(id, null, PartType.COMPLETE);
+            result = createJoinToken(id, null, PartType.COMPLETE);
         } else { // Regular case
-            return super.createDefaultTokenInstance(id);
+            result = super.createDefaultTokenInstance(id);
         }
+        LOG.log(Level.FINE, "createDefaultTokenInstance({0})", new Object[]{id, result});
+        return result;
     }
 
     @Override
     protected AbstractToken<T> createPropertyTokenInstance(T id,
     TokenPropertyProvider<T> propertyProvider, PartType partType) {
+        AbstractToken<T> result;
         if (recognizedTokenJoined) {
-            return createJoinToken(id, propertyProvider, partType);
+            result = createJoinToken(id, propertyProvider, partType);
         } else { // Regular case
-            return super.createPropertyTokenInstance(id, propertyProvider, partType);
+            result = super.createPropertyTokenInstance(id, propertyProvider, partType);
         }
+        LOG.log(Level.FINE, "createDefaultTokenInstance({0}, {1}, {2})", new Object[]{id, propertyProvider, partType, result});
+        return result;
     }
-    
+
     private AbstractToken<T> createJoinToken(T id,
     TokenPropertyProvider<T> propertyProvider, PartType partType) {
         // Create join token
         // realTokenStartOffset is already advanced by tokenLength so first decrease it
-        realTokenStartOffset -= tokenLength;
+        int start = readOffset - tokenLength;
+        int globalStart = toGlobalPosition(start, false);
+        int end = readOffset;
+        int globalEnd = toGlobalPosition(end, true);
         WrapTokenId<T> wid = wrapTokenIdCache.plainWid(id);
-        JoinToken<T> joinToken = new JoinToken<T>(wid, tokenLength, propertyProvider, partType);
-        int joinPartCountEstimate = readText.tokenListIndex - activeTokenListIndex + 1;
+        JoinToken<T> joinToken = new JoinToken<>(wid, tokenLength, propertyProvider, partType);
         @SuppressWarnings("unchecked")
-        PartToken<T>[] parts = new PartToken[joinPartCountEstimate];
-        int partLength = activeTokenListEndOffset - realTokenStartOffset;
-        PartToken<T> partToken = new PartToken<T>(wid, partLength, propertyProvider, PartType.START, joinToken, 0, 0);
-        partToken.setRawOffset(realTokenStartOffset); // realTokenStartOffset already decreased by tokenLength
-        parts[0] = partToken;
-        int partIndex = 1;
-        int partTextOffset = partLength; // Length of created parts so far
-        int firstPartTokenListIndex = activeTokenListIndex;
-        do {
-            activeTokenListIndex++;
+        ArrayList<PartToken<T>> parts = new ArrayList<>(readText.getTokenListIndexIndex() - activeTokenListIndex + 1);
+        int partIndex = 0;
+        int partTextOffset = 0;
+        int firstPartTokenListIndex = -1;
+        int lastPartTokenListIndex = -1;
+        for(int i = 0; ;i++) {
+            activeTokenListIndex = i;
             fetchActiveTokenList();
-            // realTokenStartOffset set to start activeTokenList
-            PartType partPartType;
-            // Attempt total ETL's length as partLength
-            partLength = activeTokenListEndOffset - realTokenStartOffset;
-            if (partLength == 0) {
+            int etlStart = activeTokenList().startOffset();
+            int etlEnd = activeTokenList().endOffset();
+            if(etlEnd < globalStart || etlEnd == etlStart) {
                 continue;
             }
-            if (partTextOffset + partLength >= tokenLength) { // Last part
-                partLength = tokenLength - partTextOffset;
-                // If the partType of the join token is not complete then this will be PartType.MIDDLE
-                partPartType = (partType == PartType.START) ? PartType.MIDDLE : PartType.END;
+            int partStart = Math.max(etlStart, globalStart);
+            int partEnd = Math.min(etlEnd, globalEnd);
+            PartType partPartType;
+            if (parts.isEmpty()) {
+                partPartType = PartType.START;
+            } else if (etlEnd >= globalEnd) { // Last part
+                partPartType = PartType.END;
             } else { // Non-last part
                 partPartType = PartType.MIDDLE;
             }
 
-            partToken = new PartToken<T>(wid, partLength, propertyProvider, partPartType, joinToken, partIndex, partTextOffset);
-            // realTokenStartOffset still points to start of activeTokenList
-            partToken.setRawOffset(realTokenStartOffset); // ETL.startOffset() will be subtracted upon addition to ETL
+            int partLength = partEnd - partStart;
+            PartToken<T> partToken = new PartToken<>(wid, partEnd - partStart, propertyProvider, partPartType, joinToken, partIndex, partTextOffset);
+            partIndex++;
+            partToken.setRawOffset(partStart);
+            parts.add(partToken);
             partTextOffset += partLength;
-            parts[partIndex++] = partToken;
-        } while (partTextOffset < tokenLength);
-        // Update realTokenStartOffset which pointed to start of activeTokenList
-        realTokenStartOffset += partLength;
-        // Check that the array does not have any extra items
-        if (partIndex < parts.length) {
-            @SuppressWarnings("unchecked")
-            PartToken<T>[] tmp = new PartToken[partIndex];
-            System.arraycopy(parts, 0, tmp, 0, partIndex);
-            parts = tmp;
+            lastPartTokenListIndex = i;
+            if(firstPartTokenListIndex == -1) {
+                firstPartTokenListIndex = i;
+            }
+            if(partPartType == PartType.END) {
+                break;
+            }
         }
-        List<PartToken<T>> partList = ArrayUtilities.unmodifiableList(parts);
-        joinToken.setJoinedParts(partList, activeTokenListIndex - firstPartTokenListIndex);
-        // joinToken.setTokenList() makes no sense - JoinTokenList instances are temporary
-        // joinToken.setRawOffset() makes no sense - offset taken from initial part
+        parts.trimToSize();
+        joinToken.setJoinedParts(Collections.unmodifiableList(parts), lastPartTokenListIndex - firstPartTokenListIndex);
+        activeTokenListIndex = lastPartTokenListIndex;
+        fetchActiveTokenList();
         return joinToken;
     }
-    
+
+    private int toGlobalPosition(int positionInTokenList, boolean end) {
+        int shift = 0;
+        int lastEnd = 0;
+        for (int i = 0; i < tokenListCount(); i++) {
+            TokenList tl = tokenList(i);
+            shift += tl.startOffset() - lastEnd;
+            lastEnd = tl.endOffset();
+            int shiftedPos = shift + positionInTokenList;
+            if ((end ? (shiftedPos <= lastEnd) : shiftedPos < lastEnd) && relexOffset <= shiftedPos) {
+                break;
+            }
+        }
+        return shift + positionInTokenList;
+    }
+
     /**
      * Class for reading of text of subsequent ETLs - it allows to see their text
      * as a consecutive character sequence (inputSourceText is used as a backing char sequence)
      * with an increasing readIndex (it's not decremented after token's recognition).
      */
-    final class TokenListText {
+    private final class TokenListText {
 
-        int tokenListIndex;
+        private int tokenListIndex;
 
-        int tokenListStartOffset;
+        private int tokenListStartOffset;
 
-        int tokenListEndOffset;
+        private int tokenListEndOffset;
 
         /**
          * A constant added to readOffset to allow a smoothly increasing reading offset
@@ -302,7 +343,7 @@ public class JoinLexerInputOperation<T extends TokenId> extends LexerInputOperat
          * (tokenList(n+1).getStartOffset() - tokenList(n).getEndOffset()) and similarly
          * for backward move among token lists.
          */
-        int readOffsetShift;
+        private int readOffsetShift;
 
         TokenListText(int tokenListIndex) {
             this.tokenListIndex = tokenListIndex;
@@ -311,8 +352,15 @@ public class JoinLexerInputOperation<T extends TokenId> extends LexerInputOperat
             tokenListStartOffset = etl.startOffset();
             tokenListEndOffset = etl.endOffset();
             readOffsetShift = 0;
+            int lastEndOffset = 0;
+            for (int i = 0; i <= tokenListIndex; i++) {
+                TokenList tl = tokenList(i);
+                readOffsetShift += (tl.startOffset() - lastEndOffset);
+                lastEndOffset = tl.endOffset();
+            }
         }
 
+        @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
         TokenListText(TokenListText text) {
             this.tokenListIndex = text.tokenListIndex;
             this.tokenListStartOffset = text.tokenListStartOffset;
@@ -323,6 +371,7 @@ public class JoinLexerInputOperation<T extends TokenId> extends LexerInputOperat
         /**
          * Read next char or return EOF.
          */
+        @SuppressWarnings("AssignmentToMethodParameter")
         int read(int offset) {
             offset += readOffsetShift;
             if (offset < tokenListEndOffset) {
@@ -349,23 +398,26 @@ public class JoinLexerInputOperation<T extends TokenId> extends LexerInputOperat
 
         /**
          * Check whether currently set text covers the given relative index.
-         * 
+         *
          * @param index index in the same metrics as readIndex.
          * @return whether the given index is within current bounds.
          */
+        @SuppressWarnings("AssignmentToMethodParameter")
         boolean isInBounds(int offset) {
             offset += readOffsetShift;
             return offset >= tokenListStartOffset && offset < tokenListEndOffset;
         }
-        
+
         /**
          * Get char that was previously verified to be within bounds.
          */
+        @SuppressWarnings("AssignmentToMethodParameter")
         char inBoundsChar(int offset) {
             offset += readOffsetShift;
             return inputSourceText.charAt(offset);
         }
-        
+
+        @SuppressWarnings("AssignmentToMethodParameter")
         char existingChar(int offset) {
             offset += readOffsetShift;
             if (offset < tokenListStartOffset) {
@@ -375,7 +427,7 @@ public class JoinLexerInputOperation<T extends TokenId> extends LexerInputOperat
                         return inputSourceText.charAt(offset);
                     }
                 }
-                
+
             } else if (offset >= tokenListEndOffset) {
                 while (true) { // Char should exist
                     offset += moveNextTokenList();
@@ -383,12 +435,16 @@ public class JoinLexerInputOperation<T extends TokenId> extends LexerInputOperat
                         return inputSourceText.charAt(offset);
                     }
                 }
-                
+
             }
             // Index within current bounds
             return inputSourceText.charAt(offset);
         }
-        
+
+        public int getTokenListIndexIndex() {
+            return tokenListIndex;
+        }
+
         private int movePreviousTokenList() {
             tokenListIndex--;
             EmbeddedTokenList etl = tokenList(tokenListIndex);
@@ -401,7 +457,7 @@ public class JoinLexerInputOperation<T extends TokenId> extends LexerInputOperat
             tokenListStartOffset = etl.startOffset();
             return shift;
         }
-        
+
         private int moveNextTokenList() {
             tokenListIndex++;
             EmbeddedTokenList etl = tokenList(tokenListIndex);
@@ -422,12 +478,10 @@ public class JoinLexerInputOperation<T extends TokenId> extends LexerInputOperat
         }
 
     }
-    
+
     @Override
     public String toString() {
-        return super.toString() + ", realTokenStartOffset=" + realTokenStartOffset + // NOI18N
-                ", activeTokenListIndex=" + activeTokenListIndex + // NOI18N
-                ", activeTokenListEndOffset=" + activeTokenListEndOffset; // NOI18N
+        return super.toString() + ", activeTokenListIndex=" + activeTokenListIndex; // NOI18N
     }
 
 }

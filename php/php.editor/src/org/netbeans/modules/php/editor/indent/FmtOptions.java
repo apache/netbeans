@@ -81,6 +81,8 @@ public final class FmtOptions {
     public static final String CLASS_DECL_BRACE_PLACEMENT = "classDeclBracePlacement"; //NOI18N
     public static final String ANONYMOUS_CLASS_BRACE_PLACEMENT = "anonymousClassBracePlacement"; //NOI18N
     public static final String METHOD_DECL_BRACE_PLACEMENT = "methodDeclBracePlacement"; //NOI18N
+    public static final String FIELD_DECL_BRACE_PLACEMENT = "fieldDeclBracePlacement"; //NOI18N
+    public static final String PROPERTY_HOOK_DECL_BRACE_PLACEMENT = "propertyHookDeclBracePlacement"; //NOI18N
     public static final String IF_BRACE_PLACEMENT = "ifBracePlacement"; //NOI18N
     public static final String FOR_BRACE_PLACEMENT = "forBracePlacement"; //NOI18N
     public static final String WHILE_BRACE_PLACEMENT = "whileBracePlacement"; //NOI18N
@@ -104,7 +106,10 @@ public final class FmtOptions {
     public static final String BLANK_LINES_BEFORE_FIELDS = "blankLinesBeforeField"; //NOI18N
     public static final String BLANK_LINES_BETWEEN_FIELDS = "blankLinesBetweenField"; //NOI18N
     public static final String BLANK_LINES_AFTER_FIELDS = "blankLinesAfterField"; //NOI18N
+    public static final String BLANK_LINES_BEFORE_PROPERTY_HOOKS = "blankLinesBeforePropertyHooks"; //NOI18N
+    public static final String BLANK_LINES_BETWEEN_PROPERTY_HOOKS = "blankLinesBetweenPropertyHooks"; //NOI18N
     public static final String BLANK_LINES_EMPTY_FUNCTION_BODY = "blankLinesEmptyFunctionBody"; //NOI18N
+    public static final String BLANK_LINES_EMPTY_PROPERTY_HOOK_BODY = "blankLinesEmptyPropertyHookBody"; //NOI18N
     public static final String BLANK_LINES_EOF = "blankLinesEndOfFile"; //NOI18N
     public static final String BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES = "blankLinesGroupFieldsWithoutDocAndAttributes"; //NOI18N
     public static final String BLANK_LINES_BEFORE_FUNCTION = "blankLinesBeforeFunction"; //NOI18N
@@ -146,6 +151,8 @@ public final class FmtOptions {
     public static final String SPACE_BEFORE_CLASS_DECL_LEFT_BRACE = "spaceBeforeClassDeclLeftBrace"; //NOI18N
     public static final String SPACE_BEFORE_ANONYMOUS_CLASS_LEFT_BRACE = "spaceBeforeAnonymousClassLeftBrace"; //NOI18N
     public static final String SPACE_BEFORE_METHOD_DECL_LEFT_BRACE = "spaceBeforeMethodDeclLeftBrace"; //NOI18N
+    public static final String SPACE_BEFORE_FIELD_DECL_LEFT_BRACE = "spaceBeforeFieldDeclLeftBrace"; //NOI18N
+    public static final String SPACE_BEFORE_PROPERTY_HOOK_DECL_LEFT_BRACE = "spaceBeforePropertyHookDeclLeftBrace"; //NOI18N
     public static final String SPACE_BEFORE_IF_LEFT_BRACE = "spaceBeforeIfLeftBrace"; //NOI18N
     public static final String SPACE_BEFORE_ELSE_LEFT_BRACE = "spaceBeforeElseLeftBrace"; //NOI18N
     public static final String SPACE_BEFORE_WHILE_LEFT_BRACE = "spaceBeforeWhileLeftBrace"; //NOI18N
@@ -239,15 +246,15 @@ public final class FmtOptions {
     }
 
     public static int getDefaultAsInt(String key) {
-        return Integer.parseInt(defaults.get(key));
+        return Integer.parseInt(DEFAULTS.get(key));
     }
 
     public static boolean getDefaultAsBoolean(String key) {
-        return Boolean.parseBoolean(defaults.get(key));
+        return Boolean.parseBoolean(DEFAULTS.get(key));
     }
 
     public static String getDefaultAsString(String key) {
-        return defaults.get(key);
+        return DEFAULTS.get(key);
     }
     // Private section ---------------------------------------------------------
     private static final String TRUE = "true";      // NOI18N
@@ -260,13 +267,9 @@ public final class FmtOptions {
     public static final String WRAP_ALWAYS = CodeStyle.WrapStyle.WRAP_ALWAYS.name();
     public static final String WRAP_IF_LONG = CodeStyle.WrapStyle.WRAP_IF_LONG.name();
     public static final String WRAP_NEVER = CodeStyle.WrapStyle.WRAP_NEVER.name();
-    private static Map<String, String> defaults;
+    private static final Map<String, String> DEFAULTS = Map.copyOf(createDefaults());
 
-    static {
-        createDefaults();
-    }
-
-    private static void createDefaults() {
+    private static Map<String, String> createDefaults() {
         String[][] defaultValues = {
             {EXPAND_TAB_TO_SPACES, TRUE}, //NOI18N
             {TAB_SIZE, "8"}, //NOI18N
@@ -281,6 +284,8 @@ public final class FmtOptions {
             {CLASS_DECL_BRACE_PLACEMENT, OBRACE_SAMELINE},
             {ANONYMOUS_CLASS_BRACE_PLACEMENT, OBRACE_SAMELINE},
             {METHOD_DECL_BRACE_PLACEMENT, OBRACE_SAMELINE},
+            {FIELD_DECL_BRACE_PLACEMENT, OBRACE_SAMELINE},
+            {PROPERTY_HOOK_DECL_BRACE_PLACEMENT, OBRACE_SAMELINE},
             {IF_BRACE_PLACEMENT, OBRACE_SAMELINE},
             {FOR_BRACE_PLACEMENT, OBRACE_SAMELINE},
             {WHILE_BRACE_PLACEMENT, OBRACE_SAMELINE},
@@ -303,10 +308,13 @@ public final class FmtOptions {
             {BLANK_LINES_BEFORE_CLASS_END, "0"}, //NOI18N
             {BLANK_LINES_BEFORE_FIELDS, "1"}, //NOI18N
             {BLANK_LINES_EMPTY_FUNCTION_BODY, TRUE},
+            {BLANK_LINES_BEFORE_PROPERTY_HOOKS, "0"}, //NOI18N
+            {BLANK_LINES_EMPTY_PROPERTY_HOOK_BODY, FALSE},
             {BLANK_LINES_EOF, FALSE},
             {BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES, TRUE},
             {BLANK_LINES_BETWEEN_FIELDS, "1"}, //NOI18N
             {BLANK_LINES_AFTER_FIELDS, "1"}, //NOI18N
+            {BLANK_LINES_BETWEEN_PROPERTY_HOOKS, "0"}, //NOI18N
             {BLANK_LINES_BEFORE_FUNCTION, "1"}, //NOI18N
             {BLANK_LINES_AFTER_FUNCTION, "1"}, //NOI18N
             {BLANK_LINES_BEFORE_FUNCTION_END, "0"}, //NOI18N
@@ -346,6 +354,8 @@ public final class FmtOptions {
             {SPACE_AROUND_INTERSECTION_TYPE_SEPARATOR, FALSE},
             {SPACE_BEFORE_CLASS_DECL_LEFT_BRACE, TRUE},
             {SPACE_BEFORE_METHOD_DECL_LEFT_BRACE, TRUE},
+            {SPACE_BEFORE_FIELD_DECL_LEFT_BRACE, TRUE},
+            {SPACE_BEFORE_PROPERTY_HOOK_DECL_LEFT_BRACE, TRUE},
             {SPACE_BEFORE_IF_LEFT_BRACE, TRUE},
             {SPACE_BEFORE_ELSE_LEFT_BRACE, TRUE},
             {SPACE_BEFORE_WHILE_LEFT_BRACE, TRUE},
@@ -436,16 +446,15 @@ public final class FmtOptions {
             {USES_KEEP_EXISTING_TYPE_ORDER, TRUE},
         };
 
-        defaults = new HashMap<>();
-
+        Map<String, String> defaults = new HashMap<>();
         for (java.lang.String[] strings : defaultValues) {
             defaults.put(strings[0], strings[1]);
         }
-
+        return defaults;
     }
 
     public static Map<String, String> getDefaults() {
-        return defaults;
+        return DEFAULTS;
     }
 
     // Support section ---------------------------------------------------------
@@ -569,19 +578,15 @@ public final class FmtOptions {
             pane.setIgnoreRepaint(true);
 
             final Document doc = pane.getDocument();
-            if (doc instanceof BaseDocument) {
+            if (doc instanceof BaseDocument baseDocument) {
                 final Reformat reformat = Reformat.get(doc);
                 reformat.lock();
                 try {
-                    ((BaseDocument) doc).runAtomic(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            try {
-                                reformat.reformat(0, doc.getLength());
-                            } catch (BadLocationException ble) {
-                                LOGGER.log(Level.WARNING, null, ble);
-                            }
+                    baseDocument.runAtomic(() -> {
+                        try {
+                            reformat.reformat(0, doc.getLength());
+                        } catch (BadLocationException ble) {
+                            LOGGER.log(Level.WARNING, null, ble);
                         }
                     });
                 } finally {
@@ -650,27 +655,22 @@ public final class FmtOptions {
         // Private methods -----------------------------------------------------
         private void performOperation(Operation operation, JComponent jc, String optionID, Preferences p) {
             switch (operation) {
-                case LOAD:
-                    loadData(jc, optionID, p);
-                    break;
-                case STORE:
-                    storeData(jc, optionID, p);
-                    break;
-                case ADD_LISTENERS:
-                    addListener(jc);
-                    break;
-                default:
+                case LOAD -> loadData(jc, optionID, p);
+                case STORE -> storeData(jc, optionID, p);
+                case ADD_LISTENERS -> addListener(jc);
+                default -> {
                     assert false : operation;
+                }
             }
         }
 
         private void scan(Operation what, Preferences p) {
             for (JComponent jc : components) {
                 Object o = jc.getClientProperty(OPTION_ID);
-                if (o instanceof String) {
-                    performOperation(what, jc, (String) o, p);
-                } else if (o instanceof String[]) {
-                    for (String oid : (String[]) o) {
+                if (o instanceof String string) {
+                    performOperation(what, jc, string, p);
+                } else if (o instanceof String[] strings) {
+                    for (String oid : strings) {
                         performOperation(what, jc, oid, p);
                     }
                 }
@@ -679,8 +679,7 @@ public final class FmtOptions {
 
         private void scan(Container container, List<JComponent> components) {
             for (Component c : container.getComponents()) {
-                if (c instanceof JComponent) {
-                    JComponent jc = (JComponent) c;
+                if (c instanceof JComponent jc) {
                     Object o = jc.getClientProperty(OPTION_ID);
                     if (o instanceof String || o instanceof String[]) {
                         components.add(jc);
@@ -698,22 +697,18 @@ public final class FmtOptions {
          */
         private void loadData(JComponent jc, String optionID, Preferences node) {
 
-            if (jc instanceof JTextField) {
-                JTextField field = (JTextField) jc;
+            if (jc instanceof JTextField field) {
                 field.setText(node.get(optionID, getDefaultAsString(optionID)));
-            } else if (jc instanceof JCheckBox) {
-                JCheckBox checkBox = (JCheckBox) jc;
+            } else if (jc instanceof JCheckBox checkBox) {
                 boolean df = getDefaultAsBoolean(optionID);
                 checkBox.setSelected(node.getBoolean(optionID, df));
-            } else if (jc instanceof JComboBox) {
-                JComboBox cb = (JComboBox) jc;
+            } else if (jc instanceof JComboBox comboBox) {
                 String value = node.get(optionID, getDefaultAsString(optionID));
                 ComboBoxModel model = createModel(value);
-                cb.setModel(model);
+                comboBox.setModel(model);
                 ComboItem item = whichItem(value, model);
-                cb.setSelectedItem(item);
-            } else if (jc instanceof JRadioButton) {
-                JRadioButton radioButton = (JRadioButton) jc;
+                comboBox.setSelectedItem(item);
+            } else if (jc instanceof JRadioButton radioButton) {
                 boolean df = getDefaultAsBoolean(optionID);
                 radioButton.setSelected(node.getBoolean(optionID, df));
             }
@@ -769,16 +764,13 @@ public final class FmtOptions {
         }
 
         private void addListener(JComponent jc) {
-            if (jc instanceof JTextField) {
-                JTextField field = (JTextField) jc;
+            if (jc instanceof JTextField field) {
                 field.addActionListener(this);
                 field.getDocument().addDocumentListener(this);
-            } else if (jc instanceof JCheckBox) {
-                JCheckBox checkBox = (JCheckBox) jc;
+            } else if (jc instanceof JCheckBox checkBox) {
                 checkBox.addActionListener(this);
-            } else if (jc instanceof JComboBox) {
-                JComboBox cb = (JComboBox) jc;
-                cb.addActionListener(this);
+            } else if (jc instanceof JComboBox comboBox) {
+                comboBox.addActionListener(this);
             }
         }
 
@@ -956,7 +948,7 @@ public final class FmtOptions {
     }
 
     public static boolean isInteger(String optionID) {
-        String value = defaults.get(optionID);
+        String value = DEFAULTS.get(optionID);
 
         try {
             Integer.parseInt(value);

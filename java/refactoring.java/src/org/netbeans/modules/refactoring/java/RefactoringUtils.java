@@ -305,7 +305,7 @@ public class RefactoringUtils {
     public static boolean isOnSourceClasspath(FileObject fo) {
         Project pr = FileOwnerQuery.getOwner(fo);
         if (pr == null) {
-            return false;
+            return SourceLauncher.isSourceLauncherFile(fo);
         }
 
         //workaround for 143542

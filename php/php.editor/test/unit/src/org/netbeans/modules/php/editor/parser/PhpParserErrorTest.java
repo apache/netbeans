@@ -1556,4 +1556,49 @@ public class PhpParserErrorTest extends PHPTestBase {
     public void testFinalFieldsAnonClass() throws Exception {
         checkErrors("testfiles/parser/php84/finalFieldsAnonClass.php");
     }
+
+    // the following cases are parse errors as of PHP 8.4: $a{1}, "string"{1}
+    public void testCurlyBracesArrayAccessError01() throws Exception {
+        checkErrors("testfiles/parser/php84/curlyBracesArrayAccessError01.php");
+    }
+
+    public void testCurlyBracesArrayAccessError02() throws Exception {
+        checkErrors("testfiles/parser/php84/curlyBracesArrayAccessError02.php");
+    }
+
+    public void testCurlyBracesArrayAccessError03() throws Exception {
+        checkErrors("testfiles/parser/php84/curlyBracesArrayAccessError03.php");
+    }
+
+    public void testCurlyBracesArrayAccessError04() throws Exception {
+        checkErrors("testfiles/parser/php84/curlyBracesArrayAccessError04.php");
+    }
+
+    public void testCurlyBracesArrayAccessError05() throws Exception {
+        checkErrors("testfiles/parser/php84/curlyBracesArrayAccessError05.php");
+    }
+
+    public void testPropertyHooks() throws Exception {
+        checkErrors("testfiles/parser/php84/propertyHooks.php");
+    }
+
+    public void testPropertyHooksAbstract() throws Exception {
+        checkErrors("testfiles/parser/php84/propertyHooksAbstract.php");
+    }
+
+    public void testPropertyHooksCPP() throws Exception {
+        checkErrors("testfiles/parser/php84/propertyHooksCPP.php");
+    }
+
+    public void testPropertyHooksInterface() throws Exception {
+        checkErrors("testfiles/parser/php84/propertyHooksInterface.php");
+    }
+
+    public void testPropertyHooksInterfaceError_01() throws Exception {
+        checkErrors("testfiles/parser/php84/propertyHooksInterfaceError_01.php");
+    }
+
+    public void testPropertyHooksTrait() throws Exception {
+        checkErrors("testfiles/parser/php84/propertyHooksTrait.php");
+    }
 }

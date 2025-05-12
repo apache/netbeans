@@ -133,4 +133,86 @@ public class WrongOrderOfArgsHintTest extends PHPHintsTestBase {
                 "Rearrange arguments"
         );
     }
+
+    // PHP 8.4: Property hooks
+    public void testConstructorPropertyPromotionWithPropertyHooks() throws Exception {
+        checkHints(new WrongOrderOfArgsHint(), "testConstructorPropertyPromotionWithPropertyHooks.php");
+    }
+
+    public void testConstructorPropertyPromotionWithPropertyHooksFix_01() throws Exception {
+        applyHint(
+                new WrongOrderOfArgsHint(),
+                "testConstructorPropertyPromotionWithPropertyHooks.php",
+                "public function __construct(private ?int $o^ptional = 1 {get{} set{}}, $mandatory) {",
+                "Rearrange arguments"
+        );
+    }
+
+    public void testConstructorPropertyPromotionWithPropertyHooksFix_02() throws Exception {
+        applyHint(
+                new WrongOrderOfArgsHint(),
+                "testConstructorPropertyPromotionWithPropertyHooks.php",
+                "public function __construct(private ?int $optional1 = 1 {get => $this->optional1; set => $this->optional1 = $value;}, $mandatory, string $opt^ional2 = \"default value\" {get{} set{}}) {",
+                "Rearrange arguments"
+        );
+    }
+
+    public void testConstructorPropertyPromotionWithPropertyHooksFix_03() throws Exception {
+        applyHint(
+                new WrongOrderOfArgsHint(),
+                "testConstructorPropertyPromotionWithPropertyHooks.php",
+                "public function __construct(#[Attr] protected ?int $mandatory1, $o^ptional = \"default value\" {get {} set{}}, private string|int $mandatory2) {",
+                "Rearrange arguments"
+        );
+    }
+
+    public void testConstructorPropertyPromotionWithPropertyHooksFix_04() throws Exception {
+        applyHint(
+                new WrongOrderOfArgsHint(),
+                "testConstructorPropertyPromotionWithPropertyHooks.php",
+                "public function __construct(private ?int $mandatory1, private $optio^nal = \"default value\" {get {return $this->optional;} set {$this->optional = $value;}}, public string $mandatory2) {",
+                "Rearrange arguments"
+        );
+    }
+
+    public void testConstructorPropertyPromotionMultiLinesWithPropertyHooks() throws Exception {
+        checkHints(new WrongOrderOfArgsHint(), "testConstructorPropertyPromotionMultiLinesWithPropertyHooks.php");
+    }
+
+    public void testConstructorPropertyPromotionMultiLinesWithPropertyHooksFix_01() throws Exception {
+        applyHint(
+                new WrongOrderOfArgsHint(),
+                "testConstructorPropertyPromotionMultiLinesWithPropertyHooks.php",
+                "        $mand^atory, // test1",
+                "Rearrange arguments"
+        );
+    }
+
+    public void testConstructorPropertyPromotionMultiLinesWithPropertyHooksFix_02() throws Exception {
+        applyHint(
+                new WrongOrderOfArgsHint(),
+                "testConstructorPropertyPromotionMultiLinesWithPropertyHooks.php",
+                "        $mandato^ry, // test2",
+                "Rearrange arguments"
+        );
+    }
+
+    public void testConstructorPropertyPromotionMultiLinesWithPropertyHooksFix_03() throws Exception {
+        applyHint(
+                new WrongOrderOfArgsHint(),
+                "testConstructorPropertyPromotionMultiLinesWithPropertyHooks.php",
+                "        private string|int $mandatory^2, // test3",
+                "Rearrange arguments"
+        );
+    }
+
+    public void testConstructorPropertyPromotionMultiLinesWithPropertyHooksFix_04() throws Exception {
+        applyHint(
+                new WrongOrderOfArgsHint(),
+                "testConstructorPropertyPromotionMultiLinesWithPropertyHooks.php",
+                "        public string $mandat^ory2 // test4",
+                "Rearrange arguments"
+        );
+    }
+
 }

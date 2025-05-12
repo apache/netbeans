@@ -34,6 +34,8 @@ import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.ParserTestBase;
 import org.netbeans.modules.php.editor.parser.TestHtmlFormatter;
+import org.netbeans.modules.php.project.api.PhpSourcePath;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -106,8 +108,8 @@ public abstract class PhpNavigatorTestBase extends ParserTestBase {
     private String printStructureItem(StructureItem structureItem, int indent) {
         StringBuilder sb = new StringBuilder();
         sb.append(indent(indent));
-        if (structureItem instanceof StructureItem.InheritedItem) {
-            if (((StructureItem.InheritedItem) structureItem).isInherited()) {
+        if (structureItem instanceof StructureItem.InheritedItem inheritedItem) {
+            if (inheritedItem.isInherited()) {
                 sb.append("(Inherited) ");
             }
         }
@@ -119,7 +121,7 @@ public abstract class PhpNavigatorTestBase extends ParserTestBase {
         sb.append("] : ");
         HtmlFormatter formatter = new TestHtmlFormatter();
         sb.append(structureItem.getHtml(formatter));
-        List<? extends StructureItem> nestedItems = structureItem.getNestedItems();
+        List<? extends StructureItem> nestedItems = new ArrayList<>(structureItem.getNestedItems());
         nestedItems.sort(STRUCTURE_ITEM_COMPARATOR);
         for (StructureItem item : nestedItems) {
             sb.append("\n");
@@ -131,9 +133,30 @@ public abstract class PhpNavigatorTestBase extends ParserTestBase {
     private String indent(int indent) {
         String text = "|-";
         for (int i = 0; i < indent; i++) {
-            text = text + "-";
+            text += "-";
         }
         return text;
     }
 
+    @Override
+    protected Map<String, ClassPath> createClassPathsForTest() {
+        FileObject[] srcFolders = createSourceClassPathsForTest();
+        return srcFolders != null ? Collections.singletonMap(
+            PhpSourcePath.SOURCE_CP,
+            ClassPathSupport.createClassPath(srcFolders)
+        ) : null;
+    }
+
+    protected FileObject[] createSourceClassPathsForTest() {
+        return null;
+    }
+
+    protected String getTestName() {
+        String name = getName();
+        int indexOf = name.indexOf("_");
+        if (indexOf != -1) {
+            name = name.substring(0, indexOf);
+        }
+        return name;
+    }
 }

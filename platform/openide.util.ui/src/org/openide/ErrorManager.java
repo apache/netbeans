@@ -25,6 +25,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -41,7 +42,6 @@ import org.openide.util.Enumerations;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
-import org.openide.util.WeakSet;
 
 /**
  * A more or less <em>deprecated</em> system of managing, annotating, and classifying errors
@@ -531,7 +531,7 @@ public abstract class ErrorManager extends Object {
          * A set that has to be updated when the list of delegates
          * changes. All instances created by getInstance are held here.
          */
-        private WeakSet<DelegatingErrorManager> createdByMe = new WeakSet<DelegatingErrorManager>();
+        private Set<DelegatingErrorManager> createdByMe = Collections.newSetFromMap(new WeakHashMap<>());
 
         /** If we are the "central" delagate this is not null and
          * we listen on the result. On newly created delegates this

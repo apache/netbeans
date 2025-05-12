@@ -20,6 +20,28 @@
     under the License.
 
 -->
+## Version 26.0
+* Fix error when verifying JDK in `JDK Configuration` wizard
+* Avoid NPE in Native Image degugging by specifying `displayName` 
+* LSP: Speed up publish diagnostics on project scan.
+* Fix TEMP database properties directory permissions
+* Micronaut applications use `--also-make` for run+debug by default
+* Permit relative paths and class names as `mainClass` setting in launch.json
+* Fixes in Java support 
+  * Support star expansion on classpath for source launcher
+  * If a ClassIndex ignores a root due to missing index, make sure the ClassIndex is rebuilt when the index is created
+  * Account for possible Element instance changed when lazily computing
+  * Fix code completion after `new HashMap<>`
+  * Fixing imports for static item completion
+* First VSNetBeans release decoupled from main IDE release process. Based on same `commit` as NetBeans IDE 26.0
+
+## Version 25.9.9
+* JDK 24 nb-javac integrated 
+
+## Version 25.0
+* Change parameter order for runDebug, compat with VSNetBeans codelenses
+
+
 ## Version 24.9.9
 * Version 24.9.9 is VSNetBeans technology preview of upcoming VSNetBeans 25.0
 * New terminal is opened in VSCode Output panel for every LSP IO operation, like build...

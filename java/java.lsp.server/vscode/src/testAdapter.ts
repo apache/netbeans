@@ -107,7 +107,7 @@ export class NbTestAdapter {
                         }
                         if (!cancellation.isCancellationRequested) {
                             try {
-                                await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? COMMAND_PREFIX + '.debug.single' : COMMAND_PREFIX + '.run.single', item.uri.toString(), idx < 0 ? undefined : item.id.slice(idx + 1), 
+                                await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? COMMAND_PREFIX + '.debug.test' : COMMAND_PREFIX + '.run.test', item.uri.toString(), idx < 0 ? undefined : item.id.slice(idx + 1), 
                                     undefined /* configuration */, nestedClass);
                             } catch(err) {
                                 // test state will be handled in the code below
@@ -124,7 +124,7 @@ export class NbTestAdapter {
                             if (testInParallel) {
                                 await commands.executeCommand(COMMAND_PREFIX + '.run.test', workspaceFolder.uri.toString(), undefined, undefined, undefined, true, projects);
                             } else {
-                                await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? COMMAND_PREFIX + '.debug.test': COMMAND_PREFIX + '.run.test', workspaceFolder.uri.toString());
+                                await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? COMMAND_PREFIX + '.project.test.debug': COMMAND_PREFIX + '.project.test', workspaceFolder.uri.toString());
                             }
                         } catch(err) {
                             // test state will be handled in the code below

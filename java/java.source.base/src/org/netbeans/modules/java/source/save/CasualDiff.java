@@ -143,6 +143,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import static java.util.logging.Level.*;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -941,7 +942,15 @@ public class CasualDiff {
     // TODO: should be here printer.enclClassName be used?
     private Name origClassName = null;
     private Name newClassName = null;
-
+    /**
+     * Computes differences between old and new classTree and prints.
+     *
+     * The this.origText is used between bounds[0] and bounds[1].
+     * @param oldT old definition of class tree
+     * @param newT new definition of class tree
+     * @param bounds the bounds of the old classtree in thge original text
+     * @return the end position in the origText.
+     */
     protected int diffClassDef(JCClassDecl oldT, JCClassDecl newT, int[] bounds) {
         int localPointer = bounds[0];
         final Name origOuterClassName = origClassName;
@@ -959,6 +968,7 @@ public class CasualDiff {
         moveToSrcRelevant(tokenSequence, Direction.FORWARD);
         insertHint = tokenSequence.offset();
         localPointer = diffModifiers(oldT.mods, newT.mods, oldT, localPointer);
+        boolean newIsRecord = (newT.mods.flags & Flags.RECORD) != 0;
         if (kindChanged(oldT.mods.flags, newT.mods.flags)) {
             int pos = oldT.pos;
             if ((oldT.mods.flags & Flags.ANNOTATION) != 0) {
@@ -973,6 +983,9 @@ public class CasualDiff {
             } else if ((newT.mods.flags & Flags.ENUM) != 0) {
                 copyTo(localPointer, pos);
                 printer.print("enum"); //NOI18N
+            } else if (newIsRecord) {
+                copyTo(localPointer, pos);
+                printer.print("record"); //NOI18N
             } else if ((newT.mods.flags & Flags.INTERFACE) != 0) {
                 copyTo(localPointer, pos);
                 printer.print("interface"); //NOI18N
@@ -1016,8 +1029,8 @@ public class CasualDiff {
         }
         //TODO: class to record and vice versa!
         if (oldT.getKind() == Kind.RECORD && newT.getKind() == Kind.RECORD) {
-            ComponentsAndOtherMembers oldParts = splitOutRecordComponents(filteredOldTDefs);
-            ComponentsAndOtherMembers newParts = splitOutRecordComponents(filteredNewTDefs);
+            ComponentsAndOtherMembers oldParts = splitOutRecordComponents(filteredOldTDefs, oldT);
+            ComponentsAndOtherMembers newParts = splitOutRecordComponents(filteredNewTDefs,newT);
             int posHint;
             if (oldParts.components().isEmpty()) {
                 // compute the position. Find the parameters closing ')', its
@@ -1046,16 +1059,20 @@ public class CasualDiff {
             moveFwdToToken(tokenSequence, oldParts.components.isEmpty() ? posHint : endPos(oldParts.components.get(oldParts.components.size() - 1)), JavaTokenId.RPAREN);
             tokenSequence.moveNext();
             posHint = tokenSequence.offset();
-            if (localPointer < posHint)
+            if (localPointer < posHint) {
                 copyTo(localPointer, localPointer = posHint);
+            }
             filteredOldTDefs = oldParts.defs;
             filteredNewTDefs = newParts.defs;
             tokenSequence.move(localPointer);
             moveToSrcRelevant(tokenSequence, Direction.FORWARD);
             // it can be > (GT) or >> (SHIFT)
-            insertHint = tokenSequence.offset() + tokenSequence.token().length();
-        }
-        switch (getChangeKind(oldT.extending, newT.extending)) {
+            // do not print closing { too early
+            insertHint = tokenSequence.offset()-1;// + tokenSequence.token().length()-1;
+        } // end both recod
+
+        final ChangeKind changeKind = getChangeKind(oldT.extending, newT.extending);
+        switch (changeKind) {
             case NOCHANGE:
                 insertHint = oldT.extending != null ? endPos(oldT.extending) : insertHint;
                 copyTo(localPointer, localPointer = insertHint);
@@ -1077,33 +1094,34 @@ public class CasualDiff {
                 break;
         }
         {
-        // TODO (#pf): there is some space for optimization. If the new list
-        // is also empty, we can skip this computation.
-        if (oldT.implementing.isEmpty()) {
-            // if there is not any implementing part, we need to adjust position
-            // from different place. Look at the examples in all if branches.
-            // | represents current adjustment and ! where we want to point to
-            if (oldT.extending != null)
-                // public class Yerba<E>| extends Object! { ...
-                insertHint = endPos(oldT.extending);
-            else {
-                // currently no need to adjust anything here:
-                // public class Yerba<E>|! { ...
+            // TODO (#pf): there is some space for optimization. If the new list
+            // is also empty, we can skip this computation.
+            if (oldT.implementing.isEmpty()) {
+                // if there is not any implementing part, we need to adjust position
+                // from different place. Look at the examples in all if branches.
+                // | represents current adjustment and ! where we want to point to
+                if (oldT.extending != null) // public class Yerba<E>| extends Object! { ...
+                {
+                    insertHint = endPos(oldT.extending);
+                } else {
+                    // currently no need to adjust anything here:
+                    // public class Yerba<E>|! { ...
+                }
+            } else {
+                // we already have any implements, adjust position to first
+                // public class Yerba<E>| implements !Mate { ...
+                // Note: in case of all implements classes are removed,
+                // diffing mechanism will solve the implements keyword.
+                insertHint = oldT.implementing.iterator().next().getStartPosition();
             }
-        } else {
-            // we already have any implements, adjust position to first
-            // public class Yerba<E>| implements !Mate { ...
-            // Note: in case of all implements classes are removed,
-            // diffing mechanism will solve the implements keyword.
-            insertHint = oldT.implementing.iterator().next().getStartPosition();
-        }
-        long flags = oldT.sym != null ? oldT.sym.flags() : oldT.mods.flags;
-        PositionEstimator estimator = (flags & INTERFACE) == 0 ?
-            EstimatorFactory.implementz(oldT.getImplementsClause(), newT.getImplementsClause(), diffContext) :
-            EstimatorFactory.extendz(oldT.getImplementsClause(), newT.getImplementsClause(), diffContext);
-        if (!newT.implementing.isEmpty())
-            copyTo(localPointer, insertHint);
-        localPointer = diffList2(oldT.implementing, newT.implementing, insertHint, estimator);
+            long flags = oldT.sym != null ? oldT.sym.flags() : oldT.mods.flags;
+            PositionEstimator estimator = (flags & INTERFACE) == 0
+                    ? EstimatorFactory.implementz(oldT.getImplementsClause(), newT.getImplementsClause(), diffContext)
+                    : EstimatorFactory.extendz(oldT.getImplementsClause(), newT.getImplementsClause(), diffContext);
+            if (!newT.implementing.isEmpty()) {
+                copyTo(localPointer, insertHint);
+            }
+            localPointer = diffList2(oldT.implementing, newT.implementing, insertHint, estimator);
         }
 
         {
@@ -1199,25 +1217,61 @@ public class CasualDiff {
         }
         return bounds[1];
     }
-    
-    private ComponentsAndOtherMembers splitOutRecordComponents(List<JCTree> defs) {
-        ListBuffer<JCTree> components = new ListBuffer<>();
-        ListBuffer<JCTree> filteredDefs = new ListBuffer<>();
+
+    /**
+     * Get and split into components and other members from a record.
+     * If the record declares a synthethic or compact constructor, obtain the parameters
+     * from that one, and see if the last parameter is a varargs parameter. If so, patch the
+     * flags of the last recordComponent such that it also is returned as a varargs parameter.
+     * 
+     * This works because in a record there is a constructor because the 'default' constructor
+     * in the classTree of a record is a canonical constructor (specifying all
+     * record components). Same applies for the canonical constuctor, which in the classtree is normal constructor
+     * with all parameters equal to the record components.
+     *
+     * @param defs member declarations to consider
+     * @param classTree for this record
+     * @return a record containing the components and the non-component members such as static fields, methods etc.
+     */
+    private ComponentsAndOtherMembers splitOutRecordComponents(List<JCTree> defs, JCClassDecl classTree) {
+        List<JCVariableDecl> components = new ArrayList<>();
+        List<JCTree> filteredDefs = new ArrayList<>();
 
         for (JCTree t : defs) {
-            if (t.getKind() == Kind.VARIABLE &&
-                (((JCVariableDecl) t).mods.flags & RECORD) != 0) {
-                components.add(t);
+            if (t.getKind() == Kind.VARIABLE && t instanceof JCVariableDecl decl
+                    && (decl.mods.flags & RECORD) != 0) {
+                components.add(decl);
             } else {
                 filteredDefs.add(t);
             }
         }
 
-        return new ComponentsAndOtherMembers(components.toList(),
-                                             filteredDefs.toList());
+        // only if last component is present and is array, we consider varargs for the record param
+        if (!components.isEmpty() && components.get(components.size() - 1).vartype.getKind() == Kind.ARRAY_TYPE) {
+            int idx = components.size() - 1;
+            final long syntOrCompact = Flags.SYNTHETIC | Flags.COMPACT_RECORD_CONSTRUCTOR;
+            var recordParams = classTree.defs
+                    .stream()
+                    .filter(m -> m.getKind() == Kind.METHOD && m instanceof JCMethodDecl mdecl && mdecl.getReturnType() == null)
+                    .map(JCMethodDecl.class::cast)
+                    .filter(met -> (met.mods.flags & syntOrCompact) != 0)
+                    .findFirst()
+                    .map(m -> m.params);
+            if (recordParams.isPresent()) {
+                List<JCVariableDecl> params = recordParams.get();
+                assert params.size() == components.size();
+                JCVariableDecl lastParam = params.get(idx);
+                boolean varargsCtor = (lastParam.mods.flags & Flags.VARARGS) != 0;
+                if (varargsCtor) {
+                    JCVariableDecl lastComponent = components.get(idx);
+                    lastComponent.mods.flags |= Flags.VARARGS;
+                }
+            }
+        }
+        return new ComponentsAndOtherMembers(components, filteredDefs);
     }
 
-    record ComponentsAndOtherMembers(List<JCTree> components, List<JCTree> defs) {}
+    record ComponentsAndOtherMembers(List<? extends JCTree> components, List<JCTree> defs) {}
 
     /**
      * When the enumeration contains just methods, it is necessary to preced them with single ;. If a constant is

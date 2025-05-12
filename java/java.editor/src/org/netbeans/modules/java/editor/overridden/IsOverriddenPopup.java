@@ -26,7 +26,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.Comparator;
 import java.util.List;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -51,18 +50,14 @@ public class IsOverriddenPopup extends JPanel implements FocusListener {
         this.caption = caption;
         this.declarations = declarations;
 
-        declarations.sort(new Comparator<ElementDescription>() {
-            public int compare(ElementDescription o1, ElementDescription o2) {
-                if (o1.isOverridden() == o2.isOverridden()) {
-                    return o1.getDisplayName().compareTo(o2.getDisplayName());
-                }
-                
-                if (o1.isOverridden()) {
-                    return 1;
-                }
-                
-                return -1;
+        declarations.sort((o1, o2) -> {
+            if (o1.isOverridden() == o2.isOverridden()) {
+                return o1.getDisplayName().compareTo(o2.getDisplayName());
             }
+            if (o1.isOverridden()) {
+                return 1;
+            }
+            return -1;
         });
         
         initComponents();
@@ -131,7 +126,7 @@ public class IsOverriddenPopup extends JPanel implements FocusListener {
     
     private void jList1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jList1KeyPressed
         // TODO add your handling code here:
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER && evt.getModifiers() == 0) {
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER && evt.getModifiersEx()== 0) {
             openSelected();
         }
     }//GEN-LAST:event_jList1KeyPressed
@@ -168,6 +163,7 @@ public class IsOverriddenPopup extends JPanel implements FocusListener {
         private static final int DARKER_COLOR_COMPONENT = 5;
         private boolean selected;
 
+        @Override
         public Component getListCellRendererComponent(
                 JList list,
                 Object value,
@@ -175,9 +171,7 @@ public class IsOverriddenPopup extends JPanel implements FocusListener {
                 boolean isSelected,
                 boolean cellHasFocus) {
             super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);            
-            if (value instanceof ElementDescription) {
-                ElementDescription desc = (ElementDescription) value;
-                
+            if (value instanceof ElementDescription desc) {
                 setIcon(desc.getIcon());
                 setText(desc.getDisplayName());
             }
@@ -214,11 +208,13 @@ public class IsOverriddenPopup extends JPanel implements FocusListener {
         }
     }
     
+    @Override
     public void focusGained(FocusEvent arg0) {
         jList1.requestFocus();
         jList1.requestFocusInWindow();
     }
     
+    @Override
     public void focusLost(FocusEvent arg0) {
     }
     

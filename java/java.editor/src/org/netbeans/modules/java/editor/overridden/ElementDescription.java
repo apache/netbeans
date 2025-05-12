@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.java.editor.overridden;
 
-import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.Collection;
 import javax.lang.model.element.Element;
@@ -48,12 +47,12 @@ public class ElementDescription {
     private static final String PKG_COLOR = Utilities.getHTMLColor(192, 192, 192);
     private final ElementKind imageKind;
 
-    private ClasspathInfo originalCPInfo;
+    private final ClasspathInfo originalCPInfo;
     
-    private ElementHandle<Element> handle;
-    private ElementHandle<TypeElement> outtermostElement;
-    private Collection<Modifier> modifiers;
-    private String displayName;
+    private final ElementHandle<Element> handle;
+    private final ElementHandle<TypeElement> outtermostElement;
+    private final Collection<Modifier> modifiers;
+    private final String displayName;
     private final boolean overriddenFlag;
 
     public ElementDescription(CompilationInfo info, Element element, boolean overriddenFlag) {

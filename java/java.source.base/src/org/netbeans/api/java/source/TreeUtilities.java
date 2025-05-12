@@ -1650,13 +1650,13 @@ public final class TreeUtilities {
         ImmutableTreeTranslator itt = new ImmutableTreeTranslator(info instanceof WorkingCopy ? (WorkingCopy)info : null) {
             private @NonNull Map<Tree, Tree> map = new HashMap<Tree, Tree>(original2Translated);
             @Override
-            public Tree translate(Tree tree) {
+            public Tree translate(Tree tree, Object p) {
                 Tree translated = map.remove(tree);
 
                 if (translated != null) {
-                    return translate(translated);
+                    return translate(translated, p);
                 } else {
-                    return super.translate(tree);
+                    return super.translate(tree, p);
                 }
             }
         };
@@ -1665,7 +1665,7 @@ public final class TreeUtilities {
 
         itt.attach(c, ia, tree2Tag);
 
-        return itt.translate(original);
+        return itt.translate(original, null);
     }
     
     /**Returns new tree based on {@code original}, such that each visited subtree
@@ -1726,7 +1726,7 @@ public final class TreeUtilities {
         }
 
         @Override
-        public void classEntered(ClassTree clazz) {}
+        public void classEntered(ClassTree clazz, boolean isAnonymous) {}
 
         @Override
         public void enterVisibleThroughClasses(ClassTree clazz) {}

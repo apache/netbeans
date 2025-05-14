@@ -632,7 +632,7 @@ public class Css3ParserTest extends CssTestBase {
         Node media_expression = NodeUtil.query(media_query, "mediaExpression");
         assertNotNull(media_expression);
 
-        Node media_feature = NodeUtil.query(media_expression, "mediaFeature");
+        Node media_feature = NodeUtil.query(media_expression, "mediaFeatureType");
         assertNotNull(media_feature);
 
         assertResultOK(result);
@@ -1940,4 +1940,14 @@ public class Css3ParserTest extends CssTestBase {
         assertNull(NodeUtil.query(result.getParseTree(), "styleSheet/body/bodyItem|3"));
     }
 
+    public void testMediaQueryNoValue() throws Exception {
+        assertParses("@media (color) {}");
+        assertParses("@media not screen and (color), print and (color) {}");
+    }
+
+    public void testMediaQueryRangeContext() throws Exception {
+        assertParses("@media (width <= 1250px) {}");
+        assertParses("@media (30em <= width <= 50em) {}");
+        assertParses("@media (width >= 600px) { .element {} }");
+    }
 }

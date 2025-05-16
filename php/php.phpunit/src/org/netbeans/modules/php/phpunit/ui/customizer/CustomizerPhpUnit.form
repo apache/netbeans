@@ -145,7 +145,7 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="suiteInfoLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="scriptCheckBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -153,7 +153,7 @@
                   <Component id="scriptTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="scriptBrowseButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="isRelativePathEnabled" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="runPhpUnitOnlyCheckBox" min="-2" max="-2" attributes="0"/>

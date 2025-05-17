@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Vector;
 
 /**
@@ -727,15 +728,15 @@ public class EvaluatorApp extends BaseClass {
     }
     
     public static boolean testOp36c() {
-        return (Runtime.getRuntime() instanceof java.lang.Iterable);
+        return (System.getProperties() instanceof java.lang.AutoCloseable);
     }
     
     public static boolean testOp36d() {
-        return (Runtime.getRuntime() instanceof Runtime);
+        return (System.getProperties() instanceof Properties);
     }
     
     public static boolean testOp36e() {
-        return (Runtime.getRuntime() instanceof Object);
+        return (System.getProperties() instanceof Object);
     }
     
     public static int testOp37a() {

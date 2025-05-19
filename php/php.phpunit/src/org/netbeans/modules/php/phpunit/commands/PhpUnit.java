@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -473,7 +474,7 @@ public final class PhpUnit {
                     params.add(getNbSuite().getAbsolutePath());
                 } else {
                     // GH-5790 we can use NetBeansSuite.php no longer with PHPUnit 10
-                    params.add(FileUtil.toFile(startFiles.get(0)).getAbsolutePath());
+                    params.add(getTestFilePath(phpModule, FileUtil.toFile(startFiles.get(0))));
                 }
                 // #254276
                 //params.add(PARAM_SEPARATOR);
@@ -483,6 +484,16 @@ public final class PhpUnit {
             }
         }
         return new TestParams(params, envVariables);
+    }
+
+    private String getTestFilePath(PhpModule phpModule, File file) {
+        if (PhpUnitPreferences.isRelativePathEnabled(phpModule)) {
+            String basePathText = phpModule.getSourceDirectory().getPath();
+            return Paths.get(basePathText)
+                    .relativize(file.toPath())
+                    .toString();
+        }
+        return file.getAbsolutePath();
     }
 
     private void addBootstrap(PhpModule phpModule, List<String> params) {

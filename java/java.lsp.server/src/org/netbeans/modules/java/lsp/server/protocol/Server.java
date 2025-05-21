@@ -165,7 +165,6 @@ public final class Server {
      * Special logger that logs LSP in/out messages.
      */
     private static final Logger LSP_LOG = Logger.getLogger("org.netbeans.modules.java.lsp.server.lsptrace"); // NOI18N
-    private static final LspServerTelemetryManager LSP_SERVER_TELEMETRY = new LspServerTelemetryManager();
     private static final ErrorsNotifier ERR_NOTIFIER = new ErrorsNotifier();
     
     private Server() {
@@ -189,7 +188,6 @@ public final class Server {
         ((LanguageClientAware) server).connect(remote);
         msgProcessor.attachClient(server.client);
         Future<Void> runningServer = serverLauncher.startListening();
-        LSP_SERVER_TELEMETRY.connect(server.client, runningServer);
         ERR_NOTIFIER.connect(server, runningServer);
         return new NbLspServer(server, runningServer);
     }
@@ -794,7 +792,7 @@ public final class Server {
                     }
                     f.complete(candidateMapping);
                     List<FileObject> workspaceClientFolders = workspaceService.getClientWorkspaceFolders();
-                    LSP_SERVER_TELEMETRY.sendWorkspaceInfo(client, workspaceClientFolders, openedProjects, System.currentTimeMillis() - t);
+                    LspServerTelemetryManager.getInstance().sendWorkspaceInfo(client, workspaceClientFolders, openedProjects, System.currentTimeMillis() - t);
                     LOG.log(Level.INFO, "{0} projects opened in {1}ms", new Object[] { prjsRequested.length, (System.currentTimeMillis() - t) });
                 } else {
                     LOG.log(Level.FINER, "{0}: Collecting projects to prime from: {1}", new Object[]{id, Arrays.asList(additionalProjects)});
@@ -955,6 +953,9 @@ public final class Server {
         public CompletableFuture<InitializeResult> initialize(InitializeParams init) {
             NbCodeClientCapabilities capa = NbCodeClientCapabilities.get(init);
             client.setClientCaps(capa);
+            if (capa != null && capa.wantsTelemetryEnabled()) {
+                LspServerTelemetryManager.getInstance().connect(client, lspSession.getLspServer().getRunningFuture());
+            }
             hackConfigureGroovySupport(capa);
             hackNoReuseOfOutputsForAntProjects();
             List<FileObject> projectCandidates = new ArrayList<>();
@@ -1454,13 +1455,13 @@ public final class Server {
 
         @Override
         public synchronized boolean scanStarted(Context context) {
-            LSP_SERVER_TELEMETRY.sendTelemetry(new TelemetryEvent(MessageType.Info.toString(), LSP_SERVER_TELEMETRY.SCAN_START_EVT, "nbls.scanStarted")); 
-	    return true;
+            LspServerTelemetryManager.getInstance().sendTelemetry(new TelemetryEvent(MessageType.Info.toString(), LspServerTelemetryManager.SCAN_START_EVT, "nbls.scanStarted"));
+	        return true;
         }
 
         @Override
         public synchronized void scanFinished(Context context) {
-            LSP_SERVER_TELEMETRY.sendTelemetry(new TelemetryEvent(MessageType.Info.toString(),LSP_SERVER_TELEMETRY.SCAN_END_EVT,"nbls.scanFinished"));
+            LspServerTelemetryManager.getInstance().sendTelemetry(new TelemetryEvent(MessageType.Info.toString(), LspServerTelemetryManager.SCAN_END_EVT,"nbls.scanFinished"));
             ERR_NOTIFIER.notifyErrors(context.getRootURI());
         }
 

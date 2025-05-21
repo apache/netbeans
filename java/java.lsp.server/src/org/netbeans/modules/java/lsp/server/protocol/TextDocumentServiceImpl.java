@@ -114,8 +114,6 @@ import org.eclipse.lsp4j.CompletionItemLabelDetails;
 import org.eclipse.lsp4j.CompletionItemTag;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
-import org.eclipse.lsp4j.ConfigurationItem;
-import org.eclipse.lsp4j.ConfigurationParams;
 import org.eclipse.lsp4j.DefinitionParams;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DiagnosticSeverity;
@@ -371,7 +369,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     private static final int DEFAULT_COMPLETION_WARNING_LENGTH = 10_000;
     private static final RequestProcessor COMPLETION_SAMPLER_WORKER = new RequestProcessor("java-lsp-completion-sampler", 1, false, false);
     private static final AtomicReference<Sampler> RUNNING_SAMPLER = new AtomicReference<>();
-
+    
     @Override
     @Messages({
         "# {0} - the timeout elapsed",
@@ -422,24 +420,16 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 return CompletableFuture.completedFuture(Either.forRight(completionList));
             }
             StyledDocument doc = (StyledDocument)rawDoc;
-            ConfigurationItem conf = new ConfigurationItem();
-            conf.setScopeUri(uri);
-            conf.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_JAVADOC_LOAD_TIMEOUT);
-            ConfigurationItem completionWarningLength = new ConfigurationItem();
-            completionWarningLength.setScopeUri(uri);
-            completionWarningLength.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_COMPLETION_WARNING_TIME);
-            ConfigurationItem commitCharacterConfig = new ConfigurationItem();
-            commitCharacterConfig.setScopeUri(uri);
-            commitCharacterConfig.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_CODE_COMPLETION_COMMIT_CHARS);
-            return client.configuration(new ConfigurationParams(Arrays.asList(conf, completionWarningLength, commitCharacterConfig))).thenApply(c -> {
+            List<String> configValues = List.of(NETBEANS_JAVADOC_LOAD_TIMEOUT, NETBEANS_COMPLETION_WARNING_TIME, NETBEANS_CODE_COMPLETION_COMMIT_CHARS);
+            return client.getClientConfigurationManager().getConfigurations(configValues, uri).thenApply(c -> {
                 if (c != null && !c.isEmpty()) {
-                    if (c.get(0) instanceof JsonPrimitive) {
-                        JsonPrimitive javadocTimeSetting = (JsonPrimitive) c.get(0);
+                    if (c.get(0).isJsonPrimitive()) {
+                        JsonPrimitive javadocTimeSetting = c.get(0).getAsJsonPrimitive();
 
                         javadocTimeout.set(javadocTimeSetting.getAsInt());
                     }
-                    if (c.get(1) instanceof JsonPrimitive) {
-                        JsonPrimitive samplingWarningsLengthSetting = (JsonPrimitive) c.get(1);
+                    if (c.get(1).isJsonPrimitive()) {
+                        JsonPrimitive samplingWarningsLengthSetting = c.get(1).getAsJsonPrimitive();
 
                         samplingWarningLength.set(samplingWarningsLengthSetting.getAsLong());
                     }
@@ -1937,11 +1927,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         if (js == null) {
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
-        ConfigurationItem conf = new ConfigurationItem();
-        conf.setScopeUri(uri);
-        conf.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_JAVA_ON_SAVE_ORGANIZE_IMPORTS);
-        return client.configuration(new ConfigurationParams(Collections.singletonList(conf))).thenApply(c -> {
-            if (c != null && !c.isEmpty() && ((JsonPrimitive) c.get(0)).getAsBoolean()) {
+        
+        return client.getClientConfigurationManager().getConfiguration(NETBEANS_JAVA_ON_SAVE_ORGANIZE_IMPORTS, uri).thenApply(c -> {
+            if (c != null && c.isJsonPrimitive() && c.getAsJsonPrimitive().getAsBoolean()) {
                 try {
                     List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
                         wc.toPhase(JavaSource.Phase.RESOLVED);
@@ -2828,10 +2816,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @Override
     public CompletableFuture<List<InlayHint>> inlayHint(InlayHintParams params) {
         String uri = params.getTextDocument().getUri();
-        ConfigurationItem conf = new ConfigurationItem();
-        conf.setScopeUri(uri);
-        conf.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_INLAY_HINT);
-        return client.configuration(new ConfigurationParams(Collections.singletonList(conf))).thenCompose(c -> {
+        
+        return client.getClientConfigurationManager().getConfiguration(NETBEANS_INLAY_HINT, uri).thenCompose(c -> {
             FileObject file;
             try {
                 file = Utils.fromUri(uri);
@@ -2839,13 +2825,13 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 return CompletableFuture.failedFuture(ex);
             }
             Set<String> enabled = null;
-            if (c != null && !c.isEmpty()) {
+            if (c != null && c.isJsonArray()) {
                 enabled = new HashSet<>();
 
-                JsonArray actualSettings = ((JsonArray) c.get(0));
+                JsonArray actualSettings = c.getAsJsonArray();
 
                 for (JsonElement el : actualSettings) {
-                    enabled.add(((JsonPrimitive) el).getAsString());
+                    enabled.add(el.getAsJsonPrimitive().getAsString());
                 }
             }
             org.netbeans.api.lsp.Range range = new org.netbeans.api.lsp.Range(Utils.getOffset(file, params.getRange().getStart()),

@@ -68,7 +68,7 @@ public class HighlightsListTest {
 
         HighlightsList hList = highlightsListSimple(doc);
         // Fetch first
-        AttributeSet attrs = hList.cutSameFont(defaultFont, 10, 10, null, false);
+        AttributeSet attrs = hList.cutSameFont(defaultFont, 10, 10, null);
         assert (attrs instanceof CompoundAttributes) : "Non-CompoundAttributes attrs=" + attrs;
         CompoundAttributes cAttrs = (CompoundAttributes) attrs;
         assert (cAttrs.startOffset() == 0) : "startOffset=" + cAttrs.startOffset();
@@ -79,21 +79,21 @@ public class HighlightsListTest {
         assertItem(items[2], 6, null);
         // Fetch next
         assert (hList.startOffset() == 6);
-        attrs = hList.cutSameFont(defaultFont, 10, 10, null, false);
+        attrs = hList.cutSameFont(defaultFont, 10, 10, null);
         assert !(attrs instanceof CompoundAttributes);
         assert attrs == attrSets[1];
         assert (hList.startOffset() == 8);
-        attrs = hList.cutSameFont(defaultFont, 10, 10, null, false);
+        attrs = hList.cutSameFont(defaultFont, 10, 10, null);
         assert !(attrs instanceof CompoundAttributes);
         assert (attrs == null);
         assert (hList.startOffset() == 10);
         
         
         hList = highlightsListSimple(doc);
-        attrs = hList.cutSameFont(defaultFont, 2, 2, null, false);
+        attrs = hList.cutSameFont(defaultFont, 2, 2, null);
         assert !(attrs instanceof CompoundAttributes);
         assert (attrs == null);
-        attrs = hList.cutSameFont(defaultFont, 10, 10, null, false);
+        attrs = hList.cutSameFont(defaultFont, 10, 10, null);
         assert (hList.startOffset() == 6);
         assert (attrs instanceof CompoundAttributes) : "Non-CompoundAttributes attrs=" + attrs;
         cAttrs = (CompoundAttributes) attrs;
@@ -104,7 +104,7 @@ public class HighlightsListTest {
         assertItem(items[1], 6, null);
         
         hList = highlightsListSimple(doc);
-        attrs = hList.cutSameFont(defaultFont, 3, 3, null, false);
+        attrs = hList.cutSameFont(defaultFont, 3, 3, null);
         cAttrs = (CompoundAttributes) attrs;
         assert (cAttrs.startOffset() == 0) : "startOffset=" + cAttrs.startOffset();
         items = cAttrs.highlightItems();
@@ -112,7 +112,7 @@ public class HighlightsListTest {
         assertItem(items[0], 2, null);
         assertItem(items[1], 3, attrSets[0]);
         // Next
-        attrs = hList.cutSameFont(defaultFont, 5, 5, null, false);
+        attrs = hList.cutSameFont(defaultFont, 5, 5, null);
         cAttrs = (CompoundAttributes) attrs;
         assert (cAttrs.startOffset() == 3) : "startOffset=" + cAttrs.startOffset();
         items = cAttrs.highlightItems();
@@ -120,22 +120,22 @@ public class HighlightsListTest {
         assertItem(items[0], 4, attrSets[0]);
         assertItem(items[1], 5, null);
         // Next
-        attrs = hList.cutSameFont(defaultFont, 7, 7, null, false);
+        attrs = hList.cutSameFont(defaultFont, 7, 7, null);
         assert !(attrs instanceof CompoundAttributes);
         assert (attrs == null);
         assert (hList.startOffset() == 6);
         // Next
-        attrs = hList.cutSameFont(defaultFont, 7, 7, null, false);
+        attrs = hList.cutSameFont(defaultFont, 7, 7, null);
         assert !(attrs instanceof CompoundAttributes);
         assert (attrs == attrSets[1]);
         assert (hList.startOffset() == 7);
         // Next
-        attrs = hList.cutSameFont(defaultFont, 10, 10, null, false);
+        attrs = hList.cutSameFont(defaultFont, 10, 10, null);
         assert !(attrs instanceof CompoundAttributes);
         assert (attrs == attrSets[1]);
         assert (hList.startOffset() == 8);
         // Next
-        attrs = hList.cutSameFont(defaultFont, 10, 10, null, false);
+        attrs = hList.cutSameFont(defaultFont, 10, 10, null);
         assert !(attrs instanceof CompoundAttributes);
         assert (attrs == null);
         assert (hList.startOffset() == 10);
@@ -182,7 +182,7 @@ public class HighlightsListTest {
         HighlightsList hList = reader.highlightsList();
 
         // Fetch first
-        AttributeSet attrs = hList.cutSameFont(defaultFont, end, end, null, false);
+        AttributeSet attrs = hList.cutSameFont(defaultFont, end, end, null);
         assert (attrs instanceof CompoundAttributes) : "Non-CompoundAttributes attrs=" + attrs;
         CompoundAttributes cAttrs = (CompoundAttributes) attrs;
         assert (cAttrs.startOffset() == 0) : "startOffset=" + cAttrs.startOffset();
@@ -194,11 +194,11 @@ public class HighlightsListTest {
         assertItem(items[3], 8, null);
         // Fetch next
         assert (hList.startOffset() == 8);
-        attrs = hList.cutSameFont(defaultFont, end, end, null, false);
+        attrs = hList.cutSameFont(defaultFont, end, end, null);
         assert !(attrs instanceof CompoundAttributes);
         assert attrs == attrs3;
         assert (hList.startOffset() == 10);
-        attrs = hList.cutSameFont(defaultFont, end, end, null, false);
+        attrs = hList.cutSameFont(defaultFont, end, end, null);
         assert !(attrs instanceof CompoundAttributes);
         assert (attrs == null);
         assert (hList.startOffset() == 14);
@@ -210,15 +210,15 @@ public class HighlightsListTest {
         HighlightsList hList = reader.highlightsList();
 
         // Fetch first
-        AttributeSet attrs = hList.cutSameFont(defaultFont, end, end, null, true);
+        AttributeSet attrs = hList.cutSameFont(defaultFont, end, end, null);
         assert !(attrs instanceof CompoundAttributes) : "CompoundAttributes attrs=" + attrs;
         assert attrs == attrs1;
         assert (hList.startOffset() == 2);
-        attrs = hList.cutSameFont(defaultFont, end, end, null, true);
+        attrs = hList.cutSameFont(defaultFont, end, end, null);
         assert !(attrs instanceof CompoundAttributes);
         assert (attrs == attrs2);
         assert (hList.startOffset() == 4);
-        attrs = hList.cutSameFont(defaultFont, end, end, null, true);
+        attrs = hList.cutSameFont(defaultFont, end, end, null);
         assert (attrs instanceof CompoundAttributes) : "Non-CompoundAttributes attrs=" + attrs;
         CompoundAttributes cAttrs = (CompoundAttributes) attrs;
         assert (cAttrs.startOffset() == 4) : "startOffset=" + cAttrs.startOffset();
@@ -228,11 +228,11 @@ public class HighlightsListTest {
         assertItem(items[1], 8, null);
         // Fetch next
         assert (hList.startOffset() == 8);
-        attrs = hList.cutSameFont(defaultFont, end, end, null, true);
+        attrs = hList.cutSameFont(defaultFont, end, end, null);
         assert !(attrs instanceof CompoundAttributes);
         assert attrs == attrs3;
         assert (hList.startOffset() == 10);
-        attrs = hList.cutSameFont(defaultFont, end, end, null, true);
+        attrs = hList.cutSameFont(defaultFont, end, end, null);
         assert !(attrs instanceof CompoundAttributes);
         assert (attrs == null);
         assert (hList.startOffset() == 14);

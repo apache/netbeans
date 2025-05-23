@@ -166,15 +166,13 @@ public class LspServerTelemetryManager {
             if (client == null) {
                 return false;
             }
-            AtomicBoolean isEnablePreviewSet = new AtomicBoolean(false);
-            ConfigurationItem conf = new ConfigurationItem();
-            conf.setSection(client.getNbCodeCapabilities().getAltConfigurationPrefix() + "runConfig.vmOptions");
-            client.configuration(new ConfigurationParams(Collections.singletonList(conf))).thenAccept(c -> {
-                String config = ((JsonPrimitive) ((List<Object>) c).get(0)).getAsString();
-                isEnablePreviewSet.set(config.contains(this.ENABLE_PREVIEW));
+            boolean[] isEnablePreviewSet = {false};
+            ClientConfigurationManager.getInstance().getConfigurationUsingAltPrefix(client, "runConfig.vmOptions").thenAccept(c -> {
+                isEnablePreviewSet[0] = c != null && !c.getAsJsonArray().isEmpty()
+                                && c.getAsJsonArray().get(0).getAsString().contains(ENABLE_PREVIEW);
             });
             
-            return isEnablePreviewSet.get();
+            return isEnablePreviewSet[0];
         }
         
         Result result = CompilerOptionsQuery.getOptions(source);

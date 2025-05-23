@@ -362,7 +362,15 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     private static final int DEFAULT_COMPLETION_WARNING_LENGTH = 10_000;
     private static final RequestProcessor COMPLETION_SAMPLER_WORKER = new RequestProcessor("java-lsp-completion-sampler", 1, false, false);
     private static final AtomicReference<Sampler> RUNNING_SAMPLER = new AtomicReference<>();
-
+    
+    void registerConfigChangeListeners() {
+        ClientConfigurationManager confManager = ClientConfigurationManager.getInstance();
+        String fullConfigPrefix = client.getNbCodeCapabilities().getConfigurationPrefix();
+        
+        confManager.registerConfigCache(client, fullConfigPrefix + NETBEANS_JAVADOC_LOAD_TIMEOUT);
+        confManager.registerConfigCache(client, fullConfigPrefix + NETBEANS_COMPLETION_WARNING_TIME);
+    }
+    
     @Override
     @Messages({
         "# {0} - the timeout elapsed",
@@ -418,15 +426,16 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             ConfigurationItem completionWarningLength = new ConfigurationItem();
             completionWarningLength.setScopeUri(uri);
             completionWarningLength.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_COMPLETION_WARNING_TIME);
-            return client.configuration(new ConfigurationParams(Arrays.asList(conf, completionWarningLength))).thenApply(c -> {
+            List<String> configValues = List.of(NETBEANS_JAVADOC_LOAD_TIMEOUT, NETBEANS_COMPLETION_WARNING_TIME);
+            return ClientConfigurationManager.getInstance().getConfigurations(client, configValues, uri).thenApply(c -> {
                 if (c != null && !c.isEmpty()) {
-                    if (c.get(0) instanceof JsonPrimitive) {
-                        JsonPrimitive javadocTimeSetting = (JsonPrimitive) c.get(0);
+                    if (c.get(0).isJsonPrimitive()) {
+                        JsonPrimitive javadocTimeSetting = c.get(0).getAsJsonPrimitive();
 
                         javadocTimeout.set(javadocTimeSetting.getAsInt());
                     }
-                    if (c.get(1) instanceof JsonPrimitive) {
-                        JsonPrimitive samplingWarningsLengthSetting = (JsonPrimitive) c.get(1);
+                    if (c.get(1).isJsonPrimitive()) {
+                        JsonPrimitive samplingWarningsLengthSetting = c.get(1).getAsJsonPrimitive();
 
                         samplingWarningLength.set(samplingWarningsLengthSetting.getAsLong());
                     }

@@ -129,7 +129,7 @@ public abstract class NbLaunchDelegate {
 
     public final CompletableFuture<Void> nbLaunch(FileObject toRun, boolean preferProjActions, @NullAllowed File nativeImageFile,
                                                   @NullAllowed String method, @NullAllowed String nestedClassName, Map<String, Object> launchArguments, DebugAdapterContext context,
-                                                  boolean debug, boolean testRun, Consumer<NbProcessConsole.ConsoleMessage> consoleMessages,
+                                                  boolean debug, LaunchType launchType, Consumer<NbProcessConsole.ConsoleMessage> consoleMessages,
                                                   boolean testInParallel) {
         CompletableFuture<Void> launchFuture = new CompletableFuture<>();
         NbProcessConsole ioContext = new NbProcessConsole(consoleMessages);
@@ -200,7 +200,7 @@ public abstract class NbLaunchDelegate {
                 }
             }
             W writer = new W();
-            CompletableFuture<Pair<ActionProvider, String>> commandFuture = findTargetWithPossibleRebuild(prj, preferProjActions, toRun, singleMethod, nestedClass, debug, testRun, ioContext, testInParallel, projectFilter);
+            CompletableFuture<Pair<ActionProvider, String>> commandFuture = findTargetWithPossibleRebuild(prj, preferProjActions, toRun, singleMethod, nestedClass, debug, launchType, ioContext, testInParallel, projectFilter);
             commandFuture.thenAccept((providerAndCommand) -> {
                 ExplicitProcessParameters params = createExplicitProcessParameters(launchArguments);
                 OperationContext ctx = OperationContext.find(Lookup.getDefault());
@@ -512,8 +512,8 @@ public abstract class NbLaunchDelegate {
         }
     }
 
-    private static CompletableFuture<Pair<ActionProvider, String>> findTargetWithPossibleRebuild(Project proj, boolean preferProjActions, FileObject toRun, SingleMethod singleMethod, NestedClass nestedClass, boolean debug, boolean testRun, NbProcessConsole ioContext, boolean testInParallel, ContainedProjectFilter projectFilter) throws IllegalArgumentException {
-        Pair<ActionProvider, String> providerAndCommand = findTarget(proj, preferProjActions, toRun, singleMethod, nestedClass, debug, testRun, testInParallel, projectFilter);
+    private static CompletableFuture<Pair<ActionProvider, String>> findTargetWithPossibleRebuild(Project proj, boolean preferProjActions, FileObject toRun, SingleMethod singleMethod, NestedClass nestedClass, boolean debug, LaunchType launchType, NbProcessConsole ioContext, boolean testInParallel, ContainedProjectFilter projectFilter) throws IllegalArgumentException {
+        Pair<ActionProvider, String> providerAndCommand = findTarget(proj, preferProjActions, toRun, singleMethod, nestedClass, debug, launchType, testInParallel, projectFilter);
         if (providerAndCommand != null) {
             return CompletableFuture.completedFuture(providerAndCommand);
         }
@@ -529,7 +529,7 @@ public abstract class NbLaunchDelegate {
             @Override
             public void finished(boolean success) {
                 if (success) {
-                    Pair<ActionProvider, String> providerAndCommand = findTarget(proj, preferProjActions, toRun, singleMethod, nestedClass, debug, testRun, testInParallel, projectFilter);
+                    Pair<ActionProvider, String> providerAndCommand = findTarget(proj, preferProjActions, toRun, singleMethod, nestedClass, debug, launchType, testInParallel, projectFilter);
                     if (providerAndCommand != null) {
                         afterBuild.complete(providerAndCommand);
                         return;
@@ -562,14 +562,16 @@ public abstract class NbLaunchDelegate {
         return afterBuild;
     }
 
-    protected static @CheckForNull Pair<ActionProvider, String> findTarget(Project prj, boolean preferProjActions, FileObject toRun, SingleMethod singleMethod, NestedClass nestedClass, boolean debug, boolean testRun, boolean testInParallel, ContainedProjectFilter projectFilter) {
+    protected static @CheckForNull Pair<ActionProvider, String> findTarget(Project prj, boolean preferProjActions, FileObject toRun, SingleMethod singleMethod, NestedClass nestedClass, boolean debug, LaunchType launchType, boolean testInParallel, ContainedProjectFilter projectFilter) {
         ClassPath sourceCP = ClassPath.getClassPath(toRun, ClassPath.SOURCE);
-        FileObject fileRoot = sourceCP != null ? sourceCP.findOwnerRoot(toRun) : null;
         boolean mainSource;
-        if (fileRoot != null) {
-            mainSource = UnitTestForSourceQuery.findUnitTests(fileRoot).length > 0;
+        if (launchType == LaunchType.RUN_MAIN) {
+            mainSource = true;
+        } else if (launchType == LaunchType.RUN_TEST) {
+            mainSource = false;
         } else {
-            mainSource = !testRun;
+            FileObject fileRoot = sourceCP != null ? sourceCP.findOwnerRoot(toRun) : null;
+            mainSource = fileRoot != null && UnitTestForSourceQuery.findUnitTests(fileRoot).length > 0;
         }
         ActionProvider provider = null;
         String command = null;
@@ -722,5 +724,22 @@ public abstract class NbLaunchDelegate {
             }
         }
         return actionProviders;
+    }
+
+    public enum LaunchType {
+        AUTODETECT,
+        RUN_MAIN,
+        RUN_TEST;
+
+        static LaunchType from(Map<String, Object> launchArguments) {
+            Object testRunValue = launchArguments.get("testRun");
+
+            if (testRunValue instanceof Boolean) {
+                Boolean testRunSetting = (Boolean) testRunValue;
+                return testRunSetting ? RUN_TEST : RUN_MAIN;
+            } else {
+                return AUTODETECT;
+            }
+        }
     }
 }

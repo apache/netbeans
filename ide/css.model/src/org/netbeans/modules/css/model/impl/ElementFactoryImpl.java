@@ -136,6 +136,11 @@ public final class ElementFactoryImpl implements ElementFactory {
                 return new MediaQueryI(model, node);
             case "MediaQueryOperator":
                 return new MediaQueryOperatorI(model, node);
+            case "MediaConditionWithoutOr":
+            case "MediaCondition":
+                return new MediaConditionI(model, node);
+            case "MediaInParens":
+                return new MediaInParensI(model, node);
             case "MediaExpression":
                 return new MediaExpressionI(model, node);
             case "MediaFeature":

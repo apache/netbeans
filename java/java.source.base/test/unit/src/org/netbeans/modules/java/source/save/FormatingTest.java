@@ -1556,6 +1556,76 @@ public class FormatingTest extends NbTestCase {
         preferences.putBoolean("specialElseIf", false);
         reformat(doc, content, golden);
         preferences.putBoolean("specialElseIf", true);
+        
+       content = """
+                  package hierbas.del.litoral;
+                  class Test extends Integer implements Runnable, Serializable{
+                  public void run(){
+                     if ("foo".contains("bar"))))) )))  {
+                                System.out.println("bar");
+                    }
+                  }
+                  }
+                 """;
+        golden = """
+                 package hierbas.del.litoral;
+                 
+                 class Test extends Integer implements Runnable, Serializable {
+                 
+                     public void run() {
+                         if ("foo".contains("bar"))))) )))  {
+                             System.out.println("bar");
+                         }
+                     }
+                 }
+                 """;
+       reformat(doc, content, golden);
+       
+       content = """
+                  package hierbas.del.litoral;
+                  class Test extends Integer implements Runnable, Serializable{
+                  public void run(){
+                     if ("foo".contains("bar"))))) ))) 
+                  }
+                  }
+                 """;
+        golden = """
+                 package hierbas.del.litoral;
+                 
+                 class Test extends Integer implements Runnable, Serializable {
+                 
+                     public void run() {
+                         if ("foo".contains("bar"))))) )))
+                     }
+                 }
+                 """;
+       reformat(doc, content, golden);
+       
+       content = """
+                  package hierbas.del.litoral;
+                  class Test extends Integer implements Runnable, Serializable{
+                  public void run(){
+                     if ("foo".contains("bar"))))) ))) 
+                 else {
+                       System.out.println("bar2")
+                    }
+                  }
+                  }
+                 """;
+        golden = """
+                 package hierbas.del.litoral;
+                 
+                 class Test extends Integer implements Runnable, Serializable {
+                 
+                     public void run() {
+                         if ("foo".contains("bar"))))) )))
+                 else {
+                                     System.out.println("bar2")
+                                 }
+                     }
+                 }
+                 """;
+       reformat(doc, content, golden);
     }
 
     public void testWhile() throws Exception {

@@ -40,6 +40,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -118,7 +119,6 @@ import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
-import org.openide.util.WeakSet;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.ServiceProvider;
@@ -130,7 +130,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class InstantRenamePerformer implements DocumentListener, KeyListener {
     
     private static final Logger LOG = Logger.getLogger(InstantRenamePerformer.class.getName());
-    private static final Set<InstantRenamePerformer> registry = Collections.synchronizedSet(new WeakSet<InstantRenamePerformer>());
+    private static final Set<InstantRenamePerformer> registry = Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
 
     private SyncDocumentRegion region;
     private int span;

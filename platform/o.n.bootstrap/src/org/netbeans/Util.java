@@ -457,7 +457,7 @@ public final class Util {
     static final class ModuleLookup extends Lookup {
         ModuleLookup() {}
         private final Set<Module> modules = new HashSet<Module>(100);
-        private final Set<ModuleResult> results = new WeakSet<ModuleResult>(10);
+        private final Set<ModuleResult> results = Collections.newSetFromMap(new WeakHashMap<>(10));
         /** Add a module to the set. */
         public void add(Module m) {
             synchronized (modules) {

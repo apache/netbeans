@@ -1044,7 +1044,7 @@ public class MakeNBM extends Task {
                 XMLUtil.write(doc, baos);
                 validateAgainstAUDTDs(new InputSource(new ByteArrayInputStream(baos.toByteArray())), updaterJar, this);
             } catch (Exception x) {
-                throw new BuildException("Could not validate Info.xml before writing: " + x, x, getLocation());
+                log("Could not validate Info.xml before writing: " + x, Project.MSG_ERR);
             }
         } else {
             log("No updater.jar specified, cannot validate Info.xml against DTD", Project.MSG_WARN);

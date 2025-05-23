@@ -473,7 +473,7 @@ public class RenameRecordTest extends RefactoringTestBase {
 
     }
 
-    // test fro varargs and generic.
+    // test for varargs and generic.
     public void testRenameRecordGenVar() throws Exception {
         sideBySideCompare=true;
         showOutputOnPass=true;
@@ -520,6 +520,54 @@ public class RenameRecordTest extends RefactoringTestBase {
                                     """));
 
     }
+    // test for varargs and generic.
+    public void testRenameRecordGenVarComponent() throws Exception {
+        sideBySideCompare=true;
+        showOutputOnPass=true;
+
+        String testCode = """
+                          package test;
+                          public record Test<G extends Number>(G... comp|onent) {
+                              public Test {
+                                  assert 0 < component.length;
+                              }
+                          }
+                          """;
+        TestInput splitCode = TestUtilities.splitCodeAndPos(testCode);
+        writeFilesAndWaitForScan(src,
+                                 new File("Test.java", splitCode.code()),
+                                 new File("Use.java",
+                                          """
+                                          package test;
+                                          public class Use {
+                                              private Test<Integer> test() {
+                                                  return new Test(1, 2);
+                                              }
+                                          }
+                                          """));
+        JavaRenameProperties props = new JavaRenameProperties();
+        performRename(src.getFileObject("Test.java"), splitCode.pos(), "parts", props, true);
+        verifyContent(src, new File("Test.java",
+                                    """
+                                    package test;
+                                    public record Test<G extends Number>(G... parts) {
+                                        public Test {
+                                            assert 0 < parts.length;
+                                        }
+                                    }
+                                    """),
+                           new File("Use.java",
+                                    """
+                                    package test;
+                                    public class Use {
+                                        private Test<Integer> test() {
+                                            return new Test(1, 2);
+                                        }
+                                    }
+                                    """));
+
+    }
+
     private void performRename(FileObject source, final int absPos, final String newname, final JavaRenameProperties props, final boolean searchInComments, Problem... expectedProblems) throws Exception {
         final RenameRefactoring[] r = new RenameRefactoring[1];
         JavaSource.forFileObject(source).runUserActionTask(new Task<CompilationController>() {

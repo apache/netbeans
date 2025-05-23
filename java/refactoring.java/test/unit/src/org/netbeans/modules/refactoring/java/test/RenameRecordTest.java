@@ -121,7 +121,7 @@ public class RenameRecordTest extends RefactoringTestBase {
 
     // disabled, somehow having int x before to be renamed component
     // breaks list diff
-    public void _testRenameComponent1a() throws Exception {
+    public void testRenameComponent1b() throws Exception {
         String testCode = """
                         package test;
                         public record Test(int x, int compo|nent) {}

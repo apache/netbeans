@@ -44,7 +44,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.swing.text.Document;
@@ -93,7 +92,7 @@ public final class CompilationInfoImpl {
     private final boolean isClassFile;
     private final boolean isDetached;
     JavaSource.Phase parserCrashed = JavaSource.Phase.UP_TO_DATE;      //When javac throws an error, the moveToPhase sets this to the last safe phase
-    private final Map<CacheClearPolicy, Map<Object, Object>> userCache = new EnumMap<CacheClearPolicy, Map<Object, Object>>(CacheClearPolicy.class);
+    private final Map<CacheClearPolicy, Map<Object, Object>> userCache = new EnumMap<>(CacheClearPolicy.class);
     //cache of already parsed files
     private Map<JavaFileObject, CompilationUnitTree> parsedTrees;
     private Map<FileObject, AbstractSourceFileObject> ide2javacFileObject;
@@ -481,14 +480,8 @@ public final class CompilationInfoImpl {
         for (Map<Object, Object> c : userCache.values()) {
             c.remove(key);
         }
-
-        Map<Object, Object> c = userCache.get(clearPolicy);
-
-        if (c == null) {
-            userCache.put(clearPolicy, c = new HashMap<Object, Object>());
-        }
-
-        c.put(key, value);
+        userCache.computeIfAbsent(clearPolicy, k -> new HashMap<>())
+                 .put(key, value);
     }
 
     public void taskFinished() {
@@ -669,9 +662,7 @@ public final class CompilationInfoImpl {
                 HashSet<DiagNode> tailNodes = new HashSet<>();
                 for (Iterator<Entry<Integer,Collection<DiagNode>>> it = tail.entrySet().iterator(); it.hasNext();) {
                     Entry<Integer, Collection<DiagNode>> e = it.next();
-                    for (DiagNode d : e.getValue()) {
-                        tailNodes.add(d);
-                    }
+                    tailNodes.addAll(e.getValue());
                     it.remove();
                 }
                 DiagNode node = errors.first;
@@ -831,12 +822,8 @@ public final class CompilationInfoImpl {
             private DiagNode last;
 
             public void add(int pos, Diagnostic<? extends JavaFileObject> diag) {
-                Collection<DiagNode> nodes = get((int)diag.getPosition());
-                if (nodes == null) {
-                    put((int) diag.getPosition(), nodes = new ArrayList<>());
-                }
                 DiagNode node = new DiagNode(last, diag, null);
-                nodes.add(node);
+                computeIfAbsent((int)diag.getPosition(), k -> new ArrayList<>()).add(node);
                 if (last != null) {
                     last.next = node;
                 }
@@ -939,11 +926,7 @@ public final class CompilationInfoImpl {
         }
 
         public static Diagnostic wrap(Diagnostic d, DiagnosticFormatter<JCDiagnostic> df) {
-            if (d instanceof JCDiagnostic) {
-                return new RichDiagnostic((JCDiagnostic) d, df);
-            } else {
-                return d;
-            }
+            return d instanceof JCDiagnostic jd ? new RichDiagnostic(jd, df) : d;
         }
     }    
 }

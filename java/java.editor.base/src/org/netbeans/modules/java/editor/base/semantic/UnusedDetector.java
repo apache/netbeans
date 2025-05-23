@@ -82,20 +82,10 @@ import org.openide.util.Lookup;
  */
 public class UnusedDetector {
 
-    public static class UnusedDescription {
-        public final Element unusedElement;
-        public final TreePath unusedElementPath;
-        public final boolean packagePrivate;
-        public final UnusedReason reason;
-
-        public UnusedDescription(Element unusedElement, TreePath unusedElementPath, boolean packagePrivate, UnusedReason reason) {
-            this.unusedElement = unusedElement;
-            this.unusedElementPath = unusedElementPath;
-            this.packagePrivate = packagePrivate;
-            this.reason = reason;
-        }
-
-    }
+    public record UnusedDescription(Element unusedElement, TreePath unusedElementPath, boolean packagePrivate, UnusedReason reason) {}
+    
+    private static final Object RESULTS_KEY = new Object();
+    private static final Object CLASS_INDEX_KEY = new Object();
 
     public enum UnusedReason {
         NOT_WRITTEN_READ("neither read or written to"),
@@ -111,7 +101,8 @@ public class UnusedDetector {
     }
 
     public static List<UnusedDescription> findUnused(CompilationInfo info, Callable<Boolean> cancel) {
-        List<UnusedDescription> cached = (List<UnusedDescription>) info.getCachedValue(UnusedDetector.class);
+        @SuppressWarnings("unchecked")
+        List<UnusedDescription> cached = (List<UnusedDescription>) info.getCachedValue(RESULTS_KEY);
         if (cached != null) {
             return cached;
         }
@@ -181,7 +172,7 @@ public class UnusedDetector {
             }
         }
 
-        info.putCachedValue(UnusedDetector.class, result, CompilationInfo.CacheClearPolicy.ON_CHANGE);
+        info.putCachedValue(RESULTS_KEY, result, CompilationInfo.CacheClearPolicy.ON_CHANGE);
 
         return result;
     }
@@ -361,28 +352,17 @@ public class UnusedDetector {
             default:
                 return true;
         }
-        ElementHandle eh = ElementHandle.create(el);
-        Project prj = FileOwnerQuery.getOwner(info.getFileObject());
-        ClasspathInfo cpInfo;
-        if (prj != null) {
-            SourceGroup[] sourceGroups = ProjectUtils.getSources(prj).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-            FileObject[] roots = new FileObject[sourceGroups.length];
-            for (int i = 0; i < sourceGroups.length; i++) {
-                SourceGroup sourceGroup = sourceGroups[i];
-                roots[i] = sourceGroup.getRootFolder();
-            }
-            cpInfo = ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(roots));
-        } else {
-            cpInfo = info.getClasspathInfo();
-        }
-        Set<FileObject> res = cpInfo.getClassIndex().getResources(ElementHandle.create(typeElement), searchKinds, scope);
+        FileObject fileObject = info.getFileObject();
+        ClassIndex classIndex = getCachedClassIndex(fileObject, info);
+        Set<FileObject> res = classIndex.getResources(ElementHandle.create(typeElement), searchKinds, scope);
         if (res != null) {
+            ElementHandle<Element> eh = ElementHandle.create(el);
             for (FileObject fo : res) {
                 try {
                     if (Boolean.TRUE.equals(cancel.call())) {
                         return false;
                     }
-                    if (fo != info.getFileObject()) {
+                    if (fo != fileObject) {
                         JavaSource js = JavaSource.forFileObject(fo);
                         if (js == null) {
                             return false;
@@ -397,6 +377,7 @@ public class UnusedDetector {
                                         Element element = cc.getTrees().getElement(new TreePath(getCurrentPath(), tree));
                                         if (element != null && eh.signatureEquals(element)) {
                                             found.set(true);
+                                            return null;
                                         }
                                         super.scan(tree, p);
                                     }
@@ -415,6 +396,29 @@ public class UnusedDetector {
             return true;
         }
         return false;
+    }
+
+    // obtaining the ClassIndex can be expensive, this is usually called multiple times per search
+    private static ClassIndex getCachedClassIndex(FileObject fileObject, CompilationInfo info) {
+        ClassIndex classIndex = (ClassIndex) info.getCachedValue(CLASS_INDEX_KEY);
+        if (classIndex == null) {
+            ClasspathInfo cpInfo;
+            Project prj = FileOwnerQuery.getOwner(fileObject);
+            if (prj != null) {
+                SourceGroup[] sourceGroups = ProjectUtils.getSources(prj).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+                FileObject[] roots = new FileObject[sourceGroups.length];
+                for (int i = 0; i < sourceGroups.length; i++) {
+                    SourceGroup sourceGroup = sourceGroups[i];
+                    roots[i] = sourceGroup.getRootFolder();
+                }
+                cpInfo = ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(roots));
+            } else {
+                cpInfo = info.getClasspathInfo();
+            }
+            classIndex = cpInfo.getClassIndex();
+            info.putCachedValue(CLASS_INDEX_KEY, classIndex, CompilationInfo.CacheClearPolicy.ON_CHANGE);
+        }
+        return classIndex;
     }
 
     private static List<UsedDetector> collectUsedDetectors(CompilationInfo info) {
@@ -661,7 +665,7 @@ public class UnusedDetector {
         @Override
         public Void visitMethodInvocation(MethodInvocationTree node, Void p) {
             Element invoked = info.getTrees().getElement(new TreePath(getCurrentPath(), node.getMethodSelect()));
-            if (invoked != null && invoked.getEnclosingElement() == methodHandlesLookup && node.getArguments().size() > 0) {
+            if (invoked != null && invoked.getEnclosingElement() == methodHandlesLookup && !node.getArguments().isEmpty()) {
                 ExpressionTree clazz = node.getArguments().get(0);
                 Element lookupType = null;
                 if (clazz.getKind() == Kind.MEMBER_SELECT) {
@@ -678,16 +682,12 @@ public class UnusedDetector {
                     }
                 }
                 switch (invoked.getSimpleName().toString()) {
-                    case "findStatic": case "findVirtual": case "findSpecial":
+                    case "findStatic", "findVirtual", "findSpecial" ->
                         type2LookedUpMethods.computeIfAbsent(lookupType, t -> new HashSet<>()).add(lookupName);
-                        break;
-                    case "findConstructor":
+                    case "findConstructor" ->
                         type2LookedUpMethods.computeIfAbsent(lookupType, t -> new HashSet<>()).add("<init>");
-                        break;
-                    case "findGetter": case "findSetter": case "findStaticGetter":
-                    case "findStaticSetter": case "findStaticVarHandle": case "findVarHandle":
+                    case "findGetter", "findSetter", "findStaticGetter", "findStaticSetter", "findStaticVarHandle", "findVarHandle" ->
                         type2LookedUpFields.computeIfAbsent(lookupType, t -> new HashSet<>()).add(lookupName);
-                        break;
                 }
             }
             return super.visitMethodInvocation(node, p);

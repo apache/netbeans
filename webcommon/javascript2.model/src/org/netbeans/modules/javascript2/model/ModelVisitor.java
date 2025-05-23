@@ -1512,7 +1512,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
                         handleDeclaredFunction(currentBlockScope, parentFn, fnNode);
                     }
                     for (VarNode varNode : declaredVars) {
-                        if (varNode.isLet()) {
+                        if (varNode.isBlockScoped()) {
                             // block scope variable
                             handleDeclaredVariable(currentBlockScope, parentFn, varNode, docHolder);
                         } else {
@@ -1779,10 +1779,15 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
                 pathIndex++;
                 lastVisited = getPath().get(pathSize - pathIndex);
             }
-            if ( lastVisited instanceof VarNode) {
+            if (lastVisited instanceof VarNode) {
                 fqName = getName((VarNode)lastVisited);
                 isDeclaredInParent = true;
-                JsObject declarationScope = ((VarNode)lastVisited).isLet() ? modelBuilder.getCurrentDeclarationScope() : modelBuilder.getCurrentDeclarationFunction();
+                JsObject declarationScope;
+                if (((VarNode) lastVisited).isBlockScoped()) {
+                    declarationScope = modelBuilder.getCurrentDeclarationScope();
+                } else {
+                    declarationScope = modelBuilder.getCurrentDeclarationFunction();
+                }
                 parent = declarationScope;
                 if (fqName.size() == 1 && !ModelUtils.isGlobal(declarationScope)) {
                     isPrivate = true;

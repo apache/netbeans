@@ -44,8 +44,12 @@ public class JsTypedTextInterceptorTest extends JsTestBase {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void setUp() throws Exception {
         super.setUp();
+        OptionsUtils options = OptionsUtils.forLanguage(getPreferredLanguage().getLexerLanguage());
+        options.setTestDisablePreferencesTracking();
+        options.setTestCompletionSmartQuotes(OptionsUtils.AUTO_COMPLETION_SMART_QUOTES_DEFAULT);
         MimeLookup.getLookup(JsTokenId.JAVASCRIPT_MIME_TYPE).lookup(Preferences.class).clear();
     }
 
@@ -332,9 +336,9 @@ public class JsTypedTextInterceptorTest extends JsTestBase {
         insertChar("x = ^", '"', "x = \"^\"");
     }
 
+    @SuppressWarnings("unchecked")
     public void testDisabledSmartQuotes() throws Exception {
-        MimeLookup.getLookup(JsTokenId.JAVASCRIPT_MIME_TYPE).lookup(Preferences.class)
-                .putBoolean(OptionsUtils.AUTO_COMPLETION_SMART_QUOTES, false);
+        OptionsUtils.forLanguage(getPreferredLanguage().getLexerLanguage()).setTestCompletionSmartQuotes(false);
         insertChar("x = ^", '"', "x = \"^");
     }
 

@@ -79,6 +79,7 @@ public class SecureURLResourceRetrieverTest {
     @Test
     public void shouldUseKeyStoreFromSystemProperties() throws Exception {
         System.setProperty("javax.net.debug", "ssl,keystore");
+        // get from https://badssl.com/download/ (expires 04.2027)
         System.setProperty("javax.net.ssl.keyStore", SecureURLResourceRetrieverTest.class.getResource("badssl.com-client.p12").getPath());
         System.setProperty("javax.net.ssl.keyStorePassword", "badssl.com");
         System.setProperty("javax.net.ssl.keyStoreType", "pkcs12");

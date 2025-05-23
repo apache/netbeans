@@ -316,7 +316,13 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
             }
             if (null != outputDir) {
                 createSession(outputDir);
-                project2outputDirs.put(visitor.getContext().getCurrentProject(), outputDir);
+                OutputVisitor.Context context = visitor.getContext();
+                if (context != null) {
+                    Project currentProject = context.getCurrentProject();
+                    if (currentProject != null) {
+                        project2outputDirs.put(currentProject, outputDir);
+                    }
+                }
             }
         }
     }
@@ -325,10 +331,13 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
         MavenProject currentProject = null;
         // get maven module from context if available
         OutputVisitor.Context context = visitor.getContext();
-        if (context != null && context.getCurrentProject() != null) {
-            NbMavenProject subProject = context.getCurrentProject().getLookup().lookup(NbMavenProject.class);
-            if (subProject != null) {
-                currentProject = subProject.getMavenProject();
+        if (context != null) {
+            Project cp = context.getCurrentProject();
+            if (cp != null) {
+                NbMavenProject subProject = cp.getLookup().lookup(NbMavenProject.class);
+                if (subProject != null) {
+                    currentProject = subProject.getMavenProject();
+                }
             }
         }
         if (currentProject == null) {
@@ -590,12 +599,20 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
         if (runningTestClass != null) {
             generateTest();
         }
-        File outputDir = project2outputDirs.remove(visitor.getContext().getCurrentProject());
-        TestSession session = outputDir != null ? outputDir2sessions.remove(outputDir) : null;
-        if (session != null) {
-            CoreManager junitManager = getManagerProvider();
-            if (junitManager != null) {
-                junitManager.sessionFinished(session);
+        OutputVisitor.Context context = visitor.getContext();
+        if (context != null) {
+            Project currentProject = context.getCurrentProject();
+            if (currentProject != null) {
+                File outputDir = project2outputDirs.remove(currentProject);
+                if (outputDir != null) {
+                    TestSession session = outputDir2sessions.remove(outputDir);
+                    if (session != null) {
+                        CoreManager junitManager = getManagerProvider();
+                        if (junitManager != null) {
+                            junitManager.sessionFinished(session);
+                        }
+                    }
+                }
             }
         }
         runningTestClass = null;
@@ -633,28 +650,31 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
     }
 
     public @Override void sequenceFail(String sequenceId, OutputVisitor visitor) {
-        LOG.log(Level.FINE, "Got sequenceFail: {0}, line {1}", new Object[] { visitor.getContext().getCurrentProject(), visitor.getLine() });
-        // try to get the failed test class. How can this be solved if it is not the first one in the list?
-        if(surefireRunningInParallel) {
-            String saveRunningTestClass = runningTestClass;
-            
-            Project currentProject = visitor.getContext().getCurrentProject();
-            for (String s : runningTestClassesInParallel) {
-                File outputDir = locateOutputDirAndWait(s, false);
-                // match the output dir to the project
-                if (outputDir != null) {
-                    Project outputOwner = FileOwnerQuery.getOwner(FileUtil.toFileObject(outputDir));
-                    if (outputOwner == currentProject) {
-                        LOG.log(Level.FINE, "Found unfinished test {0} in {1}, trying to finish", new Object[] { s, currentProject });
-                        runningTestClass  = s;
-                        if (Objects.equals(saveRunningTestClass, s)) {
-                            saveRunningTestClass = null;
+        OutputVisitor.Context context = visitor.getContext();
+        if (context != null) {
+            Project currentProject = context.getCurrentProject();
+            LOG.log(Level.FINE, "Got sequenceFail: {0}, line {1}", new Object[] {currentProject, visitor.getLine()});
+            // try to get the failed test class. How can this be solved if it is not the first one in the list?
+            if (currentProject != null && surefireRunningInParallel) {
+                String saveRunningTestClass = runningTestClass;
+
+                for (String s : runningTestClassesInParallel) {
+                    File outputDir = locateOutputDirAndWait(s, false);
+                    // match the output dir to the project
+                    if (outputDir != null) {
+                        Project outputOwner = FileOwnerQuery.getOwner(FileUtil.toFileObject(outputDir));
+                        if (outputOwner == currentProject) {
+                            LOG.log(Level.FINE, "Found unfinished test {0} in {1}, trying to finish", new Object[] {s, currentProject});
+                            runningTestClass = s;
+                            if (Objects.equals(saveRunningTestClass, s)) {
+                                saveRunningTestClass = null;
+                            }
+                            generateTest();
                         }
-                        generateTest();
                     }
                 }
+                runningTestClass = saveRunningTestClass;
             }
-            runningTestClass = saveRunningTestClass;
         }
         sequenceEnd(sequenceId, visitor);
     }

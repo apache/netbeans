@@ -3,7 +3,7 @@ export default {
   |>FIELD:path<|: '/',
 
   |>CUSTOM2:async<| |>METHOD:action<|() {
-    const component = |>CUSTOM2:await<| next();
+    |>CUSTOM2:const<| component = |>CUSTOM2:await<| next();
 
   },
 

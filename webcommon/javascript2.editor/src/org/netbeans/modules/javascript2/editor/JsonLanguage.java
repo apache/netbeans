@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.javascript2.editor;
 
+import org.netbeans.api.lexer.Language;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
@@ -83,7 +84,7 @@ public class JsonLanguage extends DefaultLanguageConfig {
     }
 
     @Override
-    public org.netbeans.api.lexer.Language getLexerLanguage() {
+    public Language<JsTokenId> getLexerLanguage() {
         return JsTokenId.jsonLanguage();
     }
 
@@ -98,6 +99,7 @@ public class JsonLanguage extends DefaultLanguageConfig {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean hasStructureScanner() {
         return NAVIGATOR;
     }

@@ -21,7 +21,6 @@ package org.netbeans.modules.javascript2.editor;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import org.netbeans.modules.csl.api.ColoringAttributes;
@@ -73,25 +72,22 @@ public class JsonSemanticAnalyzer extends SemanticAnalyzer<JsonParserResult> {
         if (ModelUtils.wasProcessed(parent, processedObjects)) {
             return highlights;
         }
-        for (Iterator<? extends JsObject> it = parent.getProperties().values().iterator(); it.hasNext();) {
-            JsObject object = it.next();
+        for (JsObject object : parent.getProperties().values()) {
             if (object.getDeclarationName() != null) {
                 switch (object.getJSKind()) {
-                    case OBJECT_LITERAL:
+                    case OBJECT_LITERAL -> {
                         if(object.getDeclarationName() != null) {
                             addColoring(result, highlights, object.getDeclarationName().getOffsetRange(), ColoringAttributes.FIELD_SET);
                         }
-                        break;
-                    case PROPERTY:
-                        addColoring(result, highlights, object.getDeclarationName().getOffsetRange(), ColoringAttributes.FIELD_SET);
-                        break;
+                    }
+                    case PROPERTY -> addColoring(result, highlights, object.getDeclarationName().getOffsetRange(), ColoringAttributes.FIELD_SET);
                 }
             }
             if (canceled) {
                 highlights = Collections.emptyMap();
                 break;
             }
-            if (!(object instanceof JsReference && ModelUtils.isDescendant(object, ((JsReference)object).getOriginal()))) {
+            if (!(object instanceof JsReference jr && ModelUtils.isDescendant(object, jr.getOriginal()))) {
                 highlights = count(result, object, highlights, processedObjects);
             }
         }

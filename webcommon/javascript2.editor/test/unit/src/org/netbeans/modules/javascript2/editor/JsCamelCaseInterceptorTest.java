@@ -62,7 +62,12 @@ public class JsCamelCaseInterceptorTest extends CslTestBase {
         sb.append(text.substring(0, index));
         sb.append(text.substring(index + 1));
         BaseDocument document = getDocument(sb.toString(), JsTokenId.JAVASCRIPT_MIME_TYPE);
-        int newOffset = JsCamelCaseInterceptor.getWordOffset(document, index, reverse);
-        assertEquals(expected,  newOffset);
+        document.readLock();
+        try {
+            int newOffset = JsCamelCaseInterceptor.getWordOffset(document, index, reverse);
+            assertEquals(expected, newOffset);
+        } finally {
+            document.readUnlock();
+        }
     } 
 }

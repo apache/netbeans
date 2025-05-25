@@ -440,15 +440,38 @@ mediaQueryList
  ;
 
 mediaQuery
- :
-    (mediaQueryOperator ws? )?  mediaType ((ws? key_and)=> ws? key_and ws? mediaExpression )*
-    | mediaExpression ((ws? key_and)=> ws? key_and ws? mediaExpression )*
+    :
+    mediaCondition
+    | (mediaQueryOperator ws? )?  mediaType ((ws? key_and) => ws? key_and ws? mediaConditionWithoutOr)?
     | {isLessSource()}? cp_variable
  ;
 
 mediaQueryOperator
- 	: key_only | NOT
- 	;
+    :
+    key_only | NOT
+;
+
+mediaCondition
+    :
+    (NOT ws?) mediaInParens //media-not
+    | mediaInParens  (ws? (
+        ws? key_and ws? mediaInParens //media-and
+        | ws? key_or ws? mediaInParens //media-or
+          ) 
+      )*
+    | LPAREN ws* RPAREN
+;
+
+mediaConditionWithoutOr
+    :
+    (NOT ws?) mediaInParens //media-not
+    | mediaInParens (ws? key_and ws? mediaInParens)* //media-and
+    | (HASH) => {isCssPreprocessorSource()}? sass_interpolation_expression_var
+;
+
+mediaInParens:
+   LPAREN ws? (mediaCondition | mediaExpression) ws? RPAREN
+;
 
 mediaType
  : IDENT | GEN | {isCssPreprocessorSource()}? sass_interpolation_expression_var
@@ -456,19 +479,33 @@ mediaType
 
 mediaExpression
     :
-    (LPAREN) => (LPAREN ws? mediaFeature mediaFeatureValue? ws? RPAREN)
+    mediaFeature (ws? (COLON | mediaComparisonOperator) ws? mediaFeatureValue)?
+    | mediaFeatureRangeContext
     | (HASH) => {isCssPreprocessorSource()}? sass_interpolation_expression_var
     ;
 
-mediaFeatureValue
-    :
-    ws? COLON ws?
-    (
-        {isCssPreprocessorSource()}? cp_expression
-        |
-        expression
-    )
+mediaComparisonOperator
+    : 
+    OPEQ | LESS | LESS_OR_EQ | GREATER | GREATER_OR_EQ
+    ;    
+
+mediaRangeExplicitValue
+    : LENGTH | EMS |  REM | RESOLUTION | EXS | DIMENSION
     ;
+
+mediaFeatureValue 
+   :
+   mediaRangeExplicitValue 
+   | {isCssPreprocessorSource()}? cp_expression
+   | expression
+;
+
+mediaFeatureRangeContext
+    :
+    (mediaFeatureValue ws? (LESS | LESS_OR_EQ) ) => mediaFeatureValue ws? (LESS | LESS_OR_EQ)  ws? mediaFeature (ws? (LESS | LESS_OR_EQ) ws? mediaFeatureValue)?
+    | (mediaFeatureValue ws? (GREATER | GREATER_OR_EQ) ) => mediaFeatureValue ws? (GREATER | GREATER_OR_EQ)  ws? mediaFeature (ws? (GREATER | GREATER_OR_EQ) ws? mediaFeatureValue)?
+    | mediaFeatureValue ws? OPEQ ws? mediaFeature
+;
 
 mediaFeature
  : IDENT | GEN | {isCssPreprocessorSource()}? ( cp_variable | sass_interpolation_expression_var )

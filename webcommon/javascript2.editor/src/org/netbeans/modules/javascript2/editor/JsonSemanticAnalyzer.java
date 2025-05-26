@@ -26,8 +26,6 @@ import java.util.Set;
 import org.netbeans.modules.csl.api.ColoringAttributes;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.SemanticAnalyzer;
-import org.netbeans.modules.javascript2.doc.api.JsDocumentationSupport;
-import org.netbeans.modules.javascript2.doc.spi.JsComment;
 import org.netbeans.modules.javascript2.editor.parser.JsonParserResult;
 import org.netbeans.modules.javascript2.model.api.JsObject;
 import org.netbeans.modules.javascript2.model.api.JsReference;
@@ -100,19 +98,10 @@ public class JsonSemanticAnalyzer extends SemanticAnalyzer<JsonParserResult> {
     private void addColoring(JsonParserResult result, Map<OffsetRange, Set<ColoringAttributes>> highlights, OffsetRange astRange, Set<ColoringAttributes> coloring) {
         int start = result.getSnapshot().getOriginalOffset(astRange.getStart());
         int end = result.getSnapshot().getOriginalOffset(astRange.getEnd());
-        if (start > -1 && end > -1 && start < end && !isInComment(result, astRange)) {
+        if (start > -1 && end > -1 && start < end) {
             OffsetRange range = start == astRange.getStart() ? astRange : new OffsetRange(start, end);
             highlights.put(range, coloring);
         }
-    }
-
-    private boolean isInComment(JsonParserResult result, OffsetRange range) {
-        for (JsComment comment : JsDocumentationSupport.getDocumentationHolder(result).getCommentBlocks().values()) {
-            if (comment.getOffsetRange().containsInclusive(range.getStart())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override

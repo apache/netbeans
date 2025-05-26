@@ -203,8 +203,16 @@ final class CaretItem implements Comparable {
         this.dotPos = dotPos;
     }
 
+    public void setDotBias(Position.Bias dotBias) {
+        this.dotBias = dotBias;
+    }
+
     void setMarkPos(Position markPos) {
         this.markPos = markPos;
+    }
+
+    public void setMarkBias(Position.Bias markBias) {
+        this.markBias = markBias;
     }
 
     void setMagicCaretPosition(Point newMagicCaretPosition) { // [TODO] move to transaction context

@@ -190,7 +190,7 @@ public final class HighlightsViewFactory extends EditorViewFactory implements Hi
         }
         if (startOffset == lineEndOffset - 1) {
             AttributeSet attrs = hList.cutSingleChar();
-            return wrapWithPrependedText(new NewlineView(attrs), attrs);
+            return wrapWithPrependedText(new NewlineView(attrs), attrs, true);
         } else { // Regular view with possible highlight(s) or tab view
             updateTabsAndHighlightsAndRTL(startOffset);
             if (charType == TAB_CHAR_TYPE) {
@@ -200,7 +200,7 @@ public final class HighlightsViewFactory extends EditorViewFactory implements Hi
                     limitOffset = tabsEndOffset;
                 }
                 attrs = hList.cut(limitOffset);
-                return wrapWithPrependedText(new TabView(limitOffset - startOffset, attrs), attrs);
+                return wrapWithPrependedText(new TabView(limitOffset - startOffset, attrs), attrs, false);
 
             } else { // Create regular view with either LTR or RTL text
                 limitOffset = Math.min(limitOffset, nextTabOrRTLOffset); // nextTabOrRTLOffset < lineEndOffset 
@@ -221,7 +221,7 @@ public final class HighlightsViewFactory extends EditorViewFactory implements Hi
                 boolean inlineHints = documentView().op.isInlineHintsEnable();
                 AttributeSet attrs = hList.cutSameFont(defaultFont, limitOffset, wsEndOffset, docText, inlineHints);
                 int length = hList.startOffset() - startOffset;
-                EditorView view = wrapWithPrependedText(new HighlightsView(length, attrs), attrs);
+                EditorView view = wrapWithPrependedText(new HighlightsView(length, attrs), attrs, false);
                 EditorView origViewUnwrapped = origView instanceof PrependedTextView ? ((PrependedTextView) origView).getDelegate() : origView;
                 if (origViewUnwrapped != null && origViewUnwrapped.getClass() == HighlightsView.class && origViewUnwrapped.getLength() == length) {
                     HighlightsView origHView = (HighlightsView) origViewUnwrapped;
@@ -254,11 +254,11 @@ public final class HighlightsViewFactory extends EditorViewFactory implements Hi
         }
     }
 
-    private @NonNull EditorView wrapWithPrependedText(@NonNull EditorView origView, @NullAllowed AttributeSet attrs) {
+    private @NonNull EditorView wrapWithPrependedText(@NonNull EditorView origView, @NullAllowed AttributeSet attrs, boolean newLineView) {
         boolean inlineHints = documentView().op.isInlineHintsEnable();
 
         if (attrs != null && inlineHints && attrs.getAttribute(ViewUtils.KEY_VIRTUAL_TEXT_PREPEND) instanceof String) {
-            return new PrependedTextView(documentView().op, attrs, origView);
+            return new PrependedTextView(documentView().op, attrs, origView, newLineView);
         }
 
         return origView;

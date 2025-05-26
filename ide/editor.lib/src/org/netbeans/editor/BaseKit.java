@@ -2993,7 +2993,9 @@ public class BaseKit extends DefaultEditorKit {
                                 editorCaret.moveCarets(new CaretMoveHandler() {
                                     @Override
                                     public void moveCarets(CaretMoveContext context) {
+                                        Position.Bias[] biasRet = new Position.Bias[1];
                                         for (CaretInfo caretInfo : context.getOriginalSortedCarets()) {
+                                            biasRet[0] = Position.Bias.Forward; // Initial value in case it would stay non-updated
                                             try {
                                                 if (!select && caretInfo.isSelection()) {
                                                     int offset = caretInfo.getSelectionEnd();
@@ -3001,12 +3003,12 @@ public class BaseKit extends DefaultEditorKit {
                                                 } else {
                                                     int offset = caretInfo.getDot();
                                                     offset = target.getUI().getNextVisualPositionFrom(target,
-                                                            offset, Position.Bias.Forward, SwingConstants.EAST, null);
+                                                            offset, caretInfo.getDotBias(), SwingConstants.EAST, biasRet);
                                                     Position dotPos = doc.createPosition(offset);
                                                     if (select) {
-                                                        context.moveDot(caretInfo, dotPos, Position.Bias.Forward);
+                                                        context.moveDot(caretInfo, dotPos, biasRet[0]);
                                                     } else {
-                                                        context.setDot(caretInfo, dotPos, Position.Bias.Forward);
+                                                        context.setDot(caretInfo, dotPos, biasRet[0]);
                                                     }
                                                 }
                                             } catch (BadLocationException ex) {
@@ -3284,7 +3286,9 @@ public class BaseKit extends DefaultEditorKit {
                                 editorCaret.moveCarets(new CaretMoveHandler() {
                                     @Override
                                     public void moveCarets(CaretMoveContext context) {
+                                        Position.Bias[] biasRet = new Position.Bias[1];
                                         for (CaretInfo caretInfo : context.getOriginalSortedCarets()) {
+                                            biasRet[0] = Position.Bias.Forward; // Initial value in case it would stay non-updated
                                             try {
                                                 if (!select && caretInfo.isSelection()) {
                                                     int offset = caretInfo.getSelectionStart();
@@ -3292,12 +3296,12 @@ public class BaseKit extends DefaultEditorKit {
                                                 } else {
                                                     int offset = caretInfo.getDot();
                                                     offset = target.getUI().getNextVisualPositionFrom(target,
-                                                            offset, Position.Bias.Backward, SwingConstants.WEST, null);
+                                                            offset, caretInfo.getDotBias(), SwingConstants.WEST, biasRet);
                                                     Position dotPos = doc.createPosition(offset);
                                                     if (select) {
-                                                        context.moveDot(caretInfo, dotPos, Position.Bias.Forward);
+                                                        context.moveDot(caretInfo, dotPos, biasRet[0]);
                                                     } else {
-                                                        context.setDot(caretInfo, dotPos, Position.Bias.Forward);
+                                                        context.setDot(caretInfo, dotPos, biasRet[0]);
                                                     }
                                                 }
                                             } catch (BadLocationException ex) {

@@ -180,11 +180,13 @@ final class CaretTransaction {
                 }
                 if (dotChanged) {
                     caretItem.setDotPos(dotPos);
+                    caretItem.setDotBias(dotBias);
                     expandFoldPositions.add(dotPos);
                     anyDotChanged = true;
                 }
                 if (markChanged) {
                     caretItem.setMarkPos(markPos);
+                    caretItem.setMarkBias(markBias);
                     expandFoldPositions.add(markPos);
                     anyMarkChanged = true;
                 }

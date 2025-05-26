@@ -1099,7 +1099,8 @@ public final class EditorCaret implements Caret {
                     // since they were not visible up to this moment.
                     if (caretItem.getAndClearUpdateCaretBounds()) {
                         int dot = caretItem.getDot();
-                        Rectangle newCaretBounds = lvh.modelToViewBounds(dot, Position.Bias.Forward);
+                        Position.Bias dotBias = caretItem.getDotBias();
+                        Rectangle newCaretBounds = lvh.modelToViewBounds(dot, dotBias);
                         Rectangle oldBounds = caretItem.setCaretBoundsWithRepaint(newCaretBounds, c, "EditorCaret.paint()", i);
                         if (caretItem == lastCaret && oldBounds != null) {
                             maybeSaveCaretOffset(oldBounds);
@@ -1643,7 +1644,7 @@ public final class EditorCaret implements Caret {
                                 setRectangularSelectionToDotAndMark();
                             } else {
                                 try {
-                                    Rectangle r = c.modelToView(getLastCaretItem().getDot());
+                                    Rectangle r = c.modelToView(getLastCaretItem().getDot()); //TODO: bias?
                                     if (rsDotRect != null) {
                                         rsDotRect.y = r.y;
                                         rsDotRect.height = r.height;
@@ -2042,7 +2043,7 @@ public final class EditorCaret implements Caret {
                         Rectangle caretBounds;
                         Rectangle oldCaretBounds;
                         if (lastCaretItem.getAndClearUpdateCaretBounds()) {
-                            caretBounds = lvh.modelToViewBounds(lastCaretItem.getDot(), Position.Bias.Forward);
+                            caretBounds = lvh.modelToViewBounds(lastCaretItem.getDot(), lastCaretItem.getDotBias());
                             oldCaretBounds = lastCaretItem.setCaretBoundsWithRepaint(caretBounds, c, "update()-last-for-scroll", -2);
                         } else {
                             caretBounds = lastCaretItem.getCaretBounds();
@@ -2168,7 +2169,7 @@ public final class EditorCaret implements Caret {
                         CaretItem caretItem = caretInfo.getCaretItem();
                         Rectangle caretBounds = null;
                         if (caretItem.getAndClearUpdateCaretBounds()) {
-                            caretBounds = lvh.modelToViewBounds(caretItem.getDot(), Position.Bias.Forward);
+                            caretBounds = lvh.modelToViewBounds(caretItem.getDot(), caretItem.getDotBias());
                             caretItem.setCaretBoundsWithRepaint(caretBounds, c, "EditorCaret.update()", i);                            
                         }
                         if (i > 0) {

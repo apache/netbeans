@@ -99,22 +99,26 @@ public enum NodeType {
     margin,
     margin_sym,
     media,
-    mediaExpression,
     mediaFeature,
     mediaQueryList,
     mediaQuery,
-    
     /**
      * NOT | ONLY prefix of the media query
      */
     mediaQueryOperator,
-    
-    
+    /**
+     * https://www.w3.org/TR/mediaqueries-4/#mq-syntax
+     */
+    mediaCondition,
+    mediaConditionWithoutOr,
+    mediaInParens,
+    mediaExpression,
+    mediaFeatureRangeContext,
+    mediaComparisonOperator,
     mediaType,
-    
     mediaBody,
     mediaFeatureValue,
-    
+    mediaRangeExplicitValue,
     /**
      * Mozilla specific at rule @-moz-document See
      * https://developer.mozilla.org/en/CSS/@-moz-document

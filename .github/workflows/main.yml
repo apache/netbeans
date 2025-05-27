@@ -1563,8 +1563,8 @@ jobs:
 #      - name: debugger.jpda.truffle
 #        run: ant $OPTS -f java/debugger.jpda.truffle test
 
-#      - name: debugger.jpda.ui
-#        run: ant $OPTS -f java/debugger.jpda.ui test
+      - name: debugger.jpda.ui
+        run: ant $OPTS -f java/debugger.jpda.ui test-unit
 
       - name: Create Test Summary
         uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4

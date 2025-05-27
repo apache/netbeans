@@ -24,6 +24,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
@@ -138,6 +139,10 @@ import org.eclipse.lsp4j.ImplementationParams;
 import org.eclipse.lsp4j.InlayHint;
 import org.eclipse.lsp4j.InlayHintLabelPart;
 import org.eclipse.lsp4j.InlayHintParams;
+import org.eclipse.lsp4j.InlineValue;
+import org.eclipse.lsp4j.InlineValueEvaluatableExpression;
+import org.eclipse.lsp4j.InlineValueParams;
+import org.eclipse.lsp4j.InlineValueVariableLookup;
 import org.eclipse.lsp4j.InsertTextFormat;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
@@ -194,6 +199,8 @@ import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
+import org.netbeans.api.java.source.support.CancellableTreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
@@ -256,6 +263,7 @@ import org.netbeans.spi.lsp.CallHierarchyProvider;
 import org.netbeans.spi.lsp.CodeLensProvider;
 import org.netbeans.spi.lsp.ErrorProvider;
 import org.netbeans.spi.lsp.InlayHintsProvider;
+import org.netbeans.spi.lsp.InlineValuesProvider;
 import org.netbeans.spi.lsp.StructureProvider;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectConfiguration;
@@ -2863,6 +2871,34 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
             return result;
         });
+    }
+
+    @Override
+    public CompletableFuture<List<InlineValue>> inlineValue(InlineValueParams params) {
+        String uri = params.getTextDocument().getUri();
+        FileObject file = fromURI(uri);
+        if (file == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+        CompletableFuture<List<InlineValue>> result = new CompletableFuture<>();
+        result.complete(List.of());
+        Document rawDoc = server.getOpenedDocuments().getDocument(uri);
+        if (!(rawDoc instanceof StyledDocument)) {
+            return CompletableFuture.completedFuture(Collections.emptyList());
+        }
+        StyledDocument doc = (StyledDocument)rawDoc;
+        int currentExecutionPosition = Utils.getOffset(doc, params.getContext().getStoppedLocation().getEnd());
+        for (InlineValuesProvider provider : MimeLookup.getLookup(file.getMIMEType()).lookupAll(InlineValuesProvider.class)) {
+            result = result.thenCombine(provider.inlineValues(file, currentExecutionPosition), (l1, l2) -> {
+                List<InlineValue> res = new ArrayList<>(l1.size() + l2.size());
+                res.addAll(l1);
+                for (org.netbeans.api.lsp.InlineValue val : l2) {
+                    res.add(new InlineValue(new InlineValueEvaluatableExpression(new Range(Utils.createPosition(file, val.getRange().getStartOffset()), Utils.createPosition(file, val.getRange().getEndOffset())), val.getExpression())));
+                }
+                return res;
+            });
+        }
+        return result;
     }
 
 }

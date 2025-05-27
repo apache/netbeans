@@ -16,22 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.editor.actions;
+package org.netbeans.modules.debugger.ui.actions;
 
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import org.netbeans.api.editor.EditorActionRegistration;
+import org.netbeans.spi.debugger.ui.Constants;
+import org.openide.util.NbBundle.Messages;
 
-@EditorActionRegistration(name="toggle-lines-view",
+@EditorActionRegistration(name="toggle-inline-values",
                           menuPath="View",
-                          menuPosition=895,
-                          preferencesKey=ShowLinesAction.KEY_LINES,
-                          preferencesDefault=ShowLinesAction.DEF_LINES)
-public class ShowLinesAction extends AbstractAction {
-    public static final String KEY_LINES = "enable.guide.lines";
-    public static final boolean DEF_LINES = true;
+                          menuPosition=899,
+                          preferencesKey=Constants.KEY_INLINE_VALUES,
+                          preferencesDefault=Constants.DEF_INLINE_VALUES)
+@Messages({
+    "toggle-inline-values=Show Inline Values",
+    "toggle-inline-values_menu_text=Show Inline V&alues"
+})
+public class ShowInlineValuesAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
     }
-    
+
 }

@@ -74,6 +74,9 @@ public class DebugAction extends NodeAction {
     }
     
     private static boolean enableImpl(PayaraModule commonSupport) {
+        if (Boolean.TRUE.toString().equals(commonSupport.getInstanceProperties().get(PayaraModule.WSL_ATTR))) {
+            return false;
+        }
         return PayaraState.canStart(commonSupport.getInstance()) &&
                 null != commonSupport.getInstanceProperties().get(PayaraModule.DOMAINS_FOLDER_ATTR) &&
                 Util.isDefaultOrServerTarget(commonSupport.getInstanceProperties());

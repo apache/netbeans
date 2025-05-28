@@ -72,6 +72,9 @@ public class StartServerAction extends NodeAction {
     }
     
     private static boolean enableImpl(PayaraModule commonSupport) {
+        if (Boolean.TRUE.toString().equals(commonSupport.getInstanceProperties().get(PayaraModule.WSL_ATTR))) {
+            return false;
+        }
         PayaraServer server = commonSupport.getInstance();
         return PayaraState.canStart(server) && !server.isRemote();
     }

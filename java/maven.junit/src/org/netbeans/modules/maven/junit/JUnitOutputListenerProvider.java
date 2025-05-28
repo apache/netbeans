@@ -285,7 +285,7 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
                 "surefire.reportNameSuffix");  //NOI81N
             testType = TESTTYPE_INTEGRATION;  //NOI81N
         }
-        if (null != reportsDirectory) {
+        if (reportsDirectory != null) {
             File outputDir = null;
             File absoluteFile = new File(reportsDirectory);
             // configuration might be "target/directory", which is relative
@@ -314,14 +314,15 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
                     }
                 }
             }
-            if (null != outputDir) {
+            if (outputDir != null) {
                 createSession(outputDir);
                 OutputVisitor.Context context = visitor.getContext();
-                if (context != null) {
-                    Project currentProject = context.getCurrentProject();
-                    if (currentProject != null) {
-                        project2outputDirs.put(currentProject, outputDir);
-                    }
+                // may be null when EventSpy is not active
+                Project project = context != null && context.getCurrentProject() != null
+                                ? context.getCurrentProject()
+                                : FileOwnerQuery.getOwner(Utilities.toURI(outputDir));
+                if (project != null) {
+                    project2outputDirs.put(project, outputDir);
                 }
             }
         }
@@ -351,8 +352,8 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
                 Object defaultValue = PluginPropertyUtils
                     .createEvaluator(currentProject)
                     .evaluate(fallbackExpression);
-                if (defaultValue instanceof String) {
-                    reportsDirectory = (String) defaultValue;
+                if (defaultValue instanceof String str) {
+                    reportsDirectory = str;
                 }
             } catch (ExpressionEvaluationException ex) {
                 // NOP could not resolved default value
@@ -376,14 +377,14 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
     })
     private String createSessionName(String projectId) {
         String name;
-        if(testType != null && testType.equals(TESTTYPE_INTEGRATION)) {
+        if (TESTTYPE_INTEGRATION.equals(testType)) {
             name = Bundle.LBL_TESTTYPE_INTEGRATION(projectId);
         } else {
             name = Bundle.LBL_TESTTYPE_UNIT(projectId);
         }
         int index = 2;
         while (usedNames.contains(name)) {
-            if (testType != null && testType.equals(TESTTYPE_INTEGRATION)) {
+            if (TESTTYPE_INTEGRATION.equals(testType)) {
                 name = Bundle.LBL_TESTTYPE_INTEGRATION_INDEXED(projectId, index);
             } else {
                 name = Bundle.LBL_TESTTYPE_UNIT_INDEXED(projectId, index);
@@ -590,7 +591,7 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
             }
         }
         return false;
-    }    
+    }
 
     public @Override void sequenceEnd(String sequenceId, OutputVisitor visitor) {
         if (outputDir2sessions.isEmpty()) {
@@ -599,19 +600,29 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
         if (runningTestClass != null) {
             generateTest();
         }
+        File outputDir = null;
         OutputVisitor.Context context = visitor.getContext();
-        if (context != null) {
-            Project currentProject = context.getCurrentProject();
-            if (currentProject != null) {
-                File outputDir = project2outputDirs.remove(currentProject);
-                if (outputDir != null) {
-                    TestSession session = outputDir2sessions.remove(outputDir);
-                    if (session != null) {
-                        CoreManager junitManager = getManagerProvider();
-                        if (junitManager != null) {
-                            junitManager.sessionFinished(session);
-                        }
+        if (context != null && context.getCurrentProject() != null) {
+            outputDir = project2outputDirs.remove(context.getCurrentProject());
+        } else if (runningTestClass != null) {
+            // fallback if EventSpy is not active
+            Set<File> dirs = runningTestClass2outputDirs.get(runningTestClass);
+            if (dirs != null) {
+                for (File dir : outputDir2sessions.keySet()) {
+                    if (dirs.contains(dir)) {
+                        outputDir = dir;
+                        break;
                     }
+                }
+            }
+        }
+        if (outputDir != null) {
+            TestSession session = outputDir2sessions.remove(outputDir);
+            if (session != null) {
+                project2outputDirs.remove(session.getProject());
+                CoreManager junitManager = getManagerProvider();
+                if (junitManager != null) {
+                    junitManager.sessionFinished(session);
                 }
             }
         }

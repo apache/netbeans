@@ -32,6 +32,7 @@ import org.openide.util.Parameters;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.hints.spi.preview.PreviewEnabler;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.protocol.ClientConfigurationManager;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.protocol.UpdateConfigParams;
 import org.openide.util.Lookup;
@@ -63,11 +64,8 @@ public class EnablePreviewSingleSourceFile implements PreviewEnabler {
             return ;
         }
 
-        ConfigurationItem conf = new ConfigurationItem();
-        conf.setScopeUri(Utils.toUri(file));
-        conf.setSection(client.getNbCodeCapabilities().getAltConfigurationPrefix() + "runConfig.vmOptions");
-        client.configuration(new ConfigurationParams(Collections.singletonList(conf))).thenApply(c -> {
-            String compilerArgs = ((JsonPrimitive) ((List<Object>) c).get(0)).getAsString();
+        ClientConfigurationManager.getInstance().getConfigurationUsingAltPrefix(client, "runConfig.vmOptions", Utils.toUri(file)).thenApply(c -> {
+            String compilerArgs = ((JsonPrimitive) c).getAsString();
             if (compilerArgs == null) {
                 compilerArgs = "";
             }

@@ -99,7 +99,7 @@ public class TestJQuery extends GeneralJavaScript {
         String[] res = {"add", "addClass", "ajaxComplete", "ajaxError", "ajaxSend", "ajaxStart", "animate", "before"};
         CompletionJListOperator cjo = completion.listItself;
         checkCompletionItems(cjo, res);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         type(eo, "add().");
         evt.waitNoEvent(100);
@@ -107,7 +107,7 @@ public class TestJQuery extends GeneralJavaScript {
         completion = getCompletion();
         cjo = completion.listItself;
         checkCompletionItems(cjo, res);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         endTest();
     }
@@ -129,7 +129,7 @@ public class TestJQuery extends GeneralJavaScript {
         checkCompletionItems(cjo, res);
         String[] res2 = {"add"};
         checkCompletionDoesntContainItems(cjo, res2);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         endTest();
     }
@@ -190,7 +190,7 @@ public class TestJQuery extends GeneralJavaScript {
         if (notToFind.length > 0) {
             checkCompletionDoesntContainItems(cjo, notToFind);
         }
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
     }
 
     public void testMultipleSelectors() {

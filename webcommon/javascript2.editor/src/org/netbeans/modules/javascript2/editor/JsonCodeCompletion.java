@@ -67,7 +67,7 @@ public class JsonCodeCompletion implements CodeCompletionHandler {
 
         long start = System.currentTimeMillis();
 
-        Document doc = (Document) context.getParserResult().getSnapshot().getSource().getDocument(false);
+        Document doc = context.getParserResult().getSnapshot().getSource().getDocument(false);
         if (doc == null) {
             return CodeCompletionResult.NONE;
         }
@@ -212,7 +212,7 @@ public class JsonCodeCompletion implements CodeCompletionHandler {
             int caretOffset,
             boolean upToOffset) {
         String prefix = "";
-        Document doc = (Document) info.getSnapshot().getSource().getDocument(false);
+        Document doc = info.getSnapshot().getSource().getDocument(false);
         if (doc == null) {
             return null;
         }

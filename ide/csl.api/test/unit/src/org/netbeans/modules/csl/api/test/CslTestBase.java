@@ -403,7 +403,7 @@ public abstract class CslTestBase extends NbTestCase {
         if (!wholeInputFile.exists()) {
             NbTestCase.fail("File " + wholeInputFile + " not found.");
         }
-        FileObject fo = FileUtil.toFileObject(wholeInputFile);
+        FileObject fo = FileUtil.toFileObject(FileUtil.normalizeFile(wholeInputFile));
         assertNotNull(fo);
 
         return fo;

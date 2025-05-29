@@ -26,6 +26,22 @@
 <apidef name="explorer">Explorer API</apidef>
 </apidefs>
 <changes>
+    <change id="setEntireRowClickable">
+        <api name="explorer"/>
+        <summary>Add the TreeView.setEntireRowClickable method.</summary>
+        <version major="6" minor="91"/>
+        <date day="13" month="3" year="2025"/>
+        <author login="ebakke"/>
+        <compatibility binary="compatible" source="compatible" deprecation="no" deletion="no" addition="yes"/>
+        <description>
+            The TreeView can now be optionally configured, via TreeView.setEntireRowClickable, so
+            that clicks in the empty space on the right-hand side of a node are interpreted as
+            clicks on said node.
+        </description>
+        <class package="org.openide.explorer.view" name="TreeView"/>
+        <issue number="NETBEANS-5736"/>
+    </change>
+
     <change id="ScrollOnExpand">
         <api name="explorer"/>
         <summary>Expose scrollOnExpand property on TreeView.</summary>

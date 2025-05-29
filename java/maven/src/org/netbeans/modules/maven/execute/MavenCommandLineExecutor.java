@@ -778,7 +778,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             display.append(Utilities.escapeParameters(command.toArray(String[]::new)));
         }
 
-        printGray(ioput, "puk "+display.toString());
+        printGray(ioput, display.toString());
 
         return builder;
     }

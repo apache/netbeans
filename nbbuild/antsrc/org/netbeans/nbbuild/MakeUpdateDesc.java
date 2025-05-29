@@ -488,8 +488,7 @@ public class MakeUpdateDesc extends MatchingTask {
             try {
                 MakeNBM.validateAgainstAUDTDs(new InputSource(desc.toURI().toString()), updaterJar, this);
             } catch (Exception x) {
-                desc.delete();
-                throw new BuildException("Could not validate " + desc + " after writing: " + x, x, getLocation());
+                log("Could not validate " + desc + " after writing: " + x, Project.MSG_ERR);
             }
         } else {
             log("No updater.jar specified, cannot validate " + desc + " against DTD", Project.MSG_WARN);

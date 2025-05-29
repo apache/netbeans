@@ -449,15 +449,23 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
                             int windowslimitcount = 0;
                             for (Testcase tc : tests) {
                                 //TODO just when is the classname null??
-                                if (tc.getClassName() != null) {
+                                String tcName= tc.getClassName();
+                                if (tcName != null) {
                                     Collection<String> lst = methods.get(tc.getClassName());
                                     if (lst == null) {
                                         lst = new ArrayList<>();
                                         methods.put(tc.getClassName(), lst);
                                         windowslimitcount = windowslimitcount + tc.getClassName().length() + 1; // + 1 for ,
                                     }
-                                    lst.add(tc.getName());
-                                    windowslimitcount = windowslimitcount + tc.getName().length() + 1; // + 1 for # or +
+                                    String mName = tc.getName();
+
+                                    if (tcName!=null
+                                            && mName.startsWith(tcName)
+                                            && mName.charAt(tcName.length())=='.'){
+                                        mName = mName.substring(tcName.length()+1);
+                                    }
+                                    lst.add(mName);
+                                    windowslimitcount = windowslimitcount + mName.length() + 1; // + 1 for # or +
                                 }
                             }
                             boolean exceedsWindowsLimit = Utilities.isWindows() && windowslimitcount > 6000; //just be conservative here, the limit is more (8000+)

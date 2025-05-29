@@ -240,19 +240,12 @@ public class DG<N,E,K,V> {
         return sb.toString ();
     }
     
-    private static Character NN = new Character ('\n');
-    private static Character NR = new Character ('\n');
-    private static Character NT = new Character ('\n');
-    private static Character NS = new Character ('\n');
-    
-    private static final Character STAR = new Character ((char)0);
+    private static Character NN = '\n';
+    private static final Character STAR = (char)0;
     
     private String convert (E edge) {
         if (STAR.equals (edge)) return ".";
         if (NN.equals (edge)) return "\\n";
-        if (NR.equals (edge)) return "\\r";
-        if (NT.equals (edge)) return "\\t";
-        if (NS.equals (edge)) return "' '";
         return edge.toString ();
     }
     

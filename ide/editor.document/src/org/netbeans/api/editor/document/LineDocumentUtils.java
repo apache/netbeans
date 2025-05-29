@@ -30,7 +30,6 @@ import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.document.DocumentServices;
 import org.netbeans.modules.editor.document.TextSearchUtils;
 import org.netbeans.modules.editor.document.implspi.CharClassifier;
-import org.netbeans.modules.editor.lib2.AcceptorFactory;
 import org.netbeans.spi.editor.document.DocumentFactory;
 import org.openide.util.Lookup;
 

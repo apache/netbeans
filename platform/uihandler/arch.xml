@@ -205,7 +205,7 @@
                     <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">LogRecord</a>
                     (where the MSG_KEY is the string returned by <code>record.getMessage()</code>)
                     and the value is then going to be used for the 
-                    <a href="@org-openide-nodes@/org/openide/nodes/AbstractNode.html#setIconBaseWithExtension-java.lang.String-">
+                    <a href="@org-openide-nodes@/org/openide/nodes/AbstractNode.html#setIconBaseWithExtension(java.lang.String)">
                         Node
                     </a> representing the UI gesture.
                 </api>

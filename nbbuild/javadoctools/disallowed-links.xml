@@ -51,6 +51,7 @@
     
     <!-- project site we use -->
     <filter pattern="https://bits\.netbeans\.org/html\+java/dev.*" accept="true" />
+    <filter pattern="https://bits\.netbeans\.org/.*" accept="true" />
     <filter pattern="https://graalvm\.org" accept="true" />
     <filter pattern="https://freemarker\.apache\.org" accept="true" />
     <filter pattern="https://felix\.apache\.org" accept="true" />

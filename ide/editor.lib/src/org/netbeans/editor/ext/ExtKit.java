@@ -588,7 +588,7 @@ public class ExtKit extends BaseKit {
      * This action does nothing.
      * 
      * @deprecated Please use Braces Matching SPI instead, for details see
-     *   <a href="@org-netbeans-modules-editor-bracesmatching@/overview-summary.html">Editor Braces Matching</a>.
+     *   <a href="@org-netbeans-modules-editor-bracesmatching@/index.html">Editor Braces Matching</a>.
      */
     @Deprecated
     public static class MatchBraceAction extends BaseKitLocalizedAction {
@@ -1036,7 +1036,7 @@ public class ExtKit extends BaseKit {
 
     /** 
      * @deprecated Please do not subclass this class. Use Typing Hooks instead, for details see
-     *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
+     *   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a>.
      */
 //    @EditorActionRegistration(
 //            name = defaultKeyTypedAction,
@@ -1082,7 +1082,7 @@ public class ExtKit extends BaseKit {
          * 
          * @deprecated Please use <a href="@org-netbeans-modules-editor-indent-support@/org/netbeans/modules/editor/indent/spi/support/AutomatedIndenting.html">AutomatedIndentig</a>
          *   or Typing Hooks instead, for details see
-         *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
+         *   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a>.
          */
         protected void checkIndentHotChars(JTextComponent target, String typedText) {
         }
@@ -1091,7 +1091,7 @@ public class ExtKit extends BaseKit {
         /** 
          * Check and possibly popup, hide or refresh the completion 
          * @deprecated Please use Editor Code Completion API instead, for details see
-         *   <a href="@org-netbeans-modules-editor-completion@/overview-summary.html">Editor Code Completion</a>.
+         *   <a href="@org-netbeans-modules-editor-completion@/index.html">Editor Code Completion</a>.
          */
         protected void checkCompletion(JTextComponent target, String typedText) {
         }
@@ -1099,7 +1099,7 @@ public class ExtKit extends BaseKit {
 
     /** 
      * @deprecated Please use Editor Code Completion API instead, for details see
-     *   <a href="@org-netbeans-modules-editor-completion@/overview-summary.html">Editor Code Completion</a>.
+     *   <a href="@org-netbeans-modules-editor-completion@/index.html">Editor Code Completion</a>.
      */
     @Deprecated
     @EditorActionRegistration(
@@ -1120,7 +1120,7 @@ public class ExtKit extends BaseKit {
 
     /** 
      * @deprecated Please use Editor Code Completion API instead, for details see
-     *   <a href="@org-netbeans-modules-editor-completion@/overview-summary.html">Editor Code Completion</a>.
+     *   <a href="@org-netbeans-modules-editor-completion@/index.html">Editor Code Completion</a>.
      */
     @Deprecated
     @EditorActionRegistration(
@@ -1139,7 +1139,7 @@ public class ExtKit extends BaseKit {
 
     /** 
      * @deprecated Please use Editor Code Completion API instead, for details see
-     *   <a href="@org-netbeans-modules-editor-completion@/overview-summary.html">Editor Code Completion</a>.
+     *   <a href="@org-netbeans-modules-editor-completion@/index.html">Editor Code Completion</a>.
      */
     @Deprecated
     @EditorActionRegistration(
@@ -1158,7 +1158,7 @@ public class ExtKit extends BaseKit {
 
     /** 
      * @deprecated Please use Editor Code Completion API instead, for details see
-     *   <a href="@org-netbeans-modules-editor-completion@/overview-summary.html">Editor Code Completion</a>.
+     *   <a href="@org-netbeans-modules-editor-completion@/index.html">Editor Code Completion</a>.
      */
     @Deprecated
     @EditorActionRegistration(
@@ -1177,7 +1177,7 @@ public class ExtKit extends BaseKit {
 
     /** 
      * @deprecated Please do not subclass this class. Use Typing Hooks instead, for details see
-     *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
+     *   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a>.
      */
     @Deprecated
     public static class ExtDeleteCharAction extends DeleteCharAction {

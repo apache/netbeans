@@ -155,7 +155,7 @@ export function assertWorkspace(): string {
  * @param folder 
  * @returns promise that will be fullfilled after the project opens in NBJLS.
  */
-async function waitProjectRecognized(someJavaFile : string) {
+export async function waitProjectRecognized(someJavaFile : string) {
     return waitCommandsReady().then(() => {
         const u : vscode.Uri = vscode.Uri.file(someJavaFile);
         // clear out possible bad or negative caches.

@@ -228,12 +228,12 @@ public abstract class LockContentionPanel extends DataView {
         LockContentionRenderer lcRenderer = new LockContentionRenderer();
         treeTable.setTreeCellRenderer(lcRenderer);
         
-        Number refTime = new Long(123456);
+        Long refTime = Long.valueOf(123456);
         
         NumberPercentRenderer npr = new NumberPercentRenderer(new McsTimeRenderer());
 //        npr.setValue(refTime, -1);
         hbrTime = new HideableBarRenderer(npr);
-        hbrTime.setMaxValue(refTime.longValue());
+        hbrTime.setMaxValue(refTime);
         treeTable.setColumnRenderer(1, hbrTime);
         treeTable.setDefaultColumnWidth(1, hbrTime.getOptimalWidth());
         

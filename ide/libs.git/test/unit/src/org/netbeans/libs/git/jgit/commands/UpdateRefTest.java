@@ -21,6 +21,7 @@ package org.netbeans.libs.git.jgit.commands;
 
 import java.io.File;
 import java.io.IOException;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.ReflogReader;
 import org.eclipse.jgit.lib.Repository;
 import org.netbeans.libs.git.GitClient;
@@ -83,7 +84,9 @@ public class UpdateRefTest extends AbstractGitTestCase {
         
         GitRefUpdateResult res = client.updateReference("master", info.getRevision(), NULL_PROGRESS_MONITOR);
         assertEquals(GitRefUpdateResult.FAST_FORWARD, res);
-        ReflogReader reflogReader = repository.getReflogReader("master");
+        Ref ref = repository.findRef("master");
+        assertNotNull(ref);
+        ReflogReader reflogReader = repository.getRefDatabase().getReflogReader(ref);
         assertEquals("merge " + info.getRevision() + ": Fast-forward", reflogReader.getLastEntry().getComment());
     }
 
@@ -104,7 +107,9 @@ public class UpdateRefTest extends AbstractGitTestCase {
         
         GitRefUpdateResult res = client.updateReference("master", "BRANCH", NULL_PROGRESS_MONITOR);
         assertEquals(GitRefUpdateResult.FAST_FORWARD, res);
-        ReflogReader reflogReader = repository.getReflogReader("master");
+        Ref ref = repository.findRef("master");
+        assertNotNull(ref);
+        ReflogReader reflogReader = repository.getRefDatabase().getReflogReader(ref);
         assertEquals("merge BRANCH: Fast-forward", reflogReader.getLastEntry().getComment());
     }
 

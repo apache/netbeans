@@ -254,7 +254,7 @@ is the proper place.
             objects &ndash; it always searched
             projects' <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/SourceGroup.html"><code>SourceGroup</code></a>s.
             Now the action first checks the
-            <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/Project.html#getLookup--">project's <code>Lookup</code></a>
+            <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/Project.html#getLookup()">project's <code>Lookup</code></a>
             for presence of a <code>SearchInfo</code> object. If some
             <code>SearchInfo</code> is present, it is used for the search,
             and only if there is no <code>SearchInfo</code>,

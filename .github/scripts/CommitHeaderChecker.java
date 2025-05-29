@@ -36,18 +36,18 @@ record Result(int total, boolean green) {}
 // checks commit headers for valid author, email and commit msg formatting
 // its main purpose is to prevent common merge mistakes
 
-// Java 23+, may require preview flag
+// Java 25+
 // java CommitHeaderChecker.java https://github.com/apache/netbeans/pull/${{ github.event.pull_request.number }}
 
 // green tests:
-// java --enable-preview CommitHeaderChecker.java https://github.com/apache/netbeans/pull/66
-// java --enable-preview CommitHeaderChecker.java https://github.com/apache/netbeans/pull/7641
-// java --enable-preview CommitHeaderChecker.java https://github.com/apache/netbeans/pull/4138
-// java --enable-preview CommitHeaderChecker.java https://github.com/apache/netbeans/pull/4692
+// java CommitHeaderChecker.java https://github.com/apache/netbeans/pull/66
+// java CommitHeaderChecker.java https://github.com/apache/netbeans/pull/7641
+// java CommitHeaderChecker.java https://github.com/apache/netbeans/pull/4138
+// java CommitHeaderChecker.java https://github.com/apache/netbeans/pull/4692
 
 // red tests:
-// java --enable-preview CommitHeaderChecker.java https://github.com/apache/netbeans/pull/7776
-// java --enable-preview CommitHeaderChecker.java https://github.com/apache/netbeans/pull/5567
+// java CommitHeaderChecker.java https://github.com/apache/netbeans/pull/7776
+// java CommitHeaderChecker.java https://github.com/apache/netbeans/pull/5567
 
 void main(String[] args) throws IOException, InterruptedException {
 
@@ -60,7 +60,7 @@ void main(String[] args) throws IOException, InterruptedException {
             .timeout(Duration.ofSeconds(10))
             .build();
 
-    println("checking PR patch file...");
+    log("checking PR patch file...");
     Result result;
     try (HttpClient client = HttpClient.newBuilder()
             .followRedirects(Redirect.NORMAL).build()) {
@@ -81,7 +81,7 @@ void main(String[] args) throws IOException, InterruptedException {
             .orElseThrow();
     }
 
-    println(result.total + " commit(s) checked");
+    log(result.total + " commit(s) checked");
     System.exit(result.green ? 0 : 1);
 }
 
@@ -124,7 +124,7 @@ boolean checkNameAndEmail(int i, String from) {
 
     boolean green = true;
     if (mail.isBlank() || !mail.contains("@") || mail.contains("noreply") || mail.contains("localhost")) {
-        println("::error::invalid email in commit " + i + " '" + from + "'");
+        log("::error::invalid email in commit " + i + " '" + from + "'");
         green = false;
     }
 
@@ -133,7 +133,7 @@ boolean checkNameAndEmail(int i, String from) {
 
     // single word author -> probably the nickname/account name/root etc
     if (author.isBlank() || (!encoded && !author.contains(" ") && !author.contains("-"))) {
-        println("::error::invalid author in commit " + i + " '" + author + "' (full name?)");
+        log("::error::invalid author in commit " + i + " '" + author + "' (full name?)");
         green = false;
     }
     return green;
@@ -145,7 +145,7 @@ boolean checkSubject(int i, String subject) {
     subject = subject.substring(subject.indexOf(']')+1).strip();
     // single word subjects are likely not intended or should be squashed before merge
     if (!subject.contains(" ")) {
-        println("::error::invalid subject in commit " + i + " '" + subject + "'");
+        log("::error::invalid subject in commit " + i + " '" + subject + "'");
         return false;
     }
     return true;
@@ -155,8 +155,12 @@ boolean checkSubject(int i, String subject) {
 boolean checkBlankLineAfterSubject(int i, String blank) {
 // disabled since this would produce too many warnings due to overflowing subject lines
 //    if (!blank.isBlank()) {
-//        println("::warning::blank line after subject recommended in commit " + i + " (is subject over 50 char limit?)");
-////        return false;
+//        log("::warning::blank line after subject recommended in commit " + i + " (is subject over 50 char limit?)");
+// //       return false;
 //    }
     return true;
+}
+
+void log(String msg) {
+    System.out.println(msg);
 }

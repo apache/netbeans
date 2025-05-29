@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="24" height="24" version="1.1" viewBox="0 0 24 24">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #eeba75;
+      }
+
+      .st1 {
+        fill: #fff;
+      }
+
+      .st2 {
+        opacity: .5;
+      }
+
+      .st3 {
+        opacity: .33;
+      }
+
+      .st4 {
+        fill: #bfd6e8;
+      }
+    </style>
+  </defs>
+  <description>Apache NetBeans Logo
+  </description>
+  <g>
+    <polygon class="st4" points="19 23 0 23 0 2 8.769 2 10.962 4.8 19 4.8 19 23"/>
+    <g class="st3">
+      <path d="M8.282,3l1.892,2.416.3.384h7.526v16.2H1V3h7.282M8.769,2H0v21h19V4.8h-8.038l-2.192-2.8h0Z"/>
+    </g>
+  </g>
+  <g>
+    <polygon class="st4" points="19.109 23 0 23 4.41 13 23.519 13 19.109 23"/>
+    <g class="st3">
+      <path d="M21.985,14l-3.528,8H1.534l3.528-8h16.923M23.519,13H4.41L0,23h19.109l4.41-10h0Z"/>
+    </g>
+  </g>
+  <polygon class="st0" points="11 12 22 12 22 3.2 20.429 1 12.571 1 11 3.2 11 12"/>
+  <g class="st2">
+    <polygon class="st1" points="22 3.2 20.429 1 12.571 1 11 3.2 11.999 3.515 21.001 3.515 22 3.2"/>
+  </g>
+  <g class="st3">
+    <path d="M19.912,1.99l1.089,1.525v7.495h-9.002V3.515l1.089-1.525h6.824M20.429,1h-7.857l-1.571,2.2v8.8h11V3.2l-1.571-2.2h0Z"/>
+  </g>
+</svg>

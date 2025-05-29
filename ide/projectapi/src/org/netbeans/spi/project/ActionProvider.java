@@ -35,7 +35,7 @@ import org.openide.util.Lookup;
  * requested a specific configuration, and use it to process the requested action, if found.
  * @see org.netbeans.api.project.Project#getLookup
  * @see <a href="@org-apache-tools-ant-module@/org/apache/tools/ant/module/api/support/ActionUtils.html"><code>ActionUtils</code></a>
- * @see <a href="@org-netbeans-modules-projectuiapi@/org/netbeans/spi/project/ui/support/ProjectSensitiveActions.html#projectCommandAction-java.lang.String-java.lang.String-javax.swing.Icon-"><code>ProjectSensitiveActions.projectCommandAction(...)</code></a>
+ * @see <a href="@org-netbeans-modules-projectuiapi@/org/netbeans/spi/project/ui/support/ProjectSensitiveActions.html#projectCommandAction(java.lang.String,java.lang.String,javax.swing.Icon)"><code>ProjectSensitiveActions.projectCommandAction(...)</code></a>
  * @see SingleMethod
  * @author Jesse Glick
  */

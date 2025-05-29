@@ -28,6 +28,7 @@ import javax.lang.model.element.Modifier;
 import javax.swing.JPanel;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
@@ -307,7 +308,7 @@ public class FmtNaming extends javax.swing.JPanel implements Runnable {
             members.add(gu.createGetter(booleanField));
             members.add(gu.createSetter(ct, booleanField));
             ModifiersTree mods = tm.Modifiers(EnumSet.of(Modifier.PRIVATE, Modifier.STATIC));
-            ClassTree nested = tm.Class(mods, "Nested", Collections.<TypeParameterTree>emptyList(), null, Collections.<Tree>emptyList(), Collections.<Tree>emptyList()); //NOI18N
+            ClassTree nested = tm.Class(mods, "Nested", Collections.<TypeParameterTree>emptyList(), null, Collections.<Tree>emptyList(), Collections.<ExpressionTree>emptyList(), Collections.<Tree>emptyList()); //NOI18N
             members.add(nested);
             IdentifierTree nestedId = tm.Identifier("Nested"); //NOI18N
             String instance = CodeStyleUtils.addPrefixSuffix("instance",

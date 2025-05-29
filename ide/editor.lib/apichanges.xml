@@ -1107,7 +1107,7 @@ duplicate messages suppressed: 14
                     Using <code>DrawLayer</code> and related classes and methods
                     has been deprecated in favor of the new Highlighting SPI in
                     the editor/lib2 module. For more details see
-                    <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Highlighting SPI</a>.
+                    <a href="@org-netbeans-modules-editor-lib2@/index.html">Highlighting SPI</a>.
                 </p>
             </description>
         </change>
@@ -1154,11 +1154,11 @@ duplicate messages suppressed: 14
     </head>
     <body>
 
-<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+<p class="overviewlink"><a href="index.html">Overview</a></p>
 
 <h1>Introduction</h1>
 
-<p>This document lists changes made to the <a href="overview-summary.html">Editor Library API</a>.</p>
+<p>This document lists changes made to the <a href="index.html">Editor Library API</a>.</p>
 
 <!-- The actual lists of changes, as summaries and details: -->
       <hr/>

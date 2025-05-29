@@ -405,7 +405,7 @@ public class DOMBinding {
                     else
                         c = s.charAt(0);
 
-                    return new Character(c);
+                    return Character.valueOf(c);
                 }
                 if (charArrayClass.isAssignableFrom(cls))
                     return ret.toCharArray();

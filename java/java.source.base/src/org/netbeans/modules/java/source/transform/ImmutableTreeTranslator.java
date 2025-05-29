@@ -686,15 +686,18 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
 	Tree extending = translateClassRef(tree.getExtendsClause());
 	List<? extends ExpressionTree> implementing = 
             translateClassRef((List<? extends ExpressionTree>)tree.getImplementsClause());
+	List<? extends ExpressionTree> permits =
+            translateClassRef((List<? extends ExpressionTree>)tree.getPermitsClause());
         importAnalysis.enterVisibleThroughClasses(tree);
 	List<? extends Tree> defs = translate(tree.getMembers());
         boolean typeChanged = !typarams.equals(tree.getTypeParameters()) || 
             extending != tree.getExtendsClause() ||
-            !implementing.equals(tree.getImplementsClause());
+            !implementing.equals(tree.getImplementsClause()) ||
+            !permits.equals(tree.getPermitsClause());
 	if (typeChanged || mods != tree.getModifiers() || 
             !defs.equals(tree.getMembers())) {
 	    ClassTree n = make.Class(mods, tree.getSimpleName(), typarams,
-                                     extending, implementing, defs);
+                                     extending, implementing, permits, defs);
             if (!typeChanged) {
                 model.setElement(n, model.getElement(tree));
                 model.setType(n, model.getType(tree));

@@ -152,7 +152,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
     {
         super.endDocument();
 
-        this.State = new Integer(this.XGD_END);
+        this.State = this.XGD_END;
     } /*Method-End*/
 
     public   void endElement(java.lang.String name) throws org.xml.sax.SAXException
@@ -286,11 +286,11 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
                 case XGD_NEED_END_ROW_ELEMENT:
 //                    System.out.println("In endElement and this.XGD_NEED_END_ROW_ELEMENT currently a no op ");
 
-                    this.State = new Integer(this.XGD_NEED_ROW_ELEMENT);
+                    this.State = this.XGD_NEED_ROW_ELEMENT;
                     break;
                 case XGD_NEED_ROW_ELEMENT:
 //                    System.out.println("In endElement and this.XGD_NEED_ROW_ELEMENT currently a no op ");
-                     this.State = new Integer(this.XGD_NEED_ROW_TAG);
+                     this.State = this.XGD_NEED_ROW_TAG;
                     break;
                 case XGD_NEED_ROW_TAG:
 //                    System.out.println("In endElement and this.XGD_NEED_ROW_TAG currently a no op ");
@@ -336,7 +336,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
     {
         super.startDocument();
 
-        State = new Integer(this.XGD_END);
+        State = this.XGD_END;
         this.pushState(this.XGD_NEED_OBJECT);
     } /*Method-End*/
 
@@ -372,7 +372,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
                     break;
                 case XGD_NEED_ROW_TAG:
 //                    System.out.println("In startElement and this.XGD_NEED_ROW_TAG currently a no op ");
-                    this.State = new Integer(this.XGD_NEED_ROW_ELEMENT);
+                    this.State = this.XGD_NEED_ROW_ELEMENT;
                     break;
                 //    row :  XMLRow = new;
                 //    row.Elements = new;
@@ -381,7 +381,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
                 //    PushObject(row);
                 case XGD_NEED_ROW_ELEMENT:
 //                    System.out.println("In startElement and this.XGD_NEED_ROW_ELEMENT currently a no op ");
-                    this.State = new Integer(this.XGD_NEED_END_ROW_ELEMENT);
+                    this.State = this.XGD_NEED_END_ROW_ELEMENT;
                     break;
                 //    elm :  XMLRowElement = new;
                 //    elm.ElementNm = name;
@@ -554,7 +554,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
             if (lRefName != null)
             {
                 this.processObjectReference(lRefName);
-                State = new Integer(this.XGD_NEED_END_OBJECT);
+                State = this.XGD_NEED_END_OBJECT;
                 return;
             }// end if
         }// end if;
@@ -641,7 +641,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
 
         if (lObj == null)
         {
-               State = new Integer(this.XGD_NEED_END_OBJECT);
+            State = this.XGD_NEED_END_OBJECT;
         }
         //else if (lobj.IsA(Stringizeable) then
         //    State = XGD_NEED_STRING;
@@ -650,7 +650,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
         //    State = XGD_NEED_ROW_TAG;
         else
         {
-            State = new Integer(this.XGD_NEED_ATTRIBUTE);
+            State = this.XGD_NEED_ATTRIBUTE;
         }
     } /*Method-End*/
 
@@ -763,7 +763,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
 
             this.pushRowType(lRowClassType);
             this.pushObject(lArray);
-            this.State = new Integer(this.XGD_NEED_ROW);
+            this.State = this.XGD_NEED_ROW;
         }
         else if (name.equals("NULLVALUE"))
         {
@@ -825,7 +825,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
                 else
                     this.pushObject(lField.getType().getDeclaredConstructor().newInstance());
 
-                this.State = new Integer(this.XGD_NEED_END_NULLVALUE);
+                this.State = this.XGD_NEED_END_NULLVALUE;
             }
             catch (InstantiationException | NoSuchMethodException | InvocationTargetException e1)
             {
@@ -1105,7 +1105,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
             else if (lRowType.equals("boolean")  || lRowType.equals("java.lang.Boolean"))
                 this.pushObject(Boolean.valueOf(lRowValue));
             else if (lRowType.equals("char")  || lRowType.equals("java.lang.Character"))
-                this.pushObject(new Character(lRowValue.charAt(0)));
+                this.pushObject(lRowValue.charAt(0));
             else
             {
                 System.out.println("Found and unknown type in a row");
@@ -1132,8 +1132,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
 
     private void pushRowCount()
     {
-        Integer lInt = new Integer(0);
-        this.RowCountStack.push(lInt);
+        this.RowCountStack.push(0);
     }
 
     private void popRowCount()
@@ -1149,10 +1148,9 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
 
     private void incrementRowCount()
     {
-        Integer lInt = (Integer)(this.RowCountStack.pop());
-        int lRowCount = lInt.intValue();
+        Integer lRowCount = (Integer)(this.RowCountStack.pop());
         lRowCount++;
-        this.RowCountStack.push(new Integer(lRowCount));
+        this.RowCountStack.push(lRowCount);
     }
 
     // MBO: added new class WrapperClassHelper.
@@ -1190,7 +1188,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
                                { return Short.valueOf(s); } });
             converters.put(Character.class,
                            new Converter() { public Object valueOf(String s) 
-                               { return new Character(s.charAt(0)); } });
+                               { return Character.valueOf(s.charAt(0)); } });
             converters.put(Integer.class,
                            new Converter() { public Object valueOf(String s) 
                                { return Integer.valueOf(s); } });

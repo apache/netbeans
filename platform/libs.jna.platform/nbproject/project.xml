@@ -47,8 +47,8 @@
                 <package>com.sun.jna.platform.wince</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/jna-platform-5.14.0.jar</runtime-relative-path>
-                <binary-origin>external/jna-platform-5.14.0.jar</binary-origin>
+                <runtime-relative-path>ext/jna-platform-5.17.0.jar</runtime-relative-path>
+                <binary-origin>external/jna-platform-5.17.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

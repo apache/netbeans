@@ -108,6 +108,7 @@ import org.openide.util.lookup.ProxyLookup;
     "ERR_LaunchDefaultConfiguration=the default one.",
     "# {0} - the recommended configuration",
     "ERR_LaunchSupportiveConfigName=\"{0}\"",
+    "CTL_NativeImageDebugger=Native Image Debugger"
 })
 public abstract class NbLaunchDelegate {
 
@@ -460,6 +461,7 @@ public abstract class NbLaunchDelegate {
         StartDebugParameters.Builder parametersBuilder = StartDebugParameters.newBuilder(command)
                 .debugger(miDebugger)
                 .debuggerDisplayObjects(false)
+                .displayName(Bundle.CTL_NativeImageDebugger())
                 .executionDescriptor(executionDescriptor)
                 .lookup(contextLookup);
         StartDebugParameters parameters = parametersBuilder.build();

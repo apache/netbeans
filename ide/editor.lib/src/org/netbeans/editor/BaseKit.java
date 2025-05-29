@@ -547,7 +547,7 @@ public class BaseKit extends DefaultEditorKit {
      *   creation is not related to the particular document
      * 
      * @deprecated Please use Lexer instead, for details see
-     *   <a href="@org-netbeans-modules-lexer@/overview-summary.html">Lexer</a>.
+     *   <a href="@org-netbeans-modules-lexer@/index.html">Lexer</a>.
      */
     @Deprecated
     public Syntax createSyntax(Document doc) {
@@ -558,7 +558,7 @@ public class BaseKit extends DefaultEditorKit {
      * Create the syntax used for formatting.
      * 
      * @deprecated Please use Editor Indentation API instead, for details see
-     *   <a href="@org-netbeans-modules-editor-indent@/overview-summary.html">Editor Indentation</a>.
+     *   <a href="@org-netbeans-modules-editor-indent@/index.html">Editor Indentation</a>.
      */
     @Deprecated
     public Syntax createFormatSyntax(Document doc) {
@@ -569,7 +569,7 @@ public class BaseKit extends DefaultEditorKit {
      * Create syntax support
      * 
      * @deprecated Please use Lexer instead, for details see
-     *   <a href="@org-netbeans-modules-lexer@/overview-summary.html">Lexer</a>.
+     *   <a href="@org-netbeans-modules-lexer@/index.html">Lexer</a>.
      */
     @Deprecated
     public SyntaxSupport createSyntaxSupport(BaseDocument doc) {
@@ -580,7 +580,7 @@ public class BaseKit extends DefaultEditorKit {
 //    /**
 //     * Create the formatter appropriate for this kit
 //     * @deprecated Please use Editor Indentation API instead, for details see
-//     *   <a href="@org-netbeans-modules-editor-indent@/overview-summary.html">Editor Indentation</a>.
+//     *   <a href="@org-netbeans-modules-editor-indent@/index.html">Editor Indentation</a>.
 //     */
 //    public Formatter createFormatter() {
 //        return new Formatter(this.getClass());
@@ -1044,7 +1044,7 @@ public class BaseKit extends DefaultEditorKit {
      * Default typed action
      *
      * @deprecated Please do not subclass this class. Use Typing Hooks instead, for details see
-     *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
+     *   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a>.
      */
 //    @EditorActionRegistration(name = defaultKeyTypedAction)
     @Deprecated
@@ -1308,7 +1308,7 @@ public class BaseKit extends DefaultEditorKit {
          * to intercept inserted characters.
          *
          * @deprecated Please use Typing Hooks instead, for details see
-         *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
+         *   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a>.
          */
         protected void insertString(BaseDocument doc,
 				  int dotPos, 
@@ -1330,7 +1330,7 @@ public class BaseKit extends DefaultEditorKit {
          * to intercept inserted characters.
          *
          * @deprecated Please use Typing Hooks instead, for details see
-         *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
+         *   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a>.
          */
         protected void replaceSelection(
                 JTextComponent target,
@@ -1348,7 +1348,7 @@ public class BaseKit extends DefaultEditorKit {
          *
          * @deprecated Please use <a href="@org-netbeans-modules-editor-indent-support@/org/netbeans/modules/editor/indent/spi/support/AutomatedIndenting.html">AutomatedIndentig</a>
          *   or Typing Hooks instead, for details see
-         *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
+         *   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a>.
          */
         protected void checkIndent(JTextComponent target, String typedText) {
         }
@@ -1433,7 +1433,7 @@ public class BaseKit extends DefaultEditorKit {
 
     /** 
      * @deprecated Please do not subclass this class. Use Typing Hooks instead, for details see
-     *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
+     *   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a>.
      */
     @Deprecated
     public static class InsertBreakAction extends LocalBaseAction {
@@ -1559,7 +1559,7 @@ public class BaseKit extends DefaultEditorKit {
          * returned is passed intact to the other hook.
          * 
          * @deprecated Please use Typing Hooks instead, for details see
-         *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
+         *   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a>.
          */
         protected Object beforeBreak(JTextComponent target, BaseDocument doc, Caret caret) {
             return null;
@@ -1574,7 +1574,7 @@ public class BaseKit extends DefaultEditorKit {
          * By default <code>null</code>.
          * 
          * @deprecated Please use Typing Hooks instead, for details see
-         *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
+         *   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a>.
          */
         protected void afterBreak(JTextComponent target, BaseDocument doc, Caret caret, Object data) {
         }
@@ -2017,7 +2017,7 @@ public class BaseKit extends DefaultEditorKit {
 
     /** 
      * @deprecated Please do not subclass this class. Use Typing Hooks instead, for details see
-     *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
+     *   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a>.
      */
     @Deprecated
     public static class DeleteCharAction extends LocalBaseAction {
@@ -2216,14 +2216,14 @@ public class BaseKit extends DefaultEditorKit {
 
         /**
          * @deprecated Please use Typing Hooks instead, for details see
-         *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
+         *   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a>.
          */
         protected void charBackspaced(BaseDocument doc, int dotPos, Caret caret, char ch) throws BadLocationException {
         }
 
         /**
          * @deprecated Please use Typing Hooks instead, for details see
-         *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
+         *   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a>.
          */
         protected void charDeleted(BaseDocument doc, int dotPos, Caret caret, char ch) throws BadLocationException {
         }

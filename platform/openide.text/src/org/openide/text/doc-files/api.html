@@ -21,21 +21,21 @@
 
 <html><head>
 <title>Editor API</title>
-<link rel="stylesheet" href="../../../../prose.css" type="text/css">
+<link rel="stylesheet" href="@TOP@/resource-files/prose.css" type="text/css">
 </head><body>
 
-<p class="overviewlink"><a href="../../../../overview-summary.html">Overview</a></p>
+<p class="overviewlink"><a href="@TOP@/index.html">Overview</a></p>
 
 <h1>Javadoc</h1>
 
 Please see the
 
-<a href="../package-summary.html">Javadoc</a>
+{@link org.openide.text Javadoc }
 
 for further details; of greatest interest will be the documentation
 for
 
-<a href="../NbDocument.html"><code>NbDocument</code></a>.
+{@link org.openide.text.NbDocument NbDocument }.
 
 
 <h1>Contents</h1>
@@ -172,19 +172,19 @@ the class (with children corresponding to methods, variables, etc.).
 window or pane, then this window/pane is reused and just given
 focus (i.e. a new
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JEditorPane.html"><code>JEditorPane</code></a>
+{@link javax.swing.JEditorPane JEditorPane }
 
 is created, but using the same
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/EditorKit.html"><code>EditorKit</code></a>
+{@link javax.swing.text.EditorKit EditorKit }
 
 and
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/StyledDocument.html"><code>StyledDocument</code></a>).
+{@link javax.swing.text.StyledDocument StyledDocument }).
 
 <p>If not, a new <code>JEditorPane</code> is
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JEditorPane.html#getEditorKitForContentType-java.lang.String-">asked</a>
+{@link javax.swing.JEditorPane#getEditorKitForContentType(java.lang.String) asked }
 
 to create an editor for the Java source content type (typically
 <code>text/x-java</code>). Now, the Form Editor's data loader is an
@@ -197,7 +197,7 @@ in the source code, which are the markers used to indicate guarded
 areas in saved source code. When it finds one, rather than inserting
 the marker into the document, it uses
 
-<a href="../NbDocument.html#insertGuarded-javax.swing.text.StyledDocument-int-java.lang.String-"><code>NbDocument.insertGuarded(...)</code></a>
+{@link org.openide.text.NbDocument#insertGuarded(javax.swing.text.StyledDocument,int,java.lang.String) NbDocument.insertGuarded(...) }
 
 to insert the enclosed text area, making it read-only to the user.
 
@@ -221,15 +221,15 @@ loaded into the Form Editor.
 
 <p>Note that the Form Editor directly or indirectly calls
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/Document.html#insertString-int-java.lang.String-javax.swing.text.AttributeSet-"><code>Document.insertString(...)</code></a>
+{@link javax.swing.text.Document#insertString(int,java.lang.String,javax.swing.text.AttributeSet) Document.insertString(...) }
 
 (or
 
-<a href="../NbDocument.html#insertGuarded-javax.swing.text.StyledDocument-int-java.lang.String-"><code>NbDocument.insertGuarded(...)</code></a>)
+{@link org.openide.text.NbDocument#insertGuarded(javax.swing.text.StyledDocument,int,java.lang.String) NbDocument.insertGuarded(...) })
 
 and
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/Document.html#remove-int-int-"><code>Document.remove(...)</code></a>
+{@link javax.swing.text.Document#remove(int,int) Document.remove(...) }
 
 to do this work, so it is itself unaffected by guard blocks.
 
@@ -240,13 +240,13 @@ objects. If the user modifies one of these attributes, or uses a more
 complex JavaBean view of the class, the document is asked to make the
 corresponding update in the source; but in this case, the
 
-<a href="../NbDocument.html#GUARDED">guarded attribute</a>
+{@link org.openide.text.NbDocument#GUARDED guarded attribute}
 
 <em>is</em> checked, since the user should not be able to arbitrarily
 rename or otherwise affect members used by the Form Editor without its
 consent! NetBeans actions implementing such modifications will use
 
-<a href="../NbDocument.WriteLockable.html#runAtomicAsUser-java.lang.Runnable-"><code>NbDocument.WriteLockable.runAtomicAsUser(...)</code></a>
+{@link org.openide.text.NbDocument.WriteLockable#runAtomicAsUser(java.lang.Runnable) NbDocument.WriteLockable.runAtomicAsUser(...) }
 
 to make sure that the guard blocks are properly honored.
 
@@ -283,8 +283,8 @@ scratch. Also, exception handling is not illustrated here.
 <span class="type">FileObject</span> <span class="variable-name">fo</span> = FileUtil.fromFile(f)[0];
 <span class="type">DataObject</span> <span class="variable-name">d</span> = DataObject.find(fo);
 <span class="type">EditorCookie</span> <span class="variable-name">ec</span> = (<span class="type">EditorCookie</span>)d.getCookie(EditorCookie.<span class="keyword">class</span>);
-ec.<a href="../../cookies/EditorCookie.html#open--">open</a>();
-<span class="type">StyledDocument</span> <span class="variable-name">doc</span> = ec.<a href="../../cookies/EditorCookie.html#openDocument--">openDocument</a>();
+ec.{@link org.openide.cookies.EditorCookie#open() open }();
+<span class="type">StyledDocument</span> <span class="variable-name">doc</span> = ec.{@link org.openide.cookies.EditorCookie#openDocument() openDocument }();
 </pre>
 
 <h3 id="modification">Common operations on resulting document</h3>
@@ -292,13 +292,13 @@ ec.<a href="../../cookies/EditorCookie.html#open--">open</a>();
 You can check such things as whether or not the file is modified in the Editor:
 
 <pre>
-if (ec.<a href="../../cookies/EditorCookie.html#isModified--">isModified</a>()) ...
+if (ec.{@link org.openide.cookies.EditorCookie#isModified() isModified }()) ...
 </pre>
 
 Then see what the current contents of line 26 are (zero-based):
 
 <pre>
-int start=<a href="../NbDocument.html#findLineOffset-javax.swing.text.StyledDocument-int-">NbDocument.findLineOffset</a>(doc, 25);
+int start={@link org.openide.text.NbDocument#findLineOffset(javax.swing.text.StyledDocument,int) NbDocument.findLineOffset }(doc, 25);
 int end=NbDocument.findLineOffset(doc, 26);
 String contents=doc.getText(start, end-start);
 </pre>
@@ -306,14 +306,14 @@ String contents=doc.getText(start, end-start);
 And display this line in the Editor window:
 
 <pre>
-ec.<a href="../../cookies/LineCookie.html#getLineSet--">getLineSet</a>().<a href="../Line.Set.html#getCurrent-int-">getCurrent</a>(25).<a href="../Line.html#show-int-">show</a>(<a href="../Line.html#SHOW_TRY_SHOW">Line.SHOW_TRY_SHOW</a>);
+ec.{@link org.openide.cookies.LineCookie#getLineSet() getLineSet }().{@link org.openide.text.Line.Set#getCurrent(int) getCurrent }(25).{@link org.openide.text.Line#show(int) show }({@link org.openide.text.Line#SHOW_TRY_SHOW Line.SHOW_TRY_SHOW });
 </pre>
 
 Now insert a new line here after it:
 
 <pre>
 <span class="keyword">final</span> <span class="type">BadLocationException</span>[] <span class="variable-name">exc</span> = <span class="keyword">new</span> <span class="type">BadLocationException</span>[] {<span class="constant">null</span>};
-NbDocument.<a href="../NbDocument.html#runAtomicAsUser-javax.swing.text.StyledDocument-java.lang.Runnable-">runAtomicAsUser</a>(doc, <span class="keyword">new</span> <span class="type">Runnable</span>() {
+NbDocument.{@link org.openide.text.NbDocument#runAtomicAsUser(javax.swing.text.StyledDocument,java.lang.Runnable) runAtomicAsUser }(doc, <span class="keyword">new</span> <span class="type">Runnable</span>() {
     <span class="keyword">public</span> <span class="type">void</span> <span class="function-name">run</span>() {
         <span class="keyword">try</span> {
             doc.insertString(NbDocument.findLineOffset(doc, 26),
@@ -330,7 +330,7 @@ NbDocument.<a href="../NbDocument.html#runAtomicAsUser-javax.swing.text.StyledDo
 All done! Prompt to save the file, and close the editor window:
 
 <pre>
-ec.<a href="../../cookies/EditorCookie.html#close--">close</a>();
+ec.{@link org.openide.cookies.EditorCookie#close() close }();
 </pre>
 
 <h2 id="automation">Advanced Editor Automation</h2>
@@ -351,41 +351,41 @@ recreated by other means), can do so.
 
 <li>To create a guard block over an existing area of text, you may use
 
-<a href="../NbDocument.html#markGuarded-javax.swing.text.StyledDocument-int-int-"><code>NbDocument.markGuarded(...)</code></a>;
+{@link org.openide.text.NbDocument#markGuarded(javax.swing.text.StyledDocument,int,int) NbDocument.markGuarded(...) };
 
 the guard block may subsequently be removed using
 
-<a href="../NbDocument.html#unmarkGuarded-javax.swing.text.StyledDocument-int-int-"><code>NbDocument.unmarkGuarded(...)</code></a>.
+{@link org.openide.text.NbDocument#unmarkGuarded(javax.swing.text.StyledDocument,int,int) NbDocument.unmarkGuarded(...) }.
 
 <p>Typically you will want to remember the positions of the guard
 blocks you added using a position, so that user edits in the vicinity
 of the guard block will be taken into consideration. You may create
 such a position using
 
-<a href="../NbDocument.html#createPosition-javax.swing.text.Document-int-javax.swing.text.Position.Bias-"><code>NbDocument.createPosition(...)</code></a>,
+{@link org.openide.text.NbDocument#createPosition(javax.swing.text.Document,int,javax.swing.text.Position.Bias) NbDocument.createPosition(...) },
 
 and retrieve its current offset when needed using
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/Position.html#getOffset--"><code>Position.getOffset()</code></a>.
+{@link javax.swing.text.Position#getOffset() Position.getOffset() }.
 
 <li>To insert a new guarded block of text, you may use
 
-<a href="../NbDocument.html#insertGuarded-javax.swing.text.StyledDocument-int-java.lang.String-"><code>NbDocument.insertGuarded(...)</code></a>.
+{@link org.openide.text.NbDocument#insertGuarded(javax.swing.text.StyledDocument,int,java.lang.String) NbDocument.insertGuarded(...) }.
 
 <li>To change the contents of part of the document, without regard to
 the presence of guard blocks (this assumes you know what you are doing
 and what the guard blocks are being used for), you may use the
 standard Swing
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/Document.html#insertString-int-java.lang.String-javax.swing.text.AttributeSet-"><code>Document.insertString(...)</code></a>
+{@link javax.swing.text.Document#insertString(int,java.lang.String,javax.swing.text.AttributeSet) Document.insertString(...) }
 
 and
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/Document.html#remove-int-int-"><code>Document.remove(...)</code></a>.
+{@link javax.swing.text.Document#remove(int,int) Document.remove(...) }.
 
 You probably want to use
 
-<a href="../NbDocument.html#runAtomic-javax.swing.text.StyledDocument-java.lang.Runnable-"><code>NbDocument.runAtomic(...)</code></a>
+{@link org.openide.text.NbDocument#runAtomic(javax.swing.text.StyledDocument,java.lang.Runnable) NbDocument.runAtomic(...) }
 
 to prevent errors in threaded code.
 
@@ -394,7 +394,7 @@ accidentally touching a guard block, i.e. if your module was not the
 creator of the guard block (or you are not even sure if there any in
 the document), please use
 
-<a href="../NbDocument.html#runAtomicAsUser-javax.swing.text.StyledDocument-java.lang.Runnable-"><code>NbDocument.runAtomicAsUser(...)</code></a>
+{@link org.openide.text.NbDocument#runAtomicAsUser(javax.swing.text.StyledDocument,java.lang.Runnable) NbDocument.runAtomicAsUser(...) }
 
 instead.
 
@@ -460,7 +460,7 @@ about each field in the DTD see
 
 <li>Extend the
 
-<a href="../Annotation.html"><code>Annotation</code></a>
+{@link org.openide.text.Annotation Annotation }
 
 abstract class and define your own annotation. You must specify the
 <em>type</em> - which matches the code name given in the XML
@@ -473,10 +473,10 @@ the annotation. For example:
     <span class="keyword">public</span> <span class="type">SomeAnnotation</span>(<span class="type">String</span> <span class="variable-name">error</span>) {
         <span class="keyword">this</span>.error = error;
     }
-    <span class="keyword">public</span> <span class="type">String</span> <a href="../Annotation.html#getAnnotationType--"><span class="function-name">getAnnotationType</span></a>() {
+    <span class="keyword">public</span> <span class="type">String</span> {@link org.openide.text.Annotation#getAnnotationType() getAnnotationType }() {
         <span class="keyword">return</span> <span class="string">"org-nb-modules-foo-some-annotation"</span>;
     }
-    <span class="keyword">public</span> <span class="type">String</span> <a href="../Annotation.html#getShortDescription--"><span class="function-name">getShortDescription</span></a>() {
+    <span class="keyword">public</span> <span class="type">String</span> {@link org.openide.text.Annotation#getShortDescription() getShortDescription }() {
         <span class="comment">// Localize this with NbBundle:</span>
         <span class="keyword">return</span> <span class="string">"The error was: "</span> + error;
     }
@@ -496,15 +496,15 @@ on-screen.
 
 <li>Finally, attach an annotation instance you make to some
 
-<a href="../Annotatable.html"><code>Annotatable</code></a>
+{@link org.openide.text.Annotatable Annotatable }
 
 object. Normally this will be a
 
-<a href="../Line.html"><code>Line</code></a>
+{@link org.openide.text.Line Line }
 
 representing a whole line of text, or a
 
-<a href="../Line.Part.html"><code>Line.Part</code></a>
+{@link org.openide.text.Line.Part Line.Part }
 
 representing a section of a line. For example:
 
@@ -512,11 +512,11 @@ representing a section of a line. For example:
 <span class="comment">// Given error output like: "pkg/Name.java:123: You made a mistake"
 </span><span class="type">FileObject</span> <span class="variable-name">fileWithError</span> = fs.findResource(<span class="string">"pkg/Name.java"</span>);
 <span class="type">DataObject</span> <span class="variable-name">objWithError</span> = DataObject.find(fileWithError);
-<a href="../../cookies/LineCookie.html"><span class="type">LineCookie</span></a> <span class="variable-name">cookie</span> = (<span class="type">LineCookie</span>)objWithError.getCookie(LineCookie.<span class="keyword">class</span>);
-<a href="../Line.Set.html"><span class="type">Line.Set</span></a> <span class="variable-name">lineSet</span> = cookie.getLineSet();
-<span class="keyword">final</span> <a href="../Line.html"><span class="type">Line</span></a> <span class="variable-name">line</span> = lineSet.<a href="../Line.Set.html#getOriginal-int-">getOriginal</a>(123);
+{@link org.openide.cookies.LineCookie LineCookie } <span class="variable-name">cookie</span> = (<span class="type">LineCookie</span>)objWithError.getCookie(LineCookie.<span class="keyword">class</span>);
+{@link org.openide.text.Line.Set Line.Set } <span class="variable-name">lineSet</span> = cookie.getLineSet();
+<span class="keyword">final</span> {@link org.openide.text.Line Line } <span class="variable-name">line</span> = lineSet.{@link org.openide.text.Line.Set#getOriginal(int) getOriginal }(123);
 <span class="keyword">final</span> <span class="type">Annotation</span> <span class="variable-name">ann</span> = <span class="keyword">new</span> <span class="type">SomeAnnotation</span>(<span class="string">"You made a mistake"</span>);
-ann.<a href="../Annotation.html#attach-org.openide.text.Annotatable-">attach</a>(line);
+ann.{@link org.openide.text.Annotation#attach(org.openide.text.Annotatable) attach }(line);
 </pre>
 
 </li>
@@ -558,7 +558,7 @@ them. If this is the case it may be helpful to force the editor to
 move your annotation in front of any others:</p>
 
 <pre>
-ann.<a href="../Annotation.html#moveToFront--">moveToFront</a>();
+ann.{@link org.openide.text.Annotation#moveToFront() moveToFront }();
 </pre>
 
 <p>NetBeans presents GUI settings to the user in which it is possible to
@@ -787,15 +787,15 @@ appropriate hooks. The best thing to do is to subclass
 
 and use this subclass to implement cookies such as
 
-<a href="../../cookies/EditorCookie.html"><code>EditorCookie</code></a>.
+{@link org.openide.cookies.EditorCookie EditorCookie }.
 
 Now just provide appropriate implementations of
 
-<a href="../CloneableEditorSupport.html#loadFromStreamToKit-javax.swing.text.StyledDocument-java.io.InputStream-javax.swing.text.EditorKit-"><code>CloneableEditorSupport.loadFromStreamToKit(...)</code></a>
+{@link org.openide.text.CloneableEditorSupport#loadFromStreamToKit(javax.swing.text.StyledDocument,java.io.InputStream,javax.swing.text.EditorKit) CloneableEditorSupport.loadFromStreamToKit(...) }
 
 (to interpret special markings in the saved file and convert them into document attributes); and
 
-<a href="../CloneableEditorSupport.html#saveFromKitToStream-javax.swing.text.StyledDocument-javax.swing.text.EditorKit-java.io.OutputStream-"><code>CloneableEditorSupport.saveFromKitToStream(...)</code></a>
+{@link org.openide.text.CloneableEditorSupport#saveFromKitToStream(javax.swing.text.StyledDocument,javax.swing.text.EditorKit,java.io.OutputStream) CloneableEditorSupport.saveFromKitToStream(...) }
 
 (to translate these attributes back into ASCII markings).
 
@@ -836,13 +836,13 @@ beyond what is normally required by Swing.
 
 You will need to create an implementation of
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/StyledDocument.html"><code>javax.swing.text.StyledDocument</code></a>
+{@link javax.swing.text.StyledDocument javax.swing.text.StyledDocument }
 
 to hold the content of the buffer being edited.
 
 <p>Actually, you could get away with a plain
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/Document.html"><code>Document</code></a>
+{@link javax.swing.text.Document Document }
 
 if you really wanted, but you would be unable to support guard blocks
 and would have a harder time supporting annotations and line numbering; while this would probably
@@ -865,21 +865,20 @@ handling guard blocks, but again it is up to you to actually do so
 correctly - NetBeans cannot determine this.
 
 <p>There is very little to the way NetBeans indicates
-guarding. Essentially, it is just a character attribute, <a
-href="../NbDocument.html#GUARDED"><code>NbDocument.GUARDED</code></a>,
+guarding. Essentially, it is just a character attribute, {@link org.openide.text.NbDocument#GUARDED NbDocument.GUARDED },
 which will be set to <code>Boolean.TRUE</code> for guarded characters,
 and <code>Boolean.FALSE</code> (or unset) for others; it is typically
 placed on the document by means of the
 
-<a href="../NbDocument.html#markGuarded-javax.swing.text.StyledDocument-int-int-"><code>NbDocument.markGuarded(...)</code></a>
+{@link org.openide.text.NbDocument#markGuarded(javax.swing.text.StyledDocument,int,int) NbDocument.markGuarded(...) }
 
 and
 
-<a href="../NbDocument.html#unmarkGuarded-javax.swing.text.StyledDocument-int-int-"><code>NbDocument.unmarkGuarded(...)</code></a>
+{@link org.openide.text.NbDocument#unmarkGuarded(javax.swing.text.StyledDocument,int,int) NbDocument.unmarkGuarded(...) }
 
 methods, which just call
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/StyledDocument.html#setCharacterAttributes-int-int-javax.swing.text.AttributeSet-boolean-"><code>StyledDocument.setCharacterAttributes(...)</code></a>.
+{@link javax.swing.text.StyledDocument#setCharacterAttributes(int,int,javax.swing.text.AttributeSet,boolean) StyledDocument.setCharacterAttributes(...) }.
 
 Very likely you will want to override this method, calling its
 superclass method but first checking to see if the attribute setting
@@ -891,7 +890,7 @@ general and would rather just query this attribute when it is
 needed. If overriding <code>setCharacterAttributes</code> for this
 purpose, also remember to check the attributes on
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/Document.html#insertString-int-java.lang.String-javax.swing.text.AttributeSet-"><code>insertString</code></a>,
+{@link javax.swing.text.Document#insertString(int,java.lang.String,javax.swing.text.AttributeSet) insertString },
 
 etc.
 
@@ -907,11 +906,11 @@ otherwise a half-guarded line would be created.
 <em>only</em> to user modifications, i.e. those undertaken in the
 context of a user-initiated Swing action, or by
 
-<a href="../NbDocument.html#runAtomicAsUser-javax.swing.text.StyledDocument-java.lang.Runnable-"><code>NbDocument.runAtomicAsUser(...)</code></a>.
+{@link org.openide.text.NbDocument#runAtomicAsUser(javax.swing.text.StyledDocument,java.lang.Runnable) NbDocument.runAtomicAsUser(...) }.
 
 Internal NetBeans module code may freely insert or remove text (typically using
 
-<a href="../NbDocument.html#insertGuarded-javax.swing.text.StyledDocument-int-java.lang.String-"><code>NbDocument.insertGuarded(...)</code></a>
+{@link org.openide.text.NbDocument#insertGuarded(javax.swing.text.StyledDocument,int,java.lang.String) NbDocument.insertGuarded(...) }
 
 and <code>Document.remove(...)</code>). For example, this would be
 done by the Form Editor component while adding a new event
@@ -924,7 +923,7 @@ guarded areas, say with a special background color. It is your
 responsibility to choose a color or another appearance for this
 purpose, however. Possibly NetBeans will specify a
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/StyleConstants.ColorConstants.html#Background"><code>StyleConstants.ColorConstants.Background</code></a>
+{@link javax.swing.text.StyleConstants.ColorConstants#Background StyleConstants.ColorConstants.Background }
 
 attribute describing which color will actually be used, and make this
 color settable in a control panel, but assume that you need to
@@ -937,7 +936,7 @@ colorize based on this attribute yourself.</p>
 It is highly recommended that all of the Swing actions (such as those
 returned by
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/EditorKit.html#getActions--"><code>EditorKit.getActions()</code></a>)
+{@link javax.swing.text.EditorKit#getActions() EditorKit.getActions() })
 
 applicable to your editor kit be reviewed for the possibility that
 they might attempt to change the content of the document (so, not only
@@ -962,20 +961,20 @@ that it is even possible to do satisfactorily. This applies only to
 people who are trying to adapt an existing
 <code>StyledDocument</code>, such as Swing's
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/DefaultStyledDocument.html"><code>DefaultStyledDocument</code></a>,
+{@link javax.swing.text.DefaultStyledDocument DefaultStyledDocument },
 
 which already has a full implementation of important things but no
 recognition of guard blocks.
 
 <p>The idea is to first get a list of all
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/Action.html">actions</a>
+{@link javax.swing.Action actions }
 
 which might involve buffer modification - or, to be conservative, just
 all actions. For each of these, create a new action which calls the
 original
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/awt/event/ActionListener.html#actionPerformed-java.awt.event.ActionEvent-"><code>actionPerformed</code></a>,
+{@link java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent) actionPerformed },
 
 but "dynamically binds" some special flag stored with the document to
 true - dynamic binding here means that it should be restored (turned
@@ -998,7 +997,7 @@ violation, you might do one or more of the following:
 
 <li> Throw a
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/BadLocationException.html"><code>javax.swing.text.BadLocationException</code></a>
+{@link javax.swing.text.BadLocationException javax.swing.text.BadLocationException }
 
 and see what happens. Since the original action cannot ignore this
 exception (since <code>actionPerformed</code> does not have any
@@ -1007,11 +1006,11 @@ simply beep.
 
 <li>Try to run a beep action to alert the user (using
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/awt/Toolkit.html#beep--"><code>Toolkit.beep()</code></a>).
+{@link java.awt.Toolkit#beep() Toolkit.beep() }).
 
 This would probably need to be done with
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/SwingUtilities.html#invokeLater-java.lang.Runnable-"><code>SwingUtilities.invokeLater(...)</code></a>.
+{@link javax.swing.SwingUtilities#invokeLater(java.lang.Runnable) SwingUtilities.invokeLater(...) }.
 
 </ul>
 
@@ -1048,12 +1047,12 @@ may be efficient.</p>
 
 <p>Furthermore you should ensure that the
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/Document.html#getDefaultRootElement--">default root element</a>
+{@link javax.swing.text.Document#getDefaultRootElement() default root element}
 
 of the document has child elements corresponding to all text lines;
 and if using <code>StyledDocument</code>, that
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/StyledDocument.html#getParagraphElement-int-">"paragraph" elements</a>
+{@link javax.swing.text.StyledDocument#getParagraphElement(int) "paragraph" elements}
 
 again correspond to text lines. Proper use of elements corresponding
 to lines will enable the APIs to accurately translate between buffer
@@ -1077,7 +1076,7 @@ An editor must do two things to support annotations:
 
 This
 
-<a href="../NbDocument.Annotatable.html">interface</a>
+{@link org.openide.text.NbDocument.Annotatable interface }
 
 has two methods. One adds an annotation to the document:
 
@@ -1129,28 +1128,28 @@ then attempt to convert these (Swing) formatting specifications into
 and may not be implemented. To better support printing, it is
 desirable for the <code>StyledDocument</code> to implement
 
-<a href="../NbDocument.Printable.html"><code>org.openide.text.NbDocument.Printable</code></a>,
+{@link org.openide.text.NbDocument.Printable org.openide.text.NbDocument.Printable },
 
 which will allow it to specify exactly how it wants to be printed. The
 method
 
-<a href="../NbDocument.Printable.html#createPrintIterators--"><code>NbDocument.Printable.createPrintIterators(...)</code></a>
+{@link org.openide.text.NbDocument.Printable#createPrintIterators() NbDocument.Printable.createPrintIterators(...) }
 
 should return a list of
 
-<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/text/AttributedCharacterIterator.html"><code>java.text.AttributedCharacterIterator</code></a>s,
+{@link java.text.AttributedCharacterIterator java.text.AttributedCharacterIterator }s,
 
 providing attributes taken from
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/awt/font/TextAttribute.html"><code>java.awt.font.TextAttribute</code></a>.
+{@link java.awt.font.TextAttribute java.awt.font.TextAttribute }.
 
 <p>Also, if your document supports either
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/awt/print/Printable.html"><code>java.awt.print.Printable</code></a>
+{@link java.awt.print.Printable java.awt.print.Printable }
 
 or
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/awt/print/Pageable.html"><code>java.awt.print.Pageable</code></a>,
+{@link java.awt.print.Pageable java.awt.print.Pageable },
 
 then these interfaces will be used to perform the printing
 directly. You should only need to do this if attributed characters do
@@ -1166,11 +1165,11 @@ certain operations (performed by NetBeans, not in response to user
 events) more reliable and safer. In order to do this, please
 implement
 
-<a href="../NbDocument.WriteLockable.html"><code>org.openide.text.NbDocument.WriteLockable</code></a>
+{@link org.openide.text.NbDocument.WriteLockable org.openide.text.NbDocument.WriteLockable }
 
 and its
 
-<a href="../NbDocument.WriteLockable.html#runAtomic-java.lang.Runnable-"><code>runAtomic(...)</code></a>
+{@link org.openide.text.NbDocument.WriteLockable#runAtomic(java.lang.Runnable) runAtomic(...) }
 
 method. The <code>Runnable</code> passed in this way should be
 executed with all other write actions (and reads) disabled,
@@ -1178,16 +1177,16 @@ i.e. blocked.
 
 <p>If you are extending
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/AbstractDocument.html"><code>javax.swing.text.AbstractDocument</code></a>,
+{@link javax.swing.text.AbstractDocument javax.swing.text.AbstractDocument },
 
 please note that just enclosing the <code>Runnable</code> block in
 calls to
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/AbstractDocument.html#writeLock--"><code>writeLock()</code></a>
+{@link javax.swing.text.AbstractDocument#writeLock() writeLock() }
 
 and
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/AbstractDocument.html#writeUnlock--"><code>writeUnlock()</code></a>
+{@link javax.swing.text.AbstractDocument#writeUnlock() writeUnlock() }
 
 will not do the trick - these calls do take out exclusive locks,
 however they specifically do not nest. This means that you cannot
@@ -1199,7 +1198,7 @@ this, e.g. your own locks.
 
 <p>You must also implement
 
-<a href="../NbDocument.WriteLockable.html#runAtomicAsUser-java.lang.Runnable-"><code>NbDocument.WriteLockable.runAtomicAsUser(...)</code></a>,
+{@link org.openide.text.NbDocument.WriteLockable#runAtomicAsUser(java.lang.Runnable) NbDocument.WriteLockable.runAtomicAsUser(...) },
 
 which is very similar but is invoked on behalf of user actions
 unrelated to whatever component created the guard blocks - e.g., this
@@ -1235,11 +1234,11 @@ implementation.
 
 Please consider implementing
 
-<a href="../NbDocument.PositionBiasable.html"><code>org.openide.text.NbDocument.PositionBiasable</code></a>
+{@link org.openide.text.NbDocument.PositionBiasable org.openide.text.NbDocument.PositionBiasable }
 
 and its
 
-<a href="../NbDocument.PositionBiasable.html#createPosition-int-javax.swing.text.Position.Bias-"><code>createPosition(...)</code></a>
+{@link org.openide.text.NbDocument.PositionBiasable#createPosition(int,javax.swing.text.Position.Bias) createPosition(...) }
 
 method, to create a position marker which not only moves freely with
 insertions and deletions in nearby text, but also specifies the
@@ -1254,7 +1253,7 @@ position.
 given line will be displayed. You should not need to do anything
 special to support this;
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/Caret.html#setDot-int-"><code>Caret.setDot()</code></a>
+{@link javax.swing.text.Caret#setDot(int) Caret.setDot() }
 
 will be called and ought to perform the scrolling appropriately.
 
@@ -1264,7 +1263,7 @@ It is desirable for the editor to present actions to the user that may
 be invoked on the document and may be accessed in various ways. For
 example, if your editor provides an
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/Action.html">action</a>
+{@link javax.swing.Action action }
 
 for reindenting a section of text, it is best if this action can be
 integrated into the rest of NetBeans consistently: a "Reindent" item
@@ -1282,7 +1281,7 @@ modules.
 <p>Instead, you should use the <a
 href="@org-openide-actions@/org/openide/actions/doc-files/api.html">Actions API</a> to add
 
-<a href="@org-openide-util-ui@/org/openide/util/actions/CallbackSystemAction.html"><code>CallbackSystemAction</code></a>s
+{@link org.openide.util.actions.CallbackSystemAction CallbackSystemAction }s
 
 (e.g.) to your module.
 
@@ -1297,19 +1296,19 @@ inappropriate to install into the main control window.
 
 <p>You do not need to do much to support this editor toolbar: in the
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/EditorKit.html#getActions--"><code>getActions()</code></a>
+{@link javax.swing.text.EditorKit#getActions() getActions() }
 
 method of your editor kit, if there are any actions which are also
 
-<a href="@org-openide-util-ui@/org/openide/util/actions/SystemAction.html"><code>SystemAction</code></a>s
+{@link org.openide.util.actions.SystemAction SystemAction }s
 
 implementing
 
-<a href="@org-openide-util-ui@/org/openide/util/actions/Presenter.Toolbar.html"><code>Presenter.Toolbar</code></a>,
+{@link org.openide.util.actions.Presenter.Toolbar Presenter.Toolbar },
 
 then this interface will be used to get a
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/awt/Component.html"><code>java.awt.Component</code></a>
+{@link java.awt.Component java.awt.Component }
 
 which will be displayed in the editor toolbar. You are free to make
 this component be whatever you like, e.g. a button to run some
@@ -1326,12 +1325,12 @@ names. Default instances of these are also available in the
 <code>DefaultEditorKit</code> class, but your actions will be
 recognized based on a call to
 
-<code><a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/Action.html#getValue-java.lang.String-">getValue</a>(<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/Action.html#NAME">Action.NAME</a>)</code>:</p>
+<code>{@link javax.swing.Action#getValue(java.lang.String) getValue }({@link javax.swing.Action#NAME Action.NAME })</code>:</p>
 
 <table border=1>
 <caption>name to DefaultEditorKit field mappings</caption>
 <tr><th>Name</th><th>Static field in
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/DefaultEditorKit.html"><code>DefaultEditorKit</code></a></th></tr>
+{@link javax.swing.text.DefaultEditorKit DefaultEditorKit }</th></tr>
 <tr><td><code>copy-to-clipboard</code></td><td><code>copyAction</code></td></tr>
 <tr><td><code>cut-to-clipboard</code></td><td><code>cutAction</code></td></tr>
 <tr><td><code>paste-from-clipboard</code></td><td><code>pasteAction</code></td></tr>
@@ -1357,7 +1356,7 @@ the text, e.g. a specific line number.</td></tr>
 <tr><td><code>delete</code></td><td>Delete the selection, without
 affecting clipboard.</td></tr>
 <tr><td><code>undo</code></td><td>Undo action. See package
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/undo/package-summary.html"><code>javax.swing.undo</code></a> for help. Currently not specially
+{@link javax.swing.undo javax.swing.undo } for help. Currently not specially
 supported, except to call your action.</td></tr>
 <tr><td><code>redo</code></td><td>Redo action. Ditto.</td></tr>
 </table>
@@ -1367,7 +1366,7 @@ standard invocations such as from the system toolbar, will
 automatically invoke these actions on your document, if you supply
 them. You should use
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/Action.html#isEnabled--"><code>Action.isEnabled()</code></a>
+{@link javax.swing.Action#isEnabled() Action.isEnabled() }
 
 to indicate whether your action is ready, and thus whether or not the
 corresponding UI elements should be grayed out.
@@ -1376,12 +1375,12 @@ corresponding UI elements should be grayed out.
 
 It is desirable for your document's user-level edit actions to implement
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/undo/UndoableEdit.html"><code>UndoableEdit</code></a>,
+{@link javax.swing.undo.UndoableEdit UndoableEdit },
 
 so that NetBeans can smoothly provide Undo/Redo support for the editor
 from the standard places (e.g. in the Edit menu). Note that
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/AbstractDocument.html"><code>AbstractDocument</code></a>,
+{@link javax.swing.text.AbstractDocument AbstractDocument },
 
 for example, already provides this support.
 
@@ -1398,7 +1397,7 @@ you will make a JAR file containing a manifest with attributes
 recognized by NetBeans as constituting a <a
 href="@org-openide-modules@/org/openide/modules/doc-files/api.html">module</a>, and just call
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JEditorPane.html#registerEditorKitForContentType-java.lang.String-java.lang.String-"><code>javax.swing.JEditorPane.registerEditorKitForContentType(...)</code></a>,
+{@link javax.swing.JEditorPane#registerEditorKitForContentType(java.lang.String,java.lang.String) javax.swing.JEditorPane.registerEditorKitForContentType(...) },
 
 and NetBeans should subsequently use it.
 
@@ -1410,7 +1409,7 @@ and NetBeans should subsequently use it.
 API for registering editors. Although doing it manually in the
 module's
 
-<a href="@org-openide-modules@/org/openide/modules/ModuleInstall.html#installed--"><code>installed()</code></a>
+{@link org.openide.modules.ModuleInstall#installed() installed() }
 
 method is not difficult, properly the module should also restore the
 original editor kit for each content type upon an uninstall, and
@@ -1439,7 +1438,7 @@ currently recognized, you may wish to use the
 infrastructure in the Filesystems API to help your files be
 recognized. Additionally,
 
-<a href="../CloneableEditorSupport.html#setMIMEType-java.lang.String-"><code>CloneableEditorSupport.setMIMEType(String)</code></a>
+{@link org.openide.text.CloneableEditorSupport#setMIMEType(java.lang.String) CloneableEditorSupport.setMIMEType(String) }
 
 may be used to control the MIME type of an editor kit regardless of
 the type of the underlying file.

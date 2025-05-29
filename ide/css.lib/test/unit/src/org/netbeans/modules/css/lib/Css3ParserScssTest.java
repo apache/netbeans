@@ -2051,4 +2051,10 @@ public class Css3ParserScssTest extends CssTestBase {
                 + "@layer components;\n"
                 + "@layer default {}");
     }
+
+    public void testMediaQueryRangeContext() throws Exception {
+        assertParses("@media (width <= $widthValue) {}");
+        assertParses("@media (width <= 1200px) {}");
+        assertParses("@media (30em <= width <= #{$widthValue}) {}");
+    }
 }

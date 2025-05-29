@@ -106,7 +106,7 @@ is the proper place.
                 <p>
                     Gradle 6.7 introduced Java Toolchains to separate Gradle Java Runtime
                     and the Java used for compilation (and other Java execution).
-                    <code><a href="@TOP@/org/netbeans/modules/gradle/java/api/GradleJavaSourceSet.html#getCompilerJavaHome-org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType-">GradleJavaSourceSet.getCompilerJavaHome</a></code> has been added to
+                    <code><a href="@TOP@/org/netbeans/modules/gradle/java/api/GradleJavaSourceSet.html#getCompilerJavaHome(org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType)">GradleJavaSourceSet.getCompilerJavaHome</a></code> has been added to
                     return the Java Home of the JDK in use for compilation.
                 </p>
                 <p>

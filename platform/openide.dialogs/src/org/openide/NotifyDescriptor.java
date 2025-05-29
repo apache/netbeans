@@ -414,7 +414,7 @@ public class NotifyDescriptor extends Object {
 
         int oldType = messageType;
         messageType = newType;
-        firePropertyChange(PROP_MESSAGE_TYPE, new Integer(oldType), new Integer(messageType));
+        firePropertyChange(PROP_MESSAGE_TYPE, oldType, messageType);
     }
 
     /**
@@ -460,7 +460,7 @@ public class NotifyDescriptor extends Object {
 
         int oldType = optionType;
         optionType = newType;
-        firePropertyChange(PROP_OPTION_TYPE, new Integer(oldType), new Integer(optionType));
+        firePropertyChange(PROP_OPTION_TYPE, oldType, optionType);
     }
 
     /**

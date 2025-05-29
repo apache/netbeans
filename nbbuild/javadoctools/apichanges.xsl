@@ -68,7 +68,8 @@ committed to the repository for legal reasons. You need to download it:
     <xsl:param name="issue-url-base" select="'https://bz.apache.org/netbeans/show_bug.cgi?id='"/>
     <xsl:param name="apache-issue-url-base" select="'https://issues.apache.org/jira/browse/'"/>
     <xsl:param name="javadoc-url-base" select="'???'"/>
-
+    <xsl:param name="javadoc-header" />
+    <xsl:param name="deprecated" />
     <!-- Main document structure: -->
     <xsl:template match="/">
         <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;</xsl:text>
@@ -76,73 +77,86 @@ committed to the repository for legal reasons. You need to download it:
             <head>
                 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
                 <xsl:apply-templates select="apichanges/htmlcontents/head/title"/>
-                <link rel="stylesheet" type="text/css" href="javadoc.css" title="Style"/>
-                <script type="text/javascript" src="script.js"></script>
+                <link rel="stylesheet" type="text/css" href="resource-files/javadoc.css" title="Style"/>
+                <script type="text/javascript" src="script-files/script.js"></script>
+                <script type="text/javascript" src="script-files/jquery-3.7.1.min.js"></script>
+                <script type="text/javascript" src="script-files/jquery-ui.min.js"></script>
             </head>
             <body>
-                <!-- ========= START OF TOP NAVBAR ======= -->
-                <div class="topNav">
-                    <a name="navbar.top">
-                        <!--   -->
-                    </a>
-                    <div class="skipNav">
-                        <a href="#skip.navbar.top" title="Skip navigation links">Skip navigation links</a>
+                <script type="text/javascript">var pathtoroot = "./";
+                 loadScripts(document, 'script');</script>
+                <noscript>
+                 <div>JavaScript is disabled on your browser.</div>
+                </noscript>
+                 <header role="banner">
+                  <nav role="navigation">
+                   <!-- ========= START OF TOP NAVBAR ======= -->
+                   <div class="top-nav" id="navbar-top">
+                    <div class="nav-content">
+                     <div class="nav-menu-button">
+                      <button id="navbar-toggle-button" aria-controls="navbar-top" aria-expanded="false" aria-label="Toggle navigation links">
+                       <span class="nav-bar-toggle-icon">
+                        <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                       </span>
+                       <span class="nav-bar-toggle-icon">
+                        <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                       </span>
+                       <span class="nav-bar-toggle-icon">
+                        <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                       </span>
+                      </button>
+                     </div>
+                     <div class="skip-nav">
+                      <a href="#skip-navbar-top" title="Skip navigation links">Skip navigation links</a>
+                     </div>
+                     <ul id="navbar-top-firstrow" class="nav-list" title="Navigation">
+                      <li class="nav-bar-cell1-rev">API Changes</li>
+                      <li>
+                       <a href="architecture-summary.html">Architecture Summary</a>
+                      </li>
+                      <li>
+                       <a href="index.html">Overview</a>
+                      </li>
+                      <li>
+                       <a href="overview-tree.html">Tree</a>
+                      </li>
+                      <xsl:if test="$deprecated='true'">
+                          <li>
+                              <a href="deprecated-list.html">Deprecated</a>
+                          </li>   
+                      </xsl:if>
+                      <li>
+                       <a href="index-files/index-1.html">Index</a>
+                      </li>
+                      <li><a href="search.html">Search</a></li>
+                      <li>
+                       <a href="help-doc.html#overview">Help</a>
+                      </li>
+                     </ul>
+                
+                     <div class="about-language">
+                      <xsl:value-of select="$javadoc-header"/>
+                     </div>
+                    </div>  
+                   </div>
+                   <div class="sub-nav">
+                    <div class="nav-content">
+                     <ol class="sub-nav-list"></ol>
+                     <div class="nav-list-search">
+                      <input type="text" id="search-input" disabled="disabled" placeholder="Search" aria-label="Search in documentation" autocomplete="off"/>
+                      <input type="reset" id="reset-search" disabled="disabled" value="Reset"/>
+                     </div>
                     </div>
-                    <a name="navbar.top.firstrow">
-                        <!--   -->
-                    </a>
-                    <ul class="navList noreplace" title="Navigation">
-                        <li class="navBarCell1Rev">
-                            API Changes
-                        </li>
-                        <li><a href="architecture-summary.html">Architecture Summary</a></li>
-                        <li><a href="overview-summary.html">Overview</a></li>
-                        <li>Package</li>
-                        <li>Class</li>
-                        <li>Use</li>
-                        <li>Tree</li>
-                        <li>
-                            <a href="deprecated-list.html">Deprecated</a>
-                        </li>
-                        <li>Index</li>
-                        <li>
-                            <a href="help-doc.html">Help</a>
-                        </li>
-                    </ul>
-                    <div class="aboutLanguage"> </div>
-                </div>
-                <div class="subNav">
-                    <ul class="navList">
-                        <li>
-                            <a href="index.html?overview-summary.html" target="_top">Frames</a>
-                        </li>
-                        <li>
-                            <a href="overview-summary.html" target="_top">No Frames</a>
-                        </li>
-                    </ul>
-                    <ul class="navList" id="allclasses_navbar_top">
-                        <li>
-                            <a href="allclasses-noframe.html">All Classes</a>
-                        </li>
-                    </ul>
-                    <div>
-                        <script type="text/javascript"><!--
-  allClassesLink = document.getElementById("allclasses_navbar_top");
-  if(window==top) {
-    allClassesLink.style.display = "block";
-  }
-  else {
-    allClassesLink.style.display = "none";
-  }
-  //-->
-                        </script>
-                    </div>
-                    <a name="skip.navbar.top">
-                        <!--   -->
-                    </a>
-                </div>
-                <!-- ========= END OF TOP NAVBAR ========= -->
+                   </div>
+                   <!-- ========= END OF TOP NAVBAR ========= -->
+                   <span class="skip-nav" id="skip-navbar-top"></span>
+                  </nav>
+                 </header>
+                 <div class="main-grid">
+                  <main role="main">
                 <xsl:apply-templates select="apichanges/htmlcontents/body/node()[not(contains(@class, 'overviewlink'))]"/>
+                  </main>
+                 </div>
             </body>
         </html>
     </xsl:template>
@@ -442,9 +456,9 @@ committed to the repository for legal reasons. You need to download it:
             Unrecognized changelist style: <xsl:value-of select="@style"/>
         </xsl:message>
     </xsl:template>
-    
+
     <!-- Show all change lists usually needed: -->
-    
+
     <xsl:template match="standard-changelists">
       <h1><a name="list-all-apis">Index of APIs</a></h1>
       <xsl:call-template name="changelist-list-all-apis"/>
@@ -452,9 +466,11 @@ committed to the repository for legal reasons. You need to download it:
       <h1><a name="incompat-by-date">Incompatible changes by date</a></h1>
       <p>Fuller descriptions of all changes can be found below (follow links).</p>
       <p>Not all deprecations are listed here, assuming that the deprecated
-        APIs continue to essentially work. For a full deprecation list, please
-        consult the
-        <a href="deprecated-list.html">Javadoc</a>.</p>
+          APIs continue to essentially work.</p>
+      <xsl:if test="$deprecated='true'">   
+          <p>For a full deprecation list, please consult the
+              <a href="deprecated-list.html">Javadoc</a>.</p>
+      </xsl:if>
       <xsl:call-template name="changelist-incompat-by-date"/>
 
       <h1><a name="all-by-date">All changes by date</a></h1>
@@ -499,7 +515,7 @@ committed to the repository for legal reasons. You need to download it:
     <xsl:template match="version" >
         <xsl:apply-templates mode="print-version" select="." />
     </xsl:template>
-    
+
     <xsl:template match="version" mode="print-version" >
         <xsl:value-of select="@major"/>.<xsl:value-of select="@minor"/>
         <xsl:if test="@subminor">.<xsl:value-of select="@subminor"/></xsl:if>
@@ -621,11 +637,11 @@ committed to the repository for legal reasons. You need to download it:
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
+
     <xsl:template name="print-hash" >
         <xsl:param name="text" />
         <xsl:param name="hash" />
-        
+
         <xsl:variable name="first-char" select="substring($text,1,1)" />
         <xsl:choose>
             <xsl:when test="$text and number($first-char) >= 0">

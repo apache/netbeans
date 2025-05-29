@@ -100,6 +100,7 @@
                   <Component id="askForTestGroupsCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="scriptCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="runPhpUnitOnlyCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="isRelativePathEnabled" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -144,7 +145,7 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="suiteInfoLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="scriptCheckBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -152,7 +153,9 @@
                   <Component id="scriptTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="scriptBrowseButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="isRelativePathEnabled" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="runPhpUnitOnlyCheckBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="runTestUsingUnitCheckBox" min="-2" max="-2" attributes="0"/>
@@ -482,9 +485,6 @@
     </Component>
     <Component class="javax.swing.JLabel" name="versionLabel">
       <Properties>
-        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-          <ComponentRef name="default"/>
-        </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="org/netbeans/modules/php/phpunit/ui/customizer/Bundle.properties" key="CustomizerPhpUnit.versionLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
@@ -498,6 +498,13 @@
     <Component class="javax.swing.JLabel" name="versionLineLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="VERSION" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="isRelativePathEnabled">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/php/phpunit/ui/customizer/Bundle.properties" key="CustomizerPhpUnit.isRelativePathEnabled.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
       </Properties>
     </Component>
   </SubComponents>

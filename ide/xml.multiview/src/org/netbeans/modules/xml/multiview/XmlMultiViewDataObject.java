@@ -434,9 +434,9 @@ public abstract class XmlMultiViewDataObject extends MultiDataObject implements 
             if (setData(s)) {
                 if (!modified) {
                     saveData(lock);
-                    firePropertyChange(PROPERTY_DATA_UPDATED, new Long(oldTimeStamp), new Long(timeStamp));
+                    firePropertyChange(PROPERTY_DATA_UPDATED, oldTimeStamp, timeStamp);
                 } else {
-                    firePropertyChange(PROPERTY_DATA_MODIFIED, new Long(oldTimeStamp), new Long(timeStamp));
+                    firePropertyChange(PROPERTY_DATA_MODIFIED, oldTimeStamp, timeStamp);
                 }
             } 
         }

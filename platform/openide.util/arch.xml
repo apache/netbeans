@@ -240,8 +240,8 @@
   <p>
     The <a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jar/jar.html#Provider%20Configuration%20File">META-INF/services/...</a> files.
     <api name="TranslateNames" category="official" type="export" group="java.io.File" 
-    url="@TOP@/org/openide/util/BaseUtilities.html#translate-java.lang.String-">
-    <a href="@TOP@/org/openide/util/BaseUtilities.html#translate-java.lang.String-">Utilities.translate</a> 
+    url="@TOP@/org/openide/util/BaseUtilities.html#translate(java.lang.String)">
+    <a href="@TOP@/org/openide/util/BaseUtilities.html#translate(java.lang.String)">Utilities.translate</a> 
     reads <code>META-INF/netbeans/translate.names</code> files from JARs</api>.
   </p>
  </answer>

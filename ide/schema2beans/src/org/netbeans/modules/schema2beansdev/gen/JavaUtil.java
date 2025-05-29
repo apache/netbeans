@@ -741,17 +741,17 @@ public class JavaUtil {
             else if ("boolean".equals(type))
                 Boolean.valueOf(value).booleanValue();
             else if ("java.lang.Double".equals(type))
-                new java.lang.Double(value);
+                Double.valueOf(value);
             else if ("java.lang.Integer".equals(type))
-                new java.lang.Integer(value);
+                Integer.valueOf(value);
             else if ("java.lang.Boolean".equals(type))
                 Boolean.valueOf(value);
             else if ("java.lang.Float".equals(type))
-                new java.lang.Float(value);
+                Float.valueOf(value);
             else if ("java.lang.Short".equals(type))
-                new java.lang.Short(value);
+                Short.valueOf(value);
             else if ("java.lang.Long".equals(type))
-                new java.lang.Long(value);
+                Long.valueOf(value);
             else if ("java.math.BigDecimal".equals(type))
                 new java.math.BigDecimal(value);
             else if ("java.math.BigInteger".equals(type))

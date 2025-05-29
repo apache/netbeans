@@ -22,7 +22,7 @@
 <html>
 <head>
 <title>Creating a New Explorer View</title>
-<link rel="Stylesheet" href="../../../../prose.css" type="text/css" title="NetBeans Open APIs Style">
+<link rel="Stylesheet" href="@TOP@/resource-files/prose.css" type="text/css" title="NetBeans Open APIs Style">
 </head>
 <body>
 
@@ -42,28 +42,28 @@ it need not implement any particular interface, etc. However, the
 convention is that it keep track of the Explorer manager that controls
 it; this manager should be located when it is
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/awt/Component.html#addNotify--">added</a>
+{@link java.awt.Component#addNotify() added }
 
 to a parent component, by calling
 
-<a href="../ExplorerManager.html#find-java.awt.Component-"><code>ExplorerManager.find(...)</code></a>,
+{@link org.openide.explorer.ExplorerManager#find(java.awt.Component) ExplorerManager.find(...) },
 
 and then use that manager's properties to control it; the view should
 also stop consulting the manager when the component is
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/awt/Component.html#removeNotify--">removed</a>
+{@link java.awt.Component#removeNotify() removed}
 
 from its parent.
 
 <p>The view will want to use a
 
-<a href="../ExplorerManager.html#addPropertyChangeListener-java.beans.PropertyChangeListener-">property change listener</a>
+{@link org.openide.explorer.ExplorerManager#addPropertyChangeListener(java.beans.PropertyChangeListener) property change listener }
 
 to keep track of what the manager expects it to do;
 
 possibly it could also
 
-<a href="../ExplorerManager.html#addVetoableChangeListener-java.beans.VetoableChangeListener-">veto</a>
+{@link org.openide.explorer.ExplorerManager#addVetoableChangeListener(java.beans.VetoableChangeListener) veto } 
 
 certain changes.
 
@@ -74,23 +74,23 @@ possible, and so the API does not specify any more than this.
 
 The abstract base class
 
-<a href="../view/TreeView.html"><code>TreeView</code></a>
+{@link org.openide.explorer.view.TreeView TreeView }
 
 may be used to create a specialized view based on the normal visual
 metaphor of an expandable tree of nodes being explored. Many
 customizations to it may be done by modifying the
 
-<a href="../view/NodeTreeModel.html">model</a>
+{@link org.openide.explorer.view.NodeTreeModel model }
 
 it uses to determine which nodes are to be displayed.
 
 Or, one of its implementations may be fine-tuned:
 
-<a href="../view/BeanTreeView.html"><code>BeanTreeView</code></a>
+{@link org.openide.explorer.view.BeanTreeView BeanTreeView }
 
 provides the usual Explorer view;
 
-<a href="../view/ContextTreeView.html"><code>ContextTreeView</code></a>
+{@link org.openide.explorer.view.ContextTreeView ContextTreeView }
 
 provides something similar but only displaying non-leaf nodes (which
 may be useful as one panel of a multi-paned UI setup, also including a

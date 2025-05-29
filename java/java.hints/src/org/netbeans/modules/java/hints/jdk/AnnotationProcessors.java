@@ -382,14 +382,8 @@ public class AnnotationProcessors {
                     List<? extends AnnotationTree> annos = new ArrayList<>(nct.getModifiers().getAnnotations());
                     if (annos.remove(tp.getLeaf())) {
                         make.asRemoved(tp.getLeaf());
-                        nct = make.Class(
-                                make.Modifiers(nct.getModifiers(), annos), 
-                                nct.getSimpleName().toString(), 
-                                nct.getTypeParameters(), 
-                                nct.getExtendsClause(), 
-                                nct.getImplementsClause(), 
-                                nct.getMembers()
-                        );
+                        wc.rewrite(nct.getModifiers(),
+                                   make.Modifiers(nct.getModifiers(), annos));
                     }
                 }
             }

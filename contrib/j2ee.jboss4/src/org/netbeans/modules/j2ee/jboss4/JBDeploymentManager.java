@@ -126,7 +126,7 @@ public class JBDeploymentManager implements DeploymentManager {
     public int getPort() {
         String port = InstanceProperties.getInstanceProperties(realUri).
                 getProperty(JBPluginProperties.PROPERTY_PORT);
-        return new Integer(port).intValue();
+        return Integer.parseInt(port);
     }
 
     public int getDebuggingPort() {

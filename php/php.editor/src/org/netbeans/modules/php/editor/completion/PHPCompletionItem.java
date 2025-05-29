@@ -1419,6 +1419,9 @@ public abstract class PHPCompletionItem implements CompletionProposal {
 
         private String getOverrideAttribute() {
             MethodElement method = (MethodElement) getBaseFunctionElement();
+            if (method.isConstructor()) {
+                return CodeUtils.EMPTY_STRING;
+            }
             TypeElement type = method.getType();
             if (!isMagic()
                     && (!type.isTrait() || ElementUtils.isAbstractTraitMethod(method))

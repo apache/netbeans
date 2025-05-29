@@ -17,6 +17,7 @@ GLOBAL     inline-grid                                <font color=999999>display
 GLOBAL     inline-table                               <font color=999999>display</font>
 GLOBAL     list-item                                  <font color=999999>display</font>
 GLOBAL     none                                       <font color=999999>display</font>
+GLOBAL     revert                                     <font color=999999>display</font>
 GLOBAL     ruby                                       <font color=999999>display</font>
 GLOBAL     ruby-base                                  <font color=999999>display</font>
 GLOBAL     ruby-base-container                        <font color=999999>display</font>

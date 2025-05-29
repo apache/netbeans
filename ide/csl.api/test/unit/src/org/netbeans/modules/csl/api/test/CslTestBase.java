@@ -4384,8 +4384,11 @@ public abstract class CslTestBase extends NbTestCase {
                             }
                         }
                         if (HintsSettings.getSeverity(manager, ucr) == HintSeverity.CURRENT_LINE_WARNING) {
-                            manager.setTestingRules(null, Collections.EMPTY_MAP, testHints, null);
+                            manager.setTestingRules(null, testHints, testHints, null);
                             provider.computeSuggestions(manager, context, hints, caretOffset);
+                        } else if(HintsSettings.getSeverity(manager, ucr) == HintSeverity.ERROR || HintsSettings.getSeverity(manager, ucr) == HintSeverity.WARNING) {
+                            manager.setTestingRules(null, testHints, testHints, null);
+                            provider.computeErrors(manager, context, hints, new ArrayList<Error>());
                         } else {
                             manager.setTestingRules(null, testHints, null, null);
                             context.caretOffset = -1;

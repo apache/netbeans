@@ -642,9 +642,6 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                     javaHome = new File(entry.getValue());
                 }
             }
-            if ("test".equals(entry.getKey())) {
-                Thread.currentThread().dumpStack();
-            }
         }
         if (javaHome == null) {
             if (clonedConfig.getProject() != null) {

@@ -24,7 +24,7 @@
     <target name="-release.files" depends="projectized.-release.files,check-binariesembedded-list">
         <mkdir dir="${cluster}/maven"/>
         <unzip src="external/${bundled.maven}-bin.zip" dest="${cluster}/maven">
-            <mapper type="glob" from="${bundled.maven}/*" to="*"/>
+            <mapper type="glob" from="${bundled.maven}-SNAPSHOT/*" to="*"/>
         </unzip>                
     </target>
     <target name="check-binariesembedded-list">

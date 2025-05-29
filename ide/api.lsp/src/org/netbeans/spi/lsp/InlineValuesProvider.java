@@ -16,22 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.editor.actions;
+package org.netbeans.spi.lsp;
 
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
-import org.netbeans.api.editor.EditorActionRegistration;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.lsp.InlineValue;
+import org.openide.filesystems.FileObject;
 
-@EditorActionRegistration(name="toggle-lines-view",
-                          menuPath="View",
-                          menuPosition=895,
-                          preferencesKey=ShowLinesAction.KEY_LINES,
-                          preferencesDefault=ShowLinesAction.DEF_LINES)
-public class ShowLinesAction extends AbstractAction {
-    public static final String KEY_LINES = "enable.guide.lines";
-    public static final boolean DEF_LINES = true;
-    @Override
-    public void actionPerformed(ActionEvent e) {
-    }
-    
+/**
+ * Compute {@link InlineValue}s for the given file and offset.
+ *
+ * @since 1.35
+ */
+public interface InlineValuesProvider {
+
+    /**
+     * Compute {@linkplain InlineValue}s for the given file and location.
+     *
+     * @param file file for which the inline values should be computed
+     * @param currentExecutionPosition position for which the inline values should be computed
+     * @return the computed inline values
+     */
+    public CompletableFuture<List<? extends InlineValue>> inlineValues(@NonNull FileObject file, int currentExecutionPosition);
 }

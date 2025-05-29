@@ -26,20 +26,25 @@ import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.javascript2.vue.editor.VueLanguage;
+import static org.netbeans.modules.javascript2.vue.editor.embedding.VueHtmlEmbeddingProvider.TARGET_MIME_TYPE;
 import org.netbeans.modules.javascript2.vue.editor.lexer.VueTokenId;
+import static org.netbeans.modules.javascript2.vue.editor.lexer.VueTokenId.CSS;
+import static org.netbeans.modules.javascript2.vue.editor.lexer.VueTokenId.STYLE_LESS;
+import static org.netbeans.modules.javascript2.vue.editor.lexer.VueTokenId.STYLE_SCSS;
 import org.netbeans.modules.parsing.api.Embedding;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.spi.EmbeddingProvider;
 
 /**
  * this will enable braces matches of html elements
- * 
+ *
  * @author bhaidu
  */
 @EmbeddingProvider.Registration(
         mimeType = VueLanguage.MIME_TYPE,
-        targetMimeType = "text/html")
+        targetMimeType = TARGET_MIME_TYPE)
 public class VueHtmlEmbeddingProvider extends EmbeddingProvider {
+
     public static final String FILLER = " "; //NOI18N
     public static final String TARGET_MIME_TYPE = "text/html"; //NOI18N
 
@@ -47,7 +52,7 @@ public class VueHtmlEmbeddingProvider extends EmbeddingProvider {
     public List<Embedding> getEmbeddings(final Snapshot snapshot) {
         TokenHierarchy<?> tokenHierarchy = snapshot.getTokenHierarchy();
         TokenSequence<?> ts = tokenHierarchy.tokenSequence();
-        
+
         if (ts == null || !ts.isValid()) {
             return Collections.emptyList();
         }
@@ -56,17 +61,26 @@ public class VueHtmlEmbeddingProvider extends EmbeddingProvider {
 
         try {
             while (ts.moveNext()) {
-                Token<?> t = ts.token();
-                TokenId id = t.id();
+                Token<?> token = ts.token();
+                TokenId id = token.id();
 
-                if (id.equals(VueTokenId.HTML)) {
-                    embeddings.add(snapshot.create(ts.offset(), t.length(), TARGET_MIME_TYPE));
+                if (token.text() != null && id instanceof VueTokenId) {
+                    switch ((VueTokenId) id) {
+                        //javascript, css, scss, less require content embedding due to braces matcher issue
+                        case HTML, JAVASCRIPT, CSS -> {
+                            embeddings.add(snapshot.create(ts.offset(), token.length(), TARGET_MIME_TYPE));
+                        }
+                        case STYLE_SCSS, STYLE_LESS -> {
+                            String fake = new String(new char[token.text().length()]).replace("\0", FILLER); //NOI18N
+                            embeddings.add(snapshot.create(fake, TARGET_MIME_TYPE));
+                        }
+                    }
                 }
             }
         } catch (Exception ex) {
             return Collections.emptyList();
         }
-        
+
         if (embeddings.isEmpty()) {
             return Collections.emptyList();
         } else {
@@ -80,5 +94,6 @@ public class VueHtmlEmbeddingProvider extends EmbeddingProvider {
     }
 
     @Override
-    public void cancel() { }
+    public void cancel() {
+    }
 }

@@ -71,6 +71,9 @@ public class StopServerAction extends NodeAction {
     }
 
     private static boolean enableImpl(PayaraModule commonSupport) {
+        if (Boolean.TRUE.toString().equals(commonSupport.getInstanceProperties().get(PayaraModule.WSL_ATTR))) {
+            return false;
+        }
         boolean online = PayaraState.isOnline(commonSupport.getInstance());
         return (online
                 || commonSupport.getServerState() == ServerState.STOPPED_JVM_PROFILER)

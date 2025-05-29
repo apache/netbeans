@@ -301,6 +301,8 @@ public final class VariablesFormatter implements Cloneable {
                         "MSG_EnumFormatter=Default Enum Formatter",
                         "MSG_BigDecimalFormatter=Default BigDecimal Formatter",
                         "MSG_BigIntegerFormatter=Default BigInteger Formatter",
+                        "MSG_JavadocASTFormatter=Default com.sun.source.doctree.DocTree Formatter",
+                        "MSG_JavacASTFormatter=Default com.sun.source.tree.Tree Formatter",
                         })
     private static VariablesFormatter[] createDefaultFormatters() {
         VariablesFormatter charSequence = new VariablesFormatter(Bundle.MSG_CharSequenceFormatter());
@@ -354,8 +356,20 @@ public final class VariablesFormatter implements Cloneable {
         bigIntegerFormatter.setValueFormatCode("toString()");
         bigIntegerFormatter.isDefault = true;
 
+        VariablesFormatter javadocASTFormatter = new VariablesFormatter(Bundle.MSG_JavadocASTFormatter());
+        javadocASTFormatter.setClassTypes("com.sun.source.doctree.DocTree");
+        javadocASTFormatter.setIncludeSubTypes(true);
+        javadocASTFormatter.setValueFormatCode("toString()");
+        javadocASTFormatter.isDefault = true;
+
+        VariablesFormatter javacASTFormatter = new VariablesFormatter(Bundle.MSG_JavacASTFormatter());
+        javacASTFormatter.setClassTypes("com.sun.source.tree.Tree");
+        javacASTFormatter.setIncludeSubTypes(true);
+        javacASTFormatter.setValueFormatCode("toString()");
+        javacASTFormatter.isDefault = true;
+
         return new VariablesFormatter[] { charSequence, collection, map, mapEntry, enumFormatter,
-            bigDecimalFormatter, bigIntegerFormatter };
+            bigDecimalFormatter, bigIntegerFormatter, javadocASTFormatter, javacASTFormatter };
     }
 
 

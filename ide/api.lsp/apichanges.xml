@@ -51,6 +51,19 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="InlineValuesProvider">
+        <api name="LSP_API"/>
+        <summary>Adding InlineValue and InlineValuesProvider</summary>
+        <version major="1" minor="35"/>
+        <date day="23" month="4" year="2025"/>
+        <author login="jlahoda"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no" />
+        <description>
+            The <code>InlineValuesProvider</code> is introduced to provide debugger
+            inline values in the the LSP protocol.
+        </description>
+        <class package="org.netbeans.spi.lsp" name="InlineValuesProvider"/>
+    </change>
     <change id="InlayHintsProvider">
         <api name="LSP_API"/>
         <summary>Adding InlayHintsProvider</summary>

@@ -892,6 +892,7 @@ public final class Server {
                 capabilities.setDocumentFormattingProvider(true);
                 capabilities.setDocumentRangeFormattingProvider(true);
                 capabilities.setReferencesProvider(true);
+                capabilities.setInlineValueProvider(true);
 
                 CallHierarchyRegistrationOptions chOpts = new CallHierarchyRegistrationOptions();
                 chOpts.setWorkDoneProgress(true);

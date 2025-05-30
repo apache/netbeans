@@ -34,7 +34,6 @@ import org.openide.*;
 import org.openide.nodes.*;
 import org.openide.cookies.*;
 import org.openide.windows.*;
-import org.openide.util.WeakSet;
 
 
 import org.netbeans.api.xml.cookies.*;
@@ -65,7 +64,7 @@ public final class InputOutputReporter implements CookieObserver {
 
     // remember all attached annotations
     private static final Set hyperlinks = 
-        Collections.synchronizedSet(new WeakSet()); // Set<Hyperlink>
+        Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap())); // Set<Hyperlink>
     
     /** 
      * Creates new InputOutputReporter regirecting ProcessorListener

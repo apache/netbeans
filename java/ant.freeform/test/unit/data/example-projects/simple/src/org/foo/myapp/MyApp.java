@@ -19,7 +19,6 @@
 package org.foo.myapp;
 import java.io.IOException;
 import java.util.Set;
-import org.openide.util.WeakSet;
 import org.openide.util.io.NullInputStream;
 public class MyApp {
     public static void main(String[] args) throws IOException {

@@ -22,6 +22,7 @@ import com.sun.jdi.ObjectReference;
 import java.beans.PropertyChangeEvent;
 import java.util.Collections;
 import java.util.Set;
+import java.util.WeakHashMap;
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.api.debugger.DebuggerManager;
@@ -49,7 +50,6 @@ import org.openide.NotifyDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 
 /**
  * Grabs screenshot of remote application.
@@ -166,7 +166,7 @@ public class TakeScreenshotActionProvider extends ActionsProviderSupport {
     
     private class BPListener implements DebuggerManagerListener {
         
-        private final Set<RemoteScreenshot> screenshots = new WeakSet<RemoteScreenshot>();
+        private final Set<RemoteScreenshot> screenshots = Collections.newSetFromMap(new WeakHashMap<>());
         
         void addScreenshot(RemoteScreenshot screenshot) {
             synchronized (screenshots) {

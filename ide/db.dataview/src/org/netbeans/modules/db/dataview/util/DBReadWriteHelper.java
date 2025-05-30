@@ -453,10 +453,10 @@ public class DBReadWriteHelper {
 
                 case Types.INTEGER: {
                     long ldata = Long.parseLong(valueObj.toString());
-                        if(ldata >= ((long) Integer.MIN_VALUE) && ldata <= ((long) Integer.MAX_VALUE)) {
-                        return Integer.valueOf((int) ldata);
-                        } else if ( ldata < maxUnsignedInt ) {
-                        return new Long(ldata);
+                    if (ldata >= ((long) Integer.MIN_VALUE) && ldata <= ((long) Integer.MAX_VALUE)) {
+                        return (int) ldata;
+                    } else if (ldata < maxUnsignedInt) {
+                        return ldata;
                     } else {
                         throw new NumberFormatException("Illegal value for java.sql.Type.Integer");
                     }
@@ -464,9 +464,9 @@ public class DBReadWriteHelper {
 
                 case Types.SMALLINT: {
                     int idata = Integer.parseInt(valueObj.toString());
-                        if(idata >= ((int) Short.MIN_VALUE) && idata <= ((int) Short.MAX_VALUE)) {
+                    if (idata >= ((int) Short.MIN_VALUE) && idata <= ((int) Short.MAX_VALUE)) {
                         return (short) idata;
-                        } else if ( idata < maxUnsignedShort ) {
+                    } else if ( idata < maxUnsignedShort ) {
                         return idata;
                     } else {
                         throw new NumberFormatException("Illegal value for java.sql.Type.SMALLINT");

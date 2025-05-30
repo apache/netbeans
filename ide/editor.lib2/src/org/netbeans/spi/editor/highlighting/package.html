@@ -61,29 +61,29 @@
   
   <p>
   The whole SPI is organized around the
-  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/highlighting/HighlightsLayer.html">HighlightsLayer</a></code>
+  {@link HighlightsLayer HighlightsLayer }
   class, which is the ultimate thing that modules need to implement in order to provide
   a list of highlights for a document. The <code>HighlightsLayer</code>s are created
-  by <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/highlighting/HighlightsLayerFactory.html">HighlightsLayerFactory</a></code>,
+  by {@link HighlightsLayerFactory HighlightsLayerFactory },
   which should be registered in <code>MimeLookup</code> under the mime-type of a document
   that the layer should be used for. All layers registered for one type of a document
   are ordedred according to the
-  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/highlighting/ZOrder.html">ZOrder</a></code>
+  {@link ZOrder ZOrder}
   they provide. Besides of <code>ZOrder</code> the layers provide additional information
   about nature of highlights they maintain.
   </p>
 
   <p>
   The <code>HighlightsLayer</code> class implements
-  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/highlighting/HighlightsContainer.html">HighlightsContainer</a></code>
+  {@link HighlightsContainer HighlightsContainer }
   interface, which is the fundamental part of the SPI.
   The <code>HighlightsContainer</code> interface allows to get a list of highlighs
   and to listen on changes in highlights that it contains.
   Besides of <code>HighlightsLayer</code> there are two other implementations of
   this interface and they are
-  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/highlighting/support/OffsetsBag.html">OffsetsBag</a></code>
+  {@link org.netbeans.spi.editor.highlighting.support.OffsetsBag OffsetsBag}
   and
-  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/highlighting/support/PositionsBag.html">PositionsBag</a></code>.
+  {@link org.netbeans.spi.editor.highlighting.support.PositionsBag PositionsBag}.
   Both <code>OffsetsBag</code> and <code>PositionsBag</code> classes allow adding
   and removing highlights dynamically. The highlights can be added either one-by-one
   or in chunks; each change is reported to listeners.
@@ -116,7 +116,7 @@
   <p>
   The <code>HLFactory</code> class will simply return a new instance of
   the module's implementation of the <code>HighlightsLayer</code> class from its
-  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/highlighting/HighlightsLayerFactory.html#createLayers-org.netbeans.spi.editor.highlighting.HighlightsLayerFactory.Context-">createLayers</a></code>
+  {@link HighlightsLayerFactory#createLayers(org.netbeans.spi.editor.highlighting.HighlightsLayerFactory.Context) createLayers }
   method. The parameter of the <code>createLayers</code> method provides access to
   a <code>JTextComponent</code> and its <code>Document</code>, which the layer
   is being created for. The method can create and return multiple <code>HighlightsLayer</code>s.
@@ -210,7 +210,7 @@
   Since there can be multiple layers suplying highlights for one document and the
   highlights can generally overlap it is important to sort the layers according
   to their Z-order. For this purpose each layer has to supply an appropriate
-  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/highlighting/ZOrder.html">ZOrder</a></code>.
+  {@link ZOrder ZOrder}.
   </p>
   
   <p>
@@ -298,12 +298,12 @@
   
   <p>
   The <code>AttributeSet</code>s used for highlighting are often created by calling
-  <code><a href="@org-netbeans-modules-editor-settings@/org/netbeans/api/editor/settings/FontColorSettings.html">FontColorSettings</a></code>
+  {@link org.netbeans.api.editor.settings.FontColorSettings FontColorSettings }
   and it is a responsibility of this class to prevent excesive creation of
   <code>AttributeSet</code>s it provides. However, if your highlighting layer creates
   its own <code>AttributeSet</code>s they should always be cached and reused. You can
   use methods from the
-  <code><a href="@org-netbeans-modules-editor-settings@/org/netbeans/api/editor/settings/AttributesUtilities.html">AttributesUtilities</a></code>
+  {@link org.netbeans.api.editor.settings.AttributesUtilities AttributesUtilities }
   class for creating immutable <code>AttributeSet</code>s.
   </p>
   

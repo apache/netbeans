@@ -121,7 +121,7 @@ public final class HighlightsList {
      * @param usePrependText reflect the prepended text setting.
      * @return either simple or compound attribute set.
      */
-    public AttributeSet cutSameFont(Font defaultFont, int maxEndOffset, int wsEndOffset, CharSequence docText, boolean usePrependText) {
+    public AttributeSet cutSameFont(Font defaultFont, int maxEndOffset, int wsEndOffset, CharSequence docText) {
         assert (maxEndOffset <= endOffset()) :
                 "maxEndOffset=" + maxEndOffset + " > endOffset()=" + endOffset() + ", " + this; // NOI18N
         HighlightItem item = get(0);
@@ -159,18 +159,16 @@ public final class HighlightsList {
 
         // Extends beyond first highlight
         Font firstFont = ViewUtils.getFont(firstAttrs, defaultFont);
-        Object firstPrependText = usePrependText && firstAttrs != null ? firstAttrs.getAttribute(ViewUtils.KEY_VIRTUAL_TEXT_PREPEND) : null;
+        Object firstPrependText = firstAttrs != null ? firstAttrs.getAttribute(ViewUtils.KEY_VIRTUAL_TEXT_PREPEND) : null;
         Object firstShadowPrependText = firstAttrs != null ? firstAttrs.getAttribute(ViewUtils.KEY_SHADOW_TEXT_PREPEND) : null;
-        Object firstVerticalShadowPrependText = firstAttrs != null ? firstAttrs.getAttribute(ViewUtils.KEY_VERTICAL_SHADOW_TEXT_PREPEND) : null;
         int index = 1;
         while (true) {
             item = get(index);
             AttributeSet attrs = item.getAttributes();
             Font font = ViewUtils.getFont(attrs, defaultFont);
-            Object prependText = usePrependText && attrs != null ? attrs.getAttribute(ViewUtils.KEY_VIRTUAL_TEXT_PREPEND) : null;
+            Object prependText = attrs != null ? attrs.getAttribute(ViewUtils.KEY_VIRTUAL_TEXT_PREPEND) : null;
             Object shadowPrependText = attrs != null ? attrs.getAttribute(ViewUtils.KEY_SHADOW_TEXT_PREPEND) : null;
-            Object verticalShadowPrependText = attrs != null ? attrs.getAttribute(ViewUtils.KEY_VERTICAL_SHADOW_TEXT_PREPEND) : null;
-            if (!font.equals(firstFont) || !Objects.equals(firstPrependText, prependText) || !Objects.equals(firstShadowPrependText, shadowPrependText) || !Objects.equals(firstShadowPrependText, verticalShadowPrependText)) { // Stop at itemEndOffset
+            if (!font.equals(firstFont) || !Objects.equals(firstPrependText, prependText) || !Objects.equals(firstShadowPrependText, shadowPrependText)) { // Stop at itemEndOffset
                 if (index == 1) { // Just single attribute set
                     cutStartItems(1);
                     startOffset = itemEndOffset; // end offset of first item

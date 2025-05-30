@@ -40,11 +40,9 @@ public class Installer implements Runnable {
     public static void add (String mimeType) {
         if (mimeTypes.containsKey(mimeType)) {
             Integer v = mimeTypes.get(mimeType);
-            v = v + 1;
-            mimeTypes.put(mimeType, v);
+            mimeTypes.put(mimeType, v + 1);
         } else {
-            Integer v = new Integer(1);
-            mimeTypes.put(mimeType, v);
+            mimeTypes.put(mimeType, 1);
         }
     }
     

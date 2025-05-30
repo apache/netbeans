@@ -367,7 +367,6 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             }
             addToPath(cldec);
             typeInfo = new TypeDeclarationTypeInfo(cldec);
-            scan(cldec.getAttributes());
             scan(cldec.getSuperClass());
             scan(cldec.getInterfaces());
             Identifier name = cldec.getName();
@@ -375,6 +374,8 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             needToScan.put(typeInfo, new ArrayList<>());
             if (cldec.getBody() != null) {
                 cldec.getBody().accept(this);
+                // GH-8244 scan attributes after constant declarations are scanned
+                scan(cldec.getAttributes());
 
                 // find all usages in the method bodies
                 scanMethodBodies();
@@ -513,13 +514,14 @@ public class SemanticAnalysis extends SemanticAnalyzer {
                 // GH-5551 keep original type info to scan parent blocks
                 TypeInfo originalTypeInfo = typeInfo;
                 typeInfo = new ClassInstanceCreationTypeInfo(node);
-                scan(node.getAttributes());
                 scan(node.getSuperClass());
                 scan(node.getInterfaces());
                 needToScan.put(typeInfo, new ArrayList<>());
                 Block body = node.getBody();
                 if (body != null) {
                     body.accept(this);
+                    // GH-8244 scan attributes after constant declarations are scanned
+                    scan(node.getAttributes());
 
                     // find all usages in the method bodies
                     scanMethodBodies();
@@ -571,7 +573,6 @@ public class SemanticAnalysis extends SemanticAnalyzer {
                 return;
             }
             addToPath(node);
-            scan(node.getAttributes());
             scan(node.getInterfaces());
             typeInfo = new TypeDeclarationTypeInfo(node);
             Identifier name = node.getName();
@@ -579,6 +580,8 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             needToScan.put(typeInfo, new ArrayList<>());
             if (node.getBody() != null) {
                 node.getBody().accept(this);
+                // GH-8244 scan attributes after constant declarations are scanned
+                scan(node.getAttributes());
                 scanMethodBodies();
                 addColoringForUnusedPrivateConstants();
             }

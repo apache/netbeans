@@ -21,6 +21,7 @@ package org.netbeans.modules.css.model.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.netbeans.modules.css.lib.api.Node;
+import org.netbeans.modules.css.model.api.MediaCondition;
 import org.netbeans.modules.css.model.api.MediaExpression;
 import org.netbeans.modules.css.model.api.MediaQuery;
 import org.netbeans.modules.css.model.api.MediaQueryOperator;
@@ -54,6 +55,10 @@ public class MediaQueryI extends ModelElement implements MediaQuery {
             mediaExpressions.add(value);
         }
       
+        @Override
+        public void elementAdded(MediaCondition value) {
+            mediaExpressions.addAll(value.getMediaExpressions());
+        }
         
     };
     

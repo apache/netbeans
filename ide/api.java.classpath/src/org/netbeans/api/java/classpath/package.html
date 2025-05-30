@@ -77,7 +77,7 @@ as in this example for getting compilation classpath:
 <div class="nonnormative">
 <pre>
 <span class="type"><a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html">FileObject</a></span> <span class="variable-name">f</span> = <span class="function-name">getSomeJavaSourceFile</span>();
-<span class="type"><a href="ClassPath.html">ClassPath</a></span> <span class="variable-name">cp</span> = ClassPath.<a href="ClassPath.html#getClassPath-org.openide.filesystems.FileObject-java.lang.String-"><span class="function-name">getClassPath</span></a>(f, ClassPath.<a href="ClassPath.html#COMPILE"><span class="constant">COMPILE</span></a>);
+<span class="type"><a href="ClassPath.html">ClassPath</a></span> <span class="variable-name">cp</span> = ClassPath.<a href="ClassPath.html#getClassPath(org.openide.filesystems.FileObject,java.lang.String)"><span class="function-name">getClassPath</span></a>(f, ClassPath.<a href="ClassPath.html#COMPILE"><span class="constant">COMPILE</span></a>);
 <span class="predefined">System.err.println</span>(cp);
 </pre>
 </div>
@@ -110,8 +110,8 @@ to find out what folders are the roots:
 
 <div class="nonnormative">
 <pre>
-<a href="ClassPath.html"><span class="type">ClassPath</span></a> <span class="variable-name">cp</span> = ClassPath.<a href="ClassPath.html#getClassPath-org.openide.filesystems.FileObject-java.lang.String-"><span class="function-name">getClassPath</span></a>(myClassFile, ClassPath.<a href="ClassPath.html#EXECUTE"><span class="constant">EXECUTE</span></a>);
-<a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html">FileObject</a>[] <span class="variable-name">roots</span> = cp.<a href="ClassPath.html#getRoots--"><span class="function-name">getRoots</span></a>();
+<a href="ClassPath.html"><span class="type">ClassPath</span></a> <span class="variable-name">cp</span> = ClassPath.<a href="ClassPath.html#getClassPath(org.openide.filesystems.FileObject,java.lang.String)"><span class="function-name">getClassPath</span></a>(myClassFile, ClassPath.<a href="ClassPath.html#EXECUTE"><span class="constant">EXECUTE</span></a>);
+<a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html">FileObject</a>[] <span class="variable-name">roots</span> = cp.<a href="ClassPath.html#getRoots()"><span class="function-name">getRoots</span></a>();
 <span class="keyword">for</span> (<span class="keyword">int</span> <span class="variable-name">i</span> = <span class="constant">0</span>; i &lt; roots.length; i++) {
     System.err.print(roots[i] + <span class="constant">":"</span>);
 }
@@ -124,15 +124,15 @@ more thoroughly using
 
 <div class="nonnormative">
 <pre>
-<a href="ClassPath.html"><span class="type">ClassPath</span></a> <span class="variable-name">cp</span> = ClassPath.<a href="ClassPath.html#getClassPath-org.openide.filesystems.FileObject-java.lang.String-"><span class="function-name">getClassPath</span></a>(myClassObject, ClassPath.<a href="ClassPath.html#EXECUTE"><span class="constant">EXECUTE</span></a>);
-<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/util/List.html"><span class="type">List</span></a> <span class="variable-name">entries</span> = cp.<a href="ClassPath.html#entries--"><span class="function-name">entries</span></a>();
+<a href="ClassPath.html"><span class="type">ClassPath</span></a> <span class="variable-name">cp</span> = ClassPath.<a href="ClassPath.html#getClassPath(org.openide.filesystems.FileObject,java.lang.String)"><span class="function-name">getClassPath</span></a>(myClassObject, ClassPath.<a href="ClassPath.html#EXECUTE"><span class="constant">EXECUTE</span></a>);
+<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/util/List.html"><span class="type">List</span></a> <span class="variable-name">entries</span> = cp.<a href="ClassPath.html#entries()"><span class="function-name">entries</span></a>();
 <span class="keyword">for</span> (Iterator <span class="variable-name">it</span> = entries.iterator(); it.hasNext(); ) {
     <a href="ClassPath.Entry.html"><span class="type">ClassPath.Entry</span></a> <span class="variable-name">en</span> = (ClassPath.Entry)it.next();
-    <span class="keyword">if</span> (!en.<a href="ClassPath.Entry.html#isValid--"><span class="function-name">isValid()</span></a>) {
-        <span class="type">IOException</span> <span class="variable-name">x</span> = en.<a href="ClassPath.Entry.html#getError--"><span class="function-name">getError</span></a>();
+    <span class="keyword">if</span> (!en.<a href="ClassPath.Entry.html#isValid()"><span class="function-name">isValid()</span></a>) {
+        <span class="type">IOException</span> <span class="variable-name">x</span> = en.<a href="ClassPath.Entry.html#getError()"><span class="function-name">getError</span></a>();
         <span class="comment">// Report the error somehow, perhaps using <a href="@org-openide-util-ui@/org/openide/ErrorManager.html"><code>org.openide.ErrorManager</code></a></span>.
     } <span class="keyword">else</span> {
-        <a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html"><span class="type">FileObject</span></a> <span class="variable-name">root</span> = en.<a href="ClassPath.Entry.html#getRoot--"><span class="function-name">getRoot</span></a>();
+        <a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html"><span class="type">FileObject</span></a> <span class="variable-name">root</span> = en.<a href="ClassPath.Entry.html#getRoot()"><span class="function-name">getRoot</span></a>();
         <span class="comment">// Do something with the root folder</span>
     }
 }
@@ -164,9 +164,9 @@ instance and ask it to compute the name for you:
 
 <div class="nonnormative">
 <pre>
-<a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html"><span class="type">FileObject</span></a> <span class="variable-name">f</span> = bundleDataObject.<a href="@org-openide-loaders@/org/openide/loaders/DataObject.html#getPrimaryFile--"><span class="function-name">getPrimaryFile</span></a>();
-<a href="ClassPath.html"><span class="type">ClassPath</span></a> <span class="variable-name">cp</span> = ClassPath.<a href="ClassPath.html#getClassPath-org.openide.filesystems.FileObject-java.lang.String-"><span class="function-name">getClassPath</span></a>(theSourceDataObject.getPrimaryFile(), ClassPath.<a href="ClassPath.html#EXECUTE"><span class="constant">EXECUTE</span></a>);
-String <span class="variable-name">bundleResource</span> = cp.<a href="ClassPath.html#getResourceName-org.openide.filesystems.FileObject-"><span class="function-name">getResourceName</span></a>(f);
+<a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html"><span class="type">FileObject</span></a> <span class="variable-name">f</span> = bundleDataObject.<a href="@org-openide-loaders@/org/openide/loaders/DataObject.html#getPrimaryFile()"><span class="function-name">getPrimaryFile</span></a>();
+<a href="ClassPath.html"><span class="type">ClassPath</span></a> <span class="variable-name">cp</span> = ClassPath.<a href="ClassPath.html#getClassPath(org.openide.filesystems.FileObject,java.lang.String)"><span class="function-name">getClassPath</span></a>(theSourceDataObject.getPrimaryFile(), ClassPath.<a href="ClassPath.html#EXECUTE"><span class="constant">EXECUTE</span></a>);
+String <span class="variable-name">bundleResource</span> = cp.<a href="ClassPath.html#getResourceName(org.openide.filesystems.FileObject)"><span class="function-name">getResourceName</span></a>(f);
 </pre>
 </div>
 
@@ -189,10 +189,10 @@ dependencies, you may do:
 <div class="nonnormative">
 <pre>
 <a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html"><span class="type">FileObject</span></a> <span class="variable-name">f</span>; <span class="comment">// some interesting FileObject.</span>
-<a href="ClassPath.html"><span class="type">ClassPath</span></a> <span class="variable-name">cp</span> = ClassPath.<a href="ClassPath.html#getClassPath-org.openide.filesystems.FileObject-java.lang.String-"><span class="function-name">getClassPath</span></a>(f, ClassPath.<a href="ClassPath.html#COMPILE"><span class="constant">COMPILE</span></a>);
-cp.<a href="ClassPath.html#addPropertyChangeListener-java.beans.PropertyChangeListener-"><span class="function-name">addPropertyChangeListener</span></a>(new <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/PropertyChangeListener.html"><span class="type">PropertyChangeListener</span></a>() {
+<a href="ClassPath.html"><span class="type">ClassPath</span></a> <span class="variable-name">cp</span> = ClassPath.<a href="ClassPath.html#getClassPath(org.openide.filesystems.FileObject,java.lang.String)"><span class="function-name">getClassPath</span></a>(f, ClassPath.<a href="ClassPath.html#COMPILE"><span class="constant">COMPILE</span></a>);
+cp.<a href="ClassPath.html#addPropertyChangeListener(java.beans.PropertyChangeListener)"><span class="function-name">addPropertyChangeListener</span></a>(new <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/PropertyChangeListener.html"><span class="type">PropertyChangeListener</span></a>() {
     <span class="keyword">public void</span> <span class="function-name">propertyChange</span>(<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/PropertyChangeEvent.html"><span class="type">PropertyChangeEvent</span></a> <span class="variable-name">evt</span>) {
-        <span class="keyword">if</span> (ClassPath.<a href="ClassPath.html#PROP_ROOTS"><span class="constant">PROP_ROOTS</span></a>.equals(evt.<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/PropertyChangeEvent.html#getPropertyName--"><span class="function-name">getPropertyName()</span></a>)) {
+        <span class="keyword">if</span> (ClassPath.<a href="ClassPath.html#PROP_ROOTS"><span class="constant">PROP_ROOTS</span></a>.equals(evt.<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/PropertyChangeEvent.html#getPropertyName()"><span class="function-name">getPropertyName()</span></a>)) {
             <span class="comment">// Update your stuff, because classpath roots have changed.</span>
         }
     }

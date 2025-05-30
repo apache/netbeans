@@ -215,22 +215,22 @@ is the proper place.
 	  <p>
 	      After fixing bug#185209
 	      <code>
-	      <a href="@TOP@/org/openide/windows/IOContainer.html#select-javax.swing.JComponent-">IOContainer.select()</a>
+	      <a href="@TOP@/org/openide/windows/IOContainer.html#select(javax.swing.JComponent)">IOContainer.select()</a>
 	      </code>
 	      no longer performs these operations for us so implementations of IOProvider
 	      have to do them:
 	      <code>
-	      <a href="@TOP@/org/openide/windows/IOContainer.html#open--">IOContainer.open()</a>
+	      <a href="@TOP@/org/openide/windows/IOContainer.html#open()">IOContainer.open()</a>
 	      </code>
 	      ,
 	      <code>
-	      <a href="@TOP@/org/openide/windows/IOContainer.html#requestVisible--">IOContainer.requestVisible()</a>
+	      <a href="@TOP@/org/openide/windows/IOContainer.html#requestVisible()">IOContainer.requestVisible()</a>
 	      </code>
 	      .
 	  </p>
 	  <p>
 	      Existing implementation of
-	      <a href="@TOP@/org/openide/windows/InputOutput.html#select--">InputOutput.select()</a>
+	      <a href="@TOP@/org/openide/windows/InputOutput.html#select()">InputOutput.select()</a>
 	      has been adjusted and is still compatible.
 	  </p>
       </description>
@@ -287,14 +287,14 @@ is the proper place.
       <author login="t_h"/>
       <compatibility addition="yes" binary="compatible" semantic="compatible" />
       <description>
-        <p>Added static <a href="@TOP@/org/openide/windows/IOProvider.html#get-java.lang.String-">
+        <p>Added static <a href="@TOP@/org/openide/windows/IOProvider.html#get(java.lang.String)">
         <code>IOProvider.get(String name)</code></a> to get specific implementation of IOProvider. Added
-        <a href="@TOP@/org/openide/windows/IOProvider.html#getName--"><code>IOProvider.getName()</code></a>
+        <a href="@TOP@/org/openide/windows/IOProvider.html#getName()"><code>IOProvider.getName()</code></a>
         which should be overriden by subclasses to provide its name (ID).
         </p>
         <p><a href="@TOP@/org/openide/windows/IOContainer.html"><code>IOContainer</code></a>
         was introduced as an accessor to "parent container" for IO components (tab).
-        <a href="@TOP@/org/openide/windows/IOProvider.html#getIO-java.lang.String-javax.swing.Action:A-org.openide.windows.IOContainer-">
+        <a href="@TOP@/org/openide/windows/IOProvider.html#getIO(java.lang.String,javax.swing.Action%5B%5D,org.openide.windows.IOContainer)">
         <code>IOProvider.getIO(String name, Action[] additionalActions, IOContainer ioContainer)</code></a>
         can be used to specify alternative container.
         </p>

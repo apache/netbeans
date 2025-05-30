@@ -60,7 +60,7 @@
             <public-packages/>
             <class-path-extension>
                 <runtime-relative-path>org-eclipse-jgit-lfs.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.jgit.lfs-7.0.0.202409031743-r.jar</binary-origin>
+                <binary-origin>external/org.eclipse.jgit.lfs-7.2.0.202503040940-r.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

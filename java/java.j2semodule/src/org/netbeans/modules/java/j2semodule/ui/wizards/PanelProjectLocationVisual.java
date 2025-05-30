@@ -286,7 +286,7 @@ public class PanelProjectLocationVisual extends SettingsPanel implements Documen
             String formatter = NbBundle.getMessage(PanelProjectLocationVisual.class, "TXT_JavaModuleApplication");
             while ((projectName=validFreeProjectName(projectLocation, formatter, baseCount))==null)
                 baseCount++;                
-            settings.putProperty (NewJ2SEModularProjectWizardIterator.PROP_NAME_INDEX, new Integer(baseCount));
+            settings.putProperty (NewJ2SEModularProjectWizardIterator.PROP_NAME_INDEX, baseCount);
         }
         this.projectNameTextField.setText (projectName);                
         this.projectNameTextField.selectAll();
@@ -319,7 +319,7 @@ public class PanelProjectLocationVisual extends SettingsPanel implements Documen
     }
     
     private String validFreeProjectName (final File parentFolder, final String formater, final int index) {
-        String name = MessageFormat.format (formater, new Object[]{new Integer (index)});                
+        String name = MessageFormat.format (formater, index);                
         File file = new File (parentFolder, name);
         return file.exists() ? null : name;
     }

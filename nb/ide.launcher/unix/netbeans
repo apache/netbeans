@@ -51,6 +51,8 @@ case "`uname`" in
         ;;
 esac
 
+# $HOME can be used as it is present on mac OS and
+BASEDIR=$basedir
 
 if [ -f "$basedir"/etc/netbeans.conf ] ; then
     . "$basedir"/etc/netbeans.conf

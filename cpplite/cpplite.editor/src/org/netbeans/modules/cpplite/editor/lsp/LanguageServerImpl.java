@@ -111,28 +111,36 @@ public class LanguageServerImpl implements LanguageServerProvider {
 
                     File compileCommandDirs = getCompileCommandsDir(config);
                     if (compileCommandDirs != null) {
-                        Map<String,List<String>> commands = new HashMap<>();
-                        commands.put(Utils.KEY_CCLS_PATH, List.of(
-                                ccls,
-                                "--init={\"compilationDatabaseDirectory\":\"" + compileCommandDirs.getAbsolutePath() + "\"}"
-                        ));
-                        commands.put(Utils.KEY_CLANGD_PATH, List.of(
-                                clangd,
-                                "--compile-commands-dir=" + compileCommandDirs.getAbsolutePath(),
-                                "--clang-tidy",
-                                "--completion-style=detailed"
-                        ));
+                        Map<String, String> serverKey2Path = new HashMap<>();
 
-                        List<String> command;
-                        if (Utils.getPreferredLs().equals(Utils.KEY_CCLS_PATH) && ccls != null && new File(ccls).canExecute()) {
-                            command = commands.get(Utils.KEY_CCLS_PATH);
-                        } else if (Utils.getPreferredLs().equals(Utils.KEY_CLANGD_PATH) && clangd != null && new File(clangd).canExecute()) {
-                            command = commands.get(Utils.KEY_CLANGD_PATH);
-                        } else if (ccls != null && new File(ccls).canExecute()) {
-                            command = commands.get(Utils.KEY_CCLS_PATH);
-                        } else {
-                            command = commands.get(Utils.KEY_CLANGD_PATH);
+                        serverKey2Path.put(Utils.KEY_CCLS_PATH, ccls);
+                        serverKey2Path.put(Utils.KEY_CLANGD_PATH, clangd);
+
+                        List<String> command = null;
+
+                        SERVER_FOUND:
+                        for (String serverCandidate : new String[] {Utils.getPreferredLs(),
+                                                                    Utils.KEY_CCLS_PATH,
+                                                                    Utils.KEY_CLANGD_PATH}) {
+                            String currentServer = serverKey2Path.get(serverCandidate);
+                            if (currentServer != null && new File(currentServer).canExecute()) {
+                                command = switch (serverCandidate) {
+                                    case Utils.KEY_CCLS_PATH -> List.of(
+                                            currentServer,
+                                            "--init={\"compilationDatabaseDirectory\":\"" + compileCommandDirs.getAbsolutePath() + "\"}"
+                                    );
+                                    case Utils.KEY_CLANGD_PATH -> List.of(
+                                            currentServer,
+                                            "--compile-commands-dir=" + compileCommandDirs.getAbsolutePath(),
+                                            "--clang-tidy",
+                                            "--completion-style=detailed"
+                                    );
+                                    default -> throw new InternalError("Unknown server key: " + serverCandidate);
+                                };
+                                break SERVER_FOUND;
+                            }
                         }
+
                         ProcessBuilder builder = new ProcessBuilder(command);
                         if (LOG.isLoggable(Level.FINEST)) {
                             builder.redirectError(Redirect.INHERIT);

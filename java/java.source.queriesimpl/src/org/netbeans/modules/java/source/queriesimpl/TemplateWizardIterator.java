@@ -135,13 +135,7 @@ class TemplateWizardIterator implements WizardDescriptor.AsynchronousInstantiati
                             ExpressionTree extendsTree = superclassElm != null
                                 ? maker.QualIdent(superclassElm)
                                 : maker.Identifier(superclassName);
-                            ClassTree copy = maker.Class(
-                                orig.getModifiers(),
-                                orig.getSimpleName(),
-                                orig.getTypeParameters(),
-                                extendsTree,
-                                orig.getImplementsClause(),
-                                orig.getMembers());
+                            ClassTree copy = maker.setExtends(orig, extendsTree);
                             wcopy.rewrite(orig, copy);
                             break;
                         }

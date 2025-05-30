@@ -107,7 +107,7 @@ public class ChicletWrapper implements Runnable {
             result *= 1951;
         }
 
-        return new Long(result);
+        return result;
     }
 
     private static HashMap<CacheEntry,BufferedImage> cache = new HashMap<CacheEntry,BufferedImage>();

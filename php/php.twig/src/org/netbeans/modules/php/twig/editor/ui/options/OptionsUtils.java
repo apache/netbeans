@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.php.twig.editor.ui.options;
 
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
@@ -31,13 +30,11 @@ import org.openide.util.WeakListeners;
  */
 public final class OptionsUtils {
 
-    private static final AtomicBoolean INITED = new AtomicBoolean(false);
-
     public static final String AUTO_COMPLETION_SMART_QUOTES = "twigAutoCompletionSmartQuotes"; // NOI18N
     public static final String AUTO_COMPLETION_SMART_DELIMITERS = "twigAutoCompletionSmartDelimiters"; // NOI18N
 
-    private static Boolean autoCompletionSmartQuotes = null;
-    private static Boolean autoCompletionSmartDelimiters = null;
+    private static volatile Boolean autoCompletionSmartQuotes = null;
+    private static volatile Boolean autoCompletionSmartDelimiters = null;
 
     // default values
     public static final boolean AUTO_COMPLETION_SMART_QUOTES_DEFAULT = true;
@@ -78,8 +75,8 @@ public final class OptionsUtils {
         return autoCompletionSmartDelimiters;
     }
 
-    private static void lazyInit() {
-        if (INITED.compareAndSet(false, true)) {
+    private synchronized static void lazyInit() {
+        if (PREFERENCES == null) {
             PREFERENCES = MimeLookup.getLookup(TwigLanguage.TWIG_MIME_TYPE).lookup(Preferences.class);
             PREFERENCES.addPreferenceChangeListener(WeakListeners.create(PreferenceChangeListener.class, PREFERENCES_TRACKER, PREFERENCES));
             PREFERENCES_TRACKER.preferenceChange(null);

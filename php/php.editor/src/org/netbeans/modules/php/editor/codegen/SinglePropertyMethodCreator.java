@@ -79,6 +79,9 @@ public interface SinglePropertyMethodCreator<T extends Property> {
         }
 
         private String getOverrideAttribute(MethodElement method) {
+            if (method.isConstructor()) {
+                return CodeUtils.EMPTY_STRING;
+            }
             if (!method.isMagic()
                     && (!method.getType().isTrait() || ElementUtils.isAbstractTraitMethod(method))
                     && cgsInfo.getPhpVersion().hasOverrideAttribute()) {

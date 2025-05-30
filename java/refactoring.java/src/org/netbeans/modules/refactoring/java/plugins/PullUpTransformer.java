@@ -241,6 +241,7 @@ public class PullUpTransformer extends RefactoringVisitor {
                                 oldOne.getTypeParameters(),
                                 oldOne.getExtendsClause(),
                                 oldOne.getImplementsClause(),
+                                oldOne.getPermitsClause(),
                                 oldOne.getMembers());
                         break;
                     case INTERFACE:
@@ -249,6 +250,7 @@ public class PullUpTransformer extends RefactoringVisitor {
                                 oldOne.getSimpleName(),
                                 oldOne.getTypeParameters(),
                                 oldOne.getImplementsClause(),
+                                oldOne.getPermitsClause(),
                                 oldOne.getMembers());
                         break;
                     case ANNOTATION_TYPE:

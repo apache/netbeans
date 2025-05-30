@@ -537,7 +537,7 @@
     <author login="saubrecht"/>
     <compatibility addition="yes" binary="incompatible" source="incompatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
     <description>
-        Added method <a href="@TOP@org/openide/windows/WindowManager.html#isOpenedEditorTopComponent-org.openide.windows.TopComponent-">WindowManager.isOpenedEditorTopComponent(TopComponent)</a>
+        Added method <a href="@TOP@org/openide/windows/WindowManager.html#isOpenedEditorTopComponent(org.openide.windows.TopComponent)">WindowManager.isOpenedEditorTopComponent(TopComponent)</a>
         for checking of the TopComponent type - editor or view. The method returns true if the given TopComponent is opened and is docked into an editor-type Mode.
         It is safe to call this method outside the event dispatch thread.
      </description>
@@ -553,9 +553,9 @@
     <author login="dsimonek"/>
     <compatibility addition="yes" binary="incompatible" source="incompatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
     <description>
-        Added method <a href="@TOP@org/openide/windows/TopComponent.html#openAtTabPosition-int-">TopComponent.openAtTabPosition(int)</a>
+        Added method <a href="@TOP@org/openide/windows/TopComponent.html#openAtTabPosition(int)">TopComponent.openAtTabPosition(int)</a>
         for opening and inserting top component at specified position. For retrieving current position, 
-        method <a href="@TOP@org/openide/windows/TopComponent.html#getTabPosition--">TopComponent.getTabPosition()</a>
+        method <a href="@TOP@org/openide/windows/TopComponent.html#getTabPosition()">TopComponent.getTabPosition()</a>
         was added.
      </description>
     <class package="org.openide.windows" name="TopComponent"/>
@@ -664,7 +664,7 @@
     <author login="dsimonek"/>
     <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
     <description>
-        New method <a href="@TOP@org/openide/windows/WindowManager.html#invokeWhenUIReady-java.lang.Runnable-">WindowManager.invokeWhenUIReady</a>
+        New method <a href="@TOP@org/openide/windows/WindowManager.html#invokeWhenUIReady(java.lang.Runnable)">WindowManager.invokeWhenUIReady</a>
         has been added that can be used to execute a code
         that is supposed to run after main window is shown.
     </description>

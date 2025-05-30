@@ -33,7 +33,8 @@
     <xsl:param name="arch.footer"/>
     <xsl:param name="arch.answers.date"/>
     <xsl:param name="arch.when"/>
-
+    <xsl:param name="javadoc-header" />
+    <xsl:param name="deprecated" />
     <xsl:template match="/">
         <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;</xsl:text>
         <html lang="en">
@@ -43,86 +44,99 @@
                 <xsl:if test="$arch.stylesheet">
                     <link rel="stylesheet" type="text/css" href="{$arch.stylesheet}"/>
                 </xsl:if>
+                <xsl:if test="$javadoc-header">
+                 <link rel="stylesheet" type="text/css" href="resource-files/javadoc.css" title="Style"/>
+                 <script type="text/javascript" src="script-files/script.js"></script>
+                 <script type="text/javascript" src="script-files/jquery-3.7.1.min.js"></script>
+                 <script type="text/javascript" src="script-files/jquery-ui.min.js"></script>
+                </xsl:if>
             </head>
             <body>
+             <script type="text/javascript">var pathtoroot = "./";
+              loadScripts(document, 'script');</script>
+             <noscript>
+              <div>JavaScript is disabled on your browser.</div>
+             </noscript>
+              <header role="banner">
+               <nav role="navigation">
                 <!-- ========= START OF TOP NAVBAR ======= -->
-                <div class="topNav">
-                    <a name="navbar.top">
-                        <!--   -->
-                    </a>
-                    <div class="skipNav">
-                        <a href="#skip.navbar.top" title="Skip navigation links">Skip navigation links</a>
-                    </div>
-                    <a name="navbar.top.firstrow">
-                        <!--   -->
-                    </a>
-                    <ul class="navList noreplace" title="Navigation">
-                        <li>
-                            <a href="apichanges.html">API Changes</a>
-                        </li>
-                        <li class="navBarCell1Rev">Architecture Summary</li>
-                        <li><a href="overview-summary.html">Overview</a></li>
-                        <li>Package</li>
-                        <li>Class</li>
-                        <li>Use</li>
-                        <li>Tree</li>
-                        <li>
-                            <a href="deprecated-list.html">Deprecated</a>
-                        </li>
-                        <li>Index</li>
-                        <li>
-                            <a href="help-doc.html">Help</a>
-                        </li>
-                    </ul>
-                    <div class="aboutLanguage"> </div>
+                <div class="top-nav" id="navbar-top">
+                 <div class="nav-content">
+                  <div class="nav-menu-button">
+                   <button id="navbar-toggle-button" aria-controls="navbar-top" aria-expanded="false" aria-label="Toggle navigation links">
+                    <span class="nav-bar-toggle-icon">
+                     <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                    </span>
+                    <span class="nav-bar-toggle-icon">
+                     <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                    </span>
+                    <span class="nav-bar-toggle-icon">
+                     <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                    </span>
+                   </button>
+                  </div>
+                  <div class="skip-nav">
+                   <a href="#skip-navbar-top" title="Skip navigation links">Skip navigation links</a>
+                  </div>
+
+                  <ul id="navbar-top-firstrow" class="nav-list" title="Navigation">
+                   <li>
+                    <a href="apichanges.html">API Changes</a>
+                   </li>
+                   <li class="nav-bar-cell1-rev">Architecture Summary
+                   </li>
+                   <li>
+                    <a href="index.html">Overview</a>
+                   </li>
+                   <li>
+                    <a href="overview-tree.html">Tree</a>
+                   </li>
+                   <xsl:if test="$deprecated='true'">
+                       <li>
+                           <a href="deprecated-list.html">Deprecated</a>
+                       </li>   
+                   </xsl:if>
+                   <li>
+                    <a href="index-files/index-1.html">Index</a>
+                   </li>
+                   <li><a href="search.html">Search</a></li>
+                   <li>
+                    <a href="help-doc.html#overview">Help</a>
+                   </li>
+                  </ul>
+
+                  <div class="about-language">
+                   <xsl:value-of select="$javadoc-header"/>
+                  </div>
+                 </div>
                 </div>
-                <div class="subNav">
-                    <ul class="navList">
-                        <li>
-                            <a href="index.html?overview-summary.html" target="_top">Frames</a>
-                        </li>
-                        <li>
-                            <a href="overview-summary.html" target="_top">No Frames</a>
-                        </li>
-                    </ul>
-                    <ul class="navList" id="allclasses_navbar_top">
-                        <li>
-                            <a href="allclasses-noframe.html">All Classes</a>
-                        </li>
-                    </ul>
-                    <div>
-                        <script type="text/javascript"><!--
-  allClassesLink = document.getElementById("allclasses_navbar_top");
-  if(window==top) {
-    allClassesLink.style.display = "block";
-  }
-  else {
-    allClassesLink.style.display = "none";
-  }
-  //-->
-                        </script>
-                    </div>
-                    <a name="skip.navbar.top">
-                        <!--   -->
-                    </a>
+                <div class="sub-nav">
+                 <div class="nav-content">
+                  <ol class="sub-nav-list"></ol>
+                  <div class="nav-list-search">
+                   <input type="text" id="search-input" disabled="disabled" placeholder="Search" aria-label="Search in documentation" autocomplete="off"/>
+                   <input type="reset" id="reset-search" disabled="disabled" value="Reset"/>
+                  </div>
+                 </div>
                 </div>
                 <!-- ========= END OF TOP NAVBAR ========= -->
-                <!--<xsl:if test="$arch.overviewlink">
-                    <p class="overviewlink"><a href="{$arch.overviewlink}">Overview</a></p>
-                </xsl:if>
-            -->
+                <span class="skip-nav" id="skip-navbar-top"></span>
+               </nav>
+              </header>
+              <div class="main-grid">
+               <main role="main">
                 <h1>NetBeans Architecture Answers for <xsl:value-of select="api-answers/@module" /><xsl:text> module</xsl:text></h1>
-                
+
                 <xsl:variable name="qver" select="api-answers/api-questions/@version"/>
                 <xsl:variable name="afor" select="api-answers/@question-version" />
-                
+
                 <ul>
                 <li><b>Author:</b><xsl:text> </xsl:text><xsl:value-of select="api-answers/@author" /></li>
                 <li><b>Answers as of:</b><xsl:text> </xsl:text><xsl:value-of select="$arch.answers.date"/></li>
                 <li><b>Answers for questions version:</b><xsl:text> </xsl:text><xsl:value-of select="$afor" /></li>
                 <li><b>Latest available version of questions:</b><xsl:text> </xsl:text><xsl:value-of select="$qver" /></li>
                 </ul>
-                
+
                 <xsl:if test="not($qver=$afor)">
                     <strong>
                         WARNING: answering questions version <xsl:value-of select="$afor"/>
@@ -130,29 +144,31 @@
                     </strong>
                 </xsl:if>
 
-                <hr/>            
+                <hr/>
                 <h2>Interfaces table</h2>
 
                 <xsl:call-template name="generate-api-table">
                     <xsl:with-param name="target" >api-group</xsl:with-param>
                 </xsl:call-template>
-                
-                
+
+
                 <xsl:variable name="all_interfaces" select="//api" />
                 <xsl:if test="not($all_interfaces)" >
                     <b> WARNING: No imported or exported interfaces! </b>
                 </xsl:if>
 
-                <xsl:apply-templates />    
-                
+                <xsl:apply-templates />
+
                 <xsl:if test="$arch.footer">
                     <hr/>
                     <p><xsl:value-of select="$arch.footer"/></p>
                 </xsl:if>
+               </main>
+              </div>
             </body>
         </html>
     </xsl:template>
-    
+
     <xsl:template match="category">
         <hr/>
         <h2>
@@ -164,17 +180,17 @@
             </xsl:for-each>
         </ul>
     </xsl:template>
-    
+
 
     <xsl:template name="answer">
         <xsl:variable name="value" select="@id" />
-    
+
         <p/>
         <font color="gray" >
         <b><a name="answer-{@id}">Question (<xsl:value-of select="@id"/>)</a>:</b> <em><xsl:apply-templates select="./node()" /></em>
         </font>
         <p/>
-        
+
         <xsl:choose>
             <xsl:when test="count(//answer[@id=$value])" >
                 <b>Answer:</b> <!-- <xsl:value-of select="//answer[@id=$value]" /> -->
@@ -183,7 +199,7 @@
             <xsl:when test="string-length($arch.when)=0 or contains($arch.when,@when)" >
                 <b>WARNING:</b>
                 <xsl:text> Question with id="</xsl:text>
-                <i> 
+                <i>
                 <xsl:value-of select="@id" />
                 </i>
                 <xsl:text>" has not been answered!</xsl:text>
@@ -198,7 +214,7 @@
         <!-- generates link to given API -->
         <xsl:variable name="name" select="@name" />
         <xsl:variable name="group" select="@group" />
-        
+
         <a>
             <xsl:attribute name="href" >
                 <xsl:text>#</xsl:text><xsl:value-of select="$group" /><xsl:text>-</xsl:text><xsl:value-of select="$name" />
@@ -215,23 +231,23 @@
         <h4><xsl:value-of select="@name" /></h4>
         <xsl:apply-templates select="./node()" />
     </xsl:template>
-    
+
     <!-- Format random HTML elements as is: -->
     <xsl:template match="@*|node()">
         <xsl:copy>
             <xsl:apply-templates select="@*|node()"/>
         </xsl:copy>
     </xsl:template>
-  
-  
+
+
     <xsl:template match="answer">
         <!-- ignore direct answers -->
     </xsl:template>
     <xsl:template match="hint">
         <!-- ignore direct answers -->
     </xsl:template>
-    
-    <!-- enumerates all groups of APIs and calls given template 
+
+    <!-- enumerates all groups of APIs and calls given template
       on each of them
     -->
     <xsl:template name="generate-api-table" >
@@ -239,7 +255,7 @@
         <xsl:param name="generate-export" select="'true'" />
         <xsl:param name="generate-import" select="'true'" />
         <xsl:param name="generate-group" select="''" />
-    
+
         <xsl:for-each select="//api[
             generate-id() = generate-id(key('apiGroups', @group))
             and
@@ -253,13 +269,13 @@
             </xsl:call-template>
         </xsl:for-each>
 
-    </xsl:template>    
+    </xsl:template>
     <xsl:template name="jump-to-target" >
         <xsl:param name="target" />
         <xsl:param name="group" />
         <xsl:param name="generate-export" />
         <xsl:param name="generate-import" />
-        
+
         <xsl:choose>
             <xsl:when test="$target='api-group'" >
                 <xsl:call-template name="api-group">
@@ -275,32 +291,32 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
+
 
     <!-- displays group of APIs -->
-    
+
     <xsl:template name="api-group" >
         <xsl:param name="group" />
         <xsl:param name="generate-export" />
         <xsl:param name="generate-import" />
-        
+
         <xsl:element name="h3">
             <xsl:attribute name="id" >
                 <xsl:text>group-</xsl:text><xsl:value-of select="$group" />
             </xsl:attribute>
             Group of <xsl:value-of select="$group"/> interfaces
-        </xsl:element>       
-        
-        <xsl:variable 
-            name="all_interfaces" 
-            select="//api[@group=$group and 
+        </xsl:element>
+
+        <xsl:variable
+            name="all_interfaces"
+            select="//api[@group=$group and
                           generate-id() = generate-id(key('apiNames', @name)) and
                           (
-                            ($generate-export = 'true' and @type = 'export') 
+                            ($generate-export = 'true' and @type = 'export')
                             or
-                            ($generate-import = 'true' and @type = 'import') 
+                            ($generate-import = 'true' and @type = 'import')
                           )
-                  ]" 
+                  ]"
         />
         <!--<table class="tablebg"><tr><td>-->
         <table class="tableapigroup">
@@ -326,10 +342,10 @@
             </xsl:for-each>
             </tbody>
           </table>
-        <!--</td></tr></table>-->        
-    </xsl:template>    
-    
-    <!-- the template to convert an instances of API into an HTML line in a table 
+        <!--</td></tr></table>-->
+    </xsl:template>
+
+    <!-- the template to convert an instances of API into an HTML line in a table
       describing the API -->
 
     <xsl:template name="api-group-name" >
@@ -337,12 +353,12 @@
        <xsl:param name="group" />
        <xsl:param name="category" />
        <xsl:param name="type" />
-       
+
         <tr class="tabler">
             <td>
                 <xsl:value-of select="$name"/>
             </td>
-            <xsl:if test="$type" > 
+            <xsl:if test="$type" >
                 <td> <!-- imported/exported -->
                     <xsl:choose>
                         <xsl:when test="$type='import'">Imported</xsl:when>
@@ -390,9 +406,9 @@
                             </xsl:message>
                         </xsl:otherwise>
                     </xsl:choose>
-                </a>  
+                </a>
             </td>
-            
+
             <td> <!-- description -->
                 <!-- Put anchor here, since name is centered, and we want hyperlinks to scroll to top of table row: -->
                 <a>
@@ -404,10 +420,10 @@
                         <xsl:with-param name="name" select="$name"/>
                         <xsl:with-param name="group" select="$group"/>
                     </xsl:call-template>
-                
+
             </td>
         </tr>
-    </xsl:template>  
+    </xsl:template>
     <xsl:template name="describe">
        <xsl:param name="name" />
        <xsl:param name="group" />
@@ -417,7 +433,7 @@
             <xsl:variable name="describe.node" select="./node()" />
 
             <xsl:variable name="before-hash-sign" select="substring-before(@url,'#')" />
-            
+
             <xsl:if test="@url" >
                 <a>
                     <xsl:attribute name="href" >
@@ -430,7 +446,7 @@
                         <xsl:when test="$before-hash-sign" >
                             <xsl:value-of select="$before-hash-sign" />
                         </xsl:when>
-                        
+
                         <xsl:when test="string-length(@url) > 40">
                             .../<xsl:value-of select="substring-after(substring(@url, string-length(@url) - 40),'/')" />
                         </xsl:when>
@@ -438,14 +454,14 @@
                             <xsl:value-of select="@url" />
                         </xsl:otherwise>
                     </xsl:choose>
-                    
-                </a>                
+
+                </a>
             </xsl:if>
-            
+
             <xsl:if test="$describe.node" >
                 <xsl:apply-templates select="$describe.node" />
             </xsl:if>
        </xsl:for-each>
     </xsl:template>
-        
-</xsl:stylesheet> 
+
+</xsl:stylesheet>

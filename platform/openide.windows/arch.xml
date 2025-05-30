@@ -1153,11 +1153,11 @@ Module configuration is stored in XML files.
 <answer id="lookup-lookup">
 Window Manager implementation (from core) registers itself and lookup is used 
 from API part to  get the instance and return as 
-<a href="@TOP@/org/openide/windows/WindowManager.html#getDefault--">WindowManager.getDefault ()</a>
-and also <a href="@TOP@/org/openide/windows/WindowManager.html#componentRegistry--">WindowManager.componentRegistry()</a>.
+<a href="@TOP@/org/openide/windows/WindowManager.html#getDefault()">WindowManager.getDefault ()</a>
+and also <a href="@TOP@/org/openide/windows/WindowManager.html#componentRegistry()">WindowManager.componentRegistry()</a>.
 gets the registered instance of <code>TopComponent.Registry</code>.
-Also there are provided implementations of <a href="@org-openide-dialogs@/org/openide/DialogDisplayer.html#getDefault--">DialogDisplayer.getDefault()</a> 
-and <a href="@org-openide-nodes@/org/openide/nodes/NodeOperation.html#getDefault--">NodeOperation.getDefault()</a> services.
+Also there are provided implementations of <a href="@org-openide-dialogs@/org/openide/DialogDisplayer.html#getDefault()">DialogDisplayer.getDefault()</a> 
+and <a href="@org-openide-nodes@/org/openide/nodes/NodeOperation.html#getDefault()">NodeOperation.getDefault()</a> services.
 <p/>
 There is also provided service which implements <api category="friend" group="java" name="NbTopManager.WindowSystem" type="import">org.netbeans.core.NbTopManager$WindowSystem interface</api>, 
 which is used in core module. It is used for starting window system (loading and show) in startup sequence and finishiing of window system (hiding and saving)
@@ -1195,7 +1195,7 @@ instance by singleton accessor.
         </question>
 -->
 <answer id="lookup-remove">
-Yes. It removes implementation of <a href="@org-openide-nodes@/org/openide/nodes/NodeOperation.html#getDefault--">NodeOperation.getDefault()</a>
+Yes. It removes implementation of <a href="@org-openide-nodes@/org/openide/nodes/NodeOperation.html#getDefault()">NodeOperation.getDefault()</a>
 service provided by openide-explorer module.
 </answer>
 

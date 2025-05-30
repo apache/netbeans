@@ -82,8 +82,8 @@ public interface StatusDecorator {
      * HtmlStatus but plain Status.
      *
      * @since FileSystems API, 4.30
-     * @see <a href="@org-openide-loaders@/org/openide/loaders/DataNode.html#getHtmlDisplayName--"><code>DataNode.getHtmlDisplayName()</code></a>
-     * @see <a href="@org-openide-nodes@/org/openide/nodes/Node.html#getHtmlDisplayName--"><code>Node.getHtmlDisplayName()</code></a>
+     * @see <a href="@org-openide-loaders@/org/openide/loaders/DataNode.html#getHtmlDisplayName()"><code>DataNode.getHtmlDisplayName()</code></a>
+     * @see <a href="@org-openide-nodes@/org/openide/nodes/Node.html#getHtmlDisplayName()"><code>Node.getHtmlDisplayName()</code></a>
      **/
     public String annotateNameHtml(String name, Set<? extends FileObject> files);
 }

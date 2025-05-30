@@ -18,6 +18,13 @@
  */
 package org.netbeans.modules.java.hints.spiimpl.options;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.NodeChangeListener;
+import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.modules.java.hints.providers.spi.HintMetadata;
@@ -100,7 +107,9 @@ public abstract class HintsSettings {
     }
     
     public static HintsSettings createPreferencesBasedHintsSettings(Preferences preferences, boolean useDefaultEnabled, Severity overrideSeverity) {
-        return new PreferencesBasedHintsSettings(preferences, useDefaultEnabled, overrideSeverity);
+        return new PreferencesBasedHintsSettings(
+            new HintPreferencesCache(preferences), useDefaultEnabled, overrideSeverity
+        );
     }
     
     public static HintsSettings getSettingsFor(FileObject file) {
@@ -113,7 +122,9 @@ public abstract class HintsSettings {
     
     private static final String DEFAULT_PROFILE = "default"; // NOI18N
     private static final String PREFERENCES_LOCATION = "org/netbeans/modules/java/hints";
-    private static final HintsSettings GLOBAL_SETTINGS = createPreferencesBasedHintsSettings(NbPreferences.root().node(PREFERENCES_LOCATION).node(DEFAULT_PROFILE), true, null);
+    private static final HintsSettings GLOBAL_SETTINGS = new PreferencesBasedHintsSettings(
+            NbPreferences.root().node(PREFERENCES_LOCATION).node(DEFAULT_PROFILE), true, null
+    );
     
     @MimeRegistration(mimeType="text/x-java", service=GlobalHintPreferencesProvider.class)
     public static class GlobalSettingsProvider implements GlobalHintPreferencesProvider {
@@ -123,5 +134,222 @@ public abstract class HintsSettings {
             return NbPreferences.root().node(PREFERENCES_LOCATION).node(DEFAULT_PROFILE);
         }
         
+    }
+
+    /// Caches properties on read while writing to the delegate directly.
+    /// Partial implementation. Only intended to be used for hints, since their context is one time use only.
+    /// Without caching, some frequently invoked hints were seen to spend half of their time blocking on Mutex#writeAccess.
+    /// @see org.netbeans.modules.java.hints.spiimpl.hints.HintsInvoker
+    /// and {@link HintsSettings#getSettingsFor(org.openide.filesystems.FileObject)} usages
+    private static final class HintPreferencesCache extends Preferences {
+    
+        @SuppressWarnings("RedundantStringConstructorCall")
+        private final static String MASKED_NULL = new String("MASKED_NULL");
+        
+        private final Preferences delegate;
+        private final Map<String, String> cache;
+        private final Map<String, HintPreferencesCache> nodes;
+        private final Preferences parent;
+        
+        public HintPreferencesCache(Preferences delegate) {
+            this(null, delegate);
+        }
+        
+        public HintPreferencesCache(Preferences parent, Preferences delegate) {
+            this.parent = parent;
+            this.delegate = delegate;
+            this.cache = new HashMap<>();
+            this.nodes = new HashMap<>();
+        }
+
+        private static String maskNull(String value) {
+            return value == null ? MASKED_NULL : value;
+        }
+
+        @Override
+        public Preferences node(String pathName) {
+            return nodes.computeIfAbsent(pathName, pn -> new HintPreferencesCache(this, delegate.node(pn)));
+        }
+
+        @Override
+        public Preferences parent() {
+            return parent != null ? parent : delegate.parent();
+        }
+
+        @Override
+        @SuppressWarnings("StringEquality")
+        public String get(String key, String def) {
+            String ret = cache.computeIfAbsent(key, k -> {
+                String val = delegate.get(k, def);
+                return maskNull(val); // cache null as internal token
+            });
+            return ret == MASKED_NULL ? def : ret;
+        }
+
+        @Override
+        @SuppressWarnings("StringEquality")
+        public boolean getBoolean(String key, boolean def) {
+            String ret = cache.computeIfAbsent(key, k -> Boolean.toString(delegate.getBoolean(k, def)));
+            return ret == MASKED_NULL ? def : Boolean.parseBoolean(ret); 
+        }
+
+        @Override
+        public void put(String key, String value) {
+            cache.put(key, maskNull(value));
+            delegate.put(key, value);
+        }
+
+        @Override
+        public void putBoolean(String key, boolean value) {
+            cache.put(key, Boolean.toString(value));
+            delegate.putBoolean(key, value);
+        }
+
+        @Override
+        public void remove(String key) {
+            delegate.remove(key);
+            cache.remove(key);
+        }
+
+        @Override
+        public void clear() throws BackingStoreException {
+            cache.clear();
+            nodes.clear();
+            delegate.clear();
+        }
+
+        
+        // rest isn't cached and simply delegates
+
+        @Override
+        public int getInt(String key, int def) {
+            return delegate.getInt(key, def);
+        }
+
+        @Override
+        public void putLong(String key, long value) {
+            delegate.putLong(key, value);
+        }
+
+        @Override
+        public long getLong(String key, long def) {
+            return delegate.getLong(key, def);
+        }
+
+        @Override
+        public void putFloat(String key, float value) {
+            delegate.putFloat(key, value);
+        }
+
+        @Override
+        public float getFloat(String key, float def) {
+            return delegate.getFloat(key, def);
+        }
+
+        @Override
+        public byte[] getByteArray(String key, byte[] def) {
+            return delegate.getByteArray(key, def);
+        }
+
+        @Override
+        public void putDouble(String key, double value) {
+            delegate.putDouble(key, value);
+        }
+
+        @Override
+        public double getDouble(String key, double def) {
+            return delegate.getDouble(key, def);
+        }
+
+        @Override
+        public void putInt(String key, int value) {
+            delegate.putInt(key, value);
+        }
+
+        @Override
+        public void putByteArray(String key, byte[] value) {
+            delegate.putByteArray(key, value);
+        }
+
+        @Override
+        public String[] keys() throws BackingStoreException {
+            return delegate.keys();
+        }
+
+        @Override
+        public String[] childrenNames() throws BackingStoreException {
+            return delegate.childrenNames();
+        }
+
+        @Override
+        public boolean nodeExists(String pathName) throws BackingStoreException {
+            return delegate.nodeExists(pathName);
+        }
+
+        @Override
+        public void removeNode() throws BackingStoreException {
+            delegate.removeNode();
+        }
+
+        @Override
+        public String name() {
+            return delegate.name();
+        }
+
+        @Override
+        public String absolutePath() {
+            return delegate.absolutePath();
+        }
+
+        @Override
+        public boolean isUserNode() {
+            return delegate.isUserNode();
+        }
+
+        @Override
+        public String toString() {
+            return delegate.toString();
+        }
+
+        @Override
+        public void flush() throws BackingStoreException {
+            delegate.flush();
+        }
+
+        @Override
+        public void sync() throws BackingStoreException {
+            delegate.sync();
+        }
+
+        @Override
+        public void addPreferenceChangeListener(PreferenceChangeListener pcl) {
+            delegate.addPreferenceChangeListener(pcl);
+        }
+
+        @Override
+        public void removePreferenceChangeListener(PreferenceChangeListener pcl) {
+            delegate.removePreferenceChangeListener(pcl);
+        }
+
+        @Override
+        public void addNodeChangeListener(NodeChangeListener ncl) {
+            delegate.addNodeChangeListener(ncl);
+        }
+
+        @Override
+        public void removeNodeChangeListener(NodeChangeListener ncl) {
+            delegate.removeNodeChangeListener(ncl);
+        }
+
+        @Override
+        public void exportNode(OutputStream os) throws IOException, BackingStoreException {
+            delegate.exportNode(os);
+        }
+
+        @Override
+        public void exportSubtree(OutputStream os) throws IOException, BackingStoreException {
+            delegate.exportSubtree(os);
+        }
+
     }
 }

@@ -53,4 +53,24 @@ public final class CatalogTest extends TestCase {
 
         System.err.println("Done");
     }
+
+    public void testOasisCatalogReportedValid() throws Exception {
+        Catalog catalog = new Catalog();
+        URL locationURL = getClass().getResource("data/catalog.xml");
+        assertNotNull(locationURL);
+        String location = locationURL.toExternalForm();
+        catalog.setLocation(location);
+        catalog.refresh();
+        assertTrue(catalog.isValid());
+    }
+
+    public void testXCatalogNotAcceptedAsOasis() throws Exception {
+        Catalog catalog = new Catalog();
+        URL locationURL = getClass().getResource("../xcatalog.xml");
+        assertNotNull(locationURL);
+        String location = locationURL.toExternalForm();
+        catalog.setLocation(location);
+        catalog.refresh();
+        assertFalse(catalog.isValid());
+    }
 }

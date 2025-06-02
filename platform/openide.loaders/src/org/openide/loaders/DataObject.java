@@ -1183,7 +1183,7 @@ implements Node.Cookie, Serializable, HelpCtx.Provider, Lookup.Provider {
             return createNodeDelegate().getLookup();
         }
     }
-    private static final Set<Class<?>> warnedClasses = Collections.synchronizedSet(new WeakSet<Class<?>>());
+    private static final Set<Class<?>> warnedClasses = Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
     
     /** When a request for a cookie is done on a DataShadow of this DataObject
      * this methods gets called (by default) so the DataObject knows which

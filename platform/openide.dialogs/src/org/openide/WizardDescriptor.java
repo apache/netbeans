@@ -1157,21 +1157,6 @@ public class WizardDescriptor extends DialogDescriptor {
         changeStateInProgress = false;
     }
 
-    /* commented out - issue #32927. Replaced by javadoc info in WizardDescriptor.Panel
-    private static final Set warnedPanelIsComponent = new WeakSet(); // Set<Class>
-    private static synchronized void warnPanelIsComponent(Class c) {
-        if (warnedPanelIsComponent.add(c)) {
-            StringBuffer buffer = new StringBuffer(150);
-            buffer.append("WARNING - the WizardDescriptor.Panel implementation "); // NOI18N
-            buffer.append(c.getName());
-            buffer.append(" provides itself as the result of getComponent().\n"); // NOI18N
-            buffer.append("This hurts performance and can cause a clash when Component.isValid() is overridden.\n"); // NOI18N
-            buffer.append("Please use a separate component class, see details at http://performance.netbeans.org/howto/dialogs/wizard-panels.html."); // NOI18N
-            err.log(ErrorManager.WARNING, buffer.toString());
-        }
-    }
-    */
-
     /** Tryes to get property from getProperty() if doesn't succeed then tryes at
      * supplied <CODE>JComponent</CODE>s client property.
      * @param c origin of property

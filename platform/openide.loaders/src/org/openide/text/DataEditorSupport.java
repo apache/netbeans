@@ -49,6 +49,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
@@ -475,7 +476,7 @@ public class DataEditorSupport extends CloneableEditorSupport {
         };
     }
 
-    private static Set<FileObject> warnedEncodingFiles = new WeakSet<FileObject>();
+    private static Set<FileObject> warnedEncodingFiles = Collections.newSetFromMap(new WeakHashMap<>());
 
     /** can hold the right charset to be used during save, needed for communication
      * between saveFromKitToStream and saveDocument

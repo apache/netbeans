@@ -21,6 +21,7 @@ package org.netbeans.modules.bugzilla.autoupdate;
 
 import java.util.Collections;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
@@ -29,7 +30,6 @@ import org.netbeans.modules.bugzilla.Bugzilla;
 import org.netbeans.modules.bugzilla.repository.BugzillaConfiguration;
 import org.netbeans.modules.bugzilla.repository.BugzillaRepository;
 import org.openide.util.NbBundle;
-import org.openide.util.WeakSet;
 
 /**
  *
@@ -48,7 +48,7 @@ public class BugzillaAutoupdate {
 
     private static BugzillaAutoupdate instance;
 
-    private final Set<BugzillaRepository> repos = new WeakSet<BugzillaRepository>();
+    private final Set<BugzillaRepository> repos = Collections.newSetFromMap(new WeakHashMap<>());
     
     private final AutoupdateSupport support = new AutoupdateSupport(new AutoupdateCallback(), BUGZILLA_MODULE_CODE_NAME, NbBundle.getMessage(Bugzilla.class, "LBL_ConnectorName"));
     

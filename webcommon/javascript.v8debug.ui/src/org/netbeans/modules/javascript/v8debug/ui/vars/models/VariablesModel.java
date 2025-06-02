@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.lib.v8debug.PropertyLong;
 import org.netbeans.lib.v8debug.V8Command;
@@ -63,7 +64,6 @@ import org.netbeans.spi.viewmodel.UnknownTypeException;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
-import org.openide.util.WeakSet;
 import org.openide.util.datatransfer.PasteType;
 
 /**
@@ -89,7 +89,7 @@ public class VariablesModel extends ViewModelSupport implements TreeModel,
     protected final V8Debugger dbg;
     private final VarValuesLoader vvl;
     private volatile boolean topFrameRefreshed;
-    private final Set<Variable> refreshWhenLoaded = Collections.synchronizedSet(new WeakSet<Variable>());
+    private final Set<Variable> refreshWhenLoaded = Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
 
     public VariablesModel(ContextProvider contextProvider) {
         dbg = contextProvider.lookupFirst(null, V8Debugger.class);

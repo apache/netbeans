@@ -20,7 +20,6 @@
 package org.openide.util.actions;
 
 import java.awt.Component;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -32,6 +31,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
@@ -42,7 +43,6 @@ import org.openide.util.LookupListener;
 import org.openide.util.Mutex;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 
 /** Not preferred anymore, the replacement is
 * <a href="@org-openide-awt@/org/openide/awt/Actions.html#callback(java.lang.String,javax.swing.Action,boolean,java.lang.String,java.lang.String,boolean)">Actions.callback</a> factory method.
@@ -69,10 +69,10 @@ public abstract class CallbackSystemAction extends CallableSystemAction implemen
     private static final String PROP_ACTION_PERFORMER = "actionPerformer"; // NOI18N
 
     /** a list of all actions that has survive focus change set to false */
-    private static final WeakSet<Class<? extends CallbackSystemAction>> notSurviving = new WeakSet<Class<? extends CallbackSystemAction>>(37);
+    private static final Set<Class<? extends CallbackSystemAction>> notSurviving = Collections.newSetFromMap(new WeakHashMap<>(37));
 
     /** a list of actions surviving focus change */
-    private static final WeakSet<Class<? extends CallbackSystemAction>> surviving = new WeakSet<Class<? extends CallbackSystemAction>>(37);
+    private static final Set<Class<? extends CallbackSystemAction>> surviving = Collections.newSetFromMap(new WeakHashMap<>(37));
 
     /** key to access listener */
     private static final Object LISTENER = new Object();

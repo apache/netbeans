@@ -22,11 +22,13 @@ package org.netbeans.modules.cpplite.debugger.breakpoints;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.Breakpoint.VALIDITY;
@@ -42,7 +44,6 @@ import org.openide.text.Line;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 
 
 /**
@@ -55,7 +56,7 @@ import org.openide.util.WeakSet;
 public class BreakpointAnnotationProvider extends DebuggerManagerAdapter implements AnnotationProvider {
 
     private final Map<CPPLiteBreakpoint, Set<Annotation>> breakpointToAnnotations = new IdentityHashMap<>();
-    private final Set<FileObject> annotatedFiles = new WeakSet<>();
+    private final Set<FileObject> annotatedFiles = Collections.newSetFromMap(new WeakHashMap<>());
     private Set<PropertyChangeListener> dataObjectListeners;
     private volatile boolean breakpointsActive = true;
     private final RequestProcessor annotationProcessor = new RequestProcessor("CPP BP Annotation Refresh", 1);
@@ -199,7 +200,7 @@ public class BreakpointAnnotationProvider extends DebuggerManagerAdapter impleme
                 }
             }
             if (add) {
-                breakpointToAnnotations.put(b, new WeakSet<>());
+                breakpointToAnnotations.put(b, Collections.newSetFromMap(new WeakHashMap<>()));
                 for (FileObject fo : annotatedFiles) {
                     if (isAt(b, fo)) {
                         addAnnotationTo(b);
@@ -237,7 +238,7 @@ public class BreakpointAnnotationProvider extends DebuggerManagerAdapter impleme
         }
         Set<Annotation> bpAnnotations = breakpointToAnnotations.get(b);
         if (bpAnnotations == null) {
-            Set<Annotation> set = new WeakSet<>();
+            Set<Annotation> set = Collections.newSetFromMap(new WeakHashMap<>());
             set.add(annotation);
             breakpointToAnnotations.put(b, set);
         } else {

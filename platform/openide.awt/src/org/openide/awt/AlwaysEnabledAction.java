@@ -21,7 +21,6 @@ package org.openide.awt;
 
 import java.awt.EventQueue;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -29,7 +28,10 @@ import java.beans.PropertyChangeListener;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
@@ -50,7 +52,6 @@ import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
-import org.openide.util.WeakSet;
 import org.openide.util.WeakListeners;
 import org.openide.util.actions.Presenter;
 import org.openide.util.actions.ActionInvoker;
@@ -315,7 +316,7 @@ implements PropertyChangeListener, ContextAwareAction {
 
         private JCheckBoxMenuItem popupItem;
 
-        private WeakSet<AbstractButton> toolbarItems;
+        private Set<AbstractButton> toolbarItems;
 
         private Preferences preferencesNode;
 
@@ -359,7 +360,7 @@ implements PropertyChangeListener, ContextAwareAction {
 
         public AbstractButton getToolbarPresenter() {
             if(toolbarItems == null) {
-                toolbarItems = new WeakSet<AbstractButton>(4);
+                toolbarItems = Collections.newSetFromMap(new WeakHashMap<>(4));
             }
             AbstractButton b = new DefaultIconToggleButton();
             toolbarItems.add(b);

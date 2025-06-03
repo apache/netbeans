@@ -58,6 +58,7 @@ import org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods.Factory;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.spi.java.hints.unused.UsedDetector;
 import org.netbeans.spi.project.SingleMethod;
+import org.netbeans.spi.project.NestedClass;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
@@ -150,12 +151,13 @@ public final class TestClassInfoTask implements Task<CompilationController> {
                     int end = (int) sp.getEndPosition(tp.getCompilationUnit(), tp.getLeaf());
                     Document doc = info.getSnapshot().getSource().getDocument(false);
                     try {
+                        NestedClass nestedClass = getNestedClass(elements.getBinaryName(typeElement).toString(), info.getFileObject());
                         result.add(new TestMethod(elements.getBinaryName(typeElement).toString(),
-                                doc != null ? doc.createPosition(clazzPreferred) : new SimplePosition(clazzPreferred),
-                                new SingleMethod(info.getFileObject(), mn),
-                                doc != null ? doc.createPosition(start) : new SimplePosition(start),
-                                doc != null ? doc.createPosition(preferred) : new SimplePosition(preferred),
-                                doc != null ? doc.createPosition(end) : new SimplePosition(end)));
+                            doc != null ? doc.createPosition(clazzPreferred) : new SimplePosition(clazzPreferred),
+                            nestedClass != null ? new SingleMethod(mn, nestedClass) : new SingleMethod(info.getFileObject(), mn),
+                            doc != null ? doc.createPosition(start) : new SimplePosition(start),
+                            doc != null ? doc.createPosition(preferred) : new SimplePosition(preferred),
+                            doc != null ? doc.createPosition(end) : new SimplePosition(end)));
                     } catch (BadLocationException ex) {
                         //ignore
                     }
@@ -176,6 +178,20 @@ public final class TestClassInfoTask implements Task<CompilationController> {
                 }
             });
         }
+    }
+
+    private static NestedClass getNestedClass(String fqClassName, FileObject fileObject) {
+        // drop the package name
+        String fileName = fileObject.getName();
+        String classOnly = fqClassName.substring(fqClassName.lastIndexOf('.') + 1);
+        if (classOnly.startsWith(fileName) && classOnly.length() > fileName.length()) {
+            int topLevelClassSeparatorIdx = classOnly.indexOf("$");
+            String topLevelClass = classOnly.substring(0,topLevelClassSeparatorIdx);
+            String nestedName = classOnly.substring(topLevelClassSeparatorIdx + 1);
+            NestedClass nestedClass = new NestedClass(nestedName, topLevelClass, fileObject);
+            return nestedClass;
+        }
+        return null;
     }
 
     private static boolean isTestSource(FileObject fo) {

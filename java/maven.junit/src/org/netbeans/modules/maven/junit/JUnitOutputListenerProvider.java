@@ -778,6 +778,13 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
                     }
                 }
 
+                String classname = testcase.getAttributeValue("classname");
+                // keep the embedded class in classnames and add to display name
+                int suiteNameLength = suite.getName().length();
+                if (classname.length() > suiteNameLength && classname.startsWith(suite.getName())) {
+                    displayName = classname.substring(suiteNameLength) + "." + methodName;
+                }
+
                 Testcase test = new JUnitTestcase(methodName, displayName, testType, session);
                 Element stdout = testcase.getChild("system-out"); //NOI18N
                 // If *-output.txt file exists do not log standard output here to avoid logging it twice.
@@ -811,7 +818,6 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
                     float fl = NumberFormat.getNumberInstance(Locale.ENGLISH).parse(time).floatValue();
                     test.setTimeMillis((long)(fl * 1000));
                 }
-                String classname = testcase.getAttributeValue("classname");
                 if (classname != null) {
                     //#204480
                     if (classname.endsWith(nameSuffix)) {

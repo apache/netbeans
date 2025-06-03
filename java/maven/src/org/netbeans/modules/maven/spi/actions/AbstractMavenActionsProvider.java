@@ -271,6 +271,7 @@ public abstract class AbstractMavenActionsProvider implements MavenActionsProvid
                 if (replaceMap.containsKey(DefaultReplaceTokenProvider.METHOD_NAME)) {
                     //sort of hack to push the method name through the current apis..
                     mrc.setProperty(DefaultReplaceTokenProvider.METHOD_NAME, replaceMap.get(DefaultReplaceTokenProvider.METHOD_NAME));
+                    mrc.setProperty(DefaultReplaceTokenProvider.ENCLOSING_TYPE_NAME, replaceMap.get(DefaultReplaceTokenProvider.ENCLOSING_TYPE_NAME));
                 }
                 return mrc;
             }

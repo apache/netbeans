@@ -514,11 +514,6 @@
                 <built-to>build/antclasses</built-to>
                 <built-to>${cluster}/ant/nblib/${code.name.base.dashes}.jar</built-to>
             </extra-compilation-unit>
-            <extra-compilation-unit>
-                <package-root>copyapsrc</package-root>
-                <classpath>${cp}</classpath>
-                <built-to>build/copyapclasses</built-to>
-            </extra-compilation-unit>
         </data>
     </configuration>
 </project>

@@ -35,7 +35,7 @@ import org.netbeans.modules.masterfs.filebasedfs.fileobjects.FileObjectFactory;
  * @author Jaroslav Tulach
  */
 public final class FSException extends IOException {
-    /** name of resource to use for localized message */
+    /* name of resource to use for localized message */
     //  private String resource;
     /**
      * arguments to pass to the resource

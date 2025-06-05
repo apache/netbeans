@@ -33,12 +33,9 @@ import java.awt.*;
  * @author  Peter Zavadsky
  */
 public class WindowManagerConfig {
-    /////////////////////
     // SEPARATED STATE
-    //////////
     // BEGIN Values specific for initial main window position
     // Note: Only absolute bounds are saved [x,y,w,h].
-    //////////
     /** Flag to control horizontal position of main window. If it is true x is
      undefined. */
     public boolean centeredHorizontallySeparated;
@@ -72,16 +69,10 @@ public class WindowManagerConfig {
     
     /** Relative height of main window. -1 means not set. */
     public float relativeHeightSeparated;
-    //////////
     // END
-    //////////
-    
-    //////////////
     // JOINED STATE
-    //////////
     // BEGIN Values specific for initial main window position
     // Note: Only absolute bounds are saved [x,y,w,h].
-    //////////
     /** Flag to control horizontal position of main window. If it is true x is
      undefined. */
     public boolean centeredHorizontallyJoined;
@@ -121,9 +112,7 @@ public class WindowManagerConfig {
     
     /** Minimum allowed height of main window for computing initial size */
     public int maximizeIfHeightBelowJoined;
-    //////////
     // END
-    //////////
     /** Frame state of main window when in tiled(joined) state.
      * Possible values are taken from java.awt.Frame:
      * NORMAL

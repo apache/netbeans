@@ -141,10 +141,6 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
     /** Non default MIME type used to editing */
     private String mimeType;
 
-    /** Actions to show in toolbar */
-
-    //    private SystemAction[] actions;
-
     /** Listener to the document changes and all other changes */
     private Listener listener;
 

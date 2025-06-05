@@ -24,10 +24,8 @@ import java.awt.Color;
 /** Dummy class holding utility methods for working with NetBeans document conventions.
 *
 * @author Jaroslav Tulach
+* @deprecated Not useful for anything.
 */
-
-
-/** @deprecated Not useful for anything. */
 @Deprecated
 public final class NbDocument$Colors extends org.openide.options.SystemOption {
     public static final String PROP_BREAKPOINT = "NbBreakpointStyle"; // NOI18N

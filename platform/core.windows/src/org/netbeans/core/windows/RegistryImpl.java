@@ -112,8 +112,7 @@ public final class RegistryImpl extends Object implements TopComponent.Registry 
     }
 
     
-    //////////////////////////////////////////////////////
-    /// notifications of changes from window manager >>>>>
+    // notifications of changes from window manager >>>>>
     /** Called when a TopComponent is activated.
      *
      * @param ev TopComponentChangedEvent
@@ -241,9 +240,7 @@ public final class RegistryImpl extends Object implements TopComponent.Registry 
         return tmp != null && tmp.getActivatedNodes() == null;
     }
     
-    /// notifications of changes from window manager <<<<<
-    //////////////////////////////////////////////////////
-
+    // notifications of changes from window manager <<<<<
     /** Cancels the menu if it is not assigned to specified window.
      * @param window window that the menu should be checked against
      *    (if this window contains the menu, then the menu will not be closed)

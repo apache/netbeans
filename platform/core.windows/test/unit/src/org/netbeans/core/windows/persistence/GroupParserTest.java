@@ -37,9 +37,7 @@ public class GroupParserTest extends NbTestCase {
         super(testName);
     }
     
-    ////////////////////////////////
     //Testing VALID data
-    ////////////////////////////////
     /** Test of loaded data
      */
     public void testLoadGroup01 () throws Exception {
@@ -134,9 +132,7 @@ public class GroupParserTest extends NbTestCase {
         System.out.println("GroupParserTest.testSaveGroup02 FINISH");
     }
     
-    ////////////////////////////////
     //Testing INVALID data
-    ////////////////////////////////
     /** Test of missing file
      */
     public void testLoadGroup01Invalid () throws Exception {

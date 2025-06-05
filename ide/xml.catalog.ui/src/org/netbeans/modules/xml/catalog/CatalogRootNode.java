@@ -77,11 +77,6 @@ public final class CatalogRootNode extends AbstractNode implements Node.Cookie {
             SystemAction.get(PropertiesAction.class)
         };
     }
-
-    /** We can mount entity catalogs. */
-//    public NewType[] getNewTypes() {
-//        return new NewType[] {new CatalogMounter()};
-//    }
     
     /** 
      * Mounts new catalalog as specified by user. 

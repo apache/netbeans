@@ -1408,11 +1408,11 @@ public class QueryBuilderGraphFrame extends JPanel
 //	    System.out.println("Removing Node: " + node + ((QBNodeComponent)node).getNodeName());
 //	    _scene.removeNodeWithEdges(node);
 //	}
-//// 	Collection edges = _scene.getEdges();
-//// 	for (Object edge : edges) {
-//// 	    _scene.removeEdge(edge);
-//// 	    System.out.println("Removing Edge: " + edge);
-//// 	}
+// // 	Collection edges = _scene.getEdges();
+// // 	for (Object edge : edges) {
+// // 	    _scene.removeEdge(edge);
+// // 	    System.out.println("Removing Edge: " + edge);
+// // 	}
 //    }
     
     

@@ -24,6 +24,9 @@ import org.json.simple.JSONObject;
 import org.netbeans.modules.web.webkit.debugging.api.WebKitDebugging;
 import org.openide.util.NbBundle;
 
+/**
+ * Runtime.RemoteObject
+ */
 @NbBundle.Messages({
     "TYPE_OBJECT=Object",
     "TYPE_FUNCTION=Function",
@@ -32,9 +35,6 @@ import org.openide.util.NbBundle;
     "TYPE_NUMBER=Number",
     "TYPE_BOOLEAN=Boolean"
 })
-/**
- * Runtime.RemoteObject
- */
 public class RemoteObject extends AbstractObject {
     
     private static final String PROP_TYPE = "type";                 // NOI18N

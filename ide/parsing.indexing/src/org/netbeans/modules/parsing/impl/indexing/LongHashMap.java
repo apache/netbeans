@@ -415,7 +415,7 @@ public class LongHashMap<K> //extends AbstractMap<K>
         return NO_VALUE;
     }
 
-    /**
+    /*
      * This method is used instead of put by constructors and
      * pseudoconstructors (clone, readObject).  It does not resize the table,
      * check for comodification, etc.  It calls createEntry rather than

@@ -433,9 +433,9 @@ class LocalHistoryStoreImpl implements LocalHistoryStore {
 //        }
 //
 //        // XXX do we even need this
-////        for(Entry<File, HistoryEntry> entry : afterRevert.entrySet()) {
-////
-////        }
+// //        for(Entry<File, HistoryEntry> entry : afterRevert.entrySet()) {
+// //
+// //        }
 //        return ret.toArray(new StoreEntry[ret.size()]);
 //
 //    }

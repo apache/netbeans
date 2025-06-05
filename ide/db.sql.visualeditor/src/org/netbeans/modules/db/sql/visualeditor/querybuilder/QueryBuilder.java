@@ -230,10 +230,7 @@ public class QueryBuilder extends TopComponent
     }
 
 
-    /////////////////////////////////////////////////////////////////////////
     // Delete support
-    /////////////////////////////////////////////////////////////////////////
-
     /** delete action performer */
     private final transient DeleteActionPerformer deleteActionPerformer = new DeleteActionPerformer();
 
@@ -511,25 +508,6 @@ public class QueryBuilder extends TopComponent
     boolean checkTableColumnName( Column col ) throws SQLException {
 	return qbMetaData.checkTableColumnName( col );
     }
-	
-
-    /****
-     * Check the database connection.
-     * If no connection, ask to retry.
-     * if user doesn't want to retry,
-     * then disable the query editor
-     */
-//     public boolean checkDatabaseAndDisable(String query) {
-//         if ( query == null )
-// 	    query = _queryBuilderPane.getQueryBuilderSqlTextArea().getText() ;
-//         if ( checkDatabaseConnection() == false ) {
-// 	    Log.getLogger().finest("checkDatabaseConnection returns false ... \n " ); // NOI18N
-//             // If we don't have a valid connection, disable all visual editing.
-//             disableVisualEditing(query);
-//             return false;
-//         }
-//         return true ;
-//     }
 
     /**
      * Parse the query and regenerate all the panes
@@ -683,9 +661,7 @@ public class QueryBuilder extends TopComponent
     
     
 
-    /***************************************************************************
-     * Code for checking validity of queries
-     **************************************************************************/
+    /*  Code for checking validity of queries */
 
     /**
      * Check the various parts of the query for valid table/column names
@@ -1326,9 +1302,7 @@ public class QueryBuilder extends TopComponent
 //     }
 
 
-    /***************************************************************************
-     * Accessors/Mutators
-     **************************************************************************/
+    /* Accessors/Mutators */
 
     /**
      * Return the current query model
@@ -1495,7 +1469,7 @@ public class QueryBuilder extends TopComponent
         lastQuery = null;
     }
 
-    /*****
+    /*
      * listener for changes in the sqlStatement - either the
      * command changed or the connection changed (e.g., datasource changed).
      */
@@ -1530,11 +1504,11 @@ public class QueryBuilder extends TopComponent
 //        }
 //    } ;
 
-    /***
+    /*
     private final JButton retryButton = new JButton(NbBundle.getMessage(QueryBuilder.class, "RETRY_AND_CONTINUE")) ;
     private final JButton cancelButton = new JButton(NbBundle.getMessage(QueryBuilder.class, "CANCEL_AND_CONTINUE")) ;
     **/
-    /******
+    /*
      * show a dialog with the a message saying the database connection is hosed.
      * It has a Retry and Cancel button.
      * returns true if the Retry is the closing action.

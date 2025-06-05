@@ -27,15 +27,15 @@ import java.io.Writer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.netbeans.modules.db.mysql.impl.MySQLDatabaseServer;
+import org.openide.windows.InputOutput;
+
+
 /**
  * Provides utility for rerouting process output to an output window
  * 
  * @author  ludo, David Van Couvering
  */
-
-import org.netbeans.modules.db.mysql.impl.MySQLDatabaseServer;
-import org.openide.windows.InputOutput;
-
 public class ExecSupport {
     private static final Logger LOGGER = Logger.getLogger(ExecSupport.class.getName());
 

@@ -27,7 +27,6 @@ import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.operators.ContainerOperator;
 import org.netbeans.jemmy.operators.JButtonOperator;
-import org.netbeans.jemmy.operators.JListOperator;
 import org.netbeans.jemmy.operators.JTableOperator;
 import org.openide.windows.Mode;
 import org.openide.windows.TopComponent;
@@ -196,8 +195,6 @@ public class EditorWindowOperator {
         return selectPage(index);
     }
 
-    /********************** Control buttons ********************************/
-    
     /** If the leftmost visible tab is partially hidden, it clicks on it. 
      * Otherwise it does nothing.
      * @return true if tabs were moved, false otherwise

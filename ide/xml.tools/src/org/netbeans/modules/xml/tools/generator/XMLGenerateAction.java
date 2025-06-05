@@ -72,7 +72,6 @@ public abstract class XMLGenerateAction extends CookieAction {
         }
     }
 
-    //////////////////////////
     // class GenerateDTDAction
     public static class GenerateDTDAction extends XMLGenerateAction implements CollectXMLAction.XMLAction {
         /** generated Serialized Version UID */
@@ -98,7 +97,6 @@ public abstract class XMLGenerateAction extends CookieAction {
         }
     } // end of inner class GenerateDTDAction
 
-    //////////////////////////////////////
     // class GenerateDocumentHandlerAction
    // public static class GenerateDocumentHandlerAction extends XMLGenerateAction implements CollectDTDAction.DTDAction {
         /** generated Serialized Version UID */
@@ -124,7 +122,6 @@ public abstract class XMLGenerateAction extends CookieAction {
    //     }
   //  } // end of inner class GenerateDocumentHandlerAction
 
-    /////////////////////////////////
     // class GenerateDOMScannerAction
  //   public static class GenerateDOMScannerAction extends XMLGenerateAction implements CollectDTDAction.DTDAction {
         /** generated Serialized Version UID */

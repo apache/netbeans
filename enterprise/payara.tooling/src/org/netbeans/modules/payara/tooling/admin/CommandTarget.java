@@ -28,17 +28,11 @@ package org.netbeans.modules.payara.tooling.admin;
  */
 public abstract class CommandTarget extends Command {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Target Payara instance or cluster. */
     final String target;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server enable command entity.
      * <p/>

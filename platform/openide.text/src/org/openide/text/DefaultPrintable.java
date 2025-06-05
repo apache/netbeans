@@ -49,7 +49,7 @@ final class DefaultPrintable extends Object implements Printable {
      */
     private AttributedCharacterIterator[] styledTexts;
 
-    /** expected page */
+    /* expected page */
 
     //    private int pageno;
 
@@ -392,7 +392,7 @@ final class DefaultPrintable extends Object implements Printable {
         }
     }
 
-    /** Translates given page number to line number.
+    /* Translates given page number to line number.
     * @param pageNo
     * @return number of first line on the page
     * /

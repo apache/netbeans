@@ -37,17 +37,11 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
  */
 public abstract class AdminFactory {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(AdminFactory.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates specific <code>AdminFactory</code> child class instance
      * to build Payara server administration command runner and data objects
@@ -86,10 +80,7 @@ public abstract class AdminFactory {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Abstract methods                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Build runner for command interface execution and connect it with
      * provided <code>Command</code> instance.
@@ -101,10 +92,7 @@ public abstract class AdminFactory {
     public abstract Runner getRunner(
             final PayaraServer srv, final Command cmd);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of selected <code>Runner</code> child class.
      * <p/>

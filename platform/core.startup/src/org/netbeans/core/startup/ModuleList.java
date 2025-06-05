@@ -1506,7 +1506,7 @@ final class ModuleList implements Stamps.Updater {
         public Module module;
         /** XML file holding its status */
         public FileObject file;
-        /** timestamp of last modification to XML file that this class did */
+        /* timestamp of last modification to XML file that this class did */
         //public long lastApprovedChange;
         /** if true, this module was scanned and should be enabled but we are waiting for trigger */
         public boolean pendingInstall = false;

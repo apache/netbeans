@@ -1060,9 +1060,7 @@ public abstract class CslTestBase extends NbTestCase {
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////
     // Parsing Info Based Tests
-    ////////////////////////////////////////////////////////////////////////////
     protected Parser getParser() {
         Parser parser = getPreferredLanguage().getParser();
         assertNotNull("You must override getParser(), either from your GsfLanguage or your test class", parser);
@@ -1093,9 +1091,7 @@ public abstract class CslTestBase extends NbTestCase {
 //        return copyStringToFileObject(file, text);
 //    }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Parser tests
-    ////////////////////////////////////////////////////////////////////////////
     protected void checkErrors(final String relFilePath) throws Exception {
         Source testSource = getTestSource(getTestFile(relFilePath));
 
@@ -1143,9 +1139,7 @@ public abstract class CslTestBase extends NbTestCase {
         return summary.toString();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Keystroke completion tests
-    ////////////////////////////////////////////////////////////////////////////
     protected KeystrokeHandler getKeystrokeHandler() {
         KeystrokeHandler handler = getPreferredLanguage().getKeystrokeHandler();
         assertNotNull("You must override getKeystrokeHandler, either from your GsfLanguage or your test class", handler);
@@ -1462,9 +1456,7 @@ public abstract class CslTestBase extends NbTestCase {
         });
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Mark Occurrences Tests
-    ////////////////////////////////////////////////////////////////////////////
     protected OccurrencesFinder getOccurrencesFinder() {
         OccurrencesFinder handler = getPreferredLanguage().getOccurrencesFinder();
         assertNotNull("You must override getOccurrencesFinder, either from your GsfLanguage or your test class", handler);
@@ -1593,9 +1585,7 @@ public abstract class CslTestBase extends NbTestCase {
         return text.length();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Semantic Highlighting Tests
-    ////////////////////////////////////////////////////////////////////////////
     protected SemanticAnalyzer getSemanticAnalyzer() {
         SemanticAnalyzer handler = getPreferredLanguage().getSemanticAnalyzer();
         assertNotNull("You must override getSemanticAnalyzer, either from your GsfLanguage or your test class", handler);
@@ -1709,9 +1699,7 @@ public abstract class CslTestBase extends NbTestCase {
         checkSemantic(relFilePath, null);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Rename Handling Tests
-    ////////////////////////////////////////////////////////////////////////////
     protected InstantRenamer getRenameHandler() {
         InstantRenamer handler = getPreferredLanguage().getInstantRenamer();
         assertNotNull("You must override getRenameHandler, either from your GsfLanguage's getInstantRenamer or your test class", handler);
@@ -1794,9 +1782,7 @@ public abstract class CslTestBase extends NbTestCase {
         return sb.toString();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Indexing Tests
-    ////////////////////////////////////////////////////////////////////////////
     public EmbeddingIndexerFactory getIndexerFactory() {
         EmbeddingIndexerFactory handler = getPreferredLanguage().getIndexerFactory();
         assertNotNull("You must override getIndexerFactory, either from your GsfLanguage or your test class", handler);
@@ -2023,9 +2009,7 @@ public abstract class CslTestBase extends NbTestCase {
 //        }
 //    }
 //
-    ////////////////////////////////////////////////////////////////////////////
     // Structure Analyzer Tests
-    ////////////////////////////////////////////////////////////////////////////
     public StructureScanner getStructureScanner() {
         StructureScanner handler = getPreferredLanguage().getStructureScanner();
         assertNotNull("You must override getStructureScanner, either from your GsfLanguage or your test class", handler);
@@ -2282,9 +2266,7 @@ public abstract class CslTestBase extends NbTestCase {
         return sb.toString();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Formatting Tests
-    ////////////////////////////////////////////////////////////////////////////
     protected Formatter getFormatter(IndentPrefs preferences) {
         Formatter formatter = getPreferredLanguage().getFormatter();
         assertNotNull("You must override getFormatter, either from your GsfLanguage or your test class", formatter);
@@ -2570,9 +2552,7 @@ public abstract class CslTestBase extends NbTestCase {
         insertNewline(original, expected, null);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Code Completion Tests
-    ////////////////////////////////////////////////////////////////////////////
     protected CodeCompletionHandler getCodeCompleter() {
         CodeCompletionHandler handler = getPreferredLanguage().getCompletionHandler();
         assertNotNull("You must override getCompletionHandler, either from your GsfLanguage or your test class", handler);
@@ -3467,9 +3447,7 @@ public abstract class CslTestBase extends NbTestCase {
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////
     // Ast Offsets Test
-    ////////////////////////////////////////////////////////////////////////////
     protected String describeNode(ParserResult info, Object node, boolean includePath) throws Exception {
         // Override in your test
         return null;
@@ -3648,9 +3626,7 @@ public abstract class CslTestBase extends NbTestCase {
 
 
 
-    ////////////////////////////////////////////////////////////////////////////
     // Incremental Parsing and Offsets
-    ////////////////////////////////////////////////////////////////////////////
     protected void verifyIncremental(ParserResult result, EditHistory history, ParserResult oldResult) {
         // Your module should check that the parser results are really okay and incremental here
     }
@@ -3772,7 +3748,7 @@ public abstract class CslTestBase extends NbTestCase {
 
 
         // Attempt to activate them token hierarchy, one of my attempts to get TokenHierarchyEvents fired
-        //// doc.writeLock();
+        // // doc.writeLock();
         //try {
         //    MutableTextInput input = (MutableTextInput)doc.getProperty(MutableTextInput.class);
         //    assertNotNull(input);
@@ -3901,31 +3877,29 @@ public abstract class CslTestBase extends NbTestCase {
 //        BaseDocument doc = (BaseDocument)info.getDocument();
 //        assertEquals("Parse trees must equal", doc, fullParseResult,incrementalResult);
 //
-////        List<Object> incrValidNodes = new ArrayList<Object>();
-////        List<Object> incrInvalidNodes = new ArrayList<Object>();
-////        Map<Object,OffsetRange> incrPositions = new HashMap<Object,OffsetRange>();
-////        initializeNodes(info, incrementalResult, incrValidNodes, incrPositions, incrInvalidNodes);
-////
-////        String incrementalAnnotatedSource = annotateOffsets(incrValidNodes, incrPositions, incrInvalidNodes, info);
-////
-////        // Now make sure we get an identical linearization of the non-incremental result
-////        List<Object> validNodes = new ArrayList<Object>();
-////        List<Object> invalidNodes = new ArrayList<Object>();
-////        Map<Object,OffsetRange> positions = new HashMap<Object,OffsetRange>();
-////        initializeNodes(info, fullParseResult, validNodes, positions, invalidNodes);
-////
-////        String fullParseAnnotatedSource = annotateOffsets(validNodes, positions, invalidNodes, info);
-////
-////        assertEquals(fullParseAnnotatedSource, incrementalAnnotatedSource);
+// //        List<Object> incrValidNodes = new ArrayList<Object>();
+// //        List<Object> incrInvalidNodes = new ArrayList<Object>();
+// //        Map<Object,OffsetRange> incrPositions = new HashMap<Object,OffsetRange>();
+// //        initializeNodes(info, incrementalResult, incrValidNodes, incrPositions, incrInvalidNodes);
+// //
+// //        String incrementalAnnotatedSource = annotateOffsets(incrValidNodes, incrPositions, incrInvalidNodes, info);
+// //
+// //        // Now make sure we get an identical linearization of the non-incremental result
+// //        List<Object> validNodes = new ArrayList<Object>();
+// //        List<Object> invalidNodes = new ArrayList<Object>();
+// //        Map<Object,OffsetRange> positions = new HashMap<Object,OffsetRange>();
+// //        initializeNodes(info, fullParseResult, validNodes, positions, invalidNodes);
+// //
+// //        String fullParseAnnotatedSource = annotateOffsets(validNodes, positions, invalidNodes, info);
+// //
+// //        assertEquals(fullParseAnnotatedSource, incrementalAnnotatedSource);
 //    }
 
     protected void assertEquals(String message, BaseDocument doc, ParserResult expected, ParserResult actual) throws Exception {
         fail("You must override assertEquals(ParserResult,ParserResult)");
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Type Test
-    ////////////////////////////////////////////////////////////////////////////
     protected void initializeTypeNodes(ParserResult info, List<Object> nodes,
             Map<Object,OffsetRange> positions, Map<Object,String> types) throws Exception {
         // Override in your test
@@ -4061,9 +4035,7 @@ public abstract class CslTestBase extends NbTestCase {
         return sb.toString();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Hints / Quickfix Tests
-    ////////////////////////////////////////////////////////////////////////////
     protected HintsProvider getHintsProvider() {
         HintsProvider provider = getPreferredLanguage().getHintsProvider();
         assertNotNull("You must override getHintsProvider, either from your GsfLanguage or your test class", provider);
@@ -4647,9 +4619,7 @@ public abstract class CslTestBase extends NbTestCase {
         public int caretOffset;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // DeclarationFinder
-    ////////////////////////////////////////////////////////////////////////////
     protected DeclarationFinder getFinder() {
         DeclarationFinder finder = getPreferredLanguage().getDeclarationFinder();
         if (finder == null) {

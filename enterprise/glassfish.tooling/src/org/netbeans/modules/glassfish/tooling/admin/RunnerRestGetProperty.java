@@ -37,26 +37,17 @@ import org.netbeans.modules.glassfish.tooling.logging.Logger;
  */
 public class RunnerRestGetProperty extends RunnerRest {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER
             = new Logger(RunnerRestGetProperty.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Result object - contains list of JDBC resources names.*/
     @SuppressWarnings("FieldNameHidesFieldInSuperclass")
     ResultMap<String, String> result;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * REST interface.
@@ -69,10 +60,7 @@ public class RunnerRestGetProperty extends RunnerRest {
         super(server, command, "/command/", null);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Implemented Abstract Methods                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Create <code>ResultMap</code> object corresponding
      * to server get property command execution value to be returned.

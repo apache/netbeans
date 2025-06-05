@@ -621,7 +621,6 @@ log( "==> Examining file: " + path, Project.MSG_DEBUG) ;
     return( ret) ;
   }
 
-  ////////////////////////////////////////////////////////////////////
   // This section of code supports the feature that this class will //
   // look for global properties that specify locales and brandings  //
   // that should be used.					    //
@@ -671,8 +670,6 @@ log( "==> Examining file: " + path, Project.MSG_DEBUG) ;
       }
     }
   }
-  //////////////////////////////////////////////////////////////////////
-
   protected boolean shouldWarnMissingDir() {
     String s ;
     boolean ret = false ;	// Default false. //

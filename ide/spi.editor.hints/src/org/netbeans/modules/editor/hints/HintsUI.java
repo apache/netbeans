@@ -883,7 +883,6 @@ public final class HintsUI implements MouseListener, MouseMotionListener, KeyLis
                     return;
                 }
             }
-            /////////////////////////////////
             Position start = change.getStart();
             Position end = change.getEnd();
             if (start != null) {

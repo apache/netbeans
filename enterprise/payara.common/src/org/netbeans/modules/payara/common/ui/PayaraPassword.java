@@ -36,18 +36,12 @@ import org.openide.util.NbBundle;
  */
 public class PayaraPassword extends CommonPasswordPanel {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = PayaraLogger.get(PayaraPassword.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Display Payara password panel to change Payara password.
      <p/>
@@ -82,17 +76,11 @@ public class PayaraPassword extends CommonPasswordPanel {
         return password;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Password verification label. */
     private final String passwordVerifyLabelText;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates new Payara password panel.
      * <p/>
@@ -115,10 +103,7 @@ public class PayaraPassword extends CommonPasswordPanel {
                 .addDocumentListener(initPasswordValidateListener());
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // GUI Getters and Setters                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get password value from form.
      * <p/>
@@ -128,10 +113,7 @@ public class PayaraPassword extends CommonPasswordPanel {
         return new String(password.getPassword());
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Validators                                                             //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Validate password fields.
      * <p/>
@@ -170,10 +152,7 @@ public class PayaraPassword extends CommonPasswordPanel {
         };
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Clear form fields to remove password {@see String}s from them.
      */
@@ -182,10 +161,7 @@ public class PayaraPassword extends CommonPasswordPanel {
         this.passwordVerify.setText("");
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Generated GUI code                                                     //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

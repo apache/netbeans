@@ -17,7 +17,7 @@
  * under the License.
  */
 
-/**
+/*
  *	This generated bean class Headers matches the DTD element Headers
  *
  *	Generated on Thu Jan 11 18:34:12 PST 2001

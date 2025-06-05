@@ -159,7 +159,6 @@ public class ChangingOfBeanPropertyProperties  extends JellyTestCase {
         
         new Property(propertySheetTabOperator, Bundle.getString("org.netbeans.modules.beans.Bundle", "PROP_Option_Prop_Style")).setValue(Bundle.getString("org.netbeans.modules.beans.Bundle", "MSG_Option_Gen_Undescored"));
         new EventTool().waitNoEvent(3000);
-        //////////////////
         explorerOperator = new RepositoryTabOperator();
         repositoryRootNode = explorerOperator.getRootNode();
         patternsNode = new Node(repositoryRootNode, sampleDir+"|"+NAME_TEST_FILE+"|"+"class "+NAME_TEST_FILE+"|"+Bundle.getString("org.netbeans.modules.beans.Bundle", "Patterns"));
@@ -244,7 +243,6 @@ public class ChangingOfBeanPropertyProperties  extends JellyTestCase {
         new Property(propertySheetTabOperator, Bundle.getString("org.netbeans.modules.beans.Bundle", "PROP_Option_Prop_Style")).setValue("_property_Value");
         new EventTool().waitNoEvent(3000);
         optionsOperator.close();
-        /////////////////
         explorerOperator = new RepositoryTabOperator();
         patternsNode = new Node(repositoryRootNode, sampleDir+"|"+NAME_TEST_FILE+"|"+"class "+NAME_TEST_FILE+"|"+Bundle.getString("org.netbeans.modules.beans.Bundle", "Patterns")+"|"+"initialName");
         patternsNode.select();
@@ -330,7 +328,6 @@ public class ChangingOfBeanPropertyProperties  extends JellyTestCase {
         new Property(propertySheetTabOperator, Bundle.getString("org.netbeans.modules.beans.Bundle", "PROP_Option_Prop_Style")).setValue("_property_Value");
         new EventTool().waitNoEvent(1000);
         optionsOperator.close();
-        //////////////////
         explorerOperator = new RepositoryTabOperator();
         repositoryRootNode = explorerOperator.getRootNode();
         patternsNode = new Node(repositoryRootNode, sampleDir+"|"+NAME_TEST_FILE+"|"+"class "+NAME_TEST_FILE+"|"+Bundle.getString("org.netbeans.modules.beans.Bundle", "Patterns"));
@@ -360,7 +357,7 @@ public class ChangingOfBeanPropertyProperties  extends JellyTestCase {
         jCheckBoxOperator.push();
         new EventTool().waitNoEvent(1000);
         nbDialogOperator.ok();
-        ////
+
         explorerOperator = new RepositoryTabOperator();
         
         patternsNode = new Node(repositoryRootNode, sampleDir+"|"+NAME_TEST_FILE+"|"+"class "+NAME_TEST_FILE+"|"+Bundle.getString("org.netbeans.modules.beans.Bundle", "Patterns")+"|"+"firstName");
@@ -386,8 +383,6 @@ public class ChangingOfBeanPropertyProperties  extends JellyTestCase {
         EditorOperator eo = new EditorOperator(NAME_TEST_FILE);
         ref(eo.getText());
         compareReferenceFiles();
-        
-        ////
         
     }
     

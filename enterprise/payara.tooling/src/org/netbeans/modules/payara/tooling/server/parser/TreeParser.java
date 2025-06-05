@@ -44,9 +44,7 @@ public final class TreeParser extends DefaultHandler {
     /** XML elements path items separator. */
     static final String PATH_SEPARATOR = "/";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(TreeParser.class);
 

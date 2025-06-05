@@ -181,7 +181,7 @@ class DynaMenuModel {
                     }
                 }
                 for (int i = 0; i < newones.length; i++) {
-                    ///TODO now what to do with icon alignments..
+                    //TODO now what to do with icon alignments..
                     JComponent one = newones[i];
                     menu.getPopupMenu().add(one, i + menuIndex);
                     changed = true;

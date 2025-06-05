@@ -271,10 +271,7 @@ public class RepositoryRegistry {
         TeamRepositories.getInstance().addPropertyChangeListener(listener);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////
     // private 
-    ////////////////////////////////////////////////////////////////////////////////////////
-    
     /**
      * for testing
      */
@@ -395,8 +392,6 @@ public class RepositoryRegistry {
         
     }
     
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-
     private static final String JIRA_REPO_ID                    = "jira.repository_";           // NOI18N 
     private static final String BUGZILLA_REPO_ID                = "bugzilla.repository_";       // NOI18N
     private static final String NB_BUGZILLA_USERNAME            = "nbbugzilla.username";        // NOI18N

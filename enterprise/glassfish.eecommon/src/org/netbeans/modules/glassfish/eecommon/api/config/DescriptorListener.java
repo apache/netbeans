@@ -295,12 +295,12 @@ public class DescriptorListener implements PropertyChangeListener {
 //                                    Method subKeyGetter = sourceBean.getClass().getDeclaredMethod("get" + subKey, (Class) null);
 //                                    if (subKeyGetter != null) {
 //                                        Object beanCandidate = subKeyGetter.invoke(sourceBean, (Object) null);
-////                                        if (beanCandidate instanceof CommonDDBean []) {
-////                                            CommonDDBean [] beanArray = (CommonDDBean []) beanCandidate;
-////                                            // handle each bean
-////                                        } else if (beanCandidate instanceof CommonDDBean) {
-////                                            CommonDDBean bean = (CommonDDBean) beanCandidate;
-////                                        }
+// //                                        if (beanCandidate instanceof CommonDDBean []) {
+// //                                            CommonDDBean [] beanArray = (CommonDDBean []) beanCandidate;
+// //                                            // handle each bean
+// //                                        } else if (beanCandidate instanceof CommonDDBean) {
+// //                                            CommonDDBean bean = (CommonDDBean) beanCandidate;
+// //                                        }
 //                                        if (beanCandidate instanceof CommonDDBean) {
 //                                            CommonDDBean [] tmp = new CommonDDBean[1];
 //                                            tmp[0] = (CommonDDBean) beanCandidate;

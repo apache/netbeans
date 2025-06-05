@@ -66,7 +66,7 @@ public abstract class ActionManager<A extends SystemAction, S extends CallbackSy
      *
      */
     private Object actionMapKey;
-    /**
+    /*
      * Holds class {@code SearchScopeNodeSelection.LookupSensitive}. See Bug
      * #183434.
      */

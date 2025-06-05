@@ -31,17 +31,11 @@ import java.util.Map;
  */
 public class ResultMap<K, V> extends Result<Map<K, V>> {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Value returned by administration command execution. */
     HashMap<K, V> value;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of GlassFish administration command result for
      * <code>Map</code> result value.
@@ -50,10 +44,7 @@ public class ResultMap<K, V> extends Result<Map<K, V>> {
         super();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get value returned by administration command execution.
      * @return Value returned by administration command execution.

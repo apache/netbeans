@@ -122,9 +122,9 @@ public final class ProfilingMonitor {
 //                                            // ---------------------------------------------------------
 //
 //                                            // Let results updating happen every other cycle (i.e. every ~2.5 sec) to allow the user to understand something before it disappears :-)
-////                                            if (doUpdateLiveResults && LiveResultsWindow.hasDefault()) {
-////                                                LiveResultsWindow.getDefault().refreshLiveResults();
-////                                            }
+// //                                            if (doUpdateLiveResults && LiveResultsWindow.hasDefault()) {
+// //                                                LiveResultsWindow.getDefault().refreshLiveResults();
+// //                                            }
 //
 //                                            doUpdateLiveResults = !doUpdateLiveResults;
                                         } catch (Exception e) {

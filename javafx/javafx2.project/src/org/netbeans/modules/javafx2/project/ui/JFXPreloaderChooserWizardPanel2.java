@@ -140,10 +140,10 @@ public class JFXPreloaderChooserWizardPanel2 implements WizardDescriptor.Panel<J
 //                    @Override
 //                    public void actionPerformed(ActionEvent ev) {
 //                        wizard.update();
-////                        if (JFileChooser.APPROVE_SELECTION.equals(ev.getActionCommand()))
-////                            wizard.update(); //.stepToNext();
-////                        else if (JFileChooser.CANCEL_SELECTION.equals(ev.getActionCommand()))
-////                            jarFileChooser.getTopLevelAncestor().setVisible(false);
+// //                        if (JFileChooser.APPROVE_SELECTION.equals(ev.getActionCommand()))
+// //                            wizard.update(); //.stepToNext();
+// //                        else if (JFileChooser.CANCEL_SELECTION.equals(ev.getActionCommand()))
+// //                            jarFileChooser.getTopLevelAncestor().setVisible(false);
 //                    };
 //                });
 

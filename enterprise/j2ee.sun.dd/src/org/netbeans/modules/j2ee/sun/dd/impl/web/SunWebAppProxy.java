@@ -658,7 +658,7 @@ public class SunWebAppProxy implements SunWebApp, RootInterfaceImpl {
                 else
                     downgradeWebGraph(document, newVersion, currentVersion);
             } else if(newVersion.equals(SunWebApp.VERSION_2_3_0)){
-                ////This will always be a downgrade
+                //This will always be a downgrade
                 downgradeWebGraph(document, newVersion, currentVersion);
             }
         }

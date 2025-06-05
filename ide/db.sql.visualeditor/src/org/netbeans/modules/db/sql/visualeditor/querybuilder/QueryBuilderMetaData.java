@@ -528,10 +528,10 @@ public class QueryBuilderMetaData {
 //         */
 //     }
 
-    /**
+    /*
      * Returns the list of table names in the specified schema
      */
-    /**** JFB
+    /* *** JFB
     private List getTablesInternal(String type, String schemaName) {
 	if (Log.isLoggable() ) Log.log("enter tablesInternal "+type+","+schemaName) ;
 	List tableNames = new ArrayList();
@@ -565,7 +565,7 @@ public class QueryBuilderMetaData {
     }
     ***/
 
-    /**
+    /*
      * Returns the set of columns in the specified table.
      * This is obtained from the DbMetaData.
      */
@@ -690,7 +690,7 @@ public class QueryBuilderMetaData {
         return result;
     }
 
-    /**
+    /*
      * Returns either the exported or imported keys for this table, depending on the flag
      */
     /*

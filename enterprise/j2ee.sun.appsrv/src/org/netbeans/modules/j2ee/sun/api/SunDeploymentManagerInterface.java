@@ -72,7 +72,7 @@ public interface SunDeploymentManagerInterface extends Node.Cookie{
     
    ServerInterface/* ServerMEJB*/ getManagement();
     
-///    MBeanServerConnection getMBeanServerConnection() throws RemoteException, ServerException;
+//    MBeanServerConnection getMBeanServerConnection() throws RemoteException, ServerException;
    /*
     * necessary to fix some jpda bug due to dt_socket in Windows only platform
     */

@@ -763,7 +763,6 @@ class SplitSubModel {
         return sb;
     }
 
-    ///////////////////////////////
     // Controller updates >>
     
     public ModeImpl getModeForOriginator(ModelElement originator) {
@@ -775,15 +774,11 @@ class SplitSubModel {
     }
     
     // Controller updates <<
-    ///////////////////////////////
-    
     private static void debugLog(String message) {
         Debug.log(SplitSubModel.class, message);
     }
     
-    ////////////////////////////////////////
-    /// Nodes of this tree model
-    ////////////////////////////////////////
+    // Nodes of this tree model
     /** Class representing one node in SplitSubModel.  */
     protected abstract static class Node implements ModelElement {
         /** Reference to parent node. */
@@ -851,9 +846,6 @@ class SplitSubModel {
             return null;
         }
         
-        //////////////////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////////////////
-
         /** Indicates whether component represented by this node is visible or not. */
         public boolean isVisibleInSplit() {
             return false;

@@ -17,12 +17,6 @@
  * under the License.
  */
 
-/**
- * Superclass that implements DescriptionInterface for Servlet2.4 beans.
- *
- * @author  Milan Kuchtiak
- */
-
 package org.netbeans.modules.j2ee.dd.impl.common;
 
 import java.util.Map;
@@ -35,6 +29,12 @@ import org.netbeans.modules.schema2beans.Version;
 import org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException;
 import org.netbeans.modules.j2ee.dd.api.common.DescriptionInterface;
 
+
+/**
+ * Superclass that implements DescriptionInterface for Servlet2.4 beans.
+ *
+ * @author  Milan Kuchtiak
+ */
 public abstract class DescriptionBeanMultiple extends EnclosingBean implements DescriptionInterface {
 
     private static final Logger LOG = Logger.getLogger(DescriptionBeanMultiple.class.getName());

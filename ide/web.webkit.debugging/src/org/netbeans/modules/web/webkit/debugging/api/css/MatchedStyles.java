@@ -32,7 +32,7 @@ import org.json.simple.JSONObject;
 public class MatchedStyles {
     /** CSS rules matching the node, from all applicable stylesheets. */
     private final List<Rule> matchedRules;
-    /** Pseudo style rules for the node. */
+    /* Pseudo style rules for the node. */
     // TODO: introduce when needed: private List<PseudoIdRules> pseudoRules;
     /** A chain of inherited styles (from the immediate node parent up to the DOM tree root). */
     private List<InheritedStyleEntry> inheritedRules;
@@ -82,7 +82,7 @@ public class MatchedStyles {
         return Collections.unmodifiableList(matchedRules);
     }
 
-    /**
+    /*
      * Returns pseudo style rules for the node.
      *
      * @return pseudo style rules for the node.

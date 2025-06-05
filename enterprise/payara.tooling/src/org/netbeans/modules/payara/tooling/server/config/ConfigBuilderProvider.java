@@ -42,10 +42,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraVersion;
  */
 public class ConfigBuilderProvider {
     
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-    
     /** Library builder configuration since Payara 4.1. */
     private static final Config.Next CONFIG_V4
             = new Config.Next((short)4,
@@ -74,10 +71,7 @@ public class ConfigBuilderProvider {
     private static final Map<PayaraServer, ConfigBuilder> builders
             = new HashMap<>();
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get library builder configuration for given Payara server version.
      * <p/>

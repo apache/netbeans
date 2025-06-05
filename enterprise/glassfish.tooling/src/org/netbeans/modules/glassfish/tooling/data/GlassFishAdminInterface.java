@@ -30,18 +30,13 @@ import java.util.Map;
  * @author Tomas Kraus, Peter Benedikovic
  */
 public enum GlassFishAdminInterface {
-    ////////////////////////////////////////////////////////////////////////////
     // Enum values                                                            //
-    ////////////////////////////////////////////////////////////////////////////
     /** GlassFish server administration interface is REST. */
     REST,
     /** GlassFish server administration interface is HTTP. */
     HTTP;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**  A <code>String</code> representation of REST value. */
     static final String REST_STR = "REST";
 
@@ -63,10 +58,7 @@ public enum GlassFishAdminInterface {
                     adminInterface.toString().toUpperCase(), adminInterface);
         }
     }
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Returns a <code>GlassFishAdminInterface</code> with a value represented
      * by the specified <code>String</code>. The
@@ -89,10 +81,7 @@ public enum GlassFishAdminInterface {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Convert <code>GlassFishAdminInterface</code> value to <code>String</code>.
      * <p>

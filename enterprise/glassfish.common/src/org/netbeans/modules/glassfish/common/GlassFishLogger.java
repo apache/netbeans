@@ -27,10 +27,7 @@ import java.util.logging.Logger;
  */
 public class GlassFishLogger {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get logger for given class.
      * <p/>

@@ -47,10 +47,7 @@ import org.openide.util.NbBundle;
  */
 public class Hk2JavaEEPlatformFactory extends J2eePlatformFactory {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish V3 JavaEE platform lookup key. */
     private static final String V3_LOOKUP_KEY = "J2EE/DeploymentPlugins/gfv3ee6/Lookup";
 
@@ -74,10 +71,7 @@ public class Hk2JavaEEPlatformFactory extends J2eePlatformFactory {
     /** GlassFish JavaEE platform factory singleton object. */
     private static volatile Hk2JavaEEPlatformFactory instance;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Return existing singleton instance of this class or create a new one
      * when no instance exists.
@@ -216,10 +210,7 @@ public class Hk2JavaEEPlatformFactory extends J2eePlatformFactory {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // J2eePlatformFactory methods                                            //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Return {@see J2eePlatformImpl} for the given {@see DeploymentManager}.
      * <p/>

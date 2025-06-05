@@ -942,13 +942,6 @@ public class Actions {
         */
         public String getLabel(int index);
 
-        /** Gets shortcut for specific index
-        * @index of the submenu item
-        * @return menushortcut for this menu item
-        */
-
-        //    public MenuShortcut getMenuShortcut(int index);
-
         /** Get context help for the specified item.
         * This can be used to associate help with individual items.
         * You may return <code>null</code> to just use the context help for

@@ -42,10 +42,7 @@ import org.openide.util.NbBundle;
  */
 public class GlassFishState {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Check mode.
      * <p/>
@@ -53,10 +50,7 @@ public class GlassFishState {
      */
     public static enum Mode {
 
-        ////////////////////////////////////////////////////////////////////////
         // Enum values                                                        //
-        ////////////////////////////////////////////////////////////////////////
-
         /** Default server state check mode. All special features
          *  are turned off. */
         DEFAULT,
@@ -67,10 +61,7 @@ public class GlassFishState {
          *  for remote servers. */
         REFRESH;
 
-        ////////////////////////////////////////////////////////////////////////
         // Methods                                                            //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Convert <code>Mode</code> value to <code>String</code>.
          * <p/>
@@ -89,10 +80,7 @@ public class GlassFishState {
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = GlassFishLogger.get(GlassFishState.class);

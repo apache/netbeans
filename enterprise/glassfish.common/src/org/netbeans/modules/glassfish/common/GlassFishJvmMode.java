@@ -29,10 +29,7 @@ import org.openide.util.NbBundle;
  */
 public enum GlassFishJvmMode {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Enum values                                                            //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Normal mode. */
     NORMAL,
 
@@ -42,10 +39,7 @@ public enum GlassFishJvmMode {
     /** Profiling mode. */
     PROFILE;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = GlassFishLogger.get(GlassFishJvmMode.class);
@@ -71,10 +65,7 @@ public enum GlassFishJvmMode {
             stringValuesMap.put(mode.toString().toUpperCase(), mode);
         }
     }
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-   
     /**
      * Returns a <code>GlassFishJvmMode</code> with a value represented by the
      * specified <code>String</code>. The <code>GlassFishJvmMode</code> returned
@@ -96,10 +87,7 @@ public enum GlassFishJvmMode {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Convert <code>GlassFishJvmMode</code> value to <code>String</code>.
      * <p/>

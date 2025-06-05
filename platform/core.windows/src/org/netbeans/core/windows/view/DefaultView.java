@@ -522,19 +522,11 @@ class DefaultView implements View, Controller, WindowDnDManager.ViewAccessor {
     }
     
 
-    //////////////////////////////////////////////////////////
     private void showWindowSystem(final WindowSystemAccessor wsa) {
         long start = System.currentTimeMillis();
         if(DEBUG) {
             debugLog("ShowWindowSystem--"); // NOI18N
         }
-//        java.awt.Toolkit.getDefaultToolkit().addAWTEventListener(new java.awt.event.AWTEventListener() {
-//                public void eventDispatched(java.awt.event.AWTEvent event) {
-////                    debugLog("" + event.getID() + " "  + event.getSource().getClass() + event.toString());
-//                    Debug.log(org.netbeans.core.windows.Constants.class, event.toString());  
-//                    Debug.log(org.netbeans.core.windows.Constants.class, "keyboard focus=" + java.awt.KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner());  
-//                }
-//        }, AWTEvent.FOCUS_EVENT_MASK);
         
         hierarchy.getMainWindow().initializeComponents();
 
@@ -631,7 +623,6 @@ class DefaultView implements View, Controller, WindowDnDManager.ViewAccessor {
         hierarchy.releaseAll();
     }
     
-    ////////////////////////////////////////////////////
     // Controller >>
     @Override
     public void userActivatedModeView(ModeView modeView) {
@@ -944,8 +935,6 @@ class DefaultView implements View, Controller, WindowDnDManager.ViewAccessor {
         return accessor == null ? null : accessor.getMode();
     }
     // Controller <<
-    ////////////////////////////////////////////////////
-    
     // XXX
     private void updateMainWindowBoundsSeparatedHelp() {
         controllerHandler.userResizedMainWindowBoundsSeparatedHelp(
@@ -1000,7 +989,6 @@ class DefaultView implements View, Controller, WindowDnDManager.ViewAccessor {
         }
     }
 
-    ///////////////
     // ViewAccessor
     @Override
     public Set<Component> getModeComponents() {
@@ -1022,9 +1010,6 @@ class DefaultView implements View, Controller, WindowDnDManager.ViewAccessor {
         return hierarchy.getSlidingModeComponent(side);
     }
     // ViewAccessor
-    ///////////////
-
-    
     private static void debugLog(String message) {
         Debug.log(DefaultView.class, message);
     }

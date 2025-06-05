@@ -517,7 +517,7 @@ public final class OpenProjectList {
                         log(Level.WARNING, "broken node for {0}", t);
                     }
                     log(Level.FINE, "property change notified {0}", p); // NOI18N
-                    ///same as in doOpenProject() but here for initially opened projects
+                    //same as in doOpenProject() but here for initially opened projects
                     p.getProjectDirectory().addFileChangeListener(INSTANCE.deleteListener);
                     p.getProjectDirectory().addFileChangeListener(INSTANCE.nbprojectDeleteListener);
                 } else {

@@ -42,7 +42,7 @@ public class PropertyTypeEditor extends PropertyEditorSupport implements Enhance
     public PropertyTypeEditor () {
     }
 
-    /**
+    /*
     * @return The property value as a human editable string.
     * <p>   Returns null if the value can't be expressed as an editable string.
     * <p>   If a non-null value is returned, then the PropertyEditor should
@@ -53,7 +53,7 @@ public class PropertyTypeEditor extends PropertyEditorSupport implements Enhance
 //        return (type == null) ? "" : type.getName(); // NOI18N
 //    }
 
-    /**
+    /*
     * Set the property value by parsing a given String.
     * @param string  The string to be parsed.
     */

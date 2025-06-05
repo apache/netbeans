@@ -340,10 +340,7 @@ public abstract class DefaultSchemaGenerator extends SchemaGenerator {
     
     protected abstract SchemaGenerator.Pattern getSchemaDesignPattern();
     
-    ////////////////////////////////////////////////////////////////////
-    ////////////////////////// helper methods   ////////////////////////
-    ////////////////////////////////////////////////////////////////////
-    
+    // helper methods
     protected void prepareGlobalElement(Element element) {
         GlobalElement e = null;
         ElementReference eref = null;

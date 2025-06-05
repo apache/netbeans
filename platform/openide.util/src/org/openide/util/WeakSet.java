@@ -1206,7 +1206,6 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
             }
         }
 
-        ////////////////////////////////////////////////////////////////////////////
         // new changes
 
         /**

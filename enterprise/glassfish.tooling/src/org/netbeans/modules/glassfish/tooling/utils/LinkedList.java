@@ -30,19 +30,13 @@ package org.netbeans.modules.glassfish.tooling.utils;
  */
 public class LinkedList <V> {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner Classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Linked list element containing stored value and links to neighbor nodes.
      */
     public static class Element<V> {
 
-        ////////////////////////////////////////////////////////////////////////
         // Instance attributes                                                //
-        ////////////////////////////////////////////////////////////////////////
-
         /** Pointer to previous element in list. */
         private Element<V> previous;
 
@@ -52,10 +46,7 @@ public class LinkedList <V> {
         /** Stored value object. */
         private V value;
 
-        ////////////////////////////////////////////////////////////////////////
         // Constructors                                                       //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Constructs an instance of linked list element and sets it's stored
          * <code>value</code> object.
@@ -82,10 +73,7 @@ public class LinkedList <V> {
             this.next = next;
         } 
 
-        ////////////////////////////////////////////////////////////////////////
         // Methods                                                            //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Clear all internal attributes (set them to <code>null</code>).
          * <p/>
@@ -98,10 +86,7 @@ public class LinkedList <V> {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** List head (first element in the list). List should be empty when this
      *  pointer is <code>null</code>. */
     private Element<V> head;
@@ -117,10 +102,7 @@ public class LinkedList <V> {
     /** List size. */
     private int size;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of linked list.
      * <p/>
@@ -131,10 +113,7 @@ public class LinkedList <V> {
         size = 0;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Add element at the end (after tail) of the list.
      * <p/>

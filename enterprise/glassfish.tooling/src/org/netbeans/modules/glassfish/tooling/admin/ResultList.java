@@ -30,17 +30,11 @@ import java.util.List;
  */
 public class ResultList<T> extends Result<List<T>> {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Value returned by administration command execution. */
     List<T> value;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of GlassFish administration command result for
      * <code>List</code> result value.
@@ -49,10 +43,7 @@ public class ResultList<T> extends Result<List<T>> {
         super();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get value returned by administration command execution.
      * @return Value returned by administration command execution.

@@ -428,7 +428,7 @@ public class ProfilerRuntimeMemory extends ProfilerRuntime {
         eventBuffer[curPos++] = (byte) ((currentStackDepth >> 8) & 0xFF);
         eventBuffer[curPos++] = (byte) ((currentStackDepth) & 0xFF);
 
-        /// A variant when we send non-reversed call graph
+        // A variant when we send non-reversed call graph
         //int base = depth + NO_OF_PROFILER_FRAMES - 1;
         //for (int i = 0; i < depth; i++) {
         //  eventBuffer[curPos++] = (char) ((stackFrameIds[base-i] >> 16) & 0xFFFF);

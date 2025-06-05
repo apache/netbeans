@@ -38,10 +38,7 @@ import org.xml.sax.SAXException;
  */
 public class HttpListenerReader extends TargetConfigReader implements XMLReader {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(HttpListenerReader.class);
 

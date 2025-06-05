@@ -292,11 +292,11 @@ public final class GradleSettings {
         LOG.warning("gradleVersion setting is deprecated. This setter has no effect.");
     }
 
-    @Deprecated
     /**
      * Returns the Gradle Version of the Tooling API bundled with the IDE.
      * @returns the Gradle Version of the Tooling API bundled with the IDE.
      */
+    @Deprecated
     public String getGradleVersion() {
         return GradleVersion.current().getVersion();
     }

@@ -118,7 +118,7 @@ public class HeapWalker {
         //    SwingUtilities.invokeLater(new Runnable() {
         //      public void run() {
         //        getTopComponent().open();
-        ////        getTopComponent().requestActive(); // For some reason steals focus from Dump Heap button in ProfilerControlPanel2 and causes http://www.netbeans.org/issues/show_bug.cgi?id=92425
+        // //        getTopComponent().requestActive(); // For some reason steals focus from Dump Heap button in ProfilerControlPanel2 and causes http://www.netbeans.org/issues/show_bug.cgi?id=92425
         //        getTopComponent().requestVisible(); // Workaround for the above problem
         //      }
         //    });

@@ -180,7 +180,7 @@ public class GroovyTypedTextInterceptor implements TypedTextInterceptor {
                 TokenId id = token.id();
 
                 if (id == GroovyTokenId.LINE_COMMENT) {
-                    // Did you just type "//" - make sure this didn't turn into ///
+                    // Did you just type "//" - make sure this didn't turn into "///"
                     // where typing the first "/" inserted "//" and the second "/" appended
                     // another "/" to make "///"
                     if (dotPos == ts.offset()+1 && dotPos+1 < doc.getLength() && doc.getText(dotPos+1,1).charAt(0) == '/') {

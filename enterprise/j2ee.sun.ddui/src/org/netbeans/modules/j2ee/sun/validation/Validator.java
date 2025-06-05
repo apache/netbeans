@@ -161,11 +161,11 @@ class Validator {
         if(constraintList != null) {
             failures.addAll(validate(property, constraintList, fieldName));
         } else {
-            ///String format = 
-            ///    BundleReader.getValue("MSG_No_definition_for");      //NOI18N
-            ///    Object[] arguments = 
-            ///        new Object[]{"Constraints", absoluteDtdName};    //NOI18N
-            ///System.out.println(MessageFormat.format(format, arguments));
+            //String format = 
+            //    BundleReader.getValue("MSG_No_definition_for");      //NOI18N
+            //    Object[] arguments = 
+            //        new Object[]{"Constraints", absoluteDtdName};    //NOI18N
+            //System.out.println(MessageFormat.format(format, arguments));
         }
         return failures;
     }
@@ -198,10 +198,10 @@ class Validator {
             String property = (String)validatee.getElement(elementName);
             failures.addAll(validate(property, constraintList, name));
         } else {
-            ///String format = 
-            ///    BundleReader.getValue("MSG_No_definition_for");      //NOI18N
-            ///    Object[] arguments = new Object[]{"Constraints", name}; //NOI18N
-            ///System.out.println(MessageFormat.format(format, arguments));
+            //String format = 
+            //    BundleReader.getValue("MSG_No_definition_for");      //NOI18N
+            //    Object[] arguments = new Object[]{"Constraints", name}; //NOI18N
+            //System.out.println(MessageFormat.format(format, arguments));
         }
         return failures;
     }
@@ -239,11 +239,11 @@ class Validator {
                 failures.addAll(validate(property, constraintList, name));
             }
         } else {
-            ///String format = 
-            ///    BundleReader.getValue("MSG_No_definition_for");      //NOI18N
-            ///    Object[] arguments = 
-            ///        new Object[]{"Constraints", elementName};        //NOI18N
-            ///System.out.println(MessageFormat.format(format, arguments));
+            //String format = 
+            //    BundleReader.getValue("MSG_No_definition_for");      //NOI18N
+            //    Object[] arguments = 
+            //        new Object[]{"Constraints", elementName};        //NOI18N
+            //System.out.println(MessageFormat.format(format, arguments));
         }
         return failures;
     }

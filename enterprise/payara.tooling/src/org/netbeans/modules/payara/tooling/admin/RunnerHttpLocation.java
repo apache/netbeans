@@ -34,10 +34,7 @@ public class RunnerHttpLocation extends RunnerHttp {
     @SuppressWarnings("FieldNameHidesFieldInSuperclass")
     ResultMap<String, String> result;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * HTTP interface.

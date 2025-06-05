@@ -25,10 +25,7 @@ package org.netbeans.modules.payara.tooling.server.config;
  */
 public class LibraryNode {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Library ID. */
     final String libraryID;
 
@@ -41,10 +38,7 @@ public class LibraryNode {
     /** Java sources file set. */
     final FileSet sources;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of internal library node element.
      * <p/>

@@ -30,10 +30,7 @@ import org.netbeans.modules.glassfish.tooling.utils.ServerUtils;
  */
 public class GlassFishServerEntity implements GlassFishServer {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish server name in IDE. Used as key attribute. */
     private String name;
 
@@ -79,10 +76,7 @@ public class GlassFishServerEntity implements GlassFishServer {
     /** GlassFish server administration interface type. */
     private GlassFishAdminInterface adminInterface;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs empty class instance. No default values are set.
      */
@@ -131,10 +125,7 @@ public class GlassFishServerEntity implements GlassFishServer {
         this.serverHome = serverHome;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get GlassFish server name.
      * <p/>

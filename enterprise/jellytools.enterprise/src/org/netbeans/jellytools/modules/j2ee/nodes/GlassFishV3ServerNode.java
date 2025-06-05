@@ -220,7 +220,7 @@ public class GlassFishV3ServerNode extends J2eeServerNode {
         return getServerState(ideNode);
     }
 
-    //// PRIVATE METHODS ////
+    // PRIVATE METHODS
     private static int getServerState(org.openide.nodes.Node n) {
         try {
             Object server = n.getLookup().lookup(classGlassfishInstance());

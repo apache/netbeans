@@ -34,10 +34,7 @@ import org.netbeans.modules.glassfish.tooling.data.IdeContext;
  */
 public class ServerAdmin {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Set global password authenticator for GlassFish servers.
      * <p/>

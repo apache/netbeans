@@ -30,10 +30,7 @@ import org.netbeans.modules.glassfish.tooling.data.GlassFishVersion;
  */
 public class Config {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Class used to pass library builder configuration for next (newer)
      * GlassFish versions to library builder configuration constructor.
@@ -43,20 +40,14 @@ public class Config {
      */
     public static class Next {
 
-        ////////////////////////////////////////////////////////////////////////
         // Instance attributes                                                //
-        ////////////////////////////////////////////////////////////////////////
-
         /** Libraries XML configuration file. */
         URL configFile;
 
         /** GlassFish version. */
         GlassFishVersion version;
 
-        ////////////////////////////////////////////////////////////////////////
         // Constructors                                                       //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Creates an instance of libraries configuration for given version.
          * <p/>
@@ -71,10 +62,7 @@ public class Config {
 
     }
 
-    ////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                //
-    ////////////////////////////////////////////////////////////////////////
-
     /** Configuration files. */
     final URL[] configFiles;
 

@@ -69,10 +69,7 @@ import org.openide.windows.InputOutput;
 public class GlassfishInstance implements ServerInstanceImplementation,
         Lookup.Provider, LookupListener, GlassFishServer {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Properties map used to store GlassFish server properties in GlassFish
      * server instance.
@@ -220,10 +217,7 @@ public class GlassfishInstance implements ServerInstanceImplementation,
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = GlassFishLogger.get(GlassfishInstance.class);
@@ -267,10 +261,7 @@ public class GlassfishInstance implements ServerInstanceImplementation,
      */
     static final String KEYRING_IDENT_SEPARATOR=":";
     
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Build key ring identifier for password related to given user name.
      * <p/>
@@ -690,10 +681,7 @@ public class GlassfishInstance implements ServerInstanceImplementation,
         }
     }   
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     // Server properties
     private boolean removable = true;
     
@@ -734,10 +722,7 @@ public class GlassfishInstance implements ServerInstanceImplementation,
     // GuardedBy("lookupResult")
     private Node fullNode;
     
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     @SuppressWarnings("LeakingThisInConstructor")
     private GlassfishInstance(Map<String, String> ip, GlassFishVersion version,
             GlassfishInstanceProvider instanceProvider, boolean prepareProperties) {
@@ -787,10 +772,7 @@ public class GlassfishInstance implements ServerInstanceImplementation,
         this.commonSupport = new CommonServerSupport(this);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get GlassFish properties.
      * <p/>
@@ -873,10 +855,7 @@ public class GlassfishInstance implements ServerInstanceImplementation,
         this.process = null;
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Fake Getters from GlassFishServer interface                            //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get GlassFish display name stored properties.
      * <p/>
@@ -1103,10 +1082,7 @@ public class GlassfishInstance implements ServerInstanceImplementation,
 //            return GlassFishAdminInterface.REST;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Fake Getters and Setters                                               //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get information if this GlassFish server instance is local or remote.
      * <p/>
@@ -1430,16 +1406,12 @@ public class GlassfishInstance implements ServerInstanceImplementation,
         return retVal;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods dependent on linked CommonServerSupport instance               //
-    ////////////////////////////////////////////////////////////////////////////
     // It was too complicated to remove this dependency completely. All       //
     // methods that are dependent on CommonServerSupport instance were marked //
     // as deprecated.                                                         //
     // All of them should be moved to CommonServerSupport class itself and    //
     // used in context of this class in the future.                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get <code>CommonServerSupport</code> instance associated with
      * this object.
@@ -1500,10 +1472,7 @@ public class GlassfishInstance implements ServerInstanceImplementation,
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Build and update copy of GlassFish properties to be stored
      * in <code>this</code> object.

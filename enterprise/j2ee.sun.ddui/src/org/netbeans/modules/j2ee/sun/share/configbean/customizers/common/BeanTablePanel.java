@@ -216,7 +216,7 @@ public abstract class BeanTablePanel extends javax.swing.JPanel {
 				if (dialog.hasErrors()) {
 					dialog.showErrors();
 				} else {
-					///ddView.setModelChanged(true);
+					//ddView.setModelChanged(true);
 					if(isEditOperation){
 						model.editRow(row, dialog.getValues());
 					} else {

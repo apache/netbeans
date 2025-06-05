@@ -89,10 +89,6 @@ public final class ServletVersion extends J2EEBaseVersion {
         "11.0", 11000	// NOI18N
         );
 
-    /** -----------------------------------------------------------------------
-     *  Implementation
-     */
-
     /** Creates a new instance of ServletVersion 
      */
     private ServletVersion(String version, int nv, String specVersion, int nsv) {

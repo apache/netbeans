@@ -28,10 +28,7 @@ import java.util.Map;
  */
 public enum TaskState {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Enum values                                                            //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Value representing task waiting in executor queue. */
     READY,
 
@@ -44,10 +41,7 @@ public enum TaskState {
     /** Value representing failed task. */
     FAILED;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**  A <code>String</code> representation of READY value. */
     private static final String READY_STR = "READY";
 
@@ -74,10 +68,7 @@ public enum TaskState {
         }
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Returns a <code>TaskState</code> with a value represented by the
      * specified <code>String</code>. The <code>TaskState</code> returned
@@ -98,10 +89,7 @@ public enum TaskState {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Convert <code>TaskState</code> value to <code>String</code>.
      * <p>

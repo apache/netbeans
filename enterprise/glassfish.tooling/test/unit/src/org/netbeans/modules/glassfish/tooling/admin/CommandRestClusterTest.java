@@ -37,10 +37,7 @@ public class CommandRestClusterTest extends CommandRestTest {
 
     private static final String CLUSTER_NAME = "cluster1";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Test methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Test GlasFish start cluster command via REST.
      */

@@ -26,18 +26,12 @@ package org.netbeans.modules.payara.tooling.admin;
  */
 public abstract class CommandJavaClassPath extends CommandJava {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Class path to be passed to java executable formated as
         <code>-cp &lt;path1&gt;:&lt;path2&gt;:...:&lt;pathN&gt;</code>. */
     final String classPath;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server administration command entity
      * with specified server command, Java SE home and class path.
@@ -52,10 +46,7 @@ public abstract class CommandJavaClassPath extends CommandJava {
         this.classPath = classPath;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get class path to be passed to java executable.
      * <p/>

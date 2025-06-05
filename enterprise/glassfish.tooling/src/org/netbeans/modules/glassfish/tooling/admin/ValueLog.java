@@ -28,10 +28,7 @@ import org.netbeans.modules.glassfish.tooling.utils.Utils;
  */
 public class ValueLog {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish server log lines. */
     final List<String> lines;
 
@@ -46,10 +43,7 @@ public class ValueLog {
      */
     final String paramsAppendNext;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of GlassFish server log entity.
      * <p/>
@@ -66,10 +60,7 @@ public class ValueLog {
         this.paramsAppendNext = paramsAppendNext;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get GlassFish server log lines.
      * <p/>
@@ -88,10 +79,7 @@ public class ValueLog {
         return paramsAppendNext;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Convert stored server log lines to <code>String</code>.
      * <p>

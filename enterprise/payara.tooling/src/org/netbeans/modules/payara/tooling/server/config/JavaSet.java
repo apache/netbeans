@@ -25,17 +25,11 @@ package org.netbeans.modules.payara.tooling.server.config;
  */
 public abstract class JavaSet {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Highest Java specification version implemented. */
     private final String version;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of container of Payara Java features
      * configuration.
@@ -46,10 +40,7 @@ public abstract class JavaSet {
         this.version = version;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get highest JavaEE specification version implemented.
      * <p/>

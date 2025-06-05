@@ -30,24 +30,15 @@ import org.xml.sax.SAXException;
  */
 public class PathReader extends AbstractReader {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** <code>file</code> XML element name. */
     static final String NODE = "file";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Paths retrieved from XML elements. */
     private List<String> paths = new LinkedList<>();
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of Java EE platform check configuration
      * XML element reader.
@@ -59,10 +50,7 @@ public class PathReader extends AbstractReader {
         super(pathPrefix, NODE);
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Tree parser methods                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Process attributes from current XML element.
      * <p/>
@@ -76,10 +64,7 @@ public class PathReader extends AbstractReader {
         paths.add(attributes.getValue("path"));
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get paths retrieved from XML elements.
      * <p/>
@@ -89,10 +74,7 @@ public class PathReader extends AbstractReader {
         return paths;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Reset this XML element reader.
      */

@@ -32,18 +32,12 @@ import org.netbeans.modules.payara.tooling.logging.Logger;
  */
 public class PayaraIdeException extends RuntimeException {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER
             = new Logger(PayaraIdeException.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Create exception message from message pattern and arguments using
      * {@link java.text.MessageFormat}.
@@ -59,10 +53,7 @@ public class PayaraIdeException extends RuntimeException {
         }
     }
  
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of <code>PayaraIdeException</code> without
      * detail message.

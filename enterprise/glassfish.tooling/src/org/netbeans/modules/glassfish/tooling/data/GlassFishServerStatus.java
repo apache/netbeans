@@ -29,10 +29,7 @@ import org.netbeans.modules.glassfish.tooling.GlassFishStatus;
  */
 public interface GlassFishServerStatus {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Interface Methods                                                      //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get GlassFish server entity.
      * <p/>

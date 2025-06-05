@@ -18,11 +18,6 @@
  */
 
 package org.netbeans.modules.j2ee.dd.impl.client;
-
-/**
- *
- * @author  Nitya Doraisamy
- */
 import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
 import java.util.Iterator;
@@ -36,6 +31,11 @@ import org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException;
 import org.openide.filesystems.FileAlreadyLockedException;
 import org.openide.filesystems.FileObject;
 
+
+/**
+ *
+ * @author  Nitya Doraisamy
+ */
 public class AppClientProxy implements AppClient {
     
     private AppClient app;

@@ -33,10 +33,7 @@ import org.netbeans.modules.javaee.specs.support.spi.JpaSupportImplementation;
  */
 public class Hk2JpaSupportImpl implements JpaSupportImplementation {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Individual JPA specifications support.
      */
@@ -87,10 +84,7 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
         boolean _3_2;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish server JPA provider class. */
     private static final String JPA_PROVIDER
             = "org.eclipse.persistence.jpa.PersistenceProvider";
@@ -129,10 +123,7 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish server instance. */
     private final GlassFishServer instance;
 
@@ -142,10 +133,7 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
     /** {@see Set} of available provider instances. */
     private volatile Set<JpaProvider> providers = null;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of GlassFish server JPA support.
      * <p/>
@@ -154,10 +142,7 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
         this.instance = instance;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // JpaSupportImplementation methods                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Returns GlassFish server JPA providers.
      * <p/>

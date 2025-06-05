@@ -17,12 +17,6 @@
  * under the License.
  */
 
-/**
- * Superclass that implements DescriptionInterface for Servlet2.4 beans.
- *
- * @author  Milan Kuchtiak
- */
-
 package org.netbeans.modules.j2ee.dd.impl.commonws;
 
 import java.util.Iterator;
@@ -33,6 +27,12 @@ import org.netbeans.modules.schema2beans.Version;
 import org.netbeans.modules.j2ee.dd.api.common.*;
 import org.openide.ErrorManager;
 
+
+/**
+ * Superclass that implements DescriptionInterface for Servlet2.4 beans.
+ *
+ * @author  Milan Kuchtiak
+ */
 public abstract class DescriptionBeanMultiple extends EnclosingBean implements DescriptionInterface {
 
     public DescriptionBeanMultiple(java.util.Vector comps, Version version) {

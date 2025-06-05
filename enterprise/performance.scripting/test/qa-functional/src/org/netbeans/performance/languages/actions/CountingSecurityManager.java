@@ -197,7 +197,6 @@ public final class CountingSecurityManager extends SecurityManager {
             }
             Statistics.getDefault().isDirInvoc.put(file, i);
 
-            ////////////////////
             StringBuilder sb = new StringBuilder(300);
             StackTraceElement[] ste = Thread.currentThread().getStackTrace();
             for (i = 2; i < ste.length; i++) {
@@ -222,7 +221,6 @@ public final class CountingSecurityManager extends SecurityManager {
             }
         }
 
-        ////////////////////////////////////////////////////////////////////////////
         // private members
         void print(PrintWriter out) {
             synchronized (isDirInvoc) {

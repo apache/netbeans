@@ -51,19 +51,13 @@ import org.netbeans.modules.glassfish.tooling.utils.ServerUtils;
  */
 public abstract class Runner implements Callable<Result> {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * State change request data.
      */
     protected static class StateChange {
 
-        ////////////////////////////////////////////////////////////////////////
         // Instance attributes                                                //
-        ////////////////////////////////////////////////////////////////////////
-
         /** GlassFish server administration command runner. */
         private final Runner runner;
 
@@ -76,10 +70,7 @@ public abstract class Runner implements Callable<Result> {
         /** Additional arguments. */
         private final String[] args;
 
-        ////////////////////////////////////////////////////////////////////////
         // Constructors                                                       //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Constructs an instance of state change request data.
          * <p/>
@@ -96,10 +87,7 @@ public abstract class Runner implements Callable<Result> {
             this.args = args;
         }
         
-        ////////////////////////////////////////////////////////////////////////
         // Methods                                                            //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Update task state value in <code>Result</code> object and notify
          * all registered command execution state listeners about command
@@ -113,10 +101,7 @@ public abstract class Runner implements Callable<Result> {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(Runner.class);
 
@@ -151,10 +136,7 @@ public abstract class Runner implements Callable<Result> {
     /* Global password authenticator for GlassFish servers. */
     private static volatile Authenticator authenticator;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Returns shared <code>Executor</code> instance to serialize administration
      * commands passed to GlassFish server.
@@ -258,10 +240,7 @@ public abstract class Runner implements Callable<Result> {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Allow commands to fail without a big message. */
     protected boolean silentFailureAllowed = false;
 
@@ -302,10 +281,7 @@ public abstract class Runner implements Callable<Result> {
     /** Listeners that want to know about command state. */
     protected TaskStateListener[] stateListeners;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Abstract methods                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Create <code>Result</code> object corresponding to command execution
      * value to be returned.
@@ -377,10 +353,7 @@ public abstract class Runner implements Callable<Result> {
      */
     protected abstract boolean processResponse();
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * HTTP interface.
@@ -411,10 +384,7 @@ public abstract class Runner implements Callable<Result> {
         this.query = query;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Returns the query string for this command. Value is set in constructor.
      * <p/>
@@ -473,10 +443,7 @@ public abstract class Runner implements Callable<Result> {
         this.stateListeners = listeners;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Fake getters                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Override to set the content-type of information sent to the server.
      * Default is null (not set).
@@ -508,10 +475,7 @@ public abstract class Runner implements Callable<Result> {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Build arguments for operationStateChanged method listening for state
      * changes.
@@ -722,11 +686,8 @@ public abstract class Runner implements Callable<Result> {
         return receiveResult;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // ExecutorService call() method attributes                               
     // Do not use those attributes outside call() method execution context!   //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish server administration interface URL. */
     private URL urlToConnectTo;
 
@@ -736,11 +697,8 @@ public abstract class Runner implements Callable<Result> {
     /** GlassFish server administration interface HTTP URL connection. */
     private HttpURLConnection hconn;
 
-    ////////////////////////////////////////////////////////////////////////////
     // ExecutorService call() method helpers                                  //
     // Do not use those methods outside call() method execution context!      //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Initialize class instance attributes for <code>call()</code> method.
      */
@@ -878,10 +836,7 @@ public abstract class Runner implements Callable<Result> {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // ExecutorService call() method                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * GlassFish server administration command execution call.
      * This is an entry point from <code>executor<code>'s serialization queue.

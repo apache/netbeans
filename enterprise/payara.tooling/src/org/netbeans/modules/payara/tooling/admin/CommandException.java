@@ -30,10 +30,7 @@ import org.netbeans.modules.payara.tooling.PayaraIdeException;
  */
 public class CommandException extends PayaraIdeException {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Exception message for unsupported Payara version. */
     static final String UNSUPPORTED_VERSION = "Unsupported Payara version";
 
@@ -91,10 +88,7 @@ public class CommandException extends PayaraIdeException {
     public static final String INVALID_BOOLEAN_CONSTANT
             = "Invalid String representing boolean constant.";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of <code>CommandException</code> without
      * detail message.

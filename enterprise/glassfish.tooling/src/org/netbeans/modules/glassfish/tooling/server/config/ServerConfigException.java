@@ -27,10 +27,7 @@ import org.netbeans.modules.glassfish.tooling.GlassFishIdeException;
  */
 public class ServerConfigException extends GlassFishIdeException {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Exception message for invalid GlassFish JavaSE profile version. */
     static final String INVALID_SE_PLATFORM_VERSION
             = "Invalid GlassFish JavaSE version";
@@ -44,10 +41,7 @@ public class ServerConfigException extends GlassFishIdeException {
             = "Invalid GlassFish module type name";
 
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of <code>ServerConfigException</code> without
      * detail message.

@@ -33,10 +33,7 @@ import org.netbeans.modules.payara.tooling.utils.NetUtils;
  */
 public class IpComboBox extends JComboBox<IpComboBox.InetAddr> {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**  <code>127.0.0.1</code> host name. */
     public static final String IP_4_127_0_0_1_NAME = "localhost";
 
@@ -52,10 +49,7 @@ public class IpComboBox extends JComboBox<IpComboBox.InetAddr> {
     private static final String CONSTRUCTOR_EXCEPTION_MSG =
             "Data model for a combo box shall not be supplied in constructor.";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * RAW byte sequence for <code>127.0.0.1</code> address initializer.
      * <p/>
@@ -144,14 +138,8 @@ public class IpComboBox extends JComboBox<IpComboBox.InetAddr> {
         return ipsOut;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Default {@see JComboBox} constructor is disabled because it's content
      * is retrieved from an array of {@see InetAddr}.
@@ -225,10 +213,7 @@ public class IpComboBox extends JComboBox<IpComboBox.InetAddr> {
         super(new DefaultComboBoxModel(toInetAddr(ips, lopbackOnly)));
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Update content of data model to contain all IP addresses of this host.
      * <p/>
@@ -366,10 +351,7 @@ public class IpComboBox extends JComboBox<IpComboBox.InetAddr> {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Encapsulate {@see InetAddress} object and provide human readable
      * <code>toString()</code> output for combo box.

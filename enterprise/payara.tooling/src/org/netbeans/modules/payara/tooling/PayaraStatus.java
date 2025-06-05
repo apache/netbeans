@@ -66,10 +66,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraServerStatus;
  */
 public enum PayaraStatus {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Enum values                                                            //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Server status is unknown. */
     UNKNOWN,
 
@@ -87,10 +84,7 @@ public enum PayaraStatus {
      *  or responding. */
     SHUTDOWN;
     
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(PayaraStatus.class);
 
@@ -122,10 +116,7 @@ public enum PayaraStatus {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Returns a <code>PayaraStatus</code> with a value represented by the
      * specified <code>String</code>.
@@ -484,10 +475,7 @@ public enum PayaraStatus {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Convert <code>PayaraStatus</code> value to <code>String</code>.
      * <p/>

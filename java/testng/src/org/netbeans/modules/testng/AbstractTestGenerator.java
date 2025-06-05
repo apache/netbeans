@@ -1178,8 +1178,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
                                             List<ExpressionTree> throwsList,
                                             WorkingCopy workingCopy);
 
-    /**
-     */
+
 //    private ClassTree generateMissingSuiteClassMembers(
 //                                            ClassTree tstClass,
 //                                            TreePath tstClassTreePath,
@@ -1212,8 +1211,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
 //                                workingCopy);
 //    }
     
-    /**
-     */
+
 //    protected abstract ClassTree finishSuiteClass(
 //                                        ClassTree tstClass,
 //                                        TreePath tstClassTreePath,

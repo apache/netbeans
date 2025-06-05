@@ -46,7 +46,7 @@ public class ErrorHintsTest extends HintsTestBase {
 //        suite.addTest(new JavaHintsTest("testImplementAbstractMethodsHint9"));
 //        suite.addTest(new JavaHintsTest("testImplementAbstractMethodsHint10"));
 //        suite.addTest(new JavaHintsTest("testImplementAbstractMethodsHint11"));
-////        suite.addTest(new JavaHintsTest("testMakeClassAbstract3"));
+// //        suite.addTest(new JavaHintsTest("testMakeClassAbstract3"));
 //        
 //        return suite;
 //    }
@@ -327,9 +327,9 @@ public class ErrorHintsTest extends HintsTestBase {
 //        performTestDoNotPerform("org.netbeans.test.java.hints.LocalVarParam57990a", 23, 20);
 //    }
 //
-////    public void testLocalAndParamIncorrect57990b() throws Exception {
-////        performTestDoNotPerform("org.netbeans.test.java.hints.LocalVarParam57990b", 23, 20);
-////    }
+// //    public void testLocalAndParamIncorrect57990b() throws Exception {
+// //        performTestDoNotPerform("org.netbeans.test.java.hints.LocalVarParam57990b", 23, 20);
+// //    }
 //
 //    public void testLocalAndParamIncorrect57990c() throws Exception {
 //        performTestDoNotPerform("org.netbeans.test.java.hints.LocalVarParam57990c", 23, 20);

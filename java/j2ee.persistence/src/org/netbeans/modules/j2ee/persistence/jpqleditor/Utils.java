@@ -140,7 +140,7 @@ public class Utils {
                 }
             }
             if (dbconn != null) {
-                ////autoadd driver classpath
+                //autoadd driver classpath
                 String driverClassName = dbconn.getDriverClass();
                 String resourceName = driverClassName.replace('.', '/') + ".class"; // NOI18N
                 if (cp != null) {

@@ -987,7 +987,7 @@ public class TreeFactory {
         return make.at(NOPOS).Wildcard(tbk, (JCExpression)type);
     }
     
-    ////////////////////////////////////// makers modification suggested by Tom
+    // makers modification suggested by Tom
     
     // AnnotationTree
     public AnnotationTree addAnnotationAttrValue(AnnotationTree annotation, ExpressionTree attrValue) {

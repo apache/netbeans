@@ -149,7 +149,7 @@ public class TextDocumentServiceImplTest extends NbTestCase {
 //import java.util.Collection;
 //import java.util.Collections;
 //
-///**
+// /**
 // * A top-class action performer
 // *
 // * @since 1.1

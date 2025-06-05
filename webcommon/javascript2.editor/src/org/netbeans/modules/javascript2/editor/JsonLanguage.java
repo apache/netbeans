@@ -18,12 +18,14 @@
  */
 package org.netbeans.modules.javascript2.editor;
 
+import org.netbeans.api.lexer.Language;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.api.Formatter;
 import org.netbeans.modules.csl.api.InstantRenamer;
 import org.netbeans.modules.csl.api.OccurrencesFinder;
+import org.netbeans.modules.csl.api.SemanticAnalyzer;
 import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
@@ -82,7 +84,7 @@ public class JsonLanguage extends DefaultLanguageConfig {
     }
 
     @Override
-    public org.netbeans.api.lexer.Language getLexerLanguage() {
+    public Language<JsTokenId> getLexerLanguage() {
         return JsTokenId.jsonLanguage();
     }
 
@@ -97,6 +99,7 @@ public class JsonLanguage extends DefaultLanguageConfig {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean hasStructureScanner() {
         return NAVIGATOR;
     }
@@ -108,10 +111,10 @@ public class JsonLanguage extends DefaultLanguageConfig {
                 null;
     }
 
-//    @Override
-//    public SemanticAnalyzer getSemanticAnalyzer() {
-//        return new JsSemanticAnalyzer();
-//    }
+    @Override
+    public SemanticAnalyzer getSemanticAnalyzer() {
+        return new JsonSemanticAnalyzer();
+    }
 
 // todo: tzezula - disable for now
 //    @Override

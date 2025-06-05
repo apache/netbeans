@@ -247,7 +247,9 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
             //sort of hack to push the method name through the current apis..
             SingleMethod method = methods.iterator().next();
             replaceMap.put(METHOD_NAME, method.getMethodName());
-            replaceMap.put(ENCLOSING_TYPE_NAME, method.getNestedClass().getClassName());
+            if(method.getNestedClass() != null) {
+                replaceMap.put(ENCLOSING_TYPE_NAME, method.getNestedClass().getClassName());
+            }
         }
 
         if (group != null &&

@@ -61,7 +61,7 @@ public class TestChecker implements PrerequisitesChecker {
                     // ensure that maven executes all the methods in embedded classes too.
                     String methodConstraint = method == null ? "," + test + "$*" : "#" + method;
                     if (enclosingType != null) {
-                        config.setProperty("test", test + enclosingType + methodConstraint);
+                        config.setProperty("test", test + "$" + enclosingType + methodConstraint);
                     } else {
                         config.setProperty("test", test + methodConstraint);
                     }
@@ -79,7 +79,7 @@ public class TestChecker implements PrerequisitesChecker {
                     config.setProperty(DefaultReplaceTokenProvider.ENCLOSING_TYPE_NAME, null);
                     String methodConstraint = method == null ? "," + test + "$*" : "#" + method;
                     if (enclosingType != null) {
-                        config.setProperty("it.test", test + enclosingType + methodConstraint);
+                        config.setProperty("it.test", test + "$" + enclosingType + methodConstraint);
                     } else {
                         config.setProperty("it.test", test + methodConstraint);
                     }

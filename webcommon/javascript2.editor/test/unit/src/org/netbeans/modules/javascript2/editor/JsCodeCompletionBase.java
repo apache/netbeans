@@ -55,7 +55,7 @@ public class JsCodeCompletionBase extends JsTestBase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-////        MockLookup.init();
+// //        MockLookup.init();
 //        List lookupAll = new ArrayList();
 //        lookupAll.addAll(MockLookup.getDefault().lookupAll(Object.class));
 //        MockLookup.setInstances(new ClassPathProviderImpl());

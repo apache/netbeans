@@ -240,7 +240,7 @@ public class JsIndexer extends EmbeddingIndexer {
                         storeObject(property, fqn + '.' + property.getName(), support, indexable, childVisited);
                     } else {
                         IndexDocument document = createDocumentForReference((JsReference)property, fqn + '.' + property.getName(), support, indexable);
-////                      IndexDocument document = IndexedElement.createDocument(property, fqn + '.' + property.getName(), support, indexable);
+//                      IndexDocument document = IndexedElement.createDocument(property, fqn + '.' + property.getName(), support, indexable);
                         support.addDocument(document);
                     }
                 }

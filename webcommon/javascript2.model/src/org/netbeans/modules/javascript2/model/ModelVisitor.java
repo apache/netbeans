@@ -2413,7 +2413,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
 //                                    newRef.addOccurrence(occurence.getOffsetRange());
 //                                }
 //                                if (originalFnc instanceof JsFunctionImpl) {
-////                                    ((JsFunctionImpl)originalFnc).setAnonymous(true);
+// //                                    ((JsFunctionImpl)originalFnc).setAnonymous(true);
 //                                    JsObject parent = jsObject.getParent();
 //                                    if (ModelUtils.PROTOTYPE.equals(parent.getName())) {
 //                                        parent = parent.getParent();
@@ -3129,41 +3129,41 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
             return Collections.<Identifier>emptyList();
         }
     }
+
+//    private Variable findVarWithName(final Scope scope, final String name) {
+//        Variable result = null;
+//        Collection<Variable> variables = ScopeImpl.filter(scope.getElements(), new ScopeImpl.ElementFilter() {
 //
-////    private Variable findVarWithName(final Scope scope, final String name) {
-////        Variable result = null;
-////        Collection<Variable> variables = ScopeImpl.filter(scope.getElements(), new ScopeImpl.ElementFilter() {
-////
-////            @Override
-////            public boolean isAccepted(ModelElement element) {
-////                return element.getJSKind().equals(JsElement.Kind.VARIABLE)
-////                        && element.getName().equals(name);
-////            }
-////        });
-////
-////        if (!variables.isEmpty()) {
-////            result = variables.iterator().next();
-////        } else {
-////            if (!(scope instanceof FileScope)) {
-////                result = findVarWithName((Scope)scope.getInElement(), name);
-////            }
-////        }
-////
-////        return result;
-////    }
-////
-////    private Field findFieldWithName(FunctionScope function, final String name) {
-////        Field result = null;
-////        Collection<? extends Field> fields = function.getFields();
-////        result = ModelUtils.getFirst(ModelUtils.getFirst(fields, name));
-////        if (result == null && function.getInElement() instanceof FunctionScope) {
-////            FunctionScope parent = (FunctionScope)function.getInElement();
-////            fields = parent.getFields();
-////            result = ModelUtils.getFirst(ModelUtils.getFirst(fields, name));
-////        }
-////        return result;
-////    }
+//            @Override
+//            public boolean isAccepted(ModelElement element) {
+//                return element.getJSKind().equals(JsElement.Kind.VARIABLE)
+//                        && element.getName().equals(name);
+//            }
+//        });
 //
+//        if (!variables.isEmpty()) {
+//            result = variables.iterator().next();
+//        } else {
+//            if (!(scope instanceof FileScope)) {
+//                result = findVarWithName((Scope)scope.getInElement(), name);
+//            }
+//        }
+//
+//        return result;
+//    }
+//
+//    private Field findFieldWithName(FunctionScope function, final String name) {
+//        Field result = null;
+//        Collection<? extends Field> fields = function.getFields();
+//        result = ModelUtils.getFirst(ModelUtils.getFirst(fields, name));
+//        if (result == null && function.getInElement() instanceof FunctionScope) {
+//            FunctionScope parent = (FunctionScope)function.getInElement();
+//            fields = parent.getFields();
+//            result = ModelUtils.getFirst(ModelUtils.getFirst(fields, name));
+//        }
+//        return result;
+//    }
+
     private boolean isInPropertyNode() {
         boolean inFunction = false;
         for (int i = getPath().size() - 1; i > 0 ; i--) {

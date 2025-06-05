@@ -78,7 +78,6 @@ public class NbPreInstallSummaryPanel extends ErrorMessagePanel {
     private boolean removeNBInstallationLocation = false;
     private boolean removeNBUserDir = false;
     private File userDir;
-    /////////////////////////////////////////////////////////////////////////////////
     // Instance
     public NbPreInstallSummaryPanel() {
         setProperty(TITLE_PROPERTY,
@@ -231,7 +230,6 @@ public class NbPreInstallSummaryPanel extends ErrorMessagePanel {
         return result;
     }
 
-    /////////////////////////////////////////////////////////////////////////////////
     // Inner Classes
     public static class NbPreInstallSummaryPanelUi extends ErrorMessagePanelUi {
         @SuppressWarnings("FieldNameHidesFieldInSuperclass")
@@ -290,7 +288,7 @@ public class NbPreInstallSummaryPanel extends ErrorMessagePanel {
             initComponents();
         }
         
-        // protected ////////////////////////////////////////////////////////////////
+        // protected
         @Override
         protected void initializeContainer() {
             super.initializeContainer();
@@ -795,40 +793,40 @@ public class NbPreInstallSummaryPanel extends ErrorMessagePanel {
             return result;
         }        
 
-        // private //////////////////////////////////////////////////////////////////
+        // private
         private void initComponents() {
             gridy = 0 ;
             productCheckboxList = new ArrayList <Pair <Product, NbiCheckBox>>();
-            // locationsPane ////////////////////////////////////////////////////////
+            // locationsPane
             locationsPane = new NbiTextPane();
             
-            // uninstallListPane ////////////////////////////////////////////////////
+            // uninstallListPane
             uninstallListPane = new NbiTextPane();
             
-            // uninstallListLabel ///////////////////////////////////////////////////
+            // uninstallListLabel
             uninstallListLabel = new NbiLabel();
             uninstallListLabel.setLabelFor(uninstallListPane);
             
-            // installationSizeValue ////////////////////////////////////////////////
+            // installationSizeValue
             installationSizeValue = new NbiLabel();
             //installationSizeValue.setFocusable(true);
             
-            // installationSizeLabel ////////////////////////////////////////////////
+            // installationSizeLabel
             installationSizeLabel = new NbiLabel();
             installationSizeLabel.setLabelFor(installationSizeValue);
             
-            // downloadSizeValue ////////////////////////////////////////////////////
+            // downloadSizeValue
             downloadSizeValue = new NbiLabel();
             //downloadSizeValue.setFocusable(true);
             
-            // downloadSizeLabel ////////////////////////////////////////////////////
+            // downloadSizeLabel
             downloadSizeLabel = new NbiLabel();
             downloadSizeLabel.setLabelFor(downloadSizeValue);
             
-            // spacer ///////////////////////////////////////////////////////////////
+            // spacer
             spacer = new NbiPanel();
             
-            // this /////////////////////////////////////////////////////////////////
+            // this
             add(locationsPane, new GridBagConstraints(
                     0, gridy++,                             // x, y
                     1, 1,                             // width, height
@@ -1075,7 +1073,6 @@ public class NbPreInstallSummaryPanel extends ErrorMessagePanel {
         }        
     }
     
-/////////////////////////////////////////////////////////////////////////////////
 // Constants
 
     public static final String INSTALLATION_FOLDER_PROPERTY =

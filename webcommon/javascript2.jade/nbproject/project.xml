@@ -338,7 +338,7 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <public-packages/>
+            <public-packages />
         </data>
     </configuration>
 </project>

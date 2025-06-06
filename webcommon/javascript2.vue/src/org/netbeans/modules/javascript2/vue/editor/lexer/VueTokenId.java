@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.EnumSet;
 import org.netbeans.api.html.lexer.HTMLTokenId;
 import org.netbeans.api.lexer.InputAttributes;
+import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.LanguagePath;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenId;
@@ -37,8 +38,12 @@ import org.netbeans.spi.lexer.LanguageHierarchy;
 public enum VueTokenId implements TokenId {
     HTML("html"), // NOI18N
     CSS("css"), // NOI18N
+    STYLE_SCSS("css"), // NOI18N
+    STYLE_LESS("css"), // NOI18N
     JAVASCRIPT_ATTR("javascript"), // NOI18N
     JAVASCRIPT("javascript"), // NOI18N
+    JAVASCRIPT_PUG("javascript"), // NOI18N
+    JAVASCRIPT_INTERP("javascript"), // NOI18N
     QUOTE_ATTR("attr_quote"), // NOI18N
     VUE_DIRECTIVE("vue_directive"), // NOI18N
     VAR_TAG("var_tag"), // NOI18N
@@ -56,6 +61,13 @@ public enum VueTokenId implements TokenId {
 
     public static abstract class VueLanguageHierarchy extends LanguageHierarchy<VueTokenId> {
 
+        @SuppressWarnings("PackageVisibleField") // Unittest
+        static Language<?> JADE_LANGUAGE = Language.find("text/jade");
+        @SuppressWarnings("PackageVisibleField") // Unittest
+        static Language<?> LESS_LANGUAGE = Language.find("text/less");
+        @SuppressWarnings("PackageVisibleField") // Unittest
+        static Language<?> SCSS_LANGUAGE = Language.find("text/scss");
+
         @Override
         protected Collection<VueTokenId> createTokenIds() {
             return EnumSet.allOf(VueTokenId.class);
@@ -65,21 +77,18 @@ public enum VueTokenId implements TokenId {
         protected LanguageEmbedding<? extends TokenId> embedding(Token<VueTokenId> token,
                 LanguagePath languagePath, InputAttributes inputAttributes) {
 
-            switch (token.id()) {
-                case JAVASCRIPT:
-                case JAVASCRIPT_ATTR: {
-                    return LanguageEmbedding.create(JsTokenId.javascriptLanguage(), 0, 0, true);
-                }
-                case HTML:{
-                    return LanguageEmbedding.create(HTMLTokenId.language(), 0, 0, true);
-                }
-                case CSS:{
-                    return LanguageEmbedding.create(CssTokenId.language(), 0, 0, true);
-                }
-                default: {
-                    return null;
-                }
-            }
+            return switch (token.id()) {
+                case JAVASCRIPT_INTERP -> 
+                    LanguageEmbedding.create(JsTokenId.javascriptLanguage(), 0, 0, false);
+                case JAVASCRIPT, JAVASCRIPT_ATTR ->
+                    LanguageEmbedding.create(JsTokenId.javascriptLanguage(), 0, 0, false);
+                case JAVASCRIPT_PUG -> LanguageEmbedding.create(JADE_LANGUAGE, 0, 0, true);
+                case HTML -> LanguageEmbedding.create(HTMLTokenId.language(), 0, 0, true);
+                case CSS -> LanguageEmbedding.create(CssTokenId.language(), 0, 0, true);
+                case STYLE_LESS -> LanguageEmbedding.create(LESS_LANGUAGE, 0, 0, true);
+                case STYLE_SCSS -> LanguageEmbedding.create(SCSS_LANGUAGE, 0, 0, true);
+                default -> null;
+            };
         }
     }
 }

@@ -391,10 +391,6 @@ public class PayaraInstance implements ServerInstanceImplementation,
         Map<String, String> ip = new HashMap<>();
         ip.put(PayaraModule.WSL_ATTR, String.valueOf(wsl));
         ip.put(PayaraModule.DOCKER_ATTR, String.valueOf(docker));
-        if(wsl && domainsDir == null) {
-            domainsDir = payaraRoot + File.separator + "domains";
-        }
-
         ip.put(PayaraModule.DISPLAY_NAME_ATTR, displayName);
         ip.put(PayaraModule.INSTALL_FOLDER_ATTR, installRoot);
         ip.put(PayaraModule.PAYARA_FOLDER_ATTR, payaraRoot);
@@ -1052,9 +1048,6 @@ public class PayaraInstance implements ServerInstanceImplementation,
      */
     public void setWSL(boolean isWSL) {
         properties.put(PayaraModule.WSL_ATTR, Boolean.toString(isWSL));
-        if (!isWSL) {
-            properties.put(PayaraModule.DOMAINS_FOLDER_ATTR, null);
-        }
     }
 
     /**
@@ -1105,8 +1098,6 @@ public class PayaraInstance implements ServerInstanceImplementation,
         String domainsDir = properties.get(PayaraModule.DOMAINS_FOLDER_ATTR);
         if(isDocker()) {
             return null;
-        } else if(isWSL() && domainsDir == null) {
-            domainsDir = getPayaraRoot() + File.separator + "domains";
         }
         return domainsDir;
     }

@@ -1002,6 +1002,9 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.project.test', async (node, launchConfiguration?) => {
         return runDebug(true, true, contextUri(node)?.toString() || '',  undefined, undefined, launchConfiguration, true);
     }));
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.project.test.debug', async (node, launchConfiguration?) => {
+        return runDebug(false, true, contextUri(node)?.toString() || '',  undefined, undefined, launchConfiguration, true);
+    }));
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.package.test', async (uri, launchConfiguration?) => {
         await runDebug(true, true, uri, undefined, undefined, launchConfiguration);
     }));

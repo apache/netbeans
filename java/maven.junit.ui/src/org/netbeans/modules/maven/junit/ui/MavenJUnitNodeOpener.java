@@ -188,14 +188,18 @@ public final class MavenJUnitNodeOpener extends NodeOpener {
         if (testfo != null && file == null && methodNode.getTestcase().getTrouble() != null && lineNumStorage[0] == -1) {
                 //213935 we could not recognize the stack trace line and map it to known file
             //if it's a failure text, grab the testcase's own line from the stack.
+            String fqMethodName= methodNode.getTestcase().getClassName()+ '.'+ methodNode.getTestcase().getName();
             String[] st = methodNode.getTestcase().getTrouble().getStackTrace();
             if ((st != null) && (st.length > 0)) {
-                int index = st.length - 1;
+                int index = 0;//st.length - 1;
                     //213935 we need to find the testcase linenumber to jump to.
                 // and ignore the infrastructure stack lines in the process
-                while (!testfo.equals(file) && index != -1) {
-                    file = UIJavaUtils.getFile(st[index], lineNumStorage, locator);
-                    index = index - 1;
+                while (!testfo.equals(file) && index < st.length) {
+                    if (st[index].contains(fqMethodName)) {
+                        file = UIJavaUtils.getFile(st[index], lineNumStorage, locator);
+                        break;
+                    }
+                    index++;
                 }
             }
         }

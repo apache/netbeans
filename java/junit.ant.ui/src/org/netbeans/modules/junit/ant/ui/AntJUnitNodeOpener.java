@@ -29,6 +29,7 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.util.ElementFilter;
 import javax.swing.Action;
+import jdk.internal.net.http.common.Log;
 import org.netbeans.api.extexecution.print.LineConvertors.FileLocator;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
@@ -38,6 +39,8 @@ import org.netbeans.modules.gsf.testrunner.api.TestSuite;
 import org.netbeans.modules.gsf.testrunner.api.CommonUtils;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodNode;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestsuiteNode;
+import org.netbeans.modules.java.testrunner.JavaRegexpPatterns;
+import org.netbeans.modules.java.testrunner.JavaRegexpUtils;
 import org.openide.ErrorManager;
 import org.openide.filesystems.FileObject;
 import org.netbeans.modules.junit.api.JUnitTestSuite;
@@ -157,6 +160,7 @@ public final class AntJUnitNodeOpener extends NodeOpener {
         }
         // Method node might belong to an inner class
         FileObject testfo = methodNode.getTestcase().getClassFileObject(true);
+        String fqMethodName = methodNode.getTestcase().getClassName() + '.' + methodNode.getTestcase().getName();
 	if(testfo == null) {
 	    return;
 	}
@@ -164,22 +168,34 @@ public final class AntJUnitNodeOpener extends NodeOpener {
         FileObject file = UIJavaUtils.getFile(frameInfo, lineNumStorage, locator);
         //lineNumStorage -1 means no regexp for stacktrace was matched.
         if ((file == null) && (methodNode.getTestcase().getTrouble() != null) && lineNumStorage[0] == -1) {
-            //213935 we could not recognize the stack trace line and map it to known file
-            //if it's a failure text, grab the testcase's own line from the stack.
-            boolean methodNodeParentOfStackTraceNode = false;
             String[] st = methodNode.getTestcase().getTrouble().getStackTrace();
             if ((st != null) && (st.length > 0)) {
-                int index = st.length - 1;
-                //213935 we need to find the testcase linenumber to jump to.
+                int index = 0;//st.length - 1;
+                //Jump to the first line matching the fully qualified test method name.
                 // and ignore the infrastructure stack lines in the process
-                while (!testfo.equals(file) && index != -1 && !methodNodeParentOfStackTraceNode) {
-                    file = UIJavaUtils.getFile(st[index], lineNumStorage, locator);
-                    index = index - 1;
-                    // if frameInfo.isEmpty() == true, user clicked on a failed method node. 
-                    // Try to find if the stack trace node is relevant to the method node
-                    if(file != null && frameInfo.isEmpty()) {
-                        methodNodeParentOfStackTraceNode = FileUtil.isParentOf(testfo.getParent(), file);
+                while (index < st.length) {
+                    if (st[index].contains(fqMethodName)) {
+                        file = UIJavaUtils.getFile(st[index], lineNumStorage, locator);
+                        break;
                     }
+                    index++;
+                }
+                // if not found, return top line of stack trace.
+                if (index == st.length) {
+                    index=0;
+                    while(true) {
+                        String trimmed=JavaRegexpUtils.specialTrim(st[index]);
+                        if (trimmed.startsWith(JavaRegexpUtils.CALLSTACK_LINE_PREFIX_CATCH) ||
+                               trimmed.startsWith(JavaRegexpUtils.CALLSTACK_LINE_PREFIX )){
+                            file = UIJavaUtils.getFile(st[index], lineNumStorage, locator);
+                            break;
+                        }
+                    }
+                }
+                // if that fails, return the test file object.
+                if (file == null) {
+
+                    file = testfo;
                 }
             }
         }

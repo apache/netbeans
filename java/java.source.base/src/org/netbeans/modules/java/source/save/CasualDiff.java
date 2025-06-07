@@ -124,6 +124,7 @@ import com.sun.tools.javac.tree.JCTree.JCUses;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.JCTree.JCWhileLoop;
 import com.sun.tools.javac.tree.JCTree.JCWildcard;
+import com.sun.tools.javac.tree.JCTree.JCYield;
 import com.sun.tools.javac.tree.JCTree.LetExpr;
 import com.sun.tools.javac.tree.JCTree.Tag;
 import com.sun.tools.javac.tree.JCTree.TypeBoundKind;
@@ -2130,9 +2131,11 @@ public class CasualDiff {
         }
         do { } while (tokenSequence.moveNext() && JavaTokenId.COLON != tokenSequence.token().id() && JavaTokenId.ARROW != tokenSequence.token().id());
         boolean reindentStatements = false;
+        boolean diffAsBody = false;
         if (Objects.equals(oldT.getCaseKind(), newT.getCaseKind())) {
             tokenSequence.moveNext();
             copyTo(localPointer, localPointer = tokenSequence.offset());
+            diffAsBody = oldT.getCaseKind() == CaseTree.CaseKind.RULE;
         } else {
             if (JavaTokenId.COLON == tokenSequence.token().id()) {
                 //: => ->
@@ -2154,35 +2157,53 @@ public class CasualDiff {
                 reindentStatements = true;
             }
         }
-        PositionEstimator est = EstimatorFactory.statements(
-                filterHidden(oldT.stats),
-                filterHidden(newT.stats),
-                diffContext
-        );
-        int old = printer.indent();
-        SortedSet<int[]> oldReindentRegions = printer.reindentRegions;
-        printer.reindentRegions = new TreeSet<>(new Comparator<int[]>() { //XXX: copied from the initializer!!
-            @Override public int compare(int[] o1, int[] o2) {
-                return o1[0] - o2[0];
+        if (diffAsBody) {
+            int old = printer.indent();
+            localPointer = diffInnerComments(oldT, newT, localPointer);
+            int[] bodyBounds = getBounds(oldT.getBody());
+            copyTo(localPointer, bodyBounds[0]);
+            localPointer = diffTree(oldT.getBody(), newT.getBody(), bodyBounds);
+            if (oldT.getBody().getKind() != Kind.BLOCK) {
+                tokenSequence.move(localPointer);
+                moveToSrcRelevant(tokenSequence, Direction.FORWARD);
+                if (tokenSequence.token().id() == JavaTokenId.SEMICOLON && newT.getBody().getKind() == Kind.BLOCK) {
+                    localPointer = tokenSequence.offset() + tokenSequence.token().length();
+                }
+            } else if (newT.getBody().getKind() != Kind.BLOCK && newT.getBody().getKind() != Kind.THROW) {
+                printer.print(";");
             }
-        });
-        int reindentStart = localPointer;
-        localPointer = diffInnerComments(oldT, newT, localPointer);
-        JCClassDecl oldEnclosing = printer.enclClass;
-        printer.enclClass = null;
-        localPointer = diffList(filterHidden(oldT.stats), filterHidden(newT.stats), localPointer, est, Measure.MEMBER, printer);
-        printer.enclClass = oldEnclosing;
-        if (localPointer < endPos(oldT)) {
-            copyTo(localPointer, localPointer = endPos(oldT));
-        }
-        if (reindentStatements) {
-            printer.reindentRegions = oldReindentRegions;
-            printer.reindentRegions.add(new int[] {reindentStart, localPointer});
+            printer.undent(old);
         } else {
-            oldReindentRegions.addAll(printer.reindentRegions);
-            printer.reindentRegions = oldReindentRegions;
+            PositionEstimator est = EstimatorFactory.statements(
+                    filterHidden(oldT.stats),
+                    filterHidden(newT.stats),
+                    diffContext
+            );
+            int old = printer.indent();
+            SortedSet<int[]> oldReindentRegions = printer.reindentRegions;
+            printer.reindentRegions = new TreeSet<>(new Comparator<int[]>() { //XXX: copied from the initializer!!
+                @Override public int compare(int[] o1, int[] o2) {
+                    return o1[0] - o2[0];
+                }
+            });
+            int reindentStart = localPointer;
+            localPointer = diffInnerComments(oldT, newT, localPointer);
+            JCClassDecl oldEnclosing = printer.enclClass;
+            printer.enclClass = null;
+            localPointer = diffList(filterHidden(oldT.stats), filterHidden(newT.stats), localPointer, est, Measure.MEMBER, printer);
+            printer.enclClass = oldEnclosing;
+            if (localPointer < endPos(oldT)) {
+                copyTo(localPointer, localPointer = endPos(oldT));
+            }
+            if (reindentStatements) {
+                printer.reindentRegions = oldReindentRegions;
+                printer.reindentRegions.add(new int[] {reindentStart, localPointer});
+            } else {
+                oldReindentRegions.addAll(printer.reindentRegions);
+                printer.reindentRegions = oldReindentRegions;
+            }
+            printer.undent(old);
         }
-        printer.undent(old);
         return localPointer;
     }
 
@@ -2402,6 +2423,18 @@ public class CasualDiff {
                 localPointer = diffTree(oldT.expr, newT.expr, exprBounds);
             }
         }
+        copyTo(localPointer, bounds[1]);
+
+        return bounds[1];
+    }
+
+    protected int diffYield(JCYield oldT, JCYield newT, int[] bounds) {
+        //XXX: add test
+        int localPointer = bounds[0];
+        // expr
+        int[] exprBounds = getBounds(oldT.value);
+        copyTo(localPointer, exprBounds[0]);
+        localPointer = diffTree(oldT.value, newT.value, exprBounds);
         copyTo(localPointer, bounds[1]);
 
         return bounds[1];
@@ -5731,6 +5764,9 @@ public class CasualDiff {
               break;
           case RETURN:
               retVal = diffReturn((JCReturn)oldT, (JCReturn)newT, elementBounds);
+              break;
+          case YIELD:
+              retVal = diffYield((JCYield)oldT, (JCYield)newT, elementBounds);
               break;
           case THROW:
               retVal = diffThrow((JCThrow)oldT, (JCThrow)newT,elementBounds);

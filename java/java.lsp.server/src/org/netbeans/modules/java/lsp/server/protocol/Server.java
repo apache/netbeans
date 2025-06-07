@@ -1054,20 +1054,16 @@ public final class Server {
                 List<String> defaultConfigs = List.of(NETBEANS_JAVA_HINTS, NETBEANS_PROJECT_JDKHOME);
                 List<String> projectConfigs = List.of(NETBEANS_FORMAT, NETBEANS_JAVA_IMPORTS);
 
-                AtomicReference<FileObject> projectDirectory = new AtomicReference<>(null);
-                if (projects != null && projects.length > 0) {
-                    projectDirectory.set(projects[0].getProjectDirectory());
-                }
-
+                final FileObject projectDirectory = projects != null && projects.length > 0 ? projects[0].getProjectDirectory(): null;
+                
                 List<String> allConfigs = new ArrayList<>(defaultConfigs);
-                if (projectDirectory.get() != null) {
+                if (projectDirectory != null) {
                     allConfigs.addAll(projectConfigs);
                 }
 
-                ClientConfigurationManager.getInstance().getConfigurations(
-                        client,
+                client.getClientConfigurationManager().getConfigurations(
                         allConfigs,
-                        projectDirectory.get() != null ? Utils.toUri(projectDirectory.get()) : null
+                        projectDirectory != null ? Utils.toUri(projectDirectory) : null
                 ).thenAccept(configs -> {
                     if (configs != null && !configs.isEmpty()) {
                         if (configs.get(0) instanceof JsonObject) {
@@ -1083,13 +1079,13 @@ public final class Server {
                         }
                         textDocumentService.updateProjectJDKHome(newProjectJDKHomePath);
 
-                        if (projectDirectory.get() != null) {
+                        if (projectDirectory != null) {
                             if (configs.size() > 2 && configs.get(2) instanceof JsonObject) {
-                                workspaceService.updateJavaFormatPreferences(projectDirectory.get(), (JsonObject) configs.get(2));
+                                workspaceService.updateJavaFormatPreferences(projectDirectory, (JsonObject) configs.get(2));
                             }
 
                             if (configs.size() > 3 && configs.get(3) instanceof JsonObject) {
-                                workspaceService.updateJavaImportPreferences(projectDirectory.get(), (JsonObject) configs.get(3));
+                                workspaceService.updateJavaImportPreferences(projectDirectory, (JsonObject) configs.get(3));
                             }
                         }
                     } else {
@@ -1257,6 +1253,7 @@ public final class Server {
 
     static final NbCodeLanguageClient STUB_CLIENT = new NbCodeLanguageClient() {
         private final NbCodeClientCapabilities caps = new NbCodeClientCapabilities();
+        private final ClientConfigurationManager confManager = new ClientConfigurationManager(this);
 
         private void logWarning(Object... args) {
             LOG.log(Level.WARNING, "LSP Client called without proper context with param(s): {0}",
@@ -1394,6 +1391,11 @@ public final class Server {
         public CompletableFuture<Void> resetOutput(String outputName) {
             logWarning("Reset output: " + outputName); //NOI18N
             return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        public ClientConfigurationManager getClientConfigurationManager() {
+            return confManager;
         }
     };
 

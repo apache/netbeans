@@ -364,11 +364,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     private static final AtomicReference<Sampler> RUNNING_SAMPLER = new AtomicReference<>();
     
     void registerConfigChangeListeners() {
-        ClientConfigurationManager confManager = ClientConfigurationManager.getInstance();
+        ClientConfigurationManager confManager = client.getClientConfigurationManager();
         String fullConfigPrefix = client.getNbCodeCapabilities().getConfigurationPrefix();
         
-        confManager.registerConfigCache(client, fullConfigPrefix + NETBEANS_JAVADOC_LOAD_TIMEOUT);
-        confManager.registerConfigCache(client, fullConfigPrefix + NETBEANS_COMPLETION_WARNING_TIME);
+        confManager.registerConfigCache(fullConfigPrefix + NETBEANS_JAVADOC_LOAD_TIMEOUT);
+        confManager.registerConfigCache(fullConfigPrefix + NETBEANS_COMPLETION_WARNING_TIME);
     }
     
     @Override
@@ -420,14 +420,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 return CompletableFuture.completedFuture(Either.forRight(completionList));
             }
             StyledDocument doc = (StyledDocument)rawDoc;
-            ConfigurationItem conf = new ConfigurationItem();
-            conf.setScopeUri(uri);
-            conf.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_JAVADOC_LOAD_TIMEOUT);
-            ConfigurationItem completionWarningLength = new ConfigurationItem();
-            completionWarningLength.setScopeUri(uri);
-            completionWarningLength.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_COMPLETION_WARNING_TIME);
+            
             List<String> configValues = List.of(NETBEANS_JAVADOC_LOAD_TIMEOUT, NETBEANS_COMPLETION_WARNING_TIME);
-            return ClientConfigurationManager.getInstance().getConfigurations(client, configValues, uri).thenApply(c -> {
+            return client.getClientConfigurationManager().getConfigurations(configValues, uri).thenApply(c -> {
                 if (c != null && !c.isEmpty()) {
                     if (c.get(0).isJsonPrimitive()) {
                         JsonPrimitive javadocTimeSetting = c.get(0).getAsJsonPrimitive();

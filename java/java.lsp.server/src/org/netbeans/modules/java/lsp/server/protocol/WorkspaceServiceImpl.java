@@ -1374,7 +1374,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
 
     @Override
     public void didChangeConfiguration(DidChangeConfigurationParams params) {
-        ClientConfigurationManager.getInstance().handleConfigurationChange(client, (JsonObject)params.getSettings());
+        client.getClientConfigurationManager().handleConfigurationChange((JsonObject)params.getSettings());
     }
 
     private BiConsumer<String, JsonElement> getRunConfigChangeListener() {
@@ -1400,7 +1400,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
     void registerConfigChangeListeners() {
         String fullConfigPrefix = client.getNbCodeCapabilities().getConfigurationPrefix();
         String fullAltConfigPrefix = client.getNbCodeCapabilities().getAltConfigurationPrefix();
-        ClientConfigurationManager confManager = ClientConfigurationManager.getInstance();
+        ClientConfigurationManager confManager = client.getClientConfigurationManager();
 
         BiConsumer<String, JsonElement> formatPrefsListener = (config, newValue)
                 -> server.openedProjects().thenAccept(projects -> {
@@ -1425,11 +1425,11 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         
         
         
-        confManager.registerConfigChangeListener(this.client, fullConfigPrefix + "hints", hintPrefsListener);
-        confManager.registerConfigChangeListener(this.client, fullConfigPrefix + "project.jdkhome", projectJdkHomeListener);
-        confManager.registerConfigChangeListener(this.client, fullConfigPrefix + "format", formatPrefsListener);
-        confManager.registerConfigChangeListener(this.client, fullConfigPrefix + "java.imports", importPrefsListener);
-        confManager.registerConfigChangeListener(this.client, fullAltConfigPrefix + "runConfig", getRunConfigChangeListener());
+        confManager.registerConfigChangeListener(fullConfigPrefix + "hints", hintPrefsListener);
+        confManager.registerConfigChangeListener(fullConfigPrefix + "project.jdkhome", projectJdkHomeListener);
+        confManager.registerConfigChangeListener(fullConfigPrefix + "format", formatPrefsListener);
+        confManager.registerConfigChangeListener(fullConfigPrefix + "java.imports", importPrefsListener);
+        confManager.registerConfigChangeListener(fullAltConfigPrefix + "runConfig", getRunConfigChangeListener());
     }
 
     void updateJavaFormatPreferences(FileObject fo, JsonObject configuration) {
@@ -1543,7 +1543,6 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
     @Override
     public void connect(LanguageClient client) {
         this.client = (NbCodeLanguageClient)client;
-        ClientConfigurationManager.getInstance().registerClient(this.client);
     }
 
     public Workspace getWorkspace() {

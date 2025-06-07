@@ -346,7 +346,7 @@ public class ServerTest extends NbTestCase {
         }
     }
     
-    class LspClient implements LanguageClient {
+class LspClient implements LanguageClient {
         List<MessageParams> loggedMessages = new ArrayList<>();
 
         @Override

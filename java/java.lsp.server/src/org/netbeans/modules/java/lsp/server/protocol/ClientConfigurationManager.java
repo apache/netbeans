@@ -23,12 +23,10 @@ import com.google.gson.JsonObject;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import org.eclipse.lsp4j.ConfigurationItem;
 import org.eclipse.lsp4j.ConfigurationParams;
-import org.eclipse.lsp4j.services.LanguageClient;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.lsp.server.Utils;
@@ -43,75 +41,54 @@ import org.openide.util.Lookup;
  */
 public class ClientConfigurationManager {
 
-    final WeakHashMap<LanguageClient, ConfigValueCache> clientCaches = new WeakHashMap<>();
+    final ConfigValueCache cache = new ConfigValueCache();
+    final NbCodeLanguageClient client;
 
-    private ClientConfigurationManager() {
+    public ClientConfigurationManager(NbCodeLanguageClient client) {
+        this.client = client;
     }
 
-    public static ClientConfigurationManager getInstance() {
-        return SingletonHolder.INSTANCE;
+    public void registerConfigChangeListener(String section, BiConsumer<String, JsonElement> consumer) {
+        cache.registerListener(section, consumer);
     }
 
-    private static class SingletonHolder {
-
-        private static final ClientConfigurationManager INSTANCE = new ClientConfigurationManager();
+    public void registerConfigCache(String section) {
+        cache.registerCache(section);
     }
 
-    public void registerClient(LanguageClient client) {
-        clientCaches.put(client, new ConfigValueCache());
-    }
-
-    public void registerConfigChangeListener(NbCodeLanguageClient client, String section, BiConsumer<String, JsonElement> consumer) {
-        ConfigValueCache cache = clientCaches.get(client);
-        if (cache != null) {
-            cache.registerListener(section, consumer);
-        }
-    }
-
-    public void registerConfigCache(NbCodeLanguageClient client, String section) {
-        ConfigValueCache cache = clientCaches.get(client);
-        if (cache != null) {
-            cache.registerCache(section);
-        }
-    }
-
-    public CompletableFuture<JsonElement> getConfigurationUsingAltPrefix(NbCodeLanguageClient client, String config) {
-        return lookupCacheAndGetConfig(client, List.of(config), null, true)
+    public CompletableFuture<JsonElement> getConfigurationUsingAltPrefix(String config) {
+        return lookupCacheAndGetConfig(List.of(config), null, true)
                 .thenApply(result -> result.isEmpty() ? null : result.get(0));
     }
 
-    public CompletableFuture<JsonElement> getConfigurationUsingAltPrefix(NbCodeLanguageClient client, String config, String scope) {
-        return lookupCacheAndGetConfig(client, List.of(config), scope, true)
+    public CompletableFuture<JsonElement> getConfigurationUsingAltPrefix(String config, String scope) {
+        return lookupCacheAndGetConfig(List.of(config), scope, true)
                 .thenApply(result -> result.isEmpty() ? null : result.get(0));
     }
 
-    public CompletableFuture<List<JsonElement>> getConfigurationsUsingAltPrefix(NbCodeLanguageClient client, List<String> configs) {
-        return lookupCacheAndGetConfig(client, configs, null, true);
+    public CompletableFuture<List<JsonElement>> getConfigurationsUsingAltPrefix(List<String> configs) {
+        return lookupCacheAndGetConfig(configs, null, true);
     }
 
-    public CompletableFuture<JsonElement> getConfiguration(NbCodeLanguageClient client, String config) {
-        return lookupCacheAndGetConfig(client, List.of(config), null, false)
+    public CompletableFuture<JsonElement> getConfiguration(String config) {
+        return lookupCacheAndGetConfig(List.of(config), null, false)
                 .thenApply(result -> result.isEmpty() ? null : result.get(0));
     }
 
-    public CompletableFuture<JsonElement> getConfiguration(NbCodeLanguageClient client, String config, String scope) {
-        return lookupCacheAndGetConfig(client, List.of(config), scope, false)
+    public CompletableFuture<JsonElement> getConfiguration(String config, String scope) {
+        return lookupCacheAndGetConfig(List.of(config), scope, false)
                 .thenApply(result -> result.isEmpty() ? null : result.get(0));
     }
 
-    public CompletableFuture<List<JsonElement>> getConfigurations(NbCodeLanguageClient client, List<String> configs) {
-        return lookupCacheAndGetConfig(client, configs, null, false);
+    public CompletableFuture<List<JsonElement>> getConfigurations(List<String> configs) {
+        return lookupCacheAndGetConfig(configs, null, false);
     }
 
-    public CompletableFuture<List<JsonElement>> getConfigurations(NbCodeLanguageClient client, List<String> configs, String scope) {
-        return lookupCacheAndGetConfig(client, configs, scope, false);
+    public CompletableFuture<List<JsonElement>> getConfigurations(List<String> configs, String scope) {
+        return lookupCacheAndGetConfig(configs, scope, false);
     }
 
-    private CompletableFuture<List<JsonElement>> lookupCacheAndGetConfig(NbCodeLanguageClient client, List<String> configs, String scope, boolean isAltPrefix) {
-        ConfigValueCache cache = clientCaches.get(client);
-        if (cache == null) {
-            return CompletableFuture.completedFuture(new ArrayList<>());
-        }
+    private CompletableFuture<List<JsonElement>> lookupCacheAndGetConfig(List<String> configs, String scope, boolean isAltPrefix) {
         final String configPrefix = isAltPrefix ? client.getNbCodeCapabilities().getAltConfigurationPrefix() : client.getNbCodeCapabilities().getConfigurationPrefix();
         List<ConfigurationItem> itemsToRequest = new ArrayList<>();
         List<JsonElement> result = new ArrayList<>();
@@ -140,25 +117,30 @@ public class ClientConfigurationManager {
 
         return client.configuration(new ConfigurationParams(itemsToRequest))
                 .thenApply(clientConfigs -> {
-                    int j = 0;
-                    for (int i = 0; i < result.size(); i++) {
-                        if (result.get(i) == null) {
-                            JsonElement value = (JsonElement) clientConfigs.get(j);
-                            result.set(i, value);
-                            String prefixedConfig = configPrefix + configs.get(i);
-                            cache.cacheConfigValueIfNeeded(prefixedConfig, value, prjScope);
-                            j++;
+                    if (clientConfigs != null) {
+                        int j = 0;
+                        for (int i = 0; i < result.size(); i++) {
+                            if (result.get(i) == null) {
+                                JsonElement value = (JsonElement) clientConfigs.get(j);
+                                result.set(i, value);
+                                String prefixedConfig = configPrefix + configs.get(i);
+                                cache.cacheConfigValueIfNeeded(prefixedConfig, value, prjScope);
+                                j++;
+                            }
+                        }
+                    } else {
+                        for (int i = 0; i < result.size(); i++) {
+                            if (result.get(i) == null) {
+                                result.set(i, new JsonObject());
+                            }
                         }
                     }
                     return result;
                 });
     }
 
-    public void handleConfigurationChange(NbCodeLanguageClient client, JsonObject settings) {
-        ConfigValueCache cache = clientCaches.get(client);
-        if (cache != null) {
-            cache.updateCache(client, null, cache, settings);
-        }
+    public void handleConfigurationChange(JsonObject settings) {
+        cache.updateCache(client, null, cache, settings);
     }
 
     private String getProjectFromFileScope(String scope) {
@@ -167,19 +149,20 @@ public class ClientConfigurationManager {
                 return null;
             }
             FileObject fo = Utils.fromUri(scope);
-            if(fo == null){
+            if (fo == null) {
                 return null;
             }
             Project prj = FileOwnerQuery.getOwner(fo);
             if (prj == null) {
                 return findWorkspaceFolder(fo);
             }
-            
+
             return Utils.toUri(prj.getProjectDirectory());
         } catch (MalformedURLException ignored) {
         }
         return null;
     }
+
     // Copied from abstract class SingleFileOptionsQueryImpl
     private String findWorkspaceFolder(FileObject file) {
         Workspace workspace = Lookup.getDefault().lookup(Workspace.class);

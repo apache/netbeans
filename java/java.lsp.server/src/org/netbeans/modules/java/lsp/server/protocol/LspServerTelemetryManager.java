@@ -20,24 +20,19 @@ package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
-import org.eclipse.lsp4j.ConfigurationItem;
-import org.eclipse.lsp4j.ConfigurationParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.netbeans.api.java.queries.CompilerOptionsQuery;
@@ -167,7 +162,7 @@ public class LspServerTelemetryManager {
                 return false;
             }
             boolean[] isEnablePreviewSet = {false};
-            ClientConfigurationManager.getInstance().getConfigurationUsingAltPrefix(client, "runConfig.vmOptions").thenAccept(c -> {
+            client.getClientConfigurationManager().getConfigurationUsingAltPrefix("runConfig.vmOptions").thenAccept(c -> {
                 isEnablePreviewSet[0] = c != null && !c.getAsJsonArray().isEmpty()
                                 && c.getAsJsonArray().get(0).getAsString().contains(ENABLE_PREVIEW);
             });

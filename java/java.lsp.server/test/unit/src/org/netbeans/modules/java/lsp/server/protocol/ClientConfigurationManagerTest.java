@@ -34,8 +34,6 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.lsp.server.TestCodeLanguageClient;
 
 public class ClientConfigurationManagerTest extends NbTestCase {
-
-    private final ClientConfigurationManager manager = ClientConfigurationManager.getInstance();
     private MockClient mockClient;
 
     public ClientConfigurationManagerTest(String name) {
@@ -45,7 +43,6 @@ public class ClientConfigurationManagerTest extends NbTestCase {
     @Override
     protected void setUp() throws Exception {
         mockClient = new MockClient();
-        manager.registerClient(mockClient);
     }
 
     @Test
@@ -54,7 +51,7 @@ public class ClientConfigurationManagerTest extends NbTestCase {
         JsonElement expectedValue = new JsonPrimitive("test JDK path");
         mockClient.addConfig(mockClient.codeCapa.getConfigurationPrefix() + section, expectedValue);
 
-        CompletableFuture<JsonElement> future = manager.getConfiguration(mockClient, section);
+        CompletableFuture<JsonElement> future = mockClient.getClientConfigurationManager().getConfiguration(section);
         JsonElement actualValue = future.get();
 
         assertEquals("Config value mismatch", expectedValue, actualValue);
@@ -67,7 +64,7 @@ public class ClientConfigurationManagerTest extends NbTestCase {
         URI expectedScope = new URI("file://scope1");
         mockClient.addConfig(mockClient.codeCapa.getConfigurationPrefix() + section, expectedValue);
 
-        CompletableFuture<JsonElement> future = manager.getConfiguration(mockClient, section, expectedScope.toString());
+        CompletableFuture<JsonElement> future = mockClient.getClientConfigurationManager().getConfiguration(section, expectedScope.toString());
         JsonElement actualValue = future.get();
 
         assertEquals("Scoped value mismatch", expectedValue, actualValue.getAsJsonObject().get("value"));
@@ -80,7 +77,7 @@ public class ClientConfigurationManagerTest extends NbTestCase {
         JsonElement expectedValue = new JsonPrimitive("test JDK path");
         mockClient.addConfig(mockClient.codeCapa.getAltConfigurationPrefix() + section, expectedValue);
 
-        CompletableFuture<JsonElement> future = manager.getConfigurationUsingAltPrefix(mockClient, section);
+        CompletableFuture<JsonElement> future = mockClient.getClientConfigurationManager().getConfigurationUsingAltPrefix(section);
         JsonElement actualValue = future.get();
 
         assertEquals("Alt config value mismatch", expectedValue, actualValue);
@@ -95,7 +92,7 @@ public class ClientConfigurationManagerTest extends NbTestCase {
             mockClient.addConfig(mockClient.codeCapa.getConfigurationPrefix() + configKeys.get(i), configValues.get(i));
         }
 
-        CompletableFuture<List<JsonElement>> future = manager.getConfigurations(mockClient, configKeys);
+        CompletableFuture<List<JsonElement>> future = mockClient.getClientConfigurationManager().getConfigurations(configKeys);
         List<JsonElement> results = future.get();
 
         assertEquals("Config list size mismatch", configValues.size(), results.size());
@@ -114,7 +111,7 @@ public class ClientConfigurationManagerTest extends NbTestCase {
             mockClient.addConfig(mockClient.codeCapa.getConfigurationPrefix() + configKeys.get(i), configValues.get(i));
         }
 
-        CompletableFuture<List<JsonElement>> future = manager.getConfigurations(mockClient, configKeys, expectedScope.toString());
+        CompletableFuture<List<JsonElement>> future = mockClient.getClientConfigurationManager().getConfigurations(configKeys, expectedScope.toString());
         List<JsonElement> results = future.get();
 
         assertEquals("Scoped config list size mismatch", configValues.size(), results.size());
@@ -134,21 +131,23 @@ public class ClientConfigurationManagerTest extends NbTestCase {
             assertEquals("Value mismatch in listener", expectedValue, actualValue);
         };
 
-        manager.registerConfigChangeListener(mockClient, expectedSection, listener);
+        mockClient.getClientConfigurationManager().registerConfigChangeListener(expectedSection, listener);
 
         mockClient.addConfig(expectedSection, new JsonPrimitive("Old Value"));
         JsonObject newConfigTree = mockClient.updateSectionAndGetDeepCopy(expectedSection, expectedValue);
-        manager.handleConfigurationChange(mockClient, newConfigTree);
+        mockClient.getClientConfigurationManager().handleConfigurationChange(newConfigTree);
     }
 
     private class MockClient extends TestCodeLanguageClient {
 
         NbCodeClientCapabilities codeCapa = new NbCodeClientCapabilities();
         JsonObject rootConfiguration = new JsonObject();
+        ClientConfigurationManager confManager;
 
         public MockClient() {
             codeCapa.setConfigurationPrefix("jdk");
             codeCapa.setAltConfigurationPrefix("java+");
+            confManager = new ClientConfigurationManager(this);
         }
 
         public void addConfig(String section, JsonElement value) {
@@ -208,6 +207,11 @@ public class ClientConfigurationManagerTest extends NbTestCase {
         @Override
         public NbCodeClientCapabilities getNbCodeCapabilities() {
             return codeCapa;
+        }
+        
+        @Override
+        public ClientConfigurationManager getClientConfigurationManager() {
+            return confManager;
         }
 
         @Override

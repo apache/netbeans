@@ -64,7 +64,7 @@ public class EnablePreviewSingleSourceFile implements PreviewEnabler {
             return ;
         }
 
-        ClientConfigurationManager.getInstance().getConfigurationUsingAltPrefix(client, "runConfig.vmOptions", Utils.toUri(file)).thenApply(c -> {
+        client.getClientConfigurationManager().getConfigurationUsingAltPrefix("runConfig.vmOptions", Utils.toUri(file)).thenApply(c -> {
             String compilerArgs = ((JsonPrimitive) c).getAsString();
             if (compilerArgs == null) {
                 compilerArgs = "";

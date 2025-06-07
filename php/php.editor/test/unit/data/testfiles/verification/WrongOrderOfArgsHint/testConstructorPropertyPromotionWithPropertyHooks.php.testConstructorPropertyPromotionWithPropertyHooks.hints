@@ -1,0 +1,16 @@
+    public function __construct(private ?int $optional = 1 {get{} set{}}, $mandatory) {
+                                ----------------------------------------------------
+HINT:Wrong order of arguments
+FIX:Rearrange arguments of the method or function: __construct
+    public function __construct(private ?int $optional1 = 1 {get => $this->optional1; set => $this->optional1 = $value;}, $mandatory, string $optional2 = "default value" {get{} set{}}) {
+                                -------------------------------------------------------------------------------------------------------------------------------------------------------
+HINT:Wrong order of arguments
+FIX:Rearrange arguments of the method or function: __construct
+    public function __construct(#[Attr] protected ?int $mandatory1, $optional = "default value" {get {} set{}}, private string|int $mandatory2) {
+                                --------------------------------------------------------------------------------------------------------------
+HINT:Wrong order of arguments
+FIX:Rearrange arguments of the method or function: __construct
+    public function __construct(private ?int $mandatory1, private $optional = "default value" {get {return $this->optional;} set {$this->optional = $value;}}, public string $mandatory2) {
+                                --------------------------------------------------------------------------------------------------------------------------------------------------------
+HINT:Wrong order of arguments
+FIX:Rearrange arguments of the method or function: __construct

@@ -1,10 +1,10 @@
 [[224,231]-Syntax error
  unexpected:	String '"Ivory"'
  after:	String '"FFFFE0"'
- expected:	=>, {, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', [, ], ), :, ??] 224-231:Syntax error
+ expected:	=>, {, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', [, ], ), :, **, ??, &] 224-231:Syntax error
  unexpected:	String '"Ivory"'
  after:	String '"FFFFE0"'
- expected:	=>, {, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', [, ], ), :, ??
+ expected:	=>, {, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', [, ], ), :, **, ??, &
 [[235,237]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	=>] 235-237:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	=>

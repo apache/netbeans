@@ -96,8 +96,8 @@ nb/ide.launcher/external/launcher-external-binaries-3-282bbc032bcd.zip platform/
 nb/ide.launcher/external/launcher-external-binaries-3-282bbc032bcd.zip harness/apisupport.harness/external/launcher-external-binaries-3-282bbc032bcd.zip
 
 # only one is part of the product:
-java/libs.javacapi/external/nb-javac-jdk-24-ga-api.jar java/libs.nbjavacapi/external/nb-javac-jdk-24-ga-api.jar
-java/libs.javacapi/external/nb-javac-jdk-24-ga.jar java/libs.nbjavacapi/external/nb-javac-jdk-24-ga.jar
+java/libs.javacapi/external/nb-javac-jdk-25+31.1-api.jar java/libs.nbjavacapi/external/nb-javac-jdk-25+31.1-api.jar
+java/libs.javacapi/external/nb-javac-jdk-25+31.1.jar java/libs.nbjavacapi/external/nb-javac-jdk-25+31.1.jar
 
 # Used only in unittests for mysql db specific tests
 ide/db.metadata.model/external/mysql-connector-j-8.0.31.jar ide/db.mysql/external/mysql-connector-j-8.0.31.jar

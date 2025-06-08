@@ -103,7 +103,7 @@ public final class CreateElement implements ErrorRule<Void> {
     private static final int PRIO_INNER = 2000;
 
     /**
-     * Helps to prevent github issue 8594, trying to create a method when return
+     * Helps to prevent GitHub issue 8594, trying to create a method when return
      * type can't be determined because var is used as placeholder for the type
      * at the call site.
      * @param type the TypeMirror that specifies the type info

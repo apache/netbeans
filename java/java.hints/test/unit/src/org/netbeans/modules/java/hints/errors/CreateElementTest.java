@@ -443,10 +443,8 @@ public class CreateElementTest extends HintsTestBase {
         )));
     }
 
-    // the test should show that no fix is suggested for a method call where the return type is using the var.
-
+    // the test shows that no fix is suggested for a method call where the return type is using the var.
     public void testNBIssue8594() throws Exception{
-
          performTestAnalysisTest("org.netbeans.test.java.hints.UnknownReturnType", 228, Set.of());
     }
 

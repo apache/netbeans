@@ -20,14 +20,11 @@
 package org.netbeans.modules.web.monitor.server;
 
 import java.io.IOException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
 
 import java.net.MalformedURLException;
 
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.ResourceBundle;
 import java.util.Stack;
 import java.util.StringTokenizer;
@@ -38,7 +35,6 @@ import java.text.DateFormat;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -940,7 +936,7 @@ public class MonitorFilter extends Logger implements Filter {
 	if(debug) log(" found incoming cookies"); //NOI18N
 	CookieIn[] theCookies = new CookieIn[cks.length];
 	for (int i = 0; i < theCookies.length; i++) {
-	    theCookies[i] = new CookieIn(cks[i]);
+	    theCookies[i] = new CookieIn(cks[i].getName(), cks[i].getValue());
 	    if(debug) log("cookie: " + //NOI18N
 			  theCookies[i].toString());
 	}
@@ -972,7 +968,17 @@ public class MonitorFilter extends Logger implements Filter {
 	try {
 	    theCookies = new CookieOut[numCookies];
 	    for (int i = 0; i < theCookies.length; i++) {
-		theCookies[i] = new CookieOut((Cookie)e.nextElement()); 
+                Cookie c = (Cookie) e.nextElement();
+                theCookies[i] = new CookieOut(
+                        c.getName(),
+                        c.getValue(),
+                        c.getMaxAge(),
+                        c.getVersion(),
+                        c.getDomain(),
+                        c.getPath(),
+                        c.getComment(),
+                        c.getSecure()
+                );
 		if(debug) log("cookie: " + //NOI18N
 			      theCookies[i].toString());
 	    }

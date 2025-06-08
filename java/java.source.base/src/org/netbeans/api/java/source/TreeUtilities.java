@@ -707,12 +707,7 @@ public final class TreeUtilities {
             Context context = task.getContext();
             JavaCompiler compiler = JavaCompiler.instance(context);
             JavaFileObject prev = compiler.log.useSource(new DummyJFO());
-            Log.DiagnosticHandler discardHandler = new Log.DiscardDiagnosticHandler(compiler.log) {
-                @Override
-                public void report(JCDiagnostic diag) {
-                    //ignore:
-                }            
-            };
+            Log.DiagnosticHandler discardHandler = compiler.log.new DiscardDiagnosticHandler();
             try {
                 CharBuffer buf = CharBuffer.wrap((text+"\u0000").toCharArray(), 0, text.length());
                 ParserFactory factory = ParserFactory.instance(context);
@@ -901,7 +896,7 @@ public final class TreeUtilities {
     private static TypeMirror attributeTree(JavacTaskImpl jti, CompilationUnitTree cut, Tree tree, Scope scope, final List<Diagnostic<? extends JavaFileObject>> errors) {
         Log log = Log.instance(jti.getContext());
         JavaFileObject prev = log.useSource(new DummyJFO());
-        Log.DiagnosticHandler discardHandler = new Log.DiscardDiagnosticHandler(log) {
+        Log.DiagnosticHandler discardHandler = log.new DiscardDiagnosticHandler() {
             @Override
             public void report(JCDiagnostic diag) {
                 errors.add(diag);
@@ -941,7 +936,7 @@ public final class TreeUtilities {
     private static Scope attributeTreeTo(JavacTaskImpl jti, CompilationUnitTree cut, Tree tree, Scope scope, Tree to, final List<Diagnostic<? extends JavaFileObject>> errors) {
         Log log = Log.instance(jti.getContext());
         JavaFileObject prev = log.useSource(new DummyJFO());
-        Log.DiagnosticHandler discardHandler = new Log.DiscardDiagnosticHandler(log) {
+        Log.DiagnosticHandler discardHandler = log.new DiscardDiagnosticHandler() {
             @Override
             public void report(JCDiagnostic diag) {
                 errors.add(diag);

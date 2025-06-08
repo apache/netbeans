@@ -1038,7 +1038,8 @@ public class SourceUtils {
         Source source = Source.instance(ctx);
         Preview preview = Preview.instance(ctx);
 
-        if (source.compareTo(Source.JDK21) < 0 || !preview.isEnabled()) {
+        // old launch protocol before JDK 25
+        if (source.compareTo(Source.JDK21) < 0 || (source.compareTo(Source.JDK25) < 0 && !preview.isEnabled())) {
             long flags = ((Symbol.MethodSymbol)method).flags();
 
             if (((flags & Flags.PUBLIC) == 0) || ((flags & Flags.STATIC) == 0)) {
@@ -1047,7 +1048,7 @@ public class SourceUtils {
             return !method.getParameters().isEmpty();
         }
 
-        //new launch prototocol from JEP 445:
+        // new launch prototocol from JEP 512:
         int currentMethodPriority = mainMethodPriority(method);
         int highestPriority = Integer.MAX_VALUE;
 

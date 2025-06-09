@@ -63,6 +63,8 @@ public class JaxWsClientCreator implements ClientCreator {
     private boolean isWeb;
     private boolean isEJB;
     private boolean isJakartaEENameSpace;
+    
+    private static final Logger LOG = Logger.getLogger(JaxWsClientCreator.class.getCanonicalName());
 
     /**
      * Creates a new instance of WebServiceClientCreator
@@ -113,9 +115,7 @@ public class JaxWsClientCreator implements ClientCreator {
                         MavenModelUtils.addMetroLibrary(project);
                         MavenModelUtils.addJavadoc(project);
                     } catch (Exception ex) {
-                        Logger.getLogger(
-                            JaxWsClientCreator.class.getName()).log(
-                                Level.INFO, "Cannot add Metro library to pom file", ex); //NOI18N
+                        LOG.log(Level.INFO, "Cannot add Metro library to pom file", ex); //NOI18N
                     }
                 }
                 
@@ -136,6 +136,7 @@ public class JaxWsClientCreator implements ClientCreator {
                         }
                     }
                 };
+                
                 Utilities.performPOMModelOperations(project.getProjectDirectory().getFileObject("pom.xml"),
                         Collections.singletonList(operation));
 
@@ -147,7 +148,7 @@ public class JaxWsClientCreator implements ClientCreator {
                         Collections.singletonList("compile")); //NOI18N
                 
                 RunUtils.executeMaven(cfg);
-             }
+            }
         }
     }
 

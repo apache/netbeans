@@ -1,0 +1,8 @@
+
+    @color: blue;
+    p{
+        background-color: red;
+        &.txt-blue {
+            color: @color;
+        }
+    }

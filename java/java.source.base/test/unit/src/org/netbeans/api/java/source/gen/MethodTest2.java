@@ -111,7 +111,6 @@ public class MethodTest2 extends GeneratorTestBase {
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     /**
      * @param args the command line arguments
      */

@@ -38,9 +38,7 @@ import org.openide.util.Parameters;
 public enum PayaraVersion implements PayaraPlatformVersionAPI {
 
     //add new version
-    ////////////////////////////////////////////////////////////////////////////
     // Enum values                                                            //
-    ////////////////////////////////////////////////////////////////////////////
     /** Payara 4.1.144 */
     PF_4_1_144 ((short) 4, (short) 1, (short) 0, "", (short) 14, (short) 4, (short) 0, PayaraVersion.PF_4_1_144_STR),
     /** Payara 4.1.151 */
@@ -189,10 +187,7 @@ public enum PayaraVersion implements PayaraPlatformVersionAPI {
     static final String PF_5_202_STR_NEXT[] = {"5.202.0"};
 
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Payara version enumeration length. */
     public static final int length = PayaraVersion.values().length;
     
@@ -242,10 +237,7 @@ public enum PayaraVersion implements PayaraPlatformVersionAPI {
         initStringValuesMapFromArray(PF_5_202, PF_5_202_STR_NEXT);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Helper method to initialize backward String conversion <code>Map</code> with
      * additional values using additional string values arrays.
@@ -324,10 +316,7 @@ public enum PayaraVersion implements PayaraPlatformVersionAPI {
         return version;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Major version number. */
     private final short major;
 
@@ -342,10 +331,7 @@ public enum PayaraVersion implements PayaraPlatformVersionAPI {
 
     private final String value;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server version.
      * <p/>
@@ -365,10 +351,7 @@ public enum PayaraVersion implements PayaraPlatformVersionAPI {
         this.value = value;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get major version number.
      *
@@ -405,10 +388,7 @@ public enum PayaraVersion implements PayaraPlatformVersionAPI {
         return build;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Compare major and minor parts of version number <code>String</code>s.
      * <p/>

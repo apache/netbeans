@@ -71,7 +71,6 @@ import org.openide.util.Exceptions;
 import org.openide.util.Mutex;
 import org.openide.util.Parameters;
 import org.openide.util.UserCancelException;
-import org.openide.util.WeakSet;
 
 
 /** Support for associating an editor and a Swing {@link Document}.
@@ -141,10 +140,6 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
 
     /** Non default MIME type used to editing */
     private String mimeType;
-
-    /** Actions to show in toolbar */
-
-    //    private SystemAction[] actions;
 
     /** Listener to the document changes and all other changes */
     private Listener listener;
@@ -218,7 +213,7 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
     private final Object checkModificationLock = new Object();
 
     /** Classes that have been warned about overriding asynchronousOpen() */
-    private static final Set<Class<?>> warnedClasses = new WeakSet<Class<?>>();
+    private static final Set<Class<?>> warnedClasses = Collections.newSetFromMap(new WeakHashMap<>());
     
     /** Creates new CloneableEditorSupport attached to given environment.
     *

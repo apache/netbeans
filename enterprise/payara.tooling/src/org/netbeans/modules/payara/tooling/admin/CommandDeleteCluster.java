@@ -29,17 +29,11 @@ package org.netbeans.modules.payara.tooling.admin;
 @RunnerRestClass(runner=RunnerRestDeleteCluster.class)
 public class CommandDeleteCluster extends CommandTarget {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for delete-cluster command. */
     private static final String COMMAND = "delete-cluster";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server delete-cluster command entity.
      * <p/>

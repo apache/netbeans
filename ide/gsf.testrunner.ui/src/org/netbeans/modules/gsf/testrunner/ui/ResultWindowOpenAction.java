@@ -48,14 +48,6 @@ import org.openide.util.NbBundle;
 })
 @NbBundle.Messages({"ResultWindowOpenAction.MenuName=&Test Results"})
 public final class ResultWindowOpenAction extends AbstractAction {
-
-    /**
-     * Creates an instance of this action.
-     */
-//    public ResultWindowOpenAction() {
-//        putValue(NAME, Bundle.ResultWindowOpenAction_MenuName());
-//        putValue("iconBase", "org/netbeans/modules/gsf/testrunner/ui/resources/testResults.png"); // NOI18N
-//    }
     
     /**
      * Opens and activates the JUnit Test Results window.

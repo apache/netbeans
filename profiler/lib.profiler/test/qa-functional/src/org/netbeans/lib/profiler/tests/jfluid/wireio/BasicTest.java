@@ -181,7 +181,7 @@ public class BasicTest extends CommonWireIOTestCase {
             //          10
             //          ); // NOI18N
             //            
-            ////            resp=new VMPropertiesResponse("1.5.0_04", "rt.jar", "/tmp" , "agentpath", ".", "-cp", "Run", "linux", 128, 10);
+            // //            resp=new VMPropertiesResponse("1.5.0_04", "rt.jar", "/tmp" , "agentpath", ".", "-cp", "Run", "linux", 128, 10);
             //            log("send response "+resp);
             //            wireIO.sendComplexResponse(resp);
             resp = new DumpResultsResponse(true, 200508181215L);

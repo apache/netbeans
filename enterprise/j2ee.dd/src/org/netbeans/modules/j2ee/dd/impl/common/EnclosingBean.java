@@ -17,13 +17,6 @@
  * under the License.
  */
 
-/**
- * Superclass for most s2b beans that provides useful methods for creating and finding beans
- * in bean graph.
- *
- * @author  Milan Kuchtiak
- */
-
 package org.netbeans.modules.j2ee.dd.impl.common;
 
 import java.io.OutputStream;
@@ -36,6 +29,13 @@ import org.netbeans.modules.j2ee.dd.api.common.FindCapability;
 import org.netbeans.modules.j2ee.dd.api.common.RootInterface;
 import org.openide.filesystems.FileLock;
 
+
+/**
+ * Superclass for most s2b beans that provides useful methods for creating and finding beans
+ * in bean graph.
+ *
+ * @author  Milan Kuchtiak
+ */
 public abstract class EnclosingBean extends BaseBean implements CommonDDBean, CreateCapability, FindCapability {
     
     private Object original = this;

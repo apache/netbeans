@@ -51,10 +51,7 @@ import java.io.PrintWriter;
  */
 public class NetUtils {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Comparator for {@link InetAddress} instances to be sorted.
      */
@@ -84,10 +81,7 @@ public class NetUtils {
         
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(ServerUtils.class);
 
@@ -98,10 +92,7 @@ public class NetUtils {
     private static final InetAddressComparator INET_ADDRESS_COMPARATOR
             = new InetAddressComparator();
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Finds out if server is running on remote host by connecting to remote
      * host and port.

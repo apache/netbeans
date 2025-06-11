@@ -277,7 +277,6 @@ public final class TabbedHandler implements ChangeListener, ActionListener {
         tabbed.setActive(active);
     }
     
-    ///////////////////
     // ChangeListener
     @Override
     public void stateChanged(ChangeEvent evt) {

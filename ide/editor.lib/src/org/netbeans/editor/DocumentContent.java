@@ -351,7 +351,6 @@ final class DocumentContent implements AbstractDocument.Content, CharSeq, GapSta
     }
 
     void insertText(int offset, String text) {
-        ///*DEBUG*/System.err.println("DocumentContent.insertText(" + offset + ", \"" + text + "\")");
         int textLength = text.length();
         int extraLength = textLength - gapLength;
         if (extraLength > 0) {
@@ -366,7 +365,6 @@ final class DocumentContent implements AbstractDocument.Content, CharSeq, GapSta
     }
     
     void removeText(int offset, int length) {
-        ///*DEBUG*/System.err.println("DocumentContent.removeText(" + offset + ", " + length + ")");
         if (offset >= gapStart) { // completely over gap
             if (offset > gapStart) {
                 moveGap(offset);

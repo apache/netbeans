@@ -177,7 +177,7 @@ public class MultiLineMappedMatcherBig extends AbstractMatcher {
          * Number of already decoded bytes;
          */
         private long decodedBytes = 0;
-        /**
+        /*
          * Some variables for internal statistics. Usefull when debugging.
          */
         /**

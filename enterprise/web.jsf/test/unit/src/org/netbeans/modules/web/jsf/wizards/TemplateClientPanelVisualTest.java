@@ -77,7 +77,7 @@ public class TemplateClientPanelVisualTest extends CommonTestCase {
 //        public Map<String,List<SourceGroup>> grpMap = new HashMap<String,List<SourceGroup>>();
 //
 //        public SourceGroup[] getSourceGroups(String type) {
-////            return grpMap.get(type).toArray(new SourceGroup[0]);
+// //            return grpMap.get(type).toArray(new SourceGroup[0]);
 //            return null;
 //        }
 //

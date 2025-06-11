@@ -28,10 +28,7 @@ package org.netbeans.modules.payara.tooling.data.cloud;
  */
 public class PayaraAccountEntity implements PayaraAccount {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Payara cloud user account name (display name in IDE).
      *  Used as key attribute. */
     protected String name;
@@ -51,10 +48,7 @@ public class PayaraAccountEntity implements PayaraAccount {
     /** Payara cloud entity reference. */
     protected PayaraCloud cloudEntity;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs empty class instance. No default values are set.
      */
@@ -81,10 +75,7 @@ public class PayaraAccountEntity implements PayaraAccount {
         this.cloudEntity = cloudEntity;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get Payara cloud user account display name.
      * <p/>
@@ -212,10 +203,7 @@ public class PayaraAccountEntity implements PayaraAccount {
         this.cloudEntity = cloudEntity;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * String representation of this Payara cloud entity.
      * <p/>

@@ -133,7 +133,7 @@ final class Importer {
         projectImportProblems.addAll(eclProject.getImportProblems());
 
         try {
-            /// import in two separate write locks to allow for events being
+            // import in two separate write locks to allow for events being
             // distributed after global properties were updated in stage0
             Boolean res = ProjectManager.mutex().writeAccess(new Mutex.Action<Boolean>() {
                 public Boolean run() {

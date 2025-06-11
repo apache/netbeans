@@ -49,10 +49,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
  */
 public abstract class RunnerAsadmin extends RunnerJava {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(RunnerAsadmin.class);
 
@@ -63,10 +60,7 @@ public abstract class RunnerAsadmin extends RunnerJava {
      *  password entries. */
     private static final String PASSWORD_FILE_PARAM = "--passwordfile";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Extracts asadmin JAR path from Payara server entity object.
      * <p/>
@@ -94,10 +88,7 @@ public abstract class RunnerAsadmin extends RunnerJava {
         return sb.toString();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Payara administration command result.
      * <p/>
@@ -128,20 +119,14 @@ public abstract class RunnerAsadmin extends RunnerJava {
      *  file format. */
     protected PasswordFile passwordFile;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Abstract methods                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Create internal <code>ProcessIOContent</code> object corresponding
      * to command execution IO.
      */
     protected abstract ProcessIOContent createProcessIOContent();
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * command line asadmin interface.
@@ -160,10 +145,7 @@ public abstract class RunnerAsadmin extends RunnerJava {
         passwordFile = new PasswordFile(server);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Implemented Abstract Methods                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
    /**
      * Create <code>ResultString</code> object corresponding
      * to <code>String</code>command execution value to be returned.
@@ -198,10 +180,7 @@ public abstract class RunnerAsadmin extends RunnerJava {
         return false;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // ExecutorService call() method helpers                                  //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Build process execution arguments.
      * <p/>
@@ -235,10 +214,7 @@ public abstract class RunnerAsadmin extends RunnerJava {
         return sb.toString();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Execute an arbitrary server command.
      * <p/>
@@ -263,10 +239,7 @@ public abstract class RunnerAsadmin extends RunnerJava {
         return super.execute(executor);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // ExecutorService call() method                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Payara server administration command execution call.
      * This is an entry point from <code>executor<code>'s serialization queue.

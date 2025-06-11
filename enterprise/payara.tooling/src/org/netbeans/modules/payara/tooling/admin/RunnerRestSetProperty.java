@@ -31,9 +31,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
 public class RunnerRestSetProperty extends RunnerRest {
 
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
     /**
      * Constructs an instance of administration command executor using
      * REST interface.

@@ -21,6 +21,8 @@ package org.netbeans.modules.javascript2.vue.editor;
 import org.netbeans.lib.lexer.test.TestLanguageProvider;
 import org.netbeans.modules.csl.api.test.CslTestBase;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.test.MockLookup;
 
 /**
  *
@@ -30,12 +32,15 @@ public abstract class VueTestBase extends CslTestBase {
 
     public VueTestBase(String name) {
         super(name);
+        MockLookup.setLookup(Lookups.singleton(new TestLanguageProvider()));
     }
 
     @Override
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
+        MockLookup.init();
+        MockLookup.setInstances(
+                new TestLanguageProvider());
         super.setUp();
-        TestLanguageProvider.register(getPreferredLanguage().getLexerLanguage());
     }
 
     @Override

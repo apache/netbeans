@@ -345,7 +345,7 @@ final class FindTypesSupport implements MouseMotionListener, MouseListener {
 //                            public void actionPerformed(ActionEvent e) {
 //                                Action a = Actions.forID("Edit", "org.netbeans.modules.search.FindInFilesAction");
 //                                if(a instanceof ContextAwareAction) {
-////                                    a = ((ContextAwareAction)a).createContextAwareInstance(Lookups.singleton(ctx));
+// //                                    a = ((ContextAwareAction)a).createContextAwareInstance(Lookups.singleton(ctx));
 //                                }            
 //                                a.actionPerformed(null);
 //                            }

@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.modules.java.source.indexing.JavaIndex;
 import org.openide.util.Exceptions;
-import org.openide.util.WeakSet;
 
 /**
  *
@@ -105,7 +105,7 @@ public class ExecutableFilesIndex {
         Set<ChangeListener> ls = file2Listener.get(ext);
         
         if (ls == null) {
-            file2Listener.put(ext, ls = new WeakSet<ChangeListener>());
+            file2Listener.put(ext, ls = Collections.newSetFromMap(new WeakHashMap<>()));
         }
         
         ls.add(l);

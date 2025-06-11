@@ -80,10 +80,7 @@ public class Hk2Cookie {
     
     private static final String CDI_PROBE_MODE_PROP = "applications.application.%s.property.cdiDevModeEnabled";
     
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Common node cookie.
      */
@@ -696,10 +693,7 @@ public class Hk2Cookie {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Retrieve Payara instance from {@see Lookup} object.
      * <p/>

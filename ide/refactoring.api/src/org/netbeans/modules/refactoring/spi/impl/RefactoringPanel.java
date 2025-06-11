@@ -1175,10 +1175,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         return refactoringPanel;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // INNER CLASSES
-    ////////////////////////////////////////////////////////////////////////////
-
     private class ButtonL implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent event) {
@@ -1224,8 +1221,6 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         }
 
     } // end ButtonL
-    ////////////////////////////////////////////////////////////////////////////
-
     private void stopSearch() {
         if(isVisible) {
             stopButton.setEnabled(false);

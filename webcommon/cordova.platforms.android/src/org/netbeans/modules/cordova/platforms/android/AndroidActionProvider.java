@@ -45,7 +45,7 @@ import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
 
 /**
- *
+ * Cordova Action Provider. Invokes cordova build.
  * @author Jan Becicka
  */
 @NbBundle.Messages({
@@ -60,10 +60,6 @@ import org.openide.util.Utilities;
     "ERR_NO_Cordova=NetBeans cannot find cordova or git on your PATH. Please install cordova and git.\n" +
             "NetBeans might require restart for changes to take effect.\n"
 })
-/**
- * Cordova Action Provider. Invokes cordova build.
- * @author Jan Becicka
- */
 public class AndroidActionProvider implements ActionProvider {
 
     private final Project p;

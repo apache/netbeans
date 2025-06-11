@@ -141,10 +141,7 @@ public class SplittedPanel extends JComponent implements Accessible {
     private Boolean popupMenuEnabled;
     private boolean drawBumps;
 
-    ///////////////////////
     // Private variables //
-    ///////////////////////
-
     /** the first (left/top) component */
     private Component firstComponent = null;
 
@@ -439,10 +436,7 @@ public class SplittedPanel extends JComponent implements Accessible {
         return panesSwapped;
     }
 
-    ///////////////////////////////
     // Property accessor methods //
-    ///////////////////////////////
-
     /** Getter method for the SplitType property.
     * @return Current SplitType value.
     */
@@ -713,10 +707,7 @@ public class SplittedPanel extends JComponent implements Accessible {
         updatePopupMenu();
     }
 
-    /////////////////////
     // Event Listeners //
-    /////////////////////
-
     /** Adds specified listener to the current set of SplitChangeListeners */
     public void addSplitChangeListener(SplitChangeListener l) {
         if (listeners == null) {
@@ -813,10 +804,7 @@ public class SplittedPanel extends JComponent implements Accessible {
         init();
     }
 
-    ///////////////////
     // Inner Classes //
-    ///////////////////
-
     /** A listener interface for tracking split point changes */
     public static interface SplitChangeListener {
         /** Called when a split point changes

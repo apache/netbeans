@@ -35,20 +35,14 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
 @RunnerRestClass(runner=RunnerRestStopInstance.class)
 public class CommandStopInstance extends CommandTarget {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for stop-instance command. */
     private static final String COMMAND = "stop-instance";
 
     /** Error message for administration command execution exception .*/
     private static final String ERROR_MESSAGE = "Instance stop failed.";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Stops server instance.
      * <p/>
@@ -71,10 +65,7 @@ public class CommandStopInstance extends CommandTarget {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server stop-instance command entity.
      * <p/>

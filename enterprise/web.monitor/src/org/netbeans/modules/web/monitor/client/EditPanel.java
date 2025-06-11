@@ -17,21 +17,6 @@
  * under the License.
  */
 
-/**
- * @author Ana von Klopp
- */
-
-/*
- * TO DO FOR THIS CLASS:
- *
- * For PUT requests, the only option on the data panel should be to
- * upload a file.
- *
- * For POST requests, the user should be able to choose between
- * uploading a file or editing parameters.
- *
- */
-
 package org.netbeans.modules.web.monitor.client;
 
 import java.awt.Dialog;
@@ -60,6 +45,20 @@ import org.netbeans.modules.web.monitor.data.*;
 import org.openide.awt.Mnemonics;
 
 
+/*
+ * TO DO FOR THIS CLASS:
+ *
+ * For PUT requests, the only option on the data panel should be to
+ * upload a file.
+ *
+ * For POST requests, the user should be able to choose between
+ * uploading a file or editing parameters.
+ *
+ */
+
+/**
+ * @author Ana von Klopp
+ */
 class EditPanel extends javax.swing.JPanel implements
     ActionListener, ChangeListener {
 

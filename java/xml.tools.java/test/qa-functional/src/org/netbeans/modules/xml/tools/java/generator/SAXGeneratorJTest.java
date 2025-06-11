@@ -44,7 +44,7 @@ public class SAXGeneratorJTest extends JXTest {
         super(testName);
     }
     
-    // TESTS ///////////////////////////////////////////////////////////////////
+    // TESTS
     
     /** Performs 'XSL Transformation...' action and checks output. */
     public void test() throws Exception {
@@ -190,7 +190,7 @@ public class SAXGeneratorJTest extends JXTest {
         compareReferenceFiles();
     }
     
-    // LIB ////////////////////////////////////////////////////////////////////
+    // LIB
 
     /**  @author David Kaspar */
     public String dumpFile(DataObject dao) {
@@ -287,7 +287,7 @@ public class SAXGeneratorJTest extends JXTest {
         return ar;
     }
     
-    // MAIN ////////////////////////////////////////////////////////////////////
+    // MAIN
     
     public static void main(String[] args) throws Exception {
         DEBUG = false;

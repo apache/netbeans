@@ -321,7 +321,7 @@ public class NbJShellAgent implements Runnable, ClassFileTransformer {
         }
     }
     
-    ////////////////////// INSTRUMENTATION PART ///////////////////////////////////
+    // INSTRUMENTATION PART
     private static final String CLASS_INIT_NAME = "<clinit>"; // NOI18N
     private static final String CLASS_INIT_DESC = "()V"; // NOI18N
     private static final String JAVA_LANG_CLASS = "java/lang/Class"; // NOI18N

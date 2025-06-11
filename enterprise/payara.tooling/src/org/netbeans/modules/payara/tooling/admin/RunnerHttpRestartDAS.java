@@ -34,17 +34,11 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
  */
 public class RunnerHttpRestartDAS extends RunnerHttp {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Restart DAS command <code>debug</code> parameter's name. */
     private static final String DEBUG_PARAM = "debug";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Builds restart DAS query string for given command.
      * <p/>
@@ -72,10 +66,7 @@ public class RunnerHttpRestartDAS extends RunnerHttp {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * HTTP interface.

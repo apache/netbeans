@@ -63,7 +63,7 @@ public class FixDependencies extends Task {
     private Pattern moduleFilter;
     
     
-    /** tasks to be executed */
+    /* tasks to be executed */
     
     /** Initialize. */
     public FixDependencies() {

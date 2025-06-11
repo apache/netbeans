@@ -31,10 +31,7 @@ import org.xml.sax.SAXException;
  */
 public class JavaEEModuleReader extends AbstractReader {
 
-   ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Java EE module values from XML element. */
     public class Module {
 
@@ -74,10 +71,7 @@ public class JavaEEModuleReader extends AbstractReader {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** <code>javaee</code> XML element name. */
     private static final String NODE = "module";
 
@@ -87,17 +81,11 @@ public class JavaEEModuleReader extends AbstractReader {
     /** <code>check</code> XML element attribute name. */
     private static final String CHECK_ATTR = "check";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Modules retrieved from XML elements. */
     private List<Module> modules;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of <code>module</code> Java EE configuration
      * XML element reader.
@@ -110,10 +98,7 @@ public class JavaEEModuleReader extends AbstractReader {
         modules = new LinkedList<>();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Tree parser methods                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Process attributes from current XML element.
      * <p/>
@@ -128,10 +113,7 @@ public class JavaEEModuleReader extends AbstractReader {
                 attributes.getValue(CHECK_ATTR)));
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get modules retrieved from XML elements.
      * <p/>
@@ -141,10 +123,7 @@ public class JavaEEModuleReader extends AbstractReader {
         return modules;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Reset this XML element reader.
      */

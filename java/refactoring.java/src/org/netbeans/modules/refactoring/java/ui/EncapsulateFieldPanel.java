@@ -721,9 +721,7 @@ private void jButtonSelectSettersActionPerformed(java.awt.event.ActionEvent evt)
 
     
     
-    ////////////////////////////////////////////////////////////////////////////
     // INNER CLASSES
-    ////////////////////////////////////////////////////////////////////////////
     /**
      * The class is used by EncapsulateFieldPanel - it represents table model
      * used inside in jTable. It denies to edit first column, returns the

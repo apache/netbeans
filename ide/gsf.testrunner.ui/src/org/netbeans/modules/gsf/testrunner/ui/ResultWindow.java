@@ -140,10 +140,6 @@ public final class ResultWindow extends TopComponent {
         actions.put("jumpPrev", new PrevNextFailure(false));  //NOI18N
     }
 
-    /** */
-//    private JSplitPane view;
-//    private Object lookup;
-
     /** Creates a new instance of ResultWindow */
     @NbBundle.Messages({"TITLE_TEST_RESULTS=Test Results",
         "ACSN_TestResults=Test Results",

@@ -104,9 +104,7 @@ final class DefaultModeModel implements ModeModel {
         this.topComponentSubModel = new TopComponentSubModel(kind);
     }
     
-    /////////////////////////////////////
     // Mutator methods >>
-    /////////////////////////////////////
     @Override
     public void setState(int state) {
         synchronized(LOCK_STATE) {
@@ -345,14 +343,8 @@ final class DefaultModeModel implements ModeModel {
             this.boundsSeparetedHelp.setBounds(boundsSeparatedHelp);
         }
     }
-    /////////////////////////////////////
     // Mutator methods <<
-    /////////////////////////////////////
-
-
-    /////////////////////////////////////
     // Accessor methods >>
-    /////////////////////////////////////
     @Override
     public String getName() {
         return name;
@@ -518,10 +510,7 @@ final class DefaultModeModel implements ModeModel {
         }
     }
     
-    /////////////////////////////////////
     // Accessor methods <<
-    /////////////////////////////////////
-    
     private TopComponentContextSubModel getContextSubModel() {
         if (topComponentContextSubModel == null) {
             topComponentContextSubModel = new TopComponentContextSubModel();

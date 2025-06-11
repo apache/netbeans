@@ -33,10 +33,7 @@ import org.testng.annotations.Test;
  */
 public class CommandHttpEnableDisableTest extends CommandHttpTest {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Test methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     // TODO: Deploy something real on real target.
     /**
      * Test GlasFissh enable administration HTTP command execution.

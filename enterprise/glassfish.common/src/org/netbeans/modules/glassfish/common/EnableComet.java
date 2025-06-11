@@ -35,26 +35,17 @@ import org.netbeans.modules.glassfish.spi.GlassfishModule;
  * @author vkraemer
  */
 public class EnableComet implements Runnable {
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = GlassFishLogger.get(CommonServerSupport.class);
 
     
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
      /** GlassFish server instance to be modified. */
     private final GlassfishInstance instance;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of Comet support enable handler.
      * @param instance GlassFish server instance to be modified.

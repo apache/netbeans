@@ -28,19 +28,14 @@ import org.netbeans.modules.glassfish.tooling.TaskEvent;
  */
 class StatusResult {
 
-    ////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                //
-    ////////////////////////////////////////////////////////////////////////
-
     /** Individual server status returned. */
     final GlassFishStatusCheckResult status;
 
     /** Task failure event. */
     final TaskEvent event;
 
-    ////////////////////////////////////////////////////////////////////////
     // Constructors                                                       //
-    ////////////////////////////////////////////////////////////////////////
     /**
      * Creates an instance of individual server status result.
      * <p/>
@@ -62,10 +57,7 @@ class StatusResult {
         this(status, null);
     }
 
-    ////////////////////////////////////////////////////////////////////////
     // Getters                                                            //
-    ////////////////////////////////////////////////////////////////////////
-
     /**
      * Get individual check task status.
      * <p/>

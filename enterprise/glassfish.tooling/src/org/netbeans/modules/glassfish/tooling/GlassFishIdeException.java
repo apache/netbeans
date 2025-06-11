@@ -32,18 +32,12 @@ import org.netbeans.modules.glassfish.tooling.logging.Logger;
  */
 public class GlassFishIdeException extends RuntimeException {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER
             = new Logger(GlassFishIdeException.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Create exception message from message pattern and arguments using
      * {@link java.text.MessageFormat}.
@@ -59,10 +53,7 @@ public class GlassFishIdeException extends RuntimeException {
         }
     }
  
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of <code>GlassFishIdeException</code> without
      * detail message.

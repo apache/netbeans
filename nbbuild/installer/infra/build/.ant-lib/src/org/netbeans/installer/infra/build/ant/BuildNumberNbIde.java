@@ -35,7 +35,6 @@ import org.netbeans.installer.infra.build.ant.utils.Utils;
  * @author Kirill Sorokin
  */
 public class BuildNumberNbIde extends Task {
-    /////////////////////////////////////////////////////////////////////////////////
     // Instance
     /**
      * The input file.
@@ -47,7 +46,7 @@ public class BuildNumberNbIde extends Task {
      */
     private String prefix;
     
-    // setters //////////////////////////////////////////////////////////////////////
+    // setters
     /**
      * Setter for the <code>file</code> attribute.
      * 
@@ -66,7 +65,7 @@ public class BuildNumberNbIde extends Task {
         this.prefix = prefix;
     }
     
-    // execution ////////////////////////////////////////////////////////////////////
+    // execution
     /**
      * Executes the task. The input file is parsed and three properties identifying
      * the netbeans ide build are set.
@@ -97,7 +96,6 @@ public class BuildNumberNbIde extends Task {
         }
     }
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Constants
     /**
      * Pattern for which to look in the input file.

@@ -61,10 +61,7 @@ public class RunnerRestCloudDeploy extends RunnerRestCloud {
         this.command = (CommandCloudDeploy)command;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Implemented Abstract Methods                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Handle sending data to server using HTTP command interface.
      * <p/>

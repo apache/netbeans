@@ -326,10 +326,10 @@ public final class MavenEmbedder {
 //                        }
 //                    }
 //                } else {
-////                        for (File f : poms) {
+// //                        for (File f : poms) {
 //                        DefaultMavenExecutionResult r = new DefaultMavenExecutionResult();
 //                        results.put(pom, r.addException(ex));                
-////                        } 
+// //                        } 
 //                }
 //            }
 //        }

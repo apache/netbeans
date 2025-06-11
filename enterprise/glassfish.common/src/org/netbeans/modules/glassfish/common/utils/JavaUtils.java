@@ -47,10 +47,7 @@ import org.openide.util.Parameters;
  */
 public class JavaUtils {
     
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = GlassFishLogger.get(JavaUtils.class);
@@ -67,10 +64,7 @@ public class JavaUtils {
     public static final String
             JAVA_SE_SPECIFICATION_NAME = "j2se";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get installed Java SE platforms.
      * <p/>

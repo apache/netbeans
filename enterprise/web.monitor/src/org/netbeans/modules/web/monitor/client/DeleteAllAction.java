@@ -17,7 +17,7 @@
  * under the License.
  */
 
-/**
+/*
  * DeleteAllAction.java
  *
  *

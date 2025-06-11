@@ -1867,7 +1867,7 @@ public class ETable extends JTable {
         }
     }
     
-    /**
+    /*
      * Adjusts selected rows when sorting changes.
      *
     protected final void adjustSelectedRows(int[] oldSortingPermutation, int[] oldInverseSortingPermutation,

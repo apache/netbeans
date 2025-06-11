@@ -83,10 +83,7 @@ public abstract class PayaraConfiguration implements
         MessageDestinationConfiguration,
         DatasourceConfiguration {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Payara Java EE common module Logger. */
     private static final Logger LOGGER = Logger.getLogger("payara-eecommon");
 
@@ -102,10 +99,7 @@ public abstract class PayaraConfiguration implements
         "sun-resources" + RESOURCE_FILES_SUFFIX
     };
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Create resource file path fragment for given Java EE module.
      * <i>Internal helper method.</i>
@@ -247,10 +241,7 @@ public abstract class PayaraConfiguration implements
         return Pair.of(module.getDeploymentConfigurationFile(name), true);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     protected final J2eeModule module;
     protected final J2eeModuleHelper moduleHelper;
     protected final File primaryDD;
@@ -267,10 +258,7 @@ public abstract class PayaraConfiguration implements
     private boolean deferredAppServerChange;
     private final String defaultcr;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     @Deprecated
     protected PayaraConfiguration(
             final J2eeModule module, final PayaraVersion version
@@ -382,10 +370,7 @@ public abstract class PayaraConfiguration implements
         throw new UnsupportedOperationException("JSR-88 configuration not supported.");
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     public void dispose() {
         if(descriptorListener != null) {
             descriptorListener.removeListeners();

@@ -29,10 +29,7 @@ import org.netbeans.modules.glassfish.tooling.GlassFishIdeException;
  */
 public class FetchLogException extends GlassFishIdeException {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of <code>FetchLogException</code> without
      * detail message.

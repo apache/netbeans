@@ -28,19 +28,13 @@ import org.netbeans.modules.glassfish.tooling.data.GlassFishVersion;
  */
 @Deprecated
 public class JpaSupport {
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Individual JPA specifications support.
      */
     public static class ApiVersion {
 
-        ////////////////////////////////////////////////////////////////////////
         // Class attributes                                                   //
-        ////////////////////////////////////////////////////////////////////////
-
         /** JPA 1.0 supported. */
         final boolean _1_0;
 
@@ -53,10 +47,7 @@ public class JpaSupport {
         /** JPA provider class. */
         final String provider;
 
-        ////////////////////////////////////////////////////////////////////////
         // Constructors                                                       //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Creates an instance of individual JPA specifications support class.
          * <p/>
@@ -73,10 +64,7 @@ public class JpaSupport {
             this.provider = provider;
         }
 
-        ////////////////////////////////////////////////////////////////////////
         // Getters and setters                                                //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Is JPA 1.0 supported.
          * <p/>
@@ -118,10 +106,7 @@ public class JpaSupport {
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish server JPA provider class since V1. */
     private static final String JPA_PROVIDER_SINCE_V1
             = "oracle.toplink.essentials.PersistenceProvider";
@@ -144,10 +129,7 @@ public class JpaSupport {
     private static final AtomicReferenceArray<ApiVersion> jpaSupport
             = new AtomicReferenceArray<>(GlassFishVersion.length);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get GlassFish JPA support information for given GlassFish version.
      * <p/>

@@ -73,9 +73,9 @@ final class TestGenerator extends AbstractTestGenerator {
     static final String ANN_AFTER = "org.testng.annotations.AfterMethod";                  //NOI18N
     /** */
     static final String ANN_TEST = "org.testng.annotations.Test";                    //NOI18N
-    /** */
+
 //    private static final String ANN_RUN_WITH = "org.junit.runner.RunWith";//NOI18N
-//    /** */
+
 //    private static final String ANN_SUITE = "org.junit.runners.Suite";  //NOI18N
     /** */
     private static final String ANN_SUITE_MEMBERS = "SuiteClasses";     //NOI18N
@@ -404,8 +404,7 @@ final class TestGenerator extends AbstractTestGenerator {
                 null);          //default value - used by annotations
     }
     
-    /**
-     */
+
 //    @Override
 //    protected ClassTree finishSuiteClass(ClassTree tstClass,
 //                                         TreePath tstClassTreePath,

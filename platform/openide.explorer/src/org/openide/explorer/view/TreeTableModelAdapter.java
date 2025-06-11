@@ -134,7 +134,7 @@ class TreeTableModelAdapter extends NodeTableModel {
         // selection paths stored for restore after update
         TreePath[] tps = null;
 
-        ///////// TreeExpansionListener
+        // TreeExpansionListener
         public void treeExpanded(TreeExpansionEvent event) {
             updateNodes();
         }
@@ -143,7 +143,7 @@ class TreeTableModelAdapter extends NodeTableModel {
             updateNodes();
         }
 
-        ///////////// TreeModelListener
+        // TreeModelListener
         // Install a TreeModelListener that can update the table when
         // tree changes. We use delayedUpdateNodes as we can
         // not be guaranteed the tree will have finished processing
@@ -173,7 +173,7 @@ class TreeTableModelAdapter extends NodeTableModel {
             delayedUpdateNodes(e);
         }
 
-        ///////// TableModelListener
+        // TableModelListener
         public void tableChanged(TableModelEvent e) {
             int c = e.getColumn();
             int column = (c == TableModelEvent.ALL_COLUMNS) ? TableModelEvent.ALL_COLUMNS : (c + 1);

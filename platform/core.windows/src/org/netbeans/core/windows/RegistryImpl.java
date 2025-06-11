@@ -22,7 +22,6 @@ package org.netbeans.core.windows;
 import java.util.Collection;
 import java.util.Iterator;
 import org.openide.nodes.Node;
-import org.openide.util.WeakSet;
 import org.openide.windows.TopComponent;
 
 import javax.swing.*;
@@ -31,8 +30,10 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 /** Implementstion of registry of top components. This implementation
  * receives information about top component changes from the window
@@ -49,7 +50,7 @@ public final class RegistryImpl extends Object implements TopComponent.Registry 
     /** Previouly activated top component */
     private WeakReference<TopComponent> previousActivated;
     /** Set of opened TopComponents */
-    private final Set<TopComponent> openSet = new WeakSet<TopComponent>(30);
+    private final Set<TopComponent> openSet = Collections.newSetFromMap(new WeakHashMap<>(30));
     /** Currently selected nodes. */
     private Node[] currentNodes;
     /** Last non-null value of current nodes. (If null -> it means they are
@@ -111,8 +112,7 @@ public final class RegistryImpl extends Object implements TopComponent.Registry 
     }
 
     
-    //////////////////////////////////////////////////////
-    /// notifications of changes from window manager >>>>>
+    // notifications of changes from window manager >>>>>
     /** Called when a TopComponent is activated.
      *
      * @param ev TopComponentChangedEvent
@@ -240,9 +240,7 @@ public final class RegistryImpl extends Object implements TopComponent.Registry 
         return tmp != null && tmp.getActivatedNodes() == null;
     }
     
-    /// notifications of changes from window manager <<<<<
-    //////////////////////////////////////////////////////
-
+    // notifications of changes from window manager <<<<<
     /** Cancels the menu if it is not assigned to specified window.
      * @param window window that the menu should be checked against
      *    (if this window contains the menu, then the menu will not be closed)

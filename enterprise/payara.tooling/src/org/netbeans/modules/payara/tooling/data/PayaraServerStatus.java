@@ -29,10 +29,7 @@ import org.netbeans.modules.payara.tooling.PayaraStatus;
  */
 public interface PayaraServerStatus {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Interface Methods                                                      //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get Payara server entity.
      * <p/>

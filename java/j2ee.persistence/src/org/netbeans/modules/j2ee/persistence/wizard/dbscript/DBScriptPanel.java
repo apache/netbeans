@@ -357,7 +357,6 @@ public class DBScriptPanel extends javax.swing.JPanel {
         @Override
         public void readSettings(Object settings) {
             wizardDescriptor = (WizardDescriptor) settings;
-//////            
             if (!componentInitialized) {
                 componentInitialized = true;
                 

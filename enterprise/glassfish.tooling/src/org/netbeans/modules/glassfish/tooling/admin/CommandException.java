@@ -30,10 +30,7 @@ import org.netbeans.modules.glassfish.tooling.GlassFishIdeException;
  */
 public class CommandException extends GlassFishIdeException {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Exception message for unsupported GlassFish version. */
     static final String UNSUPPORTED_VERSION = "Unsupported GlassFish version";
 
@@ -88,10 +85,7 @@ public class CommandException extends GlassFishIdeException {
     public static final String INVALID_BOOLEAN_CONSTANT
             = "Invalid String representing boolean constant.";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of <code>CommandException</code> without
      * detail message.

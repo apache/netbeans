@@ -29,24 +29,15 @@ import org.xml.sax.SAXException;
 public abstract class ConfigReaderJava
 extends AbstractReader implements XMLReader {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** <code>version</code> XML element attribute name. */
     private static final String VERSION_ATTR = "version";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Highest JavaEE specification version implemented. */
     private String version;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of Java EE configuration XML element reader.
      * <p/>
@@ -59,10 +50,7 @@ extends AbstractReader implements XMLReader {
         version = null;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Tree parser methods                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Process attributes from current XML element.
      * <p/>
@@ -76,10 +64,7 @@ extends AbstractReader implements XMLReader {
         version = attributes.getValue(VERSION_ATTR);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get highest JavaEE specification version implemented.
      * <p/>
@@ -89,10 +74,7 @@ extends AbstractReader implements XMLReader {
         return version;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Reset this XML element reader.
      */

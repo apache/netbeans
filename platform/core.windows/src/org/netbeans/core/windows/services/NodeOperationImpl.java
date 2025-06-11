@@ -27,6 +27,7 @@ import java.awt.FocusTraversalPolicy;
 import java.awt.Window;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.WeakHashMap;
 import java.util.HashSet;
@@ -52,7 +53,6 @@ import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.util.UserCancelException;
 import org.openide.util.Utilities;
-import org.openide.util.WeakSet;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.Mode;
 import org.openide.windows.TopComponent;
@@ -288,7 +288,7 @@ public final class NodeOperationImpl extends NodeOperation {
     
     //#79126 - cache the open properties windows and reuse them if the Nodes 
     //are the same
-    private static WeakSet<Node[]> nodeCache = new WeakSet<Node[]>();
+    private static Set<Node[]> nodeCache = Collections.newSetFromMap(new WeakHashMap<>());
     private static WeakHashMap<Node[], Dialog> dialogCache = new WeakHashMap<Node[], Dialog>();
     
     private static Dialog findCachedPropertiesDialog( Node n ) {

@@ -84,26 +84,17 @@ import org.xml.sax.SAXException;
  */
 public class Hk2DatasourceManager implements DatasourceManager {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish server domain configuration file. */
     private static final String DOMAIN_XML_PATH = OsUtils.joinPaths(
             ServerUtils.GF_DOMAIN_CONFIG_DIR_NAME,
             ServerUtils.GF_DOMAIN_CONFIG_FILE_NAME);
     
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish server deployment manager. */
     private Hk2DeploymentManager dm;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of GlassFish server data source manager.
      * <p/>
@@ -113,10 +104,7 @@ public class Hk2DatasourceManager implements DatasourceManager {
         this.dm = dm;
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Retrieves the data sources deployed on the server.
      * <p/>

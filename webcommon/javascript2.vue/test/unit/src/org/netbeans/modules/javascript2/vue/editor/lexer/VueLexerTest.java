@@ -59,6 +59,10 @@ public class VueLexerTest extends VueTestBase {
     public void testComponentLexer_01() throws Exception {
         checkLexer("testfiles/lexer/vue/component_01.vue");
     }
+    
+    public void testJavascriptPugScript_01() throws Exception {
+        checkLexer("testfiles/lexer/vue/javascript_pug_script.vue");
+    }
 
     private void checkLexer(final String filePath) throws Exception {
         String fileContent = Files.readString(new File(getDataDir(), filePath).toPath(), StandardCharsets.UTF_8);

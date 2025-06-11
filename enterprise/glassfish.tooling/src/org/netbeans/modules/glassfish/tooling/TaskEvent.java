@@ -29,10 +29,7 @@ import java.util.Map;
  */
 public enum TaskEvent {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Enum values                                                            //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Task queued for execution. */
     SUBMIT,
     /** Start of task. */
@@ -70,10 +67,7 @@ public enum TaskEvent {
     /** Signals wrong proxy settings. */
     BAD_GATEWAY;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**  A <code>String</code> representation of SUBMIT value. */
     private static final String SUBMIT_STR = "Submit";
 
@@ -139,10 +133,7 @@ public enum TaskEvent {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Returns a <code>TaskEvent</code> with a value represented by the
      * specified <code>String</code>. The <code>TaskEvent</code> returned
@@ -163,10 +154,7 @@ public enum TaskEvent {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Convert <code>TaskEvent</code> value to <code>String</code>.
      * <p>

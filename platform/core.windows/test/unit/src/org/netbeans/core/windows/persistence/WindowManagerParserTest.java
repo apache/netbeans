@@ -59,9 +59,7 @@ public class WindowManagerParserTest extends NbTestCase {
         PersistenceManager.getDefault().setRootLocalFolder(origRootLocalFolder);
     }
     
-    ////////////////////////////////
     //Testing VALID data
-    ////////////////////////////////
     /** Test of loaded data
      */
     public void testLoadWM01 () throws Exception {
@@ -360,9 +358,7 @@ public class WindowManagerParserTest extends NbTestCase {
         System.out.println("WindowManagerParserTest.testSaveWM04 FINISH");
     }
     
-    ////////////////////////////////
     //Testing INVALID data
-    ////////////////////////////////
     /** Test of missing file
      */
     public void testLoadWM01Invalid () throws Exception {

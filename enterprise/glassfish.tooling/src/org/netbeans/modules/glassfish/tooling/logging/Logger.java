@@ -36,17 +36,11 @@ import org.netbeans.modules.glassfish.tooling.utils.JavaUtils;
  */
 public class Logger {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish IDE SDK logger name. Deprecated. */
     private static final String LOGGER_NAME = "org.netbeans.modules.glassfish.tooling";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Find or create a logger for GlassFish IDE SDK. If a logger has
      * already been created with the given name it is returned.  Otherwise
@@ -136,10 +130,7 @@ public class Logger {
         getLogger().log(level, msg, params);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Properties file containing log messages. */
     static final String MESSAGES_FILE = "LogMessages";
 
@@ -158,10 +149,7 @@ public class Logger {
     /** Exception messages cache for individual packages. */
     private static final Map<Package, Properties> excProps = new HashMap<>();
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Build properties file name with suffix.
      * <p/>
@@ -243,10 +231,7 @@ public class Logger {
         return message(EXCEPTIONS_FILE, excProps, c, key);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger name (derived from full class name including package). */
     private final String name;
 
@@ -256,10 +241,7 @@ public class Logger {
     /** {@link java.util.logging.Logger} instance. */
     private final java.util.logging.Logger logger;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of library internal logger.
      * <p/>
@@ -271,10 +253,7 @@ public class Logger {
         logger = java.util.logging.Logger.getLogger(name);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Builds message key as
      * <code>&lt;class_name&gt;.&lt;method_name&gt;.&lt;key&gt;</code>.

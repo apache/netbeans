@@ -26,13 +26,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.WeakHashMap;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileRenameEvent;
 import org.openide.util.BaseUtilities;
-import org.openide.util.WeakSet;
 
 /**
  * Field line number cache.
@@ -40,7 +40,7 @@ import org.openide.util.WeakSet;
  */
 final class FieldLNCache {
     
-    private final Set<FileObject> knownFiles = Collections.synchronizedSet(new WeakSet<>());
+    private final Set<FileObject> knownFiles = Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
     private final Set<FileKey> knownFileRefs = Collections.synchronizedSet(new HashSet<>());
     private final Map<FieldKey, Integer> fieldLines = new LinkedHashMap<>();
     

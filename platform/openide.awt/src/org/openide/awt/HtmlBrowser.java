@@ -582,7 +582,7 @@ public class HtmlBrowser extends JPanel {
         }
     }
 
-    ////// Accessibility //////
+    // Accessibility
     @Override
     public void requestFocus() {
         if (browserComponent != null) {

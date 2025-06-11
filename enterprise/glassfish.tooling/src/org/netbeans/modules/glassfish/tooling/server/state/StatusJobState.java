@@ -34,10 +34,7 @@ import org.netbeans.modules.glassfish.tooling.logging.Logger;
  * @author Tomas Kraus
  */
 public enum StatusJobState {
-    ////////////////////////////////////////////////////////////////////////////
     // Enum values                                                            //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Server status checks are turned off. */
     NO_CHECK,
 
@@ -74,10 +71,7 @@ public enum StatusJobState {
      *  port is alive but server is not responding. . */
     SHUTDOWN_PORT;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(StatusJobState.class);
 
@@ -139,10 +133,7 @@ public enum StatusJobState {
         GlassFishStatus.SHUTDOWN  // SHUTDOWN_PORT
     };
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-   
     /**
      * Returns a <code>GlassFishStatus</code> with a value represented by the
      * specified <code>String</code>. The <code>GlassFishStatus</code> returned
@@ -164,10 +155,7 @@ public enum StatusJobState {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Convert <code>StatusJobState</code> value to <code>String</code>.
      * <p/>

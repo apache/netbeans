@@ -17,7 +17,7 @@
  * under the License.
  */
 
-/**
+/*
  * EditPanelRequest.java
  *
  *
@@ -26,10 +26,6 @@
  * @author Ana von Klopp
  * @author Simran Gleason
  * @version
- */
-
-/**
- * Contains the Request sub-panel for the EditPanel
  */
 
 package org.netbeans.modules.web.monitor.client;
@@ -42,6 +38,10 @@ import java.util.Hashtable;
 import org.openide.util.NbBundle;
 import org.netbeans.modules.web.monitor.data.*;
 
+
+/**
+ * Contains the Request sub-panel for the EditPanel
+ */
 class EditPanelRequest extends DataDisplay {
 
     private static final boolean debug = false;

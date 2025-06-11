@@ -27,10 +27,7 @@ import org.netbeans.modules.glassfish.tooling.utils.StringPrefixTree;
  */
 public class JDBCConnectionPool {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Recognized properties in JDBC connection pool.
      */
@@ -150,10 +147,7 @@ public class JDBCConnectionPool {
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** User property value. */
     private String user;
 
@@ -176,10 +170,7 @@ public class JDBCConnectionPool {
      *  represents <code>null</code>. */
     private int port;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of JDBC connection pool content with no values set.
      */
@@ -193,10 +184,7 @@ public class JDBCConnectionPool {
         this.port = -1;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get user property value.
      * <p/>
@@ -262,10 +250,7 @@ public class JDBCConnectionPool {
         return port;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Set property value depending on {@link Properties} type
      * <code>enum</code> value.

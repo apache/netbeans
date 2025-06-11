@@ -56,7 +56,6 @@ import static org.netbeans.installer.utils.helper.DetailedStatus.FAILED_TO_UNINS
  *
  */
 public class NbPostInstallSummaryPanel extends WizardPanel {
-    /////////////////////////////////////////////////////////////////////////////////
     // Instance
     public NbPostInstallSummaryPanel() {
         setProperty(TITLE_PROPERTY, 
@@ -110,7 +109,6 @@ public class NbPostInstallSummaryPanel extends WizardPanel {
         return wizardUi;
     }
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Inner Classes
     public static class NbPostInstallSummaryPanelUi extends WizardPanelUi {
         protected NbPostInstallSummaryPanel component;
@@ -379,16 +377,16 @@ public class NbPostInstallSummaryPanel extends WizardPanel {
         }
         
         private void initComponents() {
-            // messagePaneInstall ///////////////////////////////////////////////////
+            // messagePaneInstall
             messagePaneInstall = new NbiTextPane();
             
-            // messagePaneUninstall /////////////////////////////////////////////////
+            // messagePaneUninstall
             messagePaneUninstall = new NbiTextPane();
 
-            // messagePaneRestart ///////////////////////////////////////////////////
+            // messagePaneRestart
             messagePaneRestart = new NbiTextPane();
             
-            // messagePaneNetBeans ///////////////////////////////////////////////////
+            // messagePaneNetBeans
             messagePaneNetBeans = new NbiTextPane();
 
             
@@ -481,7 +479,7 @@ public class NbPostInstallSummaryPanel extends WizardPanel {
             spacer = new NbiPanel();
 
             messagePaneMySQL = new NbiTextPane();
-            // this /////////////////////////////////////////////////////////////////
+            // this
             add(messagePaneInstall, new GridBagConstraints(
                     0, 0,                             // x, y
                     1, 1,                             // width, height
@@ -575,7 +573,6 @@ public class NbPostInstallSummaryPanel extends WizardPanel {
         }
     }
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Constants
     public static final String MESSAGE_TEXT_SUCCESS_PROPERTY =
             "message.text.success"; // NOI18N

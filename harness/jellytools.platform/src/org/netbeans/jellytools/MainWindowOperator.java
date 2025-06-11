@@ -74,7 +74,7 @@ import org.netbeans.jemmy.operators.JPopupMenuOperator;
  */
 public class MainWindowOperator extends JFrameOperator {
     
-    /** Singleton instance of MainWindowOperator. */
+    /* Singleton instance of MainWindowOperator. */
     //private static MainWindowOperator defaultMainWindowOperator;
     /** JMenuBarOperator instance. */
     private JMenuBarOperator _menuBar;
@@ -166,7 +166,7 @@ public class MainWindowOperator extends JFrameOperator {
         }
     }
     
-    /***************** methods for toolbars manipulation *******************/
+    /* *************** methods for toolbars manipulation *******************/
     
     /** Returns ContainerOperator representing index-th floating toolbar in
      * IDE main window. Toolbars are NOT indexed from left to right.

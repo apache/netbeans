@@ -33,10 +33,7 @@ import org.testng.annotations.Test;
  */
 public class AdminFactoryTest extends CommandTest {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Test methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Test factory functionality for Payara
      * <p/>

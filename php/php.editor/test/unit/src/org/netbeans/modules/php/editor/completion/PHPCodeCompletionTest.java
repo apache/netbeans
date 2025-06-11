@@ -266,7 +266,7 @@ public class PHPCodeCompletionTest extends PHPCodeCompletionTestBase {
                 "while (1) $this->factory()->^", false);
     }
 
-    ///
+
     public void test147575_8() throws Exception {
         checkCompletion("testfiles/completion/lib/_base/issue147575.php",
                 "if(1) $this->^", false);
@@ -307,7 +307,7 @@ public class PHPCodeCompletionTest extends PHPCodeCompletionTestBase {
                 "while(1) $this->factory()->^", false);
     }
 
-    ///
+
     public void test7i147575() throws Exception {
         checkCompletion("testfiles/completion/lib/_base/issue147575.php",
                 "if(1)$this->^", false);

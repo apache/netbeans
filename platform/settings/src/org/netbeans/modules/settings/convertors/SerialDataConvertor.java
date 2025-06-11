@@ -337,10 +337,7 @@ implements PropertyChangeListener, FileSystem.AtomicAction {
         return request;
     }
     
-    //////////////////////////////////////////////////////////////////////////
     // SettingsInstance
-    //////////////////////////////////////////////////////////////////////////
-    
     /** InstanceCookie implementation */
     private final class SettingsInstance implements InstanceCookie.Of {
         
@@ -830,10 +827,7 @@ implements PropertyChangeListener, FileSystem.AtomicAction {
         }                
     }
 
-////////////////////////////////////////////////////////////////////////////
 // Provider
-////////////////////////////////////////////////////////////////////////////
-
     /** A provider for .settings files  containing serial data format
      * (hexa stream)
      */
@@ -855,10 +849,7 @@ implements PropertyChangeListener, FileSystem.AtomicAction {
 
     }
     
-////////////////////////////////////////////////////////////////////////////
 // NodeConvertor
-////////////////////////////////////////////////////////////////////////////
-    
     /** allow to postpone the node creation */
     private static final class NodeConvertor implements InstanceContent.Convertor<SerialDataConvertor, Node> {
         NodeConvertor() {}

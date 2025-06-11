@@ -570,7 +570,6 @@ public class GraphManager extends Object {
         }
     }
 
-    //////////////////////
     //
     //	Event misc. methods, base on the name of the PropertyChanged event
     //
@@ -871,8 +870,6 @@ public class GraphManager extends Object {
     //
     //	Events misc. methods
     //
-    /////////////////////////////
-    
     public static void debug(boolean d) {
 	DDLogFlags.debug = d;
     }

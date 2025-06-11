@@ -28,20 +28,14 @@ import org.netbeans.modules.payara.tooling.PayaraIdeException;
  */
 public class JarException extends PayaraIdeException {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Exception message for JAR file opening issues. */
     static final String OPEN_ERROR = "Cannot open JAR file.";
 
     /** Exception message for JAR file opening issues. */
     static final String CLOSE_ERROR = "Cannot close JAR file.";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of <code>JarException</code> without
      * detail message.

@@ -36,18 +36,12 @@ import org.netbeans.modules.payara.common.PayaraInstance;
  */
 public class ResourceDesc implements Comparable<ResourceDesc> {
     
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = PayaraLogger.get(ResourceDesc.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Fetch list of resource descriptions of given resource type from given
      * Payara instance.
@@ -80,10 +74,7 @@ public class ResourceDesc implements Comparable<ResourceDesc> {
         return resourcesList;
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Resource name. */
     private final String name;
 
@@ -91,10 +82,7 @@ public class ResourceDesc implements Comparable<ResourceDesc> {
      *  <code>jdbc-connection-pool</code>, ...). */
     private final String cmdType;
     
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of resource description.
      * <p/>
@@ -106,10 +94,7 @@ public class ResourceDesc implements Comparable<ResourceDesc> {
         this.cmdType = cmdType;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get resource name from resource description.
      * <p/>
@@ -128,10 +113,7 @@ public class ResourceDesc implements Comparable<ResourceDesc> {
         return cmdType;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Compare this resource description with another one.
      * <p/>

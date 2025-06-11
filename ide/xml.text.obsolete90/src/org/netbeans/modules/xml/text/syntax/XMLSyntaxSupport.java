@@ -413,29 +413,8 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
     }
     
     // ~~~~~~~~~~~~~~~~~ utility methods ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
-    
-    /**
-     * Locate DOCTYPE from the start of document.
-     */
-//    public SyntaxElement.Declaration getDeclarationElement(){
-//        int offset = 5;
-//        SyntaxElement elem = null;
-//
-//        try {
-//            while(true){  //??? optimalize stop on first element
-//                elem = getElementChain(offset);
-//                if(elem instanceof SyntaxElement.Declaration || elem == null)
-//                    break;
-//                offset += elem.getElementLength()+1;
-//            }
-//        } catch (BadLocationException ble) {
-//            org.openide.TopManager.getDefault().notifyException(ble);
-//        }
-//        return elem != null ? (SyntaxElement.Declaration)elem : null;
-//    }
-    
-    
+
+
     /**
      * Look for pairing closing tag.
      *

@@ -55,10 +55,7 @@ public class RunnerRestDeploy extends RunnerRest {
         this.command = (CommandDeploy)command;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Implemented Abstract Methods                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     @Override
     protected void prepareHttpConnection(HttpURLConnection conn) throws CommandException {
         super.prepareHttpConnection(conn);
@@ -154,10 +151,7 @@ public class RunnerRestDeploy extends RunnerRest {
         }
         writer.append(NEWLINE).flush();
     }
-    ////////////////////////////////////////////////////////////////////////////
     // Fake Getters                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Set the content-type of information sent to the server.
      * Returns

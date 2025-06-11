@@ -33,17 +33,11 @@ import java.util.Map;
 @RunnerRestClass(runner=RunnerRestDeploy.class)
 public class CommandRedeploy extends CommandTargetName {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for deploy command. */
     private static final String COMMAND = "redeploy";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Deployed application context root. */
     final String contextRoot;
 
@@ -65,10 +59,7 @@ public class CommandRedeploy extends CommandTargetName {
     /** List of modified files. */
     final List<String> sourcesChanged;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server deploy command entity.
      * <p/>

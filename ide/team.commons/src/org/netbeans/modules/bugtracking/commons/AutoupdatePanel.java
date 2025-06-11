@@ -39,7 +39,6 @@ public class AutoupdatePanel extends javax.swing.JPanel {
                                                + "The {0} server you are trying to access has a higher "
                                                + "version than the one supported by NetBeans. "
                                                + "Do you want to download an update from the NetBeans Update Center?"})            
-    /** Creates new form AutoupdatePanel */
     public AutoupdatePanel(AutoupdateSupport support) {
         initComponents();
         txtTextArea.setText(Bundle.TXT_text(support.getPluginName()));

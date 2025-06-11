@@ -33,10 +33,7 @@ import org.testng.annotations.Test;
  */
 public class CommandHttpLocationTest extends CommandHttpTest {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Test methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Test GlasFissh administration HTTP command execution.
      */

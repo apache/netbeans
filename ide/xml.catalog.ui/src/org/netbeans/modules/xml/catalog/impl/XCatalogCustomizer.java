@@ -21,7 +21,7 @@ package org.netbeans.modules.xml.catalog.impl;
 import java.beans.*;
 import java.io.File;
 import java.net.MalformedURLException;
-import org.netbeans.modules.xml.catalog.impl.XCatalog;
+
 import static org.netbeans.modules.xml.catalog.impl.res.Bundle.*;
 
 /**
@@ -44,6 +44,8 @@ public class XCatalogCustomizer extends javax.swing.JPanel implements Customizer
         this.getAccessibleContext().setAccessibleDescription(ACSD_XCatalogCustomizer());
         locationLabel.setDisplayedMnemonic(XCatalogCustomizer_locationLabel_mne().charAt(0));
         locationTextField.getAccessibleContext().setAccessibleDescription(ACSD_locationTextField());
+
+        updateValidity();
     }
 
     /** This method is called from within the constructor to
@@ -59,6 +61,7 @@ public class XCatalogCustomizer extends javax.swing.JPanel implements Customizer
         locationTextField = new javax.swing.JTextField();
         descTextArea = new javax.swing.JTextArea();
         selectButton = new javax.swing.JButton();
+        warningLabel = new javax.swing.JLabel();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -94,13 +97,13 @@ public class XCatalogCustomizer extends javax.swing.JPanel implements Customizer
         descTextArea.setOpaque(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.gridheight = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.gridheight = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(12, 0, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(6, 0, 0, 0);
         add(descTextArea, gridBagConstraints);
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/netbeans/modules/xml/catalog/impl/res/Bundle"); // NOI18N
@@ -116,6 +119,17 @@ public class XCatalogCustomizer extends javax.swing.JPanel implements Customizer
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.insets = new java.awt.Insets(0, 12, 0, 0);
         add(selectButton, gridBagConstraints);
+
+        warningLabel.setForeground(new java.awt.Color(255, 0, 0));
+        warningLabel.setText(" ");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(6, 12, 0, 12);
+        add(warningLabel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void selectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectButtonActionPerformed
@@ -125,6 +139,7 @@ public class XCatalogCustomizer extends javax.swing.JPanel implements Customizer
             String location = f.toURL().toExternalForm();
             locationTextField.setText(location);
             model.setSource(location);
+            updateValidity();
         } catch (MalformedURLException ex) {
             // ignore
         }
@@ -135,11 +150,13 @@ public class XCatalogCustomizer extends javax.swing.JPanel implements Customizer
     private void locationTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_locationTextFieldFocusLost
         //if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug("FocusLost-setting location: " + locationTextField.getText()); // NOI18N
         model.setSource(locationTextField.getText());
+        updateValidity();
     }//GEN-LAST:event_locationTextFieldFocusLost
 
     private void locationTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_locationTextFieldActionPerformed
         //if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug("ActionPerformed-setting location: " + locationTextField.getText()); // NOI18N
         model.setSource(locationTextField.getText());
+        updateValidity();
     }//GEN-LAST:event_locationTextFieldActionPerformed
 
     /**
@@ -152,6 +169,7 @@ public class XCatalogCustomizer extends javax.swing.JPanel implements Customizer
         
         model = (XCatalog) peer;        
         locationTextField.setText(model.getSource());
+        updateValidity();
     }    
 
     public void addPropertyChangeListener(java.beans.PropertyChangeListener p1) {
@@ -159,12 +177,17 @@ public class XCatalogCustomizer extends javax.swing.JPanel implements Customizer
     
     public void removePropertyChangeListener(java.beans.PropertyChangeListener p1) {
     }
-    
+
+    private void updateValidity() {
+        warningLabel.setText((model != null && ! model.isValid()) ? TEXT_catalog_not_valid() : " ");
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea descTextArea;
     private javax.swing.JLabel locationLabel;
     private javax.swing.JTextField locationTextField;
     private javax.swing.JButton selectButton;
+    private javax.swing.JLabel warningLabel;
     // End of variables declaration//GEN-END:variables
 
 }

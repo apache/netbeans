@@ -62,7 +62,6 @@ import org.netbeans.installer.wizard.components.WizardComponent;
  * @author Dmitry Lipin
  */
 public class ConfigurationLogic extends ProductConfigurationLogic {
-    /////////////////////////////////////////////////////////////////////////////////
     // Instance
     private List<WizardComponent> wizardComponents;
     
@@ -223,7 +222,6 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
             }
         }
         
-        /////////////////////////////////////////////////////////////////////////////
         progress.setPercentage(Progress.COMPLETE);
     }
     private void addFiles(FilesList list, File location) throws IOException {
@@ -253,7 +251,7 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
         String [] commands;
 
         if(installer.getAbsolutePath().endsWith(".exe")) {
-            /////////////////////////for exe////////////////////////////
+            //for exe
             LogManager.log("Installing JDK with exe installer");
             String logPath = logFile.getAbsolutePath();
             String locationPath = location.getAbsolutePath();
@@ -295,7 +293,7 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
                 };
             }
         } else {
-             ////////////////////////////for msi////////////////////////////
+             //for msi
             LogManager.log("Installing JDK with MSI installer");
             final String packageOption = "/i \"" + installer.getAbsolutePath() +"\" ";
             final String loggingOption = (logFile!=null) ?
@@ -1136,7 +1134,6 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
                 }
             }
         }
-        /////////////////////////////////////////////////////////////////////////////
         progress.setPercentage(Progress.COMPLETE);
     }
     
@@ -1283,7 +1280,6 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
     public Text getLicense() {
         return null;
     }
-/////////////////////////////////////////////////////////////////////////////////
 // Constants
     public static final String WIZARD_COMPONENTS_URI =
             "resource:" + // NOI18N

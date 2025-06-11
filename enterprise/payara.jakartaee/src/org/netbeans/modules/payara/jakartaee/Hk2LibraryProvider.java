@@ -54,9 +54,7 @@ import org.openide.modules.InstalledFileLocator;
  */
 public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
     private static final Logger LOGGER = Logger.getLogger("payara-jakartaee");
 
     /** Library provider type. */
@@ -112,10 +110,7 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
     private static final Map <PayaraServer, Hk2LibraryProvider> providers
             = new HashMap<>();
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Returns {@see Hk2LibraryProvider} class instance for specific server
      * instance.
@@ -138,10 +133,7 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
         return provider;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Library builder associated with current platform.
       * This attribute should be accessed only using {@see #getBuilder()} even
       * internally. */
@@ -178,10 +170,7 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
      *  outside {@see #getJaxRsName()} method! */
     private volatile String jaxRsName = null;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of Jersey library provider.
      * <p/>
@@ -197,10 +186,7 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
         this.server = server;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get Java EE library name for this server context.
      * <p/>

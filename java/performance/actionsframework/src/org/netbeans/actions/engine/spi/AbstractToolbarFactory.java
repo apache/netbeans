@@ -158,7 +158,7 @@ public class AbstractToolbarFactory extends ToolbarFactory {
 //        System.err.println("AbstractToolbarFactory.populateToolbar");
         ActionProvider provider = getEngine().getActionProvider();
         String[] names = provider.getActionNames(containerCtx);
-///        System.err.println("Names are " + Arrays.asList(names));
+//        System.err.println("Names are " + Arrays.asList(names));
         for (int i=0; i < names.length; i++) {
             int type = provider.getActionType(names[i], containerCtx);
             AbstractButton item = getOrCreateToolbarButton(type);

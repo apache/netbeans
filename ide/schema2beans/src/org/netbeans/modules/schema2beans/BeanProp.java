@@ -481,7 +481,6 @@ public class BeanProp implements BaseProperty {
         return bindings.size();
     }
     
-    //////
     //
     //	Add, Get, Remove values
     //
@@ -1136,10 +1135,6 @@ public class BeanProp implements BaseProperty {
     //
     //	Values methods.
     //
-    //////////////////
-    
-    
-    /////////////////////
     //
     //	Attributes methods
     //
@@ -1334,10 +1329,6 @@ public class BeanProp implements BaseProperty {
     //
     //	Attributes methods
     //
-    ///////////////////////
-    
-    
-    
     /**
      *	Called back by the DOMBinding when another bean removed the binding.
      *	This allows an automatic update of all the bean trees sharing the

@@ -154,7 +154,7 @@ public class I18nPanel extends JPanel {
      * Reset associated project to a new value
      */
 //    public void setProject(Project project) {
-////        ((ResourcePanel)resourcePanel).setProject(project);
+// //        ((ResourcePanel)resourcePanel).setProject(project);
 //        propertyPanel.setEnabled(project != null);
 //
 //    }

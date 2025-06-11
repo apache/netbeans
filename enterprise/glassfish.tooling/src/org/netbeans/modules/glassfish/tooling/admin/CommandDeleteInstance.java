@@ -29,17 +29,11 @@ package org.netbeans.modules.glassfish.tooling.admin;
 @RunnerRestClass(runner=RunnerRestDeleteInstance.class)
 public class CommandDeleteInstance extends CommandTarget {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for delete-instance command. */
     private static final String COMMAND = "delete-instance";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of GlassFish server delete-instance command entity.
      * <p/>

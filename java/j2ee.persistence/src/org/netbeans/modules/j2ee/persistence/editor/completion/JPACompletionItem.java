@@ -851,8 +851,6 @@ public abstract class JPACompletionItem implements CompletionItem {
     }
     
     private abstract static class PersistenceXmlCompletionItem extends JPACompletionItem {
-        /////////
-
         protected int substitutionOffset;
 
         protected PersistenceXmlCompletionItem(int substitutionOffset) {
@@ -940,7 +938,6 @@ public abstract class JPACompletionItem implements CompletionItem {
         }
 
         public abstract String getDisplayText();
-        /////////
     }
 
     private static class AttribValueItem extends PersistenceXmlCompletionItem {

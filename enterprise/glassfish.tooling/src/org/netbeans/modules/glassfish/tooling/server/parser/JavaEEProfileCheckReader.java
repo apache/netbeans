@@ -31,10 +31,7 @@ import org.xml.sax.SAXException;
 public class JavaEEProfileCheckReader
     extends AbstractReader implements XMLReader {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Java EE platform check values from XML element. */
     public class Check {
 
@@ -85,20 +82,14 @@ public class JavaEEProfileCheckReader
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** <code>check</code> XML element name. */
     static final String NODE = "check";
 
     /** <code>name</code> XML element attribute name. */
     private static final String NAME_ATTR = "name";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Java EE platform check value from XML element. */
     Check currentCheck;
 
@@ -108,10 +99,7 @@ public class JavaEEProfileCheckReader
     /** <code>file</code> XML element reader. */
     final PathReader pathReader;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of Java EE platform check configuration
      * XML element reader.
@@ -126,10 +114,7 @@ public class JavaEEProfileCheckReader
         currentCheck = null;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get all Java EE platform check values from XML elements on this level.
      * <p/>
@@ -139,10 +124,7 @@ public class JavaEEProfileCheckReader
         return checks;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // XML reader methods                                                     //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Provide paths to listen on.
      * <p/>
@@ -187,10 +169,7 @@ public class JavaEEProfileCheckReader
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Reset this XML element reader to allow reading of next element
      * on the same level.

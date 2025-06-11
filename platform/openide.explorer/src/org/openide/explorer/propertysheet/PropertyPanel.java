@@ -1175,7 +1175,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
         super.paint(g);
     }
 
-    ////////////////// Accessibility support ///////////////////////////////////
+    // Accessibility support
     @Override
     public javax.accessibility.AccessibleContext getAccessibleContext() {
         if (accessibleContext == null) {

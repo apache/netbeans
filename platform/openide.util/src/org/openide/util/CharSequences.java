@@ -302,7 +302,6 @@ public final class CharSequences {
         return createFromBytes(b, n, id);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////
     // Memory efficient implementations of CharSequence
     // Comparision between Fixed and String memory consumption:
     // 32-bit JVM

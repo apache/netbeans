@@ -510,16 +510,6 @@ final class BiFeatureNode extends AbstractNode implements Node.Cookie {
     }
 
     /**
-    * Sets display name and fires property change.
-    */
-    /*
-    void parameterChanged (PropertyChangeEvent e) {
-      setDisplayName (getName ());
-      firePropertyChange (e.getPropertyName (), e.getOldValue (), e.getNewValue ());
-}
-    */
-
-    /**
     * Returns human presentable name of this breakpoint containing
     * informations about lineNumber, className e.t.c.
     *

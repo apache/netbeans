@@ -26,14 +26,14 @@ import org.netbeans.modules.web.clientproject.spi.platform.ClientProjectEnhanced
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.util.Parameters;
 
-@ProjectServiceProvider(
-        projectType = "org-netbeans-modules-web-clientproject", // NOI18N
-        service = ClientProjectEnhancedBrowserProvider.class)
 /**
  * Cordova pseudo browser
  *
  * @author Jan Becicka
  */
+@ProjectServiceProvider(
+        projectType = "org-netbeans-modules-web-clientproject", // NOI18N
+        service = ClientProjectEnhancedBrowserProvider.class)
 public class EnhancedBrowserProviderImpl implements ClientProjectEnhancedBrowserProvider {
 
     private Project p;

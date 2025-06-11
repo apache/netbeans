@@ -104,8 +104,7 @@ public final class J2EEVersion extends J2EEBaseVersion {
             "11.0.0", 110000,    // NOI18N
             "11.0.0", 110000);   // NOI18N
 
-    /**
-     * -----------------------------------------------------------------------
+    /*
      * Implementation
      */
     /**

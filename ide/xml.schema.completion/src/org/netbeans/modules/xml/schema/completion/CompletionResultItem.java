@@ -334,9 +334,7 @@ public abstract class CompletionResultItem implements CompletionItem {
         return text;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////
-    ///////////////////methods from CompletionItem interface////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////
+    //methods from CompletionItem interface
     @Override
     public CompletionTask createDocumentationTask() {
         return new AsyncCompletionTask(new DocumentationQuery(this));

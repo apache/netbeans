@@ -90,7 +90,6 @@ public class ResourceTable
 //        propertySupport = new PropertyChangeSupport(this);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
     // Data Management
     
     public void setParentTable(ResourceTable parent)
@@ -165,7 +164,6 @@ public class ResourceTable
 //        fontProperties.clear();
     }
     
-    ///////////////////////////////////////////////////////////////////////////
     // Resource Management methods
     
     public Object getProperty(String name)
@@ -333,7 +331,6 @@ public class ResourceTable
         return Collections.unmodifiableSet(properties.keySet());
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Listener Management
     
     /**

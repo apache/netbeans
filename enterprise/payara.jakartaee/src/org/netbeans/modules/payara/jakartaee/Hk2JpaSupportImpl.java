@@ -37,10 +37,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersion;
  */
 public class Hk2JpaSupportImpl implements JpaSupportImplementation {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Individual JPA specifications support.
      */
@@ -90,10 +87,7 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
         boolean _3_2;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Payara server JPA provider class. */
     private static final String JPA_PROVIDER
             = "org.eclipse.persistence.jpa.PersistenceProvider";
@@ -116,10 +110,7 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Payara server instance. */
     private final PayaraServer instance;
 
@@ -129,10 +120,7 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
     /** {@see Set} of available provider instances. */
     private volatile Set<JpaProvider> providers = null;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of Payara server JPA support.
      * <p/>
@@ -141,10 +129,7 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
         this.instance = instance;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // JpaSupportImplementation methods                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Returns Payara server JPA providers.
      * <p/>

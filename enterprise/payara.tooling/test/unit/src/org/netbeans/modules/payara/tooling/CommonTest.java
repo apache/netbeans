@@ -49,10 +49,7 @@ import static org.testng.Assert.fail;
  */
 public abstract class CommonTest {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(CommonTest.class);
 
@@ -146,10 +143,7 @@ public abstract class CommonTest {
     /** Payara test server object. */
     private static volatile PayaraServer payaraServer;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Retrieve integer value stored as property.
      * <p/>

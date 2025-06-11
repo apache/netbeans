@@ -82,7 +82,7 @@ public final class IndentCommand {
         BLOCK_START,
         BLOCK_END,
 
-        /**
+        /*
          * Checkpoint to be set whenever indentation code can deduce without
          * mistake certain indentation level. The idea is that with emebedded
          * languages it is possible to break indentation level if for example
@@ -100,7 +100,7 @@ public final class IndentCommand {
          */
         //INDENT_CHECKPOINT,
 
-        /**
+        /*
          * Similar to INDENT but does not need to be finished with RETURN - it
          * will end automatically on next line which is not CONITNUE. The purpose
          * is to handle "hanging" indent of multiline statements.

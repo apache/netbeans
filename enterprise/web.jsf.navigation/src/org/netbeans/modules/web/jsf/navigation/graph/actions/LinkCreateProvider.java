@@ -101,10 +101,10 @@ public class LinkCreateProvider implements ConnectProvider {
         //        }
         //
         //        // Only allow it to be attached to the default pin.
-        ////        if (graphScene.isPin(targetWidget) &&
-        ////                ((Pin)graphScene.findObject(targetWidget)).getNavComp() == null ) {
-        ////            return ConnectorState.ACCEPT;
-        ////        }
+        // //        if (graphScene.isPin(targetWidget) &&
+        // //                ((Pin)graphScene.findObject(targetWidget)).getNavComp() == null ) {
+        // //            return ConnectorState.ACCEPT;
+        // //        }
         //        return ConnectorState.REJECT_AND_STOP;
     }
 

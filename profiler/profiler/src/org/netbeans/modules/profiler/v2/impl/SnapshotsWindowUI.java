@@ -721,8 +721,8 @@ public final class SnapshotsWindowUI extends ProfilerTopComponent {
                 isHeapDump = true;
 //            } else if (fo.getExt().equalsIgnoreCase(ResultsManager.THREADDUMP_EXTENSION)) {
 //                // Thread Dump
-////                this.icon = Icons.getIcon(ProfilerIcons.HEAP_DUMP);
-////                this.icon =  ProfilerIcons.SNAPSHOT_THREADS;
+// //                this.icon = Icons.getIcon(ProfilerIcons.HEAP_DUMP);
+// //                this.icon =  ProfilerIcons.SNAPSHOT_THREADS;
 //                this.snapshotType = 4;
 //                this.displayName = ResultsManager.getDefault().getHeapDumpDisplayName(fo.getName());
 //                this.isHeapDump = false;

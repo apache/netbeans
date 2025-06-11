@@ -104,36 +104,36 @@ public class J2SEProjectProfilingSupportProvider extends JavaProjectProfilingSup
         return JavaPlatform.getJavaPlatformById(platformName);
     }
 
-////    @Override
-////    public boolean checkProjectCanBeProfiled(final FileObject profiledClassFile) {
-////        if (profiledClassFile == null) {
-////            Project p = getProject();
-////            final PropertyEvaluator pp = getProjectProperties(p);
-////            String profiledClass = pp.getProperty("main.class"); // NOI18N
-////
-////            if ((profiledClass == null) || "".equals(profiledClass)
-////                    || (ProfilerTypeUtils.resolveClass(profiledClass, p) == null)) { // NOI18N
-////                mainClassSetManually = ProjectUtilities.selectMainClass(p, null, ProjectUtilities.getProjectName(p),
-////                                                                        -1);
-////
-////                //        Profiler.getDefault().displayError("No class to profile. To set up main class for a Project, go to \n" +
-////                //            "Project | Properties and select the main class in the Running Project section.");
-////                if (mainClassSetManually == null) {
-////                    return false;
-////                }
-////            }
-////
-////            // the following code to check the main class is way too slow to perform here
-////            /*      if (profiledClass != null && !"".equals(profiledClass)) {
-////               final FileObject fo = SourceUtilities.findFileForClass(new String[] { profiledClass, "" }, true);
-////               if (fo == null) res = false;
-////               else res = (SourceUtilities.hasMainMethod(fo) || SourceUtilities.isApplet(fo));
-////               } */
-////            return true;
-////        } else {
-////            return isFileObjectSupported(profiledClassFile);
-////        }
-////    }
+//    @Override
+//    public boolean checkProjectCanBeProfiled(final FileObject profiledClassFile) {
+//        if (profiledClassFile == null) {
+//            Project p = getProject();
+//            final PropertyEvaluator pp = getProjectProperties(p);
+//            String profiledClass = pp.getProperty("main.class"); // NOI18N
+//
+//            if ((profiledClass == null) || "".equals(profiledClass)
+//                    || (ProfilerTypeUtils.resolveClass(profiledClass, p) == null)) { // NOI18N
+//                mainClassSetManually = ProjectUtilities.selectMainClass(p, null, ProjectUtilities.getProjectName(p),
+//                                                                        -1);
+//
+//                //        Profiler.getDefault().displayError("No class to profile. To set up main class for a Project, go to \n" +
+//                //            "Project | Properties and select the main class in the Running Project section.");
+//                if (mainClassSetManually == null) {
+//                    return false;
+//                }
+//            }
+//
+//            // the following code to check the main class is way too slow to perform here
+//            /*      if (profiledClass != null && !"".equals(profiledClass)) {
+//               final FileObject fo = SourceUtilities.findFileForClass(new String[] { profiledClass, "" }, true);
+//               if (fo == null) res = false;
+//               else res = (SourceUtilities.hasMainMethod(fo) || SourceUtilities.isApplet(fo));
+//               } */
+//            return true;
+//        } else {
+//            return isFileObjectSupported(profiledClassFile);
+//        }
+//    }
 
     
 
@@ -163,12 +163,12 @@ public class J2SEProjectProfilingSupportProvider extends JavaProjectProfilingSup
     }
     
     protected void setMainClass(final PropertyEvaluator pp, SessionSettings ss) {
-////        if (mainClassSetManually == null) {
+//        if (mainClassSetManually == null) {
             String mainClass = pp.getProperty("main.class"); // NOI18N
             ss.setMainClass((mainClass != null) ? mainClass : ""); // NOI18N
-////        } else {
-////            ss.setMainClass(mainClassSetManually);
-////        }
+//        } else {
+//            ss.setMainClass(mainClassSetManually);
+//        }
     }
     
     private static String getRemotePlatformHost(JavaPlatform platform) {

@@ -23,7 +23,9 @@ import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,7 +43,6 @@ import org.openide.text.Line;
 import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
 import org.openide.util.UserQuestionException;
-import org.openide.util.WeakSet;
 import org.openide.windows.OutputEvent;
 import org.openide.windows.OutputListener;
 
@@ -53,7 +54,7 @@ import org.openide.windows.OutputListener;
  */
 public final class Hyperlink implements OutputListener {
 
-    static final Set<Hyperlink> hyperlinks = new WeakSet<Hyperlink>();
+    static final Set<Hyperlink> hyperlinks = Collections.newSetFromMap(new WeakHashMap<>());
     private static final RequestProcessor RP = new RequestProcessor(Hyperlink.class);
 
     private final URL url;

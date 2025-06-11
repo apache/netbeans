@@ -938,7 +938,6 @@ public class GuardedBlockTest extends GeneratorTestMDRCompat {
         return "";
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // classes used for getting guarded section initialized
     public static class GuardedDataLoader extends MultiFileLoader {
 

@@ -32,17 +32,11 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
  */
 public class AdminFactoryHttp extends AdminFactory {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Singleton object instance. */
     private static volatile AdminFactoryHttp instance;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Return existing singleton instance of this class or create a new one
      * when no instance exists.
@@ -61,10 +55,7 @@ public class AdminFactoryHttp extends AdminFactory {
         return instance;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Build runner for HTTP command interface execution and connect it with
      * provided <code>Command</code> instance.

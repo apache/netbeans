@@ -43,23 +43,14 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
  */
 public class RunnerLocal extends RunnerJava {
     
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Payara main class to be started when using classpath. */
     private static final String MAIN_CLASS
             = "com.sun.enterprise.glassfish.bootstrap.ASMain";
 
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Holding data for command execution. */
     @SuppressWarnings("FieldNameHidesFieldInSuperclass")
     final CommandStartDAS command;
@@ -78,10 +69,7 @@ public class RunnerLocal extends RunnerJava {
     @SuppressWarnings("FieldNameHidesFieldInSuperclass")
     ResultProcess result;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using local
      * file access interface.
@@ -94,10 +82,7 @@ public class RunnerLocal extends RunnerJava {
         this.command = (CommandStartDAS)command;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Implemented Abstract Methods                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
    /**
      * Create <code>ResultString</code> object corresponding
      * to <code>String</code>command execution value to be returned.
@@ -129,18 +114,9 @@ public class RunnerLocal extends RunnerJava {
         return false;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Fake Getters                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
-    ////////////////////////////////////////////////////////////////////////////
     // ExecutorService call() method helpers                                  //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Prepare Java VM options for Payara server execution.
      * <p/>
@@ -204,10 +180,7 @@ public class RunnerLocal extends RunnerJava {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // ExecutorService call() method                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Payara server administration command execution call.
      * This is an entry point from <code>executor<code>'s serialization queue.

@@ -30,10 +30,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
  */
 public class PayaraCloudEntity implements PayaraCloud {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Payara cloud name (display name in IDE). */
     protected String name;
 
@@ -46,10 +43,7 @@ public class PayaraCloudEntity implements PayaraCloud {
     /** Payara cloud local server. */
     protected PayaraServer localServer;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs empty class instance. No default values are set.
      */
@@ -72,10 +66,7 @@ public class PayaraCloudEntity implements PayaraCloud {
         this.localServer = localServer;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get Payara cloud name (display name in IDE).
      * <p/>
@@ -152,10 +143,7 @@ public class PayaraCloudEntity implements PayaraCloud {
         this.localServer = localServer;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * String representation of this Payara cloud entity.
      * <p/>

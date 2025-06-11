@@ -27,10 +27,7 @@ package org.netbeans.modules.payara.tooling.data;
  */
 public interface PayaraServer {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Interface Methods                                                      //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get Payara server name.
      * <p/>

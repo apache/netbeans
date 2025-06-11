@@ -27,17 +27,11 @@ package org.netbeans.modules.glassfish.tooling.admin;
 @RunnerRestClass(runner=RunnerRestListWebServices.class)
 public class CommandListWebServices  extends Command {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for list web services command. */
     private static final String COMMAND = "__list-webservices";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of GlassFish server list web services
      * command entity.

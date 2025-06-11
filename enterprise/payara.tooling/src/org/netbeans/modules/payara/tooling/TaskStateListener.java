@@ -25,10 +25,7 @@ package org.netbeans.modules.payara.tooling;
  */
 public interface TaskStateListener {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Interface Methods                                                      //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Callback to notify about Payara server administration command
      * execution state change.

@@ -49,10 +49,7 @@ public class RunnerHttpCreateConnector extends RunnerHttp {
      *  parameter name. */
     private static final String ENABLED_PARAM = "enabled";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Builds create connector resource query string for given command.
      * <p/>
@@ -105,10 +102,7 @@ public class RunnerHttpCreateConnector extends RunnerHttp {
         return sb.toString();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * HTTP interface.

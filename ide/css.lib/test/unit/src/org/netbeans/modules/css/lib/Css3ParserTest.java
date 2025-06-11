@@ -1010,7 +1010,7 @@ public class Css3ParserTest extends CssTestBase {
 //        String code = ".{} ";
 //        CssParserResult result = TestUtil.parse(code);
 //
-////        NodeUtil.dumpTree(result.getParseTree());
+// //        NodeUtil.dumpTree(result.getParseTree());
 //
 //        Node node = NodeUtil.query(result.getParseTree(),
 //                "styleSheet/body/bodyItem/"
@@ -1024,7 +1024,7 @@ public class Css3ParserTest extends CssTestBase {
 //        String code = "#{} ";
 //        CssParserResult result = TestUtil.parse(code);
 //
-////        NodeUtil.dumpTree(result.getParseTree());
+// //        NodeUtil.dumpTree(result.getParseTree());
 //
 //        //fails due to the scss_interpolation_expression rule being applied to the #{} input as it conforms
 //        //the semantic predicate looking for "#{"

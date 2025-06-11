@@ -164,11 +164,11 @@ public class ParentManagedDDBeanTableModel extends InnerTableModel {
 //            subPanel.init(getAppServerVersion(), 
 //                    GenericTablePanel.this.getWidth()*3/4, properties, extraData);
 //
-//// TODO accessibility for popup panels.  (help context as well?)            
-////            ((JPanel) subPanel).getAccessibleContext().setAccessibleName(
-////                resourceBundle.getString("ACSN_POPUP_" + resourceBase));	// NOI18N
-////            ((JPanel) subPanel).getAccessibleContext().setAccessibleDescription(
-////                resourceBundle.getString("ACSD_POPUP_" + resourceBase));	// NOI18N
+// // TODO accessibility for popup panels.  (help context as well?)            
+// //            ((JPanel) subPanel).getAccessibleContext().setAccessibleName(
+// //                resourceBundle.getString("ACSN_POPUP_" + resourceBase));	// NOI18N
+// //            ((JPanel) subPanel).getAccessibleContext().setAccessibleDescription(
+// //                resourceBundle.getString("ACSD_POPUP_" + resourceBase));	// NOI18N
 //        } catch(Exception ex) {
 //            // Coding error if we get here.
 //            ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ex);

@@ -568,7 +568,7 @@ public class ProjectUtilities {
         return toRet;
     }
     
-    /// Returns an deduplicated list of opened file URLs in encounter order for this project and group.
+    // Returns an deduplicated list of opened file URLs in encounter order for this project and group.
     private static List<String> getOpenFilesUrls(Project p, String groupName) {
         AuxiliaryConfiguration aux = ProjectUtils.getAuxiliaryConfiguration(p);
         

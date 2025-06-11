@@ -80,10 +80,7 @@ public abstract class GlassfishConfiguration implements
         MessageDestinationConfiguration,
         DatasourceConfiguration {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish Java EE common module Logger. */
     private static final Logger LOGGER = Logger.getLogger(GlassfishConfiguration.class.getName());
 
@@ -99,10 +96,7 @@ public abstract class GlassfishConfiguration implements
         "sun-resources" + RESOURCE_FILES_SUFFIX
     };
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Create resource file path fragment for given Java EE module.
      * <i>Internal helper method.</i>
@@ -231,10 +225,7 @@ public abstract class GlassfishConfiguration implements
         return Pair.of(module.getDeploymentConfigurationFile(name), true);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     protected final J2eeModule module;
     protected final J2eeModuleHelper moduleHelper;
     protected final File primarySunDD;
@@ -248,10 +239,7 @@ public abstract class GlassfishConfiguration implements
     private boolean deferredAppServerChange;
     private final String defaultcr;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of Java EE server configuration API support.
      * {@link J2eeModuleHelper} instance is added depending on Java EE module type.
@@ -375,10 +363,7 @@ public abstract class GlassfishConfiguration implements
         throw new UnsupportedOperationException("JSR-88 configuration not supported.");
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     public void dispose() {
         if(descriptorListener != null) {
             descriptorListener.removeListeners();

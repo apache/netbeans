@@ -203,7 +203,6 @@ public class JPQLExecutor {
                         final Elements elms = controller.getElements();
                         entityMappingsModel.runReadAction( (EntityMappingsMetadata metadata) -> {
                             ManagedTypeProvider mtp = new ManagedTypeProvider(project, metadata, elms);
-                            //////////////////////
                             DefaultJPQLQueryHelper  helper = new DefaultJPQLQueryHelper (DefaultJPQLGrammar.instance());
                             helper.setQuery(new org.netbeans.modules.j2ee.persistence.spi.jpql.Query(null, jpql0, mtp));
                             
@@ -211,7 +210,6 @@ public class JPQLExecutor {
                                 problems.addAll(helper.validate());
                             } catch (Exception ex) {
                             }
-                            /////////////////////
                             return null;
                         });
                     }

@@ -47,6 +47,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.WeakHashMap;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -73,7 +74,6 @@ import org.openide.util.BaseUtilities;
 import org.openide.util.Parameters;
 import org.openide.util.RequestProcessor;
 import org.openide.util.RequestProcessor.Task;
-import org.openide.util.WeakSet;
 import org.openide.xml.EntityCatalog;
 import org.openide.xml.XMLUtil;
 import org.xml.sax.Attributes;
@@ -118,7 +118,7 @@ final class ModuleList implements Stamps.Updater {
     private final Listener listener = new Listener();
     private FileChangeListener weakListener;
     /** atomic actions I have used to change Modules/*.xml */
-    private final Set<FileSystem.AtomicAction> myAtomicActions = Collections.<FileSystem.AtomicAction>synchronizedSet(new WeakSet<FileSystem.AtomicAction>(100));
+    private final Set<FileSystem.AtomicAction> myAtomicActions = Collections.<FileSystem.AtomicAction>synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>(100)));
     
     /** Create the list manager.
      * @param mgr the module manager which will actually control the modules at runtime
@@ -1506,7 +1506,7 @@ final class ModuleList implements Stamps.Updater {
         public Module module;
         /** XML file holding its status */
         public FileObject file;
-        /** timestamp of last modification to XML file that this class did */
+        /* timestamp of last modification to XML file that this class did */
         //public long lastApprovedChange;
         /** if true, this module was scanned and should be enabled but we are waiting for trigger */
         public boolean pendingInstall = false;

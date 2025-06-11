@@ -34,10 +34,7 @@ import static org.netbeans.modules.payara.tooling.admin.CommandHttpTest.payaraSe
  */
 public class CommandHttpResourcesTest extends CommandHttpTest {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Test methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Test GlasFissh administration HTTP command execution.
      */

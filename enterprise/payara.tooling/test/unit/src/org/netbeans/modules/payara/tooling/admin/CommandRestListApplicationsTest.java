@@ -34,10 +34,7 @@ import org.testng.annotations.Test;
  */
 public class CommandRestListApplicationsTest extends CommandRestTest {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Test methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Test GlasFissh administration REST command execution.
      */

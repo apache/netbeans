@@ -40,10 +40,7 @@ public class CommandRestInstanceTest extends CommandRestTest {
     private static final String NODE_NAME = "localhost-domain1";
     private static final String CLUSTER_NAME = "cluster1";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Test methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Test GlasFish start instance command via REST.
      */

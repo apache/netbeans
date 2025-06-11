@@ -32,7 +32,7 @@ public class ValidateActionTest extends AbstractCheckTest {
         super(testName);
     }
 
-    // TESTS ///////////////////////////////////////////////////////////////////
+    // TESTS
 
     // *** Not  well-formed ***
 
@@ -89,7 +89,7 @@ public class ValidateActionTest extends AbstractCheckTest {
         performAction("ValidSD.xml", 0);
     }
     
-    // LIBS ////////////////////////////////////////////////////////////////////
+    // LIBS
     
     /** Check all selected nodes. */
     protected QaIOReporter performAction(Node[] nodes) {
@@ -105,7 +105,7 @@ public class ValidateActionTest extends AbstractCheckTest {
         return reporter;
     }
     
-    // MAIN ////////////////////////////////////////////////////////////////////
+    // MAIN
     
 //    public static Test suite() {
 //        NbTestSuite suite = new NbTestSuite();

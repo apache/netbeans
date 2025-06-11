@@ -35,14 +35,11 @@ public class SumBodyTagHandler extends BodyTagSupport {
         super();
     }
     
-    ////////////////////////////////////////////////////////////////
-    ///                                                          ///
-    ///   User methods.                                          ///
-    ///                                                          ///
-    ///   Modify these methods to customize your tag handler.    ///
-    ///                                                          ///
-    ////////////////////////////////////////////////////////////////
-    
+    //
+    //   User methods.
+    //
+    //   Modify these methods to customize your tag handler.
+    //
     /**
      * Method called from doStartTag().
      * Fill in this method to perform other operations from doStartTag().
@@ -113,15 +110,12 @@ public class SumBodyTagHandler extends BodyTagSupport {
         bodyContent.clearBody();
     }
     
-    ////////////////////////////////////////////////////////////////
-    ///                                                          ///
-    ///   Tag Handler interface methods.                         ///
-    ///                                                          ///
-    ///   Do not modify these methods; instead, modify the       ///
-    ///   methods that they call.                                ///
-    ///                                                          ///
-    ////////////////////////////////////////////////////////////////
-    
+    //
+    //   Tag Handler interface methods.
+    //
+    //   Do not modify these methods; instead, modify the
+    //   methods that they call.
+    //
     /**
      * This method is called when the JSP engine encounters the start tag,
      * after the attributes are processed.

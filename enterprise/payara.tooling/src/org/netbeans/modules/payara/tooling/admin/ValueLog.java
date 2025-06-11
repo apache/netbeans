@@ -28,10 +28,7 @@ import org.netbeans.modules.payara.tooling.utils.Utils;
  */
 public class ValueLog {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Payara server log lines. */
     final List<String> lines;
 
@@ -46,10 +43,7 @@ public class ValueLog {
      */
     final String paramsAppendNext;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of Payara server log entity.
      * <p/>
@@ -66,10 +60,7 @@ public class ValueLog {
         this.paramsAppendNext = paramsAppendNext;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get Payara server log lines.
      * <p/>
@@ -88,10 +79,7 @@ public class ValueLog {
         return paramsAppendNext;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Convert stored server log lines to <code>String</code>.
      * <p>

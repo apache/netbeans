@@ -189,10 +189,7 @@ public final class ChangeParametersRefactoring extends AbstractRefactoring {
         this.overloadMethod = overloadMethod;
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // INNER CLASSES
-    ////////////////////////////////////////////////////////////////////////////
-    
     /**
      * Represents one item for setParameters(List params) list parameter.
      * Item contains information about changes in method parameters.
@@ -273,5 +270,4 @@ public final class ChangeParametersRefactoring extends AbstractRefactoring {
         public String getDefaultValue() { return defaultVal; }
     }
     
-    ////////////////////////////////////////////////////////////////////////////
 }

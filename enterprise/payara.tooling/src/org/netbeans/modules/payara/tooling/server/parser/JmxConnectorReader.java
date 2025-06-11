@@ -33,10 +33,7 @@ import org.xml.sax.SAXException;
  */
 public class JmxConnectorReader extends TargetConfigReader implements XMLReader {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(JmxConnectorReader.class);
 

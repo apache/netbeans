@@ -33,10 +33,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
  */
 public class RunnerHttpRedeploy extends RunnerHttp {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Redeploy command <code>target</code> parameter name. */
     private static final String TARGET_PARAM = "target";
 
@@ -64,10 +61,7 @@ public class RunnerHttpRedeploy extends RunnerHttp {
     /** Redeploy command <code>sourcesChanged</code> parameter name. */
     private static final String SOURCES_CHANGED_PARAM = "sourcesChanged";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Builds redeploy query string for given command.
      * <p/>
@@ -164,18 +158,12 @@ public class RunnerHttpRedeploy extends RunnerHttp {
         return sb.toString();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Holding data for command execution. */
     @SuppressWarnings("FieldNameHidesFieldInSuperclass")
     final CommandRedeploy command;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * HTTP interface.

@@ -37,10 +37,7 @@ import org.netbeans.modules.glassfish.tooling.utils.ServerUtils;
  */
 public class JavaEESet extends JavaSet {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Modules retrieved from XML elements. */
     private final List<JavaEEModuleReader.Module> modules;
 
@@ -53,10 +50,7 @@ public class JavaEESet extends JavaSet {
     /** Java EE platform check results cache. */
     private final Map<String, Boolean> checkResults;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of container of GlassFish JavaEE features
      * configuration.
@@ -81,10 +75,7 @@ public class JavaEESet extends JavaSet {
         this.checkResults = new HashMap<>(checks.size());
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get modules retrieved from XML elements.
      * <p/>
@@ -103,10 +94,7 @@ public class JavaEESet extends JavaSet {
         return profiles;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get existing cached check result or run a new check if no such cached
      * check result exists.

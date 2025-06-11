@@ -1672,7 +1672,7 @@ public class RepositoryUpdaterTest extends IndexingTestBase {
         logger.setLevel (Level.FINEST);
         logger.addHandler(handler);
 
-        ////1st) Default visibility everything should be scanned
+        //1st) Default visibility everything should be scanned
         indexerFactory.indexer.setExpectedFile(customFiles, new URL[0], new URL[0]);
         eindexerFactory.indexer.setExpectedFile(embeddedFiles, new URL[0], new URL[0]);
         final MutableClassPathImplementation mcpi1 = new MutableClassPathImplementation ();
@@ -1726,7 +1726,7 @@ public class RepositoryUpdaterTest extends IndexingTestBase {
         logger.setLevel (Level.FINEST);
         logger.addHandler(handler);
 
-        ////1st) Default visibility everything should be scanned
+        //1st) Default visibility everything should be scanned
         indexerFactory.indexer.setExpectedFile(customFiles, new URL[0], new URL[0]);
         eindexerFactory.indexer.setExpectedFile(embeddedFiles, new URL[0], new URL[0]);
         final MutableClassPathImplementation mcpi1 = new MutableClassPathImplementation         ();

@@ -35,10 +35,7 @@ import org.openide.util.Exceptions;
  */
 public class StartupArgsEntity implements StartupArgs {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command line arguments passed to bootstrap jar. */
     private List<String>payaraArgs;
 
@@ -54,10 +51,7 @@ public class StartupArgsEntity implements StartupArgs {
     /** Version of Java SDK used to run Payara. */
     private JDKVersion javaVersion;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs empty class instance. No default values are set.
      */
@@ -81,10 +75,7 @@ public class StartupArgsEntity implements StartupArgs {
         this.javaHome = javaHome;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get command line arguments passed to bootstrap jar.
      * <p/>

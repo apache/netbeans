@@ -261,10 +261,10 @@ public final class NativeExecutionService {
 
         FutureTask<Integer> runTask = new FutureTask<Integer>(callable) {
 
-            @Override
             /**
              * @return <tt>true</tt>
              */
+            @Override
             public boolean cancel(boolean mayInterruptIfRunning) {
                 synchronized (processRef) {
                     /*

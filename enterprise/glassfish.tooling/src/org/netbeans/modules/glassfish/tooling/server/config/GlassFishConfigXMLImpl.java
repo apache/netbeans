@@ -37,10 +37,7 @@ import org.netbeans.modules.glassfish.tooling.server.parser.TreeParser;
  */
 public class GlassFishConfigXMLImpl implements GlassFishConfig {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish configuration XML file. */
     private final URL configFile;
 
@@ -51,10 +48,7 @@ public class GlassFishConfigXMLImpl implements GlassFishConfig {
      *  was already read and processed */
     private volatile boolean readDone;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of GlassFish configuration API.
      * <p/>
@@ -65,10 +59,7 @@ public class GlassFishConfigXMLImpl implements GlassFishConfig {
         readDone = false;
     }
    
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get GlassFish libraries configuration.
      * <p/>
@@ -113,10 +104,7 @@ public class GlassFishConfigXMLImpl implements GlassFishConfig {
         return reader.getTools();
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Make sure GlassFish configuration XML file was read and processed.
      */

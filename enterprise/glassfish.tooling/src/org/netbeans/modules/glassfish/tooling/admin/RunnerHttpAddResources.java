@@ -27,10 +27,7 @@ import org.netbeans.modules.glassfish.tooling.data.GlassFishServer;
  */
 public class RunnerHttpAddResources extends RunnerHttp {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Builds add-resources query string for given command.
      * <p/>
@@ -50,10 +47,7 @@ public class RunnerHttpAddResources extends RunnerHttp {
         return sb.toString();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * HTTP interface.

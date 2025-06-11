@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-/**
+/*
  *	This generated bean class S2bConfig
  *	matches the schema element 's2bConfig'.
  *

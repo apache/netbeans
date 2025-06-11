@@ -26,35 +26,33 @@ import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.javascript2.vue.editor.VueLanguage;
+import static org.netbeans.modules.javascript2.vue.editor.embedding.VueCssEmbeddingProvider.TARGET_MIME_TYPE;
 import org.netbeans.modules.javascript2.vue.editor.lexer.VueTokenId;
 import org.netbeans.modules.parsing.api.Embedding;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.spi.EmbeddingProvider;
 
-/**
- * this will enable braces matches of html elements
- * 
- * @author bhaidu
- */
+
 @EmbeddingProvider.Registration(
         mimeType = VueLanguage.MIME_TYPE,
-        targetMimeType = "text/css")
+        targetMimeType = TARGET_MIME_TYPE)
 public class VueCssEmbeddingProvider extends EmbeddingProvider {
+
     public static final String TARGET_MIME_TYPE = "text/css"; //NOI18N
 
     @Override
     public List<Embedding> getEmbeddings(Snapshot snapshot) {
         TokenHierarchy<?> tokenHierarchy = snapshot.getTokenHierarchy();
         TokenSequence<?> ts = tokenHierarchy.tokenSequence();
-        
+
         if (ts == null || !ts.isValid()) {
             return Collections.emptyList();
         }
-        
+
         ts.moveStart();
-        
+
         List<Embedding> embeddings = new ArrayList<>();
-        
+
         while (ts.moveNext()) {
             Token<?> token = ts.token();
             TokenId id = token.id();
@@ -67,7 +65,6 @@ public class VueCssEmbeddingProvider extends EmbeddingProvider {
             return Collections.emptyList();
         }
         return Collections.singletonList(Embedding.create(embeddings));
-        
     }
 
     @Override

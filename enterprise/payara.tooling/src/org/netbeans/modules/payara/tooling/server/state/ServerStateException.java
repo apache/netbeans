@@ -27,10 +27,7 @@ import org.netbeans.modules.payara.tooling.PayaraIdeException;
  */
 public class ServerStateException extends PayaraIdeException {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of <code>ServerConfigException</code> without
      * detail message.

@@ -128,7 +128,7 @@ public class CompletionContextImpl extends CompletionContext {
         }
     }
 
-    ////////////////START CompletionContext Implementations////////////////
+    //START CompletionContext Implementations
     @Override
     public CompletionType getCompletionType() {
         return completionType;
@@ -163,7 +163,7 @@ public class CompletionContextImpl extends CompletionContext {
     public String getTypedChars() {
         return typedChars;
     }
-    ////////////////END CompletionContext Implementations////////////////
+    //END CompletionContext Implementations
 
     public boolean isSchemaAwareCompletion() {
         return (schemaLocation != null) || (noNamespaceSchemaLocation != null);

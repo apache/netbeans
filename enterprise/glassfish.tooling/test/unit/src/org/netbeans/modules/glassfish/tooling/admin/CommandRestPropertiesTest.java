@@ -34,10 +34,7 @@ import org.testng.annotations.Test;
  */
 public class CommandRestPropertiesTest extends CommandRestTest {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Test methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Test GlasFissh administration HTTP command execution.
      */

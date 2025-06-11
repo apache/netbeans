@@ -30,17 +30,11 @@ import java.util.Map;
 @RunnerRestClass(runner = RunnerRestCreateConnector.class)
 public class CommandCreateConnector extends CommandTarget {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for create connector resource command. */
     private static final String COMMAND = "create-connector-resource";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** The JNDI name of this connector resource. */
     final String jndiName;
 
@@ -54,10 +48,7 @@ public class CommandCreateConnector extends CommandTarget {
     final boolean enabled;
 
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of GlassFish server create connector resource
      * command entity.

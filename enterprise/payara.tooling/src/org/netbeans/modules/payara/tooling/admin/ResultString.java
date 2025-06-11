@@ -28,17 +28,11 @@ package org.netbeans.modules.payara.tooling.admin;
  */
 public class ResultString extends Result<String> {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Value returned by administration command execution. */
     String value;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara administration command result for
      * <code>String</code> result value.
@@ -47,10 +41,7 @@ public class ResultString extends Result<String> {
         super();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get value returned by administration command execution.
      * <p/>

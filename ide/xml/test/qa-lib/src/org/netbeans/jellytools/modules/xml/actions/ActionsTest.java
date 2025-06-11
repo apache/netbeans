@@ -41,12 +41,12 @@ public class ActionsTest extends JXTest {
         super(testName);
     }
     
-    // TESTS ///////////////////////////////////////////////////////////////////
+    // TESTS
     
     public void test() {
         //documentActionTest(new CheckDTDAction(), "PA",  "states");
         //documentActionTest(new CheckXMLAction(),    "PAS",  "XMLDocument");
-        ////documentActionTest(new EditScenariosAction(), "PASc",  "stylesheet"); //!!! #26559
+        // //documentActionTest(new EditScenariosAction(), "PASc",  "stylesheet"); //!!! #26559
         //documentActionTest(new GenerateCSSAction(), "PAc",  "states");
         //documentActionTest(new GenerateDOMTreeScannerAction(), "PAc",  "states");
         //documentActionTest(new GenerateDTDAction(), "PAc",  "XMLDocument");
@@ -79,7 +79,7 @@ public class ActionsTest extends JXTest {
         //catalogActionTest(new UnmountCatalogAction(), "PA",  "NetBeans Catalog"); 
     }
     
-    // LIB /////////////////////////////////////////////////////////////////////
+    // LIB
     
     /** @see actionTest(Action, String, Node) */
     private boolean catalogActionTest(Action action, String attrs, String treePath) {
@@ -146,7 +146,7 @@ public class ActionsTest extends JXTest {
         new NbDialogOperator("").cancel();
     }
     
-    // MAIN ////////////////////////////////////////////////////////////////////
+    // MAIN
     
     public static void main(String[] args) throws Exception {
         System.setProperty("xmltest.dbgTimeouts", "true");

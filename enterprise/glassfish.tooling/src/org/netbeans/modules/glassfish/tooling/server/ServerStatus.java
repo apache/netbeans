@@ -32,10 +32,7 @@ import java.net.Socket;
 import java.text.MessageFormat;
 import java.util.concurrent.*;
 import java.util.logging.Level;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.netbeans.modules.glassfish.tooling.data.GlassFishServer;
-import org.netbeans.modules.glassfish.tooling.data.GlassFishVersion;
 import org.netbeans.modules.glassfish.tooling.TaskEvent;
 import org.netbeans.modules.glassfish.tooling.logging.Logger;
 
@@ -50,10 +47,7 @@ import org.netbeans.modules.glassfish.tooling.logging.Logger;
  */
 public class ServerStatus implements Closeable {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Individual server check status returned.
      */
@@ -76,10 +70,7 @@ public class ServerStatus implements Closeable {
         /** Server status check failed because of unexpected fatal issue. */
         FATAL;
 
-        ////////////////////////////////////////////////////////////////////////
         // Methods                                                            //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Convert <code>Status</code> value to <code>String</code>.
          * <p/>
@@ -107,10 +98,7 @@ public class ServerStatus implements Closeable {
      */
     public static class Result {
 
-        ////////////////////////////////////////////////////////////////////////
         // Instance attributes                                                //
-        ////////////////////////////////////////////////////////////////////////
-
         /** Individual server status returned. */
         final Status status;
 
@@ -129,10 +117,7 @@ public class ServerStatus implements Closeable {
         /** Exception message. */
         private final String exceptionMeasage;
 
-        ////////////////////////////////////////////////////////////////////////
         // Constructors                                                       //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Creates an instance of individual server status result.
          * <p/>
@@ -232,10 +217,7 @@ public class ServerStatus implements Closeable {
             this(status, null, null, null);
         }
 
-        ////////////////////////////////////////////////////////////////////////
         // Getters                                                            //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Get individual check task status.
          * <p/>
@@ -287,17 +269,11 @@ public class ServerStatus implements Closeable {
      */
     public static class ResultLocations extends Result {
 
-        ////////////////////////////////////////////////////////////////////////
         // Instance attributes                                                //
-        ////////////////////////////////////////////////////////////////////////
-
         /** Command <code>__locations</code> execution result. */
         final ResultMap<String, String> result;
 
-        ////////////////////////////////////////////////////////////////////////
         // Constructors                                                       //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Creates an instance of individual server status result
          * for <code>__locations</code> command.
@@ -352,10 +328,7 @@ public class ServerStatus implements Closeable {
             this.result = null;
         }
 
-        ////////////////////////////////////////////////////////////////////////
         // Getters                                                            //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Get <code>__locations</code> command execution result.
          * <p/>
@@ -381,17 +354,11 @@ public class ServerStatus implements Closeable {
      */
     public static class ResultVersion extends Result {
 
-        ////////////////////////////////////////////////////////////////////////
         // Instance attributes                                                //
-        ////////////////////////////////////////////////////////////////////////
-
         /** Command <code>version</code> execution result. */
         final ResultString result;
 
-        ////////////////////////////////////////////////////////////////////////
         // Constructors                                                       //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Creates an instance of individual server status result
          * for <code>version</code> command.
@@ -446,10 +413,7 @@ public class ServerStatus implements Closeable {
             this.result = null;
         }
 
-        ////////////////////////////////////////////////////////////////////////
         // Getters                                                            //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Get <code>version</code> command execution result.
          * <p/>
@@ -466,10 +430,7 @@ public class ServerStatus implements Closeable {
      */
     private abstract static class Task implements TaskStateListener {
 
-        ////////////////////////////////////////////////////////////////////////
         // Static methods                                                     //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Format time value in miliseconds to be printed as value in seconds
          * and miliseconds <code>s.ms<code>.
@@ -486,10 +447,7 @@ public class ServerStatus implements Closeable {
             return sb.toString();
         }
 
-        ////////////////////////////////////////////////////////////////////////
         // Instance attributes                                                //
-        ////////////////////////////////////////////////////////////////////////
-
         /** GlassFish server to be tested. */
         final GlassFishServer server;
 
@@ -506,10 +464,7 @@ public class ServerStatus implements Closeable {
         /** Exception message filled by last state change. */
         String exceptionMeasage;
 
-        ////////////////////////////////////////////////////////////////////////
         // Constructors                                                       //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Creates an instance of common individual server status check.
          * <p/>
@@ -520,14 +475,8 @@ public class ServerStatus implements Closeable {
             this.tmStart = -1;
         }
 
-        ////////////////////////////////////////////////////////////////////////
         // Getters and setters                                                //
-        ////////////////////////////////////////////////////////////////////////
-
-        ////////////////////////////////////////////////////////////////////////
         // Methods                                                            //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Compute task result waiting timeout based on task start time, actual
          * time and minimal timeout limit.
@@ -579,17 +528,11 @@ public class ServerStatus implements Closeable {
      */
     private static class AdminPortTask extends Task {
 
-        ////////////////////////////////////////////////////////////////////////
         // Class attributes                                                   //
-        ////////////////////////////////////////////////////////////////////////
-
         /** Logger instance for this class. */
         private static final Logger LOGGER = new Logger(AdminPortTask.class);
 
-        ////////////////////////////////////////////////////////////////////////
         // Instance attributes                                                //
-        ////////////////////////////////////////////////////////////////////////
-
         /** Server administration interface host. */
         String host;
         
@@ -602,10 +545,7 @@ public class ServerStatus implements Closeable {
         /** Server administration port status check result. */
         private Result result;
 
-        ////////////////////////////////////////////////////////////////////////
         // Constructors                                                       //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Creates an instance of administration port status check.
          * <p/>
@@ -619,10 +559,7 @@ public class ServerStatus implements Closeable {
             this.timeout = timeout;
         }
 
-        ////////////////////////////////////////////////////////////////////////
         // Getters                                                            //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Get server administration port status check result.
          * <p/>
@@ -632,10 +569,7 @@ public class ServerStatus implements Closeable {
             return result;
         }
 
-        ////////////////////////////////////////////////////////////////////////
         // Methods                                                            //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Close socket and handle <code>IOException</code> that could
          * be thrown.
@@ -731,17 +665,11 @@ public class ServerStatus implements Closeable {
      */
     private static class LocationsTask extends Task {
 
-        ////////////////////////////////////////////////////////////////////////
         // Class attributes                                                   //
-        ////////////////////////////////////////////////////////////////////////
-
         /** Logger instance for this class. */
         private static final Logger LOGGER = new Logger(LocationsTask.class);
 
-        ////////////////////////////////////////////////////////////////////////
         // Instance attributes                                                //
-        ////////////////////////////////////////////////////////////////////////
-
         /** Locations command. */
         private final CommandLocation command;
 
@@ -758,10 +686,7 @@ public class ServerStatus implements Closeable {
          *  timeouts when <code>true</code>. */
         private final boolean startup;
 
-        ////////////////////////////////////////////////////////////////////////
         // Constructors                                                       //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Creates an instance of <code>__locations</code> server status check.
          * <p/>
@@ -775,10 +700,7 @@ public class ServerStatus implements Closeable {
             this.startup = startup;
         }
 
-        ////////////////////////////////////////////////////////////////////////
         // Getters                                                            //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Get <code>__locations</code> command status check result.
          * <p/>
@@ -788,10 +710,7 @@ public class ServerStatus implements Closeable {
             return result;
         }
 
-        ////////////////////////////////////////////////////////////////////////
         // Methods                                                            //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Start server Location task.
          */
@@ -872,17 +791,11 @@ public class ServerStatus implements Closeable {
      */
     private static class VersionTask extends Task {
 
-        ////////////////////////////////////////////////////////////////////////
         // Class attributes                                                   //
-        ////////////////////////////////////////////////////////////////////////
-
         /** Logger instance for this class. */
         private static final Logger LOGGER = new Logger(VersionTask.class);
 
-        ////////////////////////////////////////////////////////////////////////
         // Instance attributes                                                //
-        ////////////////////////////////////////////////////////////////////////
-
         /** Version command. */
         private final CommandVersion command;
 
@@ -899,10 +812,7 @@ public class ServerStatus implements Closeable {
          *  timeouts when <code>true</code>. */
         private final boolean startup;
 
-        ////////////////////////////////////////////////////////////////////////
         // Constructors                                                       //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Creates an instance of <code>version</code> server status check.
          * <p/>
@@ -917,10 +827,7 @@ public class ServerStatus implements Closeable {
         }
 
 
-        ////////////////////////////////////////////////////////////////////////
         // Getters                                                            //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Get <code>version</code> command status check result.
          * <p/>
@@ -930,10 +837,7 @@ public class ServerStatus implements Closeable {
             return result;
         }
 
-        ////////////////////////////////////////////////////////////////////////
         // Methods                                                            //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Start server Version task.
          */
@@ -1007,10 +911,7 @@ public class ServerStatus implements Closeable {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(ServerStatus.class);
 
@@ -1029,10 +930,7 @@ public class ServerStatus implements Closeable {
     /** Administration command execution timeout [ms] in startup mode. */
     private static final int COMAND_STARTUP_TIMEOUT = 600000;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Executor used to run asynchronous server status checks in parallel. */
     private final ExecutorService executor;
 
@@ -1048,13 +946,7 @@ public class ServerStatus implements Closeable {
      *  command. */
     private final LocationsTask locationsTask;
 
-    /** Asynchronous server status checks start time. Used for logging
-     *  purposes. Value of <code>-1</code> means that start time was not set. */
-
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of server status check.
      * <p/>
@@ -1072,10 +964,7 @@ public class ServerStatus implements Closeable {
         this.locationsTask = new LocationsTask(server, startup);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get server administration port status check result.
      * <p/>
@@ -1103,10 +992,7 @@ public class ServerStatus implements Closeable {
         return locationsTask.result;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Run asynchronous server status checks.
      * <p/>

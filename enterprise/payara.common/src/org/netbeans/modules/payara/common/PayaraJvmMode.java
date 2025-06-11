@@ -29,10 +29,7 @@ import org.openide.util.NbBundle;
  */
 public enum PayaraJvmMode {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Enum values                                                            //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Normal mode. */
     NORMAL,
 
@@ -42,10 +39,7 @@ public enum PayaraJvmMode {
     /** Profiling mode. */
     PROFILE;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = PayaraLogger.get(PayaraJvmMode.class);
@@ -71,10 +65,7 @@ public enum PayaraJvmMode {
             stringValuesMap.put(mode.toString().toUpperCase(), mode);
         }
     }
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-   
     /**
      * Returns a <code>PayaraJvmMode</code> with a value represented by the
      * specified <code>String</code>. The <code>PayaraJvmMode</code> returned
@@ -96,10 +87,7 @@ public enum PayaraJvmMode {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Convert <code>PayaraJvmMode</code> value to <code>String</code>.
      * <p/>

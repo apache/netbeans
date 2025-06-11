@@ -1,9 +1,9 @@
-Name: NetBeans Application Launchers
-Description: Windows Launchers for NetBeans Applications
-Version: 2-6c17cc6
+Name: Apache Maven Distribution
+Description: Apache Maven Distribution
+Version: 3.9.10
 License: Apache-2.0
-Source: https://netbeans.org/
-Origin: NetBeans
+Origin: Apache Software Foundation
+URL: https://maven.apache.org/
 
                                  Apache License
                            Version 2.0, January 2004

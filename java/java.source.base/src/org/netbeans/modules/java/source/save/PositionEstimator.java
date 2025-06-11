@@ -149,7 +149,6 @@ public abstract class PositionEstimator {
         return matrix; 
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // implementors
     static class ImplementsEstimator extends BaseEstimator {
         ImplementsEstimator(List<? extends Tree> oldL, 
@@ -956,10 +955,6 @@ public abstract class PositionEstimator {
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
-    
     /**
      * Provides position estimator for features in type declaration.
      */
@@ -1790,7 +1785,6 @@ public abstract class PositionEstimator {
         }
 
     }
-    ////////////////////////////////////////////////////////////////////////////
     // Utility methods
     @SuppressWarnings("empty-statement")
     int moveBelowGuarded(int pos) {

@@ -282,7 +282,7 @@ public abstract class DOMConvertor extends Convertor {
     }
     
    
-    // private impl //////////////////////////////////////////////////////////////
+    // private impl
     
     /** remember context for document */
     private static void setDocumentContext(Document doc, Lookup ctx) {

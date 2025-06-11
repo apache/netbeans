@@ -641,7 +641,8 @@ public class VersioningManager implements PropertyChangeListener, ChangeListener
     }
 
     public static synchronized void statusListener(VCSAnnotationListener listener, boolean add) {
-        WeakSet<VCSAnnotationListener> newSet = new WeakSet<>(statusListeners);
+        Set<VCSAnnotationListener> newSet = Collections.newSetFromMap(new WeakHashMap<>());
+        newSet.addAll(statusListeners);
         if (add) {
             newSet.add(listener);
         } else {

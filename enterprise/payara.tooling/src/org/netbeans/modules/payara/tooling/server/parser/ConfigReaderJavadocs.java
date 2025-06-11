@@ -29,20 +29,14 @@ import org.netbeans.modules.payara.tooling.server.parser.TreeParser.Path;
  */
 public class ConfigReaderJavadocs extends ConfigReader {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** <code>link</code> XML element reader. */
     private final LinkReader linkReader = new LinkReader();
 
     /** <code>lookup</code> XML element reader. */
     private final LookupReader lookupReader = new LookupReader();
 
-    ////////////////////////////////////////////////////////////////////////////
     // XML reader methods                                                     //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Provide paths to listen on.
      * <p/>
@@ -60,10 +54,7 @@ public class ConfigReaderJavadocs extends ConfigReader {
         return paths;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get links retrieved from XML elements.
      * <p/>
@@ -82,10 +73,7 @@ public class ConfigReaderJavadocs extends ConfigReader {
         return lookupReader.getLookups();
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Reset this XML element reader.
      */

@@ -40,10 +40,7 @@ import org.testng.annotations.Test;
 @Test(groups = {"unit-tests"})
 public class ProcessIOTest {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Generate process IO data for test.
      */
@@ -128,17 +125,11 @@ public class ProcessIOTest {
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(ProcessIOTest.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Close process IO streams.
      * <p/>
@@ -166,10 +157,7 @@ public class ProcessIOTest {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Test methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Test change administrator's password command execution using
      * local asadmin interface on GlassFish v3.

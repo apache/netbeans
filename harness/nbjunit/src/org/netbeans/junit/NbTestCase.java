@@ -1135,7 +1135,7 @@ public abstract class NbTestCase extends TestCase implements NbTest {
         try {
             return getFileLog(logName);
         } catch (IOException ioe) {
-            /// hey, file is not available - log will be made to System.out
+            // hey, file is not available - log will be made to System.out
             // we should probably write a little note about it
             //System.err.println("Test method "+this.getName()+" - cannot open file log to file:"+logName
             //                                +" - defaulting to System.out");

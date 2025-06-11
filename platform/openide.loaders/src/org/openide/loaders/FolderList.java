@@ -841,7 +841,7 @@ implements FileChangeListener, DataObject.Container {
         }
             
 
-        ////if (debug) System.out.println ("Notified: " + notified + " added: " + add.size () + " removed: " + remove.size ()); // NOI18N
+        //if (debug) System.out.println ("Notified: " + notified + " added: " + add.size () + " removed: " + remove.size ()); // NOI18N
         if (notify) {
             fireChildrenChange (add, remove.keySet ());
         }

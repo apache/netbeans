@@ -172,9 +172,7 @@ public abstract class Element extends AbstractElement implements AXIType {
         return getName();
     }
     
-    ////////////////////////////////////////////////////////////////////
-    ////////////////////////// member variables ////////////////////////
-    ////////////////////////////////////////////////////////////////////
+    // member variables
     protected String finalValue;
     protected String fixedValue;
     protected String defaultValue;
@@ -183,9 +181,7 @@ public abstract class Element extends AbstractElement implements AXIType {
     protected boolean isAbstract;
     protected boolean isNillable;
     
-    ////////////////////////////////////////////////////////////////////
-    ////////////////// Properties for firing events ////////////////////
-    ////////////////////////////////////////////////////////////////////
+    // Properties for firing events
     public static final String PROP_FINAL         = "final"; // NOI18N
     public static final String PROP_FIXED         = "fixed"; // NOI18N
     public static final String PROP_DEFAULT       = "default"; // NOI18N

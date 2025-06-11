@@ -29,18 +29,12 @@ import org.netbeans.modules.payara.common.PayaraInstance;
  */
 public class InstanceRemotePanel extends InstancePanel {
     
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = PayaraLogger.get(InstanceRemotePanel.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of remote Payara server properties editor.
      * <p/>
@@ -57,10 +51,7 @@ public class InstanceRemotePanel extends InstancePanel {
         domainField.setVisible(true);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Implemented abstract methods                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Remote host field initialization.
      * <p/>
@@ -95,10 +86,7 @@ public class InstanceRemotePanel extends InstancePanel {
         return hostRemoteField.getText().trim();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Enable form fields that can be modified by user.
      * <p/>

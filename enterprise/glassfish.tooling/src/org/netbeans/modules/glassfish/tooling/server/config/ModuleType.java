@@ -28,10 +28,7 @@ import java.util.Map;
  */
 public enum ModuleType {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Enum values                                                            //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** The module is an EAR archive. */
     EAR,
     /** The module is an Enterprise Java Bean archive. */
@@ -43,10 +40,7 @@ public enum ModuleType {
     /** The module is an Web Application archive. */
     WAR;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish JavaEE profile enumeration length. */
     public static final int length = ModuleType.values().length;
 
@@ -79,10 +73,7 @@ public enum ModuleType {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Returns a <code>ModuleType</code> with a value represented by the
      * specified <code>String</code>. The <code>ModuleType</code> returned
@@ -104,10 +95,7 @@ public enum ModuleType {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Convert module type name to <code>String</code>.
      * <p/>

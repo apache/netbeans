@@ -31,7 +31,6 @@ public final class PatternFilter {
     public static final int     IDXPROPERTY = 512;
     /** Specifies a child representing a event listener. */
     public static final int     EVENT_SET = 1024;
-    /** Specifies a child representing a method. */
 
     /** Does not specify a child type. */
     public static final int     ALL = PROPERTY | IDXPROPERTY | EVENT_SET;

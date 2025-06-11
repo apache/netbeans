@@ -73,7 +73,6 @@ public class JDKPanel extends DestinationPanel {
         }
     }
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Inner Classes
     public static class JDKDestinationPanelUi extends DestinationPanelUi {
         protected JDKPanel panel;
@@ -107,7 +106,7 @@ public class JDKPanel extends DestinationPanel {
             this.panel = panel;
         }
         
-        // protected ////////////////////////////////////////////////////////////////
+        // protected
         @Override
         protected void initialize() {            
             super.initialize();
@@ -161,7 +160,6 @@ public class JDKPanel extends DestinationPanel {
 
     }
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Constants
     
     public static final String DEFAULT_TITLE =

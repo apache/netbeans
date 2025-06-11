@@ -1423,7 +1423,6 @@ public final class TreeMaker {
         return delegate.Wildcard(kind, type);
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // AnnotationTree
     /**
      * Appends specified element <code>attrValue</code> to the end of attribute 

@@ -29,17 +29,11 @@ package org.netbeans.modules.payara.tooling.admin;
 @RunnerRestClass(runner=RunnerRestCreateCluster.class)
 public class CommandCreateCluster extends CommandTarget {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for create-cluster command. */
     private static final String COMMAND = "create-cluster";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server create-cluster command entity.
      * <p/>

@@ -1241,7 +1241,7 @@ public class XMLFileSystemTestHid extends TestBaseHid {
     private static String getObjectViaMethodValue1 () {
         return "";
     }
-///
+
     private static String getObjectViaMethodValue2 (String testName, FileObject fo) {
         return testName+fo.getPath();
     }
@@ -1257,7 +1257,7 @@ public class XMLFileSystemTestHid extends TestBaseHid {
     private static String getObjectViaMethodValue2 () {
         return "";
     }
-///
+
     private static String getObjectViaMethodValue3 (FileObject fo) {
         return fo.getPath();
     }
@@ -1269,7 +1269,7 @@ public class XMLFileSystemTestHid extends TestBaseHid {
     private static String getObjectViaMethodValue3 () {
         return "";
     }
-///
+
     private static String getObjectViaMethodValue4 (String testName) {
         return testName;
     }
@@ -1277,7 +1277,7 @@ public class XMLFileSystemTestHid extends TestBaseHid {
     private static String getObjectViaMethodValue4 () {
         return "";
     }
-///
+
     private static String getObjectViaMethodValue5 () {
         return "";
     }

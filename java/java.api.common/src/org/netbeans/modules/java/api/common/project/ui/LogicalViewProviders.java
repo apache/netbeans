@@ -530,7 +530,7 @@ public final class LogicalViewProviders {
 
         @Override
         public void removePropertyChangeListener(PropertyChangeListener listener) {
-            ////Immutable
+            //Immutable
         }
     }
 }

@@ -29,10 +29,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
  */
 public interface PayaraCloud {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Interface Methods                                                      //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get Payara cloud name.
      * <p/>

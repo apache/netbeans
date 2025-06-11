@@ -24,6 +24,7 @@ import java.awt.event.ActionListener;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -75,7 +76,7 @@ public final class Manager {
     /**
      * The current test sessions.
      */
-    private final Set<TestSession> testSessions = new WeakSet<TestSession>(5);
+    private final Set<TestSession> testSessions = Collections.newSetFromMap(new WeakHashMap<>(5));
 
     /**
      * if {@code true}, the window will only be promoted

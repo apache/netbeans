@@ -41,10 +41,7 @@ import org.netbeans.modules.glassfish.tooling.data.GlassFishVersion;
  */
 public class ConfigBuilderProvider {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-    
     /** Library builder default configuration file. */
     private static final URL CONFIG_V3
             = ConfigBuilderProvider.class.getResource("GlassFishV3.xml");
@@ -264,10 +261,7 @@ public class ConfigBuilderProvider {
     private static final ConcurrentMap<GlassFishServer, ConfigBuilder> builders
             = new ConcurrentHashMap<>(32);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get library builder configuration for given GlassFish server version.
      * <p/>

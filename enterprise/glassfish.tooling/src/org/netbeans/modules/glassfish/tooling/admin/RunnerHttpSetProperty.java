@@ -38,9 +38,7 @@ public class RunnerHttpSetProperty extends RunnerHttp {
                 command.format, command.property, command.value);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
     /**
      * Constructs an instance of administration command executor using
      * HTTP interface.

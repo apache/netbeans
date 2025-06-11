@@ -27,10 +27,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
  */
 public class RunnerHttpDeleteResource extends RunnerHttp {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER
             = new Logger(RunnerHttpDeleteResource.class);
@@ -57,9 +54,7 @@ public class RunnerHttpDeleteResource extends RunnerHttp {
         return query.toString();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
     /**
      * Constructs an instance of administration command executor using
      * HTTP interface.

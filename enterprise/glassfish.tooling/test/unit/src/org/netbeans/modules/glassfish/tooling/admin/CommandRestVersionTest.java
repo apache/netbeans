@@ -33,10 +33,7 @@ import org.testng.annotations.Test;
  */
 public class CommandRestVersionTest extends CommandRestTest {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Test methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Test GlasFissh admin REST command execution.
      */

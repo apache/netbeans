@@ -58,17 +58,11 @@ import org.openide.util.NbBundle;
  */
 public class RestartTask extends BasicTask<TaskState> {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER = GlassFishLogger.get(RestartTask.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** How long to wait after stopping server to let OS clean up resources. */
     @SuppressWarnings("FieldNameHidesFieldInSuperclass")
     private static final int RESTART_DELAY = 5000;
@@ -76,10 +70,7 @@ public class RestartTask extends BasicTask<TaskState> {
     /** Common support object for the server instance being restarted. */
     private final CommonServerSupport support;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of asynchronous GlassFish server restart command
      * execution support object.
@@ -93,10 +84,7 @@ public class RestartTask extends BasicTask<TaskState> {
         this.support = support;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Start local server that is offline.
      * <p/>
@@ -350,10 +338,7 @@ public class RestartTask extends BasicTask<TaskState> {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // ExecutorService call() Method                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Restart GlassFish server.
      * <p/>

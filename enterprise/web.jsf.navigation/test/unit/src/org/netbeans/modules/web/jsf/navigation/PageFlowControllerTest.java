@@ -719,13 +719,13 @@ public class PageFlowControllerTest extends NbTestCase {
 //            assertGC("PageFlowElement should be GC'ed", ref);
 //        }
 //
-////        Chain chain = scene.getActions();
-////        List<WidgetAction> actions = chain.getActions();
-////        for( WidgetAction action : actions ){
-////            if ( action instanceof MyActionMapAction) {
-////                assertGC("Actions should all be null as well." + action, new WeakReference(action));
-////            }
-////        }
+// //        Chain chain = scene.getActions();
+// //        List<WidgetAction> actions = chain.getActions();
+// //        for( WidgetAction action : actions ){
+// //            if ( action instanceof MyActionMapAction) {
+// //                assertGC("Actions should all be null as well." + action, new WeakReference(action));
+// //            }
+// //        }
 //
 //    }
 

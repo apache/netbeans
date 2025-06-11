@@ -178,7 +178,6 @@ public abstract class AbstractModeContainer implements ModeContainer {
         return kind;
     }
     
-    ////////////////////////
     // Support for TopComponentDroppable
     protected Shape getIndicationForLocation(Point location) {
         return tabbedHandler.getIndicationForLocation(location,
@@ -213,7 +212,5 @@ public abstract class AbstractModeContainer implements ModeContainer {
         return isNonEditor == thisIsNonEditor;
     }
     // Support for TopComponentDroppable
-    ////////////////////////
-
 }
 

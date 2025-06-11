@@ -31,10 +31,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class GlassFishExecutors {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * GlassFish log fetchers executor {@see ThreadFactory}.
      * <p/>
@@ -78,10 +75,7 @@ public class GlassFishExecutors {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Top level thread group name. */
     private static final String THREAD_GROUP_NAME_TOP = "GlassFish";
 
@@ -125,10 +119,7 @@ public class GlassFishExecutors {
             new LinkedBlockingQueue<Runnable>(),
             new FetchLogThreadFactory());
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods - class attributes initializers                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Initialize top level {@see ThreadGroup} object for threads being created
      * in thread factories.
@@ -169,10 +160,7 @@ public class GlassFishExecutors {
         return new ThreadGroup(tgTop, THREAD_GROUP_NAME_STAT);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * {@see ExecutorService} class instance for running log fetchers.
      * <p/>

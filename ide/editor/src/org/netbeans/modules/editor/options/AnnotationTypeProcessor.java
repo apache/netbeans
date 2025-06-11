@@ -134,8 +134,6 @@ public class AnnotationTypeProcessor implements XMLDataObject.Processor, Instanc
         return instanceClass().getName();
     }
 
-    ////////////////////////////////////////////////////////////////////////
-
     private synchronized AnnotationType parse() {
         if (annotationType == null) {
             AnnotationType at = new AnnotationType();

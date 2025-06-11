@@ -26,11 +26,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openide.util.BaseUtilities;
-import org.openide.util.WeakSet;
 
 /**
  *
@@ -186,7 +186,7 @@ implements FileChangeListener, Runnable, Callable<Boolean>, FileFilter {
         return hash;
     }
 
-    private Set<FileEvent> delivered = Collections.synchronizedSet(new WeakSet<FileEvent>());
+    private Set<FileEvent> delivered = Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
     private FileChangeListener get(FileEvent fe, boolean fromHolder) {
         if (removed) {
             return null;

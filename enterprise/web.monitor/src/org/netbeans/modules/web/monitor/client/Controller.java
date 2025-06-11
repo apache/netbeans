@@ -17,7 +17,7 @@
  * under the License.
  */
 
-/**
+/*
  * @author Ana von Klopp
  */
 

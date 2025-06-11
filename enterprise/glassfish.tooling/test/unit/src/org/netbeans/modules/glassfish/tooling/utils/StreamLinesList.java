@@ -38,27 +38,18 @@ import org.netbeans.modules.glassfish.tooling.server.FetchLog;
  */
 public class StreamLinesList {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Internal classes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Internal thread used to read lines from provided stream and store them
      * into list.
      */
     private static class LinesReader implements Runnable {
 
-        ////////////////////////////////////////////////////////////////////////
         // Class attributes                                                   //
-        ////////////////////////////////////////////////////////////////////////
-
         /** Logger instance for this class. */
         private static final Logger LOGGER = new Logger(LinesReader.class);
 
-        ////////////////////////////////////////////////////////////////////////
         // Instance attributes                                                //
-        ////////////////////////////////////////////////////////////////////////
-
         /** Stream from which data should be read. */
         private final BufferedReader in;
 
@@ -74,10 +65,7 @@ public class StreamLinesList {
         /** Stream was already closed notification. */
         private boolean closedStream;
 
-        ////////////////////////////////////////////////////////////////////////
         // Constructors                                                       //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Constructs an instance of stream reader class.
          * <p/>
@@ -92,10 +80,7 @@ public class StreamLinesList {
             this.closedStream = false;
         }
 
-        ////////////////////////////////////////////////////////////////////////
         // Methods                                                            //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Reads lines from stream and stores them into <code>List</code>
          * provided in constructor.
@@ -152,10 +137,7 @@ public class StreamLinesList {
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** List containing lines read from stream. */
     private final LinkedList<String> lines;
 
@@ -167,10 +149,7 @@ public class StreamLinesList {
     private Thread linesReaderThread;
 
     /** 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of log lines storage.
      * <p/>
@@ -193,10 +172,7 @@ public class StreamLinesList {
         this(fetchLog.getInputStream());
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Check if there is next line in the incoming log lines.
      * <p/>

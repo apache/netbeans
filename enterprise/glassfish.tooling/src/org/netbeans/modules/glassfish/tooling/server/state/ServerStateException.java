@@ -27,10 +27,7 @@ import org.netbeans.modules.glassfish.tooling.GlassFishIdeException;
  */
 public class ServerStateException extends GlassFishIdeException {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of <code>ServerConfigException</code> without
      * detail message.

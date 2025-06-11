@@ -360,7 +360,7 @@ public class CommandCompletionProvider implements CompletionProvider{
         public void query(CompletionResultSet resultSet) {
             String cmd = "/" + command + " ";
             String doc = shellTool.commandDocumentation(cmd, cmd.length(), false);
-////COMMENTED BY MERGE
+//COMMENTED BY MERGE
 //=======
 //            String doc = session.getJShellTool().commandDocumentation(cmd, cmd.length(), false);
 //>>>>>>> merge rev

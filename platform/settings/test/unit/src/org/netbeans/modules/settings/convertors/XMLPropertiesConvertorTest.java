@@ -150,11 +150,7 @@ public final class XMLPropertiesConvertorTest extends NbTestCase {
         assertEquals("Saver was not marked as dirty.", SaverImpl.DIRTY, s.state);
     }
     
-    //////////////////////////////////////////////////////////
     // Tests on SFS
-    //////////////////////////////////////////////////////////
-    
-    
     /** Checks whether the instance is the same.
      */
     public void testSame() throws Exception {

@@ -52,6 +52,7 @@ import org.openide.util.NbBundle.Messages;
  */
 public class ImageDataObject extends MultiDataObject implements CookieSet.Factory {
 
+    /** Generated serialized version UID. */
     @MIMEResolver.ExtensionRegistration(
         displayName="#ImageMimeResolverJPG",
         mimeType=ImageDataLoader.JPEG_MIME_TYPE,
@@ -60,9 +61,9 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
         position=110
     )
     @Messages("ImageMimeResolverJPG=JPEG Image Files")
-    /** Generated serialized version UID. */
     static final long serialVersionUID = -6035788991669336965L;
 
+    /** Base for image resource. */
     @MIMEResolver.ExtensionRegistration(
         displayName="#ImageMimeResolverGIF",
         mimeType=ImageDataLoader.GIF_MIME_TYPE,
@@ -71,9 +72,9 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
         position=111
     )
     @Messages("ImageMimeResolverGIF=GIF Image Files")
-    /** Base for image resource. */
     private static final String IMAGE_ICON_BASE = "org/netbeans/modules/image/imageObject.png"; // NOI18N
 
+    /** Open support for this image data object. */
     @MIMEResolver.ExtensionRegistration(
         displayName="#ImageMimeResolverPNG",
         mimeType=ImageDataLoader.PNG_MIME_TYPE,
@@ -82,8 +83,9 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
         position=112
     )
     @Messages("ImageMimeResolverPNG=PNG Image Files")
-    /** Open support for this image data object. */
     private transient ImageOpenSupport openSupport;
+
+    /** Print support for this image data object **/
     @MIMEResolver.ExtensionRegistration(
         displayName="#ImageMimeResolverBMP",
         mimeType=ImageDataLoader.BMP_MIME_TYPE,
@@ -92,7 +94,6 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
         position=113
     )
     @Messages("ImageMimeResolverBMP=BMP Image Files")
-    /** Print support for this image data object **/
     private transient ImagePrintSupport printSupport;
 
     /** Constructor.

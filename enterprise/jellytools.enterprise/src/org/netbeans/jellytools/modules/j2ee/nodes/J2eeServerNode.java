@@ -189,7 +189,7 @@ public class J2eeServerNode extends Node {
         return getServerState(ideNode);
     }
 
-    //// PRIVATE METHODS ////
+    // PRIVATE METHODS
     private static int getServerState(org.openide.nodes.Node node) {
         String displayName = node.getDisplayName();
         try {

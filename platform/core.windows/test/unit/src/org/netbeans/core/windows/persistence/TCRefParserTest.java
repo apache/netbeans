@@ -42,9 +42,7 @@ public class TCRefParserTest extends NbTestCase {
         super(testName);
     }
     
-    ////////////////////////////////
     //Testing CORRECT data
-    ////////////////////////////////
     /** Test of loaded data
      */
     public void testLoadTCRef00 () throws Exception {
@@ -186,9 +184,7 @@ System.out.println("tcrefcfg2: " + tcRefCfg2);
         System.out.println("TCRefParserTest.testSaveTCRef03 FINISH");
     }
     
-    ////////////////////////////////
     //Testing INCORRECT data
-    ////////////////////////////////
     /** Test of missing file
      */
     public void testLoadTCRef00Invalid () throws Exception {

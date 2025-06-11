@@ -152,10 +152,6 @@ public final class Stamps {
     public MappedByteBuffer asMappedByteBuffer(String cache) {
         return (MappedByteBuffer)asByteBuffer(cache, true, true);
     }
-        
-    /** Returns the stamp for this caches. 
-     * @return a date, each cache needs to be newer than this date
-     */
    
     /** Opens the access to cache object as a stream.
      * @param cache name of the cache

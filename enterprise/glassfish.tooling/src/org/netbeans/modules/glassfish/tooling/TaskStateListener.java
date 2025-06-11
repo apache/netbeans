@@ -25,10 +25,7 @@ package org.netbeans.modules.glassfish.tooling;
  */
 public interface TaskStateListener {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Interface Methods                                                      //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Callback to notify about GlassFish server administration command
      * execution state change.

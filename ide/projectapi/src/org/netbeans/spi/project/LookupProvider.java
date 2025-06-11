@@ -59,24 +59,28 @@ public interface LookupProvider {
     @Retention(RetentionPolicy.SOURCE)
     @Target({ElementType.TYPE, ElementType.METHOD})
     public @interface Registration {
+
         /**
          * Token(s) denoting one or more project types, e.g. org-netbeans-modules-maven or org-netbeans-modules-java-j2seproject
          * {@link LookupProviderSupport#createCompositeLookup} may be used with the path {@code Projects/TYPE/Lookup}.
          */
         String[] projectType() default {};
+
         /**
          * Alternate registration of project types with positions.
          * You must specify either this or {@link #projectType} (or both).
          * @since org.netbeans.modules.projectapi/1 1.22
          */
         ProjectType[] projectTypes() default {};
-        @Retention(RetentionPolicy.SOURCE)
-        @Target({})
+
         /**
          * Alternate individual registration for one project type.
          * @since org.netbeans.modules.projectapi/1 1.22
          */
+        @Retention(RetentionPolicy.SOURCE)
+        @Target({})
         @interface ProjectType {
+
             /**
              * Token denoting project type.
              * @see org.netbeans.spi.project.LookupProvider.Registration#projectType
@@ -84,6 +88,7 @@ public interface LookupProvider {
              * @see org.netbeans.spi.project.ProjectServiceProvider#projectType
              */
             String id();
+
             /**
              * Optional ordering.
              */

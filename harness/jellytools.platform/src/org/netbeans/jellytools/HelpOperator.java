@@ -95,16 +95,6 @@ public class HelpOperator extends WindowOperator {
         return new HelpOperator();
     }
 
-    /** invokes help with defined help set
-     * @param helpSet String help set name
-     * @return HelpOperator for invoked help */
-    /* Help set submenu not used for NetBeans 3.6.
-    public static HelpOperator invoke(String helpSet) {
-        new HelpAction(helpSet).perform();
-        return new HelpOperator(helpSet);
-    }
-     */
-
     /** Tries to find "" JButton in this dialog.
      * It throws TimeoutExpiredException when component not found
      * @return JButtonOperator

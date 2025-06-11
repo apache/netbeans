@@ -418,10 +418,7 @@ public final class RepositoryImpl<R, Q, I> {
         return repositoryProvider.getController(r);
     }
     
-    //////////////////////
     // Unsubmitted issues
-    //////////////////////
-    
     public Collection<IssueImpl> getUnsubmittedIssues () {
         Collection<I> issues = issueStatusProvider != null ? issueStatusProvider.getUnsubmittedIssues(r) : null;
         if (issues == null || issues.isEmpty()) {

@@ -114,9 +114,7 @@ public class JBDeploymentManager implements DeploymentManager {
         this.df = df;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Connection data methods
-    ////////////////////////////////////////////////////////////////////////////
     public String getHost() {
         String host = InstanceProperties.getInstanceProperties(realUri).
                 getProperty(JBPluginProperties.PROPERTY_HOST);
@@ -427,9 +425,7 @@ public class JBDeploymentManager implements DeploymentManager {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods for retrieving server instance state
-    ////////////////////////////////////////////////////////////////////////////
     /**
      * Returns true if the given instance properties are present in the map and value equals true.
      * Otherwise return false.
@@ -453,9 +449,7 @@ public class JBDeploymentManager implements DeploymentManager {
         }
         return as7;
     }
-    ////////////////////////////////////////////////////////////////////////////
     // DeploymentManager Implementation
-    ////////////////////////////////////////////////////////////////////////////
     public ProgressObject distribute(Target[] target, File file, File file2) throws IllegalStateException {
         if (isAs7()) {
             return new JB7Deployer(realUri, this).deploy(target, file, file2, getHost(), getPort());

@@ -130,18 +130,18 @@ public class CodeCompletionTest extends GroovyCCTestBase {
 //
 //
 //    // Package completion could not be tested at the moment, since this statement returns nothing for "java.n|":
-////    pkgSet = pathInfo.getClassIndex().getPackageNames(packageRequest.fullString, true, EnumSet.allOf(ClassIndex.SearchScope.class));
-//
-////    public void testKeywordImport2() throws Exception {
-////        checkCompletion(TEST_BASE + "KeywordImport2.groovy", "import java.n^", false);
-////        assertTrue(false);
-////    }
-//
-//
-////    Testing all completion possibilities for java.lang.String is broken
-//
-////    public void testClassMethodLocalStringConst1() throws Exception {
-////        checkCompletion(TEST_BASE + "ClassMethodLocalStringConst1.groovy", "\" ddd \".^", false);
-////    }
+//    pkgSet = pathInfo.getClassIndex().getPackageNames(packageRequest.fullString, true, EnumSet.allOf(ClassIndex.SearchScope.class));
+
+//    public void testKeywordImport2() throws Exception {
+//        checkCompletion(TEST_BASE + "KeywordImport2.groovy", "import java.n^", false);
+//        assertTrue(false);
+//    }
+
+
+//    Testing all completion possibilities for java.lang.String is broken
+
+//    public void testClassMethodLocalStringConst1() throws Exception {
+//        checkCompletion(TEST_BASE + "ClassMethodLocalStringConst1.groovy", "\" ddd \".^", false);
+//    }
 
 }

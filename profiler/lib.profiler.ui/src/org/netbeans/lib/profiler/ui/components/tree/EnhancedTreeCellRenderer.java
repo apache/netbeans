@@ -483,7 +483,7 @@ public class EnhancedTreeCellRenderer extends JPanel implements TreeCellRenderer
     // Overridden for performance reasons.
     public void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) {}
 
-    /// Overridden for performance reasons.
+    // Overridden for performance reasons.
     protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {}
 
     // ---

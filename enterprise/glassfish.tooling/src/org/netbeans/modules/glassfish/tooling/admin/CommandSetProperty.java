@@ -31,10 +31,7 @@ import org.netbeans.modules.glassfish.tooling.data.GlassFishServer;
 @RunnerRestClass(runner=RunnerRestSetProperty.class)
 public class CommandSetProperty extends Command {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for create-cluster command. */
     private static final String COMMAND = "set";
 
@@ -47,10 +44,7 @@ public class CommandSetProperty extends Command {
     private static final String ERROR_MESSAGE_MIDDLE
             = " of property ";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Build error message from command property name and it's value.
      * <p/>
@@ -121,10 +115,7 @@ public class CommandSetProperty extends Command {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-    
     /** Name of the property to set. */
     final String property;
     
@@ -134,10 +125,7 @@ public class CommandSetProperty extends Command {
     /** Format for the query string. */
     final String format;
     
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of GlassFish server set property command entity.
      * <p/>
@@ -166,10 +154,7 @@ public class CommandSetProperty extends Command {
         this.format = "DEFAULT={0}={1}";
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get name of the property to set.
      * <p/>

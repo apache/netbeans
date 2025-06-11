@@ -478,9 +478,14 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             if (k.startsWith(ENV_PREFIX) || k.startsWith(INTERNAL_PREFIX)) {
                 continue;
             }
+
+            String value=entry.getValue();
+            if ("test".equals(k)) {
+                value = fixTestReferences(value);
+            }
             //skip envs, these get filled in later.
             //#228901 since u21 we need to use cmd /c to execute on windows, quotes get escaped and when there is space in value, the value gets wrapped in quotes.
-            String value = quote2apos(entry.getValue());
+            value = quote2apos(value );
             String p = "-D" + entry.getKey() + "=" + value;
             String s = (Utilities.isWindows() && value.contains(" ") ? quote + p + quote : p);
             toRet.add(s);
@@ -996,4 +1001,56 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         }
 
     }
+
+    // solves issue#8533
+
+    /**
+     * Fixes the wrongly formatted 'test' property for maven single test cases.
+     *
+     * A single test in this case is running specific test classes or specific test method
+     * in such class instead of all tests in the project.
+     *
+     * To run such tests, maven needs a property (-Dtest=...) with a value that identifies
+     * the classes and optionally methods to be used.
+     *
+     * The property as passed to this MavenCommandLineExecutor is not well formed.
+     * Instead of using testClass#methodName it uses testClass#testClass.methodName which is
+     * not understood as intended by maven.
+     *
+     * Maven expects either {@code f.q.c.n.testclassName} to test said test class
+     *  or {@code f.q.c.n.testclassName#methodName}. In case of several methods in the same class,
+     *  those method names are joined with a plus '+' char e.g. {@code f.q.c.n.testclassName#testMethod1+testMethod2}.
+     *
+     * There is a test to this method in the unit test part of this project java/maven/test/unit/src/org/netbeans/modules/maven/execute/MavenCommandLineExecutorTest.java
+     * The test coordinate is {@code org.netbeans.modules.maven.execute.MavenCommandLineExecutorTest#testFixTestReferences1}
+     * @param value
+     * @return fixed value
+     */
+    static String fixTestReferences(String value) {
+        if (!value.contains("#")) {
+            // do not bother
+            return value;
         }
+        // split the test cases per class
+        String[] v = value.split(",");
+        for (int i = 0; i < v.length; i++) {
+            if (v[i].contains("#")) {
+                String[] split = v[i].split("[#+]");
+                // methodnames = split[1..n];
+                for (int j = 1; j < split.length; j++) {
+                    String string = split[j];
+                    int lastIndexOf = split[j].lastIndexOf(".");
+                    if (lastIndexOf > 0) {
+                        split[j] = split[j].substring(lastIndexOf + 1);
+                    }
+                }
+                v[i] = split[0] + '#' + split[1];
+                for (int j = 2; j < split.length; j++) {
+                    v[i] += '+' + split[j];
+                }
+            }
+        }
+        value = String.join(",", v);
+        return value;
+    }
+}

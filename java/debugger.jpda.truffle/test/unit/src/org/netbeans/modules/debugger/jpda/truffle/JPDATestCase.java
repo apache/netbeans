@@ -48,7 +48,7 @@ public abstract class JPDATestCase extends NbTestCase {
                 enableClasspathModules(false). 
                 clusters(".*").
                 // TODO remove once polyglot tests can run on JDK 17+ and uncomment the other line again
-                enableModules("(?!org.netbeans.modules.languages.hcl|org.netbeans.lib.nbjshell9|org.netbeans.lib.nbjshell|org.netbeans.libs.graalsdk.system).*").hideExtraModules(true).
+                enableModules("(?!org.netbeans.modules.languages.hcl|org.netbeans.libs.graalsdk.system).*").hideExtraModules(true).
 //                enableModules("org.netbeans.libs.nbjavacapi").
                 suite();
     }

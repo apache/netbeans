@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #6d6d6d;
+      }
+
+      .st1 {
+        fill: #ff791f;
+      }
+
+      .st2 {
+        fill: none;
+        stroke: #ff791f;
+        stroke-miterlimit: 10;
+      }
+
+      .st3 {
+        fill: #8d8d8d;
+      }
+
+      .st4 {
+        fill: #ececec;
+      }
+    </style>
+  </defs>
+  <g>
+    <polygon class="st4" points="1.5 14.5 1.5 .5 10.193 .5 13.5 3.807 13.5 14.5 1.5 14.5"/>
+    <path class="st0" d="M9.986,1l3.014,3.014v9.986H2V1h7.986M10.4,0H1v15h13V3.6l-3.6-3.6h0Z"/>
+  </g>
+  <polygon class="st3" points="13 5 13 4 10 4 10 1 9 1 9 5 13 5"/>
+  <line class="st2" x1="5.5" y1="6.5" x2="10" y2="11"/>
+  <rect class="st2" x="3.5" y="4.5" width="2" height="2"/>
+  <circle class="st1" cx="7.5" cy="8.5" r="1.5"/>
+  <rect class="st2" x="9.5" y="10.5" width="2" height="2"/>
+</svg>

@@ -16,3 +16,4 @@
 # under the License.
 
 90654F3E78EEA2876014468ED777CAF51F1F3B81 org.apache.tomcat:servlet-api:6.0.53
+2CD2ABB6768D760F3CD79ECF90DFF09D84F32B12 org.apache.tomcat:tomcat-servlet-api:11.0.7

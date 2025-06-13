@@ -195,10 +195,13 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
             (PayaraModule2)commonSupport : null);
         boolean restart = false;
         try {
-            restart = HttpMonitorHelper.synchronizeMonitor(commonSupport.getInstanceProperties().get(PayaraModule.DOMAINS_FOLDER_ATTR),
+            restart = HttpMonitorHelper.synchronizeMonitor(
+                    commonSupport.getInstanceProperties().get(PayaraModule.DOMAINS_FOLDER_ATTR),
                     commonSupport.getInstanceProperties().get(PayaraModule.DOMAIN_NAME_ATTR),
                     Boolean.parseBoolean(commonSupport.getInstanceProperties().get(PayaraModule.HTTP_MONITOR_FLAG)),
-                    "modules/org-netbeans-modules-schema2beans.jar");
+                    commonSupport.getInstance().getPlatformVersion().getMajor() > 5,
+                    "modules/org-netbeans-modules-schema2beans.jar"
+            );
         } catch (IOException | SAXException ex) {
             Logger.getLogger("payara-jakartaee").log(Level.WARNING, "http monitor state", ex);
         }
@@ -313,6 +316,7 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
                     commonSupport.getInstanceProperties().get(PayaraModule.DOMAINS_FOLDER_ATTR),
                     commonSupport.getInstanceProperties().get(PayaraModule.DOMAIN_NAME_ATTR),
                     Boolean.parseBoolean(commonSupport.getInstanceProperties().get(PayaraModule.HTTP_MONITOR_FLAG)),
+                    commonSupport.getInstance().getPlatformVersion().getMajor() > 5,
                     "modules/org-netbeans-modules-schema2beans.jar");
         } catch (IOException | SAXException ex) {
             Logger.getLogger("payara-jakartaee").log(Level.WARNING,"http monitor state",

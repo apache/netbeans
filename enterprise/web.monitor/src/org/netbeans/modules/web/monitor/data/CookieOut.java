@@ -21,7 +21,6 @@ package org.netbeans.modules.web.monitor.data;
 
 import java.beans.PropertyChangeListener;
 import java.util.Vector;
-import javax.servlet.http.Cookie;
 
 import org.netbeans.modules.schema2beans.BaseBean;
 import org.netbeans.modules.schema2beans.BeanComparator;
@@ -38,68 +37,39 @@ public class CookieOut extends BaseBean
 	this(Common.USE_DEFAULT_VALUES);
     }
 
-    public CookieOut(Cookie cookie) {
+    public CookieOut(String name, String value, int maxAge, int version, String domain, String path, String comment,boolean secure) {
 	super(CookieOut.comparators, new
 	org.netbeans.modules.schema2beans.Version(1, 0, 5));
 
 	// Note - the XML beans library does not treat NMTOKENS as
 	// special - they have to be set as strings! 
-	setAttributeValue("name", cookie.getName()); //NOI18N
-	setAttributeValue("value", cookie.getValue()); //NOI18N
-	setAttributeValue("maxAge", //NOI18N
-			  String.valueOf(cookie.getMaxAge()));
-	setAttributeValue("version", //NOI18N
-			  String.valueOf(cookie.getVersion()));
-
-	String domain = "";  //NOI18N
-	try { 
-	    domain = cookie.getDomain();
-	} 
-	catch(NullPointerException ne) {} 
+	setAttributeValue("name", name); //NOI18N
+	setAttributeValue("value", value); //NOI18N
+	setAttributeValue("maxAge", String.valueOf(maxAge)); //NOI18N
+	setAttributeValue("version", String.valueOf(version)); //NOI18N
 	if(domain != null) {
-	    if(domain.trim().equals("")) //NOI18N
+	    if(domain.trim().equals("")) { //NOI18N
 		setAttributeValue("domain", ""); //NOI18N
-	    else 
+            } else {
 		setAttributeValue("domain", domain);  //NOI18N
+            }
 	}
-
-	String path = "";  //NOI18N
-	try { 
-	    path = cookie.getPath();
-	} 
-	catch(NullPointerException ne) {} 
 	if(path != null) {
-	    if(path.trim().equals("")) //NOI18N
+	    if(path.trim().equals("")) { //NOI18N
 		setAttributeValue("path", ""); //NOI18N
-	    else 
+            } else {
 		setAttributeValue("path", path); //NOI18N
+            }
 	}
-
-	String comment = "";  //NOI18N
-	try { 
-	    comment = cookie.getComment();
-	} 
-	catch(NullPointerException ne) {} 
 	if(comment != null) {
 	    if(comment.trim().equals("")) //NOI18N
 		setAttributeValue("comment", ""); //NOI18N
 	    else 
 		setAttributeValue("comment", comment);  //NOI18N
 	}
-	
-	int version = cookie.getVersion();   
-	// XML Beans...
-	if(version != 0) setAttributeValue("version", //NOI18N
-					   String.valueOf(version));  
-      
-	try { 
-	    if(cookie.getSecure()) 
-		// XMLBeans library... 
-		setAttributeValue("secure", //NOI18N
-				  String.valueOf(cookie.getSecure())); 
-	    
-	}
-	catch(Exception exc) {}
+        if(secure) {
+            setAttributeValue("secure", String.valueOf(secure)); //NOI18N
+        }
     }
 
 

@@ -17,6 +17,17 @@
  * under the License.
  */
 
+package org.netbeans.modules.web.monitor.server;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.Enumeration;
+import java.util.Vector;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+
 /**
  * MonitorResponseWrapper.java
  *
@@ -26,16 +37,6 @@
  * @author Ana von Klopp
  * @version
  */
-
-package org.netbeans.modules.web.monitor.server;
-
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-
 public class MonitorResponseWrapper extends HttpServletResponseWrapper {
 
     private Vector cookies = null;
@@ -167,8 +168,17 @@ public class MonitorResponseWrapper extends HttpServletResponseWrapper {
      *
      */
     public void setStatus (int code, String msg) {
-	this.status = code;
-	response.setStatus(code, msg); 
+        this.status = code;
+        try {
+            Method m = HttpServletResponse.class.getMethod("setStatus", new Class<?>[]{int.class, String.class});
+            m.invoke(this, code, msg);
+        } catch (ReflectiveOperationException ex) {
+            // The reflective call is needed to be able to recompile this class
+            // with modified imports to work in jakarta servlet. When this
+            // method is invoked, it must me resolveable, else the Caller would
+            // not be able to be loaded. The method is public, so permissions
+            // should not be a problem.
+        }
     }
 
     /**

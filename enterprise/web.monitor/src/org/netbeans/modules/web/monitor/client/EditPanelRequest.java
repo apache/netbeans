@@ -30,11 +30,10 @@
 
 package org.netbeans.modules.web.monitor.client;
 
-import java.awt.event.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import java.util.ResourceBundle;
 import java.util.Hashtable;
+import javax.servlet.http.HttpUtils;
 import org.openide.util.NbBundle;
 import org.netbeans.modules.web.monitor.data.*;
 
@@ -167,7 +166,7 @@ class EditPanelRequest extends DataDisplay {
 				String queryString =
 				    rd.getAttributeValue("queryString"); //NOI18N 
 				Hashtable ht =
-				    javax.servlet.http.HttpUtils.parseQueryString(queryString); 
+				    HttpUtils.parseQueryString(queryString); 
 				rd.setAttributeValue("queryString", ""); //NOI18N 
 			    }
 			    catch(Exception ex) { }

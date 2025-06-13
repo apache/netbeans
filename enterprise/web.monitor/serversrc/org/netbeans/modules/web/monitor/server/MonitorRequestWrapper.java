@@ -17,24 +17,25 @@
  * under the License.
  */
 
-/**
- * @author Ana von Klopp
- * @author Simran Gleason
- */
-
 package org.netbeans.modules.web.monitor.server;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.StringTokenizer;
 import java.util.Vector;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpUtils;
 import org.netbeans.modules.web.monitor.data.RequestData;
 import org.netbeans.modules.web.monitor.data.Param;
 
@@ -463,7 +464,7 @@ public class MonitorRequestWrapper extends HttpServletRequestWrapper {
 	if(localMethod.equals("GET")) { //NOI18N
 
 	    try {
-		localParams = HttpUtils.parseQueryString(localQueryString);
+		localParams = parseQueryString(localQueryString);
 	    }
 	    catch(Exception ex) {
 		// This utility doesn't like query strings that aren't 
@@ -475,7 +476,7 @@ public class MonitorRequestWrapper extends HttpServletRequestWrapper {
 	else if(localMethod.equals("POST")) { // NOI18N
 
 	    try {
-		localParams = HttpUtils.parseQueryString(localQueryString);
+		localParams = parseQueryString(localQueryString);
 	    }
 	    catch(Exception ex) {
 		// This utility doesn't like query strings that aren't 
@@ -884,4 +885,37 @@ public class MonitorRequestWrapper extends HttpServletRequestWrapper {
 	System.out.println("MonitorRequestWrapper::" + s); // NOI18N
     }
 
+    private Hashtable<String, String[]> parseQueryString(String queryString) {
+        Map<String, List<String>> resultPrep = new HashMap<>();
+        StringTokenizer st = new StringTokenizer(queryString, "&");
+        while (st.hasMoreTokens()) {
+            try {
+                String pair = st.nextToken();
+                int pos = pair.indexOf('=');
+
+                String key;
+                String val;
+                if (pos >= 0) {
+                    key = URLDecoder.decode(pair.substring(0, pos), "UTF-8");
+                    val = URLDecoder.decode(pair.substring(pos + 1, pair.length()), "UTF-8");
+                } else {
+                    key = URLDecoder.decode(pair, "UTF-8");
+                    val = "";
+                }
+                List<String> valueList = resultPrep.get(key);
+                if (valueList == null) {
+                    valueList = new ArrayList<>();
+                    resultPrep.put(key, valueList);
+                }
+                valueList.add(val);
+            } catch (UnsupportedEncodingException ex) {
+                // Ignore - lets assume UTF-8 is supported everywhere
+            }
+        }
+        Hashtable<String, String[]> result = new Hashtable<>();
+        for (String key : resultPrep.keySet()) {
+            result.put(key, (String[]) resultPrep.get(key).toArray());
+        }
+        return result;
+    }
 } // MonitorRequestWrapper

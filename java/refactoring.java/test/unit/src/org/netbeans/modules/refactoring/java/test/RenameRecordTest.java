@@ -382,6 +382,50 @@ public class RenameRecordTest extends RefactoringTestBase {
                                     """));
 
     }
+
+    public void testRenameWithSwitchAndWhen() throws Exception {
+        String testCode = """
+                package test;
+                public class Test {
+                    record R|A() {
+                    }
+                    void method(Object o) {
+                        switch(o) {
+                            case Integer i when i == 0 -> {
+                                var r = new RA();
+                            }
+                            default -> {
+                            }
+                        }
+                    }
+                }
+                """;
+        TestInput splitCode = TestUtilities.splitCodeAndPos(testCode);
+        writeFilesAndWaitForScan(src,
+                new File("Test.java", splitCode.code()));
+
+        JavaRenameProperties props = new JavaRenameProperties();
+        performRename(src.getFileObject("Test.java"), splitCode.pos(), "RB", props, true);
+
+        verifyContent(src, new File("Test.java",
+                """
+                package test;
+                public class Test {
+                    record RB() {
+                    }
+                    void method(Object o) {
+                        switch(o) {
+                            case Integer i when i == 0 -> {
+                                var r = new RB();
+                            }
+                            default -> {
+                            }
+                        }
+                    }
+                }
+                """));
+    }
+    
     private void performRename(FileObject source, final int absPos, final String newname, final JavaRenameProperties props, final boolean searchInComments, Problem... expectedProblems) throws Exception {
         final RenameRefactoring[] r = new RenameRefactoring[1];
         JavaSource.forFileObject(source).runUserActionTask(new Task<CompilationController>() {

@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JButton;
@@ -86,6 +87,7 @@ public class BrowseFolders extends javax.swing.JPanel implements ExplorerManager
     }
 
     // ExplorerManager.Provider implementation ---------------------------------
+    @Override
     public ExplorerManager getExplorerManager() {
         return manager;
     }
@@ -130,7 +132,7 @@ public class BrowseFolders extends javax.swing.JPanel implements ExplorerManager
     // End of variables declaration//GEN-END:variables
 
     public static FileObject showDialog(SourceGroup[] folders) {
-        List<FileObject> roots = new LinkedList<FileObject>();
+        List<FileObject> roots = new LinkedList<>();
         for (SourceGroup sourceGroup : folders) {
             roots.add(sourceGroup.getRootFolder());
         }
@@ -280,10 +282,10 @@ public class BrowseFolders extends javax.swing.JPanel implements ExplorerManager
         }
     }
 
-    private final class FileObjectsChildren extends Children.Keys {
+    private final class FileObjectsChildren extends Children.Keys<FileObject> {
 
-        private FileObject[] roots;
-        private Naming naming;
+        private final FileObject[] roots;
+        private final Naming naming;
 
         public FileObjectsChildren(FileObject[] roots, Naming naming) {
             this.roots = roots;
@@ -298,20 +300,23 @@ public class BrowseFolders extends javax.swing.JPanel implements ExplorerManager
 
         @Override
         protected void removeNotify() {
-            setKeys(Collections.EMPTY_SET);
+            setKeys(Collections.emptySet());
             super.removeNotify();
         }
 
         @Override
-        protected Node[] createNodes(Object key) {
-            FileObject fObj = (FileObject) key;
-
+        protected Node[] createNodes(FileObject fObj) {
             try {
                 DataObject dobj = DataObject.find(fObj);
                 String name = naming != null ? naming.getName(fObj.getPath(), fObj.getName()) : null;
-                FilterNode fn = !fObj.isFolder()
-                        ? new SimpleFilterNode(dobj.getNodeDelegate(), Children.LEAF, name)
-                        : new SimpleFilterNode(dobj.getNodeDelegate(), new FileObjectsChildren(fObj.getChildren(), null), name);
+                FilterNode fn;
+                if (fObj.isFolder()) {
+                    FileObject[] children = fObj.getChildren();
+                    Arrays.sort(children, Comparator.comparing(FileObject::isData).thenComparing(FileObject::getName));
+                    fn = new SimpleFilterNode(dobj.getNodeDelegate(), new FileObjectsChildren(children, null), name);
+                } else {
+                    fn = new SimpleFilterNode(dobj.getNodeDelegate(), Children.LEAF, name);
+                }
 
                 return new Node[]{fn};
             } catch (DataObjectNotFoundException e) {
@@ -319,7 +324,7 @@ public class BrowseFolders extends javax.swing.JPanel implements ExplorerManager
             }
         }
 
-        private Collection getKeys() {
+        private Collection<FileObject> getKeys() {
             return Arrays.asList(roots);
         }
     }
@@ -352,7 +357,7 @@ public class BrowseFolders extends javax.swing.JPanel implements ExplorerManager
             if (COMMAND_SELECT.equals(command)) {
                 Node[] selection = browsePanel.getExplorerManager().getSelectedNodes();
                 if (selection != null && selection.length > 0) {
-                    DataObject dobj = (DataObject) selection[0].getLookup().lookup(DataObject.class);
+                    DataObject dobj = selection[0].getLookup().lookup(DataObject.class);
                     result = dobj.getPrimaryFile();
                 }
             }

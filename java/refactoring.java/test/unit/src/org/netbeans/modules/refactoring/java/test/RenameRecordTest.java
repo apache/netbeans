@@ -383,6 +383,7 @@ public class RenameRecordTest extends RefactoringTestBase {
 
     }
 
+    // show issue #8495
     public void testRenameWithSwitchAndWhen() throws Exception {
         String testCode = """
                 package test;
@@ -392,7 +393,7 @@ public class RenameRecordTest extends RefactoringTestBase {
                     void method(Object o) {
                         switch(o) {
                             case Integer i when i == 0 -> {
-                                var r = new RA();
+                                RA r = new RA();
                             }
                             default -> {
                             }
@@ -416,7 +417,7 @@ public class RenameRecordTest extends RefactoringTestBase {
                     void method(Object o) {
                         switch(o) {
                             case Integer i when i == 0 -> {
-                                var r = new RB();
+                                RB r = new RB();
                             }
                             default -> {
                             }

@@ -95,8 +95,7 @@ public class DukeScriptWizard {
         final ArchetypeData koArch = new ArchetypeData(
                 "knockout4j-archetype",
                 "com.dukescript.archetype",
-                true,
-                "0.23",
+                true, MAVEN_ARCHETYPES_VERSION,
                 "Basic DukeScript Template", "Default skeletal application",
                 null
         );
@@ -105,8 +104,7 @@ public class DukeScriptWizard {
         final ArchetypeData crudArch = new ArchetypeData(
                 "crud4j-archetype",
                 "com.dukescript.archetype",
-                false,
-                "0.23",
+                false, MAVEN_ARCHETYPES_VERSION,
                 "DukeScript CRUD Template", "Client-Server Application demonstrating communication and reuse of DataModels",
                 null
         );
@@ -114,8 +112,7 @@ public class DukeScriptWizard {
         final ArchetypeData visArch = new ArchetypeData(
                 "visual-archetype",
                 "com.dukescript.archetype",
-                false,
-                "0.23",
+                false, MAVEN_ARCHETYPES_VERSION,
                 "DukeScript Visual Archetype", "A sample application demonstrating Canvas, Charts & Maps",
                 null
         );
@@ -125,6 +122,7 @@ public class DukeScriptWizard {
         data.loadArchetypes(srvPath);
         data.setAndroidSdkPath(MavenUtilities.getDefault().readAndroidSdkPath());
     }
+    private static final String MAVEN_ARCHETYPES_VERSION = "0.41";
 
     @ComputedProperty
     static String archetypeGroupId(ArchetypeData archetype) {

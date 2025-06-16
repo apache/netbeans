@@ -50,12 +50,7 @@ class RecordOwnerLockFactory extends LockFactory {
     @Override
     public Lock makeLock(String lockName) {
         synchronized (locks) {
-            RecordOwnerLock res = locks.get(lockName);
-            if (res == null) {
-                res = new RecordOwnerLock();
-                locks.put(lockName, res);
-            }
-            return res;
+            return locks.computeIfAbsent(lockName, k -> new RecordOwnerLock());
         }
     }
 

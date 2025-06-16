@@ -111,7 +111,7 @@ public class NativeFSLockFactoryTest extends NbTestCase {
         try {
             index.store(
                 dataSet,
-                Collections.<String>emptySet(),
+                Collections.emptySet(),
                 new Convertor<Integer, Document>() {
                     @Override
                     public Document convert(Integer p) {
@@ -142,7 +142,7 @@ public class NativeFSLockFactoryTest extends NbTestCase {
 
 
     private static Collection<? extends Integer> generateDataSet(final int count) {
-        final List<Integer> res = new ArrayList<Integer>(count);
+        final List<Integer> res = new ArrayList<>(count);
         for (int i=0; i< count; i++) {
             res.add(i);
         }

@@ -35,7 +35,7 @@ public interface StoppableConvertor<P,R> {
     
     /**
      * Converts given object
-     * @param p the object to be converted
+     * @param param the object to be converted
      * @return the result of conversion
      * @throws Stop to stop the index iteration
      */

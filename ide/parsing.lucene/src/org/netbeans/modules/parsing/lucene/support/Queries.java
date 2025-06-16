@@ -306,57 +306,50 @@ public final class Queries {
 
     // <editor-fold defaultstate="collapsed" desc="Private implementation">
     private static Query createQueryImpl(
-            final @NonNull String fieldName,
-            final @NonNull String caseInsensitiveFieldName,
-            final @NonNull String value,
-            final @NonNull QueryKind kind,
-            final @NonNull QueryFactory f,
-            final @NonNull Map<String,Object> options) {
-        switch (kind) {
-            case EXACT:
-                    return f.createTermQuery(fieldName, value);
-            case PREFIX:
-                if (value.length() == 0) {
-                    return f.createAllDocsQuery(fieldName);
-                }
-                else {
-                    return f.createPrefixQuery(fieldName, value);
-                }
-            case CASE_INSENSITIVE_PREFIX:
-                if (value.length() == 0) {
-                    return f.createAllDocsQuery(caseInsensitiveFieldName);
-                }
-                else {
-                    return f.createPrefixQuery(caseInsensitiveFieldName, value.toLowerCase());
-                }
-            case CAMEL_CASE:
-                if (value.length() == 0) {
+            @NonNull String fieldName,
+            @NonNull String caseInsensitiveFieldName,
+            @NonNull String value,
+            @NonNull QueryKind kind,
+            @NonNull QueryFactory f,
+            @NonNull Map<String,Object> options) {
+
+        return switch (kind) {
+            case EXACT -> f.createTermQuery(fieldName, value);
+            case PREFIX ->
+                value.isEmpty()
+                    ? f.createAllDocsQuery(fieldName)
+                    : f.createPrefixQuery(fieldName, value);
+            case CASE_INSENSITIVE_PREFIX ->
+                value.isEmpty()
+                    ? f.createAllDocsQuery(caseInsensitiveFieldName)
+                    : f.createPrefixQuery(caseInsensitiveFieldName, value.toLowerCase());
+            case CAMEL_CASE -> {
+                if (value.isEmpty()) {
                     throw new IllegalArgumentException ();
                 } else {
-                    return f.createRegExpQuery(fieldName,createCamelCaseRegExp(value, getOption(options, OPTION_CAMEL_CASE_SEPARATOR, String.class), getOption(options, OPTION_CAMEL_CASE_PART, String.class), true), true);
+                    yield f.createRegExpQuery(fieldName,createCamelCaseRegExp(value, getOption(options, OPTION_CAMEL_CASE_SEPARATOR, String.class), getOption(options, OPTION_CAMEL_CASE_PART, String.class), true), true);
                 }
-            case CASE_INSENSITIVE_REGEXP:
-                if (value.length() == 0) {
+            }
+            case CASE_INSENSITIVE_REGEXP -> {
+                if (value.isEmpty()) {
                     throw new IllegalArgumentException ();
                 } else {
-                    return f.createRegExpQuery(caseInsensitiveFieldName, value.toLowerCase(), false);
+                    yield f.createRegExpQuery(caseInsensitiveFieldName, value.toLowerCase(), false);
                 }
-            case REGEXP:
-                if (value.length() == 0) {
+            }
+            case REGEXP -> {
+                if (value.isEmpty()) {
                     throw new IllegalArgumentException ();
                 } else {
-                    return f.createRegExpQuery(fieldName, value, true);
+                    yield f.createRegExpQuery(fieldName, value, true);
                 }
-            case CASE_INSENSITIVE_CAMEL_CASE:
-                if (value.length() == 0) {
-                    //Special case (all) handle in different way
-                    return f.createAllDocsQuery(caseInsensitiveFieldName);
-                } else {
-                    return f.createRegExpQuery(caseInsensitiveFieldName, createCamelCaseRegExp(value, getOption(options, OPTION_CAMEL_CASE_SEPARATOR, String.class), getOption(options, OPTION_CAMEL_CASE_PART, String.class), false), false);
-                }
-            default:
-                throw new UnsupportedOperationException (kind.toString());
-        }
+            }
+            case CASE_INSENSITIVE_CAMEL_CASE -> 
+                value.isEmpty() 
+                        ? f.createAllDocsQuery(caseInsensitiveFieldName) //Special case (all) handle in different way
+                        : f.createRegExpQuery(caseInsensitiveFieldName, createCamelCaseRegExp(value, getOption(options, OPTION_CAMEL_CASE_SEPARATOR, String.class), getOption(options, OPTION_CAMEL_CASE_PART, String.class), false), false);
+            default -> throw new UnsupportedOperationException(kind.toString());
+        };
     }
 
     @CheckForNull
@@ -381,8 +374,8 @@ public final class Queries {
             @NonNull final String text,
             final int offset,
             @NonNull final Pattern separator) {
-        Matcher m;
-        if ((m = separator.matcher(text)).find(offset)) {
+        Matcher m = separator.matcher(text);
+        if (m.find(offset)) {
             return m.start();
         }
         return -1;
@@ -408,8 +401,7 @@ public final class Queries {
                 final OpenBitSet bitSet = new OpenBitSet(reader.maxDoc());
                 final int[] docs = new int[32];
                 final int[] freqs = new int[32];
-                final TermDocs termDocs = reader.termDocs();
-                try {
+                try (TermDocs termDocs = reader.termDocs()) {
                     do {
                         final Term term = enumerator.term();
                         if (term == null) {
@@ -430,8 +422,6 @@ public final class Queries {
                             }
                         }
                     } while (enumerator.next());
-                } finally {
-                    termDocs.close();
                 }
                 return bitSet;
             } finally {
@@ -516,6 +506,7 @@ public final class Queries {
             this.startPrefix = getStartText(regexp);
         }
 
+        @Override
         protected FilteredTermEnum getTermEnum(final @NonNull IndexReader reader) throws IOException {
             return new RegexpTermEnum(reader, fieldName, pattern, startPrefix);
         }
@@ -562,6 +553,7 @@ public final class Queries {
             this.term = new Term(fieldName, prefix);
         }
 
+        @Override
         protected FilteredTermEnum getTermEnum(final @NonNull IndexReader reader) throws IOException {
             return new PrefixTermEnum(reader, term);
         }
@@ -592,8 +584,6 @@ public final class Queries {
                 protected boolean endEnum() {
                     return endEnum;
                 }
-
-
 
             };
         }
@@ -700,7 +690,7 @@ public final class Queries {
 
         @Override
         public Query createAllDocsQuery(final @NonNull String name) {
-            if (name.length() == 0) {
+            if (name.isEmpty()) {
                 return new MatchAllDocsQuery();
             } else {
                 return new FilteredQuery(new MatchAllDocsQuery(), new HasFieldFilter(name));

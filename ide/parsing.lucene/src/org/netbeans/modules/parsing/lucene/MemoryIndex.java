@@ -24,18 +24,20 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.LimitTokenCountAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermEnum;
 import org.apache.lucene.search.Collector;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.Searcher;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
+import org.apache.lucene.util.Version;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -92,29 +94,26 @@ public class MemoryIndex implements Index {
         
         lock.readLock().lock();
         try {
-            final IndexReader in = getReader();
+            IndexReader in = getReader();
             if (in == null) {
                 return;
             }
-            final BitSet bs = new BitSet(in.maxDoc());
-            final Collector c = new BitSetCollector(bs);
-            final Searcher searcher = new IndexSearcher(in);
-            try {
+            BitSet bs = new BitSet(in.maxDoc());
+            Collector c = new BitSetCollector(bs);
+            try (IndexSearcher searcher = new IndexSearcher(in)) {
                 for (Query q : queries) {
                     if (cancel != null && cancel.get()) {
                         throw new InterruptedException ();
                     }
                     searcher.search(q, c);
                 }
-            } finally {
-                searcher.close();
             }        
             for (int docNum = bs.nextSetBit(0); docNum >= 0; docNum = bs.nextSetBit(docNum+1)) {
                 if (cancel != null && cancel.get()) {
                     throw new InterruptedException ();
                 }
-                final Document doc = in.document(docNum, selector);
-                final T value = convertor.convert(doc);
+                Document doc = in.document(docNum, selector);
+                T value = convertor.convert(doc);
                 if (value != null) {
                     result.add (value);
                 }
@@ -144,38 +143,34 @@ public class MemoryIndex implements Index {
 
         lock.readLock().lock();
         try {
-            final IndexReader in = getReader();
+            IndexReader in = getReader();
             if (in == null) {
                 return;
             }
-            final BitSet bs = new BitSet(in.maxDoc());
-            final Collector c = new BitSetCollector(bs);
-            final Searcher searcher = new IndexSearcher(in);
-            final TermCollector termCollector = new TermCollector(c);
-            try {
+            BitSet bs = new BitSet(in.maxDoc());
+            Collector c = new BitSetCollector(bs);
+            TermCollector termCollector = new TermCollector(c);
+            try (IndexSearcher searcher = new IndexSearcher(in)) {
                 for (Query q : queries) {
                     if (cancel != null && cancel.get()) {
                         throw new InterruptedException ();
                     }
-                    if (q instanceof TermCollector.TermCollecting) {
-                        ((TermCollector.TermCollecting)q).attach(termCollector);
+                    if (q instanceof TermCollector.TermCollecting termCollecting) {
+                        termCollecting.attach(termCollector);
                     } else {
                         throw new IllegalArgumentException (
-                                String.format("Query: %s does not implement TermCollecting",    //NOI18N
-                                q.getClass().getName()));
+                                "Query: %s does not implement TermCollecting".formatted(q.getClass().getName())); //NOI18N
                     }
                     searcher.search(q, termCollector);
                 }
-            } finally {
-                searcher.close();
             }
 
             for (int docNum = bs.nextSetBit(0); docNum >= 0; docNum = bs.nextSetBit(docNum+1)) {
                 if (cancel != null && cancel.get()) {
                     throw new InterruptedException ();
                 }
-                final Document doc = in.document(docNum, selector);
-                final T value = convertor.convert(doc);
+                Document doc = in.document(docNum, selector);
+                T value = convertor.convert(doc);
                 if (value != null) {
                     final Set<Term> terms = termCollector.get(docNum);
                     if (terms != null) {
@@ -199,19 +194,18 @@ public class MemoryIndex implements Index {
         
         lock.readLock().lock();
         try {
-            final IndexReader in = getReader();
+            IndexReader in = getReader();
             if (in == null) {
                 return;
             }
-            final TermEnum terms = start == null ? in.terms () : in.terms (start);
-            try {
+            try (TermEnum terms = start == null ? in.terms() : in.terms(start)) {
                 do {
                     if (cancel != null && cancel.get()) {
                         throw new InterruptedException ();
                     }
-                    final Term currentTerm = terms.term();
+                    Term currentTerm = terms.term();
                     if (currentTerm != null) {                    
-                        final T vote = filter.convert(currentTerm);
+                        T vote = filter.convert(currentTerm);
                         if (vote != null) {
                             result.add(vote);
                         }
@@ -219,8 +213,6 @@ public class MemoryIndex implements Index {
                 } while (terms.next());
             } catch (StoppableConvertor.Stop stop) {
                 //Stop iteration of TermEnum
-            } finally {
-                terms.close();
             }
         } finally {
             lock.readLock().unlock();
@@ -231,8 +223,7 @@ public class MemoryIndex implements Index {
     public <S, T> void store(Collection<T> toAdd, Collection<S> toDelete, Convertor<? super T, ? extends Document> docConvertor, Convertor<? super S, ? extends Query> queryConvertor, boolean optimize) throws IOException {
         lock.writeLock().lock();
         try {
-            final IndexWriter out = getWriter();
-            try {
+            try (IndexWriter out = getWriter()) {
                 for (S td : toDelete) {
                     out.deleteDocuments(queryConvertor.convert(td));
                 }
@@ -242,16 +233,11 @@ public class MemoryIndex implements Index {
                 for (Iterator<T> it = toAdd.iterator(); it.hasNext();) {
                     T entry = it.next();
                     it.remove();
-                    final Document doc = docConvertor.convert(entry);
+                    Document doc = docConvertor.convert(entry);
                     out.addDocument(doc);
                 }
             } finally {
-
-                try {
-                    out.close();
-                } finally {
-                    refreshReader();
-                }
+                refreshReader();
             }
         } finally {
             lock.writeLock().unlock();
@@ -293,7 +279,7 @@ public class MemoryIndex implements Index {
     private synchronized IndexReader getReader() throws IOException {
         if (cachedReader == null) {
             try {
-                cachedReader = IndexReader.open(getDirectory(),true);
+                cachedReader = IndexReader.open(getDirectory());
             } catch (FileNotFoundException fnf) {
                 //pass - returns null
             }
@@ -304,16 +290,20 @@ public class MemoryIndex implements Index {
     private synchronized void refreshReader() throws IOException {
         assert lock.isWriteLockedByCurrentThread();
         if (cachedReader != null) {
-            final IndexReader newReader = cachedReader.reopen();
-            if (newReader != cachedReader) {
+            IndexReader newReader = IndexReader.openIfChanged(cachedReader);
+            if (newReader != null) {
                 cachedReader.close();
                 cachedReader = newReader;
             }
         }
     }
-    
+
     private synchronized IndexWriter getWriter() throws IOException {
-        return new IndexWriter (getDirectory(), analyzer, IndexWriter.MaxFieldLength.LIMITED);
+        IndexWriterConfig conf = new IndexWriterConfig(
+                Version.LUCENE_36,
+                new LimitTokenCountAnalyzer(analyzer, IndexWriter.DEFAULT_MAX_FIELD_LENGTH)
+        );
+        return new IndexWriter (getDirectory(), conf);
     }
     
     private synchronized Directory getDirectory() {
@@ -324,7 +314,7 @@ public class MemoryIndex implements Index {
     }
     
     private static <T> Set<T> convertTerms(final Convertor<? super Term, T> convertor, final Set<? extends Term> terms) {
-        final Set<T> result = new HashSet<T>(terms.size());
+        Set<T> result = new HashSet<>(terms.size());
         for (Term term : terms) {
             result.add(convertor.convert(term));
         }

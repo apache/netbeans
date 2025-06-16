@@ -40,8 +40,6 @@ class Convertors {
         throw  new IllegalStateException();
     }
 
-
-
     static Convertor<IndexDocument, Document> newIndexDocumentToDocumentConvertor() {
         return new AddConvertor();
     }
@@ -54,14 +52,12 @@ class Convertors {
         return new RemoveConvertor();
     }
 
-    static <T> StoppableConvertor<TermEnum,T> newTermEnumToTermConvertor(
-        @NonNull StoppableConvertor<Term,T> delegate) {
-        return new TermEnumToTerm<T>(delegate);
+    static <T> StoppableConvertor<TermEnum, T> newTermEnumToTermConvertor(@NonNull StoppableConvertor<Term, T> delegate) {
+        return new TermEnumToTerm<>(delegate);
     }
 
-    static <T> StoppableConvertor<TermEnum,T> newTermEnumToFreqConvertor(
-        @NonNull StoppableConvertor<Index.WithTermFrequencies.TermFreq,T> delegate) {
-        return new TermEnumToFreq<T>(delegate);
+    static <T> StoppableConvertor<TermEnum, T> newTermEnumToFreqConvertor(@NonNull StoppableConvertor<Index.WithTermFrequencies.TermFreq, T> delegate) {
+        return new TermEnumToFreq<>(delegate);
     }
 
 
@@ -104,9 +100,9 @@ class Convertors {
         }
 
         @Override
-        public void setIndexReader(@NonNull final IndexReader indexReader) {
-            if (delegate instanceof IndexReaderInjection) {
-                ((IndexReaderInjection)delegate).setIndexReader(indexReader);
+        public void setIndexReader(@NonNull IndexReader indexReader) {
+            if (delegate instanceof IndexReaderInjection iri) {
+                iri.setIndexReader(indexReader);
             }
         }
     }
@@ -132,9 +128,9 @@ class Convertors {
         }
 
         @Override
-        public void setIndexReader(@NonNull final IndexReader indexReader) {
-            if (delegate instanceof IndexReaderInjection) {
-                ((IndexReaderInjection)delegate).setIndexReader(indexReader);
+        public void setIndexReader(@NonNull IndexReader indexReader) {
+            if (delegate instanceof IndexReaderInjection iri) {
+                iri.setIndexReader(indexReader);
             }
         }
     }

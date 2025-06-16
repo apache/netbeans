@@ -46,17 +46,13 @@ public final class TermCollector extends Collector {
     
     TermCollector(Collector collector) {
         this.delegate = collector;
-        doc2Terms = new HashMap<Integer, Set<Term>>();
+        doc2Terms = new HashMap<>();
     }
     
     public void add (final int docId, final @NonNull Term term) {
         final int realId = docId + indexOffset;
-        Set<Term> slot = doc2Terms.get(realId);
-        if (slot == null) {
-            slot = new HashSet<Term>();
-            doc2Terms.put(realId, slot);
-        }
-        slot.add(term);
+        doc2Terms.computeIfAbsent(realId, k -> new HashSet<>())
+                 .add(term);
     }
     
     Set<Term> get(final int docId) {
@@ -71,19 +67,23 @@ public final class TermCollector extends Collector {
         void attach (TermCollector collector);
     }
 
+    @Override
     public void setScorer(Scorer scorer) throws IOException {
         delegate.setScorer(scorer);
     }
 
+    @Override
     public void setNextReader(IndexReader reader, int i) throws IOException {
         delegate.setNextReader(reader, i);
         indexOffset = i;
     }
 
+    @Override
     public void collect(int i) throws IOException {
         delegate.collect(i);
     }
 
+    @Override
     public boolean acceptsDocsOutOfOrder() {
         return delegate.acceptsDocsOutOfOrder();
     }

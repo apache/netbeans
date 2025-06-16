@@ -388,12 +388,15 @@ public class RenameRecordTest extends RefactoringTestBase {
         String testCode = """
                 package test;
                 public class Test {
-                    record R|A() {
+                    record R|A(int i) {
                     }
                     void method(Object o) {
                         switch(o) {
                             case Integer i when i == 0 -> {
-                                RA r = new RA();
+                                RA r = null;
+                            }
+                            case Integer i -> {
+                                RA r = new RA(i);
                             }
                             default -> {
                             }
@@ -412,12 +415,15 @@ public class RenameRecordTest extends RefactoringTestBase {
                 """
                 package test;
                 public class Test {
-                    record RB() {
+                    record RB(int i) {
                     }
                     void method(Object o) {
                         switch(o) {
                             case Integer i when i == 0 -> {
-                                RB r = new RB();
+                                RB r = null;
+                            }
+                            case Integer i -> {
+                                RB r = new RB(i);
                             }
                             default -> {
                             }

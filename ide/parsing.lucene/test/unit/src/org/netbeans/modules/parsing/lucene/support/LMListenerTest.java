@@ -32,7 +32,7 @@ public class LMListenerTest extends NbTestCase {
     private static final int _10K = 10 * 1024;
 
 
-    private List<byte []> refs = new LinkedList<byte []>();
+    private List<byte []> refs = new LinkedList<>();
 
     public LMListenerTest (final String name) {
         super (name);

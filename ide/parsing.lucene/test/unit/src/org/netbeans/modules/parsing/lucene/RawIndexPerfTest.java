@@ -104,7 +104,7 @@ public class RawIndexPerfTest extends NbTestCase {
 
     private List<Long> generateData(int size) {
         final List<Long> res = new ArrayList<>(size);
-        for (int i=0; i<size; i++) {
+        for (int i = 0; i < size; i++) {
             res.add(seq.incrementAndGet());
         }
         return res;
@@ -130,7 +130,7 @@ public class RawIndexPerfTest extends NbTestCase {
     private static final class LongToDoc implements Convertor<Long, Document> {
         @Override
         public Document convert(Long p) {
-            final Document doc = new Document();
+            Document doc = new Document();
             doc.add(new Field("dec", Long.toString(p), Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS));
             doc.add(new Field("hex", Long.toHexString(p), Field.Store.NO, Field.Index.NOT_ANALYZED_NO_NORMS));
             doc.add(new Field("bin", Long.toBinaryString(p), Field.Store.YES, Field.Index.NO));

@@ -19,7 +19,6 @@
 package org.netbeans.modules.parsing.lucene;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -75,9 +74,9 @@ public class IndexTransactionTest extends NbTestCase {
 
         //Empty index => invalid
         assertEquals(Index.Status.EMPTY, index.getStatus(true));
-        final List<String> refs = new ArrayList<String>();
+        List<String> refs = new ArrayList<>();
         refs.add("A");
-        final Set<String> toDel = new HashSet<String>();
+        Set<String> toDel = new HashSet<>();
         
         index.txStore(
                 refs,
@@ -90,7 +89,7 @@ public class IndexTransactionTest extends NbTestCase {
         assertTrue(cache.listFiles().length>0);
         
         // Open a reader, and check that the reader does NOT see the change, although flushed
-        Collection<String> result = new LinkedList<String>();
+        Collection<String> result = new LinkedList<>();
         AtomicBoolean cancel = new AtomicBoolean(false);
         index.query(
                 result, 
@@ -231,7 +230,7 @@ public class IndexTransactionTest extends NbTestCase {
     }
     
     private static class DocToStrConvertor implements Convertor<Document, String> {
-        private String name;
+        private final String name;
 
         public DocToStrConvertor(String name) {
             this.name = name;

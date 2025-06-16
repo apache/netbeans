@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.eclipse.lsp4j.ConfigurationItem;
 import org.eclipse.lsp4j.ConfigurationParams;
 
@@ -40,6 +42,7 @@ public class ConfigValueCache {
 
     private final ConcurrentHashMap<String, Object> rootCache = new ConcurrentHashMap<>();
     private static final String ROOT_KEY_VALUE = "";
+    private static final Logger LOG = Logger.getLogger(ConfigValueCache.class.getName());
 
     public void registerListener(String section, BiConsumer<String, JsonElement> listener) {
         ConfigData configData = getCachedConfigData(section);
@@ -92,6 +95,7 @@ public class ConfigValueCache {
                     consumer.accept(section, tree);
                 }
             } catch (RuntimeException e) {
+                LOG.log(Level.SEVERE, "Exception occurred while calling config change consumer handler, config: {0} and excpetion: {1}", new Object[]{section, e.getMessage()});
             }
             Map<String, JsonElement> scopedValuesMap = rootData.getAllScopedValues();
             if (scopedValuesMap != null && !scopedValuesMap.isEmpty()) {

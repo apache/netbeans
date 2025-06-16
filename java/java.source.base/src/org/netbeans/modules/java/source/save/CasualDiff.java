@@ -2133,7 +2133,9 @@ public class CasualDiff {
         if (Objects.equals(oldT.getCaseKind(), newT.getCaseKind())) {
             localPointer= tokenSequence.offset();
             tokenSequence.moveNext();
-            printer.out.needSpace();
+            if (origText.charAt(localPointer-1)==' ') {
+                localPointer--;
+            }
             copyTo(localPointer, localPointer = tokenSequence.offset());
         } else {
             if (JavaTokenId.COLON == tokenSequence.token().id()) {

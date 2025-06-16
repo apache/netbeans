@@ -388,7 +388,7 @@ public class RenameRecordTest extends RefactoringTestBase {
         String testCode = """
                 package test;
                 public class Test {
-                    record R|A(int i) {
+                    record R|A(Number x) {
                     }
                     void method(Object o) {
                         switch(o) {
@@ -397,6 +397,9 @@ public class RenameRecordTest extends RefactoringTestBase {
                             }
                             case Integer i -> {
                                 RA r = new RA(i);
+                            }
+                            case Double d-> {
+                                RA r = new RA(2.0D);
                             }
                             default -> {
                             }
@@ -415,7 +418,7 @@ public class RenameRecordTest extends RefactoringTestBase {
                 """
                 package test;
                 public class Test {
-                    record RB(int i) {
+                    record RB(Number x) {
                     }
                     void method(Object o) {
                         switch(o) {
@@ -424,6 +427,9 @@ public class RenameRecordTest extends RefactoringTestBase {
                             }
                             case Integer i -> {
                                 RB r = new RB(i);
+                            }
+                            case Double d-> {
+                                RB r = new RB(2.0D);
                             }
                             default -> {
                             }

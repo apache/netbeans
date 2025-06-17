@@ -21,6 +21,7 @@ package org.netbeans.modules.java.stackanalyzer;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.DefaultListModel;
 import org.junit.Test;
 import org.netbeans.junit.NbTestCase;
@@ -222,5 +223,53 @@ public class StackLineAnalyserTest extends NbTestCase {
                       "at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:907)",
                       "at java.lang.Thread.run(Thread.java:637)"
         });
+    }
+
+    @Test
+    public void testMultiLanguageStackFromEnso() throws Exception {
+        var stack = """
+        Execution finished with an error: java.lang.IllegalStateException: No persistance for java.time.LocalDate
+                at <java> org.enso.jvm.interop.OtherJvmMessage$ThrowException.value(OtherJvmMessage.java:54)
+                at <java> org.enso.jvm.interop.OtherJvmObject.send(OtherJvmObject.java:63)
+                at <java> org.enso.jvm.interop.OtherJvmObjectGen$ReflectionLibraryExports$Cached.send(OtherJvmObjectGen.java:65)
+                at <java> org.graalvm.truffle/com.oracle.truffle.api.interop.InteropLibraryGen$Proxy.invokeMember(InteropLibraryGen.java:2899)
+                at <java> org.graalvm.truffle/com.oracle.truffle.api.interop.InteropLibraryGen$CachedDispatch.invokeMember(InteropLibraryGen.java:8497)
+                at <java> org.enso.interpreter.node.callable.resolver.HostMethodCallNode.resolveHostMethod(HostMethodCallNode.java:223)
+                at <java> org.enso.interpreter.node.callable.resolver.HostMethodCallNodeGen.executeAndSpecialize(HostMethodCallNodeGen.java:152)
+                at <java> org.enso.interpreter.node.callable.resolver.HostMethodCallNodeGen.execute(HostMethodCallNodeGen.java:114)
+                at <java> org.enso.interpreter.node.callable.InvokeMethodNode.doPolyglot(InvokeMethodNode.java:562)
+                at <java> org.enso.interpreter.node.callable.InvokeMethodNodeGen.executeAndSpecialize(InvokeMethodNodeGen.java:868)
+                at <java> org.enso.interpreter.node.callable.InvokeMethodNodeGen.execute(InvokeMethodNodeGen.java:525)
+                at <java> org.enso.interpreter.node.callable.InvokeCallableNode.invokeDynamicSymbol(InvokeCallableNode.java:286)
+                at <java> org.enso.interpreter.node.callable.InvokeCallableNodeGen.executeAndSpecialize(InvokeCallableNodeGen.java:274)
+                at <java> org.enso.interpreter.node.callable.InvokeCallableNodeGen.execute(InvokeCallableNodeGen.java:226)
+                at <java> org.enso.interpreter.node.callable.ApplicationNode.executeGeneric(ApplicationNode.java:97)
+                at <java> org.enso.interpreter.node.callable.function.BlockNode.executeGeneric(BlockNode.java:78)
+                at <java> org.enso.interpreter.node.ClosureRootNode.execute(ClosureRootNode.java:85)
+                at <enso> Date_Time_Formatter.format_date_time<arg-1>(Internal)
+                at <enso> Panic.catch(Internal)
+                at <enso> Date_Time_Formatter.handle_java_errors(Date_Time_Formatter.enso:304-306)
+                at <enso> Date_Time_Formatter.format_date_time(Date_Time_Formatter.enso:328-329)
+                at <enso> Date_Time.format(Date_Time.enso:968:9-36)
+                at <enso> H2_JDBC_Config.with_database<arg-1>(src/H2_Spec.enso:24:51-92)
+                at <enso> H2_JDBC_Config.with_database<arg-1>(src/H2_Spec.enso:24:37-93)
+        """;
+
+        var count = new AtomicInteger();
+        stack.lines().forEach((line) -> {
+            if (line.contains("<java>")) {
+                assertTrue("Line " + line + " matches", StackLineAnalyser.matches(line));
+                var link = StackLineAnalyser.analyse(line);
+                assertNotNull("Link constructed for " + line, link);
+                count.incrementAndGet();
+
+                assertTrue("line ends with )", line.endsWith(")"));
+                var lastColon = line.lastIndexOf(':');
+                var lineNumber = Integer.parseInt(line.substring(lastColon + 1, line.length() - 1));
+
+                assertEquals(lineNumber, link.getLineNumber());
+            }
+        });
+        assertEquals("Few lines found", 17, count.get());
     }
 }

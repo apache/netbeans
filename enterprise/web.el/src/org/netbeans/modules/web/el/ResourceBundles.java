@@ -163,9 +163,9 @@ public final class ResourceBundles {
      */
     private ResourceBundleInfo getBundleForIdentifier(String ident) {
         // XXX - do it more efficiently
-        for (Map.Entry<String, ResourceBundleInfo> entry : getBundlesMap().entrySet()) {
-            if (ident.equals(entry.getValue().getVarName())) {
-                return entry.getValue();
+        for (ResourceBundleInfo rbi : getBundlesMap().values()) {
+            if (ident.equals(rbi.getVarName())) {
+                return rbi;
             }
         }
         return null;

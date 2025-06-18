@@ -36,14 +36,13 @@ import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.Formatter;
 import org.netbeans.modules.css.editor.test.TestBase;
 import org.netbeans.modules.css.lib.api.CssTokenId;
-import org.netbeans.modules.html.editor.api.HtmlKit;
-import org.netbeans.modules.html.editor.indent.HtmlIndentTaskFactory;
+import org.netbeans.modules.editor.NbEditorKit;
+import org.netbeans.modules.editor.indent.spi.IndentTask;
 import org.netbeans.modules.web.indent.api.support.AbstractIndenter;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
-import org.openide.util.Lookup;
 
 public class CssIndenterTest extends TestBase {
 
@@ -57,10 +56,12 @@ public class CssIndenterTest extends TestBase {
         AbstractIndenter.inUnitTestRun = true;
 //        CssBracketCompleter.unitTestingSupport = true;
 
-        CssIndentTaskFactory cssFactory = new CssIndentTaskFactory();
+        IndentTask.Factory cssFactory = new CssIndentTaskFactory();
         MockMimeLookup.setInstances(MimePath.parse("text/css"), cssFactory, CssTokenId.language());
-        HtmlIndentTaskFactory htmlReformatFactory = new HtmlIndentTaskFactory();
-        MockMimeLookup.setInstances(MimePath.parse("text/html"), htmlReformatFactory, new HtmlKit("text/x-jsp"), HTMLTokenId.language());
+
+        IndentTask.Factory htmlReformatFactory = (IndentTask.Factory) Class.forName("org.netbeans.modules.html.editor.indent.HtmlIndentTaskFactory").getDeclaredConstructor().newInstance();
+        NbEditorKit htmlKit = (NbEditorKit) Class.forName("org.netbeans.modules.html.editor.api.HtmlKit").getDeclaredConstructor(String.class).newInstance("text/x-jsp");
+        MockMimeLookup.setInstances(MimePath.parse("text/html"), htmlReformatFactory, htmlKit, HTMLTokenId.language());
     }
 
     public static Test xxsuite() throws IOException, BadLocationException {

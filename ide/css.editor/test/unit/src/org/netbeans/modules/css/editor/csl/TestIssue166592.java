@@ -23,7 +23,6 @@ import java.util.Collections;
 import javax.swing.text.Document;
 import org.netbeans.modules.css.editor.test.TestBase;
 import org.netbeans.modules.css.lib.api.CssParserResult;
-import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
@@ -52,13 +51,13 @@ public class TestIssue166592 extends TestBase {
         //         0         1         2         3         4
 
         //works - html
-        assertParserResultType(content, 0, HtmlParserResult.class);
-        assertParserResultType(content, 3, HtmlParserResult.class);
-        assertParserResultType(content, 48, HtmlParserResult.class);
+        assertParserResultType(content, 0, "org.netbeans.modules.html.editor.api.gsf.HtmlParserResult");
+        assertParserResultType(content, 3, "org.netbeans.modules.html.editor.api.gsf.HtmlParserResult");
+        assertParserResultType(content, 48, "org.netbeans.modules.html.editor.api.gsf.HtmlParserResult");
 
         //works - css
-        assertParserResultType(content, 12, CssParserResult.class);
-        assertParserResultType(content, 38, CssParserResult.class);
+        assertParserResultType(content, 12, CssParserResult.class.getName());
+        assertParserResultType(content, 38, CssParserResult.class.getName());
 
         //fails between the two styles - returns css instead of html parser result
 
@@ -67,7 +66,7 @@ public class TestIssue166592 extends TestBase {
 
     }
 
-    private void assertParserResultType(String content, final int offset, Class resultType) throws ParseException {
+    private void assertParserResultType(String content, final int offset, String resultType) throws ParseException {
         Document doc = getDocument(content);
         Source source = Source.create(doc);
         final Result[] _result = new Result[1];
@@ -80,7 +79,7 @@ public class TestIssue166592 extends TestBase {
 
         Result result = _result[0];
         assertNotNull(result);
-        assertEquals(resultType, result.getClass());
+        assertEquals(resultType, result.getClass().getName());
     }
 
 }

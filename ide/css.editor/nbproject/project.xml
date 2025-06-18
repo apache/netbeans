@@ -391,7 +391,6 @@
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.html.editor</code-name-base>
                         <recursive/>
-                        <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.html.editor.lib</code-name-base>

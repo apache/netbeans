@@ -20,7 +20,6 @@ package org.netbeans.modules.css.editor.csl;
 
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.css.editor.ProjectTestBase;
-import org.netbeans.modules.html.editor.gsf.HtmlLanguage;
 
 public class CssGotoDeclarationTest extends ProjectTestBase {
 
@@ -30,7 +29,11 @@ public class CssGotoDeclarationTest extends ProjectTestBase {
 
     @Override
     protected DefaultLanguageConfig getPreferredLanguage() {
-        return new HtmlLanguage();
+        try {
+            return (DefaultLanguageConfig) Class.forName("org.netbeans.modules.html.editor.gsf.HtmlLanguage").getDeclaredConstructor().newInstance();
+        } catch (ReflectiveOperationException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     public void testClass_01() throws Exception {

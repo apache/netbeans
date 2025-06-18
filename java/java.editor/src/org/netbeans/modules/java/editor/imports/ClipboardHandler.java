@@ -46,7 +46,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -56,7 +55,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Logger;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
@@ -117,7 +115,6 @@ public class ClipboardHandler {
         c.setTransferHandler(new ImportingTransferHandler(c.getTransferHandler()));
     }
 
-    private static final Logger LOG = Logger.getLogger(ClipboardHandler.class.getName());
     private static final RequestProcessor WORKER = new RequestProcessor(ClipboardHandler.class.getName(), 3, false, false);
     
     private static void doImport(JavaSource js, final Document doc, final int caret, final Map<String, String> simple2ImportFQN, final List<Position[]> inSpans, AtomicBoolean cancel) {
@@ -132,12 +129,7 @@ public class ClipboardHandler {
                     Scope scope = copy.getTrees().getScope(context);
                     Scope cutScope = copy.getTrees().getScope(new TreePath(context.getCompilationUnit()));
                     List<Position[]> spans = new ArrayList<Position[]>(inSpans);
-
-                    spans.sort(new Comparator<Position[]>() {
-                        @Override public int compare(Position[] o1, Position[] o2) {
-                            return o1[0].getOffset() - o2[0].getOffset();
-                        }
-                    });
+                    spans.sort((o1, o2) -> o1[0].getOffset() - o2[0].getOffset());
 
                     Map<String, String> imported = new HashMap<String, String>();
 
@@ -179,16 +171,12 @@ public class ClipboardHandler {
                             doc.remove(e.getKey()[0].getOffset(), e.getKey()[1].getOffset() - e.getKey()[0].getOffset());
                             doc.insertString(e.getKey()[0].getOffset(), e.getValue(), null);
                         }
-                    } catch (BadLocationException ex) {
-                        Exceptions.printStackTrace(ex);
-                    } catch (IOException ex) {
+                    } catch (BadLocationException | IOException ex) {
                         Exceptions.printStackTrace(ex);
                     }
                 }
             });
-        } catch (BadLocationException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (IOException ex) {
+        } catch (BadLocationException | IOException ex) {
             Exceptions.printStackTrace(ex);
         }
     }
@@ -252,10 +240,6 @@ public class ClipboardHandler {
                 SourcePositions[] sps = new SourcePositions[1];
 
                 OUTER: for (Entry<String, String> e : simple2FQNs.entrySet()) {
-                    // skip default static imports
-                    if ("java.lang.StringTemplate.STR".equals(e.getValue())) {
-                        continue;
-                    }
                     Element el = fqn2element(cc.getElements(), e.getValue());
                     if (el == null) {
                         continue;
@@ -381,11 +365,7 @@ public class ClipboardHandler {
                 method.setAccessible(true);
 
                 return (Transferable)method.invoke(delegate, new Object[] {c});
-            } catch (NoSuchMethodException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (IllegalAccessException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (java.lang.reflect.InvocationTargetException ex) {
+            } catch (ReflectiveOperationException ex) {
                 Exceptions.printStackTrace(ex);
             }
             return null;
@@ -404,11 +384,7 @@ public class ClipboardHandler {
                     new Class[] {javax.swing.JComponent.class, Transferable.class, int.class});
                 method.setAccessible(true);
                 method.invoke(delegate, new Object[] {source, data, action});
-            } catch (NoSuchMethodException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (IllegalAccessException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (java.lang.reflect.InvocationTargetException ex) {
+            } catch (ReflectiveOperationException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }
@@ -419,10 +395,9 @@ public class ClipboardHandler {
             ImportsWrapper iw = null;
             boolean copiedFromString = false;
 
-            if (comp instanceof JTextComponent) {
-                copiedFromString = insideToken((JTextComponent)comp, JavaTokenId.STRING_LITERAL, JavaTokenId.CHAR_LITERAL);
-                if (comp.getClientProperty(NO_IMPORTS) == null && (js = JavaSource.forDocument(((JTextComponent) comp).getDocument())) != null) {
-                    final JTextComponent tc = (JTextComponent) comp;
+            if (comp instanceof JTextComponent tc) {
+                copiedFromString = insideToken(tc, JavaTokenId.STRING_LITERAL, JavaTokenId.CHAR_LITERAL);
+                if (comp.getClientProperty(NO_IMPORTS) == null && (js = JavaSource.forDocument(tc.getDocument())) != null) {
                     final int start = tc.getSelectionStart();
                     final int end = tc.getSelectionEnd();
                     final Map<String, String> simple2ImportFQN = new HashMap<String, String>();
@@ -610,11 +585,7 @@ public class ClipboardHandler {
                             }
                         });
                     }
-                } catch (BadLocationException ex) {
-                    Exceptions.printStackTrace(ex);
-                } catch (UnsupportedFlavorException ex) {
-                    Exceptions.printStackTrace(ex);
-                } catch (IOException ex) {
+                } catch (BadLocationException | UnsupportedFlavorException | IOException ex) {
                     Exceptions.printStackTrace(ex);
                 }
 
@@ -690,8 +661,7 @@ public class ClipboardHandler {
                             } catch (BadLocationException ex) {
                                 Exceptions.printStackTrace(ex);
                             }
-                            if (data instanceof String) {
-                                String s = (String) data;
+                            if (data instanceof String s) {
                                 s = s.replace("\"\"\"","\\\"\"\""); //NOI18N
                                 StringBuilder sb = new StringBuilder("");
                                 for (int i = 0; i < indent; i++) {
@@ -701,8 +671,8 @@ public class ClipboardHandler {
                                 s = s.replace("\r\n","\n"); //NOI18N
                                 s = s.replace("\n",System.lineSeparator() + emptySpaces); //NOI18N
                                 data = s;
-                            } else if (data instanceof Reader) {
-                                BufferedReader br = new BufferedReader((Reader)data);
+                            } else if (data instanceof Reader reader) {
+                                BufferedReader br = new BufferedReader(reader);
                                 StringBuilder sb = new StringBuilder();
                                 String line;
 

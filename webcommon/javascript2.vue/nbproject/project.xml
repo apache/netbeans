@@ -79,6 +79,7 @@
                 </dependency>
                 <dependency>
                     <code-name-base>org.netbeans.modules.css.prep</code-name-base>
+                    <build-prerequisite/>
                     <compile-dependency/>
                 </dependency>
                 <dependency>

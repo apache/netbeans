@@ -106,7 +106,6 @@ import javax.lang.model.type.TypeVariable;
 import javax.lang.model.type.WildcardType;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
-import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -1102,10 +1101,6 @@ public final class GeneratorUtilities {
                 case ENUM_CONSTANT:
                 case FIELD:
                     String name = new StringBuilder(((TypeElement)e.getEnclosingElement()).getQualifiedName()).append('.').append(e.getSimpleName()).toString();
-                    // skip default static imports
-                    if ("java.lang.StringTemplate.STR".equals(name)) {
-                        break;
-                    }
                     if (!staticImportNames.add(name))
                         break;
                 default:

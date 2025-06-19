@@ -54,7 +54,7 @@ public class UseSuperTypeTest extends RefactoringTestBase {
                 new File("u/Main.java", "package u; import java.util.*; public class Main { public void method() { LinkedHashSet<String> verz = new LinkedHashSet<String>(); } }"));
         performFromMethodUseSuperType(src.getFileObject("u/Main.java"), 8);
 
-        String expectedCode = ver>=21
+        String expectedCode = ver >= 21
                 ?"package u; import java.util.*; public class Main { public void method() { SequencedCollection<String> verz = new LinkedHashSet<String>(); } }"
                 :"package u; import java.util.*; public class Main { public void method() { Set<String> verz = new LinkedHashSet<String>(); } }";
         verifyContent(src,

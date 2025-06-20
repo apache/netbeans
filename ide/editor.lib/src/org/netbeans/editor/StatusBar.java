@@ -131,7 +131,7 @@ public class StatusBar implements PropertyChangeListener, DocumentListener {
 
     private boolean visible;
 
-    private List cellList = new ArrayList();
+    private List<JLabel> cellList = new ArrayList<>();
 
     private Caret caret;
 
@@ -409,7 +409,7 @@ public class StatusBar implements PropertyChangeListener, DocumentListener {
 
     private void addCellImpl(int i, JLabel c) {
         synchronized (cellList) {
-            ArrayList newCellList = new ArrayList(cellList);
+            List<JLabel> newCellList = new ArrayList<>(cellList);
             int cnt = newCellList.size();
             if (i < 0 || i > cnt) {
                 i = cnt;
@@ -440,29 +440,29 @@ public class StatusBar implements PropertyChangeListener, DocumentListener {
         }
         if (cellCount == 1) {
             // only one cell
-            ((JLabel)cellList.get(0)).setBorder(onlyOneBorder);
+            cellList.get(0).setBorder(onlyOneBorder);
             return;
         }
         if (addedIndex == 0) {
             // added as first, updates second
-            ((JLabel)cellList.get(0)).setBorder(leftBorder);
-            JLabel second = (JLabel)cellList.get(1);
+            cellList.get(0).setBorder(leftBorder);
+            JLabel second = cellList.get(1);
             second.setBorder(cellCount == 2 ? rightBorder : innerBorder);
         } else if (addedIndex == cellCount - 1) {
             // added as last, updates previous
-            ((JLabel)cellList.get(cellCount - 1)).setBorder(rightBorder);
-            JLabel previous = (JLabel)cellList.get(cellCount - 2);
+            cellList.get(cellCount - 1).setBorder(rightBorder);
+            JLabel previous = cellList.get(cellCount - 2);
             previous.setBorder(cellCount == 2 ? leftBorder : innerBorder);
         } else {
             // cell added inside
-            ((JLabel)cellList.get(addedIndex)).setBorder(innerBorder);
+            cellList.get(addedIndex).setBorder(innerBorder);
         }
     }
 
     public JLabel getCellByName(String name) {
-        Iterator i = cellList.iterator();
+        Iterator<JLabel> i = cellList.iterator();
         while (i.hasNext()) {
-            JLabel c = (JLabel)i.next();
+            JLabel c = i.next();
             if (name.equals(c.getName())) {
                 return c;
             }
@@ -554,9 +554,9 @@ public class StatusBar implements PropertyChangeListener, DocumentListener {
     private void refreshPanel() {
         if (isVisible()) { // refresh only if visible
             // Apply coloring to all cells
-            Iterator it = cellList.iterator();
+            Iterator<JLabel> it = cellList.iterator();
             while (it.hasNext()) {
-                JLabel c = (JLabel)it.next();
+                JLabel c = it.next();
                 JTextComponent jtc = editorUI.getComponent();
                 if (c instanceof Cell && jtc != null /*#141362 Check editorUI.getComponent() not null*/) {
                     Coloring col = getColoring(
@@ -577,7 +577,7 @@ public class StatusBar implements PropertyChangeListener, DocumentListener {
 
             it = cellList.iterator();
             while (it.hasNext()) {
-                JLabel c = (JLabel)it.next();
+                JLabel c = it.next();
                 boolean main = CELL_MAIN.equals(c.getName());
                 if (main) {
                     gc.fill = GridBagConstraints.HORIZONTAL;

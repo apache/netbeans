@@ -101,6 +101,17 @@ public final class CreateElement implements ErrorRule<Void> {
     private static final int PRIO_TESTSOURCEGROUP = 500;
     private static final int PRIO_MAINSOURCEGROUP = 1000;
     private static final int PRIO_INNER = 2000;
+
+    /**
+     * Helps to prevent issue 8594, trying to create a method when return type is not given 
+     * by use of var as the placeholder for the type at the call site.
+     * @param type the TypeMirror that specifies the type info
+     * @return true if fit for create method, false otherwise
+     */
+    private static boolean hasKnownReturnType(TypeMirror type) {
+        if (type==null) return true; // for constructors
+        return type.getKind() != TypeKind.NONE; // none is insufficient info
+    }
     
     /** Creates a new instance of CreateElement */
     public CreateElement() {
@@ -455,7 +466,7 @@ public final class CreateElement implements ErrorRule<Void> {
             if (enclosingElement != null && enclosingElement.getKind() == ElementKind.ANNOTATION_TYPE) {
 //                FileObject targetFile = SourceUtils.getFile(target, info.getClasspathInfo());
                 FileObject targetFile = SourceUtils.getFile(ElementHandle.create(target), info.getClasspathInfo());
-                if (targetFile != null) {
+                if (targetFile != null && hasKnownReturnType(type)) {
                     result.add(new CreateMethodFix(info, simpleName, modifiers, (TypeElement) target, type, types, Collections.<String>emptyList(), Collections.<TypeMirror>emptyList(), Collections.<String>emptyList(), targetFile));
                 }
 
@@ -546,13 +557,16 @@ public final class CreateElement implements ErrorRule<Void> {
             Element targetExprEl = info.getTrees().getElement(new TreePath(errorPath, mref.getQualifierExpression()));
             List<Fix> fixes = new ArrayList<>();
             if (targetExprEl.getKind().isClass() || targetExprEl.getKind().isInterface()) {
-                if (methodType.getParameterTypes().size() > 0 && target.equals(info.getTypes().asElement(methodType.getParameterTypes().get(0)))) {
+                if (methodType.getParameterTypes().size() > 0 && target.equals(info.getTypes().asElement(methodType.getParameterTypes().get(0)))
+                        && hasKnownReturnType(methodType.getReturnType())) {
                     //static ref to instance type:
                     fixes.add(new CreateMethodFix(info, mref.getName().toString(), EnumSet.copyOf(modifiers), target, methodType.getReturnType(), methodType.getParameterTypes().subList(1, methodType.getParameterTypes().size()), expectedMethod.getParameters().stream().skip(1).map(var -> var.getSimpleName().toString()).collect(Collectors.toList()), Collections.emptyList(), Collections.emptyList(), targetFile));
                 }
                 modifiers.add(Modifier.STATIC);
             }
-            fixes.add(new CreateMethodFix(info, mref.getName().toString(), modifiers, target, methodType.getReturnType(), methodType.getParameterTypes(), expectedMethod.getParameters().stream().map(var -> var.getSimpleName().toString()).collect(Collectors.toList()), Collections.emptyList(), Collections.emptyList(), targetFile));
+            if (hasKnownReturnType(methodType.getReturnType())) {
+                fixes.add(new CreateMethodFix(info, mref.getName().toString(), modifiers, target, methodType.getReturnType(), methodType.getParameterTypes(), expectedMethod.getParameters().stream().map(var -> var.getSimpleName().toString()).collect(Collectors.toList()), Collections.emptyList(), Collections.emptyList(), targetFile));
+            }
             return fixes;
         }
 
@@ -582,8 +596,9 @@ public final class CreateElement implements ErrorRule<Void> {
 	    return Collections.<Fix>emptyList();
 
         FileObject targetFile = SourceUtils.getFile(ElementHandle.create(target), info.getClasspathInfo());
-        if (targetFile == null)
+        if (targetFile == null || !hasKnownReturnType(returnType)) {
             return Collections.<Fix>emptyList();
+        }
 
         return Collections.<Fix>singletonList(new CreateMethodFix(info, simpleName, modifiers, target, returnType, formalArguments.parameterTypes, formalArguments.parameterNames, formalArguments.typeParameterTypes, formalArguments.typeParameterNames, targetFile));
     }

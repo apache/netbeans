@@ -441,6 +441,13 @@ public class CreateElementTest extends HintsTestBase {
                 "CreateConstructorFix:(java.lang.String string):org.netbeans.test.java.hints.CreateConstructor"
         )));
     }
+
+    // the test should show that no fix is suggested for a method call where the return type is using the var.
+
+    public void testNBIssue8594() throws Exception{
+
+         performTestAnalysisTest("org.netbeans.test.java.hints.UnknownReturnType", 228, Set.of());
+    }
     
     protected void performTestAnalysisTest(String className, int offset, Set<String> golden) throws Exception {
         prepareTest(className);

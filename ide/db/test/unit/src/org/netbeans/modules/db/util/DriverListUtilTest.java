@@ -44,6 +44,7 @@ public class DriverListUtilTest extends TestCase {
     private static final String INSTANCE = "instancename";
     private static final String SID = "mysid";
     private static final String DSN = "mydsn";
+    private static final String FILE = "C:\\Users\\John\\foobar.db";
     private static final String TNSNAME = "mytns";
     
     private static final HashMap<String, String> ALLPROPS = new HashMap<>();
@@ -57,6 +58,7 @@ public class DriverListUtilTest extends TestCase {
         ALLPROPS.put(JdbcUrl.TOKEN_SERVERNAME, SERVERNAME);
         ALLPROPS.put(JdbcUrl.TOKEN_ADDITIONAL, ADDITIONAL);
         ALLPROPS.put(JdbcUrl.TOKEN_DSN, DSN);
+        ALLPROPS.put(JdbcUrl.TOKEN_FILE, FILE);
         ALLPROPS.put(JdbcUrl.TOKEN_SERVICENAME, SERVICENAME);
         ALLPROPS.put(JdbcUrl.TOKEN_SID, SID);
         ALLPROPS.put(JdbcUrl.TOKEN_TNSNAME, TNSNAME);
@@ -305,6 +307,66 @@ public class DriverListUtilTest extends TestCase {
 
         propValues.remove(JdbcUrl.TOKEN_HOST);
         testUrlString(url, propValues, "jdbc:redshift:iam:///" + DB);
+    }
+
+    public void testSQLite() throws Exception {
+        ArrayList<String> supportedProps = new ArrayList<>();
+        supportedProps.add(JdbcUrl.TOKEN_FILE);
+        ArrayList<String> requiredProps = new ArrayList<>();
+        requiredProps.add(JdbcUrl.TOKEN_FILE);
+        JdbcUrl url = checkUrl("SQLite", null, "org.sqlite.JDBC",
+                "jdbc:sqlite:<FILE>",
+                supportedProps, requiredProps);
+        HashMap<String, String> propValues = buildPropValues(supportedProps);
+        testUrlString(url, propValues, "jdbc:sqlite:" + FILE);
+    }
+
+    public void testDuckDB() throws Exception {
+        ArrayList<String> supportedProps = new ArrayList<>();
+        supportedProps.add(JdbcUrl.TOKEN_FILE);
+        ArrayList<String> requiredProps = new ArrayList<>();
+        JdbcUrl url = checkUrl("DuckDB", null, "org.duckdb.DuckDBDriver",
+                "jdbc:duckdb:[<FILE>]",
+                supportedProps, requiredProps);
+        HashMap<String, String> propValues = buildPropValues(supportedProps);
+        testUrlString(url, propValues, "jdbc:duckdb:" + FILE);
+        propValues.remove(JdbcUrl.TOKEN_FILE);
+        testUrlString(url, propValues, "jdbc:duckdb:");
+    }
+
+    public void testSnowflake() throws Exception {
+        ArrayList<String> supportedProps = new ArrayList<>();
+        supportedProps.add(JdbcUrl.TOKEN_HOST);
+        supportedProps.add(JdbcUrl.TOKEN_ADDITIONAL);
+        ArrayList<String> requiredProps = new ArrayList<>();
+        requiredProps.add(JdbcUrl.TOKEN_HOST);
+        JdbcUrl url = checkUrl("Snowflake", null, "net.snowflake.client.jdbc.SnowflakeDriver",
+                "jdbc:snowflake://<HOST>/[?<ADDITIONAL>]",
+                supportedProps, requiredProps);
+        HashMap<String, String> propValues = buildPropValues(supportedProps);
+        testUrlString(url, propValues, "jdbc:snowflake://" + HOST + "/?" + ADDITIONAL);
+        propValues = buildPropValues(requiredProps);
+        testUrlString(url, propValues, "jdbc:snowflake://" + HOST + "/");
+    }
+
+    public void testBigQuery() throws Exception {
+        ArrayList<String> supportedProps = new ArrayList<>();
+        supportedProps.add(JdbcUrl.TOKEN_HOST);
+        supportedProps.add(JdbcUrl.TOKEN_PORT);
+        supportedProps.add(JdbcUrl.TOKEN_INSTANCE);
+        supportedProps.add(JdbcUrl.TOKEN_ADDITIONAL);
+        ArrayList<String> requiredProps = new ArrayList<>();
+        requiredProps.add(JdbcUrl.TOKEN_HOST);
+        requiredProps.add(JdbcUrl.TOKEN_PORT);
+        requiredProps.add(JdbcUrl.TOKEN_INSTANCE);
+        requiredProps.add(JdbcUrl.TOKEN_ADDITIONAL);
+        JdbcUrl url = checkUrl("Google BigQuery", null, "com.simba.googlebigquery.jdbc.Driver",
+                "jdbc:bigquery://https://<HOST>/bigquery/v2:<PORT>;ProjectId=<INSTANCE>;<ADDITIONAL>",
+                supportedProps, requiredProps);
+        HashMap<String, String> propValues = buildPropValues(supportedProps);
+        testUrlString(url, propValues, "jdbc:bigquery://https://" + HOST + "/bigquery/v2:" + PORT + ";ProjectId=" + INSTANCE + ";" + ADDITIONAL);
+        propValues = buildPropValues(requiredProps);
+        testUrlString(url, propValues, "jdbc:bigquery://https://" + HOST + "/bigquery/v2:" + PORT + ";ProjectId=" + INSTANCE + ";" + ADDITIONAL);
     }
     
     enum DB2Types { DB2, IDS, CLOUDSCAPE };
@@ -676,6 +738,7 @@ public class DriverListUtilTest extends TestCase {
         
         JdbcUrl other = new JdbcUrl(url.getName(), url.getName(), url.getClassName(),
                 url.getType(), url.getUrlTemplate(), url.isParseUrl());
+        other.setUsernamePasswordDisplayed(url.isUsernamePasswordDisplayed());
         
         assertEquals(url, other);
 

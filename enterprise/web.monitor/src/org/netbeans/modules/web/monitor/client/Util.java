@@ -101,7 +101,7 @@ public class Util  {
 	// MULTIBYTE - I think this isn't working... 
 	Hashtable ht = null;
 	try {
-	    ht = javax.servlet.http.HttpUtils.parseQueryString(queryString);
+	    ht = HttpUtils.parseQueryString(queryString);
 	}
 	catch(IllegalArgumentException iae) {
 	    // do nothing, that's OK
@@ -134,7 +134,7 @@ public class Util  {
 	Hashtable ht = null;
 	String queryString = rd.getAttributeValue("queryString");  //NOI18N
 	try {
-	    ht = javax.servlet.http.HttpUtils.parseQueryString(queryString);
+	    ht = HttpUtils.parseQueryString(queryString);
 	}
 	catch(Exception ex) { }
 			    

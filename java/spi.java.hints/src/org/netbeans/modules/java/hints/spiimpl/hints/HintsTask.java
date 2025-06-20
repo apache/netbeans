@@ -124,12 +124,12 @@ public class HintsTask implements CancellableTask<CompilationInfo> {
 
         long endTime = System.currentTimeMillis();
         
-        TIMER.log(Level.FINE, "Jackpot 3.0 Hints Task" + (caretAware ? " - Caret Aware" : ""), new Object[] {info.getFileObject(), endTime - startTime});
+        TIMER.log(Level.FINE, "{1}ms Hints Task: " + (caretAware ? " - Caret Aware" : "") + " {0}", new Object[] {info.getFileObject(), endTime - startTime});
 
         Logger l = caretAware ? TIMER_CARET : TIMER_EDITOR;
 
         for (Entry<String, Long> e : inv.getTimeLog().entrySet()) {
-            l.log(Level.FINE, e.getKey(), new Object[] {info.getFileObject(), e.getValue()});
+            l.log(Level.FINE, "{1}ms {0}", new Object[] {e.getKey(), e.getValue()});
         }
     }
 

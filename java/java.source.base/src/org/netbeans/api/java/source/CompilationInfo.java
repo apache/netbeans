@@ -38,7 +38,6 @@ import java.util.Optional;
 
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
@@ -108,12 +107,9 @@ public class CompilationInfo {
      */
     public static @NullUnknown CompilationInfo get (@NonNull final Parser.Result result) {
         Parameters.notNull("result", result);   //NOI18N
-        CompilationInfo info = null;
-        if (result instanceof JavacParserResult) {
-            final JavacParserResult javacResult = (JavacParserResult)result;            
-            info = javacResult.get(CompilationInfo.class);            
-        }
-        return info;
+        return result instanceof JavacParserResult jpr
+                ? jpr.get(CompilationInfo.class)
+                : null;
     }
              
     // API of the class --------------------------------------------------------
@@ -217,7 +213,7 @@ public class CompilationInfo {
         if (this.impl.getFileObject() == null) {
             throw new IllegalStateException ();
         }
-        final List<TypeElement> result = new ArrayList<TypeElement>();
+        final List<TypeElement> result = new ArrayList<>();
         if (this.impl.isClassFile()) {
             final JavacElements elements = (JavacElements) getElements();
             assert elements != null;

@@ -51,5 +51,6 @@ public interface SourceFileObjectProvider {
             @NonNull AbstractSourceFileObject.Handle handle,
             @NullAllowed JavaFileFilterImplementation filter,
             @NullAllowed CharSequence content,
-            boolean renderNow) throws IOException;
+            boolean renderNow,
+            boolean embedded) throws IOException;
 }

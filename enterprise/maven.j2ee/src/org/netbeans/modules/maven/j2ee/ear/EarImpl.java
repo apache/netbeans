@@ -273,8 +273,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
         Profile profile = getJ2eeProfile();
         if (null == profile) {
             return Application.VERSION_8;
-        }
-        else {
+        } else {
             return switch (profile) {
                 case JAKARTA_EE_11_FULL -> Application.VERSION_11;
                 case JAKARTA_EE_10_FULL -> Application.VERSION_10;
@@ -744,9 +743,8 @@ public class EarImpl implements EarImplementation, EarImplementation2,
 
     private MavenModule[] checkConfiguration(MavenProject prj, Object conf) {
         List<MavenModule> toRet = new ArrayList<>();
-        if (conf instanceof Xpp3Dom xpp3Dom) {
+        if (conf instanceof Xpp3Dom dom) {
             ExpressionEvaluator eval = PluginPropertyUtils.createEvaluator(project);
-            Xpp3Dom dom = xpp3Dom;
             Xpp3Dom modules = dom.getChild("modules"); //NOI18N
             if (modules != null) {
                 int index = 0;
@@ -911,7 +909,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
         public void addPropertyChangeListener(PropertyChangeListener listener) {
             module.addPropertyChangeListener(listener);
         }
-
+        
         @Override
         public void removePropertyChangeListener(PropertyChangeListener listener) {
             module.removePropertyChangeListener(listener);
@@ -929,7 +927,9 @@ public class EarImpl implements EarImplementation, EarImplementation2,
                 return false;
             }
             final ProxyJ2eeModule other = (ProxyJ2eeModule) obj;
-            return Objects.equals(this.module, other.module);
+            return Objects.equals(this.module, other.module)
+                    && Objects.equals(this.mavenModule, other.mavenModule)
+                    && Objects.equals(this.fileNameMapping, other.fileNameMapping);
         }
 
         @Override

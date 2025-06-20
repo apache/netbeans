@@ -141,9 +141,9 @@ public class WSUtils {
             @Override
             public void run() throws IOException {
                 FileObject sunJaxwsFo = FileUtil.createData(targetDir, "sun-jaxws.xml");//NOI18N
-                try (FileLock lock = sunJaxwsFo.lock(); OutputStream os = sunJaxwsFo.getOutputStream(lock);
-                        OutputStreamWriter osw = new OutputStreamWriter(os, StandardCharsets.UTF_8);
-                        BufferedWriter bw = new BufferedWriter(osw)) {
+                try (FileLock lock = sunJaxwsFo.lock();
+                        BufferedWriter bw = new BufferedWriter(
+                                new OutputStreamWriter(sunJaxwsFo.getOutputStream(lock), StandardCharsets.UTF_8))) {
                     bw.write(sunJaxwsContent);
                 }
             }

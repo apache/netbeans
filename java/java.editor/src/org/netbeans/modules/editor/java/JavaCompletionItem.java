@@ -170,13 +170,10 @@ public abstract class JavaCompletionItem implements CompletionItem {
     }
 
     public static JavaCompletionItem createVariableItem(CompilationInfo info, VariableElement elem, TypeMirror type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean smartType, int assignToVarOffset, WhiteListQuery.WhiteList whiteList) {
-        ElementKind ek = elem.getKind();
-        if ("BINDING_VARIABLE".equals(ek.name())) {
-            ek = ElementKind.LOCAL_VARIABLE;
-        }
-        switch (ek) {
+        switch (elem.getKind()) {
             case LOCAL_VARIABLE:
             case RESOURCE_VARIABLE:
+            case BINDING_VARIABLE:
             case PARAMETER:
             case EXCEPTION_PARAMETER:
                 return new VariableItem(info, type, elem.getSimpleName().toString(), substitutionOffset, false, smartType, assignToVarOffset);

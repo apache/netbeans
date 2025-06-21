@@ -39,11 +39,23 @@ public class NetBeansAgent {
 
     public static void premain(String arg, Instrumentation instrumentation) {
         List<ClassFileTransformer> transformer = new ArrayList<>(2);
-        if ((!Boolean.getBoolean(WClipboardTransformer.DEBUG_DISABLE_TRANSFORMER))
+        int javaVersion = javaVersion();
+        if (javaVersion >= 17 && javaVersion <= 24  // JDK 25+ contains the clipboard fix (JDK-8353950)
+                && !Boolean.getBoolean(WClipboardTransformer.DEBUG_DISABLE_TRANSFORMER)
                 && System.getProperty("os.name").toLowerCase().contains("windows")) {
             transformer.add(new WClipboardTransformer(instrumentation));
         }
         transformer.forEach(cft -> instrumentation.addTransformer(cft, false));
+    }
+
+    // same as org.netbeans.Main
+    private static int javaVersion() {
+        try {
+            Object runtimeVersion = Runtime.class.getMethod("version").invoke(null);
+            return ((int) runtimeVersion.getClass().getMethod("feature").invoke(runtimeVersion));
+        } catch (ReflectiveOperationException ex) {
+            return -1;
+        }
     }
 
 }

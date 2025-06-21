@@ -165,7 +165,6 @@ public interface Index {
          * @param toDelete the objects to be removed from the index
          * @param docConvertor the {@link Convertor} used to convert toAdd objects into lucene's Documents which are stored into the {@link Index}
          * @param queryConvertor the {@link Convertor} used to convert toDelete objects into lucene's Queries used to delete the documents from {@link Index}
-         * @param optimize if true the index is optimized. The optimized index is faster for queries but optimize takes significant time.
          * @throws IOException in case of IO problem
          * @see #store
          */

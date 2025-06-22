@@ -45,11 +45,13 @@ final class ELResourceBundleKeyCompletionItem extends DefaultCompletionProposal 
     private final String key;
     private final String value;
     private final ELElement element;
+    private final FileObject bundleFile;
 
-    public ELResourceBundleKeyCompletionItem(String key, String value, ELElement element) {
+    public ELResourceBundleKeyCompletionItem(String key, String value, ELElement element, FileObject bundleFile) {
         this.key = key;
         this.value = value;
         this.element = element;
+        this.bundleFile = bundleFile;
     }
 
     @Override
@@ -92,6 +94,9 @@ final class ELResourceBundleKeyCompletionItem extends DefaultCompletionProposal 
 
         @Override
         public FileObject getFileObject() {
+            if (bundleFile != null) {
+                return bundleFile;
+            }
             return element.getSnapshot().getSource().getFileObject();
         }
 

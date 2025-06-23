@@ -111,11 +111,7 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
 
     static boolean awaitPendingEvictors() throws InterruptedException {
         try {
-            return DirCache.EVICTOR_RP.submit(new Runnable() {
-                @Override
-                public void run() {
-                }
-            }, Boolean.TRUE).get();
+            return DirCache.EVICTOR_RP.submit(() -> {}, Boolean.TRUE).get();
         } catch (ExecutionException e) {
             return false;
         }
@@ -155,20 +151,15 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
             }
             final BitSet bs = new BitSet(in.maxDoc());
             final Collector c = new BitSetCollector(bs);
-            final IndexSearcher searcher = new IndexSearcher(in);
-            try {
+            try (IndexSearcher searcher = new IndexSearcher(in)) {
                 for (Query q : queries) {
                     if (cancel != null && cancel.get()) {
                         throw new InterruptedException ();
                     }
                     searcher.search(q, c);
                 }
-            } finally {
-                searcher.close();
             }
-            if (convertor instanceof IndexReaderInjection) {
-                ((IndexReaderInjection)convertor).setIndexReader(in);
-            }
+            changeIndexReader(convertor, in);
             try {
                 for (int docNum = bs.nextSetBit(0); docNum >= 0; docNum = bs.nextSetBit(docNum+1)) {
                     if (cancel != null && cancel.get()) {
@@ -181,15 +172,19 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
                     }
                 }
             } finally {
-                if (convertor instanceof IndexReaderInjection) {
-                    ((IndexReaderInjection)convertor).setIndexReader(null);
-                }
+                changeIndexReader(convertor, null);
             }
         } finally {
             dirCache.releaseReader(in);
         }
     }
-    
+
+    private static void changeIndexReader(Object convertor, IndexReader in) {
+        if (convertor instanceof IndexReaderInjection iri) {
+            iri.setIndexReader(in);
+        }
+    }
+
     @Override
     public <T> void queryTerms(
             final @NonNull Collection<? super T> result,
@@ -223,11 +218,8 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
                 return;
             }
 
-            final TermEnum terms = seekTo == null ? in.terms () : in.terms (seekTo);        
-            try {
-                if (adapter instanceof IndexReaderInjection) {
-                    ((IndexReaderInjection)adapter).setIndexReader(in);
-                }
+            try (TermEnum terms = seekTo == null ? in.terms() : in.terms(seekTo)) {
+                changeIndexReader(adapter, in);
                 try {
                     do {
                         if (cancel != null && cancel.get()) {
@@ -241,12 +233,8 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
                 } catch (StoppableConvertor.Stop stop) {
                     //Stop iteration of TermEnum finally {
                 } finally {
-                    if (adapter instanceof IndexReaderInjection) {
-                        ((IndexReaderInjection)adapter).setIndexReader(null);
-                    }
+                    changeIndexReader(adapter, null);
                 }
-            } finally {
-                terms.close();
             }
         } finally {
             dirCache.releaseReader(in);
@@ -285,12 +273,11 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
                     if (cancel != null && cancel.get()) {
                         throw new InterruptedException ();
                     }
-                    if (q instanceof TermCollector.TermCollecting) {
-                        ((TermCollector.TermCollecting)q).attach(termCollector);
+                    if (q instanceof TermCollector.TermCollecting termCollecting) {
+                        termCollecting.attach(termCollector);
                     } else {
                         throw new IllegalArgumentException (
-                                String.format("Query: %s does not implement TermCollecting",    //NOI18N
-                                q.getClass().getName()));
+                                "Query: %s does not implement TermCollecting".formatted(q.getClass().getName())); //NOI18N
                     }
                     searcher.search(q, termCollector);
                 }
@@ -299,13 +286,9 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
             }
         
             boolean logged = false;
-            if (convertor instanceof IndexReaderInjection) {
-                ((IndexReaderInjection)convertor).setIndexReader(in);
-            }
+            changeIndexReader(convertor, in);
             try {
-                if (termConvertor instanceof IndexReaderInjection) {
-                    ((IndexReaderInjection)termConvertor).setIndexReader(in);
-                }
+                changeIndexReader(termConvertor, in);
                 try {
                     for (int docNum = bs.nextSetBit(0); docNum >= 0; docNum = bs.nextSetBit(docNum+1)) {
                         if (cancel != null && cancel.get()) {
@@ -332,14 +315,10 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
                         }
                     }
                 } finally {
-                    if (termConvertor instanceof IndexReaderInjection) {
-                        ((IndexReaderInjection)termConvertor).setIndexReader(null);
-                    }
+                    changeIndexReader(termConvertor, null);
                 }
             } finally {
-                if (convertor instanceof IndexReaderInjection) {
-                    ((IndexReaderInjection)convertor).setIndexReader(null);
-                }
+                changeIndexReader(convertor, null);
             }
         } finally {
             dirCache.releaseReader(in);
@@ -418,7 +397,7 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
             }
             final LowMemoryWatcher lmListener = LowMemoryWatcher.getInstance();
             Directory memDir = null;
-            IndexWriter activeOut = null;
+            IndexWriter activeOut;
             if (lmListener.isLowMemory()) {
                 activeOut = out;
             } else {
@@ -534,7 +513,7 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
                     @Override
                     public Iterator<T> iterator() {
                         return new Iterator<T>() {
-                            private final ListIterator<T> delegate = ((List)c).listIterator();
+                            private final ListIterator<T> delegate = ((List<T>)c).listIterator();
 
                             @Override
                             public boolean hasNext() {
@@ -812,9 +791,7 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
                             try {
                                 getReader();
                                 res = Status.VALID;
-                            } catch (java.io.IOException e) {
-                                clear();
-                            } catch (RuntimeException e) {
+                            } catch (IOException | RuntimeException e) {
                                 clear();
                             }
                         } else {
@@ -873,19 +850,16 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
             rwLock.readLock().lock();
             try {
                 try {
-                    final IndexWriter writer = indexWriterRef.acquire(new Callable<IndexWriter>() {
-                        @NonNull
-                        public IndexWriter call() throws IOException {
-                            final IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_35, analyzer);
-                            //Linux: The posix::fsync(int) is very slow on Linux ext3,
-                            //minimize number of files sync is done on.
-                            //http://netbeans.org/bugzilla/show_bug.cgi?id=208224
-                            //All OS: The CFS is better for SSD disks.
-                            final TieredMergePolicy mergePolicy = new TieredMergePolicy();
-                            mergePolicy.setNoCFSRatio(1.0);
-                            iwc.setMergePolicy(mergePolicy);
-                            return new FlushIndexWriter (fsDir, iwc);
-                        }
+                    IndexWriter writer = indexWriterRef.acquire(() -> {
+                        IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_36, analyzer);
+                        //Linux: The posix::fsync(int) is very slow on Linux ext3,
+                        //minimize number of files sync is done on.
+                        //http://netbeans.org/bugzilla/show_bug.cgi?id=208224
+                        //All OS: The CFS is better for SSD disks.
+                        TieredMergePolicy mergePolicy = new TieredMergePolicy();
+                        mergePolicy.setNoCFSRatio(1.0);
+                        iwc.setMergePolicy(mergePolicy);
+                        return new FlushIndexWriter (fsDir, iwc);
                     });
                     ok = true;
                     return writer;
@@ -954,7 +928,7 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
                         source = fsDir;
                     }
                     assert source != null;
-                    this.reader = IndexReader.open(source,true);
+                    this.reader = IndexReader.open(source);
                 } catch (final FileNotFoundException | ClosedByInterruptException | InterruptedIOException e) {
                     //Either the index dir does not exist or the thread is interrupted
                     //pass - returns null
@@ -983,7 +957,7 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
                     try {
                         synchronized (this) {
                             if (reader != null) {
-                                final IndexReader newReader = IndexReader.openIfChanged(reader);
+                                IndexReader newReader = IndexReader.openIfChanged(reader);
                                 if (newReader != null) {
                                     reader.close();
                                     reader = newReader;
@@ -1055,18 +1029,16 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
                 final LockFactory lockFactory) throws IOException {
             assert indexFolder != null;
             assert lockFactory != null;
-            final FSDirectory directory;
             final String dirType = System.getProperty(PROP_DIR_TYPE);
-            if(DIR_TYPE_MMAP.equals(dirType)) {
-                directory = new MMapDirectory(indexFolder, lockFactory);
-            } else if (DIR_TYPE_NIO.equals(dirType)) {
-                directory = new NIOFSDirectory(indexFolder, lockFactory);
-            } else if (DIR_TYPE_IO.equals(dirType)) {
-                directory = new SimpleFSDirectory(indexFolder, lockFactory);
-            } else {
-                directory = FSDirectory.open(indexFolder, lockFactory);
+            if (dirType == null) {
+                return FSDirectory.open(indexFolder, lockFactory);
             }
-            return directory;
+            return switch (dirType) {
+                case DIR_TYPE_MMAP -> new MMapDirectory(indexFolder, lockFactory);
+                case DIR_TYPE_NIO -> new NIOFSDirectory(indexFolder, lockFactory);
+                case DIR_TYPE_IO -> new SimpleFSDirectory(indexFolder, lockFactory);
+                default -> FSDirectory.open(indexFolder, lockFactory);
+            };
         }        
 
         private static boolean fitsIntoMem(@NonNull final Directory dir) {
@@ -1261,7 +1233,7 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
 
     private static final class StoreCloseSynchronizer {
 
-        private ThreadLocal<Boolean> isWriterThread = new ThreadLocal<Boolean>(){
+        private final ThreadLocal<Boolean> isWriterThread = new ThreadLocal<>(){
             @Override
             protected Boolean initialValue() {
                 return Boolean.FALSE;

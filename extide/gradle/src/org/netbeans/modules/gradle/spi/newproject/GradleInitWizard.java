@@ -19,11 +19,15 @@
 package org.netbeans.modules.gradle.spi.newproject;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import org.netbeans.modules.gradle.api.execute.GradleDistributionManager;
 import org.netbeans.modules.gradle.newproject.GradleInitPanel;
+import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.openide.WizardDescriptor;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -206,8 +210,13 @@ public final class GradleInitWizard {
             init.comments((Boolean)params.get(PROP_COMMENTS));
             init.add();
 
-
-            ops.addWrapperInit(root, "latest"); //NOI18N
+            if (!GradleSettings.getDefault().isOffline()) {
+                try {
+                    init.gradleVersion(GradleDistributionManager.get().currentDistribution().getVersion());
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
             List<String> open = important.stream()
                     .map((s) -> packageBase != null ? s.replace("${package}", packageBase.replace('.', '/')) : s) //NOI18N
                     .map((s) -> s.replace("${projectName}", name)) //NOI18N

@@ -1317,6 +1317,9 @@ jobs:
       - name: editor.htmlui
         run: ant $OPTS -f java/editor.htmlui test
 
+      - name: java.api.common
+        run: ant $OPTS -f java/java.api.common test
+
       - name: java.completion
         run: ant $OPTS -f java/java.completion test
 

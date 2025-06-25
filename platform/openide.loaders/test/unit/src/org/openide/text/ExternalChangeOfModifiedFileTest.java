@@ -132,7 +132,7 @@ public class ExternalChangeOfModifiedFileTest extends NbTestCase {
         assertNotNull("Panes are still open", arr);
         assertTrue("Document is remains modified", edit.isModified());
 
-        DD.toReturn.push(DialogDescriptor.YES_NO_OPTION);
+        DD.toReturn.push(DialogDescriptor.YES_OPTION);
 
         SaveCookie sc = obj.getLookup().lookup(SaveCookie.class);
         assertNotNull("File is modified and has save cookie", sc);

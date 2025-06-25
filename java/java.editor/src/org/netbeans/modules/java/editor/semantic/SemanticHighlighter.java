@@ -36,7 +36,6 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.modules.editor.NbEditorUtilities;
-import org.netbeans.modules.java.editor.base.semantic.ColoringAttributes;
 import org.netbeans.modules.java.editor.base.semantic.ColoringAttributes.Coloring;
 import org.netbeans.modules.java.editor.base.semantic.SemanticHighlighterBase;
 import org.netbeans.modules.java.editor.base.semantic.SemanticHighlighterBase.ErrorDescriptionSetter;
@@ -51,11 +50,12 @@ import org.openide.util.Pair;
  */
 public class SemanticHighlighter extends SemanticHighlighterBase {
 
+    @Override
     protected boolean process(final CompilationInfo info, final Document doc) {
         long start = System.currentTimeMillis();
         boolean ret = process(info, doc, ERROR_DESCRIPTION_SETTER);
-        Logger.getLogger("TIMER").log(Level.FINE, "Semantic",
-            new Object[] {NbEditorUtilities.getFileObject(doc), System.currentTimeMillis() - start});
+        Logger.getLogger(SemanticHighlighter.class.getName()).log(Level.FINE, "Semantic {1} {0}",
+                new Object[] {NbEditorUtilities.getFileObject(doc), System.currentTimeMillis() - start});
         return ret;
     }
     
@@ -63,6 +63,7 @@ public class SemanticHighlighter extends SemanticHighlighterBase {
         
         public void setErrors(Document doc, List<ErrorDescription> errors, List<TreePathHandle> allUnusedImports) {}
         
+        @Override
         public void setHighlights(final Document doc, final Collection<Pair<int[], Coloring>> highlights, Map<int[], String> preText) {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
@@ -81,6 +82,7 @@ public class SemanticHighlighter extends SemanticHighlighterBase {
             });
         }
     
+        @Override
         public void setColorings(final Document doc, final Map<Token, Coloring> colorings) {
             SwingUtilities.invokeLater(new Runnable () {
                 public void run() {

@@ -445,6 +445,7 @@ jobs:
         run: ant -quiet -Dcluster.config=$CLUSTER_CONFIG test -Dtest.includes=NoTestsJustBuild
 
       # 13-14 min for javadoc; JDK version must be synced with nb-javac
+      # TODO fails on JDK 25
       - name: Set up JDK 24 for javadoc
         if: env.test_javadoc == 'true' && success()
         uses: actions/setup-java@v4
@@ -1465,11 +1466,10 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        # TODO bump together with nb-javac 25 update
-        java: [ '17', '24' ]
+        java: [ '17', '25-ea' ]
         config: [ 'batch1', 'batch2' ]
         exclude:
-          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '24' }}
+          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '25-ea' }}
       fail-fast: false
     steps:
 

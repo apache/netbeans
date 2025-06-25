@@ -20,6 +20,7 @@ package org.netbeans.modules.web.bootsfaces;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 import org.netbeans.modules.web.jsfapi.api.Attribute;
 import org.netbeans.modules.web.jsfapi.api.Library;
 import org.netbeans.modules.web.jsfapi.api.Tag;
@@ -43,17 +44,17 @@ public class BootsFacesTagFeatureProvider implements TagFeatureProvider {
     @Override
     public <T extends TagFeature> Collection<T> getFeatures(final Tag tag, Library library, Class<T> clazz) {
         if (clazz.equals(TagFeature.IterableTagPattern.class)) {
-            final BootsFacesTagFeatureProvider.IterableTag iterableTag = resolveIterableTag(library, tag);
+            final IterableTag iterableTag = resolveIterableTag(library, tag);
             if (iterableTag != null) {
                 return Collections.singleton(clazz.cast(new TagFeature.IterableTagPattern() {
                     @Override
                     public Attribute getVariable() {
-                        return tag.getAttribute(iterableTag.getVariableAtribute());
+                        return tag.getAttribute(iterableTag.getVariableAttribute());
                     }
 
                     @Override
                     public Attribute getItems() {
-                        return tag.getAttribute(iterableTag.getItemsAtribute());
+                        return tag.getAttribute(iterableTag.getItemsAttribute());
                     }
                 }));
             }
@@ -62,11 +63,14 @@ public class BootsFacesTagFeatureProvider implements TagFeatureProvider {
         return Collections.emptyList();
     }
 
-    private BootsFacesTagFeatureProvider.IterableTag resolveIterableTag(Library library, Tag tag) {
-        for (BootsFacesTagFeatureProvider.IterableTag iterableTag : BootsFacesTagFeatureProvider.IterableTag.values()) {
-            if (library.getNamespace() != null
-                    && iterableTag.getNamespace() != null
-                    && library.getNamespace().equalsIgnoreCase(iterableTag.getNamespace())) {
+    private IterableTag resolveIterableTag(Library library, Tag tag) {
+        String libraryNamespace = library.getNamespace();
+        if (libraryNamespace == null) {
+            return null;
+        }
+        for (IterableTag iterableTag : IterableTag.values()) {
+            if (Objects.equals(libraryNamespace, iterableTag.getNamespace())
+                    && Objects.equals(tag.getName(), iterableTag.getName())) {
                 return iterableTag;
             }
         }
@@ -75,18 +79,19 @@ public class BootsFacesTagFeatureProvider implements TagFeatureProvider {
 
     private enum IterableTag {
 
-        DATA_TABLE(BOOTSFACES_UI_NAMESPACE, "dataTable", VALUE, VAR); //NOI18N
+        DATA_TABLE(BOOTSFACES_UI_NAMESPACE, "dataTable", VALUE, VAR), //NOI18N
+        TAB(BOOTSFACES_UI_NAMESPACE, "tab", VALUE, VAR); //NOI18N
 
         private final String namespace;
         private final String name;
-        private final String itemsAtribute;
-        private final String variableAtribute;
+        private final String itemsAttribute;
+        private final String variableAttribute;
 
-        private IterableTag(String namespace, String name, String itemsAtribute, String variableAtribute) {
+        private IterableTag(String namespace, String name, String itemsAttribute, String variableAttribute) {
             this.namespace = namespace;
             this.name = name;
-            this.itemsAtribute = itemsAtribute;
-            this.variableAtribute = variableAtribute;
+            this.itemsAttribute = itemsAttribute;
+            this.variableAttribute = variableAttribute;
         }
 
         public String getNamespace() {
@@ -97,12 +102,12 @@ public class BootsFacesTagFeatureProvider implements TagFeatureProvider {
             return name;
         }
 
-        public String getItemsAtribute() {
-            return itemsAtribute;
+        public String getItemsAttribute() {
+            return itemsAttribute;
         }
 
-        public String getVariableAtribute() {
-            return variableAtribute;
+        public String getVariableAttribute() {
+            return variableAttribute;
         }
     }
 }

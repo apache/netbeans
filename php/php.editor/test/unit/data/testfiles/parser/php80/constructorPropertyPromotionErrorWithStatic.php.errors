@@ -1,8 +1,8 @@
 [[905,911]-Syntax error
  unexpected:	static
- expected:	identifier, variable, array, callable, define, ?, &, (, readonly] 905-911:Syntax error
+ expected:	identifier, variable, array, callable, define, ?, &, (, ..., readonly, &, namespace\..., ...\..., \...(\...), public(set), protected(set), private(set)] 905-911:Syntax error
  unexpected:	static
- expected:	identifier, variable, array, callable, define, ?, &, (, readonly
+ expected:	identifier, variable, array, callable, define, ?, &, (, ..., readonly, &, namespace\..., ...\..., \...(\...), public(set), protected(set), private(set)
 [[912,915]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	identifier 'int'] 912-915:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	identifier 'int'

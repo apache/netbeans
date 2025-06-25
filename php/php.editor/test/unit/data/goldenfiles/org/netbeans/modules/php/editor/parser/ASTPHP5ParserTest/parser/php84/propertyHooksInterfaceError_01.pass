@@ -1,0 +1,39 @@
+<testresult testFile='propertyHooksInterfaceError_01.php'>
+    <scanner>
+        <token id='T_INTERFACE' start='814' end='823'>
+            <text>interface</text>
+        </token>
+        <token id='T_STRING' start='824' end='845'>
+            <text>PropertyHookInterface</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='846' end='847'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='852' end='858'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='859' end='865'>
+            <text>$prop1</text>
+        </token>
+        <token id='T_SEMICOLON' start='865' end='866'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='867' end='868'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='869' end='869'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='869'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ASTError start='814' end='865'/>
+            <EmptyStatement start='865' end='866'/>
+            <ASTError start='0' end='866'/>
+        </Statements>
+    </Program>
+</testresult>

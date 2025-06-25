@@ -153,14 +153,15 @@ public class JSFConfigurationPanelVisual extends javax.swing.JPanel implements H
     private static volatile boolean jsfLibrariesCacheDirty = true;
     private static final List<Library> JSF_LIBRARIES_CACHE = new CopyOnWriteArrayList<>();
 
-    /** Map used for faster seek of JSF registered libraries. */
+    /** Maps used for faster seek of JSF/Jakarta Faces registered libraries. */
     private static final Map<Boolean, String> JSF_SEEKING_MAP = new LinkedHashMap<>(2);
+    private static final Map<Boolean, String> JSF_SEEKING_MAP_JAKARTA = new LinkedHashMap<>(2);
 
     static {
-        JSF_SEEKING_MAP.put(false, JSFUtils.EJB_STATELESS);    //NOI18N
-        JSF_SEEKING_MAP.put(true, JSFUtils.FACES_EXCEPTION);   //NOI18N
-        JSF_SEEKING_MAP.put(false, JSFUtils.JAKARTAEE_EJB_STATELESS);    //NOI18N
-        JSF_SEEKING_MAP.put(true, JSFUtils.JAKARTAEE_FACES_EXCEPTION);   //NOI18N
+        JSF_SEEKING_MAP.put(false, JSFUtils.EJB_STATELESS);
+        JSF_SEEKING_MAP.put(true, JSFUtils.FACES_EXCEPTION);
+        JSF_SEEKING_MAP_JAKARTA.put(false, JSFUtils.JAKARTAEE_EJB_STATELESS);
+        JSF_SEEKING_MAP_JAKARTA.put(true, JSFUtils.JAKARTAEE_FACES_EXCEPTION);
     }
 
     /**
@@ -1744,6 +1745,9 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
             List<URL> content = library.getContent("classpath"); //NOI18N
             try {
                 Boolean foundJsfLibrary = ClasspathUtil.containsClass(content, JSF_SEEKING_MAP);
+                if (foundJsfLibrary == null) {
+                    foundJsfLibrary = ClasspathUtil.containsClass(content, JSF_SEEKING_MAP_JAKARTA);
+                }
                 if (foundJsfLibrary != null && foundJsfLibrary) {
                     JSF_LIBRARIES_CACHE.add(library);
                 }

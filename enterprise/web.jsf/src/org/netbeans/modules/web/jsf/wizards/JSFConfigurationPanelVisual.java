@@ -40,7 +40,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -153,15 +152,13 @@ public class JSFConfigurationPanelVisual extends javax.swing.JPanel implements H
     private static volatile boolean jsfLibrariesCacheDirty = true;
     private static final List<Library> JSF_LIBRARIES_CACHE = new CopyOnWriteArrayList<>();
 
-    /** Map used for faster seek of JSF registered libraries. */
-    private static final Map<Boolean, String> JSF_SEEKING_MAP = new LinkedHashMap<>(2);
-
-    static {
-        JSF_SEEKING_MAP.put(false, JSFUtils.EJB_STATELESS);    //NOI18N
-        JSF_SEEKING_MAP.put(true, JSFUtils.FACES_EXCEPTION);   //NOI18N
-        JSF_SEEKING_MAP.put(false, JSFUtils.JAKARTAEE_EJB_STATELESS);    //NOI18N
-        JSF_SEEKING_MAP.put(true, JSFUtils.JAKARTAEE_FACES_EXCEPTION);   //NOI18N
-    }
+    /** Maps used for faster seek of JSF/Jakarta Faces registered libraries. */
+    private static final Map<Boolean, String> JSF_SEEKING_MAP = Map.of(
+            false, JSFUtils.EJB_STATELESS,
+            true, JSFUtils.FACES_EXCEPTION);
+    private static final Map<Boolean, String> JSF_SEEKING_MAP_JAKARTA = Map.of(
+            false, JSFUtils.JAKARTAEE_EJB_STATELESS,
+            true, JSFUtils.JAKARTAEE_FACES_EXCEPTION);
 
     /**
      * Creates new form JSFConfigurationPanelVisual.
@@ -1744,6 +1741,9 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
             List<URL> content = library.getContent("classpath"); //NOI18N
             try {
                 Boolean foundJsfLibrary = ClasspathUtil.containsClass(content, JSF_SEEKING_MAP);
+                if (foundJsfLibrary == null) {
+                    foundJsfLibrary = ClasspathUtil.containsClass(content, JSF_SEEKING_MAP_JAKARTA);
+                }
                 if (foundJsfLibrary != null && foundJsfLibrary) {
                     JSF_LIBRARIES_CACHE.add(library);
                 }

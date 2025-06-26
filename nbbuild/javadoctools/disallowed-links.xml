@@ -65,7 +65,7 @@
     <filter pattern="http://www\.saxproject\.org" accept="true" />
     <filter pattern="https://www\.eclipse\.org/jgit" accept="true" />
     <filter pattern="https://knockoutjs\.com" accept="true" />
-    <filter pattern="https://services\.gradle\.org/versions/all" accept="true" /> 
+    <filter pattern="https://services\.gradle\.org/.*" accept="true" />
     
     <!-- documentation API -->
     <filter pattern="https://docs\.oracle\.com/javase.*" accept="true" />

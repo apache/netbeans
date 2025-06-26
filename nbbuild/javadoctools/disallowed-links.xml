@@ -44,7 +44,6 @@
     <filter pattern="https://github\.com/graalvm/fastr" accept="true" />
     <filter pattern="https://github\.com/graalvm/graalpython" accept="true" />
     <filter pattern="https://github\.com/graalvm/truffleruby" accept="true" />
-    <filter pattern="https://github\.com/twall/jna" accept="true" />
     <filter pattern="https://github\.com/openjdk/.*" accept="true" />
     <filter pattern="https://github\.com/simpligility/.*" accept="true" />
     

@@ -458,6 +458,12 @@ jobs:
           export ANT_OPTS=-Djdk.xml.totalEntitySizeLimit=200000
           ant $OPTS build-javadoc
 
+      - name: Javadoc link summary
+        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4
+        if: env.test_javadoc == 'true'
+        with:
+          paths: "./nbbuild/build/javadoc/checklinks-errors.xml"
+
       - name: Create Test Summary
         uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4
         if: failure()

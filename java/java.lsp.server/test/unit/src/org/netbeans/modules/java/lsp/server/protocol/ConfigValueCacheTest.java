@@ -57,20 +57,6 @@ public class ConfigValueCacheTest extends NbTestCase {
     }
 
     @Test
-    public void testRegistrationOfCache() {
-        ConfigValueCache cache = new ConfigValueCache();
-        String section = "jdk.test.section";
-
-        assertNull("Config should be null before registering cache", cache.getConfigData(section));
-
-        cache.registerCache(section);
-        ConfigValueCache.ConfigData configData = cache.getConfigData(section);
-
-        assertNotNull("Config should exist after registering cache", configData);
-        assertNull("Consumer should be null", configData.getConsumer());
-    }
-
-    @Test
     public void testGetConfigValueWithInvalidSections() {
         ConfigValueCache cache = new ConfigValueCache();
 
@@ -179,22 +165,18 @@ public class ConfigValueCacheTest extends NbTestCase {
     }
 
     @Test
-    public void testCacheConfigValueIfNeeded() {
+    public void testCacheConfigValue() {
         ConfigValueCache cache = new ConfigValueCache();
         String section = "project.jdkhome";
         String scope1 = "file:///project1";
         JsonElement rootValue = new JsonPrimitive("root value");
         JsonElement scopedValue = new JsonPrimitive("scoped value");
 
-        cache.cacheConfigValueIfNeeded(section, rootValue, null);
-        assertNull("Non-existent section should return null", cache.getConfigValue(section, null));
-
-        cache.registerCache(section);
-        cache.cacheConfigValueIfNeeded(section, rootValue, null);
+        cache.cacheConfigValue(section, rootValue, null);
         JsonElement result1 = cache.getConfigValue(section, null);
         assertEquals("Root value should be updated", rootValue, result1);
 
-        cache.cacheConfigValueIfNeeded(section, scopedValue, scope1);
+        cache.cacheConfigValue(section, scopedValue, scope1);
         JsonElement result2 = cache.getConfigValue(section, scope1);
         assertEquals("Scoped value should be updated", scopedValue, result2);
 

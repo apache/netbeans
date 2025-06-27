@@ -53,13 +53,6 @@ public class ConfigValueCache {
         }
     }
 
-    public void registerCache(String section) {
-        ConfigData configData = getCachedConfigData(section);
-        if (configData == null) {
-            setConfigInTree(section, new ConfigData());
-        }
-    }
-
     public JsonElement getConfigValue(String section, String scope) {
         ConfigData configData = getCachedConfigData(section);
         if (configData == null) {
@@ -135,7 +128,8 @@ public class ConfigValueCache {
         }
     }
 
-    public void cacheConfigValueIfNeeded(String section, JsonElement value, String scope) {
+    public void cacheConfigValue(String section, JsonElement value, String scope) {
+        registerCache(section);
         ConfigData configData = getCachedConfigData(section);
         if (configData != null) {
             if (scope != null) {
@@ -145,7 +139,15 @@ public class ConfigValueCache {
             }
         }
     }
-
+    
+    // Method used only in unit test
+    protected void registerCache(String section){
+        ConfigData configData = getCachedConfigData(section);
+        if (configData == null) {
+            setConfigInTree(section, new ConfigData());
+        }
+    }
+    
     // Method used only in unit test
     protected ConfigData getConfigData(String section) {
         return getCachedConfigData(section);

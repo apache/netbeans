@@ -956,7 +956,6 @@ public final class Server {
             NbCodeClientCapabilities capa = NbCodeClientCapabilities.get(init);
             client.setClientCaps(capa);
             workspaceService.registerConfigChangeListeners();
-            textDocumentService.registerConfigChangeListeners();
             hackConfigureGroovySupport(capa);
             hackNoReuseOfOutputsForAntProjects();
             List<FileObject> projectCandidates = new ArrayList<>();

@@ -52,43 +52,59 @@ public class ClientConfigurationManager {
         cache.registerListener(section, consumer);
     }
 
-    public void registerConfigCache(String section) {
-        cache.registerCache(section);
-    }
-
     public CompletableFuture<JsonElement> getConfigurationUsingAltPrefix(String config) {
-        return lookupCacheAndGetConfig(List.of(config), null, true)
+        return lookupCacheAndGetConfig(List.of(config), null, true, true)
                 .thenApply(result -> result.isEmpty() ? null : result.get(0));
     }
 
     public CompletableFuture<JsonElement> getConfigurationUsingAltPrefix(String config, String scope) {
-        return lookupCacheAndGetConfig(List.of(config), scope, true)
+        return lookupCacheAndGetConfig(List.of(config), scope, true, true)
+                .thenApply(result -> result.isEmpty() ? null : result.get(0));
+    }
+    
+    public CompletableFuture<JsonElement> getConfigurationUsingAltPrefixWithoutCaching(String config) {
+        return lookupCacheAndGetConfig(List.of(config), null, false, false)
+                .thenApply(result -> result.isEmpty() ? null : result.get(0));
+    }
+
+    public CompletableFuture<JsonElement> getConfigurationUsingAltPrefixWithoutCaching(String config, String scope) {
+        return lookupCacheAndGetConfig(List.of(config), null, false, false)
                 .thenApply(result -> result.isEmpty() ? null : result.get(0));
     }
 
     public CompletableFuture<List<JsonElement>> getConfigurationsUsingAltPrefix(List<String> configs) {
-        return lookupCacheAndGetConfig(configs, null, true);
+        return lookupCacheAndGetConfig(configs, null, true, true);
     }
 
     public CompletableFuture<JsonElement> getConfiguration(String config) {
-        return lookupCacheAndGetConfig(List.of(config), null, false)
+        return lookupCacheAndGetConfig(List.of(config), null, false, true)
+                .thenApply(result -> result.isEmpty() ? null : result.get(0));
+    }
+
+    public CompletableFuture<JsonElement> getConfigurationWithoutCaching(String config) {
+        return lookupCacheAndGetConfig(List.of(config), null, false, false)
+                .thenApply(result -> result.isEmpty() ? null : result.get(0));
+    }
+
+    public CompletableFuture<JsonElement> getConfigurationWithoutCaching(String config, String scope) {
+        return lookupCacheAndGetConfig(List.of(config), null, false, false)
                 .thenApply(result -> result.isEmpty() ? null : result.get(0));
     }
 
     public CompletableFuture<JsonElement> getConfiguration(String config, String scope) {
-        return lookupCacheAndGetConfig(List.of(config), scope, false)
+        return lookupCacheAndGetConfig(List.of(config), scope, false, true)
                 .thenApply(result -> result.isEmpty() ? null : result.get(0));
     }
 
     public CompletableFuture<List<JsonElement>> getConfigurations(List<String> configs) {
-        return lookupCacheAndGetConfig(configs, null, false);
+        return lookupCacheAndGetConfig(configs, null, false, true);
     }
 
     public CompletableFuture<List<JsonElement>> getConfigurations(List<String> configs, String scope) {
-        return lookupCacheAndGetConfig(configs, scope, false);
+        return lookupCacheAndGetConfig(configs, scope, false, true);
     }
 
-    private CompletableFuture<List<JsonElement>> lookupCacheAndGetConfig(List<String> configs, String scope, boolean isAltPrefix) {
+    private CompletableFuture<List<JsonElement>> lookupCacheAndGetConfig(List<String> configs, String scope, boolean isAltPrefix, boolean isCachingRequired) {
         final String configPrefix = isAltPrefix ? client.getNbCodeCapabilities().getAltConfigurationPrefix() : client.getNbCodeCapabilities().getConfigurationPrefix();
         List<ConfigurationItem> itemsToRequest = new ArrayList<>();
         List<JsonElement> result = new ArrayList<>();
@@ -124,7 +140,9 @@ public class ClientConfigurationManager {
                                 JsonElement value = (JsonElement) clientConfigs.get(j);
                                 result.set(i, value);
                                 String prefixedConfig = configPrefix + configs.get(i);
-                                cache.cacheConfigValueIfNeeded(prefixedConfig, value, prjScope);
+                                if (isCachingRequired) {
+                                    cache.cacheConfigValue(prefixedConfig, value, prjScope);
+                                }
                                 j++;
                             }
                         }

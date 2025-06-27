@@ -363,14 +363,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     private static final RequestProcessor COMPLETION_SAMPLER_WORKER = new RequestProcessor("java-lsp-completion-sampler", 1, false, false);
     private static final AtomicReference<Sampler> RUNNING_SAMPLER = new AtomicReference<>();
     
-    void registerConfigChangeListeners() {
-        ClientConfigurationManager confManager = client.getClientConfigurationManager();
-        String fullConfigPrefix = client.getNbCodeCapabilities().getConfigurationPrefix();
-        
-        confManager.registerConfigCache(fullConfigPrefix + NETBEANS_JAVADOC_LOAD_TIMEOUT);
-        confManager.registerConfigCache(fullConfigPrefix + NETBEANS_COMPLETION_WARNING_TIME);
-    }
-    
     @Override
     @Messages({
         "# {0} - the timeout elapsed",

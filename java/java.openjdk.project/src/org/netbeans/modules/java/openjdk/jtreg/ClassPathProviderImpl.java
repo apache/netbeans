@@ -45,6 +45,7 @@ import org.netbeans.api.project.libraries.LibraryManager;
 import org.netbeans.api.queries.FileEncodingQuery;
 import org.netbeans.modules.java.openjdk.common.BuildUtils;
 import org.netbeans.modules.java.openjdk.common.ShortcutUtils;
+import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
@@ -255,6 +256,7 @@ public class ClassPathProviderImpl implements ClassPathProvider {
     }
 
     private void initializeUsagesQuery(FileObject root) {
+        if (true) return ;
         try {
             ClassLoader cl = JavaSource.class.getClassLoader();
             Class<?> transactionContextClass = Class.forName("org.netbeans.modules.java.source.indexing.TransactionContext", false, cl);

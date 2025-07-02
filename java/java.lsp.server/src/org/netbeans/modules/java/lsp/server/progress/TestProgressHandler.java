@@ -34,9 +34,11 @@ import org.eclipse.lsp4j.debug.services.IDebugProtocolClient;
 import org.netbeans.api.extexecution.print.LineConvertors;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.queries.UnitTestForSourceQuery;
+import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
+import org.netbeans.api.project.Sources;
 import org.netbeans.modules.gsf.testrunner.api.Report;
 import org.netbeans.modules.gsf.testrunner.api.Status;
 import org.netbeans.modules.gsf.testrunner.api.TestSession;
@@ -48,6 +50,7 @@ import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.protocol.TestProgressParams;
 import org.netbeans.modules.java.lsp.server.protocol.TestSuiteInfo;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 
 /**
@@ -107,14 +110,14 @@ public final class TestProgressHandler implements TestResultDisplayHandler.Spi<M
         Map<String, TestSuiteInfo.TestCaseInfo> testCases = new LinkedHashMap<>();
         String className = report.getSuiteClassName();
         for (Testcase test : report.getTests()) {
-            String name = test.getDisplayName();
+            String name = test.getName();
             String id = className + ':' + name;
             String state = statusToState(test.getStatus());
             List<String> stackTrace = test.getTrouble() != null ? Arrays.asList(test.getTrouble().getStackTrace()) : null;
             String location = test.getLocation();
             FileObject fo = location != null ? fileLocations.computeIfAbsent(location, loc -> {
                 LineConvertors.FileLocator fileLocator = test.getSession().getProject().getLookup().lookup(LineConvertors.FileLocator.class);
-                int i = loc.indexOf(':');
+                int i = loc.indexOf(':'); //TODO: windows??
                 if (i > 0) {
                     loc = loc.substring(0, i);
                 }
@@ -130,9 +133,31 @@ public final class TestProgressHandler implements TestResultDisplayHandler.Spi<M
         }
         String state = statusToState(report.getStatus());
         FileObject fo = fileLocations.size() == 1 ? fileLocations.values().iterator().next() : null;
+        TestSuiteInfo testSuiteInfo = new TestSuiteInfo(report.getSuiteClassName(), token.getModuleName(), firstModulePath(token),
+                fo != null ? Utils.toUri(fo) : null, null, state, new ArrayList<>(testCases.values()));
         
-        lspClient.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(report.getSuiteClassName(), token.getModuleName(), firstModulePath(token),
-                fo != null ? Utils.toUri(fo) : null, null, state, new ArrayList<>(testCases.values()))));
+        setRelativePath(testSuiteInfo, fo);
+        lspClient.notifyTestProgress(new TestProgressParams(uri, testSuiteInfo));
+    }
+
+    private void setRelativePath(TestSuiteInfo suiteInfo, FileObject fo) {
+        Project owner = fo != null ? FileOwnerQuery.getOwner(fo) : null;
+        String relativePath = null;
+        if (owner != null) {
+            Sources sources = ProjectUtils.getSources(owner);
+
+            for (String sourceGroupKind : new String[] {JavaProjectConstants.SOURCES_TYPE_JAVA, "jdk-project-sources-tests"}) { //XXX: hardcoded test root key
+                SourceGroup[] groups = sources.getSourceGroups(sourceGroupKind);
+
+                for (SourceGroup group : groups) {
+                    if (FileUtil.isParentOf(group.getRootFolder(), fo)) {
+                        relativePath = FileUtil.getRelativePath(group.getRootFolder(), fo);
+                        break;
+                    }
+                }
+            }
+        }
+        suiteInfo.setRelativePath(relativePath);
     }
 
     @Override

@@ -112,6 +112,7 @@ import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
+import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.csl.api.IndexSearcher;
@@ -408,13 +409,31 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                         for (TestMethodController.TestMethod testMethod : methods) {
                             TestSuiteInfo suite = suite2infos.computeIfAbsent(testMethod.getTestClassName(), name -> {
                                 Position pos = testMethod.getTestClassPosition() != null ? Utils.createPosition(fo, testMethod.getTestClassPosition().getOffset()) : null;
-                                return new TestSuiteInfo(name, moduleName, modulePath, url, pos != null ? new Range(pos, pos) : null, TestSuiteInfo.State.Loaded, new ArrayList<>());
+                                TestSuiteInfo suiteInfo = new TestSuiteInfo(name, moduleName, modulePath, url, pos != null ? new Range(pos, pos) : null, TestSuiteInfo.State.Loaded, new ArrayList<>());
+                                String relativePath = null;
+                                if (owner != null) {
+                                    Sources sources = ProjectUtils.getSources(owner);
+
+                                    for (String sourceGroupKind : new String[] {JavaProjectConstants.SOURCES_TYPE_JAVA, "jdk-project-sources-tests"}) { //XXX: hardcoded test root key
+                                        SourceGroup[] groups = sources.getSourceGroups(sourceGroupKind);
+
+                                        for (SourceGroup group : groups) {
+                                            if (FileUtil.isParentOf(group.getRootFolder(), fo)) {
+                                                relativePath = FileUtil.getRelativePath(group.getRootFolder(), fo);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                suiteInfo.setRelativePath(relativePath);
+                                return suiteInfo;
                             });
                             String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
                             Position startPos = testMethod.start() != null ? Utils.createPosition(fo, testMethod.start().getOffset()) : null;
                             Position endPos = testMethod.end() != null ? Utils.createPosition(fo, testMethod.end().getOffset()) : startPos;
                             Range range = startPos != null ? new Range(startPos, endPos) : null;
                             suite.getTests().add(new TestSuiteInfo.TestCaseInfo(id, testMethod.method().getMethodName(), url, range, TestSuiteInfo.State.Loaded, null));
+                            System.err.println("reporting testcase: " + id);
                         }
                         return suite2infos.values();
                     };

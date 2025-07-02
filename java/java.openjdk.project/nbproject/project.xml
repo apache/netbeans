@@ -128,12 +128,21 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.modules.java.j2seplatform</code-name-base>
+                    <code-name-base>org.netbeans.modules.extexecution</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>1.64</specification-version>
+                        <release-version>2</release-version>
+                        <specification-version>1.78</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.gsf.testrunner</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>2.41</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -142,6 +151,15 @@
                     <compile-dependency/>
                     <run-dependency>
                         <specification-version>1.34</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.java.j2seplatform</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.64</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

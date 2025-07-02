@@ -55,6 +55,11 @@ public final class TestSuiteInfo {
     private String file;
 
     /**
+     * The relative path.
+     */
+    private String relativePath;
+
+    /**
      * The range within the specified file where the suite definition is located (if known).
      */
     private Range range;
@@ -151,6 +156,15 @@ public final class TestSuiteInfo {
      */
     public TestSuiteInfo setFile(final String file) {
         this.file = file;
+        return this;
+    }
+
+    public String getRelativePath() {
+        return relativePath;
+    }
+
+    public TestSuiteInfo setRelativePath(String relativePath) {
+        this.relativePath = relativePath;
         return this;
     }
 

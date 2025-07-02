@@ -352,6 +352,7 @@ public class ActionProviderImpl implements ActionProvider {
                     if (query != null) {
                         testPath += "?" + query;
                     }
+                    FileObject testRoot = getTestRoot(file);
                     options.add(testPath);
                     try {
                         stop.started();
@@ -370,13 +371,14 @@ public class ActionProviderImpl implements ActionProvider {
                                         pendingTestcase = null;
                                         pendingReport = null;
                                     }
+                                    //TODO: testLocation - is the path that jtreg prints viable here?
                                     String testLocation = t.substring("runner starting test: ".length());
                                     String suiteId = TestIndexer.relativePath2FakeClassName(testLocation); //TODO: how this will look inside NB and in VSCode?
                                     pendingTestcase = new Testcase("@test", "", testSession); //testLocation, 
                                     pendingTestcase.setClassName(suiteId);
                                     pendingTestcase.setStatus(Status.PENDING);
-                                    pendingTestcase.setLocation(file.getPath()); //TODO: this is completely wrong - needs to find a file for the current test + properly produce a path(??)
-                                    //TODO: relativePath - is the path that jtreg prints viable here?
+                                    FileObject testFile = testRoot != null ? testRoot.getFileObject(testLocation) : null;
+                                    pendingTestcase.setLocation(testFile != null ? FileUtil.toFile(testFile).getAbsolutePath() : null);
                                     pendingReport = new Report(suiteId, testSession.getProject());
                                     pendingReport.setTotalTests(pendingReport.getTotalTests() + 1);
                                     pendingReport.setPending(1);
@@ -429,7 +431,7 @@ public class ActionProviderImpl implements ActionProvider {
                                 }
                                 break;
                             default:
-                                printJTR(io, jtregWork, fullSourcePath, file);
+                                printJTR(io, jtregWork, fullSourcePath, testRoot, file);
                                 break;
                         }
                         success = true;
@@ -469,6 +471,16 @@ public class ActionProviderImpl implements ActionProvider {
                 }
             }
         }, io);
+    }
+
+    private static FileObject getTestRoot(FileObject testFile) {
+        FileObject testRoot = testFile;
+
+        while (testRoot != null && BuildUtils.getFileObject(testRoot, "TEST.ROOT") == null) {
+            testRoot = testRoot.getParent();
+        }
+
+        return testRoot;
     }
 
     static ClassPath allSources(FileObject file) {
@@ -634,11 +646,8 @@ public class ActionProviderImpl implements ActionProvider {
         return buildClasses != null ? FileUtil.toFile(buildClasses).getAbsoluteFile() : null;
     }
 
-    static void printJTR(InputOutput io, File jtregWork, ClassPath fullSourcePath, FileObject testFile) {
+    static void printJTR(InputOutput io, File jtregWork, ClassPath fullSourcePath, FileObject testRoot, FileObject testFile) {
         try {
-            FileObject testRoot = testFile;
-            while (testRoot != null && BuildUtils.getFileObject(testRoot, "TEST.ROOT") == null)
-                testRoot = testRoot.getParent();
             if (testRoot != null) {
                 String relPath = FileUtil.getRelativePath(testRoot, testFile);
                 relPath = relPath.replaceAll(".java$", ".jtr");

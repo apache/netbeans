@@ -108,7 +108,7 @@ export class NbTestAdapter {
                         if (!cancellation.isCancellationRequested) {
                             try {
                                 //TODO: testRun == true, file(!)
-                                await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? COMMAND_PREFIX + '.debug.single' : COMMAND_PREFIX + '.run.single', item.uri.toString(), idx < 0 ? undefined : item.id.slice(idx + 1), 
+                                await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? COMMAND_PREFIX + '.debug.test' : COMMAND_PREFIX + '.run.test', item.uri.toString(), idx < 0 ? undefined : item.id.slice(idx + 1), 
                                     undefined /* configuration */, nestedClass);
                             } catch(err) {
                                 // test state will be handled in the code below
@@ -388,12 +388,14 @@ export class NbTestAdapter {
         let currentTarget = currentModule;
         let suiteName = suite.name;
         if (suite.relativePath) {
+            let currentUri = suite.modulePath ? Uri.parse(suite.modulePath) : null;
             const relativePathComponents = suite.relativePath.split('/');
             for (let i = 0; i < relativePathComponents.length - 1; i++) {
                 const currentTargetChildren: TestItem[] = []
                 let newTarget = currentTarget.children.get(relativePathComponents[i]);
+                currentUri = currentUri ? Uri.joinPath(currentUri, relativePathComponents[i]) : null;
                 if (!newTarget) {
-                    newTarget = this.testController.createTestItem(relativePathComponents[i], this.getNameWithIcon(relativePathComponents[i], 'package'), undefined);
+                    newTarget = this.testController.createTestItem(relativePathComponents[i], this.getNameWithIcon(relativePathComponents[i], 'package'), currentUri ? currentUri : undefined);
                     currentTargetChildren.push(newTarget);
                 }
                 currentTarget.children.forEach(suite => currentTargetChildren.push(suite));

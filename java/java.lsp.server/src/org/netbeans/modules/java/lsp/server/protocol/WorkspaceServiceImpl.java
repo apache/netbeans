@@ -125,6 +125,7 @@ import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachConfigurations;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachNativeConfigurations;
+import org.netbeans.modules.java.lsp.server.progress.TestUtils;
 import org.netbeans.modules.java.lsp.server.project.LspProjectInfo;
 import org.netbeans.modules.java.lsp.server.singlesourcefile.SingleFileOptionsQueryImpl;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
@@ -403,29 +404,16 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                         String url = Utils.toUri(fo);
                         Project owner = FileOwnerQuery.getOwner(fo);
                         String moduleName = owner != null ? ProjectUtils.getInformation(owner).getDisplayName(): null;
-                        List<String> paths = getModuleTestPaths(owner);
-                        String modulePath = firstModulePath(paths, moduleName);
+                        List<FileObject> paths = TestUtils.getModuleTestPaths(owner);
+                        FileObject modulePath = TestUtils.findModulePath(moduleName, paths, fo);
                         Map<String, TestSuiteInfo> suite2infos = new LinkedHashMap<>();
                         for (TestMethodController.TestMethod testMethod : methods) {
                             TestSuiteInfo suite = suite2infos.computeIfAbsent(testMethod.getTestClassName(), name -> {
                                 Position pos = testMethod.getTestClassPosition() != null ? Utils.createPosition(fo, testMethod.getTestClassPosition().getOffset()) : null;
-                                TestSuiteInfo suiteInfo = new TestSuiteInfo(name, moduleName, modulePath, url, pos != null ? new Range(pos, pos) : null, TestSuiteInfo.State.Loaded, new ArrayList<>());
-                                String relativePath = null;
-                                if (owner != null) {
-                                    Sources sources = ProjectUtils.getSources(owner);
-
-                                    for (String sourceGroupKind : new String[] {JavaProjectConstants.SOURCES_TYPE_JAVA, "jdk-project-sources-tests"}) { //XXX: hardcoded test root key
-                                        SourceGroup[] groups = sources.getSourceGroups(sourceGroupKind);
-
-                                        for (SourceGroup group : groups) {
-                                            if (FileUtil.isParentOf(group.getRootFolder(), fo)) {
-                                                relativePath = FileUtil.getRelativePath(group.getRootFolder(), fo);
-                                                break;
-                                            }
-                                        }
-                                    }
+                                TestSuiteInfo suiteInfo = new TestSuiteInfo(name, moduleName, TestUtils.toPath(modulePath), url, pos != null ? new Range(pos, pos) : null, TestSuiteInfo.State.Loaded, new ArrayList<>());
+                                if (modulePath != null) {
+                                    suiteInfo.setRelativePath(FileUtil.getRelativePath(modulePath, fo));
                                 }
-                                suiteInfo.setRelativePath(relativePath);
                                 return suiteInfo;
                             });
                             String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
@@ -433,7 +421,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                             Position endPos = testMethod.end() != null ? Utils.createPosition(fo, testMethod.end().getOffset()) : startPos;
                             Range range = startPos != null ? new Range(startPos, endPos) : null;
                             suite.getTests().add(new TestSuiteInfo.TestCaseInfo(id, testMethod.method().getMethodName(), url, range, TestSuiteInfo.State.Loaded, null));
-                            System.err.println("reporting testcase: " + id);
+//                            System.err.println("reporting testcase: " + id);
                         }
                         return suite2infos.values();
                     };
@@ -834,24 +822,6 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             LOG.log(Level.WARNING, "Mutliple test roots are not yet supported for module {0}", moduleName);
         }
         return paths.iterator().next();
-    }
-    
-    private static List<String> getModuleTestPaths(Project project) {        
-        if (project == null) {
-            return null;
-        }
-        SourceGroup[] sourceGroups = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-        Set<String> paths = new LinkedHashSet<>();
-        for (SourceGroup sourceGroup : sourceGroups) {
-            URL[] urls = UnitTestForSourceQuery.findUnitTests(sourceGroup.getRootFolder());
-            for (URL u : urls) {
-                FileObject f = URLMapper.findFileObject(u);
-                if (f != null) {
-                    paths.add(f.getPath());
-                }
-            }
-        }
-        return paths.isEmpty() ? null : new ArrayList<>(paths);
     }
     
     private class ProjectInfoWorker {

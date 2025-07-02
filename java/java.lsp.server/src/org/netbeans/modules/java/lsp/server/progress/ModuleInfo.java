@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.lsp.server.progress;
 
 import java.util.List;
+import org.openide.filesystems.FileObject;
 
 /**
  *
@@ -29,9 +30,9 @@ import java.util.List;
 public final class ModuleInfo {
     
     private final String moduleName;
-    private final List<String> testRoots;
+    private final List<FileObject> testRoots;
 
-    public ModuleInfo(String moduleName, List<String> testRoots) {
+    public ModuleInfo(String moduleName, List<FileObject> testRoots) {
         this.moduleName = moduleName;
         this.testRoots = testRoots;
     }
@@ -40,7 +41,7 @@ public final class ModuleInfo {
         return moduleName;
     }
 
-    public List<String> getTestRoots() {
+    public List<FileObject> getTestRoots() {
         return testRoots;
     }
 }

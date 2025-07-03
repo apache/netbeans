@@ -493,6 +493,10 @@ public class TreeFactory {
         return make.at(NOPOS).Import((JCFieldAccess)qualid, importStatic);
     }
     
+    public ImportTree ImportModule(Tree moduleName) {
+        return make.at(NOPOS).ModuleImport((JCExpression) moduleName);
+    }
+
     public InstanceOfTree InstanceOf(ExpressionTree expression, Tree type) {
         return make.at(NOPOS).TypeTest((JCExpression)expression, (JCTree)type);
     }

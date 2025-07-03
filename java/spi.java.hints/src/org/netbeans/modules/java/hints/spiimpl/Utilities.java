@@ -988,7 +988,8 @@ public class Utilities {
 
         itt.attach(c, new NoImports(c), null);
 
-        return itt.translate(original.getLeaf());
+        return itt.translate(original.getLeaf(),
+                             original.getParentPath() != null ? original.getParentPath().getLeaf() : null);
     }
 
     public static Tree generalizePattern(CompilationInfo info, TreePath original, int firstStatement, int lastStatement) {
@@ -1153,14 +1154,14 @@ public class Utilities {
         }
 
         @Override
-        public Tree translate(Tree tree) {
+        public Tree translate(Tree tree, Object p) {
             Tree var = tree2Variable.remove(tree);
 
             if (var != null) {
-                return super.translate(var);
+                return super.translate(var, p);
             }
 
-            return super.translate(tree);
+            return super.translate(tree, p);
         }
 
     }
@@ -1172,7 +1173,7 @@ public class Utilities {
         }
 
         @Override
-        public void classEntered(ClassTree clazz) {}
+        public void classEntered(ClassTree clazz, boolean isAnonymous) {}
 
         @Override
         public void enterVisibleThroughClasses(ClassTree clazz) {}

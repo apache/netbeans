@@ -29,6 +29,8 @@ import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Source;
 import com.sun.tools.javac.model.JavacElements;
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -472,6 +474,26 @@ public class CompilationInfo {
     final void checkConfinement () throws IllegalStateException {
         if (VERIFY_CONFINEMENT && this.invalid) {
             throw new IllegalStateException (String.format("Access to the shared %s outside a guarded run method.", this.getClass().getSimpleName()));
+        }
+    }
+
+    /**Return the {@code ModuleElement} this compilation info belongs to.
+     *
+     * @return the {@code ModuleElement} this compilation info belongs to. may
+     *         return {@code null} when this {@link CompilationInfo} is not
+     *         in phase {@link JavaSource.Phase#ELEMENTS_RESOLVED} or higher.
+     * @throws IllegalStateException is thrown when the {@link JavaSource} was created with no files
+     */
+    ModuleElement getModule() {
+        //preconditions checked by getTopLevelElements or getCompilationUnit:
+        if (this.impl.isClassFile()) {
+            List<? extends TypeElement> topElement = getTopLevelElements();
+            return !topElement.isEmpty() ? getElements().getModuleOf(topElement.get(0))
+                                         : null;
+        } else {
+            CompilationUnitTree cu = getCompilationUnit();
+
+            return cu != null ? ((JCCompilationUnit) cu).modle : null;
         }
     }
 

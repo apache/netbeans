@@ -2131,7 +2131,11 @@ public class CasualDiff {
         do { } while (tokenSequence.moveNext() && JavaTokenId.COLON != tokenSequence.token().id() && JavaTokenId.ARROW != tokenSequence.token().id());
         boolean reindentStatements = false;
         if (Objects.equals(oldT.getCaseKind(), newT.getCaseKind())) {
+            localPointer= tokenSequence.offset();
             tokenSequence.moveNext();
+            if (origText.charAt(localPointer-1)==' ') {
+                localPointer--;
+            }
             copyTo(localPointer, localPointer = tokenSequence.offset());
         } else {
             if (JavaTokenId.COLON == tokenSequence.token().id()) {

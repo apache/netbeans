@@ -575,8 +575,9 @@ public abstract class PositionEstimator {
         }
 
         /**
-         * Used when all elements from the list was removed.
+         * Used when all elements from the list were removed.
          */
+        @Override
         public int[] sectionRemovalBounds(StringBuilder replacement) {
             if (!initialized) initialize();
             // this part should be generalized

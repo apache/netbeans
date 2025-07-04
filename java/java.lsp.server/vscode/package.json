@@ -230,6 +230,14 @@
 					"default": 999,
 					"minimum": 1
 				},
+				"netbeans.java.completion.commit.chars": {
+					"type": "array",
+					"default": [
+						".",
+						","
+					],
+					"description": "Specifies the characters that trigger accepting a code completion suggestion. Defaults to '.' and ','. For example, to accept suggestions when typing a dot (.), set this to [\".\"]"
+				},
 				"netbeans.guides.notified": {
 					"type": "array",
 					"items": {
@@ -271,15 +279,19 @@
 					"description": "Enable or disable various inline hints.",
 					"type": "array",
 					"default": [],
-                                        "items": {
-                                            "type": "string",
-                                            "enum": ["chained", "parameter", "var"],
-                                            "markdownEnumDescriptions": [
-                                                "show return types of chained methods",
-                                                "show parameter names",
-                                                "show types of `var` variables"
-                                            ]
-                                        }
+					"items": {
+						"type": "string",
+						"enum": [
+							"chained",
+							"parameter",
+							"var"
+						],
+						"markdownEnumDescriptions": [
+							"show return types of chained methods",
+							"show parameter names",
+							"show types of `var` variables"
+						]
+					}
 				}
 			}
 		},

@@ -43,10 +43,10 @@ public class CheckerElementVisitor {
         Collection<ElementVisitor> visitors = new ArrayList<>();
         visitors.add(new UnknownAttributesChecker(context, conf, snapshot, hints));
         visitors.add(new MissingRequiredAttributeChecker(context, conf, snapshot, hints));
-        
+
         return new AggregatedVisitor(visitors);
     }
-    
+
     public static class AggregatedVisitor implements ElementVisitor {
 
         private final Collection<ElementVisitor> visitors;
@@ -54,7 +54,7 @@ public class CheckerElementVisitor {
         public AggregatedVisitor(Collection<ElementVisitor> visitors) {
             this.visitors = visitors;
         }
-        
+
         @Override
         public void visit(Element node) {
             for(ElementVisitor visitor : visitors) {
@@ -63,9 +63,9 @@ public class CheckerElementVisitor {
         }
 
     }
-    
+
     protected abstract static class Checker implements ElementVisitor {
- 
+
         protected RuleContext context;
         protected Configuration conf;
         protected Snapshot snapshot;
@@ -116,7 +116,7 @@ public class CheckerElementVisitor {
                             boolean lineHint = false;
 
                             //use the whole element offsetrange so multiple unknown attributes can be handled
-                            OffsetRange range = new OffsetRange(snapshot.getEmbeddedOffset(ot.from()), snapshot.getEmbeddedOffset(ot.to()));
+                            OffsetRange range = new OffsetRange(snapshot.getOriginalOffset(ot.from()), snapshot.getOriginalOffset(ot.to()));
                             hints.add(new UnknownAttributes(unknownAttributeNames, tagModel.getName(), context, range, lineHint));
                         }
                     }
@@ -125,7 +125,7 @@ public class CheckerElementVisitor {
         }
     }
 
-     private static class MissingRequiredAttributeChecker extends Checker {
+    private static class MissingRequiredAttributeChecker extends Checker {
 
         public MissingRequiredAttributeChecker(RuleContext context, Configuration conf, Snapshot snapshot, List<Hint> hints) {
             super(context, conf, snapshot, hints);
@@ -157,6 +157,6 @@ public class CheckerElementVisitor {
             }
         }
     }
-    
-    
+
+
 }

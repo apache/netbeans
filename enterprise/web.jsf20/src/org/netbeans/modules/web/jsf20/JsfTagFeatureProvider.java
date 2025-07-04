@@ -29,7 +29,7 @@ import org.netbeans.modules.web.jsfapi.spi.TagFeatureProvider;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * {@link TagFeatureProvider} for JSF 2.2.
+ * {@link TagFeatureProvider} for JSF/Jakarta Faces.
  *
  * @author petrpodzimek
  */
@@ -47,12 +47,12 @@ public class JsfTagFeatureProvider implements TagFeatureProvider {
                 return Collections.singleton(clazz.cast(new TagFeature.IterableTagPattern() {
                     @Override
                     public Attribute getVariable() {
-                        return tag.getAttribute(iterableTag.getVariableAtribute());
+                        return tag.getAttribute(iterableTag.getVariableAttribute());
                     }
 
                     @Override
                     public Attribute getItems() {
-                        return tag.getAttribute(iterableTag.getItemsAtribute());
+                        return tag.getAttribute(iterableTag.getItemsAttribute());
                     }
                 }));
             }
@@ -79,19 +79,20 @@ public class JsfTagFeatureProvider implements TagFeatureProvider {
 
         FOR_EACH(DefaultLibraryInfo.JSTL_CORE, "forEach", "items", VAR),         //NOI18N
         SELECT_ITEMS(DefaultLibraryInfo.JSF_CORE, "selectItems", VALUE, VAR),    //NOI18N
+        SELECT_ITEMS_GROUPS(DefaultLibraryInfo.JSF_CORE, "selectItemGroups", VALUE, VAR), //NOI18N
         DATA_TABLE(DefaultLibraryInfo.HTML, "dataTable", VALUE, VAR),            //NOI18N
         REPEAT(DefaultLibraryInfo.FACELETS, "repeat", VALUE, VAR);               //NOI18N
 
         private final DefaultLibraryInfo libraryInfo;
         private final String name;
-        private final String itemsAtribute;
-        private final String variableAtribute;
+        private final String itemsAttribute;
+        private final String variableAttribute;
 
-        private IterableTag(DefaultLibraryInfo libraryInfo, String name, String itemsAtribute, String variableAtribute) {
+        private IterableTag(DefaultLibraryInfo libraryInfo, String name, String itemsAttribute, String variableAttribute) {
             this.libraryInfo = libraryInfo;
             this.name = name;
-            this.itemsAtribute = itemsAtribute;
-            this.variableAtribute = variableAtribute;
+            this.itemsAttribute = itemsAttribute;
+            this.variableAttribute = variableAttribute;
         }
 
         public DefaultLibraryInfo getLibraryInfo() {
@@ -102,12 +103,12 @@ public class JsfTagFeatureProvider implements TagFeatureProvider {
             return name;
         }
 
-        public String getItemsAtribute() {
-            return itemsAtribute;
+        public String getItemsAttribute() {
+            return itemsAttribute;
         }
 
-        public String getVariableAtribute() {
-            return variableAtribute;
+        public String getVariableAttribute() {
+            return variableAttribute;
         }
     }
 }

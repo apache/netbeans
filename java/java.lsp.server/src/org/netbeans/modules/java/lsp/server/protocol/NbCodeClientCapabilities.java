@@ -90,6 +90,11 @@ public final class NbCodeClientCapabilities {
      * Secondary prefix for configuration.
      */
     private String altConfigurationPrefix = "java+.";
+    
+    /**
+     * Whether telemetry needs to be enabled.
+     */
+    private Boolean wantsTelemetryEnabled = Boolean.FALSE;
 
     public ClientCapabilities getClientCapabilities() {
         return clientCaps;
@@ -177,6 +182,10 @@ public final class NbCodeClientCapabilities {
 
     public void setAltConfigurationPrefix(String altConfigurationPrefix) {
         this.altConfigurationPrefix = altConfigurationPrefix;
+    }
+
+    public boolean wantsTelemetryEnabled() {
+        return wantsTelemetryEnabled == Boolean.TRUE;
     }
 
     private NbCodeClientCapabilities withCapabilities(ClientCapabilities caps) {

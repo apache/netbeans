@@ -855,6 +855,13 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     }
 
     @Override
+    public void visitModuleImport(JCModuleImport tree) {
+        print("import module ");
+        print(tree.module);
+        print(';');
+    }
+
+    @Override
     public void visitClassDef(JCClassDecl tree) {
         JCClassDecl enclClassPrev = enclClass;
 	enclClass = tree;
@@ -2953,8 +2960,13 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         int lastGroup = -1;
         for (JCTree importStat : imports) {
             if (importGroups != null) {
-                Name name = fullName(((JCImport)importStat).qualid);
-                int group = name != null ? importGroups.getGroupId(name.toString(), ((JCImport)importStat).staticImport) : -1;
+                int group;
+                if (importStat instanceof JCImport imp) {
+                    Name name = fullName(imp.qualid);
+                    group = name != null ? importGroups.getGroupId(name.toString(), imp.staticImport) : -1;
+                } else {
+                    group = -1;
+                }
                 if (lastGroup >= 0 && lastGroup != group)
                     blankline();
                 lastGroup = group;

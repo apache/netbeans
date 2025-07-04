@@ -77,6 +77,8 @@ import com.sun.tools.javac.parser.ParserFactory;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.sun.tools.javac.tree.JCTree.JCLambda;
+import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.Log;
 import java.lang.reflect.Method;
@@ -213,6 +215,32 @@ public final class TreeUtilities {
                            path.getParentPath().getLeaf().getKind() == Kind.METHOD) {
                     JCMethodDecl m = (JCMethodDecl) path.getParentPath().getLeaf();
                     if ((m.mods.flags & Flags.COMPACT_RECORD_CONSTRUCTOR) != 0 && m.getParameters().contains(path.getLeaf())) {
+                        return true;
+                    }
+                }
+            }
+            if (path.getParentPath() != null) {
+                Tree parentLeaf = path.getParentPath().getLeaf();
+                if (parentLeaf.getKind() == Kind.VARIABLE) {
+                    JCVariableDecl var = (JCVariableDecl) parentLeaf;
+                    if (var.declaredUsingVar() && var.vartype == path.getLeaf()) {
+                        return true;
+                    }
+                    if (path.getParentPath().getParentPath() != null) {
+                        Tree parentParentLeaf = path.getParentPath().getParentPath().getLeaf();
+
+                        if (parentParentLeaf.getKind() == Kind.LAMBDA_EXPRESSION) {
+                            JCLambda let = (JCLambda) parentParentLeaf;
+
+                            if (let.paramKind == JCLambda.ParameterKind.IMPLICIT && let.getParameters().contains(parentLeaf)) {
+                                return true;
+                            }
+                        }
+                    }
+                } else if (parentLeaf.getKind() == Kind.LAMBDA_EXPRESSION
+                        && (path.getLeaf().getKind() == Kind.MEMBER_SELECT || path.getLeaf().getKind() == Kind.PRIMITIVE_TYPE)) {
+                    JCLambda let = (JCLambda) parentLeaf;
+                    if (let.paramKind == JCLambda.ParameterKind.IMPLICIT) {
                         return true;
                     }
                 }

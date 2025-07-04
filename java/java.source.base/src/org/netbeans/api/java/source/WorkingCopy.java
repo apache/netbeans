@@ -66,6 +66,8 @@ import com.sun.source.tree.TreeVisitor;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.DocTrees;
+import com.sun.tools.javac.tree.JCTree.JCLambda;
+import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -535,6 +537,22 @@ public class WorkingCopy extends CompilationController {
                 }
             }
         }
+        if (node.getKind() == Kind.VARIABLE) {
+            JCVariableDecl var = (JCVariableDecl) node;
+
+            if (var.declaredUsingVar()) {
+                diffContext.syntheticTrees.add(var.vartype);
+            }
+        }
+        if (node.getKind() == Kind.LAMBDA_EXPRESSION) {
+            JCLambda lambda = (JCLambda) node;
+
+            if (lambda.paramKind == JCLambda.ParameterKind.IMPLICIT) {
+                for (JCVariableDecl param : lambda.params) {
+                    diffContext.syntheticTrees.add(param.vartype);
+                }
+            }
+        }
     }
 
     /**
@@ -587,7 +605,8 @@ public class WorkingCopy extends CompilationController {
                     if (node == null) return null;
                     boolean oldSynthetic = synthetic;
                     try {
-                        synthetic |= getTreeUtilities().isSynthetic(diffContext.origUnit, node);
+                        synthetic |= getTreeUtilities().isSynthetic(diffContext.origUnit, node) ||
+                                     diffContext.syntheticTrees.contains(node);
                         if (!synthetic) {
                             oldTrees.add(node);
                         }

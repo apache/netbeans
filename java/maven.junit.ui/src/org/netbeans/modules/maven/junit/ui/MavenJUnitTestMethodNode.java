@@ -70,7 +70,14 @@ public class MavenJUnitTestMethodNode extends JUnitTestMethodNode {
             if (suiteProject != null) {
                 ActionProvider actionProvider = suiteProject.getLookup().lookup(ActionProvider.class);
                 if (actionProvider != null) {
-                    SingleMethod methodSpec = new SingleMethod(testFO, testcase.getName());
+                    String mName = testcase.getName();
+                    String tcName= testcase.getClassName();
+                    if (tcName!=null
+                            && mName.startsWith(tcName)
+                            && mName.charAt(tcName.length())=='.'){
+                        mName= mName.substring(tcName.length()+1);
+                    }
+                    SingleMethod methodSpec = new SingleMethod(testFO, mName);
                     Lookup nodeContext = Lookups.singleton(methodSpec);
 
                     for (String action : actionProvider.getSupportedActions()) {

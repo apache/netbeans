@@ -241,6 +241,9 @@ cause it to fail.
                 </not>
             </or>
         </condition>
+        <condition property="javadoc25.or.later">
+            <javaversion atleast="25"/>
+        </condition>
         <condition property="javadoc23.or.later">
             <javaversion atleast="23"/>
         </condition>
@@ -281,9 +284,11 @@ cause it to fail.
         </replace>
         <mkdir dir="${javadoc.out.dir}/resources"/>
         <mkdir dir="${javadoc.out.dir}/resource-files/resources"/>
-        <copy file="${javadoc.out.dir}/resource-files/glass.png" todir="${javadoc.out.dir}/resource-files/resources" />
-        <copy file="${javadoc.out.dir}/resource-files/x.png" todir="${javadoc.out.dir}/resource-files/resources" />
-          
+        <copy file="${javadoc.out.dir}/resource-files/glass.png" todir="${javadoc.out.dir}/resource-files/resources" if:blank="${javadoc25.or.later}" />
+        <copy file="${javadoc.out.dir}/resource-files/x.png" todir="${javadoc.out.dir}/resource-files/resources" if:blank="${javadoc25.or.later}" />
+        <!-- JDK 25+ uses svgs -->
+        <copy file="${javadoc.out.dir}/resource-files/glass.svg" todir="${javadoc.out.dir}/resource-files/resources" if:true="${javadoc25.or.later}" />
+        <copy file="${javadoc.out.dir}/resource-files/x.svg" todir="${javadoc.out.dir}/resource-files/resources" if:true="${javadoc25.or.later}" />
         <copy todir="${javadoc.out.dir}/resources">
             <fileset refid="javadoc.resources.files"/>
         </copy>
@@ -318,17 +323,7 @@ cause it to fail.
                 <pathelement location="${javadoc.docfiles}"/>
                 <pathelement location="${javadoc.src}"/>
                 <pathelement location="${javadoc.src}/../build/classes-generated"/>
-            </sourcepath><!--
-            <doclet
-                name="org.apidesign.javadoc.codesnippet.Doclet"
-                path="${nb_all}/nbbuild/external/codesnippet-doclet-1.0.jar"
-            >
-                <param name="-snippetpath" value="${javadoc.base}/src"/>
-                <param name="-snippetpath" value="${javadoc.base}/test/unit/src"/>
-                <param name="-maxLineLength" value="240"/> <!- - 120 was too short - ->
-                <param name="-snippetmode" value="jep413"/>
-            </doclet>
-            -->
+            </sourcepath>
             <classpath path="${javadoc.classpath}"/>
             <!-- XXX note, this does not support more than one group -->
             <group packages="${javadoc.packages}">
@@ -345,9 +340,6 @@ cause it to fail.
             <bottom>${javadoc.footer}</bottom>
             <!-- Avoid timestamp comments in _all_ html generated files, to reduce unnecessary git commits -->
             <arg value="-notimestamp" />
-            <!-- codebase has many occurrences of '///' which were never meant to appear in javadoc
-            this disables JDK 23+ "line doc comments" for now  -->
-            <arg value="--disable-line-doc-comments" if:true="${javadoc23.or.later}" />
             <arg value="-Xdoclint:all" />
             <arg value="-Xdoclint:-missing" />
             <arg value="--allow-script-in-comments" if:true="${javadoc23.or.later}" />
@@ -379,9 +371,6 @@ cause it to fail.
             <doctitle>${javadoc.title}&lt;br/&gt;${javadoc.stability.label}</doctitle>
             <header>${javadoc.header}</header>
             <bottom>${javadoc.footer}</bottom>
-            <!-- codebase has many occurrences of '///' which were never meant to appear in javadoc
-            this disables JDK 23+ "line doc comments" for now  -->
-            <arg value="--disable-line-doc-comments" if:true="${javadoc23.or.later}" />
             <arg value="-Xdoclint:all" />
             <arg value="-Xdoclint:-missing" />
         </javadoc>

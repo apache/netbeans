@@ -14,5 +14,5 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-9FB1613756338EE706C23D53F1423E6925D127C8 com.dukescript.nbjavac:nb-javac:jdk-24-ga
-AD9963C5C1DA19B72628F48364562C014A972B69 com.dukescript.nbjavac:nb-javac:jdk-24-ga:api
+4B5177660C433E4A47936806DCF049C41D067DB1 https://mbien.dev/tmp/nb-javac-jdk-25+29-impl.jar nb-javac-jdk-25+29.jar
+89D2B2C158C575ED53BBA7F6ABF8F021F7784856 https://mbien.dev/tmp/nb-javac-jdk-25+29-api.jar nb-javac-jdk-25+29-api.jar

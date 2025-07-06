@@ -20,8 +20,8 @@
 package org.netbeans.modules.refactoring.java.ui;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import org.junit.Ignore;
 import org.netbeans.modules.refactoring.java.test.RefactoringTestBase;
-import static org.junit.Assert.*;
 import org.netbeans.modules.refactoring.spi.ui.RefactoringUI;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
@@ -41,12 +41,13 @@ public class JavaRefactoringActionsProviderTest extends RefactoringTestBase {
     
     public void test211193() throws Exception {
         writeFilesAndWaitForScan(src,
-                new File("t/A.java", "package t;\n"
-                + "public class A {\n"
-                + "    public static void foo() {\n"
-                + "        int someArray[] = {};\n"
-                + "    }\n"
-                + "}"));
+                new File("t/A.java", """
+                                     package t;
+                                     public class A {
+                                         public static void foo() {
+                                             int someArray[] = {};
+                                         }
+                                     }"""));
         FileObject testFile = src.getFileObject("t/A.java");
         DataObject testFileDO = DataObject.find(testFile);
         EditorCookie ec = testFileDO.getLookup().lookup(EditorCookie.class);
@@ -66,12 +67,18 @@ public class JavaRefactoringActionsProviderTest extends RefactoringTestBase {
         assertEquals(++expectedCount, called.get());
     }
 
+    // hg blame: "#190101: preventing exceptions from various refactorings for very broken sources (without a top-level class)"
+
+    // disabled, javac 25 assumes everything what doesn't have a class declaration is
+    // a compact source file, so the orignal regression test isn't working atm
+    @Ignore
     public void test190101() throws Exception {
         writeFilesAndWaitForScan(src,
-                                 new File("t/A.java", "package t;\n" +
-                                                      "//public class A {\n" +
-                                                      "    public static void foo() {}\n" +
-                                                      "}"));
+                                 new File("t/A.java", """
+                                                      package t;
+                                                      //public class A {
+                                                          public static void foo() {}
+                                                      }"""));
         FileObject testFile = src.getFileObject("t/A.java");
         DataObject testFileDO = DataObject.find(testFile);
         EditorCookie ec = testFileDO.getLookup().lookup(EditorCookie.class);

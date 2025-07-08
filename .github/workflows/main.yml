@@ -445,11 +445,11 @@ jobs:
         run: ant -quiet -Dcluster.config=$CLUSTER_CONFIG test -Dtest.includes=NoTestsJustBuild
 
       # 13-14 min for javadoc; JDK version must be synced with nb-javac
-      - name: Set up JDK 24 for javadoc
+      - name: Set up JDK 25 for javadoc
         if: env.test_javadoc == 'true' && success()
         uses: actions/setup-java@v4
         with:
-          java-version: 24
+          java-version: 25-ea
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Build javadoc

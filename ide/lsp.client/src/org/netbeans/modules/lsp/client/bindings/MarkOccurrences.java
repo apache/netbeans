@@ -35,6 +35,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
+import org.eclipse.lsp4j.DocumentHighlight;
 import org.eclipse.lsp4j.DocumentHighlightParams;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
@@ -137,13 +138,18 @@ public class MarkOccurrences implements BackgroundTask, CaretListener, PropertyC
         }
         String uri = Utils.toURI(file);
         try {
-            return server
+            List<? extends DocumentHighlight> highlights = server
                     .getTextDocumentService()
                     .documentHighlight(new DocumentHighlightParams(new TextDocumentIdentifier(uri), Utils.createPosition(doc, caretPos)))
-                    .get()
-                    .stream()
-                    .map(h -> new int[]{Utils.getOffset(doc, h.getRange().getStart()),Utils.getOffset(doc, h.getRange().getEnd())})
-                    .collect(Collectors.toList());
+                    .get();
+            if (highlights != null) {
+                return highlights
+                        .stream()
+                        .map(h -> new int[]{Utils.getOffset(doc, h.getRange().getStart()), Utils.getOffset(doc, h.getRange().getEnd())})
+                        .collect(Collectors.toList());
+            } else {
+                return null;
+            }
         } catch (BadLocationException | InterruptedException | ExecutionException ex) {
             Exceptions.printStackTrace(ex);
             return null;

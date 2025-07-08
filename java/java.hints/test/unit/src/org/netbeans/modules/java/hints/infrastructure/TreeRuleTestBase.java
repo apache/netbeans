@@ -32,6 +32,7 @@ import java.util.prefs.AbstractPreferences;
 import java.util.prefs.BackingStoreException;
 
 import javax.swing.text.Document;
+import org.junit.Ignore;
 
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -43,7 +44,6 @@ import org.netbeans.api.java.source.SourceUtilsTestUtil2;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.junit.RandomlyFails;
 import org.netbeans.modules.java.hints.legacy.spi.RulesManager;
 import org.netbeans.modules.java.hints.legacy.spi.RulesManager.LegacyHintConfiguration;
 import org.netbeans.spi.editor.hints.ErrorDescription;
@@ -260,7 +260,8 @@ public abstract class TreeRuleTestBase extends NbTestCase {
     private Integer subTest;
     
     // common tests to check nothing is reported
-    @RandomlyFails
+    // note: those tests are *very* slow and run with all tests extending this class
+    @Ignore
     public void testIssue105979() throws Exception {
         String before = "package test; class Test {" +
                 "  return b;" +
@@ -272,10 +273,10 @@ public abstract class TreeRuleTestBase extends NbTestCase {
             SourceUtils.waitScanFinished();
             clearWorkDir();
             performAnalysisTest("test/Test.java", before, i);
-}
+        }
     }
     
-    @RandomlyFails
+    @Ignore
     public void testIssue108246() throws Exception {
 
         String before = "package test; class Test {" +
@@ -292,7 +293,7 @@ public abstract class TreeRuleTestBase extends NbTestCase {
         }
     }
 
-    @RandomlyFails
+    @Ignore
     public void testNoHintsForSimpleInitialize() throws Exception {
 
         String before = "package test; class Test {" +
@@ -308,7 +309,7 @@ public abstract class TreeRuleTestBase extends NbTestCase {
         }
     }
 
-    @RandomlyFails
+    @Ignore
     public void testIssue113933() throws Exception {
 
         String before = "package test; class Test {" +

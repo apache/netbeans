@@ -445,24 +445,26 @@ jobs:
         run: ant -quiet -Dcluster.config=$CLUSTER_CONFIG test -Dtest.includes=NoTestsJustBuild
 
       # 13-14 min for javadoc; JDK version must be synced with nb-javac
-      - name: Set up JDK 24 for javadoc
+      - name: Set up JDK 25 for javadoc
         if: env.test_javadoc == 'true' && success()
         uses: actions/setup-java@v4
         with:
-          java-version: 24
+          java-version: 25-ea
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Build javadoc
         if: env.test_javadoc == 'true' && success()
         run: |
           export ANT_OPTS=-Djdk.xml.totalEntitySizeLimit=200000
-          ant $OPTS build-javadoc
+          ant $OPTS -Djavadoc.fail.broken.links=true build-javadoc
 
       - name: Create Test Summary
         uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4
         if: failure()
         with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
+          paths: |
+            ./*/*/build/test/*/results/TEST-*.xml
+            ./nbbuild/build/javadoc/checklinks-errors.xml
 
 
   build-from-src-zip:

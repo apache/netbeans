@@ -245,12 +245,14 @@
     <target name="check-broken-links" depends="init" unless="javadoc.skip.brokenlinks.check">
         <taskdef name="checklinks" classname="org.netbeans.nbbuild.CheckLinks" classpath="${nbantext.jar}"/>
         <property name="javadoc.check.forbidden.links" value="true"/>
+        <property name="javadoc.fail.broken.links" value="false"/>
         <!-- -->
         <property name="javadoc.externallinks" location="${nb_all}/nbbuild/build/javadoclinks"/>
         <mkdir dir="${javadoc.externallinks}"/>
         <delete file="${javadoc.externallinks}*.txt" failonerror="false"/>
         <!-- -->
-        <checklinks basedir="${netbeans.javadoc.dir}" checkexternal="${javadoc.check.external.links}" checkforbidden="${javadoc.check.forbidden.links}" checkspaces="false" report="${netbeans.javadoc.dir}/checklinks-errors.xml" externallinkslist="${javadoc.externallinks}">
+        <checklinks basedir="${netbeans.javadoc.dir}" checkexternal="${javadoc.check.external.links}" checkforbidden="${javadoc.check.forbidden.links}"
+                    failbroken="${javadoc.fail.broken.links}" checkspaces="false" report="${netbeans.javadoc.dir}/checklinks-errors.xml" externallinkslist="${javadoc.externallinks}">
             <include name="*/overview-summary.html"/>
             <include name="*/apichanges.html"/>
             <include name="*/architecture-summary.html"/>

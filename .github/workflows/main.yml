@@ -110,9 +110,6 @@ env:
   # 'GraalVM' label for tests requirering GraalVM
   test_graalvm: ${{ contains(github.event.pull_request.labels.*.name, 'GraalVM') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
 
-  # 'VSCode Extension' label for building and testing the VSCode Extension
-  test_vscode_extension: ${{ contains(github.event.pull_request.labels.*.name, 'VSCode Extension') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
-
   # 'Ant', 'Gradle', 'Maven' and 'MX' labels trigger the build-tools job
   test_build_tools: ${{ contains(github.event.pull_request.labels.*.name, 'Ant') || contains(github.event.pull_request.labels.*.name, 'Gradle') || contains(github.event.pull_request.labels.*.name, 'Maven') || contains(github.event.pull_request.labels.*.name, 'MX') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
 
@@ -469,8 +466,8 @@ jobs:
 
   build-from-src-zip:
     name: Build ${{ matrix.config }} from src.zip on JDK ${{ matrix.java }}
-    # equals env.test_platform == 'true' || test_vscode_extension == 'true'
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'VSCode Extension') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+    # equals env.test_platform == 'true' 
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -514,20 +511,6 @@ jobs:
         run: |
           cd tmpbuild
           ant $OPTS -quiet build -Dcluster.config=${{ matrix.config }}
-
-      # extra round for VSCodeExt which is built with 'release' config
-      - name: Set up node
-        if: ${{ (matrix.config == 'release') && success() }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.18.1
-
-      - name: Build NBVSCodeExt from ${{ matrix.config }}-src zip
-        if: ${{ (matrix.config == 'release') && success() }}
-        run: |
-          cd tmpbuild/java/java.lsp.server
-          ant $OPTS build-vscode-ext -D3rdparty.modules=.*externalcodeformatter.*
-
 
   ide-modules-test:
     name: IDE Modules on Linux/JDK ${{ matrix.java }}
@@ -2604,55 +2587,6 @@ jobs:
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
 
-
-  vscode-extension-test:
-    name: VSCode Extension Tests on JDK ${{ matrix.java }}
-    # equals env.test_vscode_extension == 'true'
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'VSCode Extension') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
-    needs: base-build
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    strategy:
-      matrix:
-        java: [ '17' ]
-      fail-fast: false
-
-    steps:
-      - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v4
-        with:
-          java-version: ${{ matrix.java }}
-          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Set up node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.18.1
-
-      - name: Setup Xvfb
-        run: |
-          echo "DISPLAY=:99.0" >> $GITHUB_ENV
-          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-
-      - name: Download Build
-        uses: actions/download-artifact@v5
-        with:
-          name: build
-
-      - name: Extract
-        run: tar --zstd -xf build.tar.zst
-
-      - name: build-vscode-ext
-        run: |
-          cd java/java.lsp.server
-          ant $OPTS build-vscode-ext -D3rdparty.modules=.*externalcodeformatter.*
-
-      - name: test-vscode-ext
-        run: |
-          cd java/java.lsp.server
-          env "netbeans.extra.options=-J-Dnetbeans.logger.console=true" ant $OPTS test-vscode-ext
- 
-
 # cleanup job depends on everything so that it is forced to run last even if a long job fails early.
 # 'paperwork' is left out intentionally, since it doesn't run unit tests (hopefully doesn't need restarts)
 # and shouldn't prevent cleanup on validation failure - which might be common during dev time
@@ -2681,7 +2615,6 @@ jobs:
       - lsp-test
       - mysql-db-test
       - graalvm-test
-      - vscode-extension-test
 
     # cleanup if the primary build job succeeded and
     #  * nothing else failed (allows manual restarts)

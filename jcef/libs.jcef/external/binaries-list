@@ -1,0 +1,19 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+113FA4849A35D10AE7560B62CA5397AA145412D8 me.friwi:jcef-api:jcef-37f25dc+cef-116.0.19+gc6a20bc+chromium-116.0.5845.141
+7A4F32AD421930E6F93D7C7EB70A901E7FC1D1EA me.friwi:jogl-all:v2.4.0-rc-20210111
+0C37A51C8741AFCE3B75EFDA7E325F84F8F221C1 me.friwi:gluegen-rt:v2.4.0-rc-20210111

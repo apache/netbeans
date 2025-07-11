@@ -73,4 +73,11 @@ public @interface PathRecognizerRegistration {
      *   and empty strings (<code>""</code>) are ignored.
      */
     public String [] mimeTypes() default {};
+
+    /**
+     * XXX
+     *
+     * @return XXX
+     */
+    public String [] indexerFilter() default {};
 }

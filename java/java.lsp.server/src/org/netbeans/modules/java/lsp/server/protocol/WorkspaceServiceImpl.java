@@ -401,27 +401,33 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 return server.asyncOpenFileOwner(file).thenCompose(this::getTestRoots).thenCompose(testRoots -> {
                     LOG.log(Level.INFO, "Project {2}: {0} test roots opened in {1}ms", new Object[] { testRoots.size(), (System.currentTimeMillis() - t), file});
                     BiFunction<FileObject, Collection<TestMethodController.TestMethod>, Collection<TestSuiteInfo>> f = (fo, methods) -> {
-                        String url = Utils.toUri(fo);
-                        Project owner = FileOwnerQuery.getOwner(fo);
-                        String moduleName = owner != null ? ProjectUtils.getInformation(owner).getDisplayName(): null;
-                        List<FileObject> paths = TestUtils.getModuleTestPaths(owner);
-                        FileObject modulePath = TestUtils.findModulePath(moduleName, paths, fo);
                         Map<String, TestSuiteInfo> suite2infos = new LinkedHashMap<>();
-                        for (TestMethodController.TestMethod testMethod : methods) {
-                            TestSuiteInfo suite = suite2infos.computeIfAbsent(testMethod.getTestClassName(), name -> {
-                                Position pos = testMethod.getTestClassPosition() != null ? Utils.createPosition(fo, testMethod.getTestClassPosition().getOffset()) : null;
-                                TestSuiteInfo suiteInfo = new TestSuiteInfo(name, moduleName, TestUtils.toPath(modulePath), url, pos != null ? new Range(pos, pos) : null, TestSuiteInfo.State.Loaded, new ArrayList<>());
-                                if (modulePath != null) {
-                                    suiteInfo.setRelativePath(FileUtil.getRelativePath(modulePath, fo));
-                                }
-                                return suiteInfo;
-                            });
-                            String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
-                            Position startPos = testMethod.start() != null ? Utils.createPosition(fo, testMethod.start().getOffset()) : null;
-                            Position endPos = testMethod.end() != null ? Utils.createPosition(fo, testMethod.end().getOffset()) : startPos;
-                            Range range = startPos != null ? new Range(startPos, endPos) : null;
-                            suite.getTests().add(new TestSuiteInfo.TestCaseInfo(id, testMethod.method().getMethodName(), url, range, TestSuiteInfo.State.Loaded, null));
-//                            System.err.println("reporting testcase: " + id);
+                        try {
+                            String url = Utils.toUri(fo);
+                            Project owner = FileOwnerQuery.getOwner(fo);
+                            String moduleName = owner != null ? ProjectUtils.getInformation(owner).getDisplayName(): null;
+                            List<FileObject> paths = TestUtils.getModuleTestPaths(owner);
+                            FileObject modulePath = TestUtils.findModulePath(moduleName, paths, fo);
+                            for (TestMethodController.TestMethod testMethod : methods) {
+                                TestSuiteInfo suite = suite2infos.computeIfAbsent(testMethod.getTestClassName(), name -> {
+                                    Position pos = testMethod.getTestClassPosition() != null ? Utils.createPosition(fo, testMethod.getTestClassPosition().getOffset()) : null;
+                                    TestSuiteInfo suiteInfo = new TestSuiteInfo(name, moduleName, TestUtils.toPath(modulePath), url, pos != null ? new Range(pos, pos) : null, TestSuiteInfo.State.Loaded, new ArrayList<>());
+                                    if (modulePath != null) {
+                                        suiteInfo.setRelativePath(FileUtil.getRelativePath(modulePath, fo));
+                                    }
+                                    return suiteInfo;
+                                });
+                                String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
+                                Position startPos = testMethod.start() != null ? Utils.createPosition(fo, testMethod.start().getOffset()) : null;
+                                Position endPos = testMethod.end() != null ? Utils.createPosition(fo, testMethod.end().getOffset()) : startPos;
+                                Range range = startPos != null ? new Range(startPos, endPos) : null;
+                                suite.getTests().add(new TestSuiteInfo.TestCaseInfo(id, testMethod.method().getMethodName(), url, range, TestSuiteInfo.State.Loaded, null));
+                            }
+                        } catch (IllegalStateException ex) {
+                            //XXX: Utils.createPosition opens document, and that may fail (e.g. the Encoding test).
+                            //it is surely not good to crash and not report anything further tests
+                            //but, is there something better that can be done?
+                            Exceptions.printStackTrace(ex);
                         }
                         return suite2infos.values();
                     };

@@ -256,7 +256,6 @@ public class ClassPathProviderImpl implements ClassPathProvider {
     }
 
     private void initializeUsagesQuery(FileObject root) {
-        if (true) return ;
         try {
             ClassLoader cl = JavaSource.class.getClassLoader();
             Class<?> transactionContextClass = Class.forName("org.netbeans.modules.java.source.indexing.TransactionContext", false, cl);

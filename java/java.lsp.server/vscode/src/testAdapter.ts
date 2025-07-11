@@ -135,7 +135,19 @@ export class NbTestAdapter {
                 }
             }
             if (this.started) {
-                this.itemsToRun.forEach(item => this.set(item, 'skipped'));
+                this.itemsToRun.forEach(item => {
+                    var isContainer = true;
+                    if (item.children.size == 0) {
+                        isContainer = false;
+                    } else {
+                        item.children.forEach(c => {
+                            isContainer &&= c.children.size != 0;
+                        });
+                    }
+                    if (!isContainer) {
+                        this.set(item, 'skipped');
+                    }
+                });
             } 
             // TBD - message
             else {

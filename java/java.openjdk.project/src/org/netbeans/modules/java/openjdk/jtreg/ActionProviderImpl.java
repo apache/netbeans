@@ -292,6 +292,9 @@ public class ActionProviderImpl implements ActionProvider {
                     options.add(jtregReport.getAbsolutePath());
                     options.add("-xml:verify");
                     options.add("-javacoptions:-g");
+                    if (COMMAND_RUN_SINGLE.equals(command)) {
+                        options.add("-agentvm");
+                    }
                     File buildDir = BuildUtils.getBuildTargetDir(file);
                     options.add("-vmoption:-Djava.library.path=" + buildDir.getAbsolutePath() + "/support/test/jdk/jtreg/native/lib/");
                     Set<File> toRefresh = new HashSet<>();
@@ -359,6 +362,7 @@ public class ActionProviderImpl implements ActionProvider {
                         Process jtregProcess = new ProcessBuilder(options).start();
                         StringWriter errorOutput = new StringWriter();
                         Task outCopy = BACKGROUND.post(new CopyReaderWriter(new InputStreamReader(jtregProcess.getInputStream()), io.getOut(), null, new Consumer<String>() {
+                            //TODO: can this be done using the/an observer??
                             private Testcase pendingTestcase;
                             private Report pendingReport;
                             @Override

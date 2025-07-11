@@ -83,7 +83,7 @@ public class TaskCache {
     
     // Matches the diagnostic range with both the start and the end positions specified (e.g. 1,2-1,7)
     // or with only the start position specified (e.g. 1,2) where positions are written in a form line,column
-    private static final Pattern PATTERN = Pattern.compile("(\\d*),(\\d*)(?:-(\\d*),(\\d*))?");
+    private static final Pattern PATTERN = Pattern.compile("(-?\\d*),(-?\\d*)(?:-(\\d*),(\\d*))?");
 
     static {
 //        LOG.setLevel(Level.FINEST);

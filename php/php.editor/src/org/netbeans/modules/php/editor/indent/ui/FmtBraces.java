@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.php.editor.indent.ui;
 
 import java.awt.BorderLayout;
@@ -41,10 +40,9 @@ import static org.netbeans.modules.php.editor.indent.FmtOptions.CategorySupport.
 import org.openide.awt.Mnemonics;
 import org.openide.util.NbBundle;
 
-
 /**
  *
- * @author  phrebejk
+ * @author phrebejk
  */
 public class FmtBraces extends javax.swing.JPanel {
 
@@ -62,6 +60,8 @@ public class FmtBraces extends javax.swing.JPanel {
         classDeclCombo.putClientProperty(OPTION_ID, CLASS_DECL_BRACE_PLACEMENT);
         anonymousClassCombo.putClientProperty(OPTION_ID, ANONYMOUS_CLASS_BRACE_PLACEMENT);
         methodDeclCombo.putClientProperty(OPTION_ID, METHOD_DECL_BRACE_PLACEMENT);
+        fieldDeclComboBox.putClientProperty(OPTION_ID, FIELD_DECL_BRACE_PLACEMENT);
+        propertyHookComboBox.putClientProperty(OPTION_ID, PROPERTY_HOOK_DECL_BRACE_PLACEMENT);
         ifCombo.putClientProperty(OPTION_ID, IF_BRACE_PLACEMENT);
         forCombo.putClientProperty(OPTION_ID, FOR_BRACE_PLACEMENT);
         switchCombo.putClientProperty(OPTION_ID, SWITCH_BRACE_PLACEMENT);
@@ -119,6 +119,10 @@ public class FmtBraces extends javax.swing.JPanel {
         otherCombo = new JComboBox();
         matchLabel = new JLabel();
         matchCombo = new JComboBox<>();
+        fieldDeclLabel = new JLabel();
+        fieldDeclComboBox = new JComboBox<>();
+        propertyHookLabel = new JLabel();
+        propertyHookComboBox = new JComboBox<>();
 
         setName(NbBundle.getMessage(FmtBraces.class, "LBL_Braces")); // NOI18N
         setOpaque(false);
@@ -186,49 +190,59 @@ public class FmtBraces extends javax.swing.JPanel {
 
         matchCombo.setModel(new DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        fieldDeclLabel.setLabelFor(fieldDeclComboBox);
+        Mnemonics.setLocalizedText(fieldDeclLabel, NbBundle.getMessage(FmtBraces.class, "FmtBraces.fieldDeclLabel.text")); // NOI18N
+
+        fieldDeclComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        propertyHookLabel.setLabelFor(propertyHookComboBox);
+        Mnemonics.setLocalizedText(propertyHookLabel, NbBundle.getMessage(FmtBraces.class, "FmtBraces.propertyHookLabel.text")); // NOI18N
+
+        propertyHookComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         GroupLayout mainPanelLayout = new GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(forLabel)
-                            .addComponent(ifLabel)
-                            .addComponent(whileLabel)
-                            .addComponent(switchLabel)
-                            .addComponent(catchLabel)
-                            .addComponent(useTraitLabel)
-                            .addComponent(otherLabel)
-                            .addComponent(methodDeclLabel)
-                            .addComponent(classDeclLabel)
-                            .addComponent(anonymousClassLabel)
-                            .addComponent(groupUseLabel))
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(classDeclCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(anonymousClassCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(methodDeclCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ifCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(forCombo, 0, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(whileCombo, 0, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(switchCombo, 0, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(catchCombo, 0, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(useTraitCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(groupUseCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(otherCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(bracesPlacementLabel)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator1))
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(matchLabel)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(matchCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(forLabel)
+                    .addComponent(ifLabel)
+                    .addComponent(whileLabel)
+                    .addComponent(switchLabel)
+                    .addComponent(catchLabel)
+                    .addComponent(useTraitLabel)
+                    .addComponent(otherLabel)
+                    .addComponent(methodDeclLabel)
+                    .addComponent(classDeclLabel)
+                    .addComponent(anonymousClassLabel)
+                    .addComponent(groupUseLabel)
+                    .addComponent(matchLabel)
+                    .addComponent(propertyHookLabel)
+                    .addComponent(fieldDeclLabel))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(classDeclCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(anonymousClassCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(methodDeclCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(fieldDeclComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(propertyHookComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ifCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(forCombo, 0, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(whileCombo, 0, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(switchCombo, 0, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(matchCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(catchCombo, 0, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(useTraitCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(groupUseCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(otherCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(bracesPlacementLabel)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1)
+                .addContainerGap(118, Short.MAX_VALUE))
         );
 
         mainPanelLayout.linkSize(SwingConstants.HORIZONTAL, new Component[] {classDeclCombo, methodDeclCombo});
@@ -251,6 +265,14 @@ public class FmtBraces extends javax.swing.JPanel {
                 .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(methodDeclLabel)
                     .addComponent(methodDeclCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(fieldDeclLabel)
+                    .addComponent(fieldDeclComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(propertyHookLabel)
+                    .addComponent(propertyHookComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(ifCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -345,6 +367,8 @@ public class FmtBraces extends javax.swing.JPanel {
     private JLabel catchLabel;
     private JComboBox classDeclCombo;
     private JLabel classDeclLabel;
+    private JComboBox<String> fieldDeclComboBox;
+    private JLabel fieldDeclLabel;
     private JComboBox forCombo;
     private JLabel forLabel;
     private JComboBox<String> groupUseCombo;
@@ -360,6 +384,8 @@ public class FmtBraces extends javax.swing.JPanel {
     private JLabel methodDeclLabel;
     private JComboBox otherCombo;
     private JLabel otherLabel;
+    private JComboBox<String> propertyHookComboBox;
+    private JLabel propertyHookLabel;
     private JComboBox switchCombo;
     private JLabel switchLabel;
     private JComboBox useTraitCombo;

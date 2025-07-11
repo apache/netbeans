@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.php.editor.model;
 
 import org.netbeans.modules.php.editor.api.elements.InterfaceElement;

@@ -22,7 +22,6 @@
 
 package org.netbeans.modules.jumpto.file;
 
-import org.netbeans.modules.jumpto.common.CurrentSearch;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -58,8 +57,8 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.editor.JumpList;
-import org.netbeans.modules.jumpto.EntityComparator;
 import org.netbeans.modules.jumpto.common.AbstractModelFilter;
+import org.netbeans.modules.jumpto.common.CurrentSearch;
 import org.netbeans.modules.jumpto.common.ItemRenderer;
 import org.netbeans.modules.jumpto.common.Models;
 import org.netbeans.modules.jumpto.common.Utils;
@@ -179,7 +178,7 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
 
 
     @Override
-    public boolean setListModel(final FileSearchPanel panel, String text ) {
+    public boolean setListModel(final FileSearchPanel panel, String text, boolean force) {
         enableOK(false);
 
         cancel();
@@ -218,7 +217,7 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
         // Compute in other thread
         synchronized(this) {
             final SearchType searchType = Utils.toSearchType(nameKind);
-            if (currentSearch.isNarrowing(searchType, text, getSearchScope(panel), true)) {
+            if (!force && currentSearch.isNarrowing(searchType, text, getSearchScope(panel), true)) {
                 itemsComparator.setUsePreferred(panel.isPreferedProject());
                 itemsComparator.setText(text);
                 filterFactory.setLineNumber(lineNr);
@@ -383,6 +382,7 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
         // Set size
         d.setPreferredSize( new Dimension(  FileSearchOptions.getWidth(),
                                                  FileSearchOptions.getHeight() ) );
+        d.setMinimumSize(new Dimension(FileSearchOptions.MIN_WIDTH, FileSearchOptions.MIN_HEIGHT));
 
         // Center the dialog after the size changed.
         Rectangle r = Utilities.getUsableScreenBounds();

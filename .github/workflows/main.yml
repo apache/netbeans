@@ -1467,11 +1467,10 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        # TODO bump together with nb-javac 25 update
-        java: [ '17', '24' ]
+        java: [ '17', '25-ea' ]
         config: [ 'batch1', 'batch2' ]
         exclude:
-          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '24' }}
+          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '25-ea' }}
       fail-fast: false
     steps:
 

@@ -57,7 +57,6 @@ import static javax.lang.model.element.Modifier.*;
 import static javax.lang.model.SourceVersion.RELEASE_10;
 import static javax.lang.model.SourceVersion.RELEASE_11;
 import static javax.lang.model.SourceVersion.RELEASE_16;
-import static javax.lang.model.SourceVersion.RELEASE_19;
 import static javax.lang.model.SourceVersion.RELEASE_21;
 import static javax.lang.model.type.TypeKind.VOID;
 
@@ -2020,25 +2019,23 @@ public final class JavaCompletionTask<T> extends BaseTask {
         TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, let, env.getOffset());
         if (ts != null) {
             switch (ts.token().id()) {
-                case ARROW:
+                case ARROW -> {
                     localResult(env);
                     addValueKeywords(env);
-                    break;
-                case COMMA:
+                }
+                case COMMA -> {
                     if (let.getParameters().isEmpty()
-                            || env.getController().getTrees().getSourcePositions().getStartPosition(path.getCompilationUnit(), let.getParameters().get(0).getType()) >= 0) {
+                            || !env.getController().getTreeUtilities().isSynthetic(new TreePath(path, let.getParameters().get(0).getType()))) {
                         addClassTypes(env, null);
                         addPrimitiveTypeKeywords(env);
                         addKeyword(env, FINAL_KEYWORD, SPACE, false);
-                    }
-                    else {
+                    } else {
                         boolean isFirstParamVarType = isLambdaVarType(env, let);
-
                         if (isFirstParamVarType) {
                             addVarTypeForLambdaParam(env);
                         }
                     }
-                    break;
+                }
             }
         }
     }

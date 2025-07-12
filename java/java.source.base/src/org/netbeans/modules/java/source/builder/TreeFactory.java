@@ -64,7 +64,6 @@ import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.model.JavacTypes;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.parser.Tokens.Comment.CommentStyle;
-import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import com.sun.tools.javac.tree.DCTree.DCReference;
 import com.sun.tools.javac.tree.DocTreeMaker;
 import com.sun.tools.javac.tree.JCTree;
@@ -2070,5 +2069,11 @@ public class TreeFactory {
         public boolean isDeprecated() {
             return false;
         }
+
+        @Override
+        public Comment stripIndent() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+        
     }
 }

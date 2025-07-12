@@ -29,6 +29,7 @@ import org.netbeans.libs.git.GitException;
 import org.netbeans.modules.git.Git;
 import org.netbeans.modules.git.client.GitProgressSupport;
 import org.netbeans.modules.git.ui.actions.SingleRepositoryAction;
+import org.netbeans.modules.git.ui.history.BranchSelector;
 import org.netbeans.modules.versioning.spi.VCSContext;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -48,7 +49,10 @@ public class DeleteBranchAction extends SingleRepositoryAction {
 
     @Override
     protected void performAction (File repository, File[] roots, VCSContext context) {
-        throw new UnsupportedOperationException();
+        BranchSelector selector = new BranchSelector(repository);
+        if (selector.open()) {
+            deleteBranch(repository, selector.getSelectedBranch());
+        }
     }
 
     public void deleteBranch (final File repository, final String branchName) {

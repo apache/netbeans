@@ -3,7 +3,7 @@ Version: 33.4.8
 License: Apache-2.0
 Origin: https://github.com/google/guava
 Description: Guava is a set of core libraries that includes new collection types (such as multimap and multiset), immutable collections, a graph library, and utilities for concurrency, I/O, hashing, primitives, strings, and more.
-Files: apache-maven-3.9.10-bin.zip!/apache-maven-3.9.10/lib/guava-33.4.8-jre.jar
+Files: apache-maven-3.9.11-bin.zip!/apache-maven-3.9.11/lib/guava-33.4.8-jre.jar
 
                                  Apache License
                            Version 2.0, January 2004

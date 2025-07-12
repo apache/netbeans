@@ -3,7 +3,7 @@ Version: 1.0.3
 License: Apache-2.0
 Origin: https://github.com/google/guava
 Description: A Guava subproject
-Files: apache-maven-3.9.10-bin.zip!/apache-maven-3.9.10/lib/failureaccess-1.0.3.jar
+Files: apache-maven-3.9.11-bin.zip!/apache-maven-3.9.11/lib/failureaccess-1.0.3.jar
 
                                  Apache License
                            Version 2.0, January 2004

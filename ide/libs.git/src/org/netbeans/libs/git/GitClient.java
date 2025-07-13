@@ -70,6 +70,7 @@ import org.netbeans.libs.git.jgit.commands.PushCommand;
 import org.netbeans.libs.git.jgit.commands.RebaseCommand;
 import org.netbeans.libs.git.jgit.commands.RemoveCommand;
 import org.netbeans.libs.git.jgit.commands.RemoveRemoteCommand;
+import org.netbeans.libs.git.jgit.commands.RenameBranchCommand;
 import org.netbeans.libs.git.jgit.commands.RenameCommand;
 import org.netbeans.libs.git.jgit.commands.ResetCommand;
 import org.netbeans.libs.git.jgit.commands.RevertCommand;
@@ -1138,6 +1139,19 @@ public final class GitClient implements AutoCloseable {
     public void rename (File source, File target, boolean after, ProgressMonitor monitor) throws GitException {
         Repository repository = gitRepository.getRepository();
         RenameCommand cmd = new RenameCommand(repository, getClassFactory(), source, target, after, monitor, delegateListener);
+        cmd.execute();
+    }
+    
+    /**
+     * Renames a branch in the repository
+     * @param oldName current branch name
+     * @param newName desired branch name
+     * @param monitor progress monitor
+     * @throws GitException an unexpected error occurs
+     */
+    public void renameBranch (String oldName, String newName, ProgressMonitor monitor) throws GitException {
+        Repository repository = gitRepository.getRepository();
+        RenameBranchCommand cmd = new RenameBranchCommand(repository, getClassFactory(), oldName, newName, monitor);
         cmd.execute();
     }
     

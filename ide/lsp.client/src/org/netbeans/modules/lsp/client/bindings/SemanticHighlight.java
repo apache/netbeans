@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.AttributeSet;
@@ -34,7 +33,6 @@ import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.SemanticTokens;
 import org.eclipse.lsp4j.SemanticTokensLegend;
 import org.eclipse.lsp4j.SemanticTokensParams;
-import org.eclipse.lsp4j.SemanticTokensWithRegistrationOptions;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
@@ -49,7 +47,6 @@ import org.netbeans.spi.editor.highlighting.ZOrder;
 import org.netbeans.spi.editor.highlighting.support.OffsetsBag;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -66,46 +63,53 @@ public class SemanticHighlight implements BackgroundTask {
     }
 
     @Override
-    public void run(LSPBindings bindings, FileObject file) {
-        try {
-            SemanticTokensWithRegistrationOptions options = bindings.getInitResult().getCapabilities().getSemanticTokensProvider();
-            if (options == null) {
-                return ;
+    public void run(List<LSPBindings> servers, FileObject file) {
+        OffsetsBag target = new OffsetsBag(doc);
+        FontColorSettings[] fcs = new FontColorSettings[1];
+
+        Utils.handleBindings(servers,
+                             capa -> capa.getSemanticTokensProvider() != null,
+                             () -> new SemanticTokensParams(new TextDocumentIdentifier(Utils.toURI(file))),
+                             (server, params) -> server.getTextDocumentService().semanticTokensFull(params),
+                             (server, result) -> convertTokenHighlights(server, result, file, fcs, target));
+
+        getBag(doc).setHighlights(target);
+    }
+
+    private void convertTokenHighlights(LSPBindings server,
+                                        SemanticTokens tokens,
+                                        FileObject file,
+                                        FontColorSettings[] fcs,
+                                        OffsetsBag target) {
+        List<Integer> data = tokens.getData();
+        int lastLine = 0;
+        int lastColumn = 0;
+        int offset = 0;
+        for (int i = 0; i < data.size(); i += 5) {
+            int deltaLine = data.get(i);
+            int deltaColumn = data.get(i + 1);
+            if (deltaLine == 0) {
+                lastColumn += deltaColumn;
+                offset += deltaColumn;
+            } else {
+                lastLine += deltaLine;
+                lastColumn = deltaColumn;
+                offset = Utils.getOffset(doc, new Position(lastLine, lastColumn));
             }
-            OffsetsBag target = new OffsetsBag(doc);
-            SemanticTokensParams params = new SemanticTokensParams(new TextDocumentIdentifier(Utils.toURI(file)));
-            SemanticTokens tokens = bindings.getTextDocumentService().semanticTokensFull(params).get();
-            List<Integer> data = tokens.getData();
-            String mimeType = FileUtil.getMIMEType(file);
-            // Find mime-type specific FontColorSettings ...
-            FontColorSettings fcs = MimeLookup.getLookup(mimeType).lookup(FontColorSettings.class);
-            if (fcs == null) {
-                // ... or fall-back to "text/textmate" FontColorSettings...
-                fcs = MimeLookup.getLookup("text/textmate").lookup(FontColorSettings.class);
+            if (data.get(i + 2) <= 0) {
+                continue; //XXX!
             }
-            int lastLine = 0;
-            int lastColumn = 0;
-            int offset = 0;
-            for (int i = 0; i < data.size(); i += 5) {
-                int deltaLine = data.get(i);
-                int deltaColumn = data.get(i + 1);
-                if (deltaLine == 0) {
-                    lastColumn += deltaColumn;
-                    offset += deltaColumn;
-                } else {
-                    lastLine += deltaLine;
-                    lastColumn = deltaColumn;
-                    offset = Utils.getOffset(doc, new Position(lastLine, lastColumn));
+            if (fcs[0] == null) {
+                String mimeType = FileUtil.getMIMEType(file);
+                // Find mime-type specific FontColorSettings ...
+                fcs[0] = MimeLookup.getLookup(mimeType).lookup(FontColorSettings.class);
+                if (fcs[0] == null) {
+                    // ... or fall-back to "text/textmate" FontColorSettings...
+                    fcs[0] = MimeLookup.getLookup("text/textmate").lookup(FontColorSettings.class);
                 }
-                if (data.get(i + 2) <= 0) {
-                    continue; //XXX!
-                }
-                AttributeSet tokenHighlight = fcs == null ? EMPTY : tokenHighlight(bindings, fcs, data.get(i + 3), data.get(i + 4));
-                target.addHighlight(offset, offset + data.get(i + 2), tokenHighlight);
             }
-            getBag(doc).setHighlights(target);
-        } catch (InterruptedException | ExecutionException ex) {
-            Exceptions.printStackTrace(ex);
+            AttributeSet tokenHighlight = fcs[0] == null ? EMPTY : tokenHighlight(server, fcs[0], data.get(i + 3), data.get(i + 4));
+            target.addHighlight(offset, offset + data.get(i + 2), tokenHighlight);
         }
     }
 

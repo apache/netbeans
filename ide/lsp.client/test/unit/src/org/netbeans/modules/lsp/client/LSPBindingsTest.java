@@ -24,12 +24,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.Icon;
 import javax.swing.JComponent;
-import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -61,8 +63,8 @@ public class LSPBindingsTest {
         assertEquals("application/mock-txt", file.getMIMEType());
         assertNull("No project owner", FileOwnerQuery.getOwner(file));
 
-        LSPBindings bindings = LSPBindings.getBindings(file);
-        assertNotNull("Bindings for the projectless file found", bindings);
+        List<LSPBindings> bindings = LSPBindings.getBindings(file);
+        assertFalse("Bindings for the projectless file found", bindings.isEmpty());
     }
 
     public static final class SettableProxyLookup extends ProxyLookup {
@@ -188,8 +190,8 @@ public class LSPBindingsTest {
 
         NotifyDisplayerImpl.called.set(0);
 
-        LSPBindings bindings = LSPBindings.getBindings(file);
-        assertNull("No bindings after many failures", bindings);
+        List<LSPBindings> bindings = LSPBindings.getBindings(file);
+        assertTrue("No bindings after many failures", bindings.isEmpty());
         assertEquals(1, NotifyDisplayerImpl.called.get());
     }
 
@@ -229,8 +231,8 @@ public class LSPBindingsTest {
 
         NotifyDisplayerImpl.called.set(0);
 
-        LSPBindings bindings = LSPBindings.getBindings(file);
-        assertNull("No bindings after many failures", bindings);
+        List<LSPBindings> bindings = LSPBindings.getBindings(file);
+        assertTrue("No bindings after many failures", bindings.isEmpty());
         assertEquals(1, NotifyDisplayerImpl.called.get());
     }
 

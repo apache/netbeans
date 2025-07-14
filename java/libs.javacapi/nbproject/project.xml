@@ -40,11 +40,11 @@
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path />
-                <binary-origin>external/nb-javac-jdk-24-ga-api.jar</binary-origin>
+                <binary-origin>external/nb-javac-jdk-25+31.1-api.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path />
-                <binary-origin>external/nb-javac-jdk-24-ga.jar</binary-origin>
+                <binary-origin>external/nb-javac-jdk-25+31.1.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

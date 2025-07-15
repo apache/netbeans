@@ -154,7 +154,7 @@ public final class PomModelUtils {
                         severity= Severity.ERROR;
                         problemMessage =problem.getSeverity().toString()+" the bundled maven (version "
                                 + getActiveMavenVersion().toString()
-                                + ") detected a problem:"+problem.getMessage();
+                                + ") detected a problem: "+problem.getMessage();
                         break;
                     case WARNING:// nothing to do
                         break;

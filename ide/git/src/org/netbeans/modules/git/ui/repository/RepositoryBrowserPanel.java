@@ -1238,11 +1238,6 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                             }
                         });
                     }
-
-                    @Override
-                    public boolean isEnabled() {
-                        return !active;
-                    }
                 });
                 Action a = new AbstractAction(NbBundle.getMessage(DeleteBranchAction.class, "LBL_DeleteBranchAction_PopupName")) { //NOI18N
                     @Override

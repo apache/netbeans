@@ -700,15 +700,20 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
     
     private File locateOutputDirAndWait(String candidateClass, boolean consume) {
         String suffix = reportNameSuffix == null ? "" : "-" + reportNameSuffix;
-        File outputDir = locateOutputDir(candidateClass, suffix, consume);
-        if (outputDir == null && surefireRunningInParallel) {
-            // try waiting a bit to give time for the result file to be created
-            try {
+        File outputDir = null;
+        // Test report might be in flight, so scan for it multiple times.
+        // Problems were observed with surefire running tests in parallel and
+        // also single threaded mode at leat on linus.
+        try {
+            for (int i = 1; i <= 40; i++) {
+                outputDir = locateOutputDir(candidateClass, suffix, consume);
+                if (outputDir != null) {
+                    LOG.log(Level.FINE, "Found output dir for test {0} in {1}. iteration ", new Object[]{candidateClass, i});
+                    break;
+                }
                 Thread.sleep(500);
-            } catch (InterruptedException ex) {
-                Exceptions.printStackTrace(ex);
             }
-            outputDir = locateOutputDir(candidateClass, suffix, consume);
+        } catch (InterruptedException ex) {
         }
         return outputDir;
     }

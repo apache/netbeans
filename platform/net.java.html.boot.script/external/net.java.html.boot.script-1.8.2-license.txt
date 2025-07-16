@@ -1,6 +1,6 @@
-Name: Html4J Geolocation API
-Version: 1.8.1
-Description: Html4j Geolocation API
+Name: Html4J
+Version: 1.8.2
+Description: Html4j Boot Script
 License: Apache-2.0
 Origin: Apache Software Foundation
 URL: http://incubator.apache.org/projects/netbeans.html

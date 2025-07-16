@@ -1,5 +1,5 @@
 Name: Html4J Sound API via HTML
-Version: 1.8.1
+Version: 1.8.2
 Description: Html4j Sound API via HTML
 License: Apache-2.0
 Origin: Apache Software Foundation

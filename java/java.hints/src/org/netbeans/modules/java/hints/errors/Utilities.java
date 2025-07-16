@@ -126,6 +126,7 @@ import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
 import static com.sun.source.tree.Tree.Kind.*;
 import com.sun.source.tree.UnaryTree;
+import com.sun.source.tree.YieldTree;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacScope;
@@ -1443,6 +1444,11 @@ public class Utilities {
         
         @Override
         public Boolean visitReturn(ReturnTree node, Void p) {
+            return true;
+        }
+
+        @Override
+        public Boolean visitYield(YieldTree node, Void p) {
             return true;
         }
 

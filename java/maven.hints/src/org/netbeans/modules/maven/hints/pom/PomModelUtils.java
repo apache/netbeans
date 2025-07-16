@@ -150,12 +150,13 @@ public final class PomModelUtils {
                 String problemMessage=problem.getMessage();
                 switch (problem.getSeverity()){
                     case FATAL:
-                    case ERROR:
                         severity= Severity.ERROR;
                         problemMessage =problem.getSeverity().toString()+" the bundled maven (version "
                                 + getActiveMavenVersion().toString()
                                 + ") detected a problem: "+problem.getMessage();
                         break;
+                    case ERROR:
+                        severity= Severity.ERROR;
                     case WARNING:// nothing to do
                         break;
                 }

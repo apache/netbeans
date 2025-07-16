@@ -3,7 +3,7 @@ Version: 1.3.2
 Description: Part of Apache Maven Distribution
 License: CDDL-1.1
 Origin: Apache Maven
-Files: apache-maven-3.9.10-bin.zip!/apache-maven-3.9.10/lib/javax.annotation-api-1.3.2.jar
+Files: apache-maven-3.9.11-bin.zip!/apache-maven-3.9.11/lib/javax.annotation-api-1.3.2.jar
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

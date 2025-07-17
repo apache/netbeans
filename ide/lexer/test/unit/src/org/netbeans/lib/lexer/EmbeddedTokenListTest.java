@@ -18,11 +18,15 @@
  */
 package org.netbeans.lib.lexer;
 
+import java.util.Arrays;
+import java.util.Collection;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
 import junit.framework.TestCase;
 import org.netbeans.api.lexer.Language;
+import org.netbeans.api.lexer.PartType;
+import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
@@ -30,6 +34,10 @@ import org.netbeans.lib.lexer.lang.TestEmbeddingTokenId;
 import org.netbeans.lib.lexer.test.LexerTestUtilities;
 import org.netbeans.lib.lexer.lang.TestJavadocTokenId;
 import org.netbeans.lib.lexer.lang.TestTokenId;
+import org.netbeans.spi.lexer.LanguageHierarchy;
+import org.netbeans.spi.lexer.Lexer;
+import org.netbeans.spi.lexer.LexerInput;
+import org.netbeans.spi.lexer.LexerRestartInfo;
 
 /**
  *
@@ -215,5 +223,168 @@ public class EmbeddedTokenListTest extends TestCase {
             ((AbstractDocument)d).readUnlock();
         }
     }
-    
+
+    public void testEmbeddingModification() throws Exception {
+        Document d = new PlainDocument();
+        d.putProperty(Language.class, EmbeddingModificationTopTokenId.language);
+        d.insertString(0, "  'foo bar test'  ", null);
+
+        TokenHierarchy<?> h = TokenHierarchy.get(d);
+        ((AbstractDocument)d).readLock();
+        try {
+            TokenSequence<EmbeddingModificationTopTokenId> ts = h.tokenSequence(EmbeddingModificationTopTokenId.language);
+
+            LexerTestUtilities.assertNextTokenEquals(ts, EmbeddingModificationTopTokenId.OTHER, "  ");
+            LexerTestUtilities.assertNextTokenEquals(ts, EmbeddingModificationTopTokenId.STRING, "'foo bar test'");
+            LexerTestUtilities.assertNextTokenEquals(ts, EmbeddingModificationTopTokenId.OTHER, "  \n");
+
+            ts.moveIndex(1);
+
+            assertTrue(ts.moveNext());
+            assertTrue(ts.createEmbedding(EmbeddingModificationEmbeddedTokenId.language, 1, 1));
+
+            TokenSequence<?> nested = ts.embedded();
+
+            LexerTestUtilities.assertNextTokenEquals(nested, EmbeddingModificationEmbeddedTokenId.WORD, "foo");
+            LexerTestUtilities.assertNextTokenEquals(nested, EmbeddingModificationEmbeddedTokenId.OTHER, " ");
+            LexerTestUtilities.assertNextTokenEquals(nested, EmbeddingModificationEmbeddedTokenId.WORD, "bar");
+            LexerTestUtilities.assertNextTokenEquals(nested, EmbeddingModificationEmbeddedTokenId.OTHER, " ");
+            LexerTestUtilities.assertNextTokenEquals(nested, EmbeddingModificationEmbeddedTokenId.WORD, "test");
+        } finally {
+            ((AbstractDocument)d).readUnlock();
+        }
+
+        d.insertString(9, "a", null);
+
+        ((AbstractDocument)d).readLock();
+        try {
+            TokenSequence<EmbeddingModificationTopTokenId> ts = h.tokenSequence(EmbeddingModificationTopTokenId.language);
+
+            LexerTestUtilities.assertNextTokenEquals(ts, EmbeddingModificationTopTokenId.OTHER, "  ");
+            LexerTestUtilities.assertNextTokenEquals(ts, EmbeddingModificationTopTokenId.STRING, "'foo baar test'");
+            LexerTestUtilities.assertNextTokenEquals(ts, EmbeddingModificationTopTokenId.OTHER, "  \n");
+
+            ts.moveIndex(1);
+
+            assertTrue(ts.moveNext());
+
+            TokenSequence<?> nested = ts.embedded();
+
+            LexerTestUtilities.assertNextTokenEquals(nested, EmbeddingModificationEmbeddedTokenId.WORD, "foo");
+            LexerTestUtilities.assertNextTokenEquals(nested, EmbeddingModificationEmbeddedTokenId.OTHER, " ");
+            LexerTestUtilities.assertNextTokenEquals(nested, EmbeddingModificationEmbeddedTokenId.WORD, "baar");
+            LexerTestUtilities.assertNextTokenEquals(nested, EmbeddingModificationEmbeddedTokenId.OTHER, " ");
+            LexerTestUtilities.assertNextTokenEquals(nested, EmbeddingModificationEmbeddedTokenId.WORD, "test");
+        } finally {
+            ((AbstractDocument)d).readUnlock();
+        }
+    }
+
+    private enum EmbeddingModificationTopTokenId implements TokenId {
+        STRING,
+        OTHER;
+
+        @Override
+        public String primaryCategory() {
+            return "text";
+        }
+        private static Language<EmbeddingModificationTopTokenId> language =
+            new LanguageHierarchy<EmbeddingModificationTopTokenId>() {
+            @Override
+            protected Collection<EmbeddingModificationTopTokenId> createTokenIds() {
+                return Arrays.asList(EmbeddingModificationTopTokenId.values());
+            }
+
+            @Override
+            protected Lexer<EmbeddingModificationTopTokenId> createLexer(LexerRestartInfo<EmbeddingModificationTopTokenId> info) {
+                class Impl implements Lexer<EmbeddingModificationTopTokenId> {
+                    @Override
+                    public Token<EmbeddingModificationTopTokenId> nextToken() {
+                        if (info.input().read() == '\'') {
+                            int r;
+                            while ((r = info.input().read()) != '\'' && r != LexerInput.EOF)
+                                ;
+                            if (r == LexerInput.EOF) {
+                                info.input().backup(1);
+                                return info.tokenFactory().createToken(STRING, info.input().readLength(), PartType.START);
+                            }
+                            return info.tokenFactory().createToken(STRING);
+                        }
+                        int r;
+                        while ((r = info.input().read()) != '\'' && r != LexerInput.EOF)
+                            ;
+                        info.input().backup(1);
+                        return info.tokenFactory().createToken(OTHER);
+                    }
+                    @Override
+                    public Object state() {
+                        return null;
+                    }
+                    @Override
+                    public void release() {
+                    }
+                }
+                return new Impl();
+            }
+
+            @Override
+            protected String mimeType() {
+                return "text/top-level";
+            }
+        }.language();
+    }
+
+    private enum EmbeddingModificationEmbeddedTokenId implements TokenId {
+        WORD,
+        OTHER;
+
+        @Override
+        public String primaryCategory() {
+            return "text";
+        }
+        private static Language<EmbeddingModificationEmbeddedTokenId> language =
+            new LanguageHierarchy<EmbeddingModificationEmbeddedTokenId>() {
+            @Override
+            protected Collection<EmbeddingModificationEmbeddedTokenId> createTokenIds() {
+                return Arrays.asList(EmbeddingModificationEmbeddedTokenId.values());
+            }
+
+            @Override
+            protected Lexer<EmbeddingModificationEmbeddedTokenId> createLexer(LexerRestartInfo<EmbeddingModificationEmbeddedTokenId> info) {
+                class Impl implements Lexer<EmbeddingModificationEmbeddedTokenId> {
+                    @Override
+                    public Token<EmbeddingModificationEmbeddedTokenId> nextToken() {
+                        if (Character.isLetter(info.input().read())) {
+                            int r;
+                            while (Character.isLetter(r = info.input().read()) && r != LexerInput.EOF)
+                                ;
+                            info.input().backup(1);
+                            return info.tokenFactory().createToken(WORD);
+                        }
+                        int r;
+                        while (!Character.isLetter(r = info.input().read()) && r != LexerInput.EOF)
+                            ;
+                        info.input().backup(1);
+                        if (info.input().readLength() == 0) {
+                            return null;
+                        }
+                        return info.tokenFactory().createToken(OTHER);
+                    }
+                    @Override
+                    public Object state() {
+                        return null;
+                    }
+                    @Override
+                    public void release() {
+                    }
+                }
+                return new Impl();
+            }
+
+            @Override
+            protected String mimeType() {
+                return "text/embedded";
+            }
+        }.language();
+    }
 }

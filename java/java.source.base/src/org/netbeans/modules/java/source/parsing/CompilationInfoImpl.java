@@ -146,7 +146,8 @@ public final class CompilationInfoImpl {
             Snapshot snapshot = fileObject2Snapshot.get(file);
 
             if (snapshot != null) {
-                result = FileObjects.sourceFileObject(file, root, JavaFileFilterQuery.getFilter(file), snapshot.getText());
+                boolean embedded = snapshot.getMimePath().size() > 1;
+                result = FileObjects.sourceFileObject(file, root, JavaFileFilterQuery.getFilter(file), snapshot.getText(), embedded);
             } else {
                 result = FileObjects.sourceFileObject(file, root); //TODO: filter?
             }

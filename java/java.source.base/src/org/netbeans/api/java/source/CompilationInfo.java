@@ -29,7 +29,6 @@ import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Source;
 import com.sun.tools.javac.model.JavacElements;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 
 import java.io.IOException;
@@ -110,12 +109,9 @@ public class CompilationInfo {
      */
     public static @NullUnknown CompilationInfo get (@NonNull final Parser.Result result) {
         Parameters.notNull("result", result);   //NOI18N
-        CompilationInfo info = null;
-        if (result instanceof JavacParserResult) {
-            final JavacParserResult javacResult = (JavacParserResult)result;            
-            info = javacResult.get(CompilationInfo.class);            
-        }
-        return info;
+        return result instanceof JavacParserResult jpr
+                ? jpr.get(CompilationInfo.class)
+                : null;
     }
              
     // API of the class --------------------------------------------------------
@@ -219,7 +215,7 @@ public class CompilationInfo {
         if (this.impl.getFileObject() == null) {
             throw new IllegalStateException ();
         }
-        final List<TypeElement> result = new ArrayList<TypeElement>();
+        final List<TypeElement> result = new ArrayList<>();
         if (this.impl.isClassFile()) {
             final JavacElements elements = (JavacElements) getElements();
             assert elements != null;

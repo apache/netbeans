@@ -186,8 +186,8 @@ public enum JavaTokenId implements TokenId {
     /**@since 1.23*/
     ARROW("->", "operator"),
     
-    ELLIPSIS("...", "special"),
-    AT("@", "special"),
+    ELLIPSIS("...", "separator"), // Both '...' and '@' are separators in Java 8 language spec
+    AT("@", "annotation-separator"),
     
     WHITESPACE(null, "whitespace"),
     LINE_COMMENT(null, "comment"), // Token includes ending new-line

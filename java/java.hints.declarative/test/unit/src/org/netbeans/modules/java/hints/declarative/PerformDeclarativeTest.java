@@ -29,7 +29,7 @@ import org.netbeans.modules.java.hints.declarative.test.api.DeclarativeHintsTest
 public class PerformDeclarativeTest extends DeclarativeHintsTestBase {
 
     public static TestSuite suite() {
-        return suite(PerformDeclarativeTest.class);
+        return suite(PerformDeclarativeTest.class, ".*test.*");
     }
 
 }

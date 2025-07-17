@@ -48,81 +48,88 @@ public final class PathRecognizerRegistry {
 
     @SuppressWarnings("unchecked")
     public Set<String> getSourceIds () {
-        final Object [] data = getData();
-        return (Set<String>) data[0];
+        final CachedData data = getData();
+        return data.sourceIds();
     }
 
     @SuppressWarnings("unchecked")
     public Set<String> getLibraryIds () {
-        final Object [] data = getData();
-        return (Set<String>) data[1];
+        final CachedData data = getData();
+        return data.libraryIds();
     }
 
     @SuppressWarnings("unchecked")
     public Set<String> getBinaryLibraryIds () {
-        final Object [] data = getData();
-        return (Set<String>) data[2];
+        final CachedData data = getData();
+        return data.binaryLibraryIds();
     }
 
     @SuppressWarnings("unchecked")
     public Set<String> getMimeTypes() {
-        final Object [] data = getData();
-        return (Set<String>) data[3];
+        final CachedData data = getData();
+        return data.mimeTypes();
     }
 
     @SuppressWarnings("unchecked")
     public Set<String> getLibraryIdsForSourceId(String id) {
-        final Object [] data = getData();
-        Set<String>[] arr = ((Map<String, Set<String>[]>) data[4]).get(id);
+        final CachedData data = getData();
+        Set<String>[] arr = data.sidsMap().get(id);
         return arr != null ? arr[0] : Collections.<String>emptySet();
     }
 
     @SuppressWarnings("unchecked")
     public Set<String> getBinaryLibraryIdsForSourceId(String id) {
-        final Object [] data = getData();
-        Set<String>[] arr = ((Map<String, Set<String>[]>) data[4]).get(id);
+        final CachedData data = getData();
+        Set<String>[] arr = data.sidsMap().get(id);
         return arr != null ? arr[1] : Collections.<String>emptySet();
     }
 
     @SuppressWarnings("unchecked")
     public Set<String> getLibraryIdsForLibraryId(String id) {
-        final Object [] data = getData();
-        Set<String>[] arr = ((Map<String, Set<String>[]>) data[5]).get(id);
+        final CachedData data = getData();
+        Set<String>[] arr = data.lidsMap().get(id);
         return arr != null ? arr[0] : Collections.<String>emptySet();
     }
 
     @SuppressWarnings("unchecked")
     public Set<String> getBinaryLibraryIdsForLibraryId(String id) {
-        final Object [] data = getData();
-        Set<String>[] arr = ((Map<String, Set<String>[]>) data[5]).get(id);
+        final CachedData data = getData();
+        Set<String>[] arr = data.lidsMap().get(id);
         return arr != null ? arr[1] : Collections.<String>emptySet();
     }
 
     @SuppressWarnings("unchecked")
     public Set<String> getSourceIdsForBinaryLibraryId(String id) {
-        final Object [] data = getData();
-        Set<String>[] arr = ((Map<String, Set<String>[]>) data[6]).get(id);
+        final CachedData data = getData();
+        Set<String>[] arr = data.blidsMap().get(id);
         return arr != null ? arr[0] : Collections.<String>emptySet();
     }
 
     @SuppressWarnings("unchecked")
     public Set<String> getMimeTypesForSourceId(String id) {
-        final Object [] data = getData();
-        Set<String>[] arr = ((Map<String, Set<String>[]>) data[4]).get(id);
+        final CachedData data = getData();
+        Set<String>[] arr = data.sidsMap().get(id);
         return arr != null ? arr[2] : Collections.<String>emptySet();
     }
 
     @SuppressWarnings("unchecked")
+    public Set<String> getIndexFilterForSourceId(String id) {
+        final CachedData data = getData();
+        Set<String>[] arr = data.sidsMap().get(id);
+        return arr != null ? arr[3] : Collections.<String>emptySet();
+    }
+
+    @SuppressWarnings("unchecked")
     public Set<String> getMimeTypesForLibraryId(String id) {
-        final Object [] data = getData();
-        Set<String>[] arr = ((Map<String, Set<String>[]>) data[5]).get(id);
+        final CachedData data = getData();
+        Set<String>[] arr = data.lidsMap().get(id);
         return arr != null ? arr[2] : Collections.<String>emptySet();
     }
 
     @SuppressWarnings("unchecked")
     public Set<String> getMimeTypesForBinaryLibraryId(String id) {
-        final Object [] data = getData();
-        Set<String>[] arr = ((Map<String, Set<String>[]>) data[6]).get(id);
+        final CachedData data = getData();
+        Set<String>[] arr = data.blidsMap().get(id);
         return arr != null ? arr[2] : Collections.<String>emptySet();
     }
 
@@ -144,14 +151,14 @@ public final class PathRecognizerRegistry {
         }
     };
 
-    private Object [] cachedData;
+    private CachedData cachedData;
 
     private PathRecognizerRegistry() {
         lookupResult = Lookup.getDefault().lookupResult(PathRecognizer.class);
         lookupResult.addLookupListener(WeakListeners.create(LookupListener.class, tracker, lookupResult));
     }
 
-    private synchronized Object [] getData () {
+    private synchronized CachedData getData () {
         if (cachedData == null) {
             Set<String> sourceIds = new HashSet<String>();
             Set<String> libraryIds = new HashSet<String>();
@@ -167,6 +174,7 @@ public final class PathRecognizerRegistry {
                 Set<String> lids = r.getLibraryPathIds();
                 Set<String> blids = r.getBinaryLibraryPathIds();
                 Set<String> mts = r.getMimeTypes();
+                Set<String> filter = r.getIndexerFilter();
 
                 if (sids != null) {
                     sourceIds.addAll(sids);
@@ -176,7 +184,8 @@ public final class PathRecognizerRegistry {
                             Set<String> [] set = new Set[] {
                                 lids == null ? Collections.<String>emptySet() : Collections.unmodifiableSet(lids),
                                 blids == null ? Collections.<String>emptySet() : Collections.unmodifiableSet(blids),
-                                mts == null ? Collections.<String>emptySet() : Collections.unmodifiableSet(mts)
+                                mts == null ? Collections.<String>emptySet() : Collections.unmodifiableSet(mts),
+                                filter == null ? Collections.<String>emptySet() : Collections.unmodifiableSet(filter)
                             };
                             sidsMap.put(sid, set);
                         }
@@ -217,23 +226,30 @@ public final class PathRecognizerRegistry {
                     mimeTypes.addAll(mts);
                 }
 
-                LOG.log(Level.FINE, "PathRecognizer {0} supplied sids={1}, lids={2}, blids={3}, mts={4}", new Object [] { //NOI18N
-                    r.toString(), sids, lids, blids, mts
+                LOG.log(Level.FINE, "PathRecognizer {0} supplied sids={1}, lids={2}, blids={3}, mts={4}, filter={5}", new Object [] { //NOI18N
+                    r.toString(), sids, lids, blids, mts, filter
                 });
             }
 
-            cachedData = new Object [] {
+            cachedData = new CachedData(
                 Collections.unmodifiableSet(sourceIds),
                 Collections.unmodifiableSet(libraryIds),
                 Collections.unmodifiableSet(binaryLibraryIds),
                 Collections.unmodifiableSet(mimeTypes),
                 Collections.unmodifiableMap(sidsMap),
                 Collections.unmodifiableMap(lidsMap),
-                Collections.unmodifiableMap(blidsMap),
-            };
+                Collections.unmodifiableMap(blidsMap)
+            );
         }
 
         return cachedData;
     }
 
+    private record CachedData(Set<String> sourceIds, //0
+                              Set<String> libraryIds, //1
+                              Set<String> binaryLibraryIds, //2
+                              Set<String> mimeTypes, //3
+                              Map<String, Set<String>[]> sidsMap, //4
+                              Map<String, Set<String>[]> lidsMap, //5
+                              Map<String, Set<String>[]> blidsMap) {} //6
 }

@@ -77,6 +77,7 @@ import org.netbeans.modules.git.client.GitProgressSupport;
 import org.netbeans.modules.git.ui.branch.BranchSynchronizer;
 import org.netbeans.modules.git.ui.branch.CreateBranchAction;
 import org.netbeans.modules.git.ui.branch.DeleteBranchAction;
+import org.netbeans.modules.git.ui.branch.RenameBranchAction;
 import org.netbeans.modules.git.ui.branch.SetTrackingAction;
 import org.netbeans.modules.git.ui.checkout.CheckoutRevisionAction;
 import org.netbeans.modules.git.ui.diff.DiffAction;
@@ -1222,6 +1223,18 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                             public void run () {
                                 SearchHistoryAction.openSearch(repo, new File[] { repo }, branch,
                                         Utils.getContextDisplayName(GitUtils.getContextForFile(repo)));
+                            }
+                        });
+                    }
+                });
+                actions.add(new AbstractAction(NbBundle.getMessage(RenameBranchAction.class, "LBL_RenameBranchAction_PopupName")) { //NOI18N
+                    @Override
+                    public void actionPerformed (ActionEvent e) {
+                        EventQueue.invokeLater(new Runnable() {
+                            @Override
+                            public void run () {
+                                RenameBranchAction action = SystemAction.get(RenameBranchAction.class);
+                                action.renameBranch(repo, branch);
                             }
                         });
                     }

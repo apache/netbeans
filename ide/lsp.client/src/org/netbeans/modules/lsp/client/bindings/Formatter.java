@@ -51,9 +51,16 @@ public class Formatter implements ReformatTask {
         public ReformatTask createTask(Context context) {
             FileObject file = NbEditorUtilities.getFileObject(context.document());
             if (file != null) {
-                LSPBindings bindings = LSPBindings.getBindings(file);
-                if (bindings != null) {
-                    return new Formatter(context);
+                List<LSPBindings> servers = LSPBindings.getBindings(file);
+                for (LSPBindings server : servers) {
+                    boolean rangeFormatting = Utils.isEnabled(server.getInitResult().getCapabilities().getDocumentRangeFormattingProvider());
+                    if (rangeFormatting) {
+                        return new Formatter(context, server, ReformatKind.RANGE);
+                    }
+                    boolean documentFormatting = Utils.isEnabled(server.getInitResult().getCapabilities().getDocumentFormattingProvider());
+                    if (documentFormatting) {
+                        return new Formatter(context, server, ReformatKind.DOCUMENT);
+                    }
                 }
             }
             return null;
@@ -62,24 +69,23 @@ public class Formatter implements ReformatTask {
     }
 
     private final Context ctx;
+    private final LSPBindings server;
+    private final ReformatKind kind;
 
-    public Formatter(Context ctx) {
+    public Formatter(Context ctx, LSPBindings server, ReformatKind kind) {
         this.ctx = ctx;
+        this.server = server;
+        this.kind = kind;
     }
 
     @Override
     public void reformat() throws BadLocationException {
         FileObject file = NbEditorUtilities.getFileObject(ctx.document());
         if (file != null) {
-            LSPBindings bindings = LSPBindings.getBindings(file);
-            if (bindings != null) {
-                boolean documentFormatting = Utils.isEnabled(bindings.getInitResult().getCapabilities().getDocumentFormattingProvider());
-                boolean rangeFormatting = Utils.isEnabled(bindings.getInitResult().getCapabilities().getDocumentRangeFormattingProvider());
-                if (rangeFormatting) {
-                    rangeFormat(file, bindings);
-                } else if (documentFormatting) {
-                    documentFormat(file, bindings);
-                }
+            switch (kind) {
+                case RANGE -> rangeFormat(file, server);
+                case DOCUMENT -> documentFormat(file, server);
+                default -> throw new IllegalStateException("Unknown kind: " + kind);
             }
         }
     }
@@ -136,5 +142,10 @@ public class Formatter implements ReformatTask {
     @Override
     public ExtraLock reformatLock() {
         return null;
+    }
+
+    private enum ReformatKind {
+        RANGE,
+        DOCUMENT;
     }
 }

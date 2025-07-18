@@ -1,6 +1,6 @@
-Name: Html4J
-Version: 1.8.1
-Description: Html4j
+Name: XHR via Java
+Version: 1.8.2
+Description: XHR via Java
 License: Apache-2.0
 Origin: Apache Software Foundation
 URL: http://incubator.apache.org/projects/netbeans.html

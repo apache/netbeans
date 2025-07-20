@@ -1641,6 +1641,18 @@ public class ModifiersCheckHintErrorTest extends PHPHintsTestBase {
         checkHints(PhpVersion.PHP_83);
     }
 
+    public void testInterfaceInvalidMethodsWithBody() throws Exception {
+        checkHints();
+    }
+
+    public void testInterfaceInvalidMethodsWithBody_Fix_01() throws Exception {
+        applyHint("    function implicitP^ublicMethodWithBody() {}", "Remove body of the method: implicitPublicMethodWithBody");
+    }
+
+    public void testInterfaceInvalidMethodsWithBody_Fix_02() throws Exception {
+        applyHint("    function implicitP^ublicMethodWithBodyAndReturnType(): void {}", "Remove body of the method: implicitPublicMethodWithBodyAndReturnType");
+    }
+
     private void checkHints() throws Exception {
         checkHints(String.format("%s.php", getTestName()));
     }

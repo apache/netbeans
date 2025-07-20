@@ -1,0 +1,32 @@
+    function implicitPublicMethodWithBody() {}
+             ----------------------------
+HINT:Interface method "implicitPublicMethodWithBody" can not contain body
+FIX:Remove body of the method: implicitPublicMethodWithBody
+    static function implicitPublicStaticMethodWithBody() {}
+                    ----------------------------------
+HINT:Interface method "implicitPublicStaticMethodWithBody" can not contain body
+FIX:Remove body of the method: implicitPublicStaticMethodWithBody
+    public function implicitPublicMethodWithBody() {}
+                    ----------------------------
+HINT:Interface method "implicitPublicMethodWithBody" can not contain body
+FIX:Remove body of the method: implicitPublicMethodWithBody
+    public static function implicitPublicMethodWithBody() {}
+                           ----------------------------
+HINT:Interface method "implicitPublicMethodWithBody" can not contain body
+FIX:Remove body of the method: implicitPublicMethodWithBody
+    function implicitPublicMethodWithBodyAndReturnType(): void {}
+             -----------------------------------------
+HINT:Interface method "implicitPublicMethodWithBodyAndReturnType" can not contain body
+FIX:Remove body of the method: implicitPublicMethodWithBodyAndReturnType
+    static function implicitPublicStaticMethodWithBodyAndReturnType(): void {}
+                    -----------------------------------------------
+HINT:Interface method "implicitPublicStaticMethodWithBodyAndReturnType" can not contain body
+FIX:Remove body of the method: implicitPublicStaticMethodWithBodyAndReturnType
+    public function implicitPublicMethodWithBodyAndReturnType(): void {}
+                    -----------------------------------------
+HINT:Interface method "implicitPublicMethodWithBodyAndReturnType" can not contain body
+FIX:Remove body of the method: implicitPublicMethodWithBodyAndReturnType
+    public static function implicitPublicMethodWithBodyAndReturnType(): void {}
+                           -----------------------------------------
+HINT:Interface method "implicitPublicMethodWithBodyAndReturnType" can not contain body
+FIX:Remove body of the method: implicitPublicMethodWithBodyAndReturnType

@@ -544,14 +544,14 @@ public class ModifiersCheckHintError extends HintErrorRule {
         boolean isEnum = inScope instanceof EnumScope;
         if (phpModifiers.isAbstract() && isAnonClass) {
             fixes = new ArrayList<>();
-            if (methodScope.getBlockRange() != null) {
+            if (methodScope.getBlockRange() != null && methodScope.getBlockRange().getLength() > 1) {
                 // e.g. abstract public function method(): void {}
                 fixes.add(new RemoveModifierFix(doc, PhpModifiers.ABSTRACT_MODIFIER, methodScope.getOffset()));
             }
             hints.add(new SimpleHint(Bundle.AbstractMethodInAnonymousClass(), methodScope.getNameRange(), fixes));
         } else if (phpModifiers.isAbstract() && isEnum) {
             fixes = new ArrayList<>();
-            if (methodScope.getBlockRange() != null) {
+            if (methodScope.getBlockRange() != null  && methodScope.getBlockRange().getLength() > 1) {
                 // e.g. abstract public function method(): void {}
                 fixes.add(new RemoveModifierFix(doc, PhpModifiers.ABSTRACT_MODIFIER, methodScope.getOffset()));
             }
@@ -563,7 +563,7 @@ public class ModifiersCheckHintError extends HintErrorRule {
             }
             fixes.add(new RemoveModifierFix(doc, PhpModifiers.FINAL_MODIFIER, methodScope.getOffset()));
             hints.add(new SimpleHint(Bundle.AbstractFinalMethod(methodScope.getName()), methodScope.getNameRange(), fixes));
-        } else if (phpModifiers.isAbstract() && methodScope.getBlockRange() != null) {
+        } else if (phpModifiers.isAbstract() && methodScope.getBlockRange() != null  && methodScope.getBlockRange().getLength() > 1) {
             fixes = Collections.<HintFix>singletonList(new RemoveBodyFix(doc, methodScope));
             hints.add(new SimpleHint(Bundle.AbstractWithBlockMethod(methodScope.getName()), methodScope.getNameRange(), fixes));
         } else if (phpModifiers.isAbstract() && phpModifiers.isPrivate() && !isTrait) {

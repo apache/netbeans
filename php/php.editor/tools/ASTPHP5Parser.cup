@@ -2000,13 +2000,12 @@ constant_modifiers:modifier class_constant_declaration:list T_SEMICOLON:end
 | method_modifiers:modifier T_FUNCTION:start is_reference:isReference identifier:functionId
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE
 optional_return_type:returnType
-T_SEMICOLON:end
+method_body:body
 {:
     int methodStart = modifier == null ? startleft : modifierleft;
     modifier = modifier == null ? ASTPHP5Parser.PUBLIC : modifier;
-    Block block = new Block(endleft, endright, Collections.EMPTY_LIST, false);
-    FunctionDeclaration functionDeclaration = new FunctionDeclaration(startleft, endright, functionId, paramList, returnType, block, isReference.booleanValue());
-    MethodDeclaration methodDeclaration = new MethodDeclaration(methodStart, endright, modifier.intValue(), functionDeclaration, true);
+    FunctionDeclaration functionDeclaration = new FunctionDeclaration(startleft, bodyright, functionId, paramList, returnType, body, isReference.booleanValue());
+    MethodDeclaration methodDeclaration = new MethodDeclaration(methodStart, bodyright, modifier.intValue(), functionDeclaration, true);
     RESULT = methodDeclaration;
 :}
 ;
@@ -3267,9 +3266,10 @@ T_PUBLIC
 ;
 
 method_body ::=
-T_SEMICOLON /* abstract method */
+T_SEMICOLON:end /* abstract method */
 {:
-    RESULT = null;
+    Block block = new Block(endleft, endright, Collections.EMPTY_LIST, false);
+    RESULT = block;
 :}
 
 | T_CURLY_OPEN:start inner_statement_list:statementList T_CURLY_CLOSE:end

@@ -1048,6 +1048,92 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                             "?>\n");
     }
 
+    public void testAbstractMethodReturnType_01() throws Exception {
+        insertBreak(
+                // original
+                ""
+                + "<?php\n"
+                + "abstract class TestClass {\n"
+                + "    /**^\n"
+                + "    abstract public function testReturnType(): int;\n"
+                + "}",
+                // expected
+                ""
+                + "<?php\n"
+                + "abstract class TestClass {\n"
+                + "    /**\n"
+                + "     * \n"
+                + "     * @return int^\n"
+                + "     */\n"
+                + "    abstract public function testReturnType(): int;\n"
+                + "}"
+        );
+    }
+
+    public void testAbstractMethodReturnType_02() throws Exception {
+        insertBreak(
+                // original
+                ""
+                + "<?php\n"
+                + "abstract class TestClass {\n"
+                + "    /**^\n"
+                + "    abstract public function testReturnType();\n"
+                + "}",
+                // expected
+                ""
+                + "<?php\n"
+                + "abstract class TestClass {\n"
+                + "    /**\n"
+                + "     * ^\n"
+                + "     */\n"
+                + "    abstract public function testReturnType();\n"
+                + "}"
+        );
+    }
+
+    public void testInterfaceMethodReturnType_01() throws Exception {
+        insertBreak(
+                // original
+                ""
+                + "<?php\n"
+                + "interface TestInterface {\n"
+                + "    /**^\n"
+                + "    public function testReturnType(): int;\n"
+                + "}",
+                // expected
+                ""
+                + "<?php\n"
+                + "interface TestInterface {\n"
+                + "    /**\n"
+                + "     * \n"
+                + "     * @return int^\n"
+                + "     */\n"
+                + "    public function testReturnType(): int;\n"
+                + "}"
+        );
+    }
+
+    public void testInterfaceMethodReturnType_02() throws Exception {
+        insertBreak(
+                // original
+                ""
+                + "<?php\n"
+                + "interface TestInterface {\n"
+                + "    /**^\n"
+                + "    public function testReturnType();\n"
+                + "}",
+                // expected
+                ""
+                + "<?php\n"
+                + "interface TestInterface {\n"
+                + "    /**\n"
+                + "     * ^\n"
+                + "     */\n"
+                + "    public function testReturnType();\n"
+                + "}"
+        );
+    }
+
     @Override
     public void insertNewline(String source, String reformatted, IndentPrefs preferences) throws Exception {
         int sourcePos = source.indexOf('^');

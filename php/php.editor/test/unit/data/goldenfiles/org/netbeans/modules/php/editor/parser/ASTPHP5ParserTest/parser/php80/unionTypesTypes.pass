@@ -867,6 +867,8 @@
                                     <Identifier start='1329' end='1333' name='null'/>
                                 </NamespaceName>
                             </UnionType>
+                            <Block start='1333' end='1334' isCurly='flase'>
+                            </Block>
                         </FunctionDeclaration>
                     </MethodDeclaration>
                     <MethodDeclaration start='1340' end='1428' modifiers='protected abstract static'>
@@ -902,6 +904,8 @@
                                     <Identifier start='1424' end='1427' name='Bar'/>
                                 </NamespaceName>
                             </UnionType>
+                            <Block start='1427' end='1428' isCurly='flase'>
+                            </Block>
                         </FunctionDeclaration>
                     </MethodDeclaration>
                 </Block>

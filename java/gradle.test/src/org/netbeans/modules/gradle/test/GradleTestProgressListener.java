@@ -19,16 +19,17 @@
 
 package org.netbeans.modules.gradle.test;
 
+import java.nio.file.Path;
 import java.util.Arrays;
-import org.netbeans.modules.gradle.api.NbGradleProject;
 import java.util.Collection;
-import org.netbeans.modules.gradle.spi.GradleProgressListenerProvider;
 import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import javax.lang.model.element.ElementKind;
 import org.gradle.tooling.Failure;
 import org.gradle.tooling.events.OperationDescriptor;
 import org.gradle.tooling.events.OperationType;
@@ -46,8 +47,15 @@ import org.gradle.tooling.events.test.TestProgressEvent;
 import org.gradle.tooling.events.test.TestSkippedResult;
 import org.gradle.tooling.events.test.TestStartEvent;
 import org.gradle.tooling.events.test.TestSuccessResult;
+import org.netbeans.api.java.source.ClasspathInfo;
+import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.modules.gradle.api.NbGradleProject;
+import org.netbeans.modules.gradle.java.api.GradleJavaProject;
+import org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType;
+import org.netbeans.modules.gradle.spi.GradleProgressListenerProvider;
 import org.netbeans.modules.gsf.testrunner.api.CommonUtils;
 import org.netbeans.modules.gsf.testrunner.api.CoreManager;
 import org.netbeans.modules.gsf.testrunner.api.Report;
@@ -57,6 +65,8 @@ import org.netbeans.modules.gsf.testrunner.api.TestSuite;
 import org.netbeans.modules.gsf.testrunner.api.Testcase;
 import org.netbeans.modules.gsf.testrunner.api.Trouble;
 import org.netbeans.spi.project.ProjectServiceProvider;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 
 /**
@@ -68,8 +78,8 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
 
     private final Project project;
     private final Map<String, TestSession> sessions = new ConcurrentHashMap<>();
-
-    private Map<TestSession, Map<String, Testcase>> runningTests = new ConcurrentHashMap<>();
+    private final Map<TestSession, Map<String, TestSuite>> runningSuites = new ConcurrentHashMap<>();
+    private final Map<TestSession, Map<String, Testcase>> runningTests = new ConcurrentHashMap<>();
 
     public GradleTestProgressListener(Project project) {
         this.project = project;
@@ -190,13 +200,21 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
         TestSession session = sessions.get(getSessionKey(evt.getDescriptor()));
         assert session != null;
         TestOperationResult result = evt.getResult();
-        TestSuite currentSuite = session.getCurrentSuite();
         String suiteName = GradleTestSuite.suiteName(op);
-        if (suiteName.equals(currentSuite.getName())) {
+        // In the NetBeans wording a testsuite is the class grouping multiple
+        // methods (testcase). In the gradle wording a suite can be nested, for
+        // example the hieararchy can be:
+        // - Gradle Test Executor <Number> started
+        // - Test class <Class> started
+        // => We flatten the list (suites are registered base on executed
+        //    cases (see caseStart)
+        TestSuite testSuite = runningSuites.get(session).remove(suiteName);
+        if (testSuite != null) {
             Report report = session.getReport(result.getEndTime() - result.getStartTime());
-            session.finishSuite(currentSuite);
+            session.finishSuite(testSuite);
             CoreManager manager = getManager();
             if (manager != null) {
+                manager.displaySuiteRunning(session, testSuite);
                 manager.displayReport(session, report, true);
             }
         }
@@ -206,19 +224,21 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
         TestSession session = sessions.get(getSessionKey(evt.getDescriptor()));
         assert session != null;
         assert op.getParent() != null;
-        TestSuite currentSuite = session.getCurrentSuite();
-        TestSuite newSuite = new GradleTestSuite(getSuiteOpDesc((JvmTestOperationDescriptor) op.getParent(), op.getClassName()));
-        if ((currentSuite == null) || !currentSuite.equals(newSuite)) {
-            session.addSuite(newSuite);
-            CoreManager manager = getManager();
-            if (manager != null) {
-                manager.displaySuiteRunning(session, newSuite);
-            }
+        String suiteName = GradleTestSuite.suiteName(op.getParent());
+        Map<String, TestSuite> sessionSuites = runningSuites.computeIfAbsent(session, s -> new ConcurrentHashMap<>());
+        TestSuite ts = sessionSuites.computeIfAbsent(suiteName, s -> {
+                    TestSuite suite = new GradleTestSuite(getSuiteOpDesc((JvmTestOperationDescriptor) op.getParent(), op.getClassName()));
+                    session.addSuite(suite);
+                    return suite;
+                });
+        CoreManager manager = getManager();
+        if (manager != null && sessionSuites.size() == 1) {
+            manager.displaySuiteRunning(session, ts);
         }
         Testcase tc = new GradleTestcase(op, session);
-        synchronized (this) {  
+        synchronized (this) {
             runningTests.get(session).put(getTestOpKey(op), tc);
-            session.addTestCase(tc);   
+            session.addTestCase(tc);
         }
     }
 
@@ -233,7 +253,7 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
             TestOperationResult result = evt.getResult();
             long time = result.getEndTime() - result.getStartTime();
             tc.setTimeMillis(time);
-            tc.setLocation(searchLocation(op.getClassName(), op.getMethodName(), null));
+            tc.setLocation(searchLocation(tc, op.getClassName(), op.getMethodName(), null));
             if (result instanceof TestSuccessResult) {
                 tc.setStatus(Status.PASSED);
             }
@@ -261,7 +281,7 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
                         stackTrace = desc.split("\\n");
                         trouble.setStackTrace(stackTrace);
                     }
-                    tc.setLocation(searchLocation(op.getClassName(), op.getMethodName(), stackTrace));
+                    tc.setLocation(searchLocation(tc, op.getClassName(), op.getMethodName(), stackTrace));
                     tc.setTrouble(trouble);
                 }
 
@@ -322,7 +342,39 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
 
     }
 
-    private String searchLocation(String className, String methodName, String[] stackTrace) {
+    private String searchLocation(Testcase tc, String className, String methodName, String[] stackTrace) {
+        Map<ClasspathInfo, Path> classpathInfo = Map.of();
+        NbGradleProject nbGradleProject = tc.getSession()
+                .getProject()
+                .getLookup()
+                .lookup(NbGradleProject.class);
+        GradleJavaProject gradleJavaProject = nbGradleProject != null ? nbGradleProject.projectLookup(GradleJavaProject.class) : null;
+        if (gradleJavaProject != null) {
+            classpathInfo = gradleJavaProject
+                    .getSourceSets()
+                    .values()
+                    .stream()
+                    .flatMap(gradleJavaSourceSet -> gradleJavaSourceSet.getSourceDirs(SourceType.JAVA).stream())
+                    .collect(
+                            Collectors.toMap(
+                                    f -> ClasspathInfo.create(f),
+                                    f -> f.toPath()
+                            )
+                    );
+        }
+
+        String relativePath = null;
+        for (Map.Entry<ClasspathInfo, Path> ci : classpathInfo.entrySet()) {
+            FileObject fo = SourceUtils.getFile(ElementHandle.createTypeElementHandle(ElementKind.CLASS, className), ci.getKey());
+            if (fo != null) {
+                relativePath = ci.getValue().relativize(FileUtil.toFile(fo).toPath()).toString();
+                break;
+            }
+        }
+        if (relativePath != null) {
+            return relativePath;
+        }
+
         StringBuilder ret = new StringBuilder(className.length() + methodName.length() + 10);
         String fileName = null;
         String line = null;

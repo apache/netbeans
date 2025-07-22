@@ -451,9 +451,11 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                                     for (Project p : (Project[])evt.getNewValue()) {
                                         if (!old.contains(p)) {
                                             getTestRoots(p).thenAccept(tr -> {
-                                                for (Entry<FileObject, Collection<TestMethodController.TestMethod>> entry : TestMethodFinder.findTestMethods(tr, testMethodsListener.get()).entrySet()) {
-                                                    for (TestSuiteInfo tsi : f.apply(entry.getKey(), entry.getValue())) {
-                                                        client.notifyTestProgress(new TestProgressParams(Utils.toUri(entry.getKey()), tsi));
+                                                for (FileObject root : tr) {
+                                                    for (Entry<FileObject, Collection<TestMethodController.TestMethod>> entry : TestMethodFinder.findTestMethods(root).entrySet()) {
+                                                        for (TestSuiteInfo tsi : f.apply(entry.getKey(), entry.getValue())) {
+                                                            client.notifyTestProgress(new TestProgressParams(Utils.toUri(entry.getKey()), tsi));
+                                                        }
                                                     }
                                                 }
                                             });
@@ -466,14 +468,19 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     })) {
                         OpenProjects.getDefault().addPropertyChangeListener(WeakListeners.propertyChange(openProjectsListener.get(), OpenProjects.getDefault()));
                     }
+                    TestMethodFinder.addListener(testMethodsListener.get());
                     CompletableFuture<Object> future = new CompletableFuture<>();
                     JavaSource js = JavaSource.create(ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY));
                     try {
                         js.runWhenScanFinished(controller -> {
-                            Map<FileObject, Collection<TestMethodController.TestMethod>> testMethods = TestMethodFinder.findTestMethods(testRoots, testMethodsListener.get());
-                            Collection<TestSuiteInfo> suites = new ArrayList<>(testMethods.size());
-                            for (Entry<FileObject, Collection<TestMethodController.TestMethod>> entry : testMethods.entrySet()) {
-                                suites.addAll(f.apply(entry.getKey(), entry.getValue()));
+                            Collection<TestSuiteInfo> suites = new ArrayList<>();
+
+                            for (FileObject root : testRoots) {
+                                Map<FileObject, Collection<TestMethodController.TestMethod>> testMethods = TestMethodFinder.findTestMethods(root);
+
+                                for (Entry<FileObject, Collection<TestMethodController.TestMethod>> entry : testMethods.entrySet()) {
+                                    suites.addAll(f.apply(entry.getKey(), entry.getValue()));
+                                }
                             }
                             future.complete(suites);
                         }, true);

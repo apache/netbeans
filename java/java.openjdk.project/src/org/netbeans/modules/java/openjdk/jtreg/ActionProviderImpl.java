@@ -377,7 +377,7 @@ public class ActionProviderImpl implements ActionProvider {
                                     }
                                     //TODO: testLocation - is the path that jtreg prints viable here?
                                     String testLocation = t.substring("runner starting test: ".length());
-                                    String suiteId = TestIndexer.relativePath2FakeClassName(testLocation); //TODO: how this will look inside NB and in VSCode?
+                                    String suiteId = TestMethodFinderImpl.relativePath2FakeClassName(testLocation); //TODO: how this will look inside NB and in VSCode?
                                     pendingTestcase = new Testcase("@test", "", testSession); //testLocation, 
                                     pendingTestcase.setClassName(suiteId);
                                     pendingTestcase.setStatus(Status.PENDING);

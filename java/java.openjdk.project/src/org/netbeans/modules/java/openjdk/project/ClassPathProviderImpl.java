@@ -48,7 +48,6 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.project.libraries.Library;
 import org.netbeans.api.project.libraries.LibraryManager;
-import org.netbeans.modules.java.openjdk.jtreg.TestIndexer;
 import org.netbeans.modules.java.openjdk.project.JDKProject.Root;
 import org.netbeans.modules.java.openjdk.project.JDKProject.RootKind;
 import org.netbeans.modules.java.openjdk.project.ModuleDescription.ModuleRepository;
@@ -273,7 +272,7 @@ public class ClassPathProviderImpl implements ClassPathProvider {
         GlobalPathRegistry.getDefault().unregister(TEST_SOURCE, new ClassPath[] {testsRegCP});
     }
 
-    @PathRecognizerRegistration(sourcePathIds=TEST_SOURCE, mimeTypes="text/x-java", indexerFilter=TestIndexer.NAME)
+    @PathRecognizerRegistration(sourcePathIds=TEST_SOURCE)
     private static final class PathResourceImpl implements FilteringPathResourceImplementation, ChangeListener {
 
         private final Root root;

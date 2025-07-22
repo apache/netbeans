@@ -51,7 +51,6 @@ public class PathRecognizerRegistrationProcessor extends LayerGeneratingProcesso
             String libraryPathIds = processIds(prr.libraryPathIds());
             String binaryLibraryPathIds = processIds(prr.binaryLibraryPathIds());
             String mimeTypes = processMts(prr.mimeTypes());
-            String indexerFilter = processMts(prr.indexerFilter());
 
             if (mimeTypes != null && (sourcePathIds != null || libraryPathIds != null || binaryLibraryPathIds != null)) {
                 final LayerBuilder lb = layer(cls);
@@ -73,9 +72,6 @@ public class PathRecognizerRegistrationProcessor extends LayerGeneratingProcesso
                 }
                 if (mimeTypes != null) {
                     f.stringvalue("mimeTypes", mimeTypes); //NOI18N
-                }
-                if (indexerFilter != null) {
-                    f.stringvalue("indexerFilter", indexerFilter); //NOI18N
                 }
 
                 f.write();

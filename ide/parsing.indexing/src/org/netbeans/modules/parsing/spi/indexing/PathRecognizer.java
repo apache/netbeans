@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.parsing.spi.indexing;
 
-import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -55,12 +54,4 @@ public abstract class PathRecognizer {
      * @return mime type
      */
     public abstract Set<String> getMimeTypes();
-
-    /**
-     * XXX
-     * @return XXX
-     */
-    public Set<String> getIndexerFilter() {
-        return Collections.emptySet();
-    }
 }

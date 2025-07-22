@@ -471,13 +471,11 @@ public final class PathRegistry implements Runnable {
     @org.netbeans.api.annotations.common.SuppressWarnings(
         value="DMI_COLLECTION_OF_URLS",
         justification="URLs have never host part")
-    public MimeTypesAndIndexerFilterForRoot getMimeTypesFor(final URL root) {
+    public Set<String> getMimeTypesFor(final URL root) {
         assert noHostPart(root) : root;
         PathIds pathIds = getRootPathIds().get(root);
         return pathIds != null ? pathIds.getMimeTypes() : null;
     }
-
-    public record MimeTypesAndIndexerFilterForRoot(Set<String> mimeTypes, Set<String> indexerFilter) {}
 
     /**
      * If all the source path events where fired (task is finished) return true,
@@ -852,7 +850,7 @@ public final class PathRegistry implements Runnable {
                 pathIdsResult.put(root, pathIds);
             }
             pathIds.getSids().addAll(sids);
-            pathIds.getMimeTypes().mimeTypes().addAll(mimeTypes);
+            pathIds.getMimeTypes().addAll(mimeTypes);
 
             for(String id : sids) {
                 Set<URL> rootsWithId = pathIdToRootsResult.get(id);
@@ -1031,13 +1029,11 @@ public final class PathRegistry implements Runnable {
                 switch (kind) {
                     case SOURCE:
                         tcp.associateWithSourceId(id);
-                        tcp.associateWithMimeTypes(PathRecognizerRegistry.getDefault().getMimeTypesForSourceId(id),
-                                                   PathRecognizerRegistry.getDefault().getIndexFilterForSourceId(id));
+                        tcp.associateWithMimeTypes(PathRecognizerRegistry.getDefault().getMimeTypesForSourceId(id));
                         break;
                     case LIBRARY:
                         tcp.associateWithLibraryId(id);
-                        tcp.associateWithMimeTypes(PathRecognizerRegistry.getDefault().getMimeTypesForLibraryId(id),
-                                                   Collections.emptySet());
+                        tcp.associateWithMimeTypes(PathRecognizerRegistry.getDefault().getMimeTypesForLibraryId(id));
                         break;
                     case BINARY_LIBRARY:
                         tcp.associateWithBinaryLibraryId(id); break;
@@ -1330,9 +1326,8 @@ public final class PathRegistry implements Runnable {
             pathIds.getBlids().add(id);
         }
 
-        public void associateWithMimeTypes(Set<String> mimeTypes, Set<String> indexerFilter) {
-            pathIds.getMimeTypes().mimeTypes().addAll(mimeTypes);
-            pathIds.getMimeTypes().indexerFilter().addAll(indexerFilter);
+        public void associateWithMimeTypes(Set<String> mimeTypes) {
+            pathIds.getMimeTypes().addAll(mimeTypes);
         }
     } // End of TaggedClassPath class
 
@@ -1341,7 +1336,7 @@ public final class PathRegistry implements Runnable {
         private final Set<String> sourcePathIds = new HashSet<>();
         private final Set<String> libraryPathIds = new HashSet<>();
         private final Set<String> binaryLibraryPathIds = new HashSet<>();
-        private final MimeTypesAndIndexerFilterForRoot mimeTypes = new MimeTypesAndIndexerFilterForRoot(new HashSet<String>(), new HashSet<>());
+        private final Set<String> mimeTypes = new HashSet<>();
 
         @NonNull
         @SuppressWarnings("ReturnOfCollectionOrArrayField")
@@ -1363,7 +1358,7 @@ public final class PathRegistry implements Runnable {
 
         @NonNull
         @SuppressWarnings("ReturnOfCollectionOrArrayField")
-        public MimeTypesAndIndexerFilterForRoot getMimeTypes() {
+        public Set<String> getMimeTypes() {
             return mimeTypes;
         }
 
@@ -1379,9 +1374,7 @@ public final class PathRegistry implements Runnable {
             sourcePathIds.addAll(pathIds.getSids());
             libraryPathIds.addAll(pathIds.getLids());
             binaryLibraryPathIds.addAll(pathIds.getBlids());
-            final MimeTypesAndIndexerFilterForRoot inMimeTypes = pathIds.getMimeTypes();
-            mimeTypes.mimeTypes().addAll(inMimeTypes.mimeTypes());
-            mimeTypes.indexerFilter().addAll(inMimeTypes.indexerFilter());
+            mimeTypes.addAll(pathIds.getMimeTypes());
         }
 
         @Override

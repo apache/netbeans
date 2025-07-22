@@ -58,11 +58,6 @@ public final class DefaultPathRecognizer extends PathRecognizer {
         return mimeTypes;
     }
 
-    @Override
-    public Set<String> getIndexerFilter() {
-        return indexerFilter;
-    }
-
     // ------------------------------------------------------------------------
     // Public implementation
     // ------------------------------------------------------------------------
@@ -88,22 +83,8 @@ public final class DefaultPathRecognizer extends PathRecognizer {
                 }
             }
         }
-        // mime types
-        Set<String> indexerFilter = new HashSet<String>();
-        Object idx = fileAttributes.get("indexerFilter"); //NOI18N
-        if (idx instanceof String) {
-            String [] arr = ((String) idx).split(","); //NOI18N
-            for(String indexer : arr) {
-                indexer = indexer.trim();
-                if (indexer.length() > 0) {
-                    indexerFilter.add(indexer);
-                } else {
-                    LOG.log(Level.WARNING, "Invalid indexer name {0}, ignoring.", indexer); //NOI18N
-                }
-            }
-        }
 
-        return new DefaultPathRecognizer(sourcePathIds, libraryPathIds, binaryLibraryPathIds, Collections.unmodifiableSet(mimeTypes), Collections.unmodifiableSet(indexerFilter));
+        return new DefaultPathRecognizer(sourcePathIds, libraryPathIds, binaryLibraryPathIds, Collections.unmodifiableSet(mimeTypes));
     }
 
     @Override
@@ -125,14 +106,12 @@ public final class DefaultPathRecognizer extends PathRecognizer {
     private final Set<String> libraryPathIds;
     private final Set<String> binaryLibraryPathIds;
     private final Set<String> mimeTypes;
-    private final Set<String> indexerFilter;
 
-    private DefaultPathRecognizer(Set<String> sourcePathIds, Set<String> libraryPathIds, Set<String> binaryLibraryPathIds, Set<String> mimeTypes, Set<String> indexerFilter) {
+    private DefaultPathRecognizer(Set<String> sourcePathIds, Set<String> libraryPathIds, Set<String> binaryLibraryPathIds, Set<String> mimeTypes) {
         this.sourcePathIds = sourcePathIds;
         this.libraryPathIds = libraryPathIds;
         this.binaryLibraryPathIds = binaryLibraryPathIds;
         this.mimeTypes = mimeTypes;
-        this.indexerFilter = indexerFilter;
     }
 
     private static Set<String> readIdsAttribute(Map<String, ?> fileAttributes, String attributeName) {

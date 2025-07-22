@@ -116,7 +116,6 @@ import org.openide.util.lookup.ServiceProvider;
 import static org.netbeans.modules.parsing.impl.indexing.Debug.printCollection;
 import static org.netbeans.modules.parsing.impl.indexing.Debug.printMap;
 import static org.netbeans.modules.parsing.impl.indexing.Debug.printMimeTypes;
-import org.netbeans.modules.parsing.impl.indexing.PathRegistry.MimeTypesAndIndexerFilterForRoot;
 import org.netbeans.modules.parsing.impl.indexing.implspi.CacheFolderProvider;
 import org.netbeans.modules.parsing.impl.indexing.implspi.ContextProvider;
 import org.openide.util.lookup.Lookups;
@@ -2387,7 +2386,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                     EnumSet.of(CacheFolderProvider.Kind.SOURCES, CacheFolderProvider.Kind.LIBRARIES),
                     CacheFolderProvider.Mode.CREATE);
             customIndexersScanStarted(root, cacheRoot, sourceForBinaryRoot, indexers.cifInfos, votes, ctxToFinish);
-            embeddingIndexersScanStarted(root, cacheRoot, sourceForBinaryRoot, filterEmbeddingIndexer(root, indexers.eifInfosMap).values(), votes, ctxToFinish);
+            embeddingIndexersScanStarted(root, cacheRoot, sourceForBinaryRoot, indexers.eifInfosMap.values(), votes, ctxToFinish);
         }
 
         protected final void customIndexersScanStarted(
@@ -2650,9 +2649,9 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                     ClusteredIndexables allCi = null;
                     boolean ae = false;
                     assert ae = true;
-                    MimeTypesAndIndexerFilterForRoot rootMimeTypes = PathRegistry.getDefault().getMimeTypesFor(root);
+                    Set<String> rootMimeTypes = PathRegistry.getDefault().getMimeTypesFor(root);
                     for(IndexerCache.IndexerInfo<CustomIndexerFactory> cifInfo : indexers.cifInfos) {
-                        if (rootMimeTypes != null && !cifInfo.isAllMimeTypesIndexer() && !Util.containsAny(rootMimeTypes.mimeTypes(), cifInfo.getMimeTypes())) {
+                        if (rootMimeTypes != null && !cifInfo.isAllMimeTypesIndexer() && !Util.containsAny(rootMimeTypes, cifInfo.getMimeTypes())) {
                             // ignore roots that are not marked to be scanned by the cifInfo indexer
                             if (LOGGER.isLoggable(Level.FINE)) {
                                 LOGGER.log(Level.FINE, "Not using {0} registered for {1} to scan root {2} marked for {3}", new Object [] {
@@ -2666,12 +2665,6 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                         }
 
                         final CustomIndexerFactory factory = cifInfo.getIndexerFactory();
-                        if (factory.getIndexerName().contains("jtreg")) {
-                            System.err.println("!!!");
-                        }
-                        if (rootMimeTypes != null && !rootMimeTypes.indexerFilter().isEmpty() && !rootMimeTypes.indexerFilter().contains(factory.getIndexerName())) {
-                            continue;
-                        }
                         final Pair<String,Integer> key = Pair.of(factory.getIndexerName(),factory.getIndexVersion());
                         Pair<SourceIndexerFactory,Context> value = contexts.get(key);
                         if (value == null) {
@@ -2783,13 +2776,12 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
 
                     // now process embedding indexers
                     boolean useAllCi = false;
-                    final Map<String, Collection<IndexerInfo<EmbeddingIndexerFactory>>> eifInfosMap = filterEmbeddingIndexer(root, indexers.eifInfosMap);
                     if (allResources != null) {
                         boolean containsNewIndexers = false;
                         boolean forceReindex = false;
                         final Set<EmbeddingIndexerFactory> reindexVoters = new HashSet<>();
                         final LogContext lc = getLogContext();
-                        for(Collection<IndexerCache.IndexerInfo<EmbeddingIndexerFactory>> eifInfos : eifInfosMap.values()) {
+                        for(Collection<IndexerCache.IndexerInfo<EmbeddingIndexerFactory>> eifInfos : indexers.eifInfosMap.values()) {
                             for(IndexerCache.IndexerInfo<EmbeddingIndexerFactory> eifInfo : eifInfos) {
                                 if (indexers.changedEifs != null && indexers.changedEifs.contains(eifInfo)) {
                                     if (lc != null) {
@@ -2824,7 +2816,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                         }
                         final boolean allFiles = containsNewIndexers || forceReindex || allResources.size() == resources.size();
                         if (allFiles) {
-                            for(Collection<IndexerCache.IndexerInfo<EmbeddingIndexerFactory>> eifInfos : eifInfosMap.values()) {
+                            for(Collection<IndexerCache.IndexerInfo<EmbeddingIndexerFactory>> eifInfos : indexers.eifInfosMap.values()) {
                                 for(IndexerCache.IndexerInfo<EmbeddingIndexerFactory> eifInfo : eifInfos) {
                                     final EmbeddingIndexerFactory factory = eifInfo.getIndexerFactory();
                                     final Pair<String,Integer> key = Pair.of(factory.getIndexerName(),factory.getIndexVersion());
@@ -2866,7 +2858,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                         allIndexblesSentToIndexers.add(indexables);
 
                         long tm1 = System.currentTimeMillis();
-                        boolean f = indexEmbedding(eifInfosMap, cacheRoot, root, mimeType, indexables, usedCi, contexts, sourceForBinaryRoot);
+                        boolean f = indexEmbedding(indexers.eifInfosMap, cacheRoot, root, mimeType, indexables, usedCi, contexts, sourceForBinaryRoot);
                         long tm2 = System.currentTimeMillis();
 
                         if (!f) {
@@ -3132,10 +3124,6 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                 final Map<Pair<String,Integer>,Pair<SourceIndexerFactory,Context>> transactionContexts,
                 final boolean sourceForBinaryRoot
         ) throws IOException {
-            final Collection<? extends IndexerCache.IndexerInfo<EmbeddingIndexerFactory>> infos = getIndexerInfos(eifInfosMap, mimeType);
-            if (infos.isEmpty()) {
-                return true;
-            }
             final IndexabilityQuery iq = IndexabilityQuery.getInstance();
             final Map<Source, Indexable> sources = new LinkedHashMap<>();
             for (final Indexable dirty : files) {
@@ -3165,6 +3153,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                             final Snapshot snapshot = resultIterator.getSnapshot();
                             final Indexable dirty = sources.get(snapshot.getSource());
                             final String mimeType = snapshot.getMimeType();
+                            final Collection<? extends IndexerCache.IndexerInfo<EmbeddingIndexerFactory>> infos = getIndexerInfos(eifInfosMap, mimeType);
 
                             if (infos != null && !infos.isEmpty()) {
                                 for (IndexerCache.IndexerInfo<EmbeddingIndexerFactory> info : infos) {
@@ -6880,25 +6869,5 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                 return s;
             }
         }
-    }
-
-    private static Map<String, Collection<IndexerCache.IndexerInfo<EmbeddingIndexerFactory>>> filterEmbeddingIndexer(URL root, Map<String, Collection<IndexerCache.IndexerInfo<EmbeddingIndexerFactory>>> eifInfosMap) {
-        MimeTypesAndIndexerFilterForRoot mimeTypes = PathRegistry.getDefault().getMimeTypesFor(root);
-
-        if (mimeTypes != null && !mimeTypes.indexerFilter().isEmpty()) {
-            Map<String, Collection<IndexerCache.IndexerInfo<EmbeddingIndexerFactory>>> result = new HashMap<>();
-
-            for (Map.Entry<String, Collection<IndexerInfo<EmbeddingIndexerFactory>>> e : eifInfosMap.entrySet()) {
-                List<IndexerInfo<EmbeddingIndexerFactory>> filtered = e.getValue().stream().filter(info -> mimeTypes.indexerFilter().contains(info.getIndexerName())).toList();
-
-                if (!filtered.isEmpty()) {
-                    result.put(e.getKey(), filtered);
-                }
-            }
-
-            return result;
-        }
-
-        return eifInfosMap;
     }
 }

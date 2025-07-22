@@ -18,16 +18,20 @@
  */
 package org.netbeans.modules.gsf.testrunner.ui;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -37,19 +41,25 @@ import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 import java.util.logging.Logger;
+import javax.swing.text.Position;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
 import org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods;
+import org.netbeans.modules.gsf.testrunner.ui.spi.TestMethodFinderImplementation;
 import org.netbeans.modules.parsing.api.Snapshot;
+import org.netbeans.modules.parsing.impl.indexing.CacheFolder;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexer;
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexerFactory;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
+import org.netbeans.spi.project.SingleMethod;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -167,5 +177,75 @@ public final class TestMethodFinderImpl extends EmbeddingIndexer {
         public int getIndexVersion() {
             return VERSION;
         }
+    }
+
+    @ServiceProvider(service=TestMethodFinderImplementation.class)
+    public static final class TestMethodFinderImplementationImpl implements TestMethodFinderImplementation {
+
+        @Override
+        public void addListener(BiConsumer<FileObject, Collection<TestMethodController.TestMethod>> listener) {
+            INSTANCE.addListener(listener);
+        }
+
+        @Override
+        public Map<FileObject, Collection<TestMethodController.TestMethod>> findTestMethods(FileObject testRoot) {
+            Map<FileObject, Collection<TestMethodController.TestMethod>> file2TestMethods = new HashMap<>();
+            try {
+                FileObject cacheRoot = getCacheRoot(testRoot.toURL());
+                if (cacheRoot != null) {
+                    Enumeration<? extends FileObject> children = cacheRoot.getChildren(true);
+                    while (children.hasMoreElements()) {
+                        FileObject child = children.nextElement();
+                        if (child.hasExt("tests")) { //NOI18N
+                            loadTestMethods(child, file2TestMethods);
+                        }
+                    }
+                }
+            } catch (IOException ex) {}
+            return file2TestMethods;
+        }
+
+        private static void loadTestMethods(FileObject input, Map<FileObject, Collection<TestMethodController.TestMethod>> file2TestMethods) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(input.getInputStream(), StandardCharsets.UTF_8))) {
+                FileObject fo = null;
+                String className = null;
+                Position classPosition = null;
+                Collection<TestMethodController.TestMethod> testMethods = null;
+                String line;
+                while ((line = br.readLine()) != null) {
+                    if (line.startsWith("url: ")) { //NOI18N
+                        String url = line.substring(5);
+                        fo = URLMapper.findFileObject(URI.create(url).toURL());
+                        if (fo == null) {
+                            return;
+                        }
+                        testMethods = file2TestMethods.computeIfAbsent(fo, fObj -> {
+                            return new ArrayList<>();
+                        });
+                    } else if (line.startsWith("class: ")) { //NOI18N
+                        String info = line.substring(7);
+                        int idx = info.lastIndexOf(':');
+                        className = (idx < 0 ? info : info.substring(0, idx)).trim();
+                        classPosition = idx < 0 ? null : () -> Integer.parseInt(info.substring(idx + 1));
+                    } else if (line.startsWith("method: ") && testMethods != null && className != null) { //NOI18N
+                        String info = line.substring(8);
+                        int idx = info.lastIndexOf(':');
+                        String name = (idx < 0 ? info : info.substring(0, idx)).trim();
+                        String[] range = idx < 0 ? new String[0] : info.substring(idx + 1).split("-");
+                        Position methodStart = range.length > 0 ? () -> Integer.parseInt(range[0]) : null;
+                        Position methodEnd = range.length > 1 ? () -> Integer.parseInt(range[1]) : null;
+                        testMethods.add(new TestMethodController.TestMethod(className, classPosition, new SingleMethod(fo, name), methodStart, null, methodEnd));
+                    }
+                }
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+
+        private static FileObject getCacheRoot(URL root) throws IOException {
+            final FileObject dataFolder = CacheFolder.getDataFolder(root, true);
+            return dataFolder != null ? FileUtil.createFolder(dataFolder, TestMethodFinderImpl.NAME + "/" + TestMethodFinderImpl.VERSION) : null; //NOI18N
+        }
+
     }
 }

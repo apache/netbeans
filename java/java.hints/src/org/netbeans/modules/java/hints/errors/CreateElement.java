@@ -186,6 +186,7 @@ public final class CreateElement implements ErrorRule<Void> {
         TreePath parent = null;
         TreePath firstClass = null;
         TreePath firstMethod = null;
+        TreePath firstLambda = null;
         TreePath firstVar = null;
         TreePath firstInitializer = null;
         TreePath methodInvocation = null;
@@ -210,6 +211,9 @@ public final class CreateElement implements ErrorRule<Void> {
                 firstClass = path;
             if (leafKind == Kind.METHOD && firstMethod == null && firstClass == null)
                 firstMethod = path;
+            if (leafKind == Kind.LAMBDA_EXPRESSION && firstMethod == null &&
+                firstClass == null && firstLambda == null && firstInitializer == null)
+                firstLambda = path;
             //static/dynamic initializer:
             if (   leafKind == Kind.BLOCK && TreeUtilities.CLASS_TREE_KINDS.contains(path.getParentPath().getLeaf().getKind())
                 && firstMethod == null && firstClass == null)
@@ -511,7 +515,7 @@ public final class CreateElement implements ErrorRule<Void> {
             int identifierPos = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), errorPath.getLeaf());
             if (ee != null && fixTypes.contains(ElementKind.PARAMETER) && !Utilities.isMethodHeaderInsideGuardedBlock(info, (MethodTree) firstMethod.getLeaf()))
                 result.add(new AddParameterOrLocalFix(info, type, simpleName, ElementKind.PARAMETER, identifierPos).toEditorFix());
-            if ((firstMethod != null || firstInitializer != null) && fixTypes.contains(ElementKind.LOCAL_VARIABLE) && ErrorFixesFakeHint.enabled(ErrorFixesFakeHint.FixKind.CREATE_LOCAL_VARIABLE))
+            if ((firstMethod != null || firstInitializer != null || firstLambda != null) && fixTypes.contains(ElementKind.LOCAL_VARIABLE) && ErrorFixesFakeHint.enabled(ErrorFixesFakeHint.FixKind.CREATE_LOCAL_VARIABLE))
                 result.add(new AddParameterOrLocalFix(info, type, simpleName, ElementKind.LOCAL_VARIABLE, identifierPos).toEditorFix());
             if (fixTypes.contains(ElementKind.RESOURCE_VARIABLE))
                 result.add(new AddParameterOrLocalFix(info, type, simpleName, ElementKind.RESOURCE_VARIABLE, identifierPos).toEditorFix());

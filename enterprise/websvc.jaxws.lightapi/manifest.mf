@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.websvc.jaxws.lightapi
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/websvc/jaxws/light/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.51
+OpenIDE-Module-Specification-Version: 1.52

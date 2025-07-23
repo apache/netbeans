@@ -3,6 +3,6 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.libs.javafx.macosx.aarch64
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/javafx/macosx/aarch64/Bundle.properties
 OpenIDE-Module-Fragment-Host: org.netbeans.libs.javafx
-OpenIDE-Module-Specification-Version: 17.18
+OpenIDE-Module-Specification-Version: 17.19
 OpenIDE-Module-Requires: org.openide.modules.os.MacOSX, org.openide.modules.arch.aarch64
 OpenIDE-Module-Provides: org.openide.modules.jre.JavaFX

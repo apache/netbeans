@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.ant.browsetask
-OpenIDE-Module-Specification-Version: 1.69
+OpenIDE-Module-Specification-Version: 1.70
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/ant/browsetask/Bundle.properties
 AutoUpdate-Show-In-Client: false
 

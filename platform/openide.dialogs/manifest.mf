@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.openide.dialogs
-OpenIDE-Module-Specification-Version: 7.76
+OpenIDE-Module-Specification-Version: 7.77
 OpenIDE-Module-Localizing-Bundle: org/openide/Bundle.properties
 AutoUpdate-Essential-Module: true
 

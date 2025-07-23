@@ -3,5 +3,5 @@ OpenIDE-Module: org.netbeans.modules.uihandler
 OpenIDE-Module-Install: org/netbeans/modules/uihandler/Installer.class
 OpenIDE-Module-Layer: org/netbeans/modules/uihandler/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/uihandler/Bundle.properties
-OpenIDE-Module-Specification-Version: 2.64
+OpenIDE-Module-Specification-Version: 2.65
 

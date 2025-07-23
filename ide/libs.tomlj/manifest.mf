@@ -1,5 +1,5 @@
 OpenIDE-Module: org.netbeans.libs.tomlj/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/tomlj/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.11
+OpenIDE-Module-Specification-Version: 1.12
 OpenIDE-Module-Deprecated: true 
 OpenIDE-Module-Deprecation-Message: Module ide/libs.tomlj is deprecated, use module ide/libs.tomljava instead.

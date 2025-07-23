@@ -3,4 +3,4 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.modules.javascript2.requirejs
 OpenIDE-Module-Layer: org/netbeans/modules/javascript2/requirejs/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/javascript2/requirejs/Bundle.properties
-OpenIDE-Module-Specification-Version: 0.36
+OpenIDE-Module-Specification-Version: 0.37

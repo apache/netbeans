@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.options.keymap
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/options/keymap/Bundle.properties
 OpenIDE-Module-Layer: org/netbeans/modules/options/keymap/mf-layer.xml
-OpenIDE-Module-Specification-Version: 1.66
+OpenIDE-Module-Specification-Version: 1.67
 AutoUpdate-Show-In-Client: false
 AutoUpdate-Essential-Module: true
 

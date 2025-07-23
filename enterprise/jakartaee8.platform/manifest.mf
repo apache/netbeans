@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.jakartaee8.platform/1
-OpenIDE-Module-Specification-Version: 1.30
+OpenIDE-Module-Specification-Version: 1.31
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/jakartaee8/platform/Bundle.properties
 AutoUpdate-Show-In-Client: false

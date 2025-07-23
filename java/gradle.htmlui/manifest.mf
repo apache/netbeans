@@ -4,5 +4,5 @@ OpenIDE-Module: org.netbeans.modules.gradle.htmlui
 OpenIDE-Module-Layer: org/netbeans/modules/gradle/htmlui/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/gradle/htmlui/Bundle.properties
 OpenIDE-Module-Recommends: org.netbeans.modules.debugger.jpda.ui
-OpenIDE-Module-Specification-Version: 1.24
+OpenIDE-Module-Specification-Version: 1.25
 

@@ -4,5 +4,5 @@ OpenIDE-Module: org.netbeans.modules.options.java
 OpenIDE-Module-Layer: org/netbeans/modules/options/java/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/options/java/Bundle.properties
 OpenIDE-Module-Provides: org.netbeans.modules.options.java
-OpenIDE-Module-Specification-Version: 1.43
+OpenIDE-Module-Specification-Version: 1.44
 

@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.modules.languages.apacheconf
 OpenIDE-Module-Layer: org/netbeans/modules/languages/apacheconf/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/languages/apacheconf/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.45
+OpenIDE-Module-Specification-Version: 1.46
 

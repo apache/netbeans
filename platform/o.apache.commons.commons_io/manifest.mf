@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.apache.commons.commons_io
 OpenIDE-Module-Localizing-Bundle: org/apache/commons/commons_io/Bundle.properties
-OpenIDE-Module-Specification-Version: 2.20
+OpenIDE-Module-Specification-Version: 2.21
 

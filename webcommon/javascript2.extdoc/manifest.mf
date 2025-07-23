@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.javascript2.extdoc
 OpenIDE-Module-Layer: org/netbeans/modules/javascript2/extdoc/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/javascript2/extdoc/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.27
+OpenIDE-Module-Specification-Version: 1.28
 

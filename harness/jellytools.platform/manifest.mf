@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.jellytools.platform/3
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/jellytools/platform/Bundle.properties
-OpenIDE-Module-Specification-Version: 3.58
+OpenIDE-Module-Specification-Version: 3.59
 

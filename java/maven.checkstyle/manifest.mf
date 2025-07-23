@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.maven.checkstyle
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/maven/checkstyle/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.46
+OpenIDE-Module-Specification-Version: 1.47
 

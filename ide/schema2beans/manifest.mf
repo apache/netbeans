@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/schema2beans/Bundle.properties
 OpenIDE-Module: org.netbeans.modules.schema2beans/1
-OpenIDE-Module-Specification-Version: 1.76
+OpenIDE-Module-Specification-Version: 1.77
 

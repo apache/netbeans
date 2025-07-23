@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.libs.json_simple/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/json_simple/Bundle.properties
-OpenIDE-Module-Specification-Version: 0.41
+OpenIDE-Module-Specification-Version: 0.42
 AutoUpdate-Show-In-Client: false

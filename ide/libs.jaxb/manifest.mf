@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.libs.jaxb/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/jaxb/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.60
+OpenIDE-Module-Specification-Version: 1.61
 OpenIDE-Module-Layer: org/netbeans/libs/jaxb/layer.xml
 OpenIDE-Module-Provides: com.sun.xml.bind
 OpenIDE-Module-Requires: org.openide.modules.ModuleFormat2

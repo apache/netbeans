@@ -3,4 +3,4 @@ AutoUpdate-Show-In-Client: false
 AutoUpdate-Essential-Module: true
 OpenIDE-Module: org.netbeans.api.dashboard/0
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/dashboard/Bundle.properties
-OpenIDE-Module-Specification-Version: 0.6
+OpenIDE-Module-Specification-Version: 0.7

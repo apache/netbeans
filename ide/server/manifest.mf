@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.server/0
 OpenIDE-Module-Layer: org/netbeans/modules/server/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/server/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.62
+OpenIDE-Module-Specification-Version: 1.63
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module-Provides: org.netbeans.modules.server
 

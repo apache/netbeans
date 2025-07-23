@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.spi.debugger.jpda.ui
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/debugger/jpda/ui/spi/Bundle.properties
-OpenIDE-Module-Specification-Version: 3.32
+OpenIDE-Module-Specification-Version: 3.33
 

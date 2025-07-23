@@ -4,5 +4,5 @@ OpenIDE-Module: org.netbeans.modules.glassfish.javaee/0
 OpenIDE-Module-Layer: org/netbeans/modules/glassfish/javaee/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/glassfish/javaee/Bundle.properties
 OpenIDE-Module-Provides: org.netbeans.modules.serverplugins.javaee
-OpenIDE-Module-Specification-Version: 1.70
+OpenIDE-Module-Specification-Version: 1.71
 

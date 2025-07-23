@@ -1,5 +1,5 @@
 OpenIDE-Module: org.netbeans.modules.jsp.lexer/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/lib/jsp/lexer/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.54
+OpenIDE-Module-Specification-Version: 1.55
 OpenIDE-Module-Layer: org/netbeans/lib/jsp/lexer/layer.xml
 

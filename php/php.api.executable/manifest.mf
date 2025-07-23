@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.php.api.executable/0
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/php/api/executable/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 0.59
+OpenIDE-Module-Specification-Version: 0.60

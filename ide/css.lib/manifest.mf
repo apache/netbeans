@@ -3,4 +3,4 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.css.lib/2
 OpenIDE-Module-Layer: org/netbeans/modules/css/lib/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/css/lib/Bundle.properties
-OpenIDE-Module-Specification-Version: 2.9
+OpenIDE-Module-Specification-Version: 2.10

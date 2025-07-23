@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.hudson.ui
 OpenIDE-Module-Layer: org/netbeans/modules/hudson/ui/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/hudson/ui/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.40
+OpenIDE-Module-Specification-Version: 1.41
 

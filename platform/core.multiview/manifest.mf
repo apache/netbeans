@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.core.multiview/1
-OpenIDE-Module-Specification-Version: 1.73
+OpenIDE-Module-Specification-Version: 1.74
 OpenIDE-Module-Localizing-Bundle: org/netbeans/core/multiview/resources/Bundle.properties
 OpenIDE-Module-Layer: org/netbeans/core/multiview/resources/mf-layer.xml
 AutoUpdate-Essential-Module: true

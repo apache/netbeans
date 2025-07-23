@@ -3,4 +3,4 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.jakartaee8.api
 OpenIDE-Module-Layer: org/netbeans/modules/jakartaee8/api/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/jakartaee8/api/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.30
+OpenIDE-Module-Specification-Version: 1.31

@@ -3,5 +3,5 @@ OpenIDE-Module: org.netbeans.modules.jakarta.transformer/0
 OpenIDE-Module-Layer: org/netbeans/modules/fish/payara/jakarta/transformer/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/fish/payara/jakarta/transformer/Bundle.properties
 AutoUpdate-Show-In-Client: true
-OpenIDE-Module-Specification-Version: 2.23
+OpenIDE-Module-Specification-Version: 2.24
 

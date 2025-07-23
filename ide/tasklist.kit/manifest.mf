@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.tasklist.kit
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/tasklist/kit/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.57
+OpenIDE-Module-Specification-Version: 1.58
 

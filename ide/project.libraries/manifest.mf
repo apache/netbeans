@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.project.libraries/1
 OpenIDE-Module-Layer: org/netbeans/modules/project/libraries/resources/mf-layer.xml
-OpenIDE-Module-Specification-Version: 1.82
+OpenIDE-Module-Specification-Version: 1.83
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/project/libraries/resources/Bundle.properties
 AutoUpdate-Show-In-Client: false
 

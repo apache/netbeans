@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.css.editor/1
 OpenIDE-Module-Layer: org/netbeans/modules/css/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/css/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.97
+OpenIDE-Module-Specification-Version: 1.98
 AutoUpdate-Show-In-Client: false

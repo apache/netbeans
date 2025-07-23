@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.php.phing
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/php/phing/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 0.39
+OpenIDE-Module-Specification-Version: 0.40
 AutoUpdate-Show-In-Client: true

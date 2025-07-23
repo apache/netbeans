@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.j2ee.ejbrefactoring
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/j2ee/ejbrefactoring/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.54
+OpenIDE-Module-Specification-Version: 1.55
 AutoUpdate-Show-In-Client: false
 

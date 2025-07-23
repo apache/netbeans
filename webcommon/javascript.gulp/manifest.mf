@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.javascript.gulp
 OpenIDE-Module-Layer: org/netbeans/modules/javascript/gulp/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/javascript/gulp/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 0.42
+OpenIDE-Module-Specification-Version: 0.43
 AutoUpdate-Show-In-Client: false

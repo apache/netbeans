@@ -4,5 +4,5 @@ OpenIDE-Module-Localizing-Bundle: org/netbeans/core/ui/resources/Bundle.properti
 OpenIDE-Module-Layer: org/netbeans/core/ui/resources/layer.xml
 AutoUpdate-Show-In-Client: false
 AutoUpdate-Essential-Module: true
-OpenIDE-Module-Specification-Version: 1.74
+OpenIDE-Module-Specification-Version: 1.75
 

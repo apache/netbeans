@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.editor.autosave/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/editor/autosave/Bundle.properties
 OpenIDE-Module-Provides: org.netbeans.modules.editor.autosave
-OpenIDE-Module-Specification-Version: 1.20
+OpenIDE-Module-Specification-Version: 1.21
 AutoUpdate-Show-In-Client: false

@@ -416,10 +416,7 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <friend-packages>
-                <friend>org.netbeans.modules.bugtracking.bridge</friend>
-                <package>org.netbeans.modules.mercurial.api</package>
-            </friend-packages>
+            <public-packages/>
         </data>
     </configuration>
 </project>

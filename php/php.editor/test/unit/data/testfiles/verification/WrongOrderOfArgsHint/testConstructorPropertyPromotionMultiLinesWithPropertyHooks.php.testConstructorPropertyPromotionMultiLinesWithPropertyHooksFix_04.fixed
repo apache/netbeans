@@ -1,0 +1,176 @@
+<?php
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+class ConstructorPropertyPromotionWrong1 {
+
+    private int $mandatory;
+    public function __construct( // wrong1
+        private ?int $optional = 1 {
+            get {
+                return $this->optional;
+            }
+            set {
+                $this->optional = $value;
+            }
+        },
+        $mandatory, // test1
+    ) {
+        $this->mandatory = $mandatory;
+    }
+
+}
+
+class ConstructorPropertyPromotionWrong2 {
+
+    private int $mandatory;
+    public function __construct( // wrong2
+        private ?int $optional1 = 1 {
+            get {
+                return $this->optional;
+            }
+            set {
+                $this->optional = $value;
+            }
+        },
+        $mandatory, // test2
+        string $optional2 = "default value" {
+            get => $this->optional2;
+            set => $this->optional2 = $value;
+        }
+    ) {
+        $this->mandatory = $mandatory;
+    }
+
+}
+
+class ConstructorPropertyPromotionWrong3 {
+
+    public function __construct( // wrong3
+        protected ?int $mandatory1,
+        $optional = "default value" {
+            get {
+                return $this->optional;
+            }
+            set {
+                $this->optional = $value;
+            }
+        },
+        private string|int $mandatory2, // test3
+    ) {
+    }
+
+}
+
+class ConstructorPropertyPromotionWrong4 {
+
+    public function __construct( // wrong4
+        private ?int $mandatory1,
+        public string $mandatory2,
+        private $optional = "default value" {
+            get {
+                return $this->optional;
+            } // comment
+            set {
+                $this->optional = $value;
+            }
+        } // test4
+    ) {
+    }
+
+}
+
+class ConstructorPropertyPromotionOK1 {
+
+    public function __construct(
+        private ?int $optional1 = 1 {
+            get {
+                return $this->optional;
+            }
+            set {
+                $this->optional = $value;
+            }
+        },
+        public $optional2 = [1, 2] {
+            get {
+                return $this->optional2;
+            }
+            set {
+                $this->optional2 = $value;
+            }
+        }
+    ) {
+    }
+
+}
+
+class ConstructorPropertyPromotionOK2 {
+
+    public function __construct(
+        $optional1 = 1 {
+            get {
+                return $this->optional;
+            }
+            set {
+                $this->optional = $value;
+            }
+        },
+        public $optional2 = [1, 2],
+        private string $optional3 = "default value" {
+            get {
+                return $this->optional3;
+            }
+            set {
+                $this->optional3 = $value;
+            }
+        }
+    ) {
+    }
+
+}
+
+class ConstructorPropertyPromotionOK3 {
+
+    public function __construct(
+        private int $optional1 = 1  {
+            get => $this->optional1;
+            set => $this->optional1 = $value;
+        },
+        $optional2 = [1, 2],
+        private string $optional3 = "default value"
+    ) {
+    }
+
+}
+
+class ConstructorPropertyPromotionOK4 {
+
+    public function __construct(
+        private int $optional1 = 1,
+        protected $optional2 = [1, 2]  {
+            get => $this->optional2;
+            set => $this->optional2 = $value;
+        },
+        private string $optional3 = "default value"  {
+            get => $this->optional3;
+            set => $this->optional3 = $value;
+        }
+    ) {
+    }
+
+}

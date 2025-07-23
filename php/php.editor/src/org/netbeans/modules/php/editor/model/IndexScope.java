@@ -54,4 +54,27 @@ public interface IndexScope extends Scope {
     List<? extends CaseElement> findEnumCases(TypeScope type);
     List<? extends CaseElement> findEnumCases(TypeScope type, String enumCaseName);
 
+    public interface PHP84IndexScope extends IndexScope {
+
+        /**
+         * Find fields(properties) for an interface field name.
+         *
+         * @param interfaceScope an interface scope
+         * @param field a field name
+         * @param modifiers modifiers
+         * @return field elements
+         * @since 2.46.0
+         */
+        List<? extends FieldElement> findFields(InterfaceScope interfaceScope, String field, int... modifiers);
+
+        /**
+         * Find fields(properties) for an interface.
+         *
+         * @param interfaceScope an interface scope
+         * @param modifiers modifiers
+         * @return field elements
+         * @since 2.46.0
+         */
+        List<? extends FieldElement> findFields(InterfaceScope interfaceScope, int... modifiers);
+    }
 }

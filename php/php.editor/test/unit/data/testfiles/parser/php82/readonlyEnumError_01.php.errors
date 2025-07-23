@@ -1,5 +1,7 @@
 [[824,828]-Syntax error
+ unexpected:	enum
  after:	readonly
  expected:	class, abstract, final, readonly] 824-828:Syntax error
+ unexpected:	enum
  after:	readonly
  expected:	class, abstract, final, readonly

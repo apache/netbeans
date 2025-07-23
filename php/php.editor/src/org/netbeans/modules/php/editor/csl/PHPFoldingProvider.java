@@ -18,8 +18,8 @@
  */
 package org.netbeans.modules.php.editor.csl;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import org.netbeans.api.editor.fold.FoldType;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.modules.php.api.util.FileUtils;
@@ -32,22 +32,22 @@ import org.netbeans.spi.editor.fold.FoldTypeProvider;
 @MimeRegistration(mimeType = FileUtils.PHP_MIME_TYPE, service = FoldTypeProvider.class, position = 1000)
 public class PHPFoldingProvider implements FoldTypeProvider {
 
-    private static final Collection<FoldType> TYPES = new ArrayList<>(9);
-
-    static {
-        TYPES.add(FoldingScanner.TYPE_CLASS);
-        TYPES.add(FoldingScanner.TYPE_FUNCTION);
-        TYPES.add(FoldingScanner.TYPE_CODE_BLOCKS);
-        TYPES.add(FoldingScanner.TYPE_COMMENT);
-        TYPES.add(FoldingScanner.TYPE_PHPDOC);
-        TYPES.add(FoldingScanner.TYPE_ARRAY);
-        TYPES.add(FoldingScanner.TYPE_USE);
-        TYPES.add(FoldingScanner.TYPE_PHPTAG);
-        TYPES.add(FoldingScanner.TYPE_ATTRIBUTES);
-    }
+    private static final Collection<FoldType> TYPES = List.of(
+            FoldingScanner.TYPE_CLASS,
+            FoldingScanner.TYPE_FUNCTION,
+            FoldingScanner.TYPE_HOOKED_FIELD,
+            FoldingScanner.TYPE_PROPERTY_HOOK,
+            FoldingScanner.TYPE_CODE_BLOCKS,
+            FoldingScanner.TYPE_COMMENT,
+            FoldingScanner.TYPE_PHPDOC,
+            FoldingScanner.TYPE_ARRAY,
+            FoldingScanner.TYPE_USE,
+            FoldingScanner.TYPE_PHPTAG,
+            FoldingScanner.TYPE_ATTRIBUTES
+    );
 
     @Override
-    public Collection getValues(Class type) {
+    public Collection<FoldType> getValues(Class type) {
         return type == FoldType.class ? TYPES : null;
     }
 

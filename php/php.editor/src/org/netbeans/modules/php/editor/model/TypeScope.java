@@ -40,4 +40,22 @@ public interface TypeScope extends Scope, FullyQualifiedElement, TypeElement {
     // TODO: must be removed!!! only OverridingMethodsImpl uses it...for some recursion check?
     String getIndexSignature();
 
+    public interface FieldDeclarable extends TypeScope {
+        /**
+         * Get declared fields.
+         *
+         * @return declared fields
+         * @since 2.46.0
+         */
+        Collection<? extends FieldElement> getDeclaredFields();
+
+        /**
+         * Get inherited fields.
+         *
+         * @return declared fields
+         * @since 2.46.0
+         */
+        Collection<? extends FieldElement> getInheritedFields();
+    }
+
 }

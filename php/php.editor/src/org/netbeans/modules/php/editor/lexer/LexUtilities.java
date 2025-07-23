@@ -33,6 +33,7 @@ import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.OffsetRange;
+import org.netbeans.modules.php.editor.lexer.utils.LexerUtils;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
@@ -504,22 +505,23 @@ public final class LexUtilities {
         int start = -1;
         int origOffset = ts.offset();
 
-        Token token;
+        Token<? extends PHPTokenId> token = null;
+        Token<? extends PHPTokenId> lastTokenWithoutWSAndComments = null;
         int balance = 0;
         int curlyBalance = 0;
         boolean isInQuotes = false; // GH-6731 for checking a variable in string
         do {
+            if (!LexerUtils.isWhitespaceOrCommentToken(token)) {
+                lastTokenWithoutWSAndComments = token;
+            }
             token = ts.token();
-            if (token.id() == PHPTokenId.PHP_TOKEN) {
+            if (token.id() == PHPTokenId.PHP_TOKEN && !LexerUtils.isDollarCurlyOpen(token)) {
                 switch (token.text().charAt(0)) {
-                    case ')':
-                        balance--;
-                        break;
-                    case '(':
-                        balance++;
-                        break;
-                    default:
+                    case ')' -> balance--;
+                    case '(' -> balance++;
+                    default -> {
                         //no-op
+                    }
                 }
             } else if (token.id() == PHPTokenId.PHP_CONSTANT_ENCAPSED_STRING) {
                 // GH-6731 for checking a variable in string
@@ -532,14 +534,10 @@ public final class LexUtilities {
             } else if ((token.id() == PHPTokenId.PHP_SEMICOLON || token.id() == PHPTokenId.PHP_OPENTAG)
                     && ts.moveNext()) {
                 // we found previous end of expression => find begin of the current.
-                LexUtilities.findNext(ts, Arrays.asList(
-                        PHPTokenId.WHITESPACE,
-                        PHPTokenId.PHPDOC_COMMENT, PHPTokenId.PHPDOC_COMMENT_END, PHPTokenId.PHPDOC_COMMENT_START,
-                        PHPTokenId.PHP_COMMENT, PHPTokenId.PHP_COMMENT_END, PHPTokenId.PHP_COMMENT_START,
-                        PHPTokenId.PHP_LINE_COMMENT));
+                LexUtilities.findNext(ts, LexerUtils.getWSCommentTokens());
                 start = ts.offset();
                 break;
-            } else if (token.id() == PHPTokenId.PHP_IF) {
+            } else if (token.id() == PHPTokenId.PHP_IF && curlyBalance == 0) {
                 // we are at a beginning of if .... withouth curly?
                 // need to find end of the condition.
                 int offsetIf = ts.offset(); // remember the if offset
@@ -571,11 +569,7 @@ public final class LexUtilities {
                             }
                         }
                         if (parentBalance == 1 && ts.movePrevious()) {
-                            LexUtilities.findPrevious(ts, Arrays.asList(
-                                    PHPTokenId.WHITESPACE,
-                                    PHPTokenId.PHPDOC_COMMENT, PHPTokenId.PHPDOC_COMMENT_END, PHPTokenId.PHPDOC_COMMENT_START,
-                                    PHPTokenId.PHP_COMMENT, PHPTokenId.PHP_COMMENT_END, PHPTokenId.PHP_COMMENT_START,
-                                    PHPTokenId.PHP_LINE_COMMENT));
+                            LexUtilities.findPrevious(ts, LexerUtils.getWSCommentTokens());
                             start = ts.offset();
                         }
                         break;
@@ -588,34 +582,36 @@ public final class LexUtilities {
                     ts.move(offsetIf);
                     ts.movePrevious();
                 }
-            } else if (token.id() == PHPTokenId.PHP_CASE || token.id() == PHPTokenId.PHP_DEFAULT) {
+            } else if ((token.id() == PHPTokenId.PHP_CASE || token.id() == PHPTokenId.PHP_DEFAULT) && curlyBalance == 0) {
                 start = ts.offset();
                 break;
             } else if (token.id() == PHPTokenId.PHP_CURLY_CLOSE) {
                 curlyBalance--;
-                if (!isInQuotes && curlyBalance == -1 && ts.moveNext()) {
-                    // we are after previous blog close
-                    LexUtilities.findNext(ts, Arrays.asList(
-                            PHPTokenId.WHITESPACE,
-                            PHPTokenId.PHPDOC_COMMENT, PHPTokenId.PHPDOC_COMMENT_END, PHPTokenId.PHPDOC_COMMENT_START,
-                            PHPTokenId.PHP_COMMENT, PHPTokenId.PHP_COMMENT_END, PHPTokenId.PHP_COMMENT_START,
-                            PHPTokenId.PHP_LINE_COMMENT));
-                    if (ts.offset() <= origOffset) {
-                        start = ts.offset();
-                    } else {
-                        start = origOffset;
+                if (lastTokenWithoutWSAndComments == null || !LexerUtils.isComma(lastTokenWithoutWSAndComments)) {
+                    // check },
+                    // e.g. hooked property (CPP), lambda functions
+                    // public __construct(
+                    //     public int $prop {get {} set {}},
+                    // ) {}
+                    // myFunc(
+                    //     function() {},
+                    // )
+                    if (!isInQuotes && curlyBalance == -1 && ts.moveNext()) {
+                        // we are after previous block close
+                        LexUtilities.findNext(ts, LexerUtils.getWSCommentTokens());
+                        if (ts.offset() <= origOffset) {
+                            start = ts.offset();
+                        } else {
+                            start = origOffset;
+                        }
+                        break;
                     }
-                    break;
                 }
-            } else if (token.id() == PHPTokenId.PHP_CURLY_OPEN) {
+            } else if (LexerUtils.hasCurlyOpen(token)) {
                 curlyBalance++;
                 if (!isInQuotes && curlyBalance == 1 && ts.moveNext()) {
-                    // we are at the begining of a blog
-                    LexUtilities.findNext(ts, Arrays.asList(
-                            PHPTokenId.WHITESPACE,
-                            PHPTokenId.PHPDOC_COMMENT, PHPTokenId.PHPDOC_COMMENT_END, PHPTokenId.PHPDOC_COMMENT_START,
-                            PHPTokenId.PHP_COMMENT, PHPTokenId.PHP_COMMENT_END, PHPTokenId.PHP_COMMENT_START,
-                            PHPTokenId.PHP_LINE_COMMENT));
+                    // we are at the begining of a block
+                    LexUtilities.findNext(ts, LexerUtils.getWSCommentTokens());
                     if (ts.offset() <= origOffset) {
                         start = ts.offset();
                     } else {
@@ -623,6 +619,14 @@ public final class LexUtilities {
                     }
                     break;
                 }
+            } else if (curlyBalance == 1
+                    && (LexerUtils.isGetOrSetVisibilityToken(token) || token.id() == PHPTokenId.PHP_FUNCTION)) {
+                // e.g. CPP, lambda function
+                // func(
+                //     function() {^
+                // )
+                start = ts.offset();
+                break;
             } else if (balance == 1 && token.id() == PHPTokenId.PHP_STRING) {
                 // probably there is a function call insede the expression
                 start = ts.offset();
@@ -632,7 +636,7 @@ public final class LexUtilities {
 
         if (!ts.movePrevious()) {
             // we are at the first php line
-            LexUtilities.findNext(ts, Arrays.asList(
+            LexUtilities.findNext(ts, List.of(
                     PHPTokenId.WHITESPACE,
                     PHPTokenId.PHPDOC_COMMENT, PHPTokenId.PHPDOC_COMMENT_END, PHPTokenId.PHPDOC_COMMENT_START,
                     PHPTokenId.PHP_COMMENT, PHPTokenId.PHP_COMMENT_END, PHPTokenId.PHP_COMMENT_START,

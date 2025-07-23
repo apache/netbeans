@@ -28,44 +28,31 @@ public enum PhpElementKind {
     VARIABLE, CONSTANT, FUNCTION,
     NAMESPACE_DECLARATION, USE_STATEMENT, GROUP_USE_STATEMENT, CONSTRUCTOR,
     TRAIT, TRAIT_CONFLICT_RESOLUTION, TRAIT_METHOD_ALIAS, EMPTY,
-    ENUM, ENUM_CASE;
+    ENUM, ENUM_CASE,
+    PROPERTY_HOOK,
+    ;
 
     public final ElementKind getElementKind() {
-        ElementKind result;
-        switch (this) {
-            case CLASS:
-                result = ElementKind.CLASS;
-                break;
-            case TYPE_CONSTANT:
-                result = ElementKind.CONSTANT;
-                break;
-            case CONSTANT:
-                result = ElementKind.CONSTANT;
-                break;
-            case FIELD:
-                result = ElementKind.FIELD;
-                break;
-            case FUNCTION:
-                result = ElementKind.METHOD;
-                break;
-            case IFACE:
-                result = ElementKind.INTERFACE;
-                break;
-            case METHOD:
-                result = ElementKind.METHOD;
-                break;
-            case VARIABLE:
-                result = ElementKind.VARIABLE;
-                break;
-            case NAMESPACE_DECLARATION:
-                result = ElementKind.PACKAGE;
-                break;
-            case ENUM_CASE:
-                result = ElementKind.CONSTANT;
-                break;
-            default:
-                result = ElementKind.OTHER;
-        }
-        return result;
+        return switch (this) {
+            case CLASS ->
+                ElementKind.CLASS;
+            case TYPE_CONSTANT, CONSTANT, ENUM_CASE ->
+                ElementKind.CONSTANT;
+            case FIELD ->
+                ElementKind.FIELD;
+            case FUNCTION, METHOD ->
+                ElementKind.METHOD;
+            case IFACE ->
+                ElementKind.INTERFACE;
+            case VARIABLE ->
+                ElementKind.VARIABLE;
+            case NAMESPACE_DECLARATION ->
+                ElementKind.PACKAGE;
+            case CONSTRUCTOR, EMPTY, ENUM, GROUP_USE_STATEMENT,
+                INCLUDE, INDEX, PROGRAM, PROPERTY_HOOK,
+                TRAIT, TRAIT_CONFLICT_RESOLUTION,
+                TRAIT_METHOD_ALIAS, USE_ALIAS, USE_STATEMENT ->
+                ElementKind.OTHER;
+        };
     }
 }

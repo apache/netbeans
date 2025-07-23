@@ -445,6 +445,8 @@ terminal String T_NAME_RELATIVE; /* PHP 8.0 namespace\Foo */
 terminal String T_NAME_QUALIFIED; /* PHP 8.0 Foo\Bar */
 terminal String T_NAME_FULLY_QUALIFIED; /* PHP 8.0 \Foo\Bar */
 terminal String T_PUBLIC_SET, T_PROTECTED_SET, T_PRIVATE_SET; /* PHP 8.4 */
+terminal String T_PROPERTY_C; /* PHP 8.4 */
+/* NEED FIX PHP5ErrorHandlerImpl after a new terminal is added */
 
 /* Non terminals */
 
@@ -584,6 +586,7 @@ non terminal Identifier identifier;
 non terminal Pair<Expression, List<ASTNode[]>> class_constant_declaration;
 non terminal List constant_declaration;
 non terminal Integer optional_property_modifiers;
+non terminal Integer property_hook_modifiers;
 non terminal Integer constant_modifiers;
 non terminal Integer method_modifiers;
 non terminal Block method_body;
@@ -681,6 +684,17 @@ non terminal Statement attributed_interface_statement;
 non terminal Statement attributed_class_statement;
 non terminal Statement attributed_trait_statement;
 non terminal FormalParameter attributed_parameter;
+/*
+ * GH-8035 PHP 8.4 Support: Property hooks
+ * - https://wiki.php.net/rfc/property-hooks
+ */
+non terminal PropertyHookDeclaration property_hook;
+non terminal List<Statement> property_hook_list;
+non terminal Block optional_property_hook_list;
+non terminal SingleFieldDeclaration hooked_property;
+non terminal Block property_hook_body;
+
+non terminal List<FormalParameter> optional_parameter_list;
 
 precedence nonassoc T_THROW;
 precedence left T_INCLUDE, T_INCLUDE_ONCE, T_EVAL, T_REQUIRE, T_REQUIRE_ONCE;
@@ -1134,6 +1148,11 @@ T_INCLUDE:reserved
 :}
 
 | T_FUNC_C:reserved
+{:
+    RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_PROPERTY_C:reserved
 {:
     RESULT = new Identifier(reservedleft, reservedright, reserved, true);
 :}
@@ -1997,6 +2016,21 @@ constant_modifiers:modifier class_constant_declaration:list T_SEMICOLON:end
     RESULT = classConstantDeclaration;
 :}
 
+// PHP 8.4 Property hooks: Interfaces only include hooked properties
+| variable_modifiers:modifier optional_class_type_without_static:fieldType hooked_property:hookedProperty
+{:
+    if (!BodyDeclaration.Modifier.isVisibilityModifier(modifier.intValue())) {
+        // implicit public
+        int mod = modifier.intValue();
+        mod |= ASTPHP5Parser.IMPLICIT_PUBLIC.intValue();
+        modifier = Integer.valueOf(mod);
+    }
+    RESULT = new FieldsDeclaration.Builder(modifierleft, hookedPropertyright, modifier)
+            .fieldType(fieldType)
+            .fields(List.of(hookedProperty))
+            .build();
+:}
+
 | method_modifiers:modifier T_FUNCTION:start is_reference:isReference identifier:functionId
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE
 optional_return_type:returnType
@@ -2601,7 +2635,8 @@ T_READONLY
 ;
 
 parameter ::=
-optional_property_modifiers:modifier optional_class_type_without_static:classType is_reference:isReference is_variadic:isVariadic T_VARIABLE:var
+optional_property_modifiers:modifier optional_class_type_without_static:classType is_reference:isReference is_variadic:isVariadic
+T_VARIABLE:var optional_property_hook_list:propertyHooks
 {:
     int start = varleft;
     if (isVariadic) {
@@ -2628,11 +2663,21 @@ optional_property_modifiers:modifier optional_class_type_without_static:classTyp
             argument = new Reference(isReferenceleft, varright, v);
         }
     }
-    FormalParameter parameter = new FormalParameter(start, varright, modifier, classType, argument);
+    int end = varright;
+    if (propertyHooks != null) {
+        end = propertyHooksright;
+    }
+    FormalParameter parameter = new FormalParameter.Builder(start, end)
+            .modifier(modifier)
+            .parameterType(classType)
+            .parameterName(argument)
+            .propertyHooks(propertyHooks)
+            .build();
     RESULT = parameter;
 :}
 
-| optional_property_modifiers:modifier optional_class_type_without_static:classType is_reference:isReference is_variadic:isVariadic T_VARIABLE:var T_EQUAL static_scalar_with_class_instance:expr
+| optional_property_modifiers:modifier optional_class_type_without_static:classType is_reference:isReference is_variadic:isVariadic
+  T_VARIABLE:var T_EQUAL static_scalar_with_class_instance:expr optional_property_hook_list:propertyHooks
 {:
     int start = varleft;
     if (isVariadic) {
@@ -2659,7 +2704,17 @@ optional_property_modifiers:modifier optional_class_type_without_static:classTyp
             argument = new Reference(isReferenceleft, varright, v);
         }
     }
-    FormalParameter parameter = new FormalParameter(start, exprright, modifier, classType, argument, expr);
+    int end = exprright;
+    if (propertyHooks != null) {
+        end = propertyHooksright;
+    }
+    FormalParameter parameter = new FormalParameter.Builder(start, end)
+            .modifier(modifier)
+            .parameterType(classType)
+            .parameterName(argument)
+            .defaultValue(expr)
+            .propertyHooks(propertyHooks)
+            .build();
     RESULT = parameter;
 :}
 ;
@@ -3041,6 +3096,20 @@ variable_modifiers:modifier optional_class_type_without_static:fieldType class_v
     }
     FieldsDeclaration fieldsDeclaration = new FieldsDeclaration(modifierleft, endright, modifier.intValue(), fieldType, decList);
     RESULT = fieldsDeclaration;
+:}
+
+| variable_modifiers:modifier optional_class_type_without_static:fieldType hooked_property:hookedProperty
+{:
+    if (!BodyDeclaration.Modifier.isVisibilityModifier(modifier.intValue())) {
+        // implicit public
+        int mod = modifier.intValue();
+        mod |= ASTPHP5Parser.IMPLICIT_PUBLIC.intValue();
+        modifier = Integer.valueOf(mod);
+    }
+    RESULT = new FieldsDeclaration.Builder(modifierleft, hookedPropertyright, modifier)
+            .fieldType(fieldType)
+            .fields(List.of(hookedProperty))
+            .build();
 :}
 
 | constant_modifiers:modifier class_constant_declaration:list T_SEMICOLON:end
@@ -4485,6 +4554,12 @@ T_LNUMBER:scalar
     RESULT = s;
 :}
 
+| T_PROPERTY_C:scalar
+{:
+    Scalar s = new Scalar(scalarleft, scalarright, "__PROPERTY__", Scalar.Type.SYSTEM);
+    RESULT = s;
+:}
+
 | T_METHOD_C:scalar
 {:
     Scalar s = new Scalar(scalarleft, scalarright, "__METHOD__", Scalar.Type.SYSTEM);
@@ -5360,22 +5435,12 @@ T_OPEN_RECT:o dim_offset:index T_CLOSE_RECT:end
 {:
     RESULT = new ArrayDimension(oleft, endright, index, ArrayDimension.Type.VARIABLE_ARRAY);
 :}
-
-| T_CURLY_OPEN:o dim_offset:index T_CURLY_CLOSE:end
-{:
-    RESULT = new ArrayDimension(oleft, endright, index, ArrayDimension.Type.VARIABLE_HASHTABLE);
-:}
 ;
 
 array_dimension_with_static_scalar_value ::=
 T_OPEN_RECT:o static_scalar_value:index T_CLOSE_RECT:end
 {:
     RESULT = new ArrayDimension(oleft, endright, index, ArrayDimension.Type.VARIABLE_ARRAY);
-:}
-
-| T_CURLY_OPEN:o static_scalar_value:index T_CURLY_CLOSE:end
-{:
-    RESULT = new ArrayDimension(oleft, endright, index, ArrayDimension.Type.VARIABLE_HASHTABLE);
 :}
 ;
 
@@ -6102,5 +6167,121 @@ T_OBJECT_OPERATOR
 | T_PAAMAYIM_NEKUDOTAYIM
 {:
     RESULT = ASTPHP5Parser.Access.STATIC;
+:}
+;
+
+hooked_property ::=
+T_VARIABLE:var T_CURLY_OPEN:open property_hook_list:list T_CURLY_CLOSE:end
+{:
+    // e.g. $prop {}
+    Variable variable = new Variable(varleft, varright, var);
+    Block hooks = new Block(openleft, endright, list);
+    RESULT = new SingleFieldDeclaration.Builder(varleft, endright, variable)
+            .propertyHooks(hooks)
+            .build();
+:}
+
+| T_VARIABLE:var T_EQUAL static_scalar:expr T_CURLY_OPEN:open property_hook_list:list T_CURLY_CLOSE:end
+{:
+    // e.g. $prop = "expr" {}
+    Variable variable = new Variable(varleft, varright, var);
+    Block hooks = new Block(openleft, endright, list);
+    RESULT = new SingleFieldDeclaration.Builder(varleft, endright, variable)
+            .value(expr)
+            .propertyHooks(hooks)
+            .build();
+:}
+;
+
+property_hook_list ::=
+/* empty */
+{:
+    RESULT = new LinkedList<>();
+:}
+
+| property_hook_list:list property_hook:hook
+{:
+    list.add(hook);
+    RESULT = list;
+:}
+
+| property_hook_list:list attributes:attributes property_hook:hook
+{:
+    list.add(PropertyHookDeclaration.create(hook, attributes));
+    RESULT = list;
+:}
+;
+
+optional_property_hook_list ::=
+/* empty */
+{:
+    RESULT = null;
+:}
+
+| T_CURLY_OPEN:open property_hook_list:list T_CURLY_CLOSE:end
+{:
+    RESULT = new Block(openleft, endright, list);
+:}
+;
+
+property_hook_modifiers ::=
+/* empty */
+{:
+    RESULT = null;
+:}
+
+| non_empty_member_modifiers:modifier
+{:
+    RESULT = modifier;
+:}
+;
+
+property_hook ::=
+property_hook_modifiers:modifier is_reference:isReference T_STRING:name optional_parameter_list:paramList property_hook_body:body
+{:
+    // e.g.
+    // final set(string $value) {}
+    // &get => $this->_baz;
+    int start = modifier != null ? modifierleft
+            : isReference ? isReferenceleft
+            : nameleft;
+    RESULT = new PropertyHookDeclaration.Builder(start, bodyright, new Identifier(nameleft, nameright, name))
+            .modifier(modifier)
+            .isReference(isReference)
+            .parameters(paramList)
+            .body(body)
+            .build();
+:}
+;
+
+property_hook_body ::=
+T_SEMICOLON
+{:
+    RESULT = null;
+:}
+
+| T_CURLY_OPEN:start inner_statement_list:statementList T_CURLY_CLOSE:end
+{:
+    // {statement;}
+    RESULT = new Block(startleft, endright, statementList);
+:}
+
+| T_DOUBLE_ARROW:start expr:expr T_SEMICOLON:end
+{:
+    // => expr;
+    ExpressionStatement expressionStatement = new ExpressionStatement(exprleft, endright, expr);
+    RESULT = new Block(exprleft, endright, List.of(expressionStatement), false);
+:}
+;
+
+optional_parameter_list ::=
+/* empty */
+{:
+    RESULT = List.of();
+:}
+
+| T_OPEN_PARENTHESE:start parameter_list:paramList T_CLOSE_PARENTHESE:end
+{:
+    RESULT = paramList;
 :}
 ;

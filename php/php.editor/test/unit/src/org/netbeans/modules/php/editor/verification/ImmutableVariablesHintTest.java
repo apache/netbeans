@@ -43,6 +43,14 @@ public class ImmutableVariablesHintTest extends PHPHintsTestBase {
         checkHints(new ImmutablevariablesHintStub(1), "testImmutableVariablesHintArrowFunctions.php");
     }
 
+    public void testPropertyHooksWith1AllowedAssignments_01() throws Exception {
+        checkHints(new ImmutablevariablesHintStub(1), "testPropertyHooks_01.php");
+    }
+
+    public void testPropertyHooksWith1AllowedAssignments_02() throws Exception {
+        checkHints(new ImmutablevariablesHintStub(1), "testPropertyHooks_02.php");
+    }
+
     private class ImmutablevariablesHintStub extends ImmutableVariablesHint {
         private final int numberOfAllowedAssignments;
 

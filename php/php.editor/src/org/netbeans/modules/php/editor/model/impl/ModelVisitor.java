@@ -57,6 +57,7 @@ import org.netbeans.modules.php.editor.model.ModelElement;
 import org.netbeans.modules.php.editor.model.ModelUtils;
 import org.netbeans.modules.php.editor.model.NamespaceScope;
 import org.netbeans.modules.php.editor.model.Occurence;
+import org.netbeans.modules.php.editor.model.PropertyHookScope;
 import org.netbeans.modules.php.editor.model.Scope;
 import org.netbeans.modules.php.editor.model.TraitScope;
 import org.netbeans.modules.php.editor.model.TypeScope;
@@ -122,6 +123,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.PHPDocTypeTag;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocVarTypeTag;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPVarComment;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
+import org.netbeans.modules.php.editor.parser.astnodes.PropertyHookDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Reference;
 import org.netbeans.modules.php.editor.parser.astnodes.ReflectionVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ReturnStatement;
@@ -644,6 +646,13 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
     }
 
     @Override
+    public void visit(PropertyHookDeclaration node) {
+        modelBuilder.build(node, occurencesBuilder);
+        super.visit(node);
+        modelBuilder.reset();
+    }
+
+    @Override
     public void visit(ClassInstanceCreation node) {
         if (node.isAnonymous()) {
             modelBuilder.build(node, occurencesBuilder);
@@ -822,6 +831,10 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
     @Override
     public void visit(SingleFieldDeclaration node) {
         scan(node.getValue());
+        scan(node.getPropertyHooks());
+        if (node.isHooked()) {
+            modelBuilder.reset();
+        }
     }
 
     @Override
@@ -871,9 +884,14 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         if (scope instanceof VariableNameFactory) {
             if (scope instanceof MethodScope && "$this".equals(varInfo.getName())) { //NOI18N
                 scope = scope.getInScope();
+            } else if (scope instanceof PropertyHookScope && "$this".equals(varInfo.getName())) { // NOI18N
+                scope = scope.getInScope();
+                if (scope instanceof FieldElementImpl) {
+                    scope = scope.getInScope();
+                }
             }
-            if (scope instanceof VariableNameFactory) {
-                createVariable((VariableNameFactory) scope, node);
+            if (scope instanceof VariableNameFactory variableNameFactory) {
+                createVariable(variableNameFactory, node);
             }
         } else {
             assert scope instanceof TypeScope : scope;
@@ -1163,23 +1181,22 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         }
     }
 
-
     @Override
     public void visit(FormalParameter node) {
         Expression parameterName = node.getParameterName();
         Expression parameterType = node.getParameterType();
         Scope scp = modelBuilder.getCurrentScope();
-        if (scp instanceof FunctionScopeImpl) {
-            FunctionScopeImpl fncScope = (FunctionScopeImpl) scp;
+        if (scp instanceof FunctionScopeImpl
+                || scp instanceof PropertyHookScopeImpl) {
             // func(&...$variable), func(...$variable): Reference -> Variadic -> Variable
-            if (parameterName instanceof Reference) {
-                parameterName = ((Reference) parameterName).getExpression();
+            if (parameterName instanceof Reference reference) {
+                parameterName = reference.getExpression();
             }
-            if (parameterName instanceof Variadic) {
-                parameterName = ((Variadic) parameterName).getExpression();
+            if (parameterName instanceof Variadic variadic) {
+                parameterName = variadic.getExpression();
             }
-            if (parameterName instanceof Variable) {
-                List<? extends ParameterElement> parameters = fncScope.getParameters();
+            if (parameterName instanceof Variable variable) {
+                List<? extends ParameterElement> parameters = getParameters(scp);
                 for (ParameterElement parameter : parameters) {
                     Set<TypeResolver> types = parameter.getTypes();
                     StringBuilder sb = new StringBuilder();
@@ -1201,17 +1218,26 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
                     if (sb.length() > 0) {
                         typeName = sb.toString();
                     }
-                    VariableNameImpl var = createParameter(fncScope, parameter);
+                    VariableNameImpl var = createParameter((ScopeImpl) scp, parameter);
                     if (!types.isEmpty() && var != null) {
-                        VarAssignmentImpl varAssignment = var.createAssignment(fncScope, false, fncScope.getBlockRange(), parameter.getOffsetRange(), typeName);
+                        VarAssignmentImpl varAssignment = var.createAssignment(scp, false, scp.getBlockRange(), parameter.getOffsetRange(), typeName);
                         var.addElement(varAssignment);
                     }
                 }
-                prepareType(parameterType, fncScope);
-                prepareVariable((Variable) parameterName, fncScope);
+                prepareType(parameterType, scp);
+                prepareVariable(variable, scp);
             }
             super.visit(node);
         }
+    }
+
+    private List<? extends ParameterElement> getParameters(Scope scope) {
+        if (scope instanceof FunctionScopeImpl fncScope) {
+            return fncScope.getParameters();
+        } else if (scope instanceof PropertyHookScopeImpl propHookScope) {
+            return propHookScope.getParameters();
+        }
+        return List.of();
     }
 
     @Override
@@ -1601,8 +1627,9 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         return varName != null ? findVariable(scope, varName) : null;
     }
 
-    private VariableNameImpl createParameter(FunctionScopeImpl fncScope, ParameterElement parameter) {
-        VariableNameFactory varContainer = (VariableNameFactory) fncScope;
+    private VariableNameImpl createParameter(ScopeImpl scope, ParameterElement parameter) {
+        assert scope instanceof VariableNameFactory;
+        VariableNameFactory varContainer = (VariableNameFactory) scope;
         Map<String, VariableNameImpl> map = vars.get(varContainer);
         if (map == null) {
             map = new HashMap<>();
@@ -1612,8 +1639,8 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         VariableNameImpl varInstance = map.get(name);
         if (varInstance == null) {
             if (ModelUtils.filter(varContainer.getDeclaredVariables(), name).isEmpty()) {
-                varInstance = new VariableNameImpl(fncScope, name, fncScope.getFile(), parameter.getOffsetRange(), false);
-                fncScope.addElement(varInstance);
+                varInstance = new VariableNameImpl(scope, name, scope.getFile(), parameter.getOffsetRange(), false);
+                scope.addElement(varInstance);
                 map.put(name, varInstance);
             }
         }

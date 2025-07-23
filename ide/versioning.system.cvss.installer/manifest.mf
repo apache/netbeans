@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.versioning.system.cvss.installer
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/versioning/system/cvss/installer/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.45
+OpenIDE-Module-Specification-Version: 1.46
 AutoUpdate-Essential-Module: false

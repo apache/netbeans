@@ -4,4 +4,4 @@ OpenIDE-Module: org.netbeans.libs.jna/2
 OpenIDE-Module-Install: org/netbeans/libs/jna/Installer.class
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/jna/Bundle.properties
 AutoUpdate-Essential-Module: true
-OpenIDE-Module-Specification-Version: 2.24
+OpenIDE-Module-Specification-Version: 2.25

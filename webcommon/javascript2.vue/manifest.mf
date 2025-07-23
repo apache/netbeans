@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.modules.javascript2.vue
-OpenIDE-Module-Specification-Version: 0.2
+OpenIDE-Module-Specification-Version: 0.3
 OpenIDE-Module-Layer: org/netbeans/modules/javascript2/vue/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/javascript2/vue/resources/Bundle.properties
 

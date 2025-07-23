@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.j2ee.kit
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/j2ee/kit/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.54
+OpenIDE-Module-Specification-Version: 1.55
 OpenIDE-Module-Recommends: jakartaee10.api, jakartaee10.platform

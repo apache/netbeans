@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.websvc.saas.kit
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/websvc/saas/kit/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.56
+OpenIDE-Module-Specification-Version: 1.57
 AutoUpdate-Show-In-Client: true
 OpenIDE-Module-Provides: org.netbeans.modules.websvc.saas.kit
 

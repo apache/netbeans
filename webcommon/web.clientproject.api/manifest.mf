@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.web.clientproject.api
 OpenIDE-Module-Layer: org/netbeans/modules/web/clientproject/api/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/web/clientproject/api/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.133
+OpenIDE-Module-Specification-Version: 1.134
 

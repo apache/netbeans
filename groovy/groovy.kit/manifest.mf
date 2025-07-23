@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.groovy.kit
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/groovy/kit/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.61
+OpenIDE-Module-Specification-Version: 1.62
 

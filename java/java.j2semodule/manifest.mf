@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.modules.java.j2semodule
 OpenIDE-Module-Layer: org/netbeans/modules/java/j2semodule/ui/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/java/j2semodule/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.31
+OpenIDE-Module-Specification-Version: 1.32
 

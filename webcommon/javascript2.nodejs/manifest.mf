@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.javascript2.nodejs/0
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/javascript2/nodejs/resources/Bundle.properties
 OpenIDE-Module-Layer: org/netbeans/modules/javascript2/nodejs/resources/layer.xml
-OpenIDE-Module-Specification-Version: 0.41
+OpenIDE-Module-Specification-Version: 0.42
 AutoUpdate-Show-In-Client: true

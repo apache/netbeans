@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.modules.htmlui
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/htmlui/impl/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.14
+OpenIDE-Module-Specification-Version: 1.15
 

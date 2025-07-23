@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.spellchecker.bindings.properties
 OpenIDE-Module-Layer: org/netbeans/modules/spellchecker/bindings/properties/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/spellchecker/bindings/properties/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.51
+OpenIDE-Module-Specification-Version: 1.52
 

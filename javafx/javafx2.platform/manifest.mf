@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.javafx2.platform
 OpenIDE-Module-Layer: org/netbeans/modules/javafx2/platform/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/javafx2/platform/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.55
+OpenIDE-Module-Specification-Version: 1.56
 

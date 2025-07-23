@@ -2,6 +2,6 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.web.jsf.richfaces
 OpenIDE-Module-Layer: org/netbeans/modules/web/jsf/richfaces/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/web/jsf/richfaces/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.57
+OpenIDE-Module-Specification-Version: 1.58
 AutoUpdate-Show-In-Client: true
 OpenIDE-Module-Provides: org.netbeans.modules.web.jsf.complib

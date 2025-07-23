@@ -3,5 +3,5 @@ OpenIDE-Module: org.netbeans.modules.java.guards/0
 OpenIDE-Module-Layer: org/netbeans/modules/java/guards/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/java/guards/Bundle.properties
 OpenIDE-Module-Provides: org.netbeans.api.editor.guards.Java
-OpenIDE-Module-Specification-Version: 0.60
+OpenIDE-Module-Specification-Version: 0.61
 

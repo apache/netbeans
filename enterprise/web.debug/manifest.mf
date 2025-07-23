@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.web.debug/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/web/debug/Bundle.properties
 OpenIDE-Module-Layer: org/netbeans/modules/web/debug/resources/layer.xml
-OpenIDE-Module-Specification-Version: 2.65
+OpenIDE-Module-Specification-Version: 2.66
 OpenIDE-Module-Requires: org.netbeans.spi.debugger.jpda.EditorContext, org.netbeans.modules.debugger.jpda.ui
 AutoUpdate-Show-In-Client: false
 

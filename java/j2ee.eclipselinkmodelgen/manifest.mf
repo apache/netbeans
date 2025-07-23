@@ -3,5 +3,5 @@ OpenIDE-Module: org.netbeans.modules.j2ee.eclipselinkmodelgen/1
 OpenIDE-Module-Layer: org/netbeans/modules/j2ee/eclipselinkmodelgen/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/j2ee/eclipselinkmodelgen/Bundle.properties
 AutoUpdate-Show-In-Client: false
-OpenIDE-Module-Specification-Version: 1.61
+OpenIDE-Module-Specification-Version: 1.62
 

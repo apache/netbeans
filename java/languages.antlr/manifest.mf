@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.languages.antlr
 OpenIDE-Module-Layer: org/netbeans/modules/languages/antlr/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/languages/antlr/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.11
+OpenIDE-Module-Specification-Version: 1.12
 AutoUpdate-Show-In-Client: true

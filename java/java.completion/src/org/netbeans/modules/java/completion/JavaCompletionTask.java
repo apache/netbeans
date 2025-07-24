@@ -762,7 +762,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         String headerText = controller.getText().substring(startPos, offset);
         int idx = headerText.indexOf('{'); //NOI18N
-        if (idx >= 0) {
+        //see JDK-8364015, unclear how reliable this will be:
+        boolean isImplicitlyDeclaredClass = sourcePositions.getEndPosition(root, cls) == (-1);
+        if (idx >= 0 || isImplicitlyDeclaredClass) {
             addKeywordsForClassBody(env);
             addClassTypes(env, null);
             addElementCreators(env);

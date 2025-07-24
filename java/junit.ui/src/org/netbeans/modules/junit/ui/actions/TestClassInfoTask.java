@@ -57,6 +57,7 @@ import org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods;
 import org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods.Factory;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.spi.java.hints.unused.UsedDetector;
+import org.netbeans.spi.project.NestedClass;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
@@ -94,14 +95,17 @@ public final class TestClassInfoTask implements Task<CompilationController> {
     private static List<TestMethod> doComputeTestMethods(CompilationInfo info, AtomicBoolean cancel, int caretPosIfAny) {
         List<TestMethod> result = new ArrayList<>();
         if (caretPosIfAny == (-1)) {
-            Optional<? extends Tree> anyClass = info.getCompilationUnit().getTypeDecls().stream().filter(t -> t.getKind() == Kind.CLASS).findAny();
-            if (!anyClass.isPresent()) {
-                return Collections.emptyList();
+            List<ClassTree> clazzes = info.getCompilationUnit()
+                    .getTypeDecls()
+                    .stream()
+                    .filter(t -> t.getKind() == Kind.CLASS)
+                    .map(t -> (ClassTree) t)
+                    .collect(Collectors.toList());
+            for (ClassTree clazz : clazzes) {
+                TreePath pathToClass = new TreePath(new TreePath(info.getCompilationUnit()), clazz);
+                List<TreePath> methods = clazz.getMembers().stream().filter(m -> m.getKind() == Kind.METHOD).map(m -> new TreePath(pathToClass, m)).collect(Collectors.toList());
+                collect(info, pathToClass, methods, true, cancel, result);
             }
-            ClassTree clazz = (ClassTree) anyClass.get();
-            TreePath pathToClass = new TreePath(new TreePath(info.getCompilationUnit()), clazz);
-            List<TreePath> methods = clazz.getMembers().stream().filter(m -> m.getKind() == Kind.METHOD).map(m -> new TreePath(pathToClass, m)).collect(Collectors.toList());
-            collect(info, pathToClass, methods, true, cancel, result);
             return result;
         }
         TreePath tp = info.getTreeUtilities().pathFor(caretPosIfAny);
@@ -126,6 +130,7 @@ public final class TestClassInfoTask implements Task<CompilationController> {
         int clazzPreferred = treeUtilities.findNameSpan((ClassTree) clazz.getLeaf())[0];
         TypeElement typeElement = (TypeElement) trees.getElement(clazz);
         TypeElement testcase = elements.getTypeElement(TESTCASE);
+        NestedClass nc = getNestedClass(info, typeElement);
         boolean junit3 = (testcase != null && typeElement != null) ? info.getTypes().isSubtype(typeElement.asType(), testcase.asType()) : false;
         for (TreePath tp : methods) {
             if (cancel.get()) {
@@ -152,7 +157,7 @@ public final class TestClassInfoTask implements Task<CompilationController> {
                     try {
                         result.add(new TestMethod(elements.getBinaryName(typeElement).toString(),
                                 doc != null ? doc.createPosition(clazzPreferred) : new SimplePosition(clazzPreferred),
-                                new SingleMethod(info.getFileObject(), mn),
+                                nc == null ? new SingleMethod(info.getFileObject(), mn) : new SingleMethod(mn, nc),
                                 doc != null ? doc.createPosition(start) : new SimplePosition(start),
                                 doc != null ? doc.createPosition(preferred) : new SimplePosition(preferred),
                                 doc != null ? doc.createPosition(end) : new SimplePosition(end)));
@@ -175,6 +180,24 @@ public final class TestClassInfoTask implements Task<CompilationController> {
                     }
                 }
             });
+        }
+    }
+
+    private static NestedClass getNestedClass(CompilationInfo ci, TypeElement te) {
+        List<String> nesting = new ArrayList<>();
+        Element currentElement = te;
+        while (currentElement != null && currentElement.getKind() == ElementKind.CLASS) {
+            nesting.add(0, currentElement.getSimpleName().toString());
+            currentElement = currentElement.getEnclosingElement();
+        }
+        if(nesting.size() < 1 || (nesting.size() == 1 && nesting.get(0).equals(ci.getFileObject().getName()))) {
+            return null;
+        } else {
+            return new NestedClass(
+                    nesting.subList(1, nesting.size()).stream().collect(Collectors.joining(".")),
+                    nesting.get(0),
+                    ci.getFileObject()
+            );
         }
     }
 

@@ -567,6 +567,12 @@ ${cursor}]]></code>
 <![CDATA[private static final ${loggerType type="java.util.logging.Logger" default="Logger" editable="false"} logger = ${loggerType}.getLogger(${classVar editable="false" currClassName default="getClass()"}.class.getName());]]>
         </code>
     </codetemplate>
+
+    <codetemplate abbreviation="logs">
+        <code>
+<![CDATA[private static final ${LOGGER_TYPE type="org.slf4j.Logger" default="Logger" editable=false} log = ${LOGGER_FACTORY type="org.slf4j.LoggerFactory" default="LoggerFactory" editable=false}.getLogger(${CLASS editable="false" currClassName}.class);]]>
+        </code>
+    </codetemplate>
     
     <codetemplate abbreviation="logrb">
         <code>

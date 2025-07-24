@@ -33,7 +33,7 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCModifiers;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.tree.JCTree.JCTypeParameter;
-import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+import com.sun.tools.javac.tree.JCTree.Tag;
 import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
@@ -88,11 +88,19 @@ public class NBParserFactory extends ParserFactory {
         public JCCompilationUnit parseCompilationUnit() {
             JCCompilationUnit unit = super.parseCompilationUnit();
             if (!unit.getTypeDecls().isEmpty() && unit.getTypeDecls().get(0).getKind() == Kind.CLASS) {
-                //workaround for JDK-8310326:
                 JCClassDecl firstClass = (JCClassDecl) unit.getTypeDecls().get(0);
-                if ((firstClass.mods.flags & Flags.IMPLICIT_CLASS) != 0) {
-                    firstClass.pos = getStartPos(firstClass.defs.head);
-                    firstClass.mods.pos = Position.NOPOS;
+                if ((firstClass.mods.flags & Flags.IMPLICIT_CLASS) != 0 && getEndPos(unit) == Position.NOPOS) {
+                    //workarounds for JDK-8364015:
+                    List<JCTree> defs = unit.defs;
+                    int newPos = 0;
+
+                    while (defs.nonEmpty() && !defs.head.hasTag(Tag.CLASSDEF)) {
+                        newPos = Math.max(newPos, getEndPos(defs.head));
+                        defs = defs.tail;
+                    }
+
+                    firstClass.pos = newPos;
+                    endPosTable.storeEnd(unit, token.endPos);
                 }
             }
             return unit;

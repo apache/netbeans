@@ -79,6 +79,20 @@ public class NBParserFactoryTest extends NbTestCase {
         assertEquals(code.length(), sp.getEndPosition(parsed.second(), parsed.second()));
     }
 
+    public void testErrorRecoveryCompactSourceFilePackage() throws Exception {
+        String code = """
+                      package test;
+
+                      void main() {
+                      }
+                      """;
+        Pair<JavacTask, CompilationUnitTree> parsed = compile(code);
+
+        if (parsed.second().getPackage() == null) {
+            throw new AssertionError("no package");
+        }
+    }
+
     //<editor-fold defaultstate="collapsed" desc=" Test Infrastructure ">
     private static class MyFileObject extends SimpleJavaFileObject {
         private String text;

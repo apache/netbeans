@@ -76,6 +76,7 @@ import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.lib.nbjavac.services.NBParserFactory;
+import org.netbeans.lib.nbjavac.services.NBTreeMaker;
 import org.netbeans.modules.editor.indent.api.IndentUtils;
 import org.netbeans.modules.editor.indent.spi.Context;
 import org.netbeans.modules.editor.indent.spi.Context.Region;
@@ -256,6 +257,7 @@ public class Reindenter implements IndentTask {
                 Thread.currentThread().setContextClassLoader(Reindenter.class.getClassLoader());
                 com.sun.tools.javac.util.Context ctx = new com.sun.tools.javac.util.Context();
                 NBParserFactory.preRegister(ctx);
+                NBTreeMaker.preRegister(ctx);
                 JavacTaskImpl javacTask = (JavacTaskImpl)JavacTool.create().getTask(null, null, new DiagnosticListener<JavaFileObject>() {
                     @Override
                     public void report(Diagnostic<? extends JavaFileObject> diagnostic) {

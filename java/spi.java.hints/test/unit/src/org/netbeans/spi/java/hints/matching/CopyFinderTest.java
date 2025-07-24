@@ -1332,6 +1332,51 @@ public class CopyFinderTest extends NbTestCase {
                              false);
     }
 
+    public void testTargetTyping1() throws Exception {
+        sourceLevel = "17";
+        performVariablesTest("""
+                             package test;
+                             public class Test {
+                                 boolean test() {
+                                     long l = "";
+                                 }
+                             }
+                             """,
+                             "long $var = $1{java.lang.String};",
+                             new Pair[] {
+                                 new Pair<String, int[]>("$1", new int[] {72, 74}),
+                                 new Pair<String, int[]>("$var", new int[] {63, 75}),
+                             },
+                             new Pair[0],
+                             new Pair[] {
+                                 new Pair<String, String>("$var", "l"),
+                             },
+                             false,
+                             false);
+    }
+
+    public void testTargetTyping2() throws Exception {
+        sourceLevel = "17";
+        performVariablesTest("""
+                             package test;
+                             public class Test {
+                                 boolean test() {
+                                     long l;
+                                     l = "";
+                                 }
+                             }
+                             """,
+                             "$0{long} = $1{java.lang.String};",
+                             new Pair[] {
+                                 new Pair<String, int[]>("$1", new int[] {83, 85}),
+                                 new Pair<String, int[]>("$0", new int[] {79, 80}),
+                             },
+                             new Pair[0],
+                             new Pair[0],
+                             false,
+                             false);
+    }
+
     public void testKeepImplicitThis() throws Exception {
         prepareTest("package test; public class Test { void t() { toString(); } }", -1);
 

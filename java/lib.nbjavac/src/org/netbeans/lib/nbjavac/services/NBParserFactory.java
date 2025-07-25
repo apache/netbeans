@@ -31,15 +31,17 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCEnhancedForLoop;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCModifiers;
+import com.sun.tools.javac.tree.JCTree.JCPackageDecl;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.tree.JCTree.JCTypeParameter;
-import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+import com.sun.tools.javac.tree.JCTree.Tag;
 import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Position;
+import java.util.function.Consumer;
 
 /**
  *
@@ -57,13 +59,13 @@ public class NBParserFactory extends ParserFactory {
     }
 
     private final ScannerFactory scannerFactory;
-    private final Names names;
+    private final NBTreeMaker make;
     private final CancelService cancelService;
 
     protected NBParserFactory(Context context) {
         super(context);
         this.scannerFactory = ScannerFactory.instance(context);
-        this.names = Names.instance(context);
+        this.make = (NBTreeMaker) NBTreeMaker.instance(context);
         this.cancelService = CancelService.instance(context);
     }
 
@@ -75,24 +77,45 @@ public class NBParserFactory extends ParserFactory {
 
     public static class NBJavacParser extends JavacParser {
 
-        private final Names names;
+        private final NBTreeMaker make;
         private final CancelService cancelService;
 
         public NBJavacParser(NBParserFactory fac, Lexer S, boolean keepDocComments, boolean keepLineMap, boolean keepEndPos, boolean parseModuleInfo, CancelService cancelService) {
             super(fac, S, keepDocComments, keepLineMap, keepEndPos, parseModuleInfo);
-            this.names = fac.names;
+            this.make = fac.make;
             this.cancelService = cancelService;
         }
 
         @Override
         public JCCompilationUnit parseCompilationUnit() {
-            JCCompilationUnit unit = super.parseCompilationUnit();
+            JCPackageDecl[] pack = new JCPackageDecl[1];
+            Consumer<JCPackageDecl> prevCallback = make.setPackageCreatedCallback(p -> pack[0] = p);
+            JCCompilationUnit unit;
+
+            try {
+                unit = super.parseCompilationUnit();
+            } finally {
+                make.setPackageCreatedCallback(prevCallback);
+            }
+
             if (!unit.getTypeDecls().isEmpty() && unit.getTypeDecls().get(0).getKind() == Kind.CLASS) {
-                //workaround for JDK-8310326:
                 JCClassDecl firstClass = (JCClassDecl) unit.getTypeDecls().get(0);
-                if ((firstClass.mods.flags & Flags.IMPLICIT_CLASS) != 0) {
-                    firstClass.pos = getStartPos(firstClass.defs.head);
-                    firstClass.mods.pos = Position.NOPOS;
+                if ((firstClass.mods.flags & Flags.IMPLICIT_CLASS) != 0 && getEndPos(unit) == Position.NOPOS) {
+                    if (pack[0] != null) {
+                        unit.defs = unit.defs.prepend(pack[0]);
+                    }
+
+                    //workarounds for JDK-8364015:
+                    List<JCTree> defs = unit.defs;
+                    int newPos = 0;
+
+                    while (defs.nonEmpty() && !defs.head.hasTag(Tag.CLASSDEF)) {
+                        newPos = Math.max(newPos, getEndPos(defs.head));
+                        defs = defs.tail;
+                    }
+
+                    firstClass.pos = newPos;
+                    endPosTable.storeEnd(unit, token.endPos);
                 }
             }
             return unit;

@@ -125,6 +125,7 @@ public class NBParserFactoryTest extends NbTestCase {
 
         Context context = new Context();
         NBParserFactory.preRegister(context);
+        NBTreeMaker.preRegister(context);
         final JavacTaskImpl ct = (JavacTaskImpl) ((JavacTool)tool).getTask(null, std, null, Arrays.asList("-source", "21"), null, Arrays.asList(new MyFileObject(code)), context);
 
         CompilationUnitTree cut = ct.parse().iterator().next();

@@ -143,8 +143,7 @@ public class EmbeddingProviderImpl extends ParserBasedEmbeddingProvider<Parser.R
             new CancellableTreePathScanner<>() {
                 @Override
                 public Object visitAssignment(AssignmentTree node, Object p) {
-                    //TODO: ignore assignments to the variable!
-                    return super.visitAssignment(node, p);
+                    return scan(node.getExpression(), p);
                 }
                 @Override
                 public Object visitIdentifier(IdentifierTree node, Object p) {
@@ -154,7 +153,7 @@ public class EmbeddingProviderImpl extends ParserBasedEmbeddingProvider<Parser.R
                     return super.visitIdentifier(node, p);
                 }
             }.scan(declarationPath.getParentPath(), null);
-            //TODO: OK if useSiteLanguages contains null?
+            useSiteLanguages.remove(null);
             if (useSiteLanguages.size() == 1) {
                 return useSiteLanguages.iterator().next();
             }

@@ -210,6 +210,23 @@ public class EmbeddingProviderImplTest extends NbTestCase {
                 """);
     }
 
+    public void testPropagateLanguageFromVariableUses2() throws Exception {
+        runTest("""
+                public class Test {
+                    public void t() {
+                        String code = \"""
+                                      <html|>
+                                      \""";
+                        code = code.substring(0, code.length());
+                        new Test(code);
+                    }
+                    public Test(@Language("test") String test) {}
+                    @interface Language { public String value(); }
+                }
+                """,
+                "<html>\n");
+    }
+
     private void runTest(@org.netbeans.api.annotations.common.Language("Java") String code,
                          String snippet) throws Exception {
         runTest(code, result -> {

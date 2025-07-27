@@ -305,7 +305,7 @@ public class RefactoringUtils {
     public static boolean isOnSourceClasspath(FileObject fo) {
         Project pr = FileOwnerQuery.getOwner(fo);
         if (pr == null) {
-            return SourceLauncher.isSourceLauncherFile(fo);
+            return isIndexedSourceLauncherFile(fo);
         }
 
         //workaround for 143542
@@ -319,6 +319,11 @@ public class RefactoringUtils {
         return false;
         //end of workaround
         //return ClassPath.getClassPath(fo, ClassPath.SOURCE)!=null;
+    }
+
+    public static boolean isIndexedSourceLauncherFile(FileObject fo) {
+        // TODO: don't call from this module
+        return SourceLauncher.isIndexedSourceLauncherFile(fo);
     }
 
     /**

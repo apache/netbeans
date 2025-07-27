@@ -97,11 +97,11 @@ public final class EventSetPatternNode extends PatternNode {
 //        Sheet sheet = Sheet.createDefault();
 //        Sheet.Set ps = sheet.get(Sheet.PROPERTIES);
 //
-////        ps.put(createNameProperty( writeable ));
-////        ps.put(createTypeProperty( writeable ));
-////        ps.put(createIsUnicastProperty( writeable ));
-////        ps.put(createAddListenerProperty( false ));
-////        ps.put(createRemoveListenerProperty( false ));
+// //        ps.put(createNameProperty( writeable ));
+// //        ps.put(createTypeProperty( writeable ));
+// //        ps.put(createIsUnicastProperty( writeable ));
+// //        ps.put(createAddListenerProperty( false ));
+// //        ps.put(createRemoveListenerProperty( false ));
 //
 //        return sheet;
 //    }

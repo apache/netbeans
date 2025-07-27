@@ -31,26 +31,18 @@ import org.netbeans.modules.glassfish.tooling.logging.Logger;
  */
 public class RunnerHttpGetProperty extends RunnerHttp {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER
             = new Logger(RunnerHttpGetProperty.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Returned value is map where key-value pairs returned by server
      *  are stored. */
     @SuppressWarnings("FieldNameHidesFieldInSuperclass")
     ResultMap<String, String> result;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
     /**
      * Constructs an instance of administration command executor using
      * HTTP interface.
@@ -64,10 +56,7 @@ public class RunnerHttpGetProperty extends RunnerHttp {
                 "pattern=" + ((CommandGetProperty)command).propertyPattern);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Implemented Abstract Methods                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Create <code>ResultMap</code> object corresponding
      * to server get property command execution value to be returned.

@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.ide.kit
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/ide/kit/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.62
+OpenIDE-Module-Specification-Version: 1.63
 OpenIDE-Module-Needs: org.netbeans.Netbinox
 

@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.code.analysis/0
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/analysis/Bundle.properties
 OpenIDE-Module-Recommends: org.openide.windows.WindowManager
-OpenIDE-Module-Specification-Version: 1.55
+OpenIDE-Module-Specification-Version: 1.56
 OpenIDE-Module-Layer: org/netbeans/modules/analysis/resources/layer.xml

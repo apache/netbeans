@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.websvc.saas.api
 OpenIDE-Module-Layer: org/netbeans/modules/websvc/saas/model/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/websvc/saas/spi/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.60
+OpenIDE-Module-Specification-Version: 1.61
 

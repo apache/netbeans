@@ -33,7 +33,7 @@ public abstract class AbstractCheckTest extends XTest {
     /** Check all selected nodes. */
     protected abstract QaIOReporter performAction(Node[] nodes);
 
-    // LIBS ////////////////////////////////////////////////////////////////////
+    // LIBS
 
     /** Checks document located in 'data' folder. */
     protected void performAction(String name, int bugCount) {

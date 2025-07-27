@@ -54,7 +54,7 @@ public class NetbinoxFactory implements FrameworkFactory {
         configMap.putAll(map);
 //        configMap.put("osgi.hook.configurators.exclude", // NOI18N
 //            "org.eclipse.core.runtime.internal.adaptor.EclipseLogHook" // NOI18N
-////            + ",org.eclipse.core.runtime.internal.adaptor.EclipseClassLoadingHook" // NOI18N
+// //            + ",org.eclipse.core.runtime.internal.adaptor.EclipseClassLoadingHook" // NOI18N
 //        );
         configMap.put("org.osgi.framework.bundle.parent", "ext"); // NOI18N
         configMap.put("osgi.hook.configurators.include", NetbinoxHooks.class.getName()); // NOI18N

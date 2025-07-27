@@ -35,8 +35,9 @@ import javax.tools.SimpleJavaFileObject;
 import javax.tools.ToolProvider;
 
 /**
- * Please note this class is copied during build into apisupport/apisupport.ant.
- * When modifying this class, please ensure the module still compiles and works.
+ * Please note this class has a copy at
+ * <code>apisupport/apisupport.ant/src/org/netbeans/modules/apisupport/project/SetupLimitModulesProbe.java</code>
+ * When modifying this class, please ensure that your changes are synchronized there as well.
  */
 public class SetupLimitModulesProbe {
 

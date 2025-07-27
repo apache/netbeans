@@ -83,6 +83,20 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="current-gradle-version-discovery">
+            <api name="general"/>
+            <summary>GradleDistributionManager can query latest available version and use in init</summary>
+            <version major="2" minor="47"/>
+            <date day="20" month="6" year="2025"/>
+            <author login="neilcsmith"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                Added <code><a href="@TOP@/org/netbeans/modules/gradle/api/execute/GradleDistributionManager.html#currentDistribution()">GradleDistributionManager.currentDistribution()</a></code> 
+                method to query the current (latest) release available from the Gradle web service.
+                Added <code>gradleVersion(String version)</code> to
+                <a href="@TOP@/org/netbeans/modules/gradle/spi/newproject/TemplateOperation.InitOperation.html">TemplateOperation.InitOperation</a>.
+            </description>
+        </change>
         <change id="action-for-running-tests-in-parallel">
             <api name="general"/>
             <summary>Added action for running tests in parallel</summary>

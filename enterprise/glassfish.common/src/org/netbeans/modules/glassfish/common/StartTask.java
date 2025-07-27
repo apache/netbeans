@@ -75,20 +75,14 @@ import org.openide.util.lookup.Lookups;
  */
 public class StartTask extends BasicTask<TaskState> {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER = GlassFishLogger.get(StartTask.class);
 
     private static RequestProcessor NODE_REFRESHER
             = new RequestProcessor("nodes to refresh");
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     private static String[] removeEscapes(String[] args) {
         for (int i = 0; i < args.length; i++) {
             args[i] = args[i].replace("\\\"", ""); // NOI18N
@@ -106,10 +100,7 @@ public class StartTask extends BasicTask<TaskState> {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     private final CommonServerSupport support;
     private List<Recognizer> recognizers;
     private List<String> jvmArgs = null;
@@ -118,10 +109,7 @@ public class StartTask extends BasicTask<TaskState> {
     /** internal Java SE platform home cache. */
     private FileObject jdkHome;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of asynchronous GlassFish server startup command
      * execution support object.
@@ -177,10 +165,7 @@ public class StartTask extends BasicTask<TaskState> {
         LOGGER.log(Level.FINE, "VMI == {0}", vmi);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // ExecutorService call() Method                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Asynchronous task method started by {@link Executors}.
      * <p/>
@@ -264,10 +249,7 @@ public class StartTask extends BasicTask<TaskState> {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Validate <code>host</code> and <code>port</code> values
      * for DAS listener.

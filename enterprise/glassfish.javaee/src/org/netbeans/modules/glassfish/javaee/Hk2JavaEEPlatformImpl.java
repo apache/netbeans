@@ -109,10 +109,7 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
     /** Jersey Library support. */
     private final Hk2LibraryProvider libraryProvider;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructor helper to initialize local Lookup instance.
      * <p/>
@@ -300,10 +297,7 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
         return moduleTypeSet;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of GlassFish JavaEE platform.
      * <p/>

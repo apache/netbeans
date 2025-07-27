@@ -30,10 +30,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
  */
 public class RunnerAsadminChangeAdminPassword extends RunnerAsadmin {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER
             = new Logger(RunnerAsadminChangeAdminPassword.class);
@@ -45,10 +42,7 @@ public class RunnerAsadminChangeAdminPassword extends RunnerAsadmin {
      *  in the --domain_name option. */
     private static final String DOMAINDIR_PARAM = "--domaindir";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Builds <code>change-admin-password</code> command query string.
      */
@@ -73,18 +67,12 @@ public class RunnerAsadminChangeAdminPassword extends RunnerAsadmin {
         return sb.toString();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Holding data for command execution. */
     @SuppressWarnings("FieldNameHidesFieldInSuperclass")
     final CommandChangeAdminPassword command;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * command line asadmin interface.
@@ -105,10 +93,7 @@ public class RunnerAsadminChangeAdminPassword extends RunnerAsadmin {
             passwordFile.setAdminNewPassword(this.command.password);
     }
  
-    ////////////////////////////////////////////////////////////////////////////
     // Implemented Abstract Methods                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Create internal <code>ProcessIOContent</code> object corresponding
      * to command execution IO.

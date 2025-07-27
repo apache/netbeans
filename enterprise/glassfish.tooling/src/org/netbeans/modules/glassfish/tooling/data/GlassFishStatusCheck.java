@@ -29,10 +29,7 @@ import org.netbeans.modules.glassfish.tooling.logging.Logger;
  */
 public enum GlassFishStatusCheck {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Enum values                                                            //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Administration port check. */
     PORT,
 
@@ -42,10 +39,7 @@ public enum GlassFishStatusCheck {
     /** Locations command check. */
     LOCATIONS;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(GlassFishStatusCheck.class);
 
@@ -71,10 +65,7 @@ public enum GlassFishStatusCheck {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Returns a <code>GlassFishStatusCheck</code> with a value represented
      * by the specified <code>String</code>.
@@ -98,10 +89,7 @@ public enum GlassFishStatusCheck {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Convert <code>GlassFishStatusCheck</code> value to <code>String</code>.
      * <p/>

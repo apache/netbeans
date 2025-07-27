@@ -31,10 +31,7 @@ import org.openide.util.UserQuestionException;
  */
 public interface ProjectIDEServicesImplementation {
     
-    ////////////////////////////////////////////////////////////////////////////
     // FileBuiltQuery services
-    ////////////////////////////////////////////////////////////////////////////
-    
     /**
      * Creates a FileBuiltQuerySource
      * @param sourceFile
@@ -56,10 +53,7 @@ public interface ProjectIDEServicesImplementation {
         public void removePropertyChangeListener(PropertyChangeListener l);
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Notify services
-    ////////////////////////////////////////////////////////////////////////////
-    
     /**
      * Intended behavior.
      */
@@ -106,10 +100,7 @@ public interface ProjectIDEServicesImplementation {
      */
     public void notifyWarning(String message);
     
-    ////////////////////////////////////////////////////////////////////////////
     // Misc utils & co.
-    ////////////////////////////////////////////////////////////////////////////
-    
     /**
      * Loads an icon based on resource path.
      * Similar to {@link #loadImage(String, boolean)}, returns ImageIcon instead of Image.

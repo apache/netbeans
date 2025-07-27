@@ -168,10 +168,7 @@ public class Change extends Difference {
         return "CHANGE"+changes+"("+ getOldNodeInfo() + "," + getNewNodeInfo() + ")";
     }
     
-    ////////////////////////////////////////////////////////////////////////////////
     // Member variables
-    ////////////////////////////////////////////////////////////////////////////////
-    
     private List<Type> changes;
     private List<AttributeDiff> attrChanges = new ArrayList<AttributeDiff>();
         

@@ -79,6 +79,7 @@ public class JsWithBase extends JsCodeCompletionBase{
     }
     
     @Override
+    @SuppressWarnings({"rawtypes", "unchecked"})
     protected void checkOccurrences(String relFilePath, String caretLine, final boolean symmetric) throws Exception {
         Source testSource = getTestSource(getTestFile(relFilePath));
 
@@ -146,7 +147,7 @@ public class JsWithBase extends JsCodeCompletionBase{
                     highlights = Collections.emptyMap();
                 }
 
-                Document doc = GsfUtilities.getDocument(pr.getSnapshot().getSource().getFileObject(), true);
+                Document doc = GsfUtilities.getADocument(pr.getSnapshot().getSource().getFileObject(), true);
                 checkNoOverlaps(highlights.keySet(), doc);
 
                 String annotatedSource = annotateSemanticResults(doc, highlights);

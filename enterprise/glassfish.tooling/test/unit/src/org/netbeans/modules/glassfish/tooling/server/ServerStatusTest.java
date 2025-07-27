@@ -29,9 +29,7 @@ import org.testng.annotations.Test;
  */
 public class ServerStatusTest extends CommandHttpTest {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Test methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
     @Test(groups = {"http-commands"})
     public void testServerStatus() {
         GlassFishServer server = glassFishServer();

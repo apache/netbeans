@@ -21,7 +21,6 @@ package org.netbeans.modules.java.hints;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import java.util.Collections;
 import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -102,7 +101,7 @@ public class HideFieldByVar extends HideField {
         if (span == null) {
             return null;
         }
-        List<Fix> fixes = Collections.<Fix>singletonList(new FixImpl(
+        List<Fix> fixes = List.of(new HideFieldFix(
             (span[1] + span[0]) / 2,
             compilationInfo.getFileObject(),
             true

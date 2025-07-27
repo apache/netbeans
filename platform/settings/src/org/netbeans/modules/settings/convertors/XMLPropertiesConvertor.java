@@ -163,10 +163,7 @@ public final class XMLPropertiesConvertor extends Convertor implements PropertyC
     }
     
     
-    ////////////////////////////////////////////////////////////
     // Private implementation
-    ////////////////////////////////////////////////////////////
-    
     /** filtering of Property Change Events */
     private boolean ignoreChange(java.beans.PropertyChangeEvent pce) {
         if (pce == null || pce.getPropertyName() == null) return true;

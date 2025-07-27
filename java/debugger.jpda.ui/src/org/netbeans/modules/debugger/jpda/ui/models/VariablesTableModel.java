@@ -24,6 +24,7 @@ import java.awt.Color;
 import java.io.InvalidObjectException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -55,7 +56,6 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
-import org.openide.util.WeakSet;
 
 
 /**
@@ -83,7 +83,7 @@ public class VariablesTableModel implements TableModel, Constants {
     private static final Map<Variable, String> errorValueMsg = new WeakHashMap<Variable, String>();
     private static final Map<Variable, String> errorToStringMsg = new WeakHashMap<Variable, String>();
     private final Map<Variable, Value> origValues = new WeakHashMap<Variable, Value>();
-    private static final Set<Variable> checkReadOnlyMutables = new WeakSet<Variable>();
+    private static final Set<Variable> checkReadOnlyMutables = Collections.newSetFromMap(new WeakHashMap<>());
     
     private JPDADebugger debugger;
     private final List<ModelListener> modelListeners = new ArrayList<ModelListener>();

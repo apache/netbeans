@@ -29,27 +29,18 @@ import org.xml.sax.SAXException;
  */
 public class ToolsAsadminReader extends AbstractReader {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** <code>asadmin</code> XML element name. */
     private static final String NODE = "asadmin";
 
     /** <code>type</code> XML element attribute name. */
     private static final String JAR_ATTR = "jar";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Platforms retrieved from XML elements. */
     private String jar;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of <code>asadmin</code> tool configuration
      * XML element reader.
@@ -62,10 +53,7 @@ public class ToolsAsadminReader extends AbstractReader {
         jar = null;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Tree parser methods                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Process attributes from current XML element.
      * <p/>
@@ -79,10 +67,7 @@ public class ToolsAsadminReader extends AbstractReader {
         jar = attributes.getValue(JAR_ATTR);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get asadmin tool JAR.
      * <p/>
@@ -92,10 +77,7 @@ public class ToolsAsadminReader extends AbstractReader {
         return jar;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Reset this XML element reader.
      */

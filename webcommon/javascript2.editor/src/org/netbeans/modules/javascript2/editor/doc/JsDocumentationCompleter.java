@@ -93,8 +93,7 @@ public class JsDocumentationCompleter {
                     @Override
                     public void run(ResultIterator resultIterator) throws Exception {
                         ParserResult parserResult = (ParserResult) resultIterator.getParserResult(offset);
-                        if (parserResult instanceof JsParserResult) {
-                            final JsParserResult jsParserResult = (JsParserResult) parserResult;
+                        if (parserResult instanceof JsParserResult jsParserResult) {
                             if (jsParserResult.getRoot() == null) {
                                 // broken source
                                 return;
@@ -158,12 +157,12 @@ public class JsDocumentationCompleter {
 
     private static JsObject getWrapperScope(JsParserResult jsParserResult, JsObject jsObject, Node nearestNode, int offset) {
         JsObject result = null;
-        if (jsObject instanceof JsFunction) {
+        if (jsObject instanceof JsFunction jsFunction) {
             result = jsObject;
-            for (DeclarationScope declarationScope : ((JsFunction) jsObject).getChildrenScopes()) {
-                if (declarationScope instanceof JsFunction) {
-                    if (((JsFunction) declarationScope).getOffsetRange(jsParserResult).containsInclusive(offset)) {
-                        result = getWrapperScope(jsParserResult, (JsFunction) declarationScope, nearestNode, offset);
+            for (DeclarationScope declarationScope : jsFunction.getChildrenScopes()) {
+                if (declarationScope instanceof JsFunction declarationFunction) {
+                    if (declarationFunction.getOffsetRange(jsParserResult).containsInclusive(offset)) {
+                        result = getWrapperScope(jsParserResult, declarationFunction, nearestNode, offset);
                     }
                 }
             }
@@ -334,8 +333,7 @@ public class JsDocumentationCompleter {
         return offsetVisitor.getNearestNode();
     }
 
-    private static JsObject findJsObjectFunctionVariable(JsObject object, int offset) {
-        JsObject jsObject = (JsObject) object;
+    private static JsObject findJsObjectFunctionVariable(JsObject jsObject, int offset) {
         JsObject result = null;
         JsObject tmpObject = null;
         if (jsObject.getOffsetRange().containsInclusive(offset)) {

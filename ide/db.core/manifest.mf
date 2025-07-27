@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.db.core
-OpenIDE-Module-Specification-Version: 1.66
+OpenIDE-Module-Specification-Version: 1.67
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/db/core/Bundle.properties
 OpenIDE-Module-Layer: org/netbeans/modules/db/core/resources/layer.xml
 OpenIDE-Module-Requires: org.openide.windows.IOProvider

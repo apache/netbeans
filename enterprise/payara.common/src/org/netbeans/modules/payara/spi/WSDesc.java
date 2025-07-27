@@ -40,10 +40,7 @@ import org.netbeans.modules.payara.common.PayaraInstance;
  */
 public class WSDesc {
     
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = PayaraLogger.get(WSDesc.class);
@@ -54,10 +51,7 @@ public class WSDesc {
     /** URL extension for URL for testing. */
     private static String TEST_URL_EXTENSION = "?Tester";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Build WSDL file URL from web service name.
      * <p/>
@@ -120,10 +114,7 @@ public class WSDesc {
         return wsList;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Web Services Description Language file URL. */
     private final String wsdlUrl;
 
@@ -133,10 +124,7 @@ public class WSDesc {
     /** Web service name. */
     private final String name;
     
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of web service description.
      * <p/>
@@ -150,10 +138,7 @@ public class WSDesc {
         this.testUrl = buildTestUrl(name);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get web service name from web service description.
      * <p/>

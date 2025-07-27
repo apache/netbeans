@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.extexecution.process
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/extexecution/process/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.57
+OpenIDE-Module-Specification-Version: 1.58
 OpenIDE-Module-Provides: org.netbeans.spi.extexecution.base.ProcessesImplementation

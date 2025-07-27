@@ -29,9 +29,10 @@ import org.openide.util.lookup.ServiceProvider;
  * @author  Petr Kuzel
  * @version
  */
-@ServiceProvider(service = CatalogProvider.class)
+@ServiceProvider(service = CatalogProvider.class, position = 100)
 public class SunCatalogProvider implements CatalogProvider {
 
+    @Override
     public Class provideClass() throws IOException, ClassNotFoundException {
         return Catalog.class;
     }

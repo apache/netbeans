@@ -30,10 +30,7 @@ import org.netbeans.modules.glassfish.tooling.data.GlassFishServer;
  */
 public class GlassFishCloudEntity implements GlassFishCloud {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish cloud name (display name in IDE). */
     protected String name;
 
@@ -46,10 +43,7 @@ public class GlassFishCloudEntity implements GlassFishCloud {
     /** GlassFish cloud local server. */
     protected GlassFishServer localServer;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs empty class instance. No default values are set.
      */
@@ -72,10 +66,7 @@ public class GlassFishCloudEntity implements GlassFishCloud {
         this.localServer = localServer;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get GlassFish cloud name (display name in IDE).
      * <p/>
@@ -152,10 +143,7 @@ public class GlassFishCloudEntity implements GlassFishCloud {
         this.localServer = localServer;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * String representation of this GlassFish cloud entity.
      * <p/>

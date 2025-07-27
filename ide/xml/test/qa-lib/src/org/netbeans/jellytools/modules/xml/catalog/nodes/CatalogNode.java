@@ -93,7 +93,7 @@ public class CatalogNode extends AbstractNode {
         propertiesAction.perform(this);
     }
     
-    // LIB /////////////////////////////////////////////////////////////////////
+    // LIB
         
    /** returns catalog entry node with given name or <code>null</code> */
     public CatalogEntryNode getCatalogEntry(String displayName) {

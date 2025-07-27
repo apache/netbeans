@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.websvc.restlib/2
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/websvc/swdp/Bundle.properties
-OpenIDE-Module-Specification-Version: 2.37
+OpenIDE-Module-Specification-Version: 2.38
 OpenIDE-Module-Layer: org/netbeans/modules/websvc/swdp/layer.xml
 AutoUpdate-Show-In-Client: false

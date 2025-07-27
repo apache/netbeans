@@ -25,7 +25,6 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.core.windows.*;
-import org.openide.util.WeakSet;
 
 
 /**
@@ -42,7 +41,7 @@ class SplitSubModel {
     protected final Model parentModel;
     
     /** Maps modes to nodes of this n-branch tree model. */
-    private final Set<ModeNode> nodes = new WeakSet<ModeNode>(20);
+    private final Set<ModeNode> nodes = Collections.newSetFromMap(new WeakHashMap<>(20));
     
     /** Root <code>Node</code> which represents the split panes structure
      * with modes as leaves. */
@@ -764,7 +763,6 @@ class SplitSubModel {
         return sb;
     }
 
-    ///////////////////////////////
     // Controller updates >>
     
     public ModeImpl getModeForOriginator(ModelElement originator) {
@@ -776,15 +774,11 @@ class SplitSubModel {
     }
     
     // Controller updates <<
-    ///////////////////////////////
-    
     private static void debugLog(String message) {
         Debug.log(SplitSubModel.class, message);
     }
     
-    ////////////////////////////////////////
-    /// Nodes of this tree model
-    ////////////////////////////////////////
+    // Nodes of this tree model
     /** Class representing one node in SplitSubModel.  */
     protected abstract static class Node implements ModelElement {
         /** Reference to parent node. */
@@ -852,9 +846,6 @@ class SplitSubModel {
             return null;
         }
         
-        //////////////////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////////////////
-
         /** Indicates whether component represented by this node is visible or not. */
         public boolean isVisibleInSplit() {
             return false;

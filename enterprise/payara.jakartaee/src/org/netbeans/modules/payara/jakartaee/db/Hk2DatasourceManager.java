@@ -90,26 +90,17 @@ public class Hk2DatasourceManager implements DatasourceManager {
 
     private static final Logger LOG = Logger.getLogger("payara-jakartaee");
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Payara server domain configuration file. */
     private static final String DOMAIN_XML_PATH = OsUtils.joinPaths(
             ServerUtils.PF_DOMAIN_CONFIG_DIR_NAME,
             ServerUtils.PF_DOMAIN_CONFIG_FILE_NAME);
     
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Payara server deployment manager. */
     private Hk2DeploymentManager dm;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of Payara server data source manager.
      * <p/>
@@ -119,10 +110,7 @@ public class Hk2DatasourceManager implements DatasourceManager {
         this.dm = dm;
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Retrieves the data sources deployed on the server.
      * <p/>

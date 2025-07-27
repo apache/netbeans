@@ -25,10 +25,7 @@ package org.netbeans.modules.glassfish.tooling.admin;
  */
 public class ValueProcess {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** The name of the executable to run. */
     private String processName;
 
@@ -38,10 +35,7 @@ public class ValueProcess {
     /** Process information. */
     private Process process;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of GlassFish server process entity.
      * <p/>
@@ -58,10 +52,7 @@ public class ValueProcess {
         this.process = process;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get name of the executable to run.
      * <p/>
@@ -89,10 +80,7 @@ public class ValueProcess {
         return process;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Convert stored process information to <code>String</code>.
      * <p>

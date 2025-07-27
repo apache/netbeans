@@ -30,17 +30,11 @@ import java.util.Map;
 @RunnerRestClass(runner = RunnerRestCreateConnectorPool.class)
 public class CommandCreateConnectorConnectionPool extends Command {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for create EIS connection pool command. */
     private static final String COMMAND = "create-connector-connection-pool";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Connection pool unique name (and ID). */
     final String poolName;
 
@@ -64,10 +58,7 @@ public class CommandCreateConnectorConnectionPool extends Command {
      * </table> */
     final Map<String, String> properties;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of GlassFish server create EIS connection pool
      * command entity.

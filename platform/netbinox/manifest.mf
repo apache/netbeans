@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.netbinox
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/netbinox/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.70
+OpenIDE-Module-Specification-Version: 1.71
 OpenIDE-Module-Provides: org.osgi.framework.launch.FrameworkFactory, org.netbeans.Netbinox
 OpenIDE-Module-Hide-Classpath-Packages: org.eclipse.core.runtime.**,org.eclipse.osgi.**
 Covered-Packages: META-INF,org.netbeans.modules.netbinox,

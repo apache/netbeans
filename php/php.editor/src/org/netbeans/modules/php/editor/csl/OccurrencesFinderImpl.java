@@ -57,7 +57,7 @@ import org.netbeans.modules.php.editor.parser.PHPParseResult;
  * @author Radek Matous
  */
 public class OccurrencesFinderImpl extends OccurrencesFinder {
-    private Map<OffsetRange, ColoringAttributes> range2Attribs;
+    private Map<OffsetRange, ColoringAttributes> range2Attribs = Collections.emptyMap();
     private int caretPosition;
     private volatile boolean cancelled;
 
@@ -67,11 +67,9 @@ public class OccurrencesFinderImpl extends OccurrencesFinder {
     }
 
     @Override
+    @SuppressWarnings("ReturnOfCollectionOrArrayField") // field holds immutable map
     public Map<OffsetRange, ColoringAttributes> getOccurrences() {
-        // must not return null
-        return range2Attribs != null
-                ? Collections.unmodifiableMap(range2Attribs)
-                : Collections.emptyMap();
+        return range2Attribs;
     }
 
     @Override
@@ -81,9 +79,6 @@ public class OccurrencesFinderImpl extends OccurrencesFinder {
 
     @Override
     public void run(Result result, SchedulerEvent event) {
-        //remove the last occurrences - the CSL caches the last found occurences for us
-        range2Attribs = null;
-
         if (cancelled) {
             cancelled = false;
             return;
@@ -102,10 +97,12 @@ public class OccurrencesFinderImpl extends OccurrencesFinder {
             return;
         }
 
-        if (!node.getBoolean(MarkOccurencesSettings.KEEP_MARKS, true) || !localRange2Attribs.isEmpty()) {
-            //store the occurrences if not empty
-            range2Attribs = localRange2Attribs;
-        } else {
+        if (!localRange2Attribs.isEmpty()) {
+            // store the new occurrences if any were found
+            range2Attribs = Collections.unmodifiableMap(localRange2Attribs);
+        } else if (!node.getBoolean(MarkOccurencesSettings.KEEP_MARKS, true)) {
+            // clear occurrences if "Keep Marks" is not selected. If "Keep Marks"
+            // is enabled, the old ranges must be retained.
             range2Attribs = Collections.emptyMap();
         }
     }

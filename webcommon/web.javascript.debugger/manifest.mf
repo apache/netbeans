@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.web.javascript.debugger
 OpenIDE-Module-Layer: org/netbeans/modules/web/javascript/debugger/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/web/javascript/debugger/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.44
+OpenIDE-Module-Specification-Version: 1.45
 

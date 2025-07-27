@@ -28,18 +28,12 @@ import org.netbeans.modules.payara.tooling.PayaraStatusListener;
  */
 public abstract class BasicStateListener implements PayaraStatusListener {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Informs whether this listener is registered. */
     private boolean active;
 
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of state check results notification.
      */
@@ -47,10 +41,7 @@ public abstract class BasicStateListener implements PayaraStatusListener {
         active = false;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get an information whether this listener is registered.
      * <p/>

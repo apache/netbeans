@@ -89,4 +89,8 @@ public final class Bundle {
     public static String DESC_catalog_fmts() {
         return NbBundle.getMessage(Bundle.class, "DESC_catalog_fmts");
     }
+
+    public static String TEXT_catalog_not_valid() {
+        return NbBundle.getMessage(Bundle.class, "TEXT_catalog_not_valid");
+    }
 }

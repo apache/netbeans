@@ -386,9 +386,9 @@ public class JQueryCodeCompletion implements CompletionProvider {
 //            } else {
 //                anchorOffsetDelta = 0;
 //            }
-////            if (prefix.isEmpty()) {
-////                anchorOffsetDelta = 1;
-////            }
+// //            if (prefix.isEmpty()) {
+// //                anchorOffsetDelta = 1;
+// //            }
 //
 //
 //        }

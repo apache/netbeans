@@ -41,7 +41,6 @@ import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
-import org.openide.util.WeakSet;
 import org.openide.windows.IOProvider;
 import org.openide.windows.InputOutput;
 import org.openide.windows.OutputEvent;
@@ -210,7 +209,7 @@ public class StandardLoggerTest extends NbTestCase {
         private final AntLogger[] loggers;
         private final int verbosity;
         private final Map<AntLogger,Object> customData = new WeakHashMap<AntLogger,Object>();
-        private final Set<Throwable> consumedExceptions = new WeakSet<Throwable>();
+        private final Set<Throwable> consumedExceptions = Collections.newSetFromMap(new WeakHashMap<>());
         public final List<Message> messages = new ArrayList<Message>();
         
         public MockAntSession(AntLogger[] loggers, int verbosity) {

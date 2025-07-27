@@ -101,6 +101,7 @@ import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.ErrorType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.annotations.common.CheckForNull;
@@ -324,6 +325,10 @@ public class CopyFinder extends ErrorAwareTreeScanner<Boolean, TreePath> {
 
         if (designed != null && designed.getKind() != TypeKind.ERROR) {
             TypeMirror real = info.getTrees().getTypeMirror(currentPath);
+            if (real != null && real.getKind() == TypeKind.ERROR) {
+                ErrorType et = (ErrorType) real;
+                real = info.getTrees().getOriginalType(et);
+            }
             if (real != null && !IGNORE_KINDS.contains(real.getKind())) {
                 // special hack: if the designed type is DECLARED (assuming a boxed primitive) and the real type is 
                 // not DECLARED or is null (assuming a real primitive), do not treat them as assignable.

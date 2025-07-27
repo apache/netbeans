@@ -35,26 +35,17 @@ import org.netbeans.modules.payara.spi.PayaraModule;
  * @author vkraemer
  */
 public class EnableComet implements Runnable {
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = PayaraLogger.get(CommonServerSupport.class);
 
     
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
      /** Payara server instance to be modified. */
     private final PayaraInstance instance;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of Comet support enable handler.
      * @param instance Payara server instance to be modified.

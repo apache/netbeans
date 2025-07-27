@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
+import java.util.WeakHashMap;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import javax.swing.event.ChangeEvent;
@@ -43,7 +44,6 @@ import org.netbeans.modules.apisupport.project.ProjectXMLManager;
 import org.netbeans.spi.whitelist.WhiteListQueryImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakSet;
 
 /**
  *
@@ -56,7 +56,7 @@ public class ProjectWhiteListQueryImplementation implements WhiteListQueryImplem
     private SoftReference<TreeSet<String>> cachedPrivatePackages;
     private boolean isCached = false;
     private static final WhiteListQuery.Result OK = new WhiteListQuery.Result();
-    private final Set<ProjectWhiteListImplementation> results = Collections.synchronizedSet(new WeakSet<ProjectWhiteListImplementation>());
+    private final Set<ProjectWhiteListImplementation> results = Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
     private static final RequestProcessor RP = new RequestProcessor(ProjectWhiteListQueryImplementation.class.getName(), 3);
 
     /**

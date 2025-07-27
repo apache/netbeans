@@ -145,14 +145,6 @@ final class ViewHierarchy {
         updateAccessors(modeStructureAccessor);
         //(re)create gridsplit model
         currentSplitRoot = updateViewForAccessor(modeStructureAccessor.getSplitRootAccessor());
-//        System.out.println("updateViewHierarchy... elem=" + elem);
-//        if (maximizedModeView == null) {
-////            System.out.println("updateViewHierarchy...splitoroot=" + elem);
-//            setSplitRootIntoDesktop(elem);
-//        } else {
-////            System.out.println("updateViewHierarchy...mazimized=" + maximizedModeView);
-//            setMaximizedViewIntoDesktop(maximizedModeView);
-//        }
         if( null == currentSplitRoot && shouldUseFakeSplitRoot() ) {
             currentSplitRoot = getFakeSplitRoot();
         }

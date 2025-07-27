@@ -21,28 +21,23 @@ package org.netbeans.modules.java.hints.infrastructure;
 
 import org.netbeans.modules.java.hints.spiimpl.TestCompilerSettings;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.prefs.Preferences;
 import javax.lang.model.SourceVersion;
 import javax.swing.text.Document;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.ClasspathInfo;
-import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.hints.errors.Utilities;
 import org.netbeans.modules.java.hints.spiimpl.TestUtilities;
 import org.netbeans.modules.java.source.TestUtil;
-import org.netbeans.modules.java.source.tasklist.CompilerSettings;
 import org.netbeans.modules.java.source.usages.IndexUtil;
 import org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater;
 import org.netbeans.spi.editor.hints.ErrorDescription;
@@ -82,9 +77,7 @@ public class ErrorHintsProviderTest extends NbTestCase {
 
         RepositoryUpdater.getDefault().start(true);
         ClassPath empty = ClassPathSupport.createClassPath(new FileObject[0]);
-        JavaSource.create(ClasspathInfo.create(empty, empty, empty)).runWhenScanFinished(new Task<CompilationController>() {
-            public void run(CompilationController parameter) throws Exception {}
-        }, true).get();
+        JavaSource.create(ClasspathInfo.create(empty, empty, empty)).runWhenScanFinished(c -> {}, true).get();
     }
     
     private void prepareTest(String capitalizedName, String sourceLevel) throws Exception {
@@ -102,14 +95,7 @@ public class ErrorHintsProviderTest extends NbTestCase {
         String testPackagePath = "javahints/";
         File   testPackageFile = new File(getDataDir(), testPackagePath);
         
-        String[] names = testPackageFile.list(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                if (name.endsWith(".java"))
-                    return true;
-                
-                return false;
-            }
-        });
+        String[] names = testPackageFile.list((dir, name) -> name.endsWith(".java"));
         
         String[] files = new String[names.length];
         
@@ -239,13 +225,6 @@ public class ErrorHintsProviderTest extends NbTestCase {
     }
     
     public void testTestUnicodeError() throws Exception {
-        //only run this test with javac 17 and higher, there were adjustments to the
-        //diagnostics in previous versions:
-        try {
-            SourceVersion.valueOf("RELEASE_17");
-        } catch (IllegalArgumentException ex) {
-            return ;
-        }
         performTest("TestUnicodeError", false);
     }
     
@@ -255,19 +234,24 @@ public class ErrorHintsProviderTest extends NbTestCase {
     
     public void testTestClassNameNotMatchingFileName() throws Exception {
         performInlinedTest("test/Test.java",
-                           "package javahints;\n" +
-                           "public class |A| {\n" +
-                           "    public A() {}\n" +
-                           "}\n");
+                           """
+                           package javahints;
+                           public class |A| {
+                               public A() {}
+                           }
+                           """);
     }
 
     public void testUnnamedClass() throws Exception {
         performFullInlinedTest("Test.java",
-                               "void main() {\n" +
-                               "}\n",
+                               """
+                               void main() {
+                               }
+                               """,
                                "21",
+                               //TODO: can this comment be now removed?
                                //TODO: needs to be adjusted when the error in javac is fixed:
-                               "0:0-0:13::Test.java:1:1: compiler.err.preview.feature.disabled.plural: (compiler.misc.feature.implicit.classes)");
+                               "0:0-0:13::Test.java:1:1: compiler.err.feature.not.supported.in.source.plural: (compiler.misc.feature.implicit.classes), 21, " + SourceVersion.latest().ordinal());
     }
 
     private void performInlinedTest(String name, String code) throws Exception {

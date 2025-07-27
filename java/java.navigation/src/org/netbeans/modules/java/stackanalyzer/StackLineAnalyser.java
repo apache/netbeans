@@ -56,6 +56,7 @@ class StackLineAnalyser {
         "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";
     private static final Pattern LINE_PATTERN = Pattern.compile(
         "at\\s+" +                                                      // initial 'at'
+        "(?:<\\w+>\\s+)?" +                                             // optional identification of a language like <java>
         "("+IDENTIFIER+"\\S*/)?" +                                      // optional module name like 'java.base/' or 'Mavenproject1@0.1-SNAPSHOT/'
         "(("+IDENTIFIER+"(\\."+IDENTIFIER+")*)\\.)?("+IDENTIFIER+")" +  // class name
         "\\.("+IDENTIFIER+"|\\<init\\>|\\<clinit\\>)\\s*"+              // method name
@@ -117,6 +118,10 @@ class StackLineAnalyser {
             this.startOffset = startOffset;
             this.endOffset = endOffset;
             this.extension = extension;
+        }
+
+        int getLineNumber() {
+            return lineNumber;
         }
 
         int getStartOffset () {

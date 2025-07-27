@@ -16,11 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-/**
- * JComboBox with auto completion feature.
- *
- * @author marekfukala
- */
 package org.netbeans.modules.css.visual;
 
 import java.util.Collection;
@@ -32,6 +27,11 @@ import org.netbeans.modules.css.lib.api.properties.Properties;
 import org.netbeans.modules.css.lib.api.properties.PropertyDefinition;
 import org.openide.filesystems.FileObject;
 
+/**
+ * JComboBox with auto completion feature.
+ *
+ * @author marekfukala
+ */
 public class AutocompleteJComboBox extends JComboBox {
     
     private static Comparator<String> PROPERTY_COMPARATOR = new Comparator<String>() {

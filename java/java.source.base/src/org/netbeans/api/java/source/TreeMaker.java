@@ -795,6 +795,17 @@ public final class TreeMaker {
     }
     
     /**
+     * Creates a new ImportTree representing {@code import module}.
+     *
+     * @param moduleName fully qualified identifier.
+     * @see com.sun.source.tree.ImportTree
+     * @since 2.79
+     */
+    public ImportTree ImportModule(ExpressionTree moduleName) {
+        return delegate.ImportModule(moduleName);
+    }
+
+    /**
      * Creates a new InstanceOfTree.
      *
      * @param expression the expression whose type is being checked.
@@ -1423,7 +1434,6 @@ public final class TreeMaker {
         return delegate.Wildcard(kind, type);
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // AnnotationTree
     /**
      * Appends specified element <code>attrValue</code> to the end of attribute 

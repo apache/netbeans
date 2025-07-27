@@ -85,7 +85,7 @@ public class WebLocationsPanel extends javax.swing.JPanel implements HelpCtx.Pro
             if (wm.webInf != null)
                 webInf = getLocationDisplayName(projectEvaluator, nbProjectFolder, wm.webInf);
             else
-                ////NetBeans 5.x and older projects (WEB-INF is placed under Web Pages)
+                //NetBeans 5.x and older projects (WEB-INF is placed under Web Pages)
                 webInf = docroot + "/WEB-INF"; //NOI18N
             classpath = wm.classpath;
             jTextFieldWeb.setText(docroot);

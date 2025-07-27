@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.java.kit
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/java/kit/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.64
+OpenIDE-Module-Specification-Version: 1.65
 OpenIDE-Module-Recommends: org.netbeans.modules.profiler,
  org.netbeans.modules.debugger.jpda.kit,org.netbeans.modules.selenium2.java
 OpenIDE-Module-Layer: org/netbeans/modules/java/kit/layer.xml

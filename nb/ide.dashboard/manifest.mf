@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-OpenIDE-Module-Specification-Version: 0.6
+OpenIDE-Module-Specification-Version: 0.7
 OpenIDE-Module: org.netbeans.modules.ide.dashboard/0
 OpenIDE-Module-Layer: org/netbeans/modules/ide/dashboard/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/ide/dashboard/Bundle.properties

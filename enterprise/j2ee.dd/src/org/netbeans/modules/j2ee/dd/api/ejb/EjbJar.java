@@ -18,7 +18,7 @@
  */
 package org.netbeans.modules.j2ee.dd.api.ejb;
 
-/**
+/*
  * Generated interface for EjbJar element.<br>
  * The EjbJar object is the root of bean graph generated<br>
  * for deployment descriptor(ejb-jar.xml) file.<br>

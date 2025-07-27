@@ -44,7 +44,6 @@
     <filter pattern="https://github\.com/graalvm/fastr" accept="true" />
     <filter pattern="https://github\.com/graalvm/graalpython" accept="true" />
     <filter pattern="https://github\.com/graalvm/truffleruby" accept="true" />
-    <filter pattern="https://github\.com/twall/jna" accept="true" />
     <filter pattern="https://github\.com/openjdk/.*" accept="true" />
     <filter pattern="https://github\.com/simpligility/.*" accept="true" />
     
@@ -65,7 +64,7 @@
     <filter pattern="http://www\.saxproject\.org" accept="true" />
     <filter pattern="https://www\.eclipse\.org/jgit" accept="true" />
     <filter pattern="https://knockoutjs\.com" accept="true" />
-    <filter pattern="https://services\.gradle\.org/versions/all" accept="true" /> 
+    <filter pattern="https://services\.gradle\.org/.*" accept="true" />
     
     <!-- documentation API -->
     <filter pattern="https://docs\.oracle\.com/javase.*" accept="true" />

@@ -32,10 +32,7 @@ import org.testng.annotations.Test;
 @Test(groups = {"unit-tests"})
 public class PayaraVersionTest {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Test that <code>toValue</code> handles addition values for given version
      * and additional values array.
@@ -48,10 +45,7 @@ public class PayaraVersionTest {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Test methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Test that <code>toString</code> handles all <code>enum</code> values.
      */

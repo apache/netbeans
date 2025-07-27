@@ -38,10 +38,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
 @RunnerRestClass(runner=RunnerRestDeploy.class)
 public class CommandDeploy extends CommandTargetName {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for deploy command. */
     private static final String COMMAND = "deploy";
 
@@ -49,10 +46,7 @@ public class CommandDeploy extends CommandTargetName {
     private static final String ERROR_MESSAGE
             = "Application deployment failed.";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Deploy task that deploys application on server.
      * <p/>
@@ -78,10 +72,7 @@ public class CommandDeploy extends CommandTargetName {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** File to deploy. */
     final File path;
 
@@ -100,10 +91,7 @@ public class CommandDeploy extends CommandTargetName {
     /** Hot Deploy. */
     final boolean hotDeploy;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server deploy command entity.
      * <p/>

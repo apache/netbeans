@@ -33,10 +33,7 @@ import org.openide.util.NbBundle;
  */
 abstract class CommonPasswordPanel extends javax.swing.JPanel {
     
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = PayaraLogger.get(CommonPasswordPanel.class);
@@ -49,10 +46,7 @@ abstract class CommonPasswordPanel extends javax.swing.JPanel {
     static final Object[] invalidButtons
             = new Object[] {CANCEL_OPTION};
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Set buttons in user notification descriptor depending on form validity.
      * <p/>
@@ -69,10 +63,7 @@ abstract class CommonPasswordPanel extends javax.swing.JPanel {
             descriptor.setOptions(invalidButtons);
     }
  
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Payara server instance used to search for supported platforms. */
     final PayaraInstance instance;
 
@@ -91,10 +82,7 @@ abstract class CommonPasswordPanel extends javax.swing.JPanel {
     /** User notification descriptor. */
     final NotifyDescriptor descriptor;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates new Payara password panel.
      * <p/>
@@ -117,10 +105,7 @@ abstract class CommonPasswordPanel extends javax.swing.JPanel {
         this.instance.getAdminPassword();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructor helper method to finish form initialization after
      * <code>initComponents()</code> was called.

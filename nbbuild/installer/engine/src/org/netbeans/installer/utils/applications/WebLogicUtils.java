@@ -94,7 +94,6 @@ public class WebLogicUtils {
                 !domainBuilder.environment().containsKey(CLASSPATH)) {
             throw new DomainCreationException(ERROR_CONFIGURE_ENV_STRING);
         }                          
-        //////////////////
         List <String> commands = new ArrayList <String> ();               
         commands.add(getJavaExecutableCommand(jdkLocation));
         commands.add("-Xmx1024m");
@@ -308,7 +307,6 @@ public class WebLogicUtils {
     
   
 
-    /////////////////////////////////////////////////////////////////////////////////
     // Inner Classes
     public static class DomainCreationException extends IOException {
         private String message;
@@ -345,7 +343,6 @@ public class WebLogicUtils {
         }
     }
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Constants
     public static final long MAX_EXECUTION_TIME = 600000;    
     public static final int MAX_DELAY = 50; // NOMAGI

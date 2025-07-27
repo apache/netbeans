@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.javascript2.lexer/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/javascript2/lexer/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.35
+OpenIDE-Module-Specification-Version: 1.36
 

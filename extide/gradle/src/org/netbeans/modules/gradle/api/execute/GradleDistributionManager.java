@@ -261,6 +261,29 @@ public final class GradleDistributionManager {
     }
 
     /**
+     * Create a {@link GradleDistribution} from the current (latest) Gradle
+     * release available from the Gradle site. This method uses the
+     * <a href="https://services.gradle.org/versions/current">https://services.gradle.org/versions/current</a>
+     * web service to query the latest available version.
+     *
+     * @return the current Gradle distribution
+     * @throws java.io.IOException if information on the current Gradle release
+     * cannot be accessed
+     */
+    public GradleDistribution currentDistribution() throws IOException {
+        JSONParser parser = new JSONParser();
+        URL versionsCurrent = URI.create("https://services.gradle.org/versions/current").toURL(); //NOI18N
+        try (InputStreamReader is = new InputStreamReader(versionsCurrent.openStream(), StandardCharsets.UTF_8)) {
+            JSONObject current = (JSONObject) parser.parse(is);
+            URI downloadURL = new URI((String) current.get("downloadUrl")); //NOI18N
+            String version = (String) current.get("version");
+            return new GradleDistribution(distributionBaseDir(downloadURL, version), downloadURL, version);
+        } catch (ParseException | URISyntaxException | ClassCastException ex) {
+            throw new IOException(ex);
+        }
+    }
+
+    /**
      * Create a {@link GradleDistribution} from the Gradle version distributed
      * with the Gradle Tooling of the IDE. This should be the most IDE compatible
      * version, so it can be used as a fallback.
@@ -285,7 +308,7 @@ public final class GradleDistributionManager {
         List<GradleDistribution> ret = new ArrayList<>();
         JSONParser parser = new JSONParser();
         try {
-            URL allVersions = new URL("https://services.gradle.org/versions/all"); //NOI18N
+            URL allVersions = URI.create("https://services.gradle.org/versions/all").toURL(); //NOI18N
             try (InputStreamReader is = new InputStreamReader(allVersions.openStream(), StandardCharsets.UTF_8)) {
                 JSONArray versions = (JSONArray) parser.parse(is);
                 for (Object o : versions) {

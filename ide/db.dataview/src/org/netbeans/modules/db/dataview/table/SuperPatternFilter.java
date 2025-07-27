@@ -17,11 +17,6 @@
  * under the License.
  */
 package org.netbeans.modules.db.dataview.table;
-
-/**
- *
- * @author ahimanikya
- */
 import java.sql.Blob;
 import java.sql.Clob;
 import java.util.regex.Pattern;
@@ -30,6 +25,11 @@ import javax.swing.table.TableModel;
 import static org.netbeans.modules.db.dataview.table.SuperPatternFilter.MODE.LITERAL_FIND;
 import org.netbeans.modules.db.dataview.util.LobHelper;
 
+
+/**
+ *
+ * @author ahimanikya
+ */
 public class SuperPatternFilter extends RowFilter<TableModel, Integer> {
 
     Pattern pattern;

@@ -71,7 +71,6 @@ import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.RequestProcessor.Task;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 
 /**

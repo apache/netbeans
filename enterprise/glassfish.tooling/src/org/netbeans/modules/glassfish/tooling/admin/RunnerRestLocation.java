@@ -38,10 +38,7 @@ public class RunnerRestLocation extends RunnerRest {
     @SuppressWarnings("FieldNameHidesFieldInSuperclass")
     ResultMap<String, String> result;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * HTTP interface.

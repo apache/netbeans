@@ -945,8 +945,6 @@ public class JavaBeansUtil {
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////
-
     /**
      * Create a bean with dummy values.
      * If a bean property write method fails or the constructor to the bean

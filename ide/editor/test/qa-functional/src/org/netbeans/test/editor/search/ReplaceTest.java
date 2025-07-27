@@ -145,7 +145,7 @@ public class ReplaceTest extends EditorTestCase {
 //            new EventTool().waitNoEvent(REPLACE_TIMEOUT);           
 //            bar.replaceButton().doClick();
 //            // check status bar
-////            waitForLabel("'package' not found");
+// //            waitForLabel("'package' not found");
 //		
 //            editor.setCaretPosition(1,1);
 //            new EventTool().waitNoEvent(REPLACE_TIMEOUT);           
@@ -157,7 +157,7 @@ public class ReplaceTest extends EditorTestCase {
 //            new EventTool().waitNoEvent(REPLACE_TIMEOUT);           
 //            bar.replaceButton().doClick();
 //            // check status bar
-////            waitForLabel("'class' not found");
+// //            waitForLabel("'class' not found");
 //            
 //            editor.setCaretPosition(1,1);
 //            new EventTool().waitNoEvent(REPLACE_TIMEOUT);           
@@ -167,7 +167,7 @@ public class ReplaceTest extends EditorTestCase {
 //            bar.replaceCombo().typeText("testReplaceDialogComboBox2");
 //            bar.replaceButton().doClick();
 //            // check status bar
-////            waitForLabel("'testReplaceDialogComboBox' found at 13:35");
+// //            waitForLabel("'testReplaceDialogComboBox' found at 13:35");
 //            
 //		new EventTool().waitNoEvent(REPLACE_TIMEOUT);           
 //            boolean[] found = new boolean[3];

@@ -44,10 +44,7 @@ import org.openide.util.NbBundle;
  */
 public abstract class BasicTask<V> implements Callable<V> {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Notification about server state check results while waiting for server
      * to start.
@@ -58,20 +55,14 @@ public abstract class BasicTask<V> implements Callable<V> {
      */
     protected static class StartStateListener extends WakeUpStateListener {
 
-        ////////////////////////////////////////////////////////////////////////
         // Instance attributes                                                //
-        ////////////////////////////////////////////////////////////////////////
-
         /** Is server starting in profiling mode? */
         private final boolean profile;
 
         /** Payara process being started. */
         private volatile Process process;
 
-        ////////////////////////////////////////////////////////////////////////
         // Constructors                                                       //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Constructs an instance of state check results notification.
          * <p/>
@@ -84,10 +75,7 @@ public abstract class BasicTask<V> implements Callable<V> {
             this.process = null;
         }
 
-        ////////////////////////////////////////////////////////////////////////
         // Getters and setters                                                //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Set Payara process being started.
          * <p/>
@@ -97,10 +85,7 @@ public abstract class BasicTask<V> implements Callable<V> {
             this.process = process;
         }
 
-        ////////////////////////////////////////////////////////////////////////
         // Methods                                                            //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Callback to notify about current server status after every check
          * when enabled.
@@ -142,10 +127,7 @@ public abstract class BasicTask<V> implements Callable<V> {
      */
     protected static class ShutdownStateListener extends WakeUpStateListener {
 
-        ////////////////////////////////////////////////////////////////////////
         // Constructors                                                       //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Constructs an instance of state check results notification.
          */
@@ -153,10 +135,7 @@ public abstract class BasicTask<V> implements Callable<V> {
             super();
         }
 
-        ////////////////////////////////////////////////////////////////////////
         // Methods                                                            //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Callback to notify about current server status after every check
          * when enabled.
@@ -183,10 +162,7 @@ public abstract class BasicTask<V> implements Callable<V> {
      */
     protected static class StateChange {
 
-        ////////////////////////////////////////////////////////////////////////
         // Instance attributes                                                //
-        ////////////////////////////////////////////////////////////////////////
-
         /** Command execution task. */
         private final BasicTask<?> task;
 
@@ -202,10 +178,7 @@ public abstract class BasicTask<V> implements Callable<V> {
         /** Message arguments. */
         private final String[] msgArgs;
 
-        ////////////////////////////////////////////////////////////////////////
         // Constructors                                                       //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Constructs an instance of state change request data.
          * <p/>
@@ -242,10 +215,7 @@ public abstract class BasicTask<V> implements Callable<V> {
             this.msgArgs = msgArgs;
         }
 
-        ////////////////////////////////////////////////////////////////////////
         // Methods                                                            //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Call all registered callback listeners to inform about state change.
          * <p/>
@@ -257,10 +227,7 @@ public abstract class BasicTask<V> implements Callable<V> {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER = PayaraLogger.get(BasicTask.class);
 
@@ -286,10 +253,7 @@ public abstract class BasicTask<V> implements Callable<V> {
     /** Unit (ms) for the DELAY and START_TIMEOUT constants. */
     public static final TimeUnit TIMEUNIT = TimeUnit.MILLISECONDS;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Payara instance accessed in this task. */
     PayaraInstance instance;
 
@@ -302,10 +266,7 @@ public abstract class BasicTask<V> implements Callable<V> {
     /** Task thread when inside <code>call</code> method. */
     protected volatile Thread taskThread;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Abstract methods                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Command execution is implemented as <code>call()</code> method in child
      * classes.
@@ -315,10 +276,7 @@ public abstract class BasicTask<V> implements Callable<V> {
     @Override
     public abstract V call();
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of <code>BasicTask</code> class.
      * <p/>
@@ -333,10 +291,7 @@ public abstract class BasicTask<V> implements Callable<V> {
         this.taskThread = null;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Initialize task thread when <code>call</code> method is started.
      * <p/>

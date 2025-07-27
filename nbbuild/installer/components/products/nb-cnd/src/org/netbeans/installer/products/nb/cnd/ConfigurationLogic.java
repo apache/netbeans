@@ -27,7 +27,6 @@ import org.netbeans.installer.utils.exceptions.InitializationException;
  * @author Kirill Sorokin
  */
 public class ConfigurationLogic extends NbClusterConfigurationLogic {
-    /////////////////////////////////////////////////////////////////////////////////
     // Constants
     private static final String CND_CLUSTER = 
             "{cnd-cluster}"; // NOI18N
@@ -39,7 +38,6 @@ public class ConfigurationLogic extends NbClusterConfigurationLogic {
             "CND"; // NOI18N
 
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Instance
     public ConfigurationLogic() throws InitializationException {
         super(new String[]{

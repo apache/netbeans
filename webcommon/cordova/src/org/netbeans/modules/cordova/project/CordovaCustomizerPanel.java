@@ -268,10 +268,10 @@ public class CordovaCustomizerPanel extends javax.swing.JPanel implements Action
         }
     }
 
-    @Override
     /**
      * Store listener
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
 
         try {

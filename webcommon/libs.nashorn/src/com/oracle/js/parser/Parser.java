@@ -852,7 +852,7 @@ loop:
         return new UnaryNode(firstToken, expression);
     }
 
-    /**
+    /*
      * -----------------------------------------------------------------------
      *
      * Grammar based on

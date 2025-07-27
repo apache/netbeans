@@ -31,10 +31,7 @@ import org.openide.util.NbPreferences;
  */
 public class GlassFishSettings {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** NetBeans preferences node label. */
     private static final String NB_PREFERENCES_NODE
             = "org/netbeans/modules/glassfish/common";
@@ -51,10 +48,7 @@ public class GlassFishSettings {
     private static final String LBL_GF_SHOW_PASSWORD_IN_PROPERTIES_FORM
             = "GfShowPasswordInPropertiesForm";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Initialize and configure GlassFish Tooling Library.
      */

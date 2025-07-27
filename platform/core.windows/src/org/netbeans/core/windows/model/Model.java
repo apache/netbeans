@@ -40,9 +40,7 @@ import java.util.Set;
  */
 public interface Model {
 
-    ////////////////////////////////
     // Global (the highest) level >>
-    /////////////////////////////
     // Mutators (global level) >>
     /** Sets visibility status. */
     public void setVisible(boolean visible);
@@ -103,9 +101,6 @@ public interface Model {
     public void setTopComponentMaximizedWhenSlidedIn( String tcid, boolean maximized );
     
     // Mutators (global level) <<
-    /////////////////////////////
-
-    //////////////////////////////   
     // Accessors (global level) >>
     /** Gets visibility status. */
     public boolean isVisible();
@@ -178,14 +173,8 @@ public interface Model {
     public boolean isTopComponentMaximizedWhenSlidedIn( String tcid );
 
     // Accessors (global level) >>
-    //////////////////////////////   
     // Global (the highest) level <<
-    ////////////////////////////////
-
-    
-    ////////////////
     // Mode level >>
-    ///////////////////////////
     // Mutators (mode level) >>
     /** Sets state. */
     public void setModeState(ModeImpl mode, int state);
@@ -225,9 +214,6 @@ public interface Model {
     
     
     // Mutators (mode level) <<
-    ///////////////////////////
-
-    ////////////////////////////
     // Accessors (mode level) >>
     /** Gets programatic name of mode. */
     public String getModeName(ModeImpl mode);
@@ -288,12 +274,7 @@ public interface Model {
     public int getModeOpenedTopComponentTabPosition(ModeImpl mode, TopComponent tc);
     
     // Accessors (mode level) <<
-    ////////////////////////////
     // Mode level <<
-    ////////////////
-
-
-    ///////////////////////////
     // TopComponentGroup level >>
     public Set<TopComponentGroupImpl> getTopComponentGroups();
 
@@ -336,21 +317,16 @@ public interface Model {
     public Set<String> getGroupOpenedTopComponentsIDs(TopComponentGroupImpl tcGroup);
     // XXX<<
     // TopComponentGroup level <<
-    ///////////////////////////
-
-    //////////////////////////////////////    
     // Other methods, creating sub-models.
     /** Creates mode sub model. */
     public void createModeModel(ModeImpl mode, String name, int state, int kind, boolean permanent);
     /** Creates top component group subg  model. */
     public void createGroupModel(TopComponentGroupImpl tcGroup, String name, boolean opened);
 
-    /////////////////////////
     // snapshot
     public WindowSystemSnapshot createWindowSystemSnapshot();
 
     
-    ////////////////////////
     // controller updates >>
     // Helper values.
     public void setMainWindowBoundsUserSeparatedHelp(Rectangle bounds);
@@ -359,9 +335,5 @@ public interface Model {
     
     public void setSplitWeights( ModelElement[] snapshots, double[] splitWeights );
     // controller updates <<
-    ////////////////////////
-
-
-    
 }
 

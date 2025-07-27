@@ -496,7 +496,7 @@ public final class CookieSet extends Object implements Lookup.Provider {
         }
     }
     
-    /** Assignes a trigger that gets called everytime given class is about
+    /* Assignes a trigger that gets called everytime given class is about
      * to be queried. Can be used only for cookie set created with
      * {@link CookieSet#create(true)} and for classes that are not 
      * subclasses of Node.Cookie.

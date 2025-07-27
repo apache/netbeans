@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.java.j2seprofiles
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/java/j2seprofiles/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.37
+OpenIDE-Module-Specification-Version: 1.38
 

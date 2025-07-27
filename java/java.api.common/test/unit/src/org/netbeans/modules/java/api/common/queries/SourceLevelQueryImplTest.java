@@ -21,9 +21,7 @@ package org.netbeans.modules.java.api.common.queries;
 
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
-import java.net.SocketPermission;
 import java.net.URL;
-import java.security.Permission;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -64,21 +62,6 @@ import org.openide.util.test.MockLookup;
  * @author Tomas Mysik
  */
 public class SourceLevelQueryImplTest extends NbTestCase {
-
-    static {
-        System.setSecurityManager(new SecurityManager() {
-            public @Override void checkPermission(Permission perm) {
-                if (perm instanceof SocketPermission) {
-                    throw new SecurityException();
-                }
-            }
-            public @Override void checkPermission(Permission perm, Object context) {
-                if (perm instanceof SocketPermission) {
-                    throw new SecurityException();
-                }
-            }
-        });
-    }
 
     private static final String JDK_8 = "8";    //NOI18N
     private static final String JDK_8_ALIAS = "1.8";    //NOI18N
@@ -310,18 +293,22 @@ public class SourceLevelQueryImplTest extends NbTestCase {
 
         private JavaPlatform platform;
 
+        @Override
         public void removePropertyChangeListener(PropertyChangeListener listener) {
         }
 
+        @Override
         public void addPropertyChangeListener(PropertyChangeListener listener) {
         }
 
+        @Override
         public JavaPlatform[] getInstalledPlatforms()  {
             return new JavaPlatform[] {
                 getDefaultPlatform()
             };
         }
 
+        @Override
         public JavaPlatform getDefaultPlatform()  {
             if (this.platform == null) {
                 this.platform = new TestPlatform();
@@ -332,42 +319,52 @@ public class SourceLevelQueryImplTest extends NbTestCase {
 
     private static class TestPlatform extends JavaPlatform {
 
+        @Override
         public FileObject findTool(String toolName) {
             return null;
         }
 
+        @Override
         public String getVendor() {
             return "me";
         }
 
+        @Override
         public ClassPath getStandardLibraries() {
             return ClassPathSupport.createClassPath(new URL[0]);
         }
 
+        @Override
         public Specification getSpecification() {
             return new Specification("j2se", new SpecificationVersion("1.5"));
         }
 
+        @Override
         public ClassPath getSourceFolders() {
             return null;
         }
 
+        @Override
         public Map<String, String> getProperties() {
             return Collections.singletonMap("platform.ant.name", TEST_PLATFORM);
         }
 
+        @Override
         public List<URL> getJavadocFolders() {
             return null;
         }
 
+        @Override
         public Collection<FileObject> getInstallFolders() {
             return null;
         }
 
+        @Override
         public String getDisplayName() {
             return "TestPlatform";
         }
 
+        @Override
         public ClassPath getBootstrapLibraries() {
             return ClassPathSupport.createClassPath(new URL[0]);
         }

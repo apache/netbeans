@@ -413,7 +413,7 @@ outer:
                 return trans[indx].getTransferData(flavor);
             }
 
-            /** Compute common flavors.
+            /* Compute common flavors.
             * @param t array of transferable objects
             * @return array of common flavors
             * /

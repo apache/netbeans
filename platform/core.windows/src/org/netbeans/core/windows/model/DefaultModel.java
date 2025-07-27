@@ -135,9 +135,7 @@ final class DefaultModel implements Model {
     }
     
 
-    /////////////////////////////////////
     // Mutator methods >>
-    /////////////////////////////////////
     /** Sets visibility status. */
     @Override
     public void setVisible(boolean visible) {
@@ -356,13 +354,8 @@ final class DefaultModel implements Model {
         slideInMaximizedTopComponents.clear();
     }
     
-    /////////////////////////////////////
     // Mutator methods <<
-    /////////////////////////////////////
-
-    /////////////////////////////////////
     // Accessor methods >>
-    /////////////////////////////////////
     /** Gets visibility status. */
     @Override
     public boolean isVisible() {
@@ -596,12 +589,7 @@ final class DefaultModel implements Model {
         }
     }
 
-    /////////////////////////////////////
     // Accessor methods <<
-    /////////////////////////////////////
-    
-    
-    ///////////////////
     // Mode specific >>
     @Override
     public void createModeModel(ModeImpl mode, String name, int state, int kind, boolean permanent) {
@@ -1036,7 +1024,6 @@ final class DefaultModel implements Model {
     // End of mode specific.
 
     
-    ////////////////////////////////////
     // TopComponentGroup specific >>
     @Override
     public void createGroupModel(TopComponentGroupImpl tcGroup, String name, boolean opened) {
@@ -1280,8 +1267,6 @@ final class DefaultModel implements Model {
     }
     // XXX<<
     // TopComponentGroup specific <<
-    ////////////////////////////////////
-    
     @Override
     public void setMainWindowBoundsUserSeparatedHelp(Rectangle bounds) {
         if(bounds == null) {
@@ -1320,9 +1305,6 @@ final class DefaultModel implements Model {
     }
     
     // Controller updates <<
-    /////////////////////////
-
-
     @Override
     public WindowSystemSnapshot createWindowSystemSnapshot() {
         WindowSystemSnapshot wsms = new WindowSystemSnapshot();
@@ -1362,8 +1344,6 @@ final class DefaultModel implements Model {
         ModeStructureSnapshot ms =  new ModeStructureSnapshot(splitRoot, separateModes, slidingModes);
         return ms;
     }
-    ///////////////////////////////////////////////////
-    
     /** Checks whether the mode isn't null.  */
     private static boolean validateAddingMode(ModeImpl mode) {
         if(mode == null) {

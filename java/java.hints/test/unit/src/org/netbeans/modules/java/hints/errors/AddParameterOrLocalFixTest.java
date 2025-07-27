@@ -468,6 +468,27 @@ public class AddParameterOrLocalFixTest extends ErrorHintsTestBase {
                 "AddParameterOrLocalFix:in:java.io.FileInputStream:RESOURCE_VARIABLE");
     }
 
+    public void testLocalInLambdaInField() throws Exception {
+        performFixTest("test/Test.java",
+                """
+                package test;
+                public class Test {
+                    Runnable r = () -> {
+                        i|i = 0;
+                    };
+                }
+                """,
+                "AddParameterOrLocalFix:ii:int:LOCAL_VARIABLE",
+                """
+                package test;
+                public class Test {
+                    Runnable r = () -> {
+                        int ii = 0;
+                    };
+                }
+                """.replaceAll("[ \t\n]+", " "));
+    }
+
     @Override
     protected List<Fix> computeFixes(CompilationInfo info, String diagnosticCode, int pos, TreePath path) throws Exception {
         List<Fix> fixes = super.computeFixes(info, diagnosticCode, pos, path);

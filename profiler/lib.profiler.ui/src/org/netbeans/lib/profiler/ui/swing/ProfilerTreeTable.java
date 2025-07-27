@@ -710,9 +710,9 @@ public class ProfilerTreeTable extends ProfilerTable {
 //                            return ((Comparable)o1).compareTo(o2);
 //                        }
 //                    } : getComparator(sortColumn));
-////            Class columnClass = model.getColumnClass(sortColumn);
-////            boolean sortingStrings = JTree.class.equals(columnClass) || String.class.equals(columnClass);
-////            final Comparator comparator = sortingStrings ? null : getComparator(sortColumn);
+// //            Class columnClass = model.getColumnClass(sortColumn);
+// //            boolean sortingStrings = JTree.class.equals(columnClass) || String.class.equals(columnClass);
+// //            final Comparator comparator = sortingStrings ? null : getComparator(sortColumn);
 //            
 //            return new Comparator() {
 //                public int compare(Object o1, Object o2) {

@@ -4,6 +4,6 @@ OpenIDE-Module: org.netbeans.modules.cloud.oracle
 OpenIDE-Module-Layer: org/netbeans/modules/cloud/oracle/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/cloud/oracle/Bundle.properties
 OpenIDE-Module-Provides: org.netbeans.modules.serverplugins.javaee
-OpenIDE-Module-Specification-Version: 1.15
+OpenIDE-Module-Specification-Version: 1.16
 OpenIDE-Module-Display-Category: Cloud
 

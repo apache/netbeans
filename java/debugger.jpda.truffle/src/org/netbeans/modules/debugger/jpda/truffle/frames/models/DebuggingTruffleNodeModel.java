@@ -26,6 +26,8 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.netbeans.api.debugger.jpda.CallStackFrame;
@@ -52,7 +54,6 @@ import org.netbeans.spi.viewmodel.UnknownTypeException;
 import org.openide.util.NbBundle;
 
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 import org.openide.util.datatransfer.PasteType;
 
 @DebuggerServiceRegistration(path="netbeans-JPDASession/DebuggingView",
@@ -61,8 +62,8 @@ import org.openide.util.datatransfer.PasteType;
 public class DebuggingTruffleNodeModel implements ExtendedNodeModelFilter {
     
     private final JPDADebugger debugger;
-    private final List<ModelListener> listeners = new CopyOnWriteArrayList<ModelListener>();
-    private final WeakSet<CurrentPCInfo> cpisListening = new WeakSet<CurrentPCInfo>();
+    private final List<ModelListener> listeners = new CopyOnWriteArrayList<>();
+    private final Set<CurrentPCInfo> cpisListening = Collections.newSetFromMap(new WeakHashMap<>());
     private final CurrentInfoPropertyChangeListener cpiChL = new CurrentInfoPropertyChangeListener();
     
     public DebuggingTruffleNodeModel(ContextProvider lookupProvider) {

@@ -44,7 +44,7 @@ public class Util {
     public Util() {
     }
 
-    ///Numeric Document
+    //Numeric Document
     public static NumericDocument getNumericDocument(){
         return new NumericDocument();
     }

@@ -78,7 +78,7 @@ public final class FailedFilesPanel extends JPanel {
         "FailedFilesPanel.title.remote=Upload Files On Save failed for:"
     })
     private void init(boolean local) {
-        /// title
+        // title
         String title;
         if (local) {
             title = Bundle.FailedFilesPanel_title_local();

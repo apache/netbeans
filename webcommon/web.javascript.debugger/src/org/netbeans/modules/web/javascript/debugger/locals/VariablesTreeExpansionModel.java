@@ -19,14 +19,15 @@
 
 package org.netbeans.modules.web.javascript.debugger.locals;
 
+import java.util.Collections;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
 import org.netbeans.spi.debugger.DebuggerServiceRegistrations;
 import org.netbeans.spi.viewmodel.TreeExpansionModel;
 import org.netbeans.spi.viewmodel.UnknownTypeException;
-import org.openide.util.WeakSet;
 
 
 /**
@@ -44,8 +45,8 @@ public class VariablesTreeExpansionModel implements TreeExpansionModel {
     
     private static final Logger LOGGER = Logger.getLogger(VariablesTreeExpansionModel.class.getName());
 
-    private Set<Object> expandedNodes = new WeakSet<>();
-    private Set<Object> collapsedNodes = new WeakSet<>();
+    private Set<Object> expandedNodes = Collections.newSetFromMap(new WeakHashMap<>());
+    private Set<Object> collapsedNodes = Collections.newSetFromMap(new WeakHashMap<>());
 
     /**
      * Defines default state (collapsed, expanded) of given node.

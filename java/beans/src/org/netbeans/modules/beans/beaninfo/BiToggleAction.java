@@ -32,8 +32,6 @@ import org.openide.util.actions.NodeAction;
 public class BiToggleAction extends NodeAction  {
 
     static final long serialVersionUID =3773842179168178798L;
-    /** generated Serialized Version UID */
-    //static final long serialVersionUID = 1391479985940417455L;
 
     //private static final Class[] cookieClasses = new Class[] { BiFeatureNode.class };
 

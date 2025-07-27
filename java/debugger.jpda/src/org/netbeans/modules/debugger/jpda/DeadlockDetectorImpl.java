@@ -27,6 +27,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -34,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 import org.netbeans.api.debugger.jpda.CallStackFrame;
 import org.netbeans.api.debugger.jpda.DeadlockDetector;
@@ -46,7 +48,6 @@ import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.RequestProcessor.Task;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 
 /**
  *
@@ -57,7 +58,7 @@ import org.openide.util.WeakSet;
 })
 public class DeadlockDetectorImpl extends DeadlockDetector implements PropertyChangeListener {
     
-    private final Set<JPDAThread> suspendedThreads = new WeakSet<JPDAThread>();
+    private final Set<JPDAThread> suspendedThreads = Collections.newSetFromMap(new WeakHashMap<>());
     private final RequestProcessor rp = new RequestProcessor("Deadlock Detector", 1); // NOI18N
     private final Set<Task> unfinishedTasks = new HashSet<Task>();
     

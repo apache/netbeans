@@ -28,18 +28,12 @@ import org.netbeans.modules.glassfish.tooling.GlassFishStatusListener;
  */
 public abstract class BasicStateListener implements GlassFishStatusListener {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Informs whether this listener is registered. */
     private boolean active;
 
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of state check results notification.
      */
@@ -47,10 +41,7 @@ public abstract class BasicStateListener implements GlassFishStatusListener {
         active = false;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get an information whether this listener is registered.
      * <p/>

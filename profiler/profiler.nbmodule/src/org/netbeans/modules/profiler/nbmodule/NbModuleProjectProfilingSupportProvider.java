@@ -145,38 +145,38 @@ public final class NbModuleProjectProfilingSupportProvider extends JavaProjectPr
     
     
     
-////    /**
-////     * Returns true if the provided Project is a NB source module, false otherwise.
-////     * 
-////     * @param project Project to be checked.
-////     * @return true if the provided Project is a NB source module, false otherwise.
-////     */
-////    private boolean isNbSourceModule(Project project) {
-////        // Resolve project.xml
-////        AuxiliaryConfiguration aux = ProjectUtils.getAuxiliaryConfiguration(project);
-////        
-////        // Guess the namespace
-////        String namespace = NBMODULE_PROJECT_NAMESPACE_3;
-////        // Try to resolve nb-module-project/3 (current version in NB sources)
-////        Element e = aux.getConfigurationFragment("data", namespace, true); // NOI18N
-////        // Not a nb-module-project/3, can still be nb-module-project/2 or a suite
-////        if (e == null) {
-////            // Try to resolve nb-module-project/2 (just for compatibility)
-////            namespace = NBMODULE_PROJECT_NAMESPACE_2;
-////            e = aux.getConfigurationFragment("data", namespace, true); // NOI18N
-////            // Project is a NB module suite - not a NB source module
-////            if (e == null) return false;
-////        }
-////        
-////        // Module is a NB module suite component, not a NB source module
-////        if (XMLUtil.findElement(e, "suite-component", namespace) != null) return false; // NOI18N
-////        
-////        // Module is a NB module suite component, not a NB source module
-////        if (XMLUtil.findElement(e, "standalone", namespace) != null) return false; // NOI18N
-////        
-////        // Module is a NB source module (neither suite component nor standalone)
-////        return true;
-////    }
+//    /**
+//     * Returns true if the provided Project is a NB source module, false otherwise.
+//     * 
+//     * @param project Project to be checked.
+//     * @return true if the provided Project is a NB source module, false otherwise.
+//     */
+//    private boolean isNbSourceModule(Project project) {
+//        // Resolve project.xml
+//        AuxiliaryConfiguration aux = ProjectUtils.getAuxiliaryConfiguration(project);
+//        
+//        // Guess the namespace
+//        String namespace = NBMODULE_PROJECT_NAMESPACE_3;
+//        // Try to resolve nb-module-project/3 (current version in NB sources)
+//        Element e = aux.getConfigurationFragment("data", namespace, true); // NOI18N
+//        // Not a nb-module-project/3, can still be nb-module-project/2 or a suite
+//        if (e == null) {
+//            // Try to resolve nb-module-project/2 (just for compatibility)
+//            namespace = NBMODULE_PROJECT_NAMESPACE_2;
+//            e = aux.getConfigurationFragment("data", namespace, true); // NOI18N
+//            // Project is a NB module suite - not a NB source module
+//            if (e == null) return false;
+//        }
+//        
+//        // Module is a NB module suite component, not a NB source module
+//        if (XMLUtil.findElement(e, "suite-component", namespace) != null) return false; // NOI18N
+//        
+//        // Module is a NB module suite component, not a NB source module
+//        if (XMLUtil.findElement(e, "standalone", namespace) != null) return false; // NOI18N
+//        
+//        // Module is a NB source module (neither suite component nor standalone)
+//        return true;
+//    }
     
     
     public NbModuleProjectProfilingSupportProvider(Project project) {

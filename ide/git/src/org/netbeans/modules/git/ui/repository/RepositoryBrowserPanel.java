@@ -2108,14 +2108,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                         });
                     }
                 });
-                actions.add(new AbstractAction(NbBundle.getMessage(RepositoryBrowserPanel.class, "LBL_RepositoryPanel.RemotesNode.remove")) { //NOI18N
-                    @Override
-                    public void actionPerformed (ActionEvent e) {
-                        EventQueue.invokeLater(() -> {
-                            new RemoveRemoteAction().performAction(repo, null, VCSContext.EMPTY);
-                        });
-                    }
-                });
+
                 return actions.toArray(Action[]::new);
             } else {
                 return new Action[0];
@@ -2249,7 +2242,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                 }
             });
             actions.add(null);
-            actions.add(new AbstractAction(NbBundle.getMessage(RepositoryBrowserPanel.class, "LBL_RepositoryPanel.RemotesNode.remove")) { //NOI18N
+            actions.add(new AbstractAction(NbBundle.getMessage(RepositoryBrowserPanel.class, "LBL_RepositoryPanel.RemoteNode.remove")) { //NOI18N
                 @Override
                 public void actionPerformed (ActionEvent e) {
                     EventQueue.invokeLater(new Runnable() {

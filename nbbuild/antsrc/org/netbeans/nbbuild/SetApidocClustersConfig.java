@@ -41,14 +41,19 @@ public class SetApidocClustersConfig extends Task {
         super.execute();
         if (branch.equals("master")) {
 // for master branch, more apidoc to generate
-            getProject().setProperty("config.javadoc.all",
-                    getProject().getProperty("config.javadoc.stable") + ","
-                    + getProject().getProperty("config.javadoc.deprecated") + ","
-                    + getProject().getProperty("config.javadoc.devel") + ","
-                    + getProject().getProperty("config.javadoc.friend"));
+            String list = getProject().getProperty("config.javadoc.stable");
+            list += add("config.javadoc.deprecated");
+            list += add("config.javadoc.devel");
+            list += add("config.javadoc.friend");
+            getProject().setProperty("config.javadoc.all", list);
         } else {
 // for release branch only stable
             getProject().setProperty("config.javadoc.all", getProject().getProperty("config.javadoc.stable"));
         }
+    }
+
+    private String add(String prop) {
+        String val = getProject().getProperty(prop);
+        return (val == null || val.trim().isEmpty()) ? "" : "," + val;
     }
 }

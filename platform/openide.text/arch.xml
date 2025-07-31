@@ -172,15 +172,6 @@ Module uses following API's:
         url="@org-openide-util@/org/openide/util/doc-files/api.html"
     />
 </li>
-<!-- no more generated <li>
-    <api 
-        name="SettingsAPI"
-        group="java"
-        type="import"
-        category="official"
-        url="@org-openide-options@/org/openide/options/doc-files/api.html"
-    />
-</li>-->
 <li>
     <api 
         name="WindowSystemAPI"

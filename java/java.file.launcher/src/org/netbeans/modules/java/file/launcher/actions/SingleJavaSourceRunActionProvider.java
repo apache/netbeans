@@ -55,6 +55,19 @@ public final class SingleJavaSourceRunActionProvider implements ActionProvider {
         };
     }
 
+    private String getTaskName(String command, String fileName){
+        if(command == null || command.isEmpty()) return fileName;
+        String action = command.contains(".")
+                ? command.substring(0, command.indexOf('.'))
+                : command;
+        String capitalized = action.substring(0, 1).toUpperCase()
+                + action.substring(1).toLowerCase();
+        String baseName = fileName.contains(".")
+                ? fileName.substring(0, fileName.lastIndexOf('.'))
+                : fileName;
+        return String.format("%s (%s)", capitalized, baseName);
+    }
+
     @NbBundle.Messages({
         "CTL_SingleJavaFile=Running Single Java File"
     })
@@ -91,7 +104,7 @@ public final class SingleJavaSourceRunActionProvider implements ActionProvider {
         LaunchProcess process = invokeActionHelper(command, fileObject, params);
         ExecutionService exeService = ExecutionService.newService(
                     process,
-                    descriptor, fileObject.getNameExt());
+                    descriptor, this.getTaskName(command, fileObject.getNameExt()));
 
         Future<Integer> future = exeService.run();
         if (NbPreferences.forModule(JavaPlatformManager.class).getBoolean(SingleSourceFileUtil.GLOBAL_STOP_AND_RUN_OPTION, false)) {

@@ -182,7 +182,9 @@ public class ActionProviderImpl implements ActionProvider {
             }
         }
         if (SingleMethod.COMMAND_RUN_SINGLE_METHOD.equals(command) ||
-            SingleMethod.COMMAND_DEBUG_SINGLE_METHOD.equals(command)) {
+            SingleMethod.COMMAND_DEBUG_SINGLE_METHOD.equals(command) ||
+            COMMAND_TEST_SINGLE.equals(command) ||
+            COMMAND_DEBUG_TEST_SINGLE.equals(command)) {
             for (ActionProvider ap : Lookup.getDefault().lookupAll(ActionProvider.class)) {
                 if (new HashSet<>(Arrays.asList(ap.getSupportedActions())).contains(command) && ap.isActionEnabled(command, context)) {
                     ap.invokeAction(command, context);

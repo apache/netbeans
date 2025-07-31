@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.openjdk.jtreg;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,6 +34,8 @@ import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
+import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -52,6 +55,16 @@ public class TagParser {
 
     public static Result parseTags(Document doc) {
         return parseTags(TokenHierarchy.get(doc).tokenSequence(JavaTokenId.language()));
+    }
+
+    public static Result parseTags(FileObject file) {
+        try {
+            //XXX: should use document, if modified (?)
+            return parseTags(TokenHierarchy.create(file.asText(),JavaTokenId.language()).tokenSequence(JavaTokenId.language()));
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+            return new Result(Collections.<Tag>emptyList(), Collections.<String, List<Tag>>emptyMap()); //XXX
+        }
     }
 
     private static Result parseTags(TokenSequence<JavaTokenId> ts) {

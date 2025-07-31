@@ -18,26 +18,19 @@
  */
 package org.netbeans.modules.gsf.testrunner.ui.api;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URI;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.function.BiConsumer;
-import javax.swing.text.Position;
-import org.netbeans.modules.gsf.testrunner.ui.TestMethodFinderImpl;
-import org.netbeans.modules.parsing.impl.indexing.CacheFolder;
-import org.netbeans.spi.project.SingleMethod;
+import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController.TestMethod;
+import org.netbeans.modules.gsf.testrunner.ui.spi.TestMethodFinderImplementation;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
-import org.openide.filesystems.URLMapper;
-import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 
 /**
  * API to provide a list of {@link TestMethod}s found in sources under particular test roots.
@@ -47,73 +40,45 @@ import org.openide.util.Exceptions;
  */
 public final class TestMethodFinder {
 
+    private static final List<BiConsumer<FileObject, Collection<TestMethodController.TestMethod>>> listeners = new ArrayList<>();
+    private static final Set<TestMethodFinderImplementation> listenersAdded = Collections.newSetFromMap(new WeakHashMap<>());
+    private static final BiConsumer<FileObject, Collection<TestMethodController.TestMethod>> primaryListener = (file, tests) -> {
+        List<BiConsumer<FileObject, Collection<TestMethodController.TestMethod>>> listenersCopy;
+
+        synchronized (TestMethodFinder.class) {
+            listenersCopy = new ArrayList<>(listeners);
+        }
+
+        for (BiConsumer<FileObject, Collection<TestMethodController.TestMethod>> listener : listenersCopy) {
+            listener.accept(file, tests);
+        }
+    };
+
+    public static synchronized void addListener(BiConsumer<FileObject, Collection<TestMethodController.TestMethod>> listener) {
+        listeners.add(listener);
+    }
+
     /**
      * Provides a list of {@link TestMethod}s found in sources under particular test roots.
      *
-     * @param testRoots roots to search test methods for
-     * @param listener a listener to inform about later changes. The listener is held weakly.
+     * @param testRoot root to search test methods for
      * @return map of test source files to tests methods found
      * @since 1.27
      */
-    public static Map<FileObject, Collection<TestMethodController.TestMethod>> findTestMethods(Iterable<FileObject> testRoots, BiConsumer<FileObject, Collection<TestMethodController.TestMethod>> listener) {
-        TestMethodFinderImpl.INSTANCE.addListener(listener);
-        Map<FileObject, Collection<TestMethodController.TestMethod>> file2TestMethods = new HashMap<>();
-        for (FileObject testRoot : testRoots) {
-            try {
-                FileObject cacheRoot = getCacheRoot(testRoot.toURL());
-                if (cacheRoot != null) {
-                    Enumeration<? extends FileObject> children = cacheRoot.getChildren(true);
-                    while (children.hasMoreElements()) {
-                        FileObject child = children.nextElement();
-                        if (child.hasExt("tests")) { //NOI18N
-                            loadTestMethods(child, file2TestMethods);
-                        }
-                    }
-                }
-            } catch (IOException ex) {}
-        }
-        return file2TestMethods;
-    }
+    public static Map<FileObject, Collection<TestMethodController.TestMethod>> findTestMethods(FileObject testRoot) {
+        for (TestMethodFinderImplementation impl : Lookup.getDefault().lookupAll(TestMethodFinderImplementation.class)) {
+            Map<FileObject, Collection<TestMethodController.TestMethod>> result = impl.findTestMethods(testRoot);
 
-    private static void loadTestMethods(FileObject input, Map<FileObject, Collection<TestMethodController.TestMethod>> file2TestMethods) {
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(input.getInputStream(), StandardCharsets.UTF_8))) {
-            FileObject fo = null;
-            String className = null;
-            Position classPosition = null;
-            Collection<TestMethodController.TestMethod> testMethods = null;
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.startsWith("url: ")) { //NOI18N
-                    String url = line.substring(5);
-                    fo = URLMapper.findFileObject(URI.create(url).toURL());
-                    if (fo == null) {
-                        return;
+            if (result != null) {
+                synchronized (TestMethodFinder.class) {
+                    if (listenersAdded.add(impl)) {
+                        impl.addListener(primaryListener); //TODO: weak?
                     }
-                    testMethods = file2TestMethods.computeIfAbsent(fo, fObj -> {
-                        return new ArrayList<>();
-                    });
-                } else if (line.startsWith("class: ")) { //NOI18N
-                    String info = line.substring(7);
-                    int idx = info.lastIndexOf(':');
-                    className = (idx < 0 ? info : info.substring(0, idx)).trim();
-                    classPosition = idx < 0 ? null : () -> Integer.parseInt(info.substring(idx + 1));
-                } else if (line.startsWith("method: ") && testMethods != null && className != null) { //NOI18N
-                    String info = line.substring(8);
-                    int idx = info.lastIndexOf(':');
-                    String name = (idx < 0 ? info : info.substring(0, idx)).trim();
-                    String[] range = idx < 0 ? new String[0] : info.substring(idx + 1).split("-");
-                    Position methodStart = range.length > 0 ? () -> Integer.parseInt(range[0]) : null;
-                    Position methodEnd = range.length > 1 ? () -> Integer.parseInt(range[1]) : null;
-                    testMethods.add(new TestMethodController.TestMethod(className, classPosition, new SingleMethod(fo, name), methodStart, null, methodEnd));
                 }
+                return result;
             }
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
         }
+        return Collections.emptyMap();
     }
 
-    private static FileObject getCacheRoot(URL root) throws IOException {
-        final FileObject dataFolder = CacheFolder.getDataFolder(root, true);
-        return dataFolder != null ? FileUtil.createFolder(dataFolder, TestMethodFinderImpl.NAME + "/" + TestMethodFinderImpl.VERSION) : null; //NOI18N
-    }
 }

@@ -948,7 +948,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             const workspaceFolder = vscode.workspace.getWorkspaceFolder(docUri);
             if (project || testRun) {
                 debugConfig['projectFile'] = docUri.toString();
-                debugConfig['project'] = true;
+                debugConfig['project'] = project;
             } else {
                 debugConfig['mainClass'] =  docUri.toString();
             }

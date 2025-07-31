@@ -145,7 +145,6 @@ JRE is enough.
         </question>
 -->
 <answer id="dep-nb">
-<!-- not generated anymore <api name="OptionsAPI" group="java" type="import" category="official" url="@org-openide-options@/org/openide/options/doc-files/api.html"/>; -->
 <api group="java" name="WindowSystemAPI" type="import" category="official" url="@org-openide-windows@/org/openide/windows/doc-files/api.html"/>
 </answer>
 

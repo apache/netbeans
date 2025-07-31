@@ -57,6 +57,42 @@ public class NBParserFactoryTest extends NbTestCase {
         assertEquals(-1, sp.getEndPosition(parsed.second(), ct));
     }
 
+    public void testImplicitClassPositions() throws Exception {
+        String code = """
+                      import java.util.*;
+
+                      //prefix
+
+                      void main() {
+                      }
+
+                      //suffix
+                      """;
+        Pair<JavacTask, CompilationUnitTree> parsed = compile(code);
+
+        ClassTree ct = (ClassTree) parsed.second().getTypeDecls().get(0);
+        SourcePositions sp = Trees.instance(parsed.first()).getSourcePositions();
+
+        assertEquals(19, sp.getStartPosition(parsed.second(), ct));
+        assertEquals(-1, sp.getEndPosition(parsed.second(), ct));
+        assertEquals(0, sp.getStartPosition(parsed.second(), parsed.second()));
+        assertEquals(code.length(), sp.getEndPosition(parsed.second(), parsed.second()));
+    }
+
+    public void testErrorRecoveryCompactSourceFilePackage() throws Exception {
+        String code = """
+                      package test;
+
+                      void main() {
+                      }
+                      """;
+        Pair<JavacTask, CompilationUnitTree> parsed = compile(code);
+
+        if (parsed.second().getPackage() == null) {
+            throw new AssertionError("no package");
+        }
+    }
+
     //<editor-fold defaultstate="collapsed" desc=" Test Infrastructure ">
     private static class MyFileObject extends SimpleJavaFileObject {
         private String text;
@@ -89,6 +125,7 @@ public class NBParserFactoryTest extends NbTestCase {
 
         Context context = new Context();
         NBParserFactory.preRegister(context);
+        NBTreeMaker.preRegister(context);
         final JavacTaskImpl ct = (JavacTaskImpl) ((JavacTool)tool).getTask(null, std, null, Arrays.asList("-source", "21"), null, Arrays.asList(new MyFileObject(code)), context);
 
         CompilationUnitTree cut = ct.parse().iterator().next();

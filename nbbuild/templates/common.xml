@@ -749,7 +749,14 @@
         <test test.type="qa-functional"/>
     </target>
 
-    <target name="-do-junit" depends="test-init">
+    <target name="-setup-continue-after-failing">
+        <!-- The -do.continue... property is used in unless= context, so it must be defined only if the user property is set to true -->
+        <condition property="-do.continue.after.failing.tests">
+            <istrue value="${continue.after.failing.tests}"/>
+        </condition>
+    </target>
+
+    <target name="-do-junit" depends="test-init,-setup-continue-after-failing">
         <property name="test.jms.flags" value=""/>
         <macrodef name="junit-impl">
             <attribute name="test.type"/>
@@ -770,13 +777,13 @@
                     <formatter type="brief" usefile="false"/>
                     <formatter type="xml"/>
                 </junit>
-                <fail if="tests.failed" unless="continue.after.failing.tests">Some tests failed; see details above.</fail>
-            </sequential>
+                <fail if="tests.failed" unless="-do.continue.after.failing.tests">Some tests failed; see details above.</fail>            
+	    </sequential>
         </macrodef>
         <junit-impl test.type="${run.test.type}" disable.apple.ui="${disable.apple.ui}"/>
     </target>
 
-    <target name="-do-testng" depends="test-init">
+    <target name="-do-testng" depends="test-init,-setup-continue-after-failing">
         <macrodef name="testng-impl">
             <attribute name="test.type"/>
             <attribute name="disable.apple.ui" default="false"/>
@@ -799,7 +806,7 @@
                     <!-- needed to have tests NOT to steal focus when running, works in latest apple jdk update only.-->
                     <sysproperty key="apple.awt.UIElement" value="@{disable.apple.ui}"/>
                 </testng>
-                <fail if="tests.failed" unless="continue.after.failing.tests">Some tests failed; see details above.</fail>
+                <fail if="tests.failed" unless="-do.continue.after.failing.tests">Some tests failed; see details above.</fail>
             </sequential>
         </macrodef>
         <testng-impl test.type="${run.test.type}" disable.apple.ui="${disable.apple.ui}"/>
@@ -854,7 +861,7 @@
         <test-single test.type="${test.type}"/>
     </target>
 
-    <target name="-do-junit-single" depends="test-init">
+    <target name="-do-junit-single" depends="test-init,-setup-continue-after-failing">
         <macrodef name="junit-impl">
             <attribute name="test.type"/>
             <sequential>
@@ -872,13 +879,13 @@
                     <formatter type="brief" usefile="false"/>
                     <formatter type="xml"/>
                 </junit>
-                <fail if="tests.failed" unless="continue.after.failing.tests">Some tests failed; see details above.</fail>
+                <fail if="tests.failed" unless="-do.continue.after.failing.tests">Some tests failed; see details above.</fail>
             </sequential>
         </macrodef>
         <junit-impl test.type="${test.type}" />
     </target>
 
-    <target name="-do-testng-single" depends="test-init">
+    <target name="-do-testng-single" depends="test-init,-setup-continue-after-failing">
         <macrodef name="testng-impl">
             <attribute name="test.type"/>
             <sequential>
@@ -901,13 +908,13 @@
                     <!-- needed to have tests NOT to steal focus when running, works in latest apple jdk update only.-->
                     <sysproperty key="apple.awt.UIElement" value="@{disable.apple.ui}"/>
                 </testng>
-                <fail if="tests.failed" unless="continue.after.failing.tests">Some tests failed; see details above.</fail>
+                <fail if="tests.failed" unless="-do.continue.after.failing.tests">Some tests failed; see details above.</fail>
             </sequential>
         </macrodef>
         <testng-impl test.type="${test.type}"/>
     </target>
 
-    <target name="-do-testng-single-suite" depends="test-init">
+    <target name="-do-testng-single-suite" depends="test-init,-setup-continue-after-failing">
         <macrodef name="testng-impl">
             <attribute name="test.type"/>
             <sequential>
@@ -930,7 +937,7 @@
                     <!-- needed to have tests NOT to steal focus when running, works in latest apple jdk update only.-->
                     <sysproperty key="apple.awt.UIElement" value="@{disable.apple.ui}"/>
                 </testng>
-                <fail if="tests.failed" unless="continue.after.failing.tests">Some tests failed; see details above.</fail>
+                <fail if="tests.failed" unless="-do.continue.after.failing.tests">Some tests failed; see details above.</fail>
             </sequential>
         </macrodef>
         <testng-impl test.type="${test.type}"/>
@@ -1022,7 +1029,7 @@
         <testng-impl test.type="${test.type}"/>
     </target>
 
-    <target name="-do-testng-debug-single-suite" depends="test-init">
+    <target name="-do-testng-debug-single-suite" depends="test-init,-setup-continue-after-failing">
         <macrodef name="testng-impl">
             <attribute name="test.type"/>
             <sequential>
@@ -1046,7 +1053,7 @@
                     <!-- needed to have tests NOT to steal focus when running, works in latest apple jdk update only.-->
                     <sysproperty key="apple.awt.UIElement" value="@{disable.apple.ui}"/>
                 </testng>
-                <fail if="tests.failed" unless="continue.after.failing.tests">Some tests failed; see details above.</fail>
+                <fail if="tests.failed" unless="-do.continue.after.failing.tests">Some tests failed; see details above.</fail>
             </sequential>
         </macrodef>
         <testng-impl test.type="${test.type}"/>
@@ -1094,7 +1101,7 @@
         <test-method test.type="${test.type}"/>
     </target>
     
-    <target name="-do-junit-testmethod" depends="test-init">
+    <target name="-do-junit-testmethod" depends="test-init,-setup-continue-after-failing">
         <macrodef name="junit-impl">
             <attribute name="test.type"/>
             <sequential>
@@ -1109,13 +1116,13 @@
                     <formatter type="brief" usefile="false"/>
                     <formatter type="xml"/>
                 </junit>
-                <fail if="tests.failed" unless="continue.after.failing.tests">Some tests failed; see details above.</fail>
+                <fail if="tests.failed" unless="-do.continue.after.failing.tests">Some tests failed; see details above.</fail>
             </sequential>
         </macrodef>
         <junit-impl test.type="${test.type}" />
     </target>
 
-    <target name="-do-testng-testmethod" depends="test-init">
+    <target name="-do-testng-testmethod" depends="test-init,-setup-continue-after-failing">
         <macrodef name="testng-impl">
             <attribute name="test.type"/>
             <sequential>
@@ -1137,7 +1144,7 @@
                     <!-- needed to have tests NOT to steal focus when running, works in latest apple jdk update only.-->
                     <sysproperty key="apple.awt.UIElement" value="@{disable.apple.ui}"/>
                 </testng>
-                <fail if="tests.failed" unless="continue.after.failing.tests">Some tests failed; see details above.</fail>
+                <fail if="tests.failed" unless="-do.continue.after.failing.tests">Some tests failed; see details above.</fail>
             </sequential>
         </macrodef>
         <testng-impl test.type="${test.type}"/>

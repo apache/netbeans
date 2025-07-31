@@ -109,7 +109,6 @@ body:
         - "Apache NetBeans Snap Package"
         - "Third-party package"
         - "Own source build"
-        - "Apache VSNetBeans for VSCode"
         - "Apache NetBeans platform"
         - "Other"
     validations:

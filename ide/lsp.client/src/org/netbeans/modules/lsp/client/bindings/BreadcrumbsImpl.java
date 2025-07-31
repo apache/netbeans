@@ -24,9 +24,9 @@ import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.CharConversionException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -43,6 +43,7 @@ import org.eclipse.lsp4j.DocumentSymbolOptions;
 import org.eclipse.lsp4j.DocumentSymbolParams;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.SymbolInformation;
+import org.eclipse.lsp4j.SymbolKind;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.actions.Openable;
@@ -56,9 +57,9 @@ import org.netbeans.modules.lsp.client.Utils;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
-import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
 import org.openide.xml.XMLUtil;
@@ -83,24 +84,17 @@ public class BreadcrumbsImpl implements BackgroundTask {
     }
 
     @Override
-    public void run(LSPBindings bindings, FileObject file) {
-        ServerCapabilities capa = bindings.getInitResult().getCapabilities();
-        Either<Boolean, DocumentSymbolOptions> documentSymbolProviderOpt = capa != null ? capa.getDocumentSymbolProvider() : null;
+    public void run(List<LSPBindings> servers, FileObject file) {
+        List<Pair<LSPBindings, List<DocumentSymbol>>> allSymbols = new ArrayList<>();
+        Utils.handleBindings(servers,
+                             capa -> Utils.isEnabled(capa.getDocumentSymbolProvider()),
+                             () -> new DocumentSymbolParams(new TextDocumentIdentifier(Utils.toURI(file))),
+                             (server, params) -> server.getTextDocumentService().documentSymbol(params),
+                             (server, result) -> result.stream().map(this::toDocumentSymbol).forEach(symbols -> Pair.of(server, symbols)));
 
-        if (documentSymbolProviderOpt == null || (documentSymbolProviderOpt.isLeft() && documentSymbolProviderOpt.getLeft() == Boolean.FALSE)) {
-            return ;
-        }
+        this.rootElement = new RootBreadcrumbsElementImpl(file, doc, allSymbols);
 
-        try {
-            //TODO: modified while the query is running?
-            List<Either<SymbolInformation, DocumentSymbol>> symbols = bindings.getTextDocumentService().documentSymbol(new DocumentSymbolParams(new TextDocumentIdentifier(Utils.toURI(file)))).get();
-
-            this.rootElement = new RootBreadcrumbsElementImpl(file, doc, symbols.stream().map(this::toDocumentSymbol).collect(Collectors.toList()));
-
-            SwingUtilities.invokeLater(() -> update());
-        } catch (InterruptedException | ExecutionException ex) {
-            Exceptions.printStackTrace(ex);
-        }
+        SwingUtilities.invokeLater(() -> update());
     }
 
     private DocumentSymbol toDocumentSymbol(Either<SymbolInformation, DocumentSymbol> variants) {
@@ -144,8 +138,8 @@ public class BreadcrumbsImpl implements BackgroundTask {
     private static final class RootBreadcrumbsElementImpl implements BreadcrumbsElement {
         private final List<BreadcrumbsElement> children;
 
-        public RootBreadcrumbsElementImpl(FileObject file, Document doc, List<DocumentSymbol> symbols) {
-            this.children = Collections.singletonList(new FileBreadcrumbsElementImpl(file, doc, this, symbols));
+        public RootBreadcrumbsElementImpl(FileObject file, Document doc, List<Pair<LSPBindings, List<DocumentSymbol>>> allSymbols) {
+            this.children = Collections.singletonList(new FileBreadcrumbsElementImpl(file, doc, this, allSymbols));
         }
 
         @Override
@@ -184,10 +178,16 @@ public class BreadcrumbsImpl implements BackgroundTask {
         private final BreadcrumbsElement root;
         private final List<BreadcrumbsElement> children;
 
-        public FileBreadcrumbsElementImpl(FileObject file, Document doc, BreadcrumbsElement root, List<DocumentSymbol> symbols) {
+        public FileBreadcrumbsElementImpl(FileObject file, Document doc, BreadcrumbsElement root, List<Pair<LSPBindings, List<DocumentSymbol>>> allSymbols) {
             this.file = file;
             this.root = root;
-            this.children = BreadcrumbsElementImpl.create(this, symbols, file, doc);
+            if (allSymbols.size() == 1) {
+                this.children = BreadcrumbsElementImpl.create(this, allSymbols.get(0).second(), file, doc);
+            } else {
+                this.children = allSymbols.stream()
+                                          .map(p -> (BreadcrumbsElement) new ProviderBreadcrumbsElementImpl(file, p.first(), doc, root, p.second()))
+                                          .toList();
+            }
         }
 
         @Override
@@ -211,6 +211,61 @@ public class BreadcrumbsImpl implements BackgroundTask {
             } catch (DataObjectNotFoundException ex) {
                 return BreadcrumbsController.NO_ICON;
             }
+        }
+
+        @Override
+        public List<BreadcrumbsElement> getChildren() {
+            return children;
+        }
+
+        @Override
+        public Lookup getLookup() {
+            return Lookup.EMPTY;
+        }
+
+        @Override
+        public BreadcrumbsElement getParent() {
+            return root;
+        }
+
+    }
+
+    private static final class ProviderBreadcrumbsElementImpl implements BreadcrumbsElement {
+        private final LSPBindings bindings;
+        private final String displayName;
+        private final BreadcrumbsElement root;
+        private final List<BreadcrumbsElement> children;
+
+        public ProviderBreadcrumbsElementImpl(FileObject file, LSPBindings bindings, Document doc, BreadcrumbsElement root, List<DocumentSymbol> symbols) {
+            this.bindings = bindings;
+            this.root = root;
+            this.children = BreadcrumbsElementImpl.create(this, symbols, file, doc);
+
+            String displayName = bindings.getInitResult().getServerInfo().getName();
+            ServerCapabilities capa = bindings.getInitResult().getCapabilities();
+            Either<Boolean, DocumentSymbolOptions> docSymProvider = capa != null ? capa.getDocumentSymbolProvider() : null;
+            DocumentSymbolOptions docSymOpts = docSymProvider != null && docSymProvider.isRight() ? docSymProvider.getRight() : null;
+
+            if (docSymOpts != null && docSymOpts.getLabel() != null) {
+                displayName = docSymOpts.getLabel();
+            }
+
+            this.displayName = displayName;
+        }
+
+        @Override
+        public String getHtmlDisplayName() {
+            return escape(displayName);
+        }
+
+        @Override
+        public Image getIcon(int type) {
+            return ImageUtilities.loadImage(Icons.getSymbolIconBase(SymbolKind.Namespace));
+        }
+
+        @Override
+        public Image getOpenedIcon(int type) {
+            return getIcon(type);
         }
 
         @Override
@@ -343,19 +398,20 @@ public class BreadcrumbsImpl implements BackgroundTask {
         private void update() {
             WORKER.post(() -> {
                 FileObject file = NbEditorUtilities.getFileObject(component.getDocument());
-                LSPBindings bindings = file != null ? LSPBindings.getBindings(file) : null;
+                List<LSPBindings> allBindings = file != null ? LSPBindings.getBindings(file) : List.of();
+                List<LSPBindings> filterBindings = allBindings.stream().filter(bindings -> Utils.isEnabled(bindings.getInitResult().getCapabilities().getDocumentSymbolProvider())).toList();
                 Runnable r;
 
-                if (bindings != null && Utils.isEnabled(bindings.getInitResult().getCapabilities().getDocumentSymbolProvider())) {
+                if (filterBindings.isEmpty()) {
                     r = () -> {
-                        setPreferredSize(sidebar.getPreferredSize());
-                        setMaximumSize(sidebar.getMaximumSize());
+                        setPreferredSize(new Dimension(0,0));
+                        setMaximumSize(new Dimension(0,0));
                         revalidate();
                     };
                 } else {
                     r = () -> {
-                        setPreferredSize(new Dimension(0,0));
-                        setMaximumSize(new Dimension(0,0));
+                        setPreferredSize(sidebar.getPreferredSize());
+                        setMaximumSize(sidebar.getMaximumSize());
                         revalidate();
                     };
                 }

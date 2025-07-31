@@ -37,6 +37,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -128,6 +129,12 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     private String processUUID;
     private Process preProcess;
     private String preProcessUUID;
+
+    /**
+     * Diagnostics: stracktrace that shows what code requested the execution.
+     */
+    private final Throwable trace;
+    
     private static final SpecificationVersion VER18 = new SpecificationVersion("1.8"); //NOI18N
     private static final Logger LOGGER = Logger.getLogger(MavenCommandLineExecutor.class.getName());
 
@@ -191,6 +198,11 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     public MavenCommandLineExecutor(RunConfig conf, InputOutput io, TabContext tc) {
         super(conf, tc);
         this.io = io;
+        if (LOGGER.isLoggable(Level.FINER)) {
+            this.trace = new Throwable();
+        } else {
+            this.trace = null;
+        }
     }
 
     /**
@@ -331,6 +343,8 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
 //                ioput.getOut().println(key + ":" + env.get(key));
 //            }
             ProcessBuilder builder = constructBuilder(clonedConfig, ioput);
+            LOGGER.log(Level.FINER, "Executing process {0} from {1}", new Object[] { builder.command(), this });
+            LOGGER.log(Level.FINER, "Origin:", this.trace);
             printCoSWarning(clonedConfig, ioput);
             processUUID = UUID.randomUUID().toString();
             builder.environment().put(KEY_UUID, processUUID);
@@ -348,6 +362,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             throw death;
         } finally {
             BuildExecutionSupport.registerFinishedItem(item);
+            LOGGER.log(Level.FINER, "Execution of {0} terminated", this );
 
             try { //defend against badly written extensions..
                 out.buildFinished();

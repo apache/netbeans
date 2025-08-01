@@ -1,6 +1,6 @@
 Name: DiscoClient
 Origin: Gerrit Grunwald
-Version: 2.0.24
+Version: 2.0.39
 License: Apache-2.0
 Description: Library to access the Foojay.io Discovery API service.
 Origin: https://github.com/foojayio/discoclient

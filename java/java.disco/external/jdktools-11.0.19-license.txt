@@ -1,6 +1,6 @@
 Name: JDKTools
 Origin: Gerrit Grunwald
-Version: 11.0.11
+Version: 11.0.19
 License: Apache-2.0
 Description: Collection of classes for working with OpenJDK related things.
 Origin: https://github.com/HanSolo/jdktools

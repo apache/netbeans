@@ -15,5 +15,5 @@
 # specific language governing permissions and limitations
 # under the License.
 4FCCADF37F1C61A0895BAC3D42FE0C530438826C org.checkerframework:checker-qual:3.9.1
-CE10D968585304A7463430DD53254E6D6893DF16 io.foojay.api:discoclient:2.0.24
-F66F9FC72A84FCAB1579202728EE572BDBB46DD7 eu.hansolo:jdktools:11.0.11
+BB975ACE8403330DCC7ABF61A3142B0B59ADC755 io.foojay.api:discoclient:2.0.39
+AD117688D24FACCF74D3B76AFFFC2693C4F5D122 eu.hansolo:jdktools:11.0.19

@@ -520,7 +520,7 @@ jobs:
         if: ${{ (matrix.config == 'release') && success() }}
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20.18.1
 
       - name: Build NBVSCodeExt from ${{ matrix.config }}-src zip
         if: ${{ (matrix.config == 'release') && success() }}
@@ -2627,7 +2627,7 @@ jobs:
       - name: Set up node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20.18.1
 
       - name: Setup Xvfb
         run: |

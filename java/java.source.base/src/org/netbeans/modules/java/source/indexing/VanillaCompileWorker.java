@@ -907,7 +907,7 @@ final class VanillaCompileWorker extends CompileWorker {
             public Void visitNewClass(NewClassTree node, Void p) {
                 //TODO: fix constructors:
                 JCNewClass nc = (JCNewClass) node;
-                if (node.getClassBody() != null && !nc.clazz.type.hasTag(TypeTag.ERROR)) {
+                if (node.getClassBody() != null && nc.clazz.type !=null && !nc.clazz.type.hasTag(TypeTag.ERROR)) {
                     if (nc.constructor.kind == Kind.MTH) {
                         //make sure this class is generated even if the code is erroneous:
                         anonymousClasses.add(nc);

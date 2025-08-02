@@ -212,7 +212,7 @@ public final class GradleInitWizard {
 
             if (!GradleSettings.getDefault().isOffline()) {
                 try {
-                    init.gradleVersion(GradleDistributionManager.get().currentDistribution().getVersion());
+                    init.gradleVersion(GradleDistributionManager.get().latestSupportedDistribution().getVersion());
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
                 }

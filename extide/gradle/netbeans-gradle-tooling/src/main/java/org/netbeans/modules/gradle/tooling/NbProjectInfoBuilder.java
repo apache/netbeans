@@ -97,7 +97,6 @@ import org.gradle.api.plugins.ExtraPropertiesExtension;
 import org.gradle.api.provider.Provider;
 import org.gradle.api.reflect.HasPublicType;
 import org.gradle.api.reflect.TypeOf;
-import org.gradle.api.specs.Specs;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetContainer;
 import org.gradle.api.tasks.TaskDependency;
@@ -308,6 +307,7 @@ class NbProjectInfoBuilder {
         "shouldRunAfter",
         "enabled",
         "description",
+        "vendor",
         "group"
     ));
     
@@ -587,7 +587,7 @@ class NbProjectInfoBuilder {
         try {
             if (depth++ >= MAX_INTROSPECTION_DEPTH) {
                 if (!suppressDepthWarning) {
-                    LOG.warn("Too deep structure, truncating");
+                    LOG.warn("Too deep structure, truncating: " + String.format("path: %s, value: %s", prefix, object));
                     model.noteProblem(Report.Severity.WARNING, 
                             String.format("Object structure too deep encountered in class %s", clazz),
                             String.format("Object structure is too deep for the project model builder. This is unlikely to affect basic project operations. "
@@ -1701,7 +1701,7 @@ class NbProjectInfoBuilder {
                     try {
                         it.getResolvedConfiguration()
                                 .getLenientConfiguration()
-                                .getFirstLevelModuleDependencies(Specs.SATISFIES_ALL)
+                                .getFirstLevelModuleDependencies()
                                 .forEach(rd -> collectArtifacts(rd, resolvedJvmArtifacts));
                     } catch (ArtifactResolveException ex) {
                         convertOfflineException(ex);

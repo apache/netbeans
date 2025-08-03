@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.groovy.refactoring
 OpenIDE-Module-Layer: org/netbeans/modules/groovy/refactoring/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/groovy/refactoring/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.61
+OpenIDE-Module-Specification-Version: 1.62
 

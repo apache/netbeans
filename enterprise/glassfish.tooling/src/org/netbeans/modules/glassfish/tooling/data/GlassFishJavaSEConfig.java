@@ -29,20 +29,14 @@ import org.netbeans.modules.glassfish.tooling.server.config.JavaSESet;
  */
 public class GlassFishJavaSEConfig {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Platforms retrieved from XML elements. */
     private final Set<JavaSEPlatform> platforms;
 
     /** Highest JavaEE specification version implemented. */
     private final String version;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of avaEE configuration entity using JavaEE set
      * for GlassFish features configuration as source of instance content.
@@ -54,10 +48,7 @@ public class GlassFishJavaSEConfig {
         version = javaSEconfig.getVersion();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get highest JavaSE specification version implemented.
      * <p/>

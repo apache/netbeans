@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.websvc.manager
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/websvc/manager/Bundle.properties
 OpenIDE-Module-Install: org/netbeans/modules/websvc/manager/WebServiceModuleInstaller.class
-OpenIDE-Module-Specification-Version: 1.57
+OpenIDE-Module-Specification-Version: 1.58
 

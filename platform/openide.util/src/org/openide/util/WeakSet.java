@@ -45,6 +45,8 @@ import java.util.Set;
  * It also provides method <code>resize</code> for changing capacity of internal hash table
  * (can be used for reducing memory occupied by empty set which previously had big number of objects, but they were GCed)
  * Access to set is not thread safe.
+ * 
+ * @deprecated Use {@link java.util.WeakHashMap} and {@link java.util.Collections#newSetFromMap(java.util.Map)} instead.
  *
  * @param <E> the type of elements maintained by this set
  * @see #putIfAbsent(Object)
@@ -52,6 +54,7 @@ import java.util.Set;
  * @author Vladimir Voskresensky
  */
 @SuppressWarnings("unchecked")
+@Deprecated(forRemoval = true)
 public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializable {
     private transient SharedKeyWeakHashMap<E, Boolean> m;  // The backing map
     private transient Set<E> s;       // Its keySet
@@ -1203,7 +1206,6 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
             }
         }
 
-        ////////////////////////////////////////////////////////////////////////////
         // new changes
 
         /**

@@ -20,16 +20,11 @@
 package org.netbeans.modules.websvc.spi.jaxws.client;
 
 import org.openide.nodes.Node;
-import org.openide.filesystems.FileObject;
 import org.netbeans.api.project.Project;
-import org.netbeans.api.project.SourceGroup;
 
 /**
- *
+ * SPI for JAXWSClientView
  * @author Peter Williams, Milan Kuchtiak
- */
-
-/** SPI for JAXWSClientView
  */
 public interface JAXWSClientViewImpl {
     

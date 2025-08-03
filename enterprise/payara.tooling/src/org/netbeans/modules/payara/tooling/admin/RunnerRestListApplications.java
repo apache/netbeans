@@ -28,10 +28,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
  */
 public class RunnerRestListApplications extends RunnerRestList {
 
-     ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * REST interface.

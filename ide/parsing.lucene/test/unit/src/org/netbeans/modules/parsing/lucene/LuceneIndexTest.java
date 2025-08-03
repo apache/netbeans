@@ -19,10 +19,6 @@
 
 package org.netbeans.modules.parsing.lucene;
 
-/**
- *
- * @author Tomas Zezula
- */
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -44,9 +40,7 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.store.Directory;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.parsing.lucene.support.Convertor;
-import org.netbeans.modules.parsing.lucene.support.DocumentIndex;
 import org.netbeans.modules.parsing.lucene.support.Index;
-import org.netbeans.modules.parsing.lucene.support.IndexDocument;
 import org.netbeans.modules.parsing.lucene.support.IndexManager;
 
 /**
@@ -75,9 +69,9 @@ public class LuceneIndexTest extends NbTestCase {
         assertEquals(Index.Status.EMPTY, index.getStatus(true));
 
         clearValidityCache(index);
-        List<String> refs = new ArrayList<String>();
+        List<String> refs = new ArrayList<>();
         refs.add("A");
-        Set<String> toDel = new HashSet<String>();
+        Set<String> toDel = new HashSet<>();
         index.store(
                 refs,
                 toDel,
@@ -116,11 +110,8 @@ public class LuceneIndexTest extends NbTestCase {
             }
         }
         assertNotNull(bt);
-        FileOutputStream out = new FileOutputStream(bt);
-        try {
-            out.write(new byte[] {0,0,0,0,0,0,0,0,0,0}, 0, 10);
-        } finally {
-            out.close();
+        try (FileOutputStream out = new FileOutputStream(bt)) {
+            out.write(new byte[10]);
         }
         assertEquals(Index.Status.INVALID, index.getStatus(true));
         assertTrue(cache.listFiles().length==0);
@@ -140,9 +131,9 @@ public class LuceneIndexTest extends NbTestCase {
         
         //No TX store -> no warning
         handler.clear();
-        List<String> refs = new ArrayList<String>();
+        List<String> refs = new ArrayList<>();
         refs.add("A");
-        Set<String> toDel = new HashSet<String>();
+        Set<String> toDel = new HashSet<>();
         index.store(
             refs,
             toDel,

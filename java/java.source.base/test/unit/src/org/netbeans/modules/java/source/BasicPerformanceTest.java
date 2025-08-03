@@ -101,9 +101,9 @@ public class BasicPerformanceTest extends TestCase {
 //        }
 //        swatch.stop( "Got distinct strings " + distinct.size()  );
 //        
-////        for( String name : distinct ) {
-////            System.out.println( name );
-////        }
+// //        for( String name : distinct ) {
+// //            System.out.println( name );
+// //        }
 //        
 //    }
 //    

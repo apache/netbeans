@@ -73,10 +73,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraVersion;
 public class PayaraInstance implements ServerInstanceImplementation,
         Lookup.Provider, LookupListener, PayaraServer {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Properties map used to store Payara server properties in Payara
      * server instance.
@@ -223,10 +220,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = PayaraLogger.get(PayaraInstance.class);
@@ -270,10 +264,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
      */
     static final String KEYRING_IDENT_SEPARATOR=":";
     
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Build key ring identifier for password related to given user name.
      * <p/>
@@ -400,10 +391,6 @@ public class PayaraInstance implements ServerInstanceImplementation,
         Map<String, String> ip = new HashMap<>();
         ip.put(PayaraModule.WSL_ATTR, String.valueOf(wsl));
         ip.put(PayaraModule.DOCKER_ATTR, String.valueOf(docker));
-        if(wsl && domainsDir == null) {
-            domainsDir = payaraRoot + File.separator + "domains";
-        }
-
         ip.put(PayaraModule.DISPLAY_NAME_ATTR, displayName);
         ip.put(PayaraModule.INSTALL_FOLDER_ATTR, installRoot);
         ip.put(PayaraModule.PAYARA_FOLDER_ATTR, payaraRoot);
@@ -723,10 +710,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
         }
     }   
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     // Server properties
     private boolean removable = true;
     
@@ -777,10 +761,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
     // GuardedBy("lookupResult")
     private Node fullNode;
     
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     @SuppressWarnings("LeakingThisInConstructor")
     private PayaraInstance(Map<String, String> ip, PayaraPlatformVersionAPI version,
             PayaraInstanceProvider instanceProvider, boolean prepareProperties) {
@@ -829,10 +810,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
         this.commonSupport = new CommonServerSupport(this);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get Payara properties.
      * <p/>
@@ -915,10 +893,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
         this.process = null;
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Fake Getters from PayaraServer interface                            //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get Payara display name stored properties.
      * <p/>
@@ -1073,9 +1048,6 @@ public class PayaraInstance implements ServerInstanceImplementation,
      */
     public void setWSL(boolean isWSL) {
         properties.put(PayaraModule.WSL_ATTR, Boolean.toString(isWSL));
-        if (!isWSL) {
-            properties.put(PayaraModule.DOMAINS_FOLDER_ATTR, null);
-        }
     }
 
     /**
@@ -1126,8 +1098,6 @@ public class PayaraInstance implements ServerInstanceImplementation,
         String domainsDir = properties.get(PayaraModule.DOMAINS_FOLDER_ATTR);
         if(isDocker()) {
             return null;
-        } else if(isWSL() && domainsDir == null) {
-            domainsDir = getPayaraRoot() + File.separator + "domains";
         }
         return domainsDir;
     }
@@ -1237,10 +1207,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
         return PayaraAdminInterface.HTTP;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Fake Getters and Setters                                               //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get information if this Payara server instance is local or remote.
      * <p/>
@@ -1574,16 +1541,12 @@ public class PayaraInstance implements ServerInstanceImplementation,
         return retVal;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods dependent on linked CommonServerSupport instance               //
-    ////////////////////////////////////////////////////////////////////////////
     // It was too complicated to remove this dependency completely. All       //
     // methods that are dependent on CommonServerSupport instance were marked //
     // as deprecated.                                                         //
     // All of them should be moved to CommonServerSupport class itself and    //
     // used in context of this class in the future.                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get <code>CommonServerSupport</code> instance associated with
      * this object.
@@ -1644,10 +1607,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Build and update copy of Payara properties to be stored
      * in <code>this</code> object.

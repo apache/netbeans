@@ -572,7 +572,7 @@ public class Utilities {
             throw new IllegalArgumentException();
         JavaCompiler compiler = JavaCompiler.instance(context);
         JavaFileObject prev = compiler.log.useSource(new DummyJFO());
-        Log.DiagnosticHandler discardHandler = new Log.DiscardDiagnosticHandler(compiler.log) {
+        Log.DiagnosticHandler discardHandler = compiler.log.new DiscardDiagnosticHandler() {
             @Override
             public void report(JCDiagnostic diag) {
                 errors.add(diag);
@@ -599,7 +599,7 @@ public class Utilities {
             throw new IllegalArgumentException();
         JavaCompiler compiler = JavaCompiler.instance(context);
         JavaFileObject prev = compiler.log.useSource(new DummyJFO());
-        Log.DiagnosticHandler discardHandler = new Log.DiscardDiagnosticHandler(compiler.log) {
+        Log.DiagnosticHandler discardHandler = compiler.log.new DiscardDiagnosticHandler() {
             @Override
             public void report(JCDiagnostic diag) {
                 errors.add(diag);
@@ -630,7 +630,7 @@ public class Utilities {
     private static TypeMirror attributeTree(JavacTaskImpl jti, Tree tree, Scope scope, final List<Diagnostic<? extends JavaFileObject>> errors) {
         Log log = Log.instance(jti.getContext());
         JavaFileObject prev = log.useSource(new DummyJFO());
-        Log.DiagnosticHandler discardHandler = new Log.DiscardDiagnosticHandler(log) {
+        Log.DiagnosticHandler discardHandler = log.new DiscardDiagnosticHandler() {
             @Override
             public void report(JCDiagnostic diag) {
                 errors.add(diag);
@@ -743,7 +743,7 @@ public class Utilities {
         Annotate annotate = Annotate.instance(context);
         Names names = Names.instance(context);
         Symtab syms = Symtab.instance(context);
-        Log.DiagnosticHandler discardHandler = new Log.DiscardDiagnosticHandler(compiler.log);
+        Log.DiagnosticHandler discardHandler = log.new DiscardDiagnosticHandler();
 
         JavaFileObject jfo = FileObjects.memoryFileObject("$", "$", new File("/tmp/$$scopeclass$constraints$" + count + ".java").toURI(), System.currentTimeMillis(), clazz.toString());
 
@@ -988,7 +988,8 @@ public class Utilities {
 
         itt.attach(c, new NoImports(c), null);
 
-        return itt.translate(original.getLeaf());
+        return itt.translate(original.getLeaf(),
+                             original.getParentPath() != null ? original.getParentPath().getLeaf() : null);
     }
 
     public static Tree generalizePattern(CompilationInfo info, TreePath original, int firstStatement, int lastStatement) {
@@ -1153,14 +1154,14 @@ public class Utilities {
         }
 
         @Override
-        public Tree translate(Tree tree) {
+        public Tree translate(Tree tree, Object p) {
             Tree var = tree2Variable.remove(tree);
 
             if (var != null) {
-                return super.translate(var);
+                return super.translate(var, p);
             }
 
-            return super.translate(tree);
+            return super.translate(tree, p);
         }
 
     }
@@ -1172,7 +1173,7 @@ public class Utilities {
         }
 
         @Override
-        public void classEntered(ClassTree clazz) {}
+        public void classEntered(ClassTree clazz, boolean isAnonymous) {}
 
         @Override
         public void enterVisibleThroughClasses(ClassTree clazz) {}

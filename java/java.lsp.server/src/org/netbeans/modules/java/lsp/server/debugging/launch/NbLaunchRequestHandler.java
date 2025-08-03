@@ -52,6 +52,7 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 import org.netbeans.modules.java.lsp.server.debugging.NbSourceProvider;
+import org.netbeans.modules.java.lsp.server.debugging.launch.NbLaunchDelegate.LaunchType;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.DialogDescriptor;
@@ -88,10 +89,10 @@ public final class NbLaunchRequestHandler {
         String filePath = (String)launchArguments.get("file");
         String projectFilePath = (String)launchArguments.get("projectFile");
         String mainFilePath = (String)launchArguments.get("mainClass");
-        boolean testRun = (Boolean) launchArguments.getOrDefault("testRun", Boolean.FALSE);
+        LaunchType launchType = LaunchType.from(launchArguments);
 
         if (!isNative && (StringUtils.isBlank(mainFilePath) && StringUtils.isBlank(filePath) && StringUtils.isBlank(projectFilePath)
-                          || modulePaths.isEmpty() && classPaths.isEmpty()) && !testRun) {
+                          || modulePaths.isEmpty() && classPaths.isEmpty()) && launchType != LaunchType.RUN_TEST) {
             if (modulePaths.isEmpty() && classPaths.isEmpty()) {
                 ErrorUtilities.completeExceptionally(resultFuture,
                     "Failed to launch debuggee VM. Missing modulePaths/classPaths options in launch configuration.",
@@ -207,6 +208,8 @@ public final class NbLaunchRequestHandler {
             filePath = projectFilePath;
         }
         boolean preferProjActions = true; // True when we prefer project actions to the current (main) file actions.
+        Object preferProj = launchArguments.get("project");
+        if(preferProj instanceof Boolean) preferProjActions = (Boolean) preferProj;
         FileObject file = null;
         File nativeImageFile = null;
         if (!isNative) {
@@ -293,7 +296,7 @@ public final class NbLaunchRequestHandler {
         String singleMethod = (String)launchArguments.get("methodName");
         String nestedClass = (String)launchArguments.get("nestedClass");
         boolean testInParallel = (Boolean) launchArguments.getOrDefault("testInParallel", Boolean.FALSE);
-        activeLaunchHandler.nbLaunch(file, preferProjActions, nativeImageFile, singleMethod, nestedClass, launchArguments, context, !noDebug, testRun, new OutputListener(context), testInParallel).thenRun(() -> {
+        activeLaunchHandler.nbLaunch(file, preferProjActions, nativeImageFile, singleMethod, nestedClass, launchArguments, context, !noDebug, launchType, new OutputListener(context), testInParallel).thenRun(() -> {
             activeLaunchHandler.postLaunch(launchArguments, context);
             resultFuture.complete(null);
         }).exceptionally(e -> {

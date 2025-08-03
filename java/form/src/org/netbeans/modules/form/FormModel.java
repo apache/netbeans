@@ -1328,7 +1328,7 @@ public class FormModel
     }
 
 //    CodeGenerator getCodeGenerator() {
-////        return FormEditorSupport.getCodeGenerator(this);
+// //        return FormEditorSupport.getCodeGenerator(this);
 //        if (codeGenerator == null)
 //            codeGenerator = new JavaCodeGenerator();
 //        return codeGenerator;

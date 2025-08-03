@@ -64,7 +64,6 @@ import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.model.JavacTypes;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.parser.Tokens.Comment.CommentStyle;
-import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import com.sun.tools.javac.tree.DCTree.DCReference;
 import com.sun.tools.javac.tree.DocTreeMaker;
 import com.sun.tools.javac.tree.JCTree;
@@ -494,6 +493,10 @@ public class TreeFactory {
         return make.at(NOPOS).Import((JCFieldAccess)qualid, importStatic);
     }
     
+    public ImportTree ImportModule(Tree moduleName) {
+        return make.at(NOPOS).ModuleImport((JCExpression) moduleName);
+    }
+
     public InstanceOfTree InstanceOf(ExpressionTree expression, Tree type) {
         return make.at(NOPOS).TypeTest((JCExpression)expression, (JCTree)type);
     }
@@ -987,7 +990,7 @@ public class TreeFactory {
         return make.at(NOPOS).Wildcard(tbk, (JCExpression)type);
     }
     
-    ////////////////////////////////////// makers modification suggested by Tom
+    // makers modification suggested by Tom
     
     // AnnotationTree
     public AnnotationTree addAnnotationAttrValue(AnnotationTree annotation, ExpressionTree attrValue) {
@@ -2070,5 +2073,11 @@ public class TreeFactory {
         public boolean isDeprecated() {
             return false;
         }
+
+        @Override
+        public Comment stripIndent() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+        
     }
 }

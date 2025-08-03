@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.javascript.karma/0
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/javascript/karma/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 0.45
+OpenIDE-Module-Specification-Version: 0.46
 AutoUpdate-Show-In-Client: false

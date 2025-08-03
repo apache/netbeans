@@ -48,7 +48,6 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.TaskListener;
-import org.openide.util.WeakSet;
 
 /**
  *
@@ -192,7 +191,7 @@ public final class TaskProvider extends PushTaskScanner {
         Set<FileObject> result = root2FilesWithAttachedErrors.get(root);
         
         if (result == null) {
-            root2FilesWithAttachedErrors.put(root, result = new WeakSet<FileObject>());
+            root2FilesWithAttachedErrors.put(root, result = Collections.newSetFromMap(new WeakHashMap<>()));
         }
         
         return result;

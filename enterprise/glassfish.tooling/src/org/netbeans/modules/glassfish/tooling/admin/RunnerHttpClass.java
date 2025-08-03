@@ -32,10 +32,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface RunnerHttpClass {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish command runner class as named value. */
     Class runner() default RunnerHttp.class;
 

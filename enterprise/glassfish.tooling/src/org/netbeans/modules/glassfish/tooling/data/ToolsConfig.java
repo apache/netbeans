@@ -25,10 +25,7 @@ package org.netbeans.modules.glassfish.tooling.data;
  */
 public interface ToolsConfig {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get asadmin tool.
      * <p/>

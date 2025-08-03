@@ -38,37 +38,7 @@
         </javac>
     </target>
 
-    <target name="modular-probe" depends="probe-init">
-        <mkdir dir="${cluster}/modules/ext"/>
-        <nb-ext-jar jarfile="${cluster}/modules/ext/nb-mod-jshell-probe.jar">
-            <manifest>
-                <attribute name="NetBeans-Own-Library" value="true"/>
-                <attribute name="Main-Class" value="org.netbeans.lib.jshell.agent.AgentWorker"/>
-                <attribute name="Premain-Class" value="org.netbeans.lib.jshell.agent.NbJShellAgent"/>
-                <attribute name="Can-Redefine-Classes" value="true"/>
-                <attribute name="Can-Retransform-Classes" value="true"/>
-            </manifest>
-            <fileset dir="build/agent/classes">
-                <exclude name="jdk/**"/>
-            </fileset>
-        </nb-ext-jar>
-    </target>
-
     <target name="jar-probe" depends="probe-init">
-        <unjar src="${agentsrc.jshell.cp}" dest="build/agent/classes">
-            <patternset>
-                <include name="jdk/jshell/execution/**"/>
-                <exclude name="**/JDI*.class"/>
-                <exclude name="**/LocalExecutionControl.class"/>
-                <exclude name="**/StreamingExecutionControl.class"/>
-                <!--<exclude name="**/DemultiplexInput.class"/>-->
-            </patternset>
-            <patternset>
-                <include name="jdk/jshell/spi/ExecutionControl*.class"/>
-                <exclude name="jdk/jshell/spi/ExecutionControl*Generator.class"/>
-                <include name="jdk/jshell/spi/SPIResolutionException.class"/>
-            </patternset>
-        </unjar>
         <mkdir dir="${cluster}/modules/ext"/>
         <nb-ext-jar jarfile="${cluster}/modules/ext/nb-custom-jshell-probe.jar">
             <manifest>
@@ -82,7 +52,7 @@
         </nb-ext-jar>
     </target>
 
-    <target name="probe" depends="modular-probe,jar-probe">
+    <target name="probe" depends="jar-probe">
     </target>
 
     <target name="netbeans-extra" depends="probe"/>

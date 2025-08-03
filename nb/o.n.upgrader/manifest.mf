@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.upgrader
-OpenIDE-Module-Specification-Version: 4.64
+OpenIDE-Module-Specification-Version: 4.65
 OpenIDE-Module-Localizing-Bundle: org/netbeans/upgrade/Bundle.properties
 AutoUpdate-Essential-Module: true
 

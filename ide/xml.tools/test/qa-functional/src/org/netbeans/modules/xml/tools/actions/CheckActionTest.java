@@ -30,7 +30,7 @@ public class CheckActionTest extends AbstractCheckTest {
         super(testName);
     }
 
-    // TESTS ///////////////////////////////////////////////////////////////////
+    // TESTS
 
     // *** Not  well-formed ***
 
@@ -68,7 +68,7 @@ public class CheckActionTest extends AbstractCheckTest {
         performAction("DistributedDTD.xml", 0);
     }
     
-    // LIBS ////////////////////////////////////////////////////////////////////
+    // LIBS
     
     /** Check all selected nodes. */
     protected QaIOReporter performAction(Node[] nodes) {
@@ -84,7 +84,7 @@ public class CheckActionTest extends AbstractCheckTest {
         return reporter;
     }
     
-    // MAIN ////////////////////////////////////////////////////////////////////
+    // MAIN
     
     /**
      * Performs this testsuite.

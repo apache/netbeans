@@ -90,6 +90,7 @@ import com.sun.tools.javac.tree.JCTree.JCForLoop;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCIf;
 import com.sun.tools.javac.tree.JCTree.JCImport;
+import com.sun.tools.javac.tree.JCTree.JCImportBase;
 import com.sun.tools.javac.tree.JCTree.JCInstanceOf;
 import com.sun.tools.javac.tree.JCTree.JCLabeledStatement;
 import com.sun.tools.javac.tree.JCTree.JCLambda;
@@ -506,15 +507,15 @@ public class CasualDiff {
         }
         //XXX: no-javac-patch end
 
-        List<JCImport> originalJC = new LinkedList<>();
-        List<JCImport> nueJC = new LinkedList<>();
+        List<JCImportBase> originalJC = new LinkedList<>();
+        List<JCImportBase> nueJC = new LinkedList<>();
 
         for (ImportTree i : original) {
-            originalJC.add((JCImport) i);
+            originalJC.add((JCImportBase) i);
         }
 
         for (ImportTree i : nue) {
-            nueJC.add((JCImport) i);
+            nueJC.add((JCImportBase) i);
         }
 
         PositionEstimator est = EstimatorFactory.imports(originalJC, nueJC, td.diffContext);
@@ -4261,9 +4262,9 @@ public class CasualDiff {
         for (int j = 0; j < result.length; j++) {
             ResultItem<JCTree> item = result[j];
             int group = -1;
-            if (importGroups != null) {
-                Name name = printer.fullName(((JCImport)item.element).qualid);
-                group = (name != null ? importGroups.getGroupId(name.toString(), ((JCImport)item.element).staticImport) : -1);
+            if (importGroups != null && item.element instanceof JCImport imp) {
+                Name name = printer.fullName(imp.qualid);
+                group = (name != null ? importGroups.getGroupId(name.toString(), imp.staticImport) : -1);
             }
             switch (item.operation) {
                 case MODIFY: {

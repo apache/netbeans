@@ -30,28 +30,19 @@ import org.netbeans.modules.glassfish.tooling.logging.Logger;
  */
 public class GlassFishStatusEntity implements GlassFishServerStatus {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER
             = new Logger(GlassFishStatusEntity.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish server entity. */
     private GlassFishServer server;
 
     /** Current GlassFish server status. */
     private GlassFishStatus status;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of GlassFish server status entity.
      * <p/>
@@ -64,10 +55,7 @@ public class GlassFishStatusEntity implements GlassFishServerStatus {
         this.status = GlassFishStatus.UNKNOWN;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get GlassFish server entity.
      * <p/>

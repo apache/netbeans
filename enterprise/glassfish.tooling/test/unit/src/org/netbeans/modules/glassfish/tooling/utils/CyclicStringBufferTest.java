@@ -32,10 +32,7 @@ import org.testng.annotations.Test;
  */
 @Test(groups = {"unit-tests"})
 public class CyclicStringBufferTest extends CommonTest{
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(CyclicStringBufferTest.class);
 
@@ -43,10 +40,7 @@ public class CyclicStringBufferTest extends CommonTest{
     private static final String DATA
             = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Test methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Test cyclic buffer appends and {@link CyclicStringBuffer#toString()}.
      */

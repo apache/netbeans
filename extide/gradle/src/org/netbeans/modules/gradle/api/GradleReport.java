@@ -155,6 +155,10 @@ public final class GradleReport {
         return formatReportForHintOrProblem(true, null);
     }
 
+    /**
+     * Formats the report for simple viewing. The function concatenates report messages, starting from
+     * outer Report. If `includeLocation` is true, script name + line is printed at the end. 
+     */
     @NbBundle.Messages({
         "# {0} - previous part",
         "# {1} - appended part",
@@ -170,11 +174,6 @@ public final class GradleReport {
         "# {1} - the stack trace, one line per stack frame",
         "FMT_MessageWithTrace={0}\nError stack trace: {1}"
     })
-
-    /**
-     * Formats the report for simple viewing. The function concatenates report messages, starting from
-     * outer Report. If `includeLocation` is true, script name + line is printed at the end. 
-     */
     public String formatReportForHintOrProblem(boolean includeLocation, FileObject relativeTo) {
         String msg = "";
         String prevMessage = null;

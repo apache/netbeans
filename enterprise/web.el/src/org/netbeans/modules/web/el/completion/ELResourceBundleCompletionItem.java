@@ -19,6 +19,7 @@
 package org.netbeans.modules.web.el.completion;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -120,11 +121,10 @@ final class ELResourceBundleCompletionItem extends DefaultCompletionProposal {
             
             Map<String, String> entries = bundles.getEntries(bundle.getVar());
             for (Map.Entry<String, String> entry : entries.entrySet()) {
-                String value = entries.get(entry.getValue());
                 buf.append(entry.getKey());
                 buf.append('='); //NOI18N
                 buf.append("<font color='#ce7b00'>"); //NOI18N
-                buf.append(value);
+                buf.append(entry.getValue());
                 buf.append("</font>"); //NOI18N
                 buf.append("<br>"); //NOI18N
             }
@@ -133,6 +133,10 @@ final class ELResourceBundleCompletionItem extends DefaultCompletionProposal {
 
         @Override
         public FileObject getFileObject() {
+            List<FileObject> files = bundle.getFiles();
+            if (!files.isEmpty()) {
+                return files.get(0);
+            }
             return file;
         }
 

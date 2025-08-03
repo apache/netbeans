@@ -89,7 +89,6 @@ public class MethodTest3 extends GeneratorTestBase {
         assertFiles("testMethodThrows.pass");
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     /**
      * @param args the command line arguments
      */

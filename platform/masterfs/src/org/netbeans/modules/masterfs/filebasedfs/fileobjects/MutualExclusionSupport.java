@@ -20,7 +20,6 @@
 package org.netbeans.modules.masterfs.filebasedfs.fileobjects;
 
 
-import org.openide.util.WeakSet;
 
 import java.io.IOException;
 import java.lang.ref.Reference;
@@ -58,7 +57,7 @@ public final class MutualExclusionSupport<K> {
 
             if (!isInUse) {            
                 if (expectedCounter == null) {
-                    expectedCounter = new WeakSet<Closeable>();
+                    expectedCounter = Collections.newSetFromMap(new WeakHashMap<>());
                     expected.put(key, expectedCounter);
                 }
                 isInUse = !isShared && expectedCounter.size() > 0;            

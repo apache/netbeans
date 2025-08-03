@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.websvc.editor.hints
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/websvc/editor/hints/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.56
+OpenIDE-Module-Specification-Version: 1.57
 AutoUpdate-Show-In-Client: false
 

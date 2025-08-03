@@ -23,7 +23,6 @@
 */
 package org.openide.explorer.propertysheet;
 
-import org.openide.util.WeakSet;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -42,8 +41,11 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyEditor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.WeakHashMap;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
@@ -69,7 +71,7 @@ class RadioInplaceEditor extends JPanel implements InplaceEditor, ActionListener
     protected transient ButtonGroup group = null;
     private boolean tableUI = false;
     boolean isFirstEvent = false;
-    private WeakSet<InvRadioButton> buttonCache = new WeakSet<InvRadioButton>();
+    private Set<InvRadioButton> buttonCache = Collections.newSetFromMap(new WeakHashMap<>());
     private boolean useTitle = false;
 
     public RadioInplaceEditor(boolean tableUI) {

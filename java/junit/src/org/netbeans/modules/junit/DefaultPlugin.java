@@ -1354,7 +1354,7 @@ public final class DefaultPlugin extends JUnitPlugin {
 //        button.getAccessibleContext().setAccessibleName("AN_Select");
 //        button.getAccessibleContext().setAccessibleDescription("AD_Select");
 //        
-////        Object selectOption = bundle.getString("LBL_Select");        //NOI18N
+// //        Object selectOption = bundle.getString("LBL_Select");        //NOI18N
 //        Object answer = DialogDisplayer.getDefault().notify(
 //                new DialogDescriptor(
 //                        wrapDialogContent(panel),

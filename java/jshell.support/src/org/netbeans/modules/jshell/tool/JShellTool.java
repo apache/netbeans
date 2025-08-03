@@ -622,7 +622,7 @@ public class JShellTool implements MessageHandler {
         return editor = BUILT_IN_EDITOR;
     }
 
-    /**
+    /*
      * Process the command line arguments.
      * Set options.
      * @param args the command line arguments

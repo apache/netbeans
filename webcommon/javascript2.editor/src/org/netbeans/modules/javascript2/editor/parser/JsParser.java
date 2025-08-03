@@ -81,7 +81,9 @@ public class JsParser extends SanitizingParser<JsParserResult> {
             }
             parsableText = sb.toString();
         }
-        if (caretOffset > 0 && parsableText.charAt(caretOffset - 1) == '.'
+        if (caretOffset > 0 
+                && caretOffset < parsableText.length()
+                && parsableText.charAt(caretOffset - 1) == '.'
                 && (parsableText.length() > caretOffset)
                 && Character.isWhitespace(parsableText.charAt(caretOffset))) {
             // we are expecting that the dot was just written. See issue #246006

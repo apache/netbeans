@@ -16,12 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-/**
- * Superclass that implements DisplayNameInterface and IconInterface for Servlet2.4 beans.
- *
- * @author  Milan Kuchtiak
- */
 package org.netbeans.modules.j2ee.dd.impl.common;
 
 import java.util.ArrayList;
@@ -37,6 +31,12 @@ import org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException;
 import org.netbeans.modules.j2ee.dd.api.common.DisplayNameInterface;
 import org.netbeans.modules.j2ee.dd.api.common.Icon;
 
+
+/**
+ * Superclass that implements DisplayNameInterface and IconInterface for Servlet2.4 beans.
+ *
+ * @author  Milan Kuchtiak
+ */
 public abstract class ComponentBeanMultiple extends DescriptionBeanMultiple implements DisplayNameInterface, IconInterface {
     
     private static final Logger LOG = Logger.getLogger(ComponentBeanMultiple.class.getName());

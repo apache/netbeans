@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextPane;
@@ -47,7 +48,6 @@ import org.netbeans.modules.subversion.util.SvnUtils;
 import org.netbeans.modules.versioning.util.VCSNotificationDisplayer;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakSet;
 import org.tigris.subversion.svnclientadapter.ISVNInfo;
 import org.tigris.subversion.svnclientadapter.ISVNStatus;
 import org.tigris.subversion.svnclientadapter.SVNClientException;
@@ -63,7 +63,7 @@ public class NotificationsManager {
 
     private static NotificationsManager instance;
     private static final Logger LOG = Logger.getLogger(NotificationsManager.class.getName());
-    private static final Set<File> alreadySeen = Collections.synchronizedSet(new WeakSet<File>());
+    private static final Set<File> alreadySeen = Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
     private static final String CMD_DIFF = "cmd.diff";                  //NOI18N
 
     private final HashSet<File> files;

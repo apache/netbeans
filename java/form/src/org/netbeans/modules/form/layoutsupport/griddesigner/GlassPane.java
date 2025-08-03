@@ -1291,16 +1291,6 @@ public class GlassPane extends JPanel implements GridActionPerformer {
                             setSelection(focusedComponent);
                         }
                     }
-//                    // Column selection
-//                    int column = findColumnHeader(point);
-//                    if (column != -1) {
-////                        selectedColumns.flip(column);
-//                    }
-//                    // Row selection
-//                    int row = findRowHeader(point);
-//                    if (row != -1) {
-////                        selectedRows.flip(row);
-//                    }
                 } else {
                     // Resizing (start)
                     resizing = true;

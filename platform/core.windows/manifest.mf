@@ -7,4 +7,4 @@ OpenIDE-Module-Recommends: org.netbeans.core.windows.nativeaccess.NativeWindowSy
 OpenIDE-Module-Needs: org.netbeans.swing.tabcontrol.customtabs.TabbedComponentFactory
 AutoUpdate-Show-In-Client: false
 AutoUpdate-Essential-Module: true
-OpenIDE-Module-Specification-Version: 2.114
+OpenIDE-Module-Specification-Version: 2.115

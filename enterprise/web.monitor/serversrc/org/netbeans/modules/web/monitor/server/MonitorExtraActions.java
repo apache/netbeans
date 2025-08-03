@@ -19,18 +19,9 @@
 
 package org.netbeans.modules.web.monitor.server;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-
-/**
- * MonitorExtraActions.java
- *
- *
- * Created: Wed Oct 17 17:16:22 2001
- *
- * @author Ana von Klopp
- * @version
- */
+import javax.servlet.FilterChain;
+import javax.servlet.Servlet;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Containers who wish to provide servlet information and/or ability

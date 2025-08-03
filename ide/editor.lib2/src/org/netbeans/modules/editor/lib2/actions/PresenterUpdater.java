@@ -24,8 +24,10 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.ref.Reference;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractButton;
@@ -42,7 +44,6 @@ import org.netbeans.spi.editor.AbstractEditorAction;
 import org.openide.awt.Mnemonics;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 
 /**
  * Handler servicing menu, popup menu and toolbar presenters of a typical editor action.
@@ -124,7 +125,7 @@ public final class PresenterUpdater implements PropertyChangeListener, ActionLis
 
         action.addPropertyChangeListener(WeakListeners.propertyChange(this, action));
         if (type == MENU) {
-            listenedContextActions = new WeakSet<Action>();
+            listenedContextActions = Collections.newSetFromMap(new WeakHashMap<>());
             EditorRegistryWatcher.get().registerPresenterUpdater(this); // Includes notification of active component
         } else {
             listenedContextActions = null;

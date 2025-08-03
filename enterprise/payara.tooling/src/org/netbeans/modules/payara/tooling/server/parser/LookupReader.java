@@ -30,18 +30,12 @@ import org.xml.sax.SAXException;
  */
 public class LookupReader extends TreeParser.NodeListener {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Lookups retrieved from XML elements. */
     private List<String> lookups = new LinkedList<>();
 
 
-    ////////////////////////////////////////////////////////////////////////////
     // Tree parser methods                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Process attributes from current XML element.
      * <p/>
@@ -55,10 +49,7 @@ public class LookupReader extends TreeParser.NodeListener {
         lookups.add(attributes.getValue("path"));
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get lookups retrieved from XML elements.
      * <p/>
@@ -68,10 +59,7 @@ public class LookupReader extends TreeParser.NodeListener {
         return lookups;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Reset this XML element reader.
      */

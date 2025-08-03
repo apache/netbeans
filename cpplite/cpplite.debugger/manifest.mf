@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.cpplite.debugger
 OpenIDE-Module-Layer: org/netbeans/modules/cpplite/debugger/resources/mf-layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/cpplite/debugger/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.21
+OpenIDE-Module-Specification-Version: 1.22
 

@@ -192,6 +192,10 @@ public class GradleNetworkProxySupport {
         }
     }
 
+    /**
+     * Encapsulates a single check to avoid an enormous method or a ton of parameters passed through
+     * a method chain. Should be constructed for each new check separately.
+     */
     @NbBundle.Messages({
         "TITLE_GradleProxyMismatch=Possible Network Proxy Issue",
         "# {0} - gradle proxy",
@@ -217,10 +221,6 @@ public class GradleNetworkProxySupport {
         "# Branding API: change to false to disable suggestion to override proxies in Gradle invocation",
         "CTRL_SuggestProxyOverride=true"
     })
-    /**
-     * Encapsulates a single check to avoid an enormous method or a ton of parameters passed through
-     * a method chain. Should be constructed for each new check separately.
-     */
     private class Processor {
         Proxy publicProxy;
         String publicProxyHost;

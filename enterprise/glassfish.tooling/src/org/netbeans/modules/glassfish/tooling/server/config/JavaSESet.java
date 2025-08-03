@@ -28,17 +28,11 @@ import java.util.Set;
  */
 public class JavaSESet extends JavaSet {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Platforms retrieved from XML elements. */
     private final List<String> platforms;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of container of GlassFish JavaSE features
      * configuration.
@@ -51,10 +45,7 @@ public class JavaSESet extends JavaSet {
         this.platforms = platforms;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get platforms retrieved from XML elements.
      * <p/>
@@ -64,10 +55,7 @@ public class JavaSESet extends JavaSet {
         return platforms;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Build {@link Set} of {@link JavaSEPlatform} for known platforms
      * retrieved from XML elements.

@@ -226,9 +226,9 @@ public class JavaKit extends NbEditorKit {
 //        for (BaseAction a : createActionsForLayer()) {
 //            name2Action.put((String) a.getValue(Action.NAME), a);
 //
-////            System.err.println("<file name=\"" + (String) a.getValue(Action.NAME) + ".instance\">");
-////            System.err.println("    <attr name=\"instanceCreate\" methodvalue=\"org.netbeans.modules.editor.java.JavaKit.create\" />");
-////            System.err.println("</file>");
+// //            System.err.println("<file name=\"" + (String) a.getValue(Action.NAME) + ".instance\">");
+// //            System.err.println("    <attr name=\"instanceCreate\" methodvalue=\"org.netbeans.modules.editor.java.JavaKit.create\" />");
+// //            System.err.println("</file>");
 //        }
 //    }
 

@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.maven.kit/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/maven/feature/Bundle.properties
 OpenIDE-Module-Recommends: org.netbeans.modules.testng.maven.MavenTestNGSupport,org.netbeans.modules.maven.junit.ui.MavenJUnitManagerProvider,org.netbeans.modules.selenium2.maven.Selenium2MavenSupportImpl
-OpenIDE-Module-Specification-Version: 4.60
+OpenIDE-Module-Specification-Version: 4.61
 

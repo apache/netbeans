@@ -37,18 +37,12 @@ import org.openide.util.NbBundle;
  */
 public class InstanceLocalPanel extends InstancePanel {
     
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = PayaraLogger.get(InstanceLocalPanel.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of local Payara server properties editor.
      * <p/>
@@ -60,10 +54,7 @@ public class InstanceLocalPanel extends InstancePanel {
         hostRemoteField.setVisible(false);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Implemented abstract methods                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Local host field initialization.
      * <p/>
@@ -135,10 +126,7 @@ public class InstanceLocalPanel extends InstancePanel {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Enable form fields that can be modified by user.
      * <p/>

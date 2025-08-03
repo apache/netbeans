@@ -1184,7 +1184,7 @@ public class Lexer extends Scanner {
                     break;
                 }
             } else {
-                /// Add string token without editing.
+                // Add string token without editing.
                 add(type, stringState.position, stringState.limit);
             }
         }

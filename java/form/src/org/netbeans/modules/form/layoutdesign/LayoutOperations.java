@@ -203,7 +203,7 @@ class LayoutOperations implements LayoutConstants {
 //            group.setMinimumSize(USE_PREFERRED_SIZE);
 //            group.setMaximumSize(USE_PREFERRED_SIZE);
 //        }
-////        group.setGroupAlignment(alignment);
+// //        group.setGroupAlignment(alignment);
 
         // fill the group
         for (Iterator it=list.iterator(); it.hasNext(); ) {

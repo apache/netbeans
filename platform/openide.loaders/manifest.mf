@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.openide.loaders
-OpenIDE-Module-Specification-Version: 7.99
+OpenIDE-Module-Specification-Version: 7.100
 OpenIDE-Module-Localizing-Bundle: org/openide/loaders/Bundle.properties
 OpenIDE-Module-Provides: org.netbeans.modules.templates.v1_0
 OpenIDE-Module-Layer: org/netbeans/modules/openide/loaders/layer.xml

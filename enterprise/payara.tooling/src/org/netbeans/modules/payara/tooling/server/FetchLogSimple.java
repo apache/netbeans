@@ -27,10 +27,7 @@ import java.io.InputStream;
  */
 public class FetchLogSimple extends FetchLog {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server log fetcher using provided
      * stream.
@@ -46,10 +43,7 @@ public class FetchLogSimple extends FetchLog {
         super(in, false);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Implemented Abstract Methods                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructor callback makes no sense in this child class.
      * <p/>

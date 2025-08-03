@@ -34,10 +34,7 @@ import java.util.regex.Pattern;
  */
 public class Utils {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get system default line separator.
      * <p/>

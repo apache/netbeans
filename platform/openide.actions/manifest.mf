@@ -3,5 +3,5 @@ OpenIDE-Module: org.openide.actions
 OpenIDE-Module-Localizing-Bundle: org/openide/actions/Bundle.properties
 AutoUpdate-Essential-Module: true
 OpenIDE-Module-Recommends: org.openide.util.spi.SVGLoader
-OpenIDE-Module-Specification-Version: 6.68
+OpenIDE-Module-Specification-Version: 6.69
 

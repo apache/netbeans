@@ -47,7 +47,6 @@ public class SchemaRep implements PrefixGuesser {
      * The Schema Representation is internally made up of a tree of
      * Element Expressions (ElementExpr).
      */
-    ////////////////////////////////////////////////////////////////
     public abstract class ElementExpr {
         public abstract String getName();
         public abstract void writeDTD(StringBuffer out);
@@ -100,7 +99,6 @@ public class SchemaRep implements PrefixGuesser {
         }
     }
 
-    ////////////////////////////////////////////////////////////////
     // This class represents all elements (or nodes in the metadata)
     // that can have subelements.
     public abstract class ContainsSubElements extends ElementExpr {
@@ -421,7 +419,7 @@ public class SchemaRep implements PrefixGuesser {
         public ElementExpr getRefElementExpr();
     }
 
-    ////
+
     public abstract class HasTypeName extends ContainsSubElements {
         private String typeNameLocalPart = null;
         private String typeNameNamespace = null;
@@ -461,7 +459,6 @@ public class SchemaRep implements PrefixGuesser {
 
     }
     
-    ////////////////////////////////////////////////////////////////
     // Top of an XML Schema
     public class SchemaNode extends ContainsSubElements {
         protected String targetNamespace;
@@ -638,7 +635,6 @@ public class SchemaRep implements PrefixGuesser {
         schemaValidSubElementTypeMap.put(Group.class, null);
     }
 
-    ////////////////////////////////////////////////////////////////
     // See XML Schema complexType
     public class ComplexType extends HasTypeName implements HasJavaTypeName {
         //protected String typeName;
@@ -744,7 +740,6 @@ public class SchemaRep implements PrefixGuesser {
         complexTypeValidSubElementTypeMap.put(ComplexContent.class, null);
     }
 
-    ////////////////////////////////////////////////////////////////
     public class SimpleContent extends ContainsSubElements implements HasJavaTypeName {
         public SimpleContent() {
         }
@@ -788,7 +783,6 @@ public class SchemaRep implements PrefixGuesser {
     }
 
 
-    ////////////////////////////////////////////////////////////////
     public class ComplexContent extends ContainsSubElements implements HasJavaTypeName {
         private boolean mixed;
 
@@ -856,7 +850,6 @@ public class SchemaRep implements PrefixGuesser {
         complexContentValidSubElementTypeMap.put(Extension.class, null);
     }
 
-    ////////////////////////////////////////////////////////////////
     // See XML Schema simpleType
     public class SimpleType extends HasTypeName implements HasJavaTypeName {
         //private String typeName = null;
@@ -991,7 +984,6 @@ public class SchemaRep implements PrefixGuesser {
         simpleTypeValidSubElementTypeMap.put(UnionType.class, null);
     }
 
-    ////////////////////////////////////////////////////////////////
     // See XML Schema simpleType
     public class UnionType extends ContainsSubElements {
         private String typeName = null;
@@ -1146,7 +1138,6 @@ public class SchemaRep implements PrefixGuesser {
         }
     }
 
-    ////////////////////////////////////////////////////////////////
     // See XML Schema restriction (usually underneath simpleType)
     public class Restriction extends ContainsSubElements implements HasJavaTypeName {
         protected String base;
@@ -1284,7 +1275,6 @@ public class SchemaRep implements PrefixGuesser {
         restrictionValidSubElementTypeMap.put(WhiteSpace.class, null);
     }
 
-    ////////////////////////////////////////////////////////////////
     public class Extension extends ContainsSubElements implements HasJavaTypeName {
         protected String base;
         public Extension() {
@@ -1371,7 +1361,6 @@ public class SchemaRep implements PrefixGuesser {
         extensionValidSubElementTypeMap.put(All.class, null);
     }
 
-    ////////////////////////////////////////////////////////////////
     public class ListElement extends ContainsSubElements {
         protected String itemType;
         public ListElement() {
@@ -1451,7 +1440,6 @@ public class SchemaRep implements PrefixGuesser {
         listValidSubElementTypeMap.put(Annotation.class, null);
     }
 
-    ////////////////////////////////////////////////////////////////
     public abstract class RestrictionType extends ContainsSubElements {
         protected String value;
 
@@ -1521,7 +1509,6 @@ public class SchemaRep implements PrefixGuesser {
         restrictionTypeValidSubElementTypeMap.put(Annotation.class, null);
     }
 
-    ////////////////////////////////////////////////////////////////
     public class MaxExclusive extends RestrictionType implements DataTypeRestriction {
         public MaxExclusive(String value) {
             super(value);
@@ -1548,7 +1535,6 @@ public class SchemaRep implements PrefixGuesser {
         }
     }
 
-    ////////////////////////////////////////////////////////////////
     public class MinExclusive extends RestrictionType implements DataTypeRestriction {
         public MinExclusive(String value) {
             super(value);
@@ -1575,7 +1561,6 @@ public class SchemaRep implements PrefixGuesser {
         }
     }
 
-    ////////////////////////////////////////////////////////////////
     public class Enumeration extends RestrictionType implements DataEnumRestriction {
         public Enumeration(String value) {
             super(value);
@@ -1594,7 +1579,6 @@ public class SchemaRep implements PrefixGuesser {
         }
     }
 
-    ////////////////////////////////////////////////////////////////
     public class Pattern extends RestrictionType implements DataTypeRestriction {
         public Pattern(String value) {
             super(value);
@@ -1639,7 +1623,6 @@ public class SchemaRep implements PrefixGuesser {
         }
     }
 
-    ////////////////////////////////////////////////////////////////
     public class MinLength extends RestrictionType implements DataTypeRestriction {
         public MinLength(String value) {
             super(value);
@@ -1666,7 +1649,6 @@ public class SchemaRep implements PrefixGuesser {
         }
     }
 
-    ////////////////////////////////////////////////////////////////
     public class MaxLength extends RestrictionType implements DataTypeRestriction {
         public MaxLength(String value) {
             super(value);
@@ -1693,7 +1675,6 @@ public class SchemaRep implements PrefixGuesser {
         }
     }
 
-    ////////////////////////////////////////////////////////////////
     public class TotalDigits extends RestrictionType implements DataTypeRestriction {
         public TotalDigits(String value) {
             super(value);
@@ -1739,7 +1720,6 @@ public class SchemaRep implements PrefixGuesser {
         }
     }
 
-    ////////////////////////////////////////////////////////////////
     public class MinInclusive extends RestrictionType implements DataTypeRestriction {
         public MinInclusive(String value) {
             super(value);
@@ -1766,7 +1746,6 @@ public class SchemaRep implements PrefixGuesser {
         }
     }
 
-    ////////////////////////////////////////////////////////////////
     public class MaxInclusive extends RestrictionType implements DataTypeRestriction {
         public MaxInclusive(String value) {
             super(value);
@@ -1793,7 +1772,6 @@ public class SchemaRep implements PrefixGuesser {
         }
     }
 
-    ////////////////////////////////////////////////////////////////
     public class FractionDigits extends RestrictionType implements DataTypeRestriction {
         public FractionDigits(String value) {
             super(value);
@@ -1849,7 +1827,6 @@ public class SchemaRep implements PrefixGuesser {
         }
     }
 
-    ////////////////////////////////////////////////////////////////
     public class Length extends RestrictionType implements DataTypeRestriction {
         public Length(String value) {
             super(value);
@@ -1876,7 +1853,6 @@ public class SchemaRep implements PrefixGuesser {
         }
     }
 
-    ////////////////////////////////////////////////////////////////
     public class WhiteSpace extends RestrictionType implements DataTypeRestriction {
         public WhiteSpace(String value) {
             super(value);
@@ -1916,7 +1892,6 @@ public class SchemaRep implements PrefixGuesser {
         }
     }
 
-    ////////////////////////////////////////////////////////////////
     // the parent class for some others
     public abstract class ElementInformationItem extends ContainsSubElements {
         private String id;
@@ -2000,7 +1975,6 @@ public class SchemaRep implements PrefixGuesser {
         }
     }
 
-    ////////////////////////////////////////////////////////////////
     public class Key extends ElementInformationItem {
         public Key() {
         }
@@ -2025,7 +1999,6 @@ public class SchemaRep implements PrefixGuesser {
         keyValidSubElementTypeMap.put(Field.class, null);
     }
 
-    ////////////////////////////////////////////////////////////////
     public class Unique extends ElementInformationItem {
         public Unique() {
         }
@@ -2050,7 +2023,6 @@ public class SchemaRep implements PrefixGuesser {
         uniqueValidSubElementTypeMap.put(Field.class, null);
     }
 
-    ////////////////////////////////////////////////////////////////
     public class KeyRef extends ElementInformationItem {
         private String refer;
 
@@ -2108,7 +2080,6 @@ public class SchemaRep implements PrefixGuesser {
         keyrefValidSubElementTypeMap.put(Field.class, null);
     }
 
-    ////////////////////////////////////////////////////////////////
     public abstract class SelectorOrField extends ContainsSubElements {
         private String id;
         private String xpath;
@@ -2196,7 +2167,6 @@ public class SchemaRep implements PrefixGuesser {
         }
     }
 
-    ////////////////////////////////////////////////////////////////
     public class Selector extends SelectorOrField {
         public Selector() {
         }
@@ -2241,7 +2211,6 @@ public class SchemaRep implements PrefixGuesser {
         fieldValidSubElementTypeMap.put(Annotation.class, null);
     }
 
-    ////////////////////////////////////////////////////////////////
     public class Include extends ElementExpr {
         private String schemaLocation;
 
@@ -2335,7 +2304,6 @@ public class SchemaRep implements PrefixGuesser {
         }
     }
 
-    ////////////////////////////////////////////////////////////////
     public class Import extends ElementExpr {
         private String theNamespace;
         private String schemaLocation;
@@ -2444,7 +2412,6 @@ public class SchemaRep implements PrefixGuesser {
         }
     }
 
-    ////////////////////////////////////////////////////////////////
     // See XML Schema sequence.
     public abstract class ModelGroup extends ContainsSubElements implements MinMaxOccurs {
         private String minOccurs;
@@ -2549,7 +2516,6 @@ public class SchemaRep implements PrefixGuesser {
         }
     }
 
-    ////////////////////////////////////////////////////////////////
     // See XML Schema sequence.
     public class Sequence extends ModelGroup {
         public Sequence() {
@@ -2578,7 +2544,6 @@ public class SchemaRep implements PrefixGuesser {
         sequenceValidSubElementTypeMap.put(Group.class, null);
     }
 
-    ////////////////////////////////////////////////////////////////
     public class Choice extends ModelGroup {
         public Choice() {
         }
@@ -2606,7 +2571,6 @@ public class SchemaRep implements PrefixGuesser {
         choiceValidSubElementTypeMap.put(Group.class, null);
     }
 
-    ////////////////////////////////////////////////////////////////
     public class All extends ModelGroup {
         public All() {
         }
@@ -2631,7 +2595,6 @@ public class SchemaRep implements PrefixGuesser {
         allValidSubElementTypeMap.put(Any.class, null);
     }
 
-    ////////////////////////////////////////////////////////////////
     public class Group extends ModelGroup implements CanRef {
         private String name;
         private String ref;
@@ -2746,7 +2709,6 @@ public class SchemaRep implements PrefixGuesser {
         groupValidSubElementTypeMap.put(Annotation.class, null);
     }
 
-    ////////////////////////////////////////////////////////////////
     // See XML Schema annotation
     // (an XML Schema comment)
     public class Annotation extends ContainsSubElements {
@@ -2795,7 +2757,6 @@ public class SchemaRep implements PrefixGuesser {
     }
 
 
-    ////////////////////////////////////////////////////////////////
     // See XML Schema appInfo
     public class AppInfo extends ContainsSubElements {
         public AppInfo() {
@@ -2847,7 +2808,6 @@ public class SchemaRep implements PrefixGuesser {
     }
 
 
-    ////////////////////////////////////////////////////////////////
     // See XML Schema documentation
     public class Documentation extends ContainsSubElements {
         public Documentation() {
@@ -2892,7 +2852,6 @@ public class SchemaRep implements PrefixGuesser {
     }
 
 
-    ////////////////////////////////////////////////////////////////
     // This represents any undefined node
     public class AnyNode extends ContainsSubElements {
         protected String name;
@@ -2994,7 +2953,6 @@ public class SchemaRep implements PrefixGuesser {
         anyNodeValidSubElementTypeMap.put(TextNode.class, null);
     }
 
-    ////////////////////////////////////////////////////////////////
     // This represents a text element and allows for subelements.
     public class TextNode extends ContainsSubElements {
         protected String text;
@@ -3081,7 +3039,6 @@ public class SchemaRep implements PrefixGuesser {
         textNodeValidSubElementTypeMap.put(TextNode.class, null);
     }
 
-    ////////////////////////////////////////////////////////////////
     // See XML Schema element
     // This implementation is missing attributes right now.
     public class Element extends ContainsSubElements implements MinMaxOccurs, CanRef {
@@ -3743,7 +3700,6 @@ public class SchemaRep implements PrefixGuesser {
         anyAttributeValidSubElementTypeMap.put(Annotation.class, null);
     }
 
-    ////////////////////////////////////////////////////////////////
     // An Schema Attribute
     // An XML Schema attribute may contain simpleType as a subelement
     // and/or annotation.
@@ -4012,7 +3968,6 @@ public class SchemaRep implements PrefixGuesser {
     }
 
 
-    ////////////////////////////////////////////////////////////////
     // An Schema AttributeGroup
     public class AttributeGroup extends ContainsSubElements implements CanRef {
         private String name;
@@ -4126,8 +4081,6 @@ public class SchemaRep implements PrefixGuesser {
         attributeGroupValidSubElementTypeMap.put(AnyAttribute.class, null);
     }
 
-    ////////////////////////////////////////////////////////////////
-
     private class ParserSchemaState {
         private String targetNamespace;
         private String documentNamespace;
@@ -4149,8 +4102,6 @@ public class SchemaRep implements PrefixGuesser {
         }
     }
     
-    ////////////////////////////////////////////////////////////////
-
     //protected String docType;  // Not implemented
     protected Map namespaceTable;	// Map<String, String>  example: <xsd, http://www.w3.org/2001/XMLSchema>
     protected String targetNamespace;

@@ -24,15 +24,16 @@
 
 package org.netbeans.modules.j2ee.dd.impl.webservices;
 
-/**
- *
- * @author  Nitya Doraisamy
- */
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import org.netbeans.modules.j2ee.dd.api.webservices.Webservices;
 
+
+/**
+ *
+ * @author  Nitya Doraisamy
+ */
 public class WebServicesProxy implements Webservices {
     private Webservices webSvc;
     private String version;

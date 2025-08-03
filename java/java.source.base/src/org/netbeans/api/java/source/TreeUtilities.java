@@ -77,6 +77,9 @@ import com.sun.tools.javac.parser.ParserFactory;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.sun.tools.javac.tree.JCTree.JCLambda;
+import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+import com.sun.tools.javac.tree.JCTree.Tag;
 import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.Log;
 import java.lang.reflect.Method;
@@ -151,7 +154,15 @@ public final class TreeUtilities {
     public boolean isEnumConstant(VariableTree tree) {
         return (((JCTree.JCModifiers) tree.getModifiers()).flags & Flags.ENUM) != 0;
     }
-    
+
+    /**
+     * Checks whether given variable tree represents a record component.
+     * @since 2.79.0
+     */
+    public boolean isRecordComponent(VariableTree tree) {
+        return (((JCTree.JCModifiers) tree.getModifiers()).flags & Flags.RECORD) != 0;
+    }
+
     /**Checks whether the given tree represents an annotation.
      * @deprecated since 0.67, <code>Tree.getKind() == Kind.ANNOTATION_TYPE</code> should be used instead.
      */
@@ -213,6 +224,32 @@ public final class TreeUtilities {
                            path.getParentPath().getLeaf().getKind() == Kind.METHOD) {
                     JCMethodDecl m = (JCMethodDecl) path.getParentPath().getLeaf();
                     if ((m.mods.flags & Flags.COMPACT_RECORD_CONSTRUCTOR) != 0 && m.getParameters().contains(path.getLeaf())) {
+                        return true;
+                    }
+                }
+            }
+            if (path.getParentPath() != null) {
+                Tree parentLeaf = path.getParentPath().getLeaf();
+                if (parentLeaf.getKind() == Kind.VARIABLE) {
+                    JCVariableDecl var = (JCVariableDecl) parentLeaf;
+                    if (var.declaredUsingVar() && var.vartype == path.getLeaf()) {
+                        return true;
+                    }
+                    if (path.getParentPath().getParentPath() != null) {
+                        Tree parentParentLeaf = path.getParentPath().getParentPath().getLeaf();
+
+                        if (parentParentLeaf.getKind() == Kind.LAMBDA_EXPRESSION) {
+                            JCLambda let = (JCLambda) parentParentLeaf;
+
+                            if (let.paramKind == JCLambda.ParameterKind.IMPLICIT && let.getParameters().contains(parentLeaf)) {
+                                return true;
+                            }
+                        }
+                    }
+                } else if (parentLeaf.getKind() == Kind.LAMBDA_EXPRESSION
+                        && (path.getLeaf().getKind() == Kind.MEMBER_SELECT || path.getLeaf().getKind() == Kind.PRIMITIVE_TYPE)) {
+                    JCLambda let = (JCLambda) parentLeaf;
+                    if (let.paramKind == JCLambda.ParameterKind.IMPLICIT) {
                         return true;
                     }
                 }
@@ -364,22 +401,21 @@ public final class TreeUtilities {
             
             public Void scan(Tree tree, Void p) {
                 if (tree != null) {
-                    long startPos = sourcePositions.getStartPosition(getCurrentPath().getCompilationUnit(), tree);
-                    long endPos = sourcePositions.getEndPosition(getCurrentPath().getCompilationUnit(), tree);
+                    CompilationUnitTree cut = getCurrentPath().getCompilationUnit();
+                    long startPos = sourcePositions.getStartPosition(cut, tree);
+                    long endPos = sourcePositions.getEndPosition(cut, tree);
                     if (endPos == (-1)) {
                         switch (tree.getKind()) {
                             case ASSIGNMENT:
                                 if (getCurrentPath().getLeaf().getKind() == Kind.ANNOTATION) {
                                     ExpressionTree value = ((AssignmentTree) tree).getExpression();
-                                    startPos = sourcePositions.getStartPosition(getCurrentPath().getCompilationUnit(), value);
-                                    endPos = sourcePositions.getEndPosition(getCurrentPath().getCompilationUnit(), value);
+                                    startPos = sourcePositions.getStartPosition(cut, value);
+                                    endPos = sourcePositions.getEndPosition(cut, value);
                                 }
                                 break;
                             case CLASS:
-                                ClassTree clazz = (ClassTree) tree;
-
-                                if (!clazz.getMembers().isEmpty()) {
-                                    endPos = sourcePositions.getEndPosition(getCurrentPath().getCompilationUnit(), clazz.getMembers().get(clazz.getMembers().size() - 1));
+                                if (tree instanceof JCClassDecl clazz && (clazz.mods.flags & Flags.IMPLICIT_CLASS) != 0) {
+                                    endPos = sourcePositions.getEndPosition(cut, cut);
                                 }
                                 break;
                         }
@@ -707,12 +743,7 @@ public final class TreeUtilities {
             Context context = task.getContext();
             JavaCompiler compiler = JavaCompiler.instance(context);
             JavaFileObject prev = compiler.log.useSource(new DummyJFO());
-            Log.DiagnosticHandler discardHandler = new Log.DiscardDiagnosticHandler(compiler.log) {
-                @Override
-                public void report(JCDiagnostic diag) {
-                    //ignore:
-                }            
-            };
+            Log.DiagnosticHandler discardHandler = compiler.log.new DiscardDiagnosticHandler();
             try {
                 CharBuffer buf = CharBuffer.wrap((text+"\u0000").toCharArray(), 0, text.length());
                 ParserFactory factory = ParserFactory.instance(context);
@@ -901,7 +932,7 @@ public final class TreeUtilities {
     private static TypeMirror attributeTree(JavacTaskImpl jti, CompilationUnitTree cut, Tree tree, Scope scope, final List<Diagnostic<? extends JavaFileObject>> errors) {
         Log log = Log.instance(jti.getContext());
         JavaFileObject prev = log.useSource(new DummyJFO());
-        Log.DiagnosticHandler discardHandler = new Log.DiscardDiagnosticHandler(log) {
+        Log.DiagnosticHandler discardHandler = log.new DiscardDiagnosticHandler() {
             @Override
             public void report(JCDiagnostic diag) {
                 errors.add(diag);
@@ -941,7 +972,7 @@ public final class TreeUtilities {
     private static Scope attributeTreeTo(JavacTaskImpl jti, CompilationUnitTree cut, Tree tree, Scope scope, Tree to, final List<Diagnostic<? extends JavaFileObject>> errors) {
         Log log = Log.instance(jti.getContext());
         JavaFileObject prev = log.useSource(new DummyJFO());
-        Log.DiagnosticHandler discardHandler = new Log.DiscardDiagnosticHandler(log) {
+        Log.DiagnosticHandler discardHandler = log.new DiscardDiagnosticHandler() {
             @Override
             public void report(JCDiagnostic diag) {
                 errors.add(diag);
@@ -1650,13 +1681,13 @@ public final class TreeUtilities {
         ImmutableTreeTranslator itt = new ImmutableTreeTranslator(info instanceof WorkingCopy ? (WorkingCopy)info : null) {
             private @NonNull Map<Tree, Tree> map = new HashMap<Tree, Tree>(original2Translated);
             @Override
-            public Tree translate(Tree tree) {
+            public Tree translate(Tree tree, Object p) {
                 Tree translated = map.remove(tree);
 
                 if (translated != null) {
-                    return translate(translated);
+                    return translate(translated, p);
                 } else {
-                    return super.translate(tree);
+                    return super.translate(tree, p);
                 }
             }
         };
@@ -1665,7 +1696,7 @@ public final class TreeUtilities {
 
         itt.attach(c, ia, tree2Tag);
 
-        return itt.translate(original);
+        return itt.translate(original, null);
     }
     
     /**Returns new tree based on {@code original}, such that each visited subtree
@@ -1726,7 +1757,7 @@ public final class TreeUtilities {
         }
 
         @Override
-        public void classEntered(ClassTree clazz) {}
+        public void classEntered(ClassTree clazz, boolean isAnonymous) {}
 
         @Override
         public void enterVisibleThroughClasses(ClassTree clazz) {}

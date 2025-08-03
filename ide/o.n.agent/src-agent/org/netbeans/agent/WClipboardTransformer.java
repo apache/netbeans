@@ -23,7 +23,7 @@ import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
 import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.security.ProtectionDomain;
 import org.objectweb.asm.ClassReader;
@@ -210,8 +210,8 @@ public class WClipboardTransformer implements ClassFileTransformer {
                 };
                 cr.accept(cv, 0);
                 byte[] result = cw.toByteArray();
-                if (DEBUG_DUMP_TRANSFORMED_CLASS != null && !DEBUG_DUMP_TRANSFORMED_CLASS.isBlank()) {
-                    Files.write(Path.of(DEBUG_DUMP_TRANSFORMED_CLASS), result, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+                if (DEBUG_DUMP_TRANSFORMED_CLASS != null && !DEBUG_DUMP_TRANSFORMED_CLASS.trim().isEmpty()) {
+                    Files.write(Paths.get(DEBUG_DUMP_TRANSFORMED_CLASS), result, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
                 }
                 logMsg("%s: Transforming %s done", WClipboardTransformer.class.getName(), className);
                 return result;

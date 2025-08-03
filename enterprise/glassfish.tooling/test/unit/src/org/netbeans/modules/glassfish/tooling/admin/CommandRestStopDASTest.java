@@ -42,10 +42,7 @@ import org.testng.annotations.Test;
 @Test(enabled = false, groups = {"unit-tests"})
 public class CommandRestStopDASTest extends CommandRestTest {
     
-     ////////////////////////////////////////////////////////////////////////////
     // Test methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     @Test
     @SuppressWarnings("SleepWhileInLoop")
     public void startDASTest() {

@@ -24,6 +24,7 @@ import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.ReferenceQueue;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,6 @@ import org.netbeans.modules.masterfs.providers.BaseAnnotationProvider;
 import org.openide.util.Lookup;
 import org.openide.util.Lookup.Item;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakSet;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.util.lookup.ServiceProviders;
 
@@ -426,7 +426,7 @@ public final class Watcher extends BaseAnnotationProvider {
         synchronized(lock) {
             if (pending == null) {
                 refreshTask.schedule(1500);
-                pending = new WeakSet<FileObject>();
+                pending = Collections.newSetFromMap(new WeakHashMap<>());
             }
             pending.add(fo);
         }
@@ -439,7 +439,7 @@ public final class Watcher extends BaseAnnotationProvider {
         synchronized(lock) {
             if (pending == null) {
                 refreshTask.schedule(1500);
-                pending = new WeakSet<FileObject>();
+                pending = Collections.newSetFromMap(new WeakHashMap<>());
             }
             pending.addAll(fos);
         }

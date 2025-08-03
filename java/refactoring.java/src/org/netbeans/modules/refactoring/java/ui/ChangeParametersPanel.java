@@ -956,9 +956,7 @@ public class ChangeParametersPanel extends JPanel implements CustomRefactoringPa
         }
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // INNER CLASSES
-    ////////////////////////////////////////////////////////////////////////////
     // this class is used for marking rows as read-only. If the user uses
     // standard DefaultTableModel, rows added through its methods is added
     // as a read-write. -- Use methods with Boolean paramater to add

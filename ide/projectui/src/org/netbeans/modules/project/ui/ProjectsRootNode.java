@@ -88,7 +88,6 @@ import org.openide.util.RequestProcessor;
 import org.openide.util.Union2;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 import org.openide.util.lookup.ServiceProvider;
@@ -99,7 +98,7 @@ import org.openide.xml.XMLUtil;
 public class ProjectsRootNode extends AbstractNode {
 
     private static final Logger LOG = Logger.getLogger(ProjectsRootNode.class.getName());
-    private static final Set<ProjectsRootNode> all = new WeakSet<ProjectsRootNode>();
+    private static final Set<ProjectsRootNode> all = Collections.newSetFromMap(new WeakHashMap<>());
     private static final RequestProcessor RP = new RequestProcessor(ProjectsRootNode.class);
 
     static final int PHYSICAL_VIEW = 0;
@@ -566,7 +565,7 @@ public class ProjectsRootNode extends AbstractNode {
         private final ProjectChildren ch;
         private final boolean logicalView;
         private final ProjectChildren.Pair pair;
-        private final Set<FileObject> projectDirsListenedTo = new WeakSet<FileObject>();
+        private final Set<FileObject> projectDirsListenedTo = Collections.newSetFromMap(new WeakHashMap<>());
         private static final int DELAY = 50;
         private final FileChangeListener newSubDirListener = new FileChangeAdapter() {
             public @Override void fileDataCreated(FileEvent fe) {
@@ -592,7 +591,7 @@ public class ProjectsRootNode extends AbstractNode {
         private final Lookup.Result<ProjectIconAnnotator> result = Lookup.getDefault().lookupResult(ProjectIconAnnotator.class);
         
         static class AnnotationListener implements LookupListener, ChangeListener {
-            private final Set<ProjectIconAnnotator> annotators = new WeakSet<ProjectIconAnnotator>();
+            private final Set<ProjectIconAnnotator> annotators = Collections.newSetFromMap(new WeakHashMap<>());
             private final Reference<BadgingNode> node;
             
             public AnnotationListener(BadgingNode node) {

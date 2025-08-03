@@ -247,6 +247,15 @@ public final class TemplateOperation implements Runnable {
          */
         public abstract InitOperation projectName(String name);
 
+        /**
+         * Specify the Gradle version to use to initialize the project.
+         *
+         * @param version gradle version
+         * @return this builder to chain the calls
+         * @since 2.47
+         */
+        public abstract InitOperation gradleVersion(String version);
+
         /** Specify the Java version the project would be compiled, tested,
          * and executed with.
          * @param version the Java version to be used
@@ -270,6 +279,7 @@ public final class TemplateOperation implements Runnable {
         private String testFramework;
         private String basePackage;
         private String projectName;
+        private String gradleVersion;
         private String javaVersion;
         private Boolean comments;
 
@@ -313,6 +323,9 @@ public final class TemplateOperation implements Runnable {
         @Override
         public Set<FileObject> execute() {
             GradleConnector gconn = GradleConnector.newConnector();
+            if (gradleVersion != null) {
+                gconn.useGradleVersion(gradleVersion);
+            }
             JavaRuntimeManager.JavaRuntime defaultRuntime = GradleExperimentalSettings.getDefault().getDefaultJavaRuntime();
 
             target.mkdirs();
@@ -381,6 +394,12 @@ public final class TemplateOperation implements Runnable {
             }
             gconn.disconnect();
             return Collections.singleton(FileUtil.toFileObject(target));
+        }
+
+        @Override
+        public InitOperation gradleVersion(String version) {
+            this.gradleVersion = version;
+            return this;
         }
 
         @Override

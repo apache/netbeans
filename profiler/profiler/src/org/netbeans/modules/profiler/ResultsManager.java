@@ -126,7 +126,7 @@ public final class ResultsManager {
     //    ProfilingResultsDispatcher.getDefault().reset();
     //    if (instr == CommonConstants.INSTR_RECURSIVE_FULL || instr == CommonConstants.INSTR_RECURSIVE_SAMPLED) {
     //      // TODO reset cpu profiling results collectors
-    ////      CPUCallGraphBuilder.resetCollectors();
+    // //      CPUCallGraphBuilder.resetCollectors();
     //    } else if (instr == CommonConstants.INSTR_OBJECT_ALLOCATIONS || instr == CommonConstants.INSTR_OBJECT_LIVENESS) {
     //      MemoryCallGraphBuilder mcgb = Profiler.getDefault().getTargetAppRunner().getProfilerClient().getMemoryCallGraphBuilder();
     //      mcgb.resetCollectors();

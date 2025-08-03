@@ -29,17 +29,11 @@ package org.netbeans.modules.glassfish.tooling.admin;
 @RunnerRestClass(runner=RunnerRestUndeploy.class)
 public class CommandUndeploy extends CommandTargetName {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for undeploy command. */
     private static final String COMMAND = "undeploy";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of GlassFish server undeploy command entity.
      * <p/>

@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 OpenIDE-Module: libs.c.kohlschutter.junixsocket/2
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/c/kohlschutter/junixsocket/Bundle.properties
-OpenIDE-Module-Specification-Version: 3.11
+OpenIDE-Module-Specification-Version: 3.12

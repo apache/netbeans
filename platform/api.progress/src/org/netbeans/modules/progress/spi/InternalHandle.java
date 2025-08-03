@@ -359,7 +359,7 @@ public class InternalHandle {
             state = STATE_REQUEST_STOP;
         }
         // do not call in synchronized block because it can take a long time to process, 
-        ///  and it could slow down UI.
+        //  and it could slow down UI.
         //TODO - call in some other thread, not AWT? what is the cancel() contract?
         cancelable.cancel();
         synchronized (this) {
@@ -367,7 +367,7 @@ public class InternalHandle {
         }
     }
     
-   ///XXX - called from UI, threading
+   //XXX - called from UI, threading
     public void requestView() {
         if (del != null) {
             del.requestView();

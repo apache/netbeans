@@ -41,10 +41,7 @@ import org.netbeans.modules.glassfish.tooling.utils.ServerUtils;
  */
 abstract class RunnerJava extends Runner {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(RunnerJava.class);
 
@@ -63,10 +60,7 @@ abstract class RunnerJava extends Runner {
     @SuppressWarnings("FieldNameHidesFieldInSuperclass")
     static final char PARAM_ASSIGN_VALUE = ' ';
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get {@link GlassFishConfig} instance for provided GlassFish server which
      * shall not be <code>null</code>.
@@ -126,10 +120,7 @@ abstract class RunnerJava extends Runner {
         return javaVmExe;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Holding data for command execution. */
     @SuppressWarnings("FieldNameHidesFieldInSuperclass")
     final CommandJava command;
@@ -137,10 +128,7 @@ abstract class RunnerJava extends Runner {
     /** Java VM executable. */
     final String javaVMExe;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * command line asadmin interface.
@@ -176,16 +164,8 @@ abstract class RunnerJava extends Runner {
         this(server, command, null);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Implemented Abstract Methods                                           //
-    ////////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Do not send information to the server via HTTP POST by default.
-     * <p/>
-     * @return <code>true</code> if using HTTP POST to send to server
-     *         or <code>false</code> otherwise
-     */
     /**
      * Do not send information to the server via HTTP POST by default.
      * <p/>
@@ -245,10 +225,7 @@ abstract class RunnerJava extends Runner {
     protected void handleSend(HttpURLConnection hconn) throws IOException {
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // ExecutorService call() method helpers                                  //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Verifies if Java VM version is supported by provided GlassFish server.
      * <p/>

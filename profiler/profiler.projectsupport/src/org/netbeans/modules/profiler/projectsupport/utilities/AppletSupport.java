@@ -249,34 +249,6 @@ public class AppletSupport {
         writer.flush();
     }
 
-    //  public static String getAppletClassName(FileObject fo) {
-    //    boolean isApplet = false;
-    //    if (SourceUtils.isInstanceOf(fo, "java.applet.Applet") || SourceUtils.isInstanceOf(fo, "javax.swing.Applet")) { // NOI18N
-    //      return SourceUtils.getToplevelClassName(fo);
-    //    }
-    ////    JavaMetamodel.getDefaultRepository().beginTrans(false);
-    ////    try {
-    ////      JavaModel.setClassPath(fo); // will limit the classpath to this project only => can be faster
-    ////      Resource res = JavaModel.getResource(fo);
-    ////      JavaClass[] classes = (JavaClass[])res.getClassifiers().toArray(new JavaClass[0]);
-    ////      JavaClass applet = (JavaClass) JavaModel.getDefaultExtent().getType().resolve("java.applet.Applet"); // NOI18N
-    ////      JavaClass jApplet = (JavaClass) JavaModel.getDefaultExtent().getType().resolve("javax.swing.JApplet"); // NOI18N
-    ////
-    ////      for (int i = 0; i < classes.length; i++) {
-    ////        JavaClass javaClass = classes[i];
-    ////        if (!(javaClass instanceof UnresolvedClass)) {
-    ////          if (javaClass.isSubTypeOf(applet) || (javaClass.isSubTypeOf(jApplet))) {
-    ////            return javaClass.getName();
-    ////          }
-    ////        }
-    ////      }
-    ////      return null;
-    ////    } finally {
-    ////      JavaMetamodel.getDefaultRepository().endTrans();
-    ////    }
-    //    return null;
-    //  }
-
     /**
      * @return html file with the same name as applet
      */

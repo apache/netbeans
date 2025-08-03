@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.editor.kit
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/editor/kit/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.62
+OpenIDE-Module-Specification-Version: 1.63
 

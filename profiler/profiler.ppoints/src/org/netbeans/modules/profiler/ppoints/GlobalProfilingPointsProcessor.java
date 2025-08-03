@@ -155,7 +155,7 @@ public class GlobalProfilingPointsProcessor implements DataManagerListener {
         }
     }
 
-    //// - Core functionality ----------------------------------------------------
+    // - Core functionality ----------------------------------------------------
     private void processTimeEvent() {
         currentTime = System.currentTimeMillis();
         processTimedProfilingPoints();
@@ -307,7 +307,7 @@ public class GlobalProfilingPointsProcessor implements DataManagerListener {
 
     // --- Private implementation ------------------------------------------------
 
-    //// - Lifecycle management --------------------------------------------------
+    // - Lifecycle management --------------------------------------------------
     private void start() {
         if ((profiledProject == null) || (gpp == null) || (gpp.length == 0) || !anyProfilingPointsScheduled()) {
             reset();

@@ -29,24 +29,15 @@ package org.netbeans.modules.glassfish.tooling.admin;
 @RunnerRestClass(runner=RunnerRestCreateInstance.class)
 public class CommandCreateInstance extends CommandTargetName {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for create-instance command. */
     private static final String COMMAND = "create-instance";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Target GlassFish node where instance will be created. */
     final String node;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of GlassFish server create-instance command entity.
      * <p/>

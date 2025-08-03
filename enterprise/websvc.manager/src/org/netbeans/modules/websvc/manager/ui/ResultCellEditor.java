@@ -20,11 +20,6 @@
 
 package org.netbeans.modules.websvc.manager.ui;
 
-/**
- *
- * @author  David Botterill
- */
-
 import javax.swing.DefaultCellEditor;
 import javax.swing.table.TableCellEditor;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -38,7 +33,7 @@ import java.awt.Dialog;
 
 /**
  *
- * @author  david
+ * @author David Botterill
  */
 public class ResultCellEditor extends DefaultCellEditor implements TableCellEditor {
 

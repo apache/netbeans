@@ -54,7 +54,6 @@ import org.netbeans.installer.wizard.components.panels.JdkLocationPanel;
  *
  */
 public class ConfigurationLogic extends ProductConfigurationLogic {
-    /////////////////////////////////////////////////////////////////////////////////
     // Instance
     private List<WizardComponent> wizardComponents;
     
@@ -71,7 +70,6 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
         final FilesList filesList = product.getInstalledFiles();
         final boolean hasNestedJre = product.getProperty(JdkLocationPanel.JRE_NESTED) != null;
         
-        /////////////////////////////////////////////////////////////////////////////
         final File jdkHome = new File(
                 product.getProperty(JdkLocationPanel.JDK_LOCATION_PROPERTY));
         try {
@@ -94,7 +92,6 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
                     e);
         }
         
-        /////////////////////////////////////////////////////////////////////////////
         try {
             progress.setDetail(getString("CL.install.netbeans.clusters")); // NOI18N
             for (String clusterName: CLUSTERS) {
@@ -111,7 +108,7 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
                     e);
         }
 
-         // update the update_tracking files information //////////////////////////////
+         // update the update_tracking files information
         for (String clusterName: CLUSTERS) {
             try {
                 progress.setDetail(getString(
@@ -127,7 +124,6 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
             }
         }
 
-        /////////////////////////////////////////////////////////////////////////////
         try {
             progress.setDetail(getString("CL.install.product.id")); // NOI18N
 
@@ -138,7 +134,6 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
                     e);
         }
 
-        /////////////////////////////////////////////////////////////////////////////
         try {
             progress.setDetail(getString("CL.install.license.accepted")); // NOI18N
             filesList.add(
@@ -150,7 +145,6 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
                     e);
         }
 
-        /////////////////////////////////////////////////////////////////////////////
         //try {
         //    progress.setDetail(getString("CL.install.irrelevant.files")); // NOI18N
         //
@@ -165,7 +159,6 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
         //            e);
         //}
 
-        /////////////////////////////////////////////////////////////////////////////
         //try {
         //    progress.setDetail(getString("CL.install.files.permissions")); // NOI18N
         //
@@ -180,7 +173,6 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
         //            e);
         //}
 
-        /////////////////////////////////////////////////////////////////////////////
         LogManager.logIndent(
                 "creating the desktop shortcut for NetBeans IDE"); // NOI18N
         if (!SystemUtils.isMacOS()) {
@@ -227,7 +219,6 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
         LogManager.logUnindent(
                 "... done"); // NOI18N
 
-        /////////////////////////////////////////////////////////////////////////////
         LogManager.logIndent(
                 "creating the start menu shortcut for NetBeans IDE"); // NOI18N
         try {
@@ -267,7 +258,6 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
         LogManager.logUnindent(
                 "... done"); // NOI18N
 
-        /////////////////////////////////////////////////////////////////////////////
         try {
             progress.setDetail(getString("CL.install.netbeans.conf")); // NOI18N
 
@@ -336,7 +326,6 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
         
         if (! javadbRegistered) {
 
-            /////////////////////////////////////////////////////////////////////////////
             try {
                 progress.setDetail(getString("CL.install.javadb.integration")); // NOI18N
 
@@ -384,8 +373,6 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
             } finally {
                 progress.setDetail(StringUtils.EMPTY_STRING); // NOI18N
             }
-            /////////////////////////////////////////////////////////////////////////////
-            
         }
 
         try {
@@ -442,7 +429,6 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
             progress.setDetail(StringUtils.EMPTY_STRING); // NOI18N
         }
         
-        /////////////////////////////////////////////////////////////////////////////
         try {
             final List<Product> jdks = Registry.getInstance().getProducts("jdk");
             for (Product jdk : jdks) {
@@ -499,7 +485,6 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
 
         product.setProperty("installation.timestamp", new Long(System.currentTimeMillis()).toString());
         
-        /////////////////////////////////////////////////////////////////////////////
         progress.setPercentage(Progress.COMPLETE);
     }
 
@@ -574,7 +559,6 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
         final File installLocation = product.getInstallationLocation();
 
         NetBeansUtils.warnNetbeansRunning(installLocation);
-        /////////////////////////////////////////////////////////////////////////////
         try {
             progress.setDetail(getString("CL.uninstall.start.menu")); // NOI18N
 
@@ -599,7 +583,6 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
                     e);
         }
 
-        /////////////////////////////////////////////////////////////////////////////
         if (!SystemUtils.isMacOS()) {
             try {
                 progress.setDetail(getString("CL.uninstall.desktop")); // NOI18N
@@ -664,7 +647,6 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
             }
         }
 
-        /////////////////////////////////////////////////////////////////////////////
         //remove cluster/update files
         try {
             progress.setDetail(getString("CL.uninstall.update.files")); // NOI18N
@@ -680,7 +662,6 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
                     e);
         }
 
-        /////////////////////////////////////////////////////////////////////////////
         progress.setPercentage(Progress.COMPLETE);
     }
 
@@ -746,7 +727,7 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
     public Text getLicense() {
         return null;
     }
-    // private //////////////////////////////////////////////////////////////////////
+    // private
     private Shortcut getDesktopShortcut(final File directory) {
         return getShortcut(
                 getStrings("CL.desktop.shortcut.name"), // NOI18N
@@ -870,7 +851,6 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
         return map;
     }
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Constants
     public static final String WIZARD_COMPONENTS_URI =
             FileProxy.RESOURCE_SCHEME_PREFIX + // NOI18N

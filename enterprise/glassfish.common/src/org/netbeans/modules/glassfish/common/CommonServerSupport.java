@@ -74,10 +74,7 @@ import org.openide.util.lookup.Lookups;
 public class CommonServerSupport
         implements GlassfishModule3, RefreshModulesCookie {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Task state listener watching __locations command execution.
      */
@@ -226,10 +223,7 @@ public class CommonServerSupport
         }
     };
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = GlassFishLogger.get(CommonServerSupport.class);
@@ -240,10 +234,7 @@ public class CommonServerSupport
     /** String to return for failed {@see getHttpHostFromServer()} search. */
     private static final String FAILED_HTTP_HOST = LOCALHOST + "FAIL";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Display pop up window with given message.
      * <p/>
@@ -262,10 +253,7 @@ public class CommonServerSupport
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Managed GlassFish instance. */
     private final GlassfishInstance instance;
 
@@ -290,10 +278,7 @@ public class CommonServerSupport
     /** Last executed start task. */
     private volatile FutureTask<TaskState> startTask;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     CommonServerSupport(GlassfishInstance instance) {
         this.instance = instance;
         this.isRemote = instance.isRemote();

@@ -40,7 +40,6 @@ import org.netbeans.installer.infra.build.ant.utils.Utils;
  * @author Kirill Sorokin
  */
 public class BuildNumberSwdp extends Task {
-    /////////////////////////////////////////////////////////////////////////////////
     // Instance
     /**
      * The input file.
@@ -52,7 +51,7 @@ public class BuildNumberSwdp extends Task {
      */
     private String prefix;
     
-    // setters //////////////////////////////////////////////////////////////////////
+    // setters
     /**
      * Setter for the <code>file</code> attribute.
      * 
@@ -71,7 +70,7 @@ public class BuildNumberSwdp extends Task {
         this.prefix = prefix;
     }
     
-    // execution ////////////////////////////////////////////////////////////////////
+    // execution
     /**
      * Executes the task. The input file is parsed and three properties identifying
      * the glassfish build are set.
@@ -123,7 +122,6 @@ public class BuildNumberSwdp extends Task {
         }
     }
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Constants
     /**
      * Pattern for which to look in the input file.

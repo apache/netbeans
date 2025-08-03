@@ -23,7 +23,9 @@ import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Collections;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
@@ -111,7 +113,7 @@ public final class NbProjectInformationProvider implements ProjectInformationPro
 
         private final ProjectInformation pinfo;
         private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-        private final Set<ProjectIconAnnotator> annotators = new WeakSet<ProjectIconAnnotator>();
+        private final Set<ProjectIconAnnotator> annotators = Collections.newSetFromMap(new WeakHashMap<>());
         private boolean annotatorsInitialized = false;
         private boolean addedPropertyListener = false;
         private final Object LOCK = new Object(); //protects access to annotatorsInitialized, addedPropertyListener and icon

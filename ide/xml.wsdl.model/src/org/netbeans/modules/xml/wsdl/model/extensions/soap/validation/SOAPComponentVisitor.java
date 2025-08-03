@@ -192,12 +192,7 @@ public class SOAPComponentVisitor implements SOAPComponent.Visitor {
         }
     }
     
-    /////////////////////////////////////////////
-    ////
-    ////  SOAPComponent.Visitor interface
-    ////
-    /////////////////////////////////////////////
-    
+    // SOAPComponent.Visitor interface
     public void visit(SOAPHeader header) {
         NamedComponentReference<Message> message = header.getMessage();
         if (message == null) {
@@ -258,19 +253,14 @@ public class SOAPComponentVisitor implements SOAPComponent.Visitor {
             return;
         }
         
-        ////////////////////////////////////////////////////////
         // GSR changed for Java EE Service Engine
         // As instructed by Jerry Waldorf.
-        ////////////////////////////////////////////////////////
         if("REPLACE_WITH_ACTUAL_URL".equals(location)) {
             return;
         }
         
-        ///////////////////////////////////////////////////////
         // Check for valid tokens for default HTTP and HTTPS port
         // Introduced to support clustering
-        ////////////////////////////////////////////////////////
-        
         if (location.indexOf(HTTP_DEFAULT_PORT_TOKEN, 6) > 0) {
             int colonIndex = -1;
             int contextStartIndex = -1;

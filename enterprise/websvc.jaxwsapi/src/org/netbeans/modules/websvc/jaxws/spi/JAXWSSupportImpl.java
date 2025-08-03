@@ -28,11 +28,8 @@ import org.netbeans.spi.project.support.ant.AntProjectHelper;
 import org.openide.filesystems.FileObject;
 
 /**
- *
+ * SPI for JAXWSSupport
  * @author Milan Kuchtiak
- */
-
-/** SPI for JAXWSSupport
  */ 
 public interface JAXWSSupportImpl {
     

@@ -28,10 +28,7 @@ package org.netbeans.modules.glassfish.tooling.data.cloud;
  */
 public class GlassFishAccountEntity implements GlassFishAccount {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish cloud user account name (display name in IDE).
      *  Used as key attribute. */
     protected String name;
@@ -51,10 +48,7 @@ public class GlassFishAccountEntity implements GlassFishAccount {
     /** GlassFish cloud entity reference. */
     protected GlassFishCloud cloudEntity;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs empty class instance. No default values are set.
      */
@@ -81,10 +75,7 @@ public class GlassFishAccountEntity implements GlassFishAccount {
         this.cloudEntity = cloudEntity;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get GlassFish cloud user account display name.
      * <p/>
@@ -212,10 +203,7 @@ public class GlassFishAccountEntity implements GlassFishAccount {
         this.cloudEntity = cloudEntity;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * String representation of this GlassFish cloud entity.
      * <p/>

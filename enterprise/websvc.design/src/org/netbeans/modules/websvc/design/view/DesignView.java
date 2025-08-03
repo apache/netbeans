@@ -29,14 +29,11 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.MouseWheelListener;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -53,10 +50,7 @@ import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
-import org.netbeans.modules.websvc.api.jaxws.project.config.Service;
 import org.netbeans.modules.websvc.design.configuration.WSConfiguration;
-import org.netbeans.modules.websvc.design.configuration.WSConfigurationProvider;
-import org.netbeans.modules.websvc.design.configuration.WSConfigurationProviderRegistry;
 import org.netbeans.modules.websvc.design.javamodel.MethodModel;
 import org.netbeans.modules.websvc.design.javamodel.ProjectService;
 import org.netbeans.modules.websvc.design.javamodel.ServiceChangeListener;
@@ -105,10 +99,10 @@ public class DesignView extends JPanel  implements Flushable {
         this.implementationClass = implementationClass;
         
         scene = new ObjectScene() {
-            @Override
             /**
              * Use our own traversal policy
              */
+            @Override
             public Comparable<DesignerWidgetIdentityCode> getIdentityCode(Object object) {
                 return new DesignerWidgetIdentityCode(scene,object);
             }

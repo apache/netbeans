@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.j2ee.persistence.kit
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/j2ee/persistence/kit/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.61
+OpenIDE-Module-Specification-Version: 1.62
 

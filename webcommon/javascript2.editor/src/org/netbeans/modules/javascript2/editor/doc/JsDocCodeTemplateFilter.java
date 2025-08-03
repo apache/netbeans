@@ -28,10 +28,6 @@ import org.netbeans.lib.editor.codetemplates.spi.CodeTemplateFilter;
  *
  * @author Petr Pisl
  */
-/**
- *
- * @author Petr Pisl
- */
 public class JsDocCodeTemplateFilter implements CodeTemplateFilter {
 
     private static final String JSDOC_CODE = "JsDoc-Comment"; // NOI18N

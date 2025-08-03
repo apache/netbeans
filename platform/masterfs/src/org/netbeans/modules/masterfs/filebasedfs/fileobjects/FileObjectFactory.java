@@ -51,7 +51,6 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.Mutex;
 import org.openide.util.BaseUtilities;
-import org.openide.util.WeakSet;
 
 /**
  * @author Radek Matous
@@ -496,7 +495,7 @@ public final class FileObjectFactory {
         final Set<BaseFileObj> all2Refresh;
         allIBaseLock.writeLock().lock();
         try {
-            all2Refresh = new WeakSet<BaseFileObj>(allIBaseFileObjects.size() * 3 + 11);
+            all2Refresh = Collections.newSetFromMap(new WeakHashMap<>(allIBaseFileObjects.size() * 3 + 11));
             final Iterator<Object> it = allIBaseFileObjects.values().iterator();
             while (it.hasNext()) {
                 final Object obj = it.next();

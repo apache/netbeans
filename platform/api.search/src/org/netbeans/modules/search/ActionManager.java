@@ -22,7 +22,9 @@ package org.netbeans.modules.search;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.ref.WeakReference;
+import java.util.Collections;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
@@ -32,7 +34,6 @@ import org.openide.actions.ReplaceAction;
 import org.openide.text.CloneableEditorSupport;
 import org.openide.util.Mutex;
 import org.openide.util.SharedClassObject;
-import org.openide.util.WeakSet;
 import org.openide.util.actions.CallbackSystemAction;
 import org.openide.util.actions.SystemAction;
 import org.openide.windows.TopComponent;
@@ -60,12 +61,12 @@ public abstract class ActionManager<A extends SystemAction, S extends CallbackSy
      * holds set of windows for which their ActionMap was modified
      */
     private final Set<TopComponent> activatedOnWindows =
-            new WeakSet<>(8);
+            Collections.newSetFromMap(new WeakHashMap<>(8));
     /**
      *
      */
     private Object actionMapKey;
-    /**
+    /*
      * Holds class {@code SearchScopeNodeSelection.LookupSensitive}. See Bug
      * #183434.
      */

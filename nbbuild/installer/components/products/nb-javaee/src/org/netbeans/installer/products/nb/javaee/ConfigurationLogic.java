@@ -43,7 +43,6 @@ import org.netbeans.installer.utils.progress.Progress;
  * @author Kirill Sorokin
  */
 public class ConfigurationLogic extends NbClusterConfigurationLogic {
-    /////////////////////////////////////////////////////////////////////////////////
     // Constants
 
     private static final String ENTERPRISE_CLUSTER =
@@ -59,7 +58,6 @@ public class ConfigurationLogic extends NbClusterConfigurationLogic {
     private static final String NB_JAVAME_UID = "nb-javame";
     private static final String MOBILITY_CLUSTER =
             "{mobility-cluster}";
-    /////////////////////////////////////////////////////////////////////////////////
     // Instance
 
     public ConfigurationLogic() throws InitializationException {
@@ -101,7 +99,6 @@ public class ConfigurationLogic extends NbClusterConfigurationLogic {
             LogManager.log("Cannot load bundled registry", e);
         }
 
-        /////////////////////////////////////////////////////////////////////////////
         try {
             progress.setDetail(getString("CL.install.tomcat.integration")); // NOI18N
 
@@ -142,7 +139,6 @@ public class ConfigurationLogic extends NbClusterConfigurationLogic {
                     e);
         }
         
-        /////////////////////////////////////////////////////////////////////////////
         try {
             progress.setDetail(getString("CL.install.glassfish.integration")); // NOI18N
 
@@ -186,7 +182,6 @@ public class ConfigurationLogic extends NbClusterConfigurationLogic {
                     e);
         }
 
-        /////////////////////////////////////////////////////////////////////////////
     }
 
     private boolean isGlassFishRegistred(File nbLocation) throws IOException {

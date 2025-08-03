@@ -445,24 +445,26 @@ jobs:
         run: ant -quiet -Dcluster.config=$CLUSTER_CONFIG test -Dtest.includes=NoTestsJustBuild
 
       # 13-14 min for javadoc; JDK version must be synced with nb-javac
-      - name: Set up JDK 24 for javadoc
+      - name: Set up JDK 25 for javadoc
         if: env.test_javadoc == 'true' && success()
         uses: actions/setup-java@v4
         with:
-          java-version: 24
+          java-version: 25-ea
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Build javadoc
         if: env.test_javadoc == 'true' && success()
         run: |
           export ANT_OPTS=-Djdk.xml.totalEntitySizeLimit=200000
-          ant $OPTS build-javadoc
+          ant $OPTS -Djavadoc.fail.broken.links=true build-javadoc
 
       - name: Create Test Summary
         uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4
         if: failure()
         with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
+          paths: |
+            ./*/*/build/test/*/results/TEST-*.xml
+            ./nbbuild/build/javadoc/checklinks-errors.xml
 
 
   build-from-src-zip:
@@ -1317,6 +1319,9 @@ jobs:
       - name: editor.htmlui
         run: ant $OPTS -f java/editor.htmlui test
 
+      - name: java.api.common
+        run: ant $OPTS -f java/java.api.common test
+
       - name: java.completion
         run: ant $OPTS -f java/java.completion test
 
@@ -1462,11 +1467,10 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        # TODO bump together with nb-javac 25 update
-        java: [ '17', '24' ]
+        java: [ '17', '25-ea' ]
         config: [ 'batch1', 'batch2' ]
         exclude:
-          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '24' }}
+          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '25-ea' }}
       fail-fast: false
     steps:
 
@@ -2373,7 +2377,7 @@ jobs:
       # linux specific setup
       - name: Setup PHP
         if: contains(matrix.os, 'ubuntu')
-        uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # v2.33.0
+        uses: shivammathur/setup-php@2282b6a082fc605c8320908a4cca3a5d1ca6c6fe # v2.35.1
         with:
           php-version: '8.3'
           tools: pecl

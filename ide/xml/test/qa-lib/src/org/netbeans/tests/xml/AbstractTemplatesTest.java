@@ -62,7 +62,7 @@ public abstract class AbstractTemplatesTest extends JXTest {
         super(testName);
     }
     
-    // ABSTRACT ////////////////////////////////////////////////////////////////
+    // ABSTRACT
     
     /**
      *  Returns Sring array with tested templates. The array have to this format:
@@ -73,7 +73,7 @@ public abstract class AbstractTemplatesTest extends JXTest {
     /** Should return TestUtil from Test's package */
     protected abstract AbstractTestUtil testUtil();
     
-    // TESTS ///////////////////////////////////////////////////////////////////
+    // TESTS
     
     public void testNewFromTemplate() throws Exception {
         String templates[][] = getTemplateList();

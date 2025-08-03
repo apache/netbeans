@@ -1329,7 +1329,7 @@ loop:
                     next();
                 }
                 boolean generator = false;
-                if (!async && type == MUL && isAtLeastES6()) {
+                if (type == MUL && isAtLeastES6() && ((!async) || isAtLeastES9())) {
                     generator = true;
                     next();
                 }
@@ -1480,7 +1480,7 @@ loop:
             endOfLine();
             return ClassElement.createField(methodToken, finish, propertyName, assignment, decorators, isStatic, computed);
         }
-        PropertyFunction methodDefinition = propertyMethodFunction(propertyName, methodToken, methodLine, generator, false, flags, computed);
+        PropertyFunction methodDefinition = propertyMethodFunction(propertyName, methodToken, methodLine, generator, async, flags, computed);
         if((flags & FunctionNode.IS_CLASS_CONSTRUCTOR) == FunctionNode.IS_CLASS_CONSTRUCTOR) {
             return ClassElement.createDefaultConstructor(methodToken, finish, methodDefinition.key, methodDefinition.functionNode);
         } else {
@@ -6180,6 +6180,8 @@ loop:
             long token = getToken(k + i);
             TokenType t = Token.descType(token);
             switch (t) {
+            case MUL:
+                continue;
             case COMMENT:
                 continue;
             case FUNCTION:

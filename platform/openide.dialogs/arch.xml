@@ -43,7 +43,7 @@
 -->
 <answer id="arch-what">
 The  
-<api name="DialogsAPI" category="official" type="export" url="@org-openide-dialogs@/org/openide/package-summary.html#package.description" group="java" />
+<api name="DialogsAPI" category="official" type="export" url="@org-openide-dialogs@/org/openide/package-summary.html#package-description" group="java" />
 allows creating a user notification, a dialog's description
 and also permits it to be displayed. The wizard framework allows create a sequence
 of panels which leads a user through the steps to complete any task.

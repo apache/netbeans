@@ -165,7 +165,7 @@ class ConnectionPanel1 extends javax.swing.JPanel {
             bundle.getString("ACSD_CW_SourceComponent")); // NOI18N
         getAccessibleContext().setAccessibleDescription(
             bundle.getString("ACSD_CW_ConnectionPanel1")); // NOI18N
-        putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(0)); // NOI18N
+        putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 0); // NOI18N
     }
 
     @Override

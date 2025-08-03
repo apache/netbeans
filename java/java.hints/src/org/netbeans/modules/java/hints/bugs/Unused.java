@@ -33,8 +33,6 @@ import org.netbeans.spi.java.hints.JavaFixUtilities;
 import org.netbeans.spi.java.hints.TriggerTreeKind;
 import org.openide.util.NbBundle.Messages;
 
-import static org.netbeans.api.java.source.CompilationInfo.CacheClearPolicy.ON_TASK_END;
-
 /**
  *
  * @author lahvac
@@ -64,15 +62,15 @@ public class Unused {
         if (unused.isEmpty()) {
             return null;
         }
-        boolean detectUnusedPackagePrivate = getTaskCachedBoolean(ctx, DETECT_UNUSED_PACKAGE_PRIVATE, DETECT_UNUSED_PACKAGE_PRIVATE_DEFAULT);
+        boolean detectUnusedPackagePrivate = ctx.getPreferences().getBoolean(DETECT_UNUSED_PACKAGE_PRIVATE, DETECT_UNUSED_PACKAGE_PRIVATE_DEFAULT);
         for (UnusedDescription ud : unused) {
             if (ctx.isCanceled()) {
                 break;
             }
-            if (ud.unusedElementPath.getLeaf() != ctx.getPath().getLeaf()) {
+            if (ud.unusedElementPath().getLeaf() != ctx.getPath().getLeaf()) {
                 continue;
             }
-            if (!detectUnusedPackagePrivate && ud.packagePrivate) {
+            if (!detectUnusedPackagePrivate && ud.packagePrivate()) {
                 continue;
             }
             ErrorDescription err = convertUnused(ctx, ud);
@@ -82,17 +80,6 @@ public class Unused {
             break;
         }
         return null;
-    }
-
-    // reading from AuxiliaryConfigBasedPreferences in inner loops is not cheap since it needs a mutex
-    private static boolean getTaskCachedBoolean(HintContext ctx, String key, boolean defaultVal) {
-        Object cached = ctx.getInfo().getCachedValue(key);
-        if (cached instanceof Boolean val) {
-            return val;
-        }
-        boolean fromPrefs = ctx.getPreferences().getBoolean(key, defaultVal);
-        ctx.getInfo().putCachedValue(key, fromPrefs, ON_TASK_END);
-        return fromPrefs;
     }
 
     @Messages({
@@ -111,34 +98,34 @@ public class Unused {
     })
     private static ErrorDescription convertUnused(HintContext ctx, UnusedDescription ud) {
         //TODO: switch expression candidate!
-        String name = ud.unusedElement.getSimpleName().toString();
+        String name = ud.unusedElement().getSimpleName().toString();
         String message;
         Fix fix = null;
-        switch (ud.reason) {
+        switch (ud.reason()) {
             case NOT_WRITTEN_READ: message = Bundle.ERR_NeitherReadOrWritten(name);
-                fix = JavaFixUtilities.removeFromParent(ctx, Bundle.FIX_RemoveUsedElement(name), ud.unusedElementPath);
+                fix = JavaFixUtilities.removeFromParent(ctx, Bundle.FIX_RemoveUsedElement(name), ud.unusedElementPath());
                 break;
             case NOT_WRITTEN: message = Bundle.ERR_NotWritten(name);
                 break;
             case NOT_READ: message = Bundle.ERR_NotRead(name);
                 //unclear what can be done with unused binding variables currently (before "_"):
-                if (ud.unusedElementPath.getParentPath().getLeaf().getKind() != Kind.BINDING_PATTERN) {
-                    fix = JavaFixUtilities.safelyRemoveFromParent(ctx, Bundle.FIX_RemoveUsedElement(name), ud.unusedElementPath);
+                if (ud.unusedElementPath().getParentPath().getLeaf().getKind() != Kind.BINDING_PATTERN) {
+                    fix = JavaFixUtilities.safelyRemoveFromParent(ctx, Bundle.FIX_RemoveUsedElement(name), ud.unusedElementPath());
                 }
                 break;
             case NOT_USED:
-                if (ud.unusedElement.getKind() == ElementKind.CONSTRUCTOR) {
+                if (ud.unusedElement().getKind() == ElementKind.CONSTRUCTOR) {
                     message = Bundle.ERR_NotUsedConstructor();
-                    fix = JavaFixUtilities.removeFromParent(ctx, Bundle.FIX_RemoveUsedConstructor(), ud.unusedElementPath);
+                    fix = JavaFixUtilities.removeFromParent(ctx, Bundle.FIX_RemoveUsedConstructor(), ud.unusedElementPath());
                 } else {
                     message = Bundle.ERR_NotUsed(name);
-                    fix = JavaFixUtilities.removeFromParent(ctx, Bundle.FIX_RemoveUsedElement(name), ud.unusedElementPath);
+                    fix = JavaFixUtilities.removeFromParent(ctx, Bundle.FIX_RemoveUsedElement(name), ud.unusedElementPath());
                 }
                 break;
             default:
-                throw new IllegalStateException("Unknown unused type: " + ud.reason);
+                throw new IllegalStateException("Unknown unused type: " + ud.reason());
         }
-        return fix != null ? ErrorDescriptionFactory.forName(ctx, ud.unusedElementPath, message, fix)
-                           : ErrorDescriptionFactory.forName(ctx, ud.unusedElementPath, message);
+        return fix != null ? ErrorDescriptionFactory.forName(ctx, ud.unusedElementPath(), message, fix)
+                           : ErrorDescriptionFactory.forName(ctx, ud.unusedElementPath(), message);
     }
 }

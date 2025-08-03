@@ -1096,7 +1096,7 @@
           application. Instead NetBeans now fully support logging two JDK's
           standard <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">Logger</a>.
           See the
-          <a href="@org-openide-util@//org/openide/util/doc-files/logging.html">NetBeans logging guide</a>
+          <a href="@org-openide-util@/org/openide/util/doc-files/logging.html">NetBeans logging guide</a>
           to learn the best practises for logging in NetBeans.
           <br/>
           <a href="@TOP@/org/openide/ErrorManager.html">ErrorManager</a>
@@ -1180,7 +1180,7 @@
       <description>
           When one calls <a href="@org-openide-util@/org/openide/util/RequestProcessor.Task.html">RequestProcessor.Task</a>.cancel(), 
           the running thread gets interrupted if the 
-          <a href="@org-openide-util@/org/openide/util/RequestProcessor.html#RequestProcessor(java.lang.String,int,boolean)">
+          <a href="@org-openide-util@/org/openide/util/RequestProcessor.html#%3Cinit%3E(java.lang.String,int,boolean)">
           RequestProcessor(string, int, boolean) 
           </a> 
           constructor is used.

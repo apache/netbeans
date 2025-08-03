@@ -22,17 +22,17 @@
 <html>
 <head>
 <title>Options API</title>
-<link rel="Stylesheet" href="../../../../prose.css" type="text/css" title="NetBeans Open APIs Style">
+<link rel="Stylesheet" href="@TOP@/resource-files/prose.css" type="text/css" title="NetBeans Open APIs Style">
 </head>
 <body>
 
-<p class="overviewlink"><a href="../../../../overview-summary.html">Overview</a></p>
+<p class="overviewlink"><a href="@TOP@/index.html">Overview</a></p>
 
 <h1>Javadoc</h1>
 
 Please see
 
-<a href="../package-summary.html"><code>org.openide.options</code></a>
+{@link org.openide.options org.openide.options }
 
 for the relevant classes.
 
@@ -81,7 +81,7 @@ the entire source for a system option can fit on one page.
 
 First you must subclass
 
-<a href="../SystemOption.html"><code>SystemOption</code></a>
+{@link org.openide.options.SystemOption SystemOption }
 
 (or one of its subclasses). The option class should be a
 <em>singleton</em>, i.e. it does not need any per-instance state; all
@@ -97,7 +97,7 @@ providing them, and ought to end in <code>Settings</code>: e.g.,
 <code>MyModuleSettings</code>. This does not affect display, however;
 every option must implement
 
-<a href="../SystemOption.html#displayName--"><code>SystemOption.displayName()</code></a>
+{@link org.openide.options.SystemOption#displayName() SystemOption.displayName() }
 
 to provide a reasonable name to present to users in the Control Panel.
 
@@ -128,18 +128,18 @@ state. For this purpose, it is possible to manually keep static variables
 with the current state, and manually fire property change events; but
 it is more convenient to use the automatically-managed state provided by
 
-<a href="@org-openide-util-ui@/org/openide/util/SharedClassObject.html"><code>SharedClassObject</code></a>:
+{@link org.openide.util.SharedClassObject SharedClassObject }:
 
 <pre>
 public Color getForeground () {
   // Retrieves from class-wide state:
-  return (Color) <a href="@org-openide-util-ui@/org/openide/util/SharedClassObject.html#getProperty-java.lang.Object-">getProperty</a> (PROPERTY_FOREGROUND);
+  return (Color) {@link org.openide.util.SharedClassObject#getProperty(java.lang.Object) getProperty} (PROPERTY_FOREGROUND);
 }
 public void setForeground (Color fg) {
   // make sure it is sane...
   if (fg == null) throw new NullPointerException ();
   // Stores in class-wide state and fires property changes if needed:
-  <a href="@org-openide-util-ui@/org/openide/util/SharedClassObject.html#putProperty-java.lang.String-java.lang.Object-boolean-">putProperty</a> (PROPERTY_FOREGROUND, fg, true);
+  {@link org.openide.util.SharedClassObject#putProperty(java.lang.String,java.lang.Object,boolean) putProperty } (PROPERTY_FOREGROUND, fg, true);
 }
 </pre>
 
@@ -151,11 +151,11 @@ be called during project save and restore; instead, the actual property value yo
 stored will be serialized and deserialized. This is convenient for some purposes, e.g.
 you may make a property of declared type
 
-<a href="@org-openide-util-ui@/org/openide/ServiceType.html"><code>ServiceType</code></a>
+{@link org.openide.ServiceType ServiceType }
 
 (and have a pleasant default property editor) while actually storing the correct
 
-<a href="@org-openide-util-ui@/org/openide/ServiceType.Handle.html"><code>ServiceType.Handle</code></a>
+{@link org.openide.ServiceType.Handle ServiceType.Handle }
 
 in the project. <strong>However</strong>, it can be dangerous in some cases, e.g.
 if you are associating some sort of runtime service configuration with the property
@@ -167,13 +167,13 @@ using <code>putProperty</code>.
 
 <p>By default,
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/Introspector.html">JavaBeans introspection</a>
+{@link java.beans.Introspector JavaBeans introspection }
 
 is used to find the properties associated with a system option, and to
 read and write them. You may want to have more control over this
 process. If so, you should create a valid
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/BeanInfo.html"><code>BeanInfo</code></a>
+{@link java.beans.BeanInfo BeanInfo }
 
 class for the option. The easiest way to do this is of course to
 create a class named e.g. <code>MyModuleSettingsBeanInfo</code>.</p>
@@ -205,13 +205,13 @@ once in a more intuitive fashion.
 course should make public constants representing these values, and
 provide e.g. a tagged
 
-<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/PropertyEditorSupport.html">property editor</a>.</p>
+{@link java.beans.PropertyEditorSupport property edito}.</p>
 
 <h3 id="cluster">Making an option cluster</h3>
 
 If
 
-<a href="../ContextSystemOption.html"><code>ContextSystemOption</code></a>
+{@link org.openide.options.ContextSystemOption ContextSystemOption }
 
 is used as the superclass, then there will appear in the Control Panel
 one master option (possibly having some properties, possibly not) with
@@ -220,7 +220,7 @@ a regular one, but each child should also be a valid system option in
 its own right, and they should be added to the parent (e.g. in the
 parent's constructor) using
 
-<a href="../ContextSystemOption.html#addOption-org.openide.options.SystemOption-"><code>ContextSystemOption.addOption(...)</code></a>.
+{@link org.openide.options.ContextSystemOption#addOption(org.openide.options.SystemOption) ContextSystemOption.addOption(...) }.
 
 <p>Such a cluster should be used for any system options for which one
 property list would be unwieldy; or if it makes sense to have multiple
@@ -230,7 +230,7 @@ and separate customizer components.
 
 The superclass
 
-<a href="../VetoSystemOption.html"><code>VetoSystemOption</code></a>
+{@link org.openide.options.VetoSystemOption VetoSystemOption }
 
 may be used for any option which desired that some or all of its
 properties be constrained by listeners - i.e. if it might be impossible
@@ -239,7 +239,7 @@ other part of the module.
 
 <p>When such a property is set, it should fire its change using
 
-<a href="../VetoSystemOption.html#fireVetoableChange-java.lang.String-java.lang.Object-java.lang.Object-"><code>VetoSystemOption.fireVetoableChange(...)</code></a>
+{@link org.openide.options.VetoSystemOption#fireVetoableChange(java.lang.String,java.lang.Object,java.lang.Object) VetoSystemOption.fireVetoableChange(...) }
 
 and be prepared to revoke the change if a veto occurs.
 
@@ -264,7 +264,7 @@ made by the user in the Control Panel.
 <p>If it necessary to access some other option, you may use:
 
 <pre>
-OtherOption oo = (OtherOption) <a href="@org-openide-util-ui@/org/openide/util/SharedClassObject.html#findObject-java.lang.Class-boolean-">SystemOption.findObject</a>(OtherOption.class, true);
+OtherOption oo = (OtherOption) {@link org.openide.util.SharedClassObject#findObject(java.lang.Class,boolean) SystemOption.findObject }(OtherOption.class, true);
 </pre>
 
 You may also use this method to obtain the default instance for local use.

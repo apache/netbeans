@@ -360,7 +360,7 @@ public class SpinButton extends Canvas {
         }
 
         if (value != oldValue) {
-            valueSupport.firePropertyChange("value", new Integer(oldValue), new Integer(value)); // NOI18N
+            valueSupport.firePropertyChange("value", Integer.valueOf(oldValue), Integer.valueOf(value)); // NOI18N
         }
 
         if ((getValue() == minimum) || (getValue() == maximum) || (oldValue == minimum) || (oldValue == maximum)) {

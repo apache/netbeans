@@ -28,7 +28,8 @@ body:
       multiple: false
       options:
         - "Apache NetBeans 25"
-        - "Apache NetBeans latest daily build"
+        - "Apache NetBeans 26 latest release candidate"
+        - "Apache NetBeans 27 latest daily build"
     validations:
       required: true
   - type: textarea
@@ -72,16 +73,12 @@ body:
       multiple: false
       options:
         - "No / Don't know"
+        - "Apache NetBeans 26"
         - "Apache NetBeans 25"
         - "Apache NetBeans 24"
         - "Apache NetBeans 23"
         - "Apache NetBeans 22"
-        - "Apache NetBeans 21"
-        - "Apache NetBeans 20"
-        - "Apache NetBeans 19"
-        - "Apache NetBeans 18"
-        - "Apache NetBeans 17"
-        - "Apache NetBeans 16 or earlier"
+        - "Apache NetBeans 21 or earlier"
     validations:
       required: true
   - type: input

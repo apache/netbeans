@@ -23,12 +23,12 @@
 
 <HEAD>
 <TITLE>HOW TO: Declarative MIME Type Resolvers</TITLE>
-<LINK REL="Stylesheet" HREF="../../../../prose.css" TYPE="text/css">
+<LINK REL="Stylesheet" HREF="@TOP@/resource-files/prose.css" TYPE="text/css">
 </HEAD>
 
 <BODY>
 
-<p class="overviewlink"><a href="../../../../overview-summary.html">Overview</a></p>
+<p class="overviewlink"><a href="@TOP@/index.html">Overview</a></p>
 <p class="overviewlink"><a href="@TOP@/org/openide/filesystems/doc-files/api.html">Back to Filesystems API</a></p>
 
 <H1>HOW TO: Declarative MIME Type Resolvers</H1>
@@ -46,13 +46,13 @@
 <p>A MIME type resolver's responsibility is to return <em>on
 request</em> a given
 
-<a href="../FileObject.html"><code>FileObject</code></a>'s
+{@link org.openide.filesystems.FileObject FileObject }'s
 
 MIME content type.</p>
 
 <p>A MIME type resolver can be any object implementing
 
-<a href="../MIMEResolver.html"><code>MIMEResolver</code></a>.
+{@link org.openide.filesystems.MIMEResolver MIMEResolver }.
 
 All MIME resolvers in the system are consulted; they are found by
 searching in

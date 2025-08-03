@@ -1,0 +1,227 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='295'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='295'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='Demo' start='0' end='10'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isConst/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='6' end='10'>
+        <name>Demo</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <ClassNode ident='Demo' start='0' end='295'>
+        <!-- ClassNode Constructor -->
+        <ClassElement name='Demo' start='0' end='295'>
+          <!-- ClassElement Key -->
+          <IdentNode start='6' end='10'>
+            <name>Demo</name>
+          </IdentNode>
+          <!-- ClassElement Value -->
+          <FunctionNode name='Demo' kind='NORMAL' start='0' end='295'>
+            <isClassConstructor/>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='0' end='295'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </FunctionNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
+        <!-- ClassNode Elements -->
+        <ClassElement name='generator1' start='19' end='78'>
+          <!-- ClassElement Key -->
+          <IdentNode start='19' end='29'>
+            <name>generator1</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- ClassElement Value -->
+          <FunctionNode name='generator1' kind='GENERATOR' start='19' end='78'>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='32' end='72'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+              <ExpressionStatement start='42' end='50'>
+                <UnaryNode type='YIELD' start='42' end='49'>
+                  <!-- UnaryNode Expression -->
+                  <NumberLiteralNode value='1' start='48' end='49'/>
+                </UnaryNode>
+              </ExpressionStatement>
+              <ExpressionStatement start='59' end='72'>
+                <UnaryNode type='YIELD' start='59' end='71'>
+                  <!-- UnaryNode Expression -->
+                  <BinaryNode type='ADD' start='65' end='71'>
+                    <!-- BinaryNode lhs -->
+                    <NumberLiteralNode value='1' start='65' end='66'/>
+                    <!-- BinaryNode rhs -->
+                    <NumberLiteralNode value='10' start='69' end='71'/>
+                  </BinaryNode>
+                </UnaryNode>
+              </ExpressionStatement>
+            </Block>
+          </FunctionNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
+        <ClassElement name='generator2' start='86' end='146'>
+          <!-- ClassElement Key -->
+          <IdentNode start='86' end='96'>
+            <name>generator2</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- ClassElement Value -->
+          <FunctionNode name='generator2' kind='GENERATOR' start='86' end='146'>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <IdentNode start='97' end='98'>
+              <name>i</name>
+            </IdentNode>
+            <!-- FunctionNode Body -->
+            <Block start='100' end='140'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+              <ExpressionStatement start='110' end='118'>
+                <UnaryNode type='YIELD' start='110' end='117'>
+                  <!-- UnaryNode Expression -->
+                  <IdentNode start='116' end='117'>
+                    <name>i</name>
+                  </IdentNode>
+                </UnaryNode>
+              </ExpressionStatement>
+              <ExpressionStatement start='127' end='140'>
+                <UnaryNode type='YIELD' start='127' end='139'>
+                  <!-- UnaryNode Expression -->
+                  <BinaryNode type='ADD' start='133' end='139'>
+                    <!-- BinaryNode lhs -->
+                    <IdentNode start='133' end='134'>
+                      <name>i</name>
+                    </IdentNode>
+                    <!-- BinaryNode rhs -->
+                    <NumberLiteralNode value='10' start='137' end='139'/>
+                  </BinaryNode>
+                </UnaryNode>
+              </ExpressionStatement>
+            </Block>
+          </FunctionNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
+        <ClassElement name='generator3' start='160' end='219'>
+          <!-- ClassElement Key -->
+          <IdentNode start='160' end='170'>
+            <name>generator3</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- ClassElement Value -->
+          <FunctionNode name='generator3' kind='GENERATOR' start='160' end='219'>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <isAsync/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='173' end='213'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+              <ExpressionStatement start='183' end='191'>
+                <UnaryNode type='YIELD' start='183' end='190'>
+                  <!-- UnaryNode Expression -->
+                  <NumberLiteralNode value='1' start='189' end='190'/>
+                </UnaryNode>
+              </ExpressionStatement>
+              <ExpressionStatement start='200' end='213'>
+                <UnaryNode type='YIELD' start='200' end='212'>
+                  <!-- UnaryNode Expression -->
+                  <BinaryNode type='ADD' start='206' end='212'>
+                    <!-- BinaryNode lhs -->
+                    <NumberLiteralNode value='1' start='206' end='207'/>
+                    <!-- BinaryNode rhs -->
+                    <NumberLiteralNode value='10' start='210' end='212'/>
+                  </BinaryNode>
+                </UnaryNode>
+              </ExpressionStatement>
+            </Block>
+          </FunctionNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
+        <ClassElement name='generator4' start='233' end='293'>
+          <!-- ClassElement Key -->
+          <IdentNode start='233' end='243'>
+            <name>generator4</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- ClassElement Value -->
+          <FunctionNode name='generator4' kind='GENERATOR' start='233' end='293'>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <isAsync/>
+            <!-- FunctionNode Parameters -->
+            <IdentNode start='244' end='245'>
+              <name>i</name>
+            </IdentNode>
+            <!-- FunctionNode Body -->
+            <Block start='247' end='287'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+              <ExpressionStatement start='257' end='265'>
+                <UnaryNode type='YIELD' start='257' end='264'>
+                  <!-- UnaryNode Expression -->
+                  <IdentNode start='263' end='264'>
+                    <name>i</name>
+                  </IdentNode>
+                </UnaryNode>
+              </ExpressionStatement>
+              <ExpressionStatement start='274' end='287'>
+                <UnaryNode type='YIELD' start='274' end='286'>
+                  <!-- UnaryNode Expression -->
+                  <BinaryNode type='ADD' start='280' end='286'>
+                    <!-- BinaryNode lhs -->
+                    <IdentNode start='280' end='281'>
+                      <name>i</name>
+                    </IdentNode>
+                    <!-- BinaryNode rhs -->
+                    <NumberLiteralNode value='10' start='284' end='286'/>
+                  </BinaryNode>
+                </UnaryNode>
+              </ExpressionStatement>
+            </Block>
+          </FunctionNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
+        <!-- ClassNode Decorators -->
+      </ClassNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

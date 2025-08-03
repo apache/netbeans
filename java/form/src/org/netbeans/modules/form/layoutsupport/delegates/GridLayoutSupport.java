@@ -215,7 +215,7 @@ public class GridLayoutSupport extends AbstractLayoutSupport
             {   // number of rows is to be set to 0, we must preset
                 // columns property to something else than 0
                 try {
-                    getProperty("columns").setValue(new Integer(1));
+                    getProperty("columns").setValue(1);
                 }
                 catch (Exception ex) {} // ignore
             }

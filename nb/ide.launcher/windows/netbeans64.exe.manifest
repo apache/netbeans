@@ -22,7 +22,7 @@
 <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
 <!-- Use processorArchitecture="x86", which is the value used by the 64-bit
      javaw.exe on Java 10.0.2 and Java 11ea. -->
-<assemblyIdentity version="101.2.0.0"
+<assemblyIdentity version="101.3.0.0"
    processorArchitecture="x86"
    name="netbeans64.exe"
    type="win32"/>

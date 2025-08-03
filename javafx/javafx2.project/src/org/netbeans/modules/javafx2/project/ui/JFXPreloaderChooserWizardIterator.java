@@ -49,7 +49,7 @@ public final class JFXPreloaderChooserWizardIterator implements WizardDescriptor
                 JComponent jc = (JComponent) c;
                 // Sets step number of a component
                 // TODO if using org.openide.dialogs >= 7.8, can use WizardDescriptor.PROP_*:
-                jc.putClientProperty("WizardPanel_contentSelectedIndex", new Integer(index));
+                jc.putClientProperty("WizardPanel_contentSelectedIndex", index);
                 // Sets steps names for a panel
                 jc.putClientProperty("WizardPanel_contentData", steps);
                 // Turn on subtitle creation on each step

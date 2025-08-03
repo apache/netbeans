@@ -153,7 +153,7 @@ public class NewModuleWizardIterator implements WizardDescriptor.AsynchronousIns
         if (c instanceof JComponent) { // assume Swing components
             JComponent jc = (JComponent)c;
             // Step #.
-            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(0));
+            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 0);
             // Step name (actually the whole list for reference).
             jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps);
         }

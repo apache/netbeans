@@ -1121,7 +1121,7 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
      * <ul>
      * <li>If no exception is thrown, proceed with the operation.
      * <li>If a UserQuestionException is thrown,
-     * call <a href="@org-openide-util-ui@/org/openide/util/UserQuestionException.html#confirmed--" >UserQuestionException#confirmed</a> on it
+     * call <a href="@org-openide-util-ui@/org/openide/util/UserQuestionException.html#confirmed()" >UserQuestionException#confirmed</a> on it
      * (asynchronously - do not block any important threads). If <code>true</code>,
      * proceed with the operation. If <code>false</code>, exit.
      * If an <code>IOException</code> is thrown, notify it and exit.

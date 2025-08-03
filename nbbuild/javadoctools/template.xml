@@ -483,6 +483,11 @@ cause it to fail.
     </target>
 
     <target name="javadoc-stage-replace" depends="javadoc-stage-main,javadoc-generate-references,javadoc-stage-alternative,javadoc-stage-apichanges,javadoc-stage-arch,javadoc-stage-export-interfaces,javadoc-stage-replace-interfaces,javadoc-stage-replace-apichanges" unless="javadoc.up.to.date">
+        <!-- need to cleanup href for allclasses as starting jdk21 javadoc this file take also description -->
+        <replaceregexp match="href=&quot;.*\@org" replace="href=&quot;\@org" flags="g" >
+            <fileset dir="${javadoc.out.dir}" includes="allclasses-index.html"/>
+        </replaceregexp>
+        
         <replace dir="${javadoc.out.dir}">
             <include name="**/*.html"/>
             &replacesjdk;

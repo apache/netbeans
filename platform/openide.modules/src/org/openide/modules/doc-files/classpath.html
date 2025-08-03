@@ -23,10 +23,10 @@
  <head>
   <title>Modules, JARs, Class Loaders, and the "Class Path"</title>
   <!-- Cf. #19961 -->
-  <link rel="stylesheet" href="../../../../prose.css" type="text/css"/>
+  <link rel="stylesheet" href="@TOP@/resource-files/prose.css" type="text/css"/>
  </head>
  <body>
-  <p class="overviewlink"><a href="../../../../overview-summary.html">Overview</a></p>
+  <p class="overviewlink"><a href="@TOP@/index.html">Overview</a></p>
 
   <h1>Contents</h1>
 
@@ -438,7 +438,7 @@ OpenIDE-Module-Module-Dependencies: org.netbeans.modules.a = 1.0-alpha-2
   </pre>
   <p>
    This class loader is also the
-   <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/Thread.html#getContextClassLoader--">context class loader</a>
+   {@link java.lang.Thread#getContextClassLoader() context class loader }
    for every thread in the NetBeans VM, unless that thread (or a parent)
    explicitly set some other context class loader. Since many libraries which are
    independent of NetBeans (including in the JRE) are written to assume that all
@@ -500,7 +500,7 @@ OpenIDE-Module-Module-Dependencies: org.netbeans.modules.a = 1.0-alpha-2
    There is also a related protocol <code>nbresloc</code> which loads from the
    system class loader but additionally performs automatic localization and
    branding of the resource you specify. Various
-   <a href="@org-openide-util@/org/openide/util/NbBundle.html#getLocalizingSuffixes--">suffixes</a>
+   {@link org.openide.util.NbBundle#getLocalizingSuffixes() suffixes }
    are inserted between the base name and the extension of the resource
    (beginning with the last dot in the path, if it is in the last path
    component), according to the current locale and branding. For example:

@@ -2565,7 +2565,36 @@ public class Reformatter implements ReformatTask {
             StatementTree elseStat = node.getElseStatement();
             CodeStyle.BracesGenerationStyle redundantIfBraces = cs.redundantIfBraces();
             int eoln = findNewlineAfterStatement(node);
-            if ((elseStat != null && redundantIfBraces == CodeStyle.BracesGenerationStyle.ELIMINATE && danglingElseChecker.hasDanglingElse(node.getThenStatement())) ||
+            Boolean hasErrThenStatement = node.getThenStatement() instanceof ExpressionStatementTree thenStatement
+                                          && thenStatement.getExpression() instanceof ErroneousTree;
+            if (hasErrThenStatement) {
+                if (getCurrentPath().getParentPath().getLeaf() instanceof BlockTree parentStTree) {
+                    boolean isPreviousIfTree = false;
+                    int endPositionOfErrThenStatement = endPos;
+                    for (StatementTree statement : parentStTree.getStatements()) {
+                        if (isPreviousIfTree) {
+                            int startPositionOfNextErrorStatement = (int) sp.getStartPosition(getCurrentPath().getCompilationUnit(), statement);
+                            endPositionOfErrThenStatement = startPositionOfNextErrorStatement;
+                            break;
+                        } else if (statement == node) {
+                            isPreviousIfTree = true;
+                            endPositionOfErrThenStatement = (int) sp.getEndPosition(getCurrentPath().getCompilationUnit(), parentStTree) - 1;
+                        }
+
+                    }
+                    if (isPreviousIfTree) {
+                        while (tokens.offset() <= endPositionOfErrThenStatement && endPositionOfErrThenStatement != -1) {
+                            tokens.moveNext();
+                        }
+                        tokens.movePrevious();
+                        if (endPositionOfErrThenStatement != -1) {
+                            endPos = endPositionOfErrThenStatement;
+                        }
+                    }
+                }
+            }
+            
+            if (hasErrThenStatement || (elseStat != null && redundantIfBraces == CodeStyle.BracesGenerationStyle.ELIMINATE && danglingElseChecker.hasDanglingElse(node.getThenStatement())) ||
                     (redundantIfBraces == CodeStyle.BracesGenerationStyle.GENERATE && (startOffset > sp.getStartPosition(root, node) || endOffset < eoln || node.getCondition().getKind() == Tree.Kind.ERRONEOUS))) {
                 redundantIfBraces = CodeStyle.BracesGenerationStyle.LEAVE_ALONE;
             }

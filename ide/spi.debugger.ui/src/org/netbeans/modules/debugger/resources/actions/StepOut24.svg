@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="24" height="24" version="1.1" viewBox="0 0 24 24">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #ab8349;
+      }
+
+      .st1 {
+        fill: #b6daf2;
+      }
+
+      .st2 {
+        fill: #ffc36d;
+      }
+
+      .st3 {
+        opacity: .33;
+      }
+
+      .st4 {
+        opacity: .15;
+      }
+    </style>
+  </defs>
+  <g>
+    <rect class="st1" x="2" y="7" width="21" height="16"/>
+    <g class="st3">
+      <path d="M22,8v14H3v-14h19M23,7H2v16h21V7h0Z"/>
+    </g>
+  </g>
+  <g>
+    <polygon class="st2" points="10.5 16.5 10.5 9.5 6.5 9.5 6.5 8.207 12.5 2.207 18.5 8.207 18.5 9.5 14.5 9.5 14.5 16.5 10.5 16.5"/>
+    <path class="st0" d="M12.5,2.914l5.5,5.5v.586h-4v7h-3v-7h-4v-.586l5.5-5.5M12.5,1.5l-6.5,6.5v2h4v7h5v-7h4v-2L12.5,1.5h0Z"/>
+  </g>
+  <description>Apache NetBeans Logo
+  </description>
+  <g class="st4">
+    <rect x="5" y="13" width="4" height="1"/>
+    <rect x="5" y="15" width="4" height="1"/>
+    <rect x="5" y="17" width="4" height="1"/>
+    <rect x="5" y="19" width="11" height="1"/>
+    <rect x="16" y="17" width="4" height="1"/>
+    <rect x="16" y="15" width="1" height="1"/>
+    <rect x="16" y="13" width="4" height="1"/>
+  </g>
+</svg>

@@ -198,29 +198,25 @@ public final class TreeUtilities {
         while (path != null) {
             if (isSynthetic(path.getCompilationUnit(), path.getLeaf()))
                 return true;
-            if (path.getParentPath() != null &&
-                path.getParentPath().getParentPath() != null &&
-                path.getParentPath().getParentPath().getLeaf().getKind() == Kind.NEW_CLASS) {
-                NewClassTree nct = (NewClassTree) path.getParentPath().getParentPath().getLeaf();
-                ClassTree body = nct.getClassBody();
-
-                if (body != null &&
-                    (body.getExtendsClause() == path.getLeaf() ||
-                     body.getImplementsClause().contains(path.getLeaf()))) {
-                    return true;
+            if (path.getParentPath() != null && path.getParentPath().getParentPath() != null) {
+                TreePath grandpa = path.getParentPath().getParentPath();
+                if (grandpa.getLeaf().getKind() == Kind.NEW_CLASS) {
+                    NewClassTree nct = (NewClassTree) grandpa.getLeaf();
+                    ClassTree body = nct.getClassBody();
+                    if (body != null &&
+                        (body.getExtendsClause() == path.getLeaf() ||
+                         body.getImplementsClause().contains(path.getLeaf()))) {
+                        return true;
+                    }
+                } else if (grandpa.getLeaf().getKind() == Kind.RECORD &&
+                           path.getLeaf().getKind() == Kind.VARIABLE &&
+                           path.getParentPath().getLeaf().getKind() == Kind.METHOD) {
+                    JCMethodDecl m = (JCMethodDecl) path.getParentPath().getLeaf();
+                    if ((m.mods.flags & Flags.COMPACT_RECORD_CONSTRUCTOR) != 0 && m.getParameters().contains(path.getLeaf())) {
+                        return true;
+                    }
                 }
             }
-            if (path.getLeaf().getKind() == Kind.VARIABLE &&
-                path.getParentPath() != null &&
-                path.getParentPath().getLeaf().getKind() == Kind.METHOD &&
-                path.getParentPath().getParentPath() != null &&
-                path.getParentPath().getParentPath().getLeaf().getKind() == Kind.RECORD) {
-                JCMethodDecl m = (JCMethodDecl) path.getParentPath().getLeaf();
-                if ((m.mods.flags & Flags.COMPACT_RECORD_CONSTRUCTOR) != 0 && m.getParameters().contains(path.getLeaf())) {
-                    return true;
-                }
-            }
-
             path = path.getParentPath();
         }
         

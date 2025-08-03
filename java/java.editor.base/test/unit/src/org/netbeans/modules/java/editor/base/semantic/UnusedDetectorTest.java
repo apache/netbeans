@@ -593,7 +593,7 @@ public class UnusedDetectorTest extends NbTestCase {
 
                     Set<String> result = UnusedDetector.findUnused(parameter, () -> false)
                                                        .stream()
-                                                       .map(ud -> parameter.getCompilationUnit().getLineMap().getLineNumber(parameter.getTrees().getSourcePositions().getStartPosition(ud.unusedElementPath.getCompilationUnit(), ud.unusedElementPath.getLeaf())) + ":" + ud.unusedElement.getSimpleName() + ":" + ud.reason.name())
+                                                       .map(ud -> parameter.getCompilationUnit().getLineMap().getLineNumber(parameter.getTrees().getSourcePositions().getStartPosition(ud.unusedElementPath().getCompilationUnit(), ud.unusedElementPath().getLeaf())) + ":" + ud.unusedElement().getSimpleName() + ":" + ud.reason().name())
                                                        .collect(Collectors.toSet());
                     assertEquals(new HashSet<>(Arrays.asList(expected)), result);
                 } catch (IOException e) {

@@ -21,20 +21,20 @@
 
 <html><head>
 <title>Filesystems API</title>
-<link rel="stylesheet" href="../../../../prose.css" type="text/css">
+<link rel="stylesheet" href="@TOP@/resource-files/prose.css" type="text/css">
 </head><body>
 
-<p class="overviewlink"><a href="../../../../overview-summary.html">Overview</a></p>
+<p class="overviewlink"><a href="@TOP@/index.html">Overview</a></p>
 
 <h1>Javadoc</h1>
 
 Take a look at the
 
-<a href="../package-summary.html">Javadoc</a>,
+{@link org.openide.filesystems Javadoc },
 
 especially for
 
-<a href="../FileObject.html"><code>FileObject</code></a>.
+{@link org.openide.filesystems.FileObject FileObject }.
 
 
 <h1>Contents</h1>
@@ -91,7 +91,7 @@ which abstracts away most of the details of files and presents data in
 terms of <a href="@org-openide-loaders@/org/openide/loaders/DataObject.html">DataObject</a>s,
 which typically represent the parsed content of a file and provide
 objects to programmatically access that content via 
-<a href="@org-openide-loaders@/org/openide/loaders/DataObject.html#getCookie-java.lang.Class-">DataObject.getCookie()</a>.
+<a href="@org-openide-loaders@/org/openide/loaders/DataObject.html#getCookie(java.lang.Class)">DataObject.getCookie()</a>.
 
 <h2 id="basic-usage">Common Tasks</h2>
 
@@ -112,14 +112,14 @@ filesystems.
 
 Normally, you will be looking for a file or folder by name, and will want to get the
 
-<a href="../FileObject.html"><code>FileObject</code></a>
+{@link org.openide.filesystems.FileObject FileObject }
 
 which represents it.
 
 <p>If you need to get a file object corresponding to a file on disk, use:
 
 <pre>
-fileObject = FileUtil.<a href="../FileUtil.html#toFileObject-java.io.File-">toFileObject</a>(new File("/some/path/to/file.txt"));
+fileObject = FileUtil.{@link org.openide.filesystems.FileUtil#toFileObject(java.io.File) toFileObject}(new File("/some/path/to/file.txt"));
 </pre>
 
 <p><code>FileUtil</code> also has methods for working with archive (ZIP/JAR) entries. File objects corresponding
@@ -130,15 +130,15 @@ To find all the folders and files directly contained in this
 folder, you may use:
 
 <pre>
-FileObject children[]=folder.<a href="../FileObject.html#getChildren--">getChildren</a>();
+FileObject children[]=folder.{@link org.openide.filesystems.FileObject#getChildren() getChildren}();
 </pre>
 
 Occasionally you may need to present a given file object as a URL; for example, to display it in
 a web browser. This is straightforward:
 
 <pre>
-URL url = <a href="../FileObject.html#getURL--">file.getURL()</a>;
-HtmlBrowser.URLDisplayer.getDefault().<a href="@org-openide-awt@/org/openide/awt/HtmlBrowser.URLDisplayer.html#showURL-java.net.URL-">showURL</a>(url);
+URL url = {@link org.openide.filesystems.FileObject#getURL() file.getURL()};
+HtmlBrowser.URLDisplayer.getDefault().<a href="@org-openide-awt@/org/openide/awt/HtmlBrowser.URLDisplayer.html#showURL(java.net.URL)">showURL</a>(url);
 </pre>
 
 <h3 id="create-delete-rename">Creating, deleting, and renaming files and folders</h3>
@@ -147,8 +147,8 @@ This example creates a subfolder and then a new file within that
 subfolder:
 
 <pre>
-FileObject subfolder=folder.<a href="../FileObject.html#createFolder-java.lang.String-">createFolder</a>("sub");
-FileObject newfile=subfolder.<a href="../FileObject.html#createData-java.lang.String-java.lang.String-">createData</a>("NewSource", "java");
+FileObject subfolder=folder.{@link org.openide.filesystems.FileObject#createFolder(java.lang.String) createFolder}("sub");
+FileObject newfile=subfolder.{@link org.openide.filesystems.FileObject#createData(java.lang.String,java.lang.String) createData}("NewSource", "java");
 </pre>
 
 <p>You can delete a file easily:</p>
@@ -159,7 +159,7 @@ newfile.delete();
 
 If you want to rename a file, you must first take out a
 
-<a href="../FileLock.html">lock</a>
+{@link org.openide.filesystems.FileLock lock}
 
 on the file, to make sure that no one else is actively using the file
 at the same time. Then you may rename it:
@@ -167,16 +167,16 @@ at the same time. Then you may rename it:
 <pre>
 FileLock lock = null;
 try {
-    lock=newfile.<a href="../FileObject.html#lock--">lock</a>();
-} catch (<a href="../FileAlreadyLockedException.html">FileAlreadyLockedException</a> e) {
+    lock=newfile.{@link org.openide.filesystems.FileObject#lock() lock}();
+} catch ({@link org.openide.filesystems.FileAlreadyLockedException FileAlreadyLockedException} e) {
     // Try again later; perhaps display a warning dialog.
     return;
 }
 try {
-    newfile.<a href="../FileObject.html#rename-org.openide.filesystems.FileLock-java.lang.String-java.lang.String-">rename</a>(lock, "NewSrc", "java");
+    newfile.{@link org.openide.filesystems.FileObject#rename(org.openide.filesystems.FileLock,java.lang.String,java.lang.String) rename}(lock, "NewSrc", "java");
 } finally {
     // Always put this in a finally block!
-    lock.<a href="../FileLock.html#releaseLock--">releaseLock</a>();
+    lock.{@link org.openide.filesystems.FileLock#releaseLock() releaseLock}();
 }
 </pre>
 
@@ -187,7 +187,7 @@ to use a NetBeans helper method:
 <pre>
 FileObject someFile;
 FileObject whereTo;
-<a href="@TOP@/org/openide/filesystems/FileUtil.html#moveFile-org.openide.filesystems.FileObject-org.openide.filesystems.FileObject-java.lang.String-">FileUtil.moveFile</a>(someFile, whereTo, "YourSource");
+<a href="@TOP@/org/openide/filesystems/FileUtil.html#moveFile(org.openide.filesystems.FileObject,org.openide.filesystems.FileObject,java.lang.String)">FileUtil.moveFile</a>(someFile, whereTo, "YourSource");
 </pre>
 
 Note that in the current API set, it is neither possible nor
@@ -207,14 +207,14 @@ operations do not involve information which could be partially
 corrupted between threads. If necessary, the API includes
 facilities for
 
-<a href="@org-openide-util@/org/openide/util/Mutex.html">read-many/write-one locks</a>.
+{@link org.openide.util.Mutex read-many/write-one locks}.
 
 <h3 id="read-write">Reading and writing files</h3>
 
 Reading and writing the contents of a data file is straightforward:
 
 <pre>
-BufferedReader from=new BufferedReader(new InputStreamReader(someFile.<a href="../FileObject.html#getInputStream--">getInputStream</a>()));
+BufferedReader from=new BufferedReader(new InputStreamReader(someFile.{@link org.openide.filesystems.FileObject#getInputStream() getInputStream}()));
 try {
     String line;
     while ((line=from.readLine()) != null) {
@@ -230,7 +230,7 @@ try {
     return;
 }
 try {
-    PrintWriter to=new PrintWriter(someFile.<a href="../FileObject.html#getOutputStream-org.openide.filesystems.FileLock-">getOutputStream</a>(lock));
+    PrintWriter to=new PrintWriter(someFile.{@link org.openide.filesystems.FileObject#getOutputStream(org.openide.filesystems.FileLock) getOutputStream}(lock));
     try {
         to.println("testing...");
         to.println("1..2..3..");
@@ -248,12 +248,12 @@ If you need to keep track of what is being done to a file by other
 components, you can monitor it using normal Java events:
 
 <pre>
-someFile.<a href="../FileObject.html#addFileChangeListener-org.openide.filesystems.FileChangeListener-">addFileChangeListener</a>(new <a href="../FileChangeAdapter.html">FileChangeAdapter</a>() {
-    public void <a href="../FileChangeAdapter.html#fileChanged-org.openide.filesystems.FileEvent-">fileChanged</a>(<a href="../FileEvent.html">FileEvent</a> ev) {
+someFile.{@link org.openide.filesystems.FileObject#addFileChangeListener(org.openide.filesystems.FileChangeListener) addFileChangeListener}(new {@link org.openide.filesystems.FileChangeAdapter FileChangeAdapter }() {
+    public void {@link org.openide.filesystems.FileChangeAdapter#fileChanged(org.openide.filesystems.FileEvent) fileChanged }({@link org.openide.filesystems.FileEvent FileEvent} ev) {
         System.out.println("Contents changed.");
     }
-    public void <a href="../FileChangeAdapter.html#fileAttributeChanged-org.openide.filesystems.FileAttributeEvent-">fileAttributeChanged</a>(<a href="../FileAttributeEvent.html">FileAttributeEvent</a> ev) {
-        System.out.println(ev.<a href="../FileAttributeEvent.html#getName--">getName</a>() + ": " + ev.<a href="../FileAttributeEvent.html#getOldValue--">getOldValue</a>() + " -> " + ev.<a href="../FileAttributeEvent.html#getNewValue--">getNewValue</a>());
+    public void {@link org.openide.filesystems.FileChangeAdapter#fileAttributeChanged(org.openide.filesystems.FileAttributeEvent) fileAttributeChanged }({@link org.openide.filesystems.FileAttributeEvent FileAttributeEvent} ev) {
+        System.out.println(ev.{@link org.openide.filesystems.FileAttributeEvent#getName() getName}() + ": " + ev.{@link org.openide.filesystems.FileAttributeEvent#getOldValue() getOldValue}() + " -> " + ev.{@link org.openide.filesystems.FileAttributeEvent#getNewValue() getNewValue}());
     }
 });
 </pre>
@@ -264,12 +264,12 @@ just want to listen on the parent folder. Also, file creation events
 are fired on the folder only, of course:
 
 <pre>
-FileObject someFolder=someFile.<a href="../FileObject.html#getParent--">getParent</a>();
+FileObject someFolder=someFile.{@link org.openide.filesystems.FileObject#getParent() getParent}();
 someFolder.addFileChangeListener(new FileChangeAdapter() {
     public void fileChanged(FileEvent ev) {
-        System.out.println("Contents of " + ev.<a href="../FileEvent.html#getFile--">getFile</a>() + " changed.");
+        System.out.println("Contents of " + ev.{@link org.openide.filesystems.FileEvent#getFile() getFile}() + " changed.");
     }
-    public void <a href="../FileChangeAdapter.html#fileDataCreated-org.openide.filesystems.FileEvent-">fileDataCreated</a>(FileEvent ev) {
+    public void {@link org.openide.filesystems.FileChangeAdapter#fileDataCreated(org.openide.filesystems.FileEvent) fileDataCreated}(FileEvent ev) {
         System.out.println("File " + ev.getFile() + " created.");
     }
 });
@@ -280,8 +280,8 @@ someFolder.addFileChangeListener(new FileChangeAdapter() {
 <p><code>FileObject.getMIMEType()</code> reports a basic MIME type for a file, which can used to classify it for
 editing and other purposes.</p>
 
-<p>If you need to influence the MIME type resolution process, you can register a <a
-href="../MIMEResolver.html"><code>MIMEResolver</code></a>.
+<p>If you need to influence the MIME type resolution process, you can register a 
+    {@link org.openide.filesystems.MIMEResolver MIMEResolver}.
 
 To simplify this process you can register a <code>MIMEResolver</code> declaratively.
 It is not only easier (no coding needed) but can be more efficient by

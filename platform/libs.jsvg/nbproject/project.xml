@@ -56,8 +56,8 @@
                 <package>com.github.weisj.jsvg.util</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/jsvg-1.6.1.jar</runtime-relative-path>
-                <binary-origin>external/jsvg-1.6.1.jar</binary-origin>
+                <runtime-relative-path>ext/jsvg-1.7.1.jar</runtime-relative-path>
+                <binary-origin>external/jsvg-1.7.1.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

@@ -314,7 +314,7 @@ public class InlineCompletion {
         return bag;
     }
 
-    @MimeRegistration(mimeType="text/x-java", service=HighlightsLayerFactory.class)
+    @MimeRegistration(mimeType="", service=HighlightsLayerFactory.class)
     public static class HighlightsLayerFactoryImpl implements HighlightsLayerFactory {
 
         public HighlightsLayer[] createLayers(HighlightsLayerFactory.Context context) {

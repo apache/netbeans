@@ -92,7 +92,7 @@
     <bind actionName="goto" key="D-G"/>
     <bind actionName="goto-declaration" key="D-B"/>
     <bind actionName="insert-break" key="ENTER"/>
-<!--    <bind actionName="insert-tab" key="TAB"/>-->
+    <bind actionName="insert-tab" key="TAB"/>
     <bind actionName="jump-list-last-edit" key="D-Q"/>
     <bind actionName="jump-list-next" key="O-RIGHT"/>
     <bind actionName="jump-list-next" key="O-KP_RIGHT"/>

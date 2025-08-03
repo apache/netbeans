@@ -27,5 +27,6 @@
 -->
 
 <bindings>
+    <bind key="TAB" remove="true"/>
     <bind actionName="lsp-inline-completion-proposal-accept" key="TAB"/>
 </bindings>

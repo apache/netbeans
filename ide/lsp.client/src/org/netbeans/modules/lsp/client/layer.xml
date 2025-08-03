@@ -26,9 +26,6 @@
             <folder name="NetBeans">
                 <folder name="Defaults">
                     <file name="org-netbeans-modules-lsp-client-keybindings.xml" url="resources/NetBeans-keybindings.xml"/>
-<!--                    <file name="org-netbeans-modules-editor-keybindings-mac.xml" url="NetBeans-keybindings-mac.xml">
-                        <attr name="nbeditor-settings-targetOS" stringvalue="OS_MAC"/>
-                    </file>-->
                 </folder>
             </folder>
         </folder>

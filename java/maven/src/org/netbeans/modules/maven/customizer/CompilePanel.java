@@ -418,7 +418,7 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, idePanelLayout.createSequentialGroup()
                         .addComponent(cbCompileOnSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(66, 66, 66))
-                    .addComponent(lblHint2, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblHint2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 558, Short.MAX_VALUE)
                     .addGroup(idePanelLayout.createSequentialGroup()
                         .addComponent(lblHint1)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -432,7 +432,8 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblHint1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblHint2, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE))
+                .addComponent(lblHint2, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         compilerPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(CompilePanel.class, "CompilePanel.compilerPanel.border.title"))); // NOI18N

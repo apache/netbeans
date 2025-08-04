@@ -85,7 +85,7 @@ is the proper place.
     <changes>
         <change id="current-gradle-version-discovery">
             <api name="general"/>
-            <summary>GradleDistributionManager can query latest available version and use in init</summary>
+            <summary>GradleDistributionManager can query latest available and latest supported versions and use in init</summary>
             <version major="2" minor="47"/>
             <date day="20" month="6" year="2025"/>
             <author login="neilcsmith"/>
@@ -93,6 +93,8 @@ is the proper place.
             <description>
                 Added <code><a href="@TOP@/org/netbeans/modules/gradle/api/execute/GradleDistributionManager.html#currentDistribution()">GradleDistributionManager.currentDistribution()</a></code> 
                 method to query the current (latest) release available from the Gradle web service.
+                Added <code><a href="@TOP@/org/netbeans/modules/gradle/api/execute/GradleDistributionManager.html#latestSupportedDistribution()">GradleDistributionManager.latestSupportedDistribution()</a></code>
+                method to query the latest supported release from the Gradle web service.
                 Added <code>gradleVersion(String version)</code> to
                 <a href="@TOP@/org/netbeans/modules/gradle/spi/newproject/TemplateOperation.InitOperation.html">TemplateOperation.InitOperation</a>.
             </description>

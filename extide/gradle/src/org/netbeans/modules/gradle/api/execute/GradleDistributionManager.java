@@ -104,7 +104,9 @@ public final class GradleDistributionManager {
         GradleVersion.version("8.14"),// JDK-24
     };
 
-    private static final GradleVersion LAST_KNOWN_GRADLE = GradleVersion.version("8.14"); //NOI18N
+    private static final GradleVersion LAST_KNOWN_GRADLE = GradleVersion.version("9.0"); //NOI18N
+
+    private static final int LATEST_SUPPORTED_MAJOR = 9;
 
     final File gradleUserHome;
 
@@ -278,6 +280,41 @@ public final class GradleDistributionManager {
             URI downloadURL = new URI((String) current.get("downloadUrl")); //NOI18N
             String version = (String) current.get("version");
             return new GradleDistribution(distributionBaseDir(downloadURL, version), downloadURL, version);
+        } catch (ParseException | URISyntaxException | ClassCastException ex) {
+            throw new IOException(ex);
+        }
+    }
+
+    /**
+     * Returns the latest {@link GradleDistribution} which is supported by this
+     * {@link GradleDistributionManager}. This method uses the
+     * <a href="https://services.gradle.org/versions">https://services.gradle.org/versions</a>
+     * web service to query the version.
+     *
+     * @return the latest Gradle distribution which can still be supported
+     * @throws java.io.IOException if information on the current Gradle release
+     * cannot be accessed
+     */
+    public GradleDistribution latestSupportedDistribution() throws IOException {
+        JSONParser parser = new JSONParser();
+        URL versionsCurrent = URI.create("https://services.gradle.org/versions/" + LATEST_SUPPORTED_MAJOR).toURL(); //NOI18N
+        try (InputStreamReader is = new InputStreamReader(versionsCurrent.openStream(), StandardCharsets.UTF_8)) {
+            JSONArray releases = (JSONArray) parser.parse(is);
+            for (Object obj : releases) {
+                JSONObject release = (JSONObject) obj;
+                if (release.get("snapshot") instanceof Boolean snapshot && !snapshot //NOI18N
+                        && release.get("nightly") instanceof Boolean nightly && !nightly //NOI18N
+                        && release.get("releaseNightly") instanceof Boolean releaseNightly && !releaseNightly //NOI18N
+                        && release.get("activeRc") instanceof Boolean activeRc && !activeRc //NOI18N
+                        && release.get("broken") instanceof Boolean broken && !broken //NOI18N
+                        && release.get("rcFor") instanceof String rcFor && rcFor.isBlank() //NOI18N
+                        && release.get("milestoneFor") instanceof String milestoneFor && milestoneFor.isBlank()) { //NOI18N
+                    URI downloadURL = new URI((String) release.get("downloadUrl")); //NOI18N
+                    String version = (String) release.get("version"); //NOI18N
+                    return new GradleDistribution(distributionBaseDir(downloadURL, version), downloadURL, version);
+                }
+            }
+            throw new IOException("no release found with major version " + LATEST_SUPPORTED_MAJOR);
         } catch (ParseException | URISyntaxException | ClassCastException ex) {
             throw new IOException(ex);
         }

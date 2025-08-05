@@ -1525,6 +1525,10 @@ public class SourceUtils {
                 return lines.get(0);
             }
         }
-        return className;
+        if(fqnForNestedClass != null) {
+            return fqnForNestedClass;
+        } else {
+            return className;
+        }
     }
 }

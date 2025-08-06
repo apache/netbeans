@@ -1952,9 +1952,11 @@ public class CasualDiff {
         if (oldT.step.nonEmpty())
             copyTo(localPointer, localPointer = getOldPos(oldT.step.head));
         else {
-            moveFwdToToken(tokenSequence, localPointer, JavaTokenId.SEMICOLON);
-            tokenSequence.moveNext();
-            copyTo(localPointer, localPointer = tokenSequence.offset());
+            tokenSequence.move(localPointer);
+            if (moveToSrcRelevant(tokenSequence, Direction.FORWARD) == JavaTokenId.SEMICOLON) {
+                tokenSequence.moveNext();
+                copyTo(localPointer, localPointer = tokenSequence.offset());
+            }
         }
         localPointer = diffParameterList(oldT.step, newT.step, null, localPointer, Measure.ARGUMENT);
 

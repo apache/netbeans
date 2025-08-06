@@ -53,6 +53,7 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
+import com.sun.source.tree.YieldTree;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -133,7 +134,11 @@ public final class CreateElementUtilities {
                 return Collections.singletonList(info.getTypes().getNoType(TypeKind.VOID));
 
             case RETURN:
-                return computeReturn(types, info, currentPath, unresolved, offset);
+                return computeReturn(types, info, currentPath, unresolved);
+            case YIELD:
+                return computeYield(types, info, currentPath, unresolved, offset);
+            case CASE:
+                return computeCase(types, info, currentPath, unresolved, offset);
             case TYPE_PARAMETER:
                 return computeTypeParameter(types, info, currentPath, unresolved, offset);
             case PARAMETERIZED_TYPE:
@@ -208,7 +213,7 @@ public final class CreateElementUtilities {
                 return computeImport(types, info, currentPath, unresolved, offset);
                 
             case LAMBDA_EXPRESSION:
-                return computeLambdaRetrun(types, info, currentPath, unresolved, offset);
+                return computeLambdaReturn(types, info, currentPath, unresolved, offset);
                 
             case BLOCK:
             case BREAK:
@@ -234,8 +239,7 @@ public final class CreateElementUtilities {
             case NULL_LITERAL:
                 //ignored:
                 return null;
-                
-            case CASE:
+
             case ANNOTATION:
             case UNBOUNDED_WILDCARD:
             case EXTENDS_WILDCARD:
@@ -401,6 +405,13 @@ public final class CreateElementUtilities {
                 types.clear();
                 types.add(ElementKind.RESOURCE_VARIABLE);
             }
+            if (parent.getParentPath() != null &&
+                parent.getParentPath().getLeaf().getKind() == Kind.EXPRESSION_STATEMENT &&
+                parent.getParentPath().getParentPath() != null &&
+                parent.getParentPath().getParentPath().getLeaf().getKind() == Kind.FOR_LOOP &&
+                ((ForLoopTree) parent.getParentPath().getParentPath().getLeaf()).getInitializer().contains(parent.getParentPath().getLeaf())) {
+                types.add(ElementKind.OTHER);
+            }
         }
         
         if (at.getExpression() == error) {
@@ -545,17 +556,32 @@ public final class CreateElementUtilities {
         return null;
     }
     
-    private static List<? extends TypeMirror> computeLambdaRetrun(Set<ElementKind> types, CompilationInfo info, TreePath parent, Tree error, int offset) {
+    private static List<? extends TypeMirror> computeLambdaReturn(Set<ElementKind> types, CompilationInfo info, TreePath parent, Tree error, int offset) {
         LambdaExpressionTree let = (LambdaExpressionTree)parent.getLeaf();
         if (let.getBody() != error) {
             return null;
         }
-        TreePath parentParent = parent.getParentPath();
-        TypeMirror m = info.getTrees().getTypeMirror(parentParent);
-        if (org.netbeans.modules.java.hints.errors.Utilities.isValidType(m)) {
-            return Collections.singletonList(m);
+
+        List<TypeMirror> result = new ArrayList<>();
+        for (TypeMirror target : resolveType(types, info, parent.getParentPath(), let, offset, null, null)) {
+            if (!org.netbeans.modules.java.hints.errors.Utilities.isValidType(target) ||
+                target.getKind() != TypeKind.DECLARED) {
+                continue;
+            }
+
+            DeclaredType declaredTarget = (DeclaredType) target;
+            ExecutableElement functionalMethod =
+                    info.getElementUtilities()
+                        .getDescriptorElement((TypeElement) (declaredTarget).asElement());
+
+            if (functionalMethod == null) {
+                continue;
+            }
+
+            result.add(((ExecutableType) info.getTypes().asMemberOf(declaredTarget, functionalMethod)).getReturnType());
         }
-        return resolveType(types, info, parentParent, let, offset, null, null);
+
+        return result;
     }
     
     private static List<? extends TypeMirror> computeParenthesis(Set<ElementKind> types, CompilationInfo info, TreePath parent, Tree error, int offset) {
@@ -672,7 +698,7 @@ public final class CreateElementUtilities {
         return null;
     }
     
-    private static List<? extends TypeMirror> computeReturn(Set<ElementKind> types, CompilationInfo info, TreePath parent, Tree error, int offset) {
+    private static List<? extends TypeMirror> computeReturn(Set<ElementKind> types, CompilationInfo info, TreePath parent, Tree error) {
         ReturnTree rt = (ReturnTree) parent.getLeaf();
         
         if (rt.getExpression() == error) {
@@ -698,6 +724,45 @@ public final class CreateElementUtilities {
         return null;
     }
     
+    private static List<? extends TypeMirror> computeYield(Set<ElementKind> types, CompilationInfo info, TreePath parent, Tree error, int offset) {
+        YieldTree yieldStatement = (YieldTree) parent.getLeaf();
+
+        if (yieldStatement.getValue() == error) {
+            Tree yieldTargetTree = info.getTreeUtilities().getBreakContinueTargetTree(parent);
+            TreePath switchExpression = parent;
+
+            while (switchExpression != null && switchExpression.getLeaf() != yieldTargetTree) {
+                switchExpression = switchExpression.getParentPath();
+            }
+
+            if (switchExpression == null) {
+                return null;
+            }
+
+            types.add(ElementKind.PARAMETER);
+            types.add(ElementKind.LOCAL_VARIABLE);
+            types.add(ElementKind.FIELD);
+
+            return resolveType(types, info, switchExpression.getParentPath(), switchExpression.getLeaf(), offset, null, null);
+        }
+
+        return null;
+    }
+
+    private static List<? extends TypeMirror> computeCase(Set<ElementKind> types, CompilationInfo info, TreePath parent, Tree error, int offset) {
+        TreePath switchCandidate = parent.getParentPath();
+
+        if (switchCandidate.getLeaf().getKind() == Kind.SWITCH_EXPRESSION) {
+            types.add(ElementKind.PARAMETER);
+            types.add(ElementKind.LOCAL_VARIABLE);
+            types.add(ElementKind.FIELD);
+
+            return resolveType(types, info, switchCandidate.getParentPath(), switchCandidate.getLeaf(), offset, null, null);
+        }
+
+        return null;
+    }
+
     private static List<? extends TypeMirror> computeTypeParameter(Set<ElementKind> types, CompilationInfo info, TreePath parent, Tree error, int offset) {
         TypeParameterTree tpt = (TypeParameterTree) parent.getLeaf();
         

@@ -307,7 +307,8 @@ class NbProjectInfoBuilder {
         "shouldRunAfter",
         "enabled",
         "description",
-        "group"
+        "group",
+        "toolchainDownloadUrls" // UpdateDaemonJvm fron org.gradle.toolchains.foojay-resolver-convention accesses online sevice for URLs
     ));
     
     private void detectTaskProperties(NbProjectInfoModel model) {

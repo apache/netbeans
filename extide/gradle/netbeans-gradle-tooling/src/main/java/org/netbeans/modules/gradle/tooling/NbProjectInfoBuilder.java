@@ -307,8 +307,8 @@ class NbProjectInfoBuilder {
         "shouldRunAfter",
         "enabled",
         "description",
-        "vendor",
-        "group"
+        "group",
+        "toolchainDownloadUrls" // UpdateDaemonJvm fron org.gradle.toolchains.foojay-resolver-convention accesses online sevice for URLs
     ));
     
     private void detectTaskProperties(NbProjectInfoModel model) {
@@ -716,6 +716,11 @@ class NbProjectInfoBuilder {
             }
             Object value = null;
             if ((mp.getModifiers() & Modifier.PUBLIC) == 0) {
+                continue;
+            }
+            // ignore static properties for now. If needed, they must be exported somehow per-class and protected
+            // against recursion.
+            if ((mp.getModifiers() & Modifier.STATIC) != 0) {
                 continue;
             }
             if (object != null) {

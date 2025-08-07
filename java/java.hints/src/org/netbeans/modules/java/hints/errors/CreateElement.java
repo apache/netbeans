@@ -489,7 +489,7 @@ public final class CreateElement implements ErrorRule<Void> {
             }
         }
 
-        if (!wasMemberSelect && (fixTypes.contains(ElementKind.LOCAL_VARIABLE) || fixTypes.contains(ElementKind.PARAMETER) || fixTypes.contains(ElementKind.RESOURCE_VARIABLE))) {
+        if (!wasMemberSelect && (fixTypes.contains(ElementKind.LOCAL_VARIABLE) || fixTypes.contains(ElementKind.PARAMETER) || fixTypes.contains(ElementKind.RESOURCE_VARIABLE) || fixTypes.contains(ElementKind.OTHER))) {
             ExecutableElement ee = null;
 
             if (firstMethod != null) {
@@ -503,6 +503,8 @@ public final class CreateElement implements ErrorRule<Void> {
                 result.add(new AddParameterOrLocalFix(info, type, simpleName, ElementKind.LOCAL_VARIABLE, identifierPos).toEditorFix());
             if (fixTypes.contains(ElementKind.RESOURCE_VARIABLE))
                 result.add(new AddParameterOrLocalFix(info, type, simpleName, ElementKind.RESOURCE_VARIABLE, identifierPos).toEditorFix());
+            if (fixTypes.contains(ElementKind.OTHER))
+                result.add(new AddParameterOrLocalFix(info, type, simpleName, ElementKind.OTHER, identifierPos).toEditorFix());
         }
 
         return result;

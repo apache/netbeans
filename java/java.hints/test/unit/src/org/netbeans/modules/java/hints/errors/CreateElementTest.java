@@ -356,7 +356,8 @@ public class CreateElementTest extends HintsTestBase {
         performTestAnalysisTest("org.netbeans.test.java.hints.Bug117431", 155, new HashSet<String>(Arrays.asList(
 		"AddParameterOrLocalFix:ii:int:PARAMETER",
 		"CreateFieldFix:ii:org.netbeans.test.java.hints.Bug117431:int:[private, static]",
-                "AddParameterOrLocalFix:ii:int:LOCAL_VARIABLE"
+                "AddParameterOrLocalFix:ii:int:LOCAL_VARIABLE",
+                "AddParameterOrLocalFix:ii:int:OTHER"
         )));
         //but do offer for a different one
         performTestAnalysisTest("org.netbeans.test.java.hints.Bug117431", 219, new HashSet<String>(Arrays.asList(

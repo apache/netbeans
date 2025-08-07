@@ -73,6 +73,7 @@ import com.sun.source.doctree.ValueTree;
 import com.sun.source.doctree.VersionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.SwitchExpressionTree;
+import com.sun.source.tree.YieldTree;
 import com.sun.source.util.DocTreePathScanner;
 import com.sun.source.util.DocTreeScanner;
 
@@ -1362,8 +1363,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                 print(tree.getGuard());
             }
         }
-        Object caseKind = tree.getCaseKind();
-        if (caseKind == null || !String.valueOf(caseKind).equals("RULE")) {
+        if (tree.getCaseKind() != CaseTree.CaseKind.RULE) {
             print(':');
             newline();
             indent();
@@ -1371,7 +1371,12 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             undent(old);
         } else {
             print(" -> "); //TODO: configure spaces!
-            printStat(tree.stats.head);
+            if (tree.stats.head.getKind() == Kind.YIELD) {
+                print((JCTree) ((YieldTree) tree.stats.head).getValue());
+                print(";");
+            } else {
+                printStat(tree.stats.head);
+            }
             undent(old);
         }
     }

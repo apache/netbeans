@@ -147,8 +147,8 @@ public class TextDocumentSyncServerCapabilityHandler {
                     try {
                         Position startPos = Utils.createPosition(doc, start);
                         Position endPos = Utils.computeEndPositionForRemovedText(startPos, oldText);
-                        TextDocumentContentChangeEvent[] event = new TextDocumentContentChangeEvent[1];
-                        event[0] = new TextDocumentContentChangeEvent(new Range(startPos,
+                        TextDocumentContentChangeEvent[] incrementalEvent = new TextDocumentContentChangeEvent[1];
+                        incrementalEvent[0] = new TextDocumentContentChangeEvent(new Range(startPos,
                                                                              endPos),
                                                                    oldText.length(),
                                                                    newText);
@@ -156,49 +156,57 @@ public class TextDocumentSyncServerCapabilityHandler {
                         boolean typingModification = DocumentUtilities.isTypingModification(doc);
                         long documentVersion = DocumentUtilities.getDocumentVersion(doc);
 
-                        LSPBindings server = LSPBindings.getBindings(file);
+                        List<LSPBindings> servers = LSPBindings.getBindings(file);
 
-                        if(server == null) {
+                        if (servers.isEmpty()) {
                             return;
                         }
 
-                        server.runOnBackground(() -> {
-                            TextDocumentSyncKind syncKind = TextDocumentSyncKind.None;
-                            Either<TextDocumentSyncKind, TextDocumentSyncOptions> sync = server.getInitResult().getCapabilities().getTextDocumentSync();
-                            if (sync != null) {
-                                if (sync.isLeft()) {
-                                    syncKind = sync.getLeft();
-                                } else {
-                                    TextDocumentSyncKind change = sync.getRight().getChange();
-                                    if (change != null)
-                                        syncKind = change;
-                                }
-                            }
-                            switch (syncKind) {
-                                case None:
-                                    return ;
-                                case Full:
-                                    doc.render(() -> {
-                                        try {
-                                            event[0] = new TextDocumentContentChangeEvent(doc.getText(0, doc.getLength()));
-                                        } catch (BadLocationException ex) {
-                                            Exceptions.printStackTrace(ex);
-                                            event[0] = new TextDocumentContentChangeEvent("");
-                                        }
-                                    });
-                                    break;
-                                case Incremental:
-                                    //event already filled
-                                    break;
-                            }
-
+                        LSPBindings.runOnBackground(() -> {
                             VersionedTextDocumentIdentifier di = new VersionedTextDocumentIdentifier(++version);
                             di.setUri(org.netbeans.modules.lsp.client.Utils.toURI(file));
-                            DidChangeTextDocumentParams params = new DidChangeTextDocumentParams(di, Arrays.asList(event));
+                            TextDocumentContentChangeEvent[] fullEvent = new TextDocumentContentChangeEvent[1];
 
-                            server.getTextDocumentService().didChange(params);
+                            for (LSPBindings server : servers) {
+                                TextDocumentSyncKind syncKind = TextDocumentSyncKind.None;
+                                Either<TextDocumentSyncKind, TextDocumentSyncOptions> sync = server.getInitResult().getCapabilities().getTextDocumentSync();
+                                if (sync != null) {
+                                    if (sync.isLeft()) {
+                                        syncKind = sync.getLeft();
+                                    } else {
+                                        TextDocumentSyncKind change = sync.getRight().getChange();
+                                        if (change != null)
+                                            syncKind = change;
+                                    }
+                                }
+                                DidChangeTextDocumentParams params;
+                                switch (syncKind) {
+                                    default:
+                                    case None:
+                                        continue;
+                                    case Full:
+                                        if (fullEvent[0] == null) {
+                                            doc.render(() -> {
+                                                try {
+                                                    fullEvent[0] = new TextDocumentContentChangeEvent(doc.getText(0, doc.getLength()));
+                                                } catch (BadLocationException ex) {
+                                                    Exceptions.printStackTrace(ex);
+                                                    fullEvent[0] = new TextDocumentContentChangeEvent("");
+                                                }
+                                            });
+                                        }
+                                        params = new DidChangeTextDocumentParams(di, Arrays.asList(fullEvent));
+                                        break;
+                                    case Incremental:
+                                        //event already filled
+                                        params = new DidChangeTextDocumentParams(di, Arrays.asList(incrementalEvent));
+                                        break;
+                                }
 
-                            if (typingModification && oldText.isEmpty() && event.length == 1) {
+                                server.getTextDocumentService().didChange(params);
+                            }
+
+                            if (typingModification && oldText.isEmpty() && incrementalEvent.length == 1) {
                                 if (newText.equals("}") || newText.equals("\n")) {
                                     List<TextEdit> edits = new ArrayList<>();
                                     doc.render(() -> {
@@ -252,19 +260,21 @@ public class TextDocumentSyncServerCapabilityHandler {
                 return; //ignore
 
             //TODO modified!
-            LSPBindings server = LSPBindings.getBindings(file);
+            List<LSPBindings> servers = LSPBindings.getBindings(file);
 
-            if (server == null) {
+            if (servers.isEmpty()) {
                 return;
             }
 
-            server.runOnBackground(() -> {
+            LSPBindings.runOnBackground(() -> {
                 TextDocumentIdentifier di = new TextDocumentIdentifier();
                 di.setUri(Utils.toURI(file));
                 DidCloseTextDocumentParams params = new DidCloseTextDocumentParams(di);
 
-                server.getTextDocumentService().didClose(params);
-                server.getOpenedFiles().remove(file);
+                for (LSPBindings server : servers) {
+                    server.getTextDocumentService().didClose(params);
+                    server.getOpenedFiles().remove(file);
+                }
             });
             openDocument2PanesCount.remove(doc);
         }
@@ -277,14 +287,15 @@ public class TextDocumentSyncServerCapabilityHandler {
         if (file == null)
             return; //ignore
 
-        LSPBindings server = LSPBindings.getBindings(file);
+        List<LSPBindings> servers = LSPBindings.getBindings(file);
 
-        if (server == null)
+        if (servers.isEmpty())
             return ; //ignore
 
         Runnable task = () -> {
+            boolean sendOpens = servers.stream().anyMatch(server -> !server.getOpenedFiles().contains(file));
 
-            if (!server.getOpenedFiles().add(file)) {
+            if (!sendOpens) {
                 //already opened:
                 return ;
             }
@@ -310,14 +321,19 @@ public class TextDocumentSyncServerCapabilityHandler {
                                                                      0,
                                                                      text[0]);
 
-            server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(textDocumentItem));
+            for (LSPBindings server : servers) {
+                if (server.getOpenedFiles().add(file)) {
+                    server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(textDocumentItem));
+                }
+            }
+
             LSPBindings.scheduleBackgroundTasks(file);
         };
 
         if (sync) {
             task.run();
         } else {
-            server.runOnBackground(task);
+            LSPBindings.runOnBackground(task);
         }
     }
 
@@ -328,12 +344,12 @@ public class TextDocumentSyncServerCapabilityHandler {
         if (file == null)
             return; //ignore
 
-        LSPBindings server = LSPBindings.getBindings(file);
+        List<LSPBindings> server = LSPBindings.getBindings(file);
 
-        if (server == null)
+        if (server.isEmpty())
             return ; //ignore
 
-        server.runOnBackground(() -> {
+        LSPBindings.runOnBackground(() -> {
             SwingUtilities.invokeLater(() -> {
                 if (c.getClientProperty(MarkOccurrences.class) == null) {
                     MarkOccurrences mo = new MarkOccurrences(c);

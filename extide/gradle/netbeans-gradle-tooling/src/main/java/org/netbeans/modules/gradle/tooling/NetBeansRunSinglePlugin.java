@@ -20,6 +20,7 @@
 package org.netbeans.modules.gradle.tooling;
 
 import static java.util.Arrays.asList;
+import java.util.List;
 import java.util.Set;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.logging.Logger;
@@ -76,15 +77,8 @@ class NetBeansRunSinglePlugin implements Plugin<Project> {
             je.setArgs(asList(project.property(RUN_SINGLE_ARGS).toString().split(" ")));
         }
         if (project.hasProperty(RUN_SINGLE_JVM_ARGS)) {
-            // Property jvmArgumentProviders should not be implemented as a lambda to allow execution optimizations.
-            // See https://docs.gradle.org/current/userguide/validation_problems.html#implementation_unknown
-            je.getJvmArgumentProviders().add(new CommandLineArgumentProvider() {
-                // Do not convert to lambda.
-                @Override
-                public Iterable<String> asArguments() {
-                    return asList(project.property(RUN_SINGLE_JVM_ARGS).toString().split(" "));
-                }
-            });
+            // do not use plain setter, as other Plugins may provide their own JVM flags + providers.
+            je.getJvmArgumentProviders().add(new JvmArgumentsHolder(asList(project.property(RUN_SINGLE_JVM_ARGS).toString().split(" "))));
         }
         try {
             je.setStandardInput(System.in);
@@ -112,4 +106,22 @@ class NetBeansRunSinglePlugin implements Plugin<Project> {
         runSingle.configure((task) -> task.doFirst((action) -> project.getLogger().warn(DEPRECATE_RUN_SINGLE)));
     }
 
+    /**
+     * A simple holder to add JVM arguments on top of other args provide by other plugins.
+     * DO NOT store Project or other resource-bound references here, keep static. It is attached to a task
+     * as a provider and serialized/cached. See Micronaut Configuration
+     * Cache requirements.
+     */
+    private static class JvmArgumentsHolder implements CommandLineArgumentProvider {
+        private final List<String> jvmArguments;
+
+        public JvmArgumentsHolder(List<String> jvmArguments) {
+            this.jvmArguments = jvmArguments;
+        }
+
+        @Override
+        public Iterable<String> asArguments() {
+            return jvmArguments;
+        }
+    }
 }

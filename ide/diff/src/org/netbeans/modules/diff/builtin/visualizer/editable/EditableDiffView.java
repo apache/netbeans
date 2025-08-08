@@ -133,9 +133,6 @@ public class EditableDiffView extends DiffControllerImpl implements DiffView, Do
     final JComponent view;
     final JSplitPane jSplitPane1 = new JSplitPane();
 
-    private String lineEnding1;
-    private String lineEnding2;
-
     private int diffSerial;
     private Difference[] diffs = NO_DIFFERENCES;
    
@@ -174,11 +171,6 @@ public class EditableDiffView extends DiffControllerImpl implements DiffView, Do
     private final String name1;
     private final String name2;
 
-    private final StreamSource source1;
-    private final StreamSource source2;
-    private final String title1;
-    private final String title2;
-
     private boolean sourcesInitialized;
     private boolean viewAdded;
     private boolean addedToHierarchy;
@@ -191,15 +183,10 @@ public class EditableDiffView extends DiffControllerImpl implements DiffView, Do
         refreshDiffTask = rp.create(new RefreshDiffTask());
         initColors();
 
-        source1 = ss1;
-        source2 = ss2;
-
         String t1 = ss1.getTitle();
         if (t1 == null) t1 = NbBundle.getMessage(EditableDiffView.class, "CTL_DiffPanel_NoTitle"); // NOI18N
         String t2 = ss2.getTitle();
         if (t2 == null) t2 = NbBundle.getMessage(EditableDiffView.class, "CTL_DiffPanel_NoTitle"); // NOI18N
-        title1 = t1;
-        title2 = t2;
 
         String mimeType1 = ss1.getMIMEType();
         String mimeType2 = ss2.getMIMEType();
@@ -258,8 +245,8 @@ public class EditableDiffView extends DiffControllerImpl implements DiffView, Do
         view.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(EditableDiffView.class, "ACS_DiffPanelA11yDesc"));  // NOI18N
         initializeTabPane(ss1, ss2);
 
-        setSourceTitle(fileLabel1, title1);
-        setSourceTitle(fileLabel2, title2);
+        setSourceTitle(fileLabel1, t1);
+        setSourceTitle(fileLabel2, t2);
 
         final String f1 = mimeType1;
         final String f2 = mimeType2;
@@ -392,23 +379,9 @@ public class EditableDiffView extends DiffControllerImpl implements DiffView, Do
         }
     }
 
-    private static String detectLineEnding(StreamSource source) {
+    private static String detectLineEnding(DiffContentPanel source) {
         try {
-            FileObject fo = source.getLookup().lookup(FileObject.class);
-            DataObject dao = DataObject.find(fo);
-
-            EditorCookie editorCookie = dao.getCookie(EditorCookie.class);
-            if (editorCookie == null) {
-                return null;
-            }
-
-            Document doc;
-            try {
-                doc = editorCookie.openDocument();
-            } catch (IOException ex) {
-                return null;
-            }
-
+            Document doc = source.getEditorPane().getDocument();
             String separator = doc.getProperty(BaseDocument.READ_LINE_SEPARATOR_PROP).toString();
             if ("\n".equals(separator)) {
                 return "LF";
@@ -1588,8 +1561,8 @@ public class EditableDiffView extends DiffControllerImpl implements DiffView, Do
                         jEditorPane1.setCurrentDiff(diffs);
                         jEditorPane2.setCurrentDiff(diffs);
 
-                        lineEnding1 = detectLineEnding(source1);
-                        lineEnding2 = detectLineEnding(source2);
+                        String lineEnding1 = detectLineEnding(jEditorPane1);
+                        String lineEnding2 = detectLineEnding(jEditorPane2);
 
                         boolean showLineEnding = lineEnding1 != null && lineEnding2 != null && !lineEnding1.equals(lineEnding2);
 
@@ -1597,9 +1570,6 @@ public class EditableDiffView extends DiffControllerImpl implements DiffView, Do
                             lineEndingLabel1.setText("<html><strong style='background-color: " + String.format("#%02x%02x%02x", colorChanged.getRed(), colorChanged.getGreen(), colorChanged.getBlue()) + "'>" + lineEnding1 + "</strong></html>");
                             lineEndingLabel2.setText("<html><strong style='background-color: " + String.format("#%02x%02x%02x", colorChanged.getRed(), colorChanged.getGreen(), colorChanged.getBlue()) + "'>" + lineEnding2 + "</strong></html>");
                         }
-
-                        setSourceTitle(fileLabel1, title1);
-                        setSourceTitle(fileLabel2, title2);
 
                         refreshDividerSize();
                         view.repaint();

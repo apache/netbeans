@@ -564,7 +564,12 @@ public final class RemoteServices {
                         } else {
                             try {
                                 Thread.sleep(100);
-                            } catch (InterruptedException iex) {}
+                            } catch (InterruptedException iex) {
+                                // Restore interrupted status and log the interruption
+                                Thread.currentThread().interrupt();
+                                logger.log(Level.FINE, "Sleep interrupted while waiting for access loop", iex);
+                                break; // Exit the loop if interrupted
+                            }
                         }
                         logger.log(Level.FINE, "  isSleeping = {0}", isSleeping);
                     } while (!isSleeping);

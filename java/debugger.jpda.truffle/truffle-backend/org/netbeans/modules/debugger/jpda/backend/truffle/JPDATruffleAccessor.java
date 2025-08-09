@@ -561,7 +561,11 @@ public class JPDATruffleAccessor extends Object {
                 // Wait until we're interrupted
                 try {
                     Thread.sleep(Long.MAX_VALUE);
-                } catch (InterruptedException iex) {}
+                } catch (InterruptedException iex) {
+                    // Expected interruption - we use interrupts to wake up this thread
+                    // when stepping state changes. This is normal flow, not an error.
+                    Thread.currentThread().interrupt(); // Restore interrupted status
+                }
                 accessLoopSleeping = false;
                 trace("AccessLoop: steppingIntoTruffle = "+steppingIntoTruffle+", isSteppingInto = "+isSteppingInto+", stepIntoPrepared = "+stepIntoPrepared);
                 

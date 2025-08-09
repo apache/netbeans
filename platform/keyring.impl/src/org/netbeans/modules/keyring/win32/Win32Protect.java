@@ -76,25 +76,33 @@ public class Win32Protect implements EncryptionProvider {
         input.store(cleartextB);
         Arrays.fill(cleartextB, (byte) 0);
         CryptIntegerBlob output = new CryptIntegerBlob();
-        if (!CryptLib.INSTANCE.CryptProtectData(input, null, null, null, null, 0, output)) {
-            throw new Exception("CryptProtectData failed: " + Native.getLastError());
+        try {
+            if (!CryptLib.INSTANCE.CryptProtectData(input, null, null, null, null, 0, output)) {
+                throw new Exception("CryptProtectData failed: " + Native.getLastError());
+            }
+            input.zero();
+            byte[] result = output.load();
+            return result;
+        } finally {
+            output.free();
         }
-        input.zero();
-        return output.load();
     }
 
     public @Override char[] decrypt(byte[] ciphertext) throws Exception {
         CryptIntegerBlob input = new CryptIntegerBlob();
         input.store(ciphertext);
         CryptIntegerBlob output = new CryptIntegerBlob();
-        if (!CryptLib.INSTANCE.CryptUnprotectData(input, null, null, null, null, 0, output)) {
-            throw new Exception("CryptUnprotectData failed: " + Native.getLastError());
+        try {
+            if (!CryptLib.INSTANCE.CryptUnprotectData(input, null, null, null, null, 0, output)) {
+                throw new Exception("CryptUnprotectData failed: " + Native.getLastError());
+            }
+            byte[] result = output.load();
+            char[] cleartext = Utils.bytes2Chars(result);
+            Arrays.fill(result, (byte) 0);
+            return cleartext;
+        } finally {
+            output.free();
         }
-        byte[] result = output.load();
-        // XXX gives CCE because not a Memory: output.zero();
-        char[] cleartext = Utils.bytes2Chars(result);
-        Arrays.fill(result, (byte) 0);
-        return cleartext;
     }
 
     public @Override boolean decryptionFailed() {
@@ -133,6 +141,12 @@ public class Win32Protect implements EncryptionProvider {
         )/* throws LastErrorException*/;
     }
 
+    public interface Kernel32Lib extends StdCallLibrary {
+        Kernel32Lib INSTANCE = Native.load("Kernel32", Kernel32Lib.class); // NOI18N
+        /** @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree">Reference</a> */
+        Pointer LocalFree(Pointer hMem);
+    }
+
     @SuppressWarnings("PublicField")
     @FieldOrder({"cbData", "pbData"})
     public static class CryptIntegerBlob extends Structure {
@@ -140,7 +154,6 @@ public class Win32Protect implements EncryptionProvider {
         public /*byte[]*/Pointer pbData;
         byte[] load() {
             return pbData.getByteArray(0, cbData);
-            // XXX how to free pbData? [Kernel32]LocalFree?
         }
         void store(byte[] data) {
             cbData = data.length;
@@ -148,7 +161,17 @@ public class Win32Protect implements EncryptionProvider {
             pbData.write(0, data, 0, cbData);
         }
         void zero() {
-            ((Memory) pbData).clear();
+            if (pbData instanceof Memory) {
+                ((Memory) pbData).clear();
+            }
+        }
+        void free() {
+            // Free memory allocated by Windows CryptProtectData/CryptUnprotectData
+            // These functions allocate memory using LocalAlloc, which must be freed with LocalFree
+            if (pbData != null && !(pbData instanceof Memory)) {
+                Kernel32Lib.INSTANCE.LocalFree(pbData);
+                pbData = null;
+            }
         }
     }
 

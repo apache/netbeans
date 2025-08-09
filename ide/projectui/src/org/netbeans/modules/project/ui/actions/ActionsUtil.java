@@ -156,12 +156,19 @@ class ActionsUtil {
             List<String> commands = Arrays.asList(ap.getSupportedActions());
             if ( commands.contains( command ) ) {
                 try {
-                if (context == null || ap.isActionEnabled(command, context)) {
-                    //System.err.println("cS: true project=" + project + " command=" + command + " context=" + context);
-                    return true;
-                }
+                    if (context == null || ap.isActionEnabled(command, context)) {
+                        //System.err.println("cS: true project=" + project + " command=" + command + " context=" + context);
+                        return true;
+                    }
                 } catch (IllegalArgumentException x) {
-                    Logger.getLogger(ActionsUtil.class.getName()).log(Level.INFO, "#213589: possible race condition in MergedActionProvider", x);
+                    // Issue #213589: Race condition in MergedActionProvider when project is closing
+                    // The action provider may throw IllegalArgumentException if the project
+                    // is being closed while we're checking action availability.
+                    // In this case, we should treat the action as disabled rather than propagating the exception.
+                    Logger.getLogger(ActionsUtil.class.getName()).log(Level.FINE, 
+                            "Action provider threw IllegalArgumentException for project: " + project + 
+                            ", command: " + command + " - likely due to project closure during query", x);
+                    return false;
                 }
             }
         }            

@@ -60,8 +60,13 @@ public class MacProvider implements KeyringProvider {
         if (data[0] == null) {
             return null;
         }
-        byte[] value = data[0].getByteArray(0, dataLength[0]); // XXX ought to call SecKeychainItemFreeContent
-        return new String(value, UTF_8).toCharArray();
+        try {
+            byte[] value = data[0].getByteArray(0, dataLength[0]);
+            return new String(value, UTF_8).toCharArray();
+        } finally {
+            // Free the memory allocated by SecKeychainFindGenericPassword to prevent memory leak
+            SecurityLibrary.LIBRARY.SecKeychainItemFreeContent(null, data[0]);
+        }
     }
 
     @Override

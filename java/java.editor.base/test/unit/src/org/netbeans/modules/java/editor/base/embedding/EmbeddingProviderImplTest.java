@@ -31,6 +31,7 @@ import static junit.framework.TestCase.assertNotNull;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.lexer.JavaTokenId;
+import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.lexer.Language;
@@ -227,10 +228,34 @@ public class EmbeddingProviderImplTest extends NbTestCase {
                 "<html>\n");
     }
 
+    public void testNestedJavaVar() throws Exception {
+        runTest("""
+                public class Test {
+                    public void t() {
+                        @Language("java")
+                        String code = \"""
+                                      |var v = 0;
+                                      \""";
+                    }
+                    @interface Language { public String value(); }
+                }
+                """,
+                result -> assertNotNull(CompilationInfo.get(result)),
+                "var v = 0;\n");
+    }
+
     private void runTest(@org.netbeans.api.annotations.common.Language("Java") String code,
                          String snippet) throws Exception {
         runTest(code, result -> {
             assertTrue(result instanceof TestParser.TestParserResult);
+        }, snippet);
+    }
+
+    private void runTest(@org.netbeans.api.annotations.common.Language("Java") String code,
+                         Consumer<Result> checkResult,
+                         String snippet) throws Exception {
+        runTest(code, result -> {
+            checkResult.accept(result);
             assertEquals(snippet, result.getSnapshot().getText().toString());
         });
     }
@@ -250,6 +275,7 @@ public class EmbeddingProviderImplTest extends NbTestCase {
         code = code.substring(0, caretPos) + code.substring(caretPos + 1);
 
         SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/java/editor/resources/layer.xml",
+            "org/netbeans/lib/java/lexer/layer.xml",
                                                       "META-INF/generated-layer.xml"},
                                         new Object[] {new MIMEResolverImpl()});
 

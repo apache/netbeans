@@ -1,0 +1,5 @@
+Code completion result for source line:
+u|se TestKeywordTrait;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    use                                        null

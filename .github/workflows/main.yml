@@ -153,7 +153,7 @@ jobs:
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
           
       - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           persist-credentials: false
           submodules: false
@@ -205,7 +205,7 @@ jobs:
     steps:
 
       - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           persist-credentials: false
           submodules: false
@@ -315,7 +315,7 @@ jobs:
 
       - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
         if: ${{ !cancelled() }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           persist-credentials: false
           submodules: false

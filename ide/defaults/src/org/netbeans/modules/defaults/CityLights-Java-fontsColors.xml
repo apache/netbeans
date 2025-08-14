@@ -57,6 +57,7 @@
     <fontcolor name="mod-annotation-type" default="interface" />
     <fontcolor name="mod-enum-declaration" default="enum"/>
     <fontcolor name="mod-enum" default="enum" />
+    <fontcolor name="mod-record-declaration" default="record" />
 
     <fontcolor name="mod-unused" default="unused" />
     <fontcolor name="mod-deprecated" default="deprecated" />

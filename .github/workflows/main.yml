@@ -153,7 +153,7 @@ jobs:
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
           
       - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           persist-credentials: false
           submodules: false
@@ -205,7 +205,7 @@ jobs:
     steps:
 
       - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           persist-credentials: false
           submodules: false
@@ -262,7 +262,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build
 
@@ -315,7 +315,7 @@ jobs:
 
       - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
         if: ${{ !cancelled() }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           persist-credentials: false
           submodules: false
@@ -354,7 +354,7 @@ jobs:
 
       - name: Download Build
         if: ${{ needs.base-build.result == 'success' && !cancelled() }}
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build
 
@@ -398,7 +398,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build
 
@@ -488,7 +488,7 @@ jobs:
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Download Build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build
 
@@ -520,7 +520,7 @@ jobs:
         if: ${{ (matrix.config == 'release') && success() }}
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20.18.1
 
       - name: Build NBVSCodeExt from ${{ matrix.config }}-src zip
         if: ${{ (matrix.config == 'release') && success() }}
@@ -552,7 +552,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build
 
@@ -875,7 +875,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build
 
@@ -996,7 +996,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build
 
@@ -1159,7 +1159,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build
 
@@ -1297,7 +1297,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build
 
@@ -1486,7 +1486,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build
 
@@ -1542,7 +1542,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build
 
@@ -1602,7 +1602,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build
 
@@ -1647,7 +1647,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build
 
@@ -1825,7 +1825,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build
 
@@ -1875,7 +1875,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build
 
@@ -1926,7 +1926,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build
 
@@ -1974,7 +1974,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build
 
@@ -2218,7 +2218,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build
 
@@ -2311,7 +2311,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build
 
@@ -2377,7 +2377,7 @@ jobs:
       # linux specific setup
       - name: Setup PHP
         if: contains(matrix.os, 'ubuntu')
-        uses: shivammathur/setup-php@0f7f1d08e3e32076e51cae65eb0b0c871405b16e # v2.34.1
+        uses: shivammathur/setup-php@ccf2c627fe61b1b4d924adfcbd19d661a18133a0 # v2.35.2
         with:
           php-version: '8.3'
           tools: pecl
@@ -2390,7 +2390,7 @@ jobs:
       # - - -
 
       - name: Download Build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build
 
@@ -2519,7 +2519,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build
 
@@ -2560,7 +2560,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build
 
@@ -2627,7 +2627,7 @@ jobs:
       - name: Set up node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20.18.1
 
       - name: Setup Xvfb
         run: |
@@ -2635,7 +2635,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build
 

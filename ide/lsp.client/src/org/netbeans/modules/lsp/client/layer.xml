@@ -22,6 +22,13 @@
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
     <folder name="Editors">
+        <folder name="Keybindings">
+            <folder name="NetBeans">
+                <folder name="Defaults">
+                    <file name="org-netbeans-modules-lsp-client-keybindings.xml" url="resources/NetBeans-keybindings.xml"/>
+                </folder>
+            </folder>
+        </folder>
         <folder name="SideBar">
             <file name="breadcrumbs.instance">
                 <attr name="location" stringvalue="South"/>

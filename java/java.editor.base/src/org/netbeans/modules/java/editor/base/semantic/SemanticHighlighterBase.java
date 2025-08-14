@@ -714,6 +714,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
         @Override
         public Void visitCase(CaseTree node, Void p) {
             int restartIndex = tl.index();
+            int restartOffset = tl.embeddedOffset();
             tl.moveToOffset(sourcePositions.getStartPosition(info.getCompilationUnit(), node));
             List<? extends CaseLabelTree> labels = node.getLabels();
             for (CaseLabelTree labelTree : labels) {
@@ -726,7 +727,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
                     }
                 }
             }
-            tl.resetToIndex(restartIndex);
+            tl.resetToIndex(restartIndex, restartOffset);
             return super.visitCase(node, p);
         }
 

@@ -99,7 +99,7 @@ public class TestProgressHandlerTest extends NbTestCase {
         };
         TestProgressHandler progressHandler = new TestProgressHandler(mlc, new IDebugProtocolClient() {}, fo.toURI().toString());
         String moduleName = ProjectUtils.getInformation(project).getDisplayName();
-        final ModuleInfo moduleInfo = new ModuleInfo(moduleName, List.of(project.getProjectDirectory().getPath()));
+        final ModuleInfo moduleInfo = new ModuleInfo(moduleName, List.of(project.getProjectDirectory()));
         progressHandler.displaySuiteRunning(moduleInfo, "TestSuiteName");
         Report report = new Report("TestSuiteName", project);
         TestSession session = new TestSession("TestSession", project, TestSession.SessionType.TEST);

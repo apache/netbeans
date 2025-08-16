@@ -19,19 +19,15 @@
 
 package org.netbeans.modules.lsp.client.bindings;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.eclipse.lsp4j.DefinitionParams;
 import org.eclipse.lsp4j.Location;
-import org.eclipse.lsp4j.LocationLink;
-import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
-import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
@@ -44,7 +40,6 @@ import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.Utils;
 import org.netbeans.modules.textmate.lexer.TextmateTokenId;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -101,44 +96,35 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
             //TODO: beep
             return ;
         }
-        LSPBindings server = LSPBindings.getBindings(file);
-        if (server == null) {
-            return ;
-        }
         String uri = Utils.toURI(file);
-        try {
-            DefinitionParams params;
-            params = new DefinitionParams(new TextDocumentIdentifier(uri),
-                                          Utils.createPosition(doc, offset));
-            //TODO: Location or Location[]
-            CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> def = server.getTextDocumentService().definition(params);
-            def.handleAsync((locations, exception) -> {
-                if (exception != null) {
-                    exception.printStackTrace();
-                }
-                if (locations == null) {
-                    return null;
-                }
-                String targetUri;
-                Range targetRange;
-                if (locations.isLeft() && locations.getLeft().size() == 1) { //TODO: what to do when there are multiple locations?
-                    targetUri = locations.getLeft().get(0).getUri();
-                    targetRange = locations.getLeft().get(0).getRange();
-                } else if (locations.isRight() && locations.getRight().size() == 1) { //TODO: what to do when there are multiple locations?
-                    targetUri = locations.getRight().get(0).getTargetUri();
-                    targetRange = locations.getRight().get(0).getTargetRange();
-                } else {
-                    return null;
-                }
-                Utils.open(targetUri, targetRange);
-                return null;
-            }).get();
-        } catch (BadLocationException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (InterruptedException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (ExecutionException ex) {
-            Exceptions.printStackTrace(ex);
+        List<Location> foundLocations = new ArrayList<>();
+        Utils.handleBindings(LSPBindings.getBindings(file),
+                             capa -> Utils.isEnabled(capa.getDefinitionProvider()),
+                             () -> new DefinitionParams(new TextDocumentIdentifier(uri),
+                                                        Utils.createPosition(doc, offset)),
+
+                             (server, params) -> server.getTextDocumentService().definition(params),
+                             (server, locations) -> {
+                                 if (locations == null) {
+                                     return ;
+                                 } else if (locations.isLeft()) {
+                                     foundLocations.addAll(locations.getLeft());
+                                 } else if (locations.isRight()) {
+                                     locations.getRight()
+                                              .stream()
+                                              .map(ll -> new Location(ll.getTargetUri(), ll.getTargetRange()))
+                                              .forEach(foundLocations::add);
+                                 }
+                             });
+        if (foundLocations.isEmpty()) {
+            //TODO: beep?
+        } else if (foundLocations.size() == 1) {
+            Location location = foundLocations.get(0);
+            Utils.open(location.getUri(), location.getRange());
+        } else {
+            //TODO: show a popup
+            Location location = foundLocations.get(0);
+            Utils.open(location.getUri(), location.getRange());
         }
     }
 

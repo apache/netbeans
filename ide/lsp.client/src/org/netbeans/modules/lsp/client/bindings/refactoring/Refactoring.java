@@ -33,9 +33,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.CancellationException;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiConsumer;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Position;
 import javax.swing.text.StyledDocument;
@@ -54,6 +53,7 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.queries.FileEncodingQuery;
 import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.Utils;
+import org.netbeans.modules.lsp.client.Utils.Environment;
 import org.netbeans.modules.lsp.client.bindings.refactoring.ModificationResult.Difference;
 import org.netbeans.modules.lsp.client.bindings.refactoring.tree.DiffElement;
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
@@ -90,17 +90,15 @@ import org.openide.util.lookup.ServiceProvider;
 @NbBundle.Messages("TXT_Canceled=Canceled")
 public class Refactoring {
 
-    private static final class WhereUsedRefactoringPlugin implements RefactoringPlugin {
+    private static final class WhereUsedRefactoringPlugin extends RefactoringBase implements RefactoringPlugin {
 
         private final WhereUsedQuery query;
-        private final LSPBindings bindings;
+        private final List<LSPBindings> servers;
         private final ReferenceParams params;
-        private final AtomicBoolean cancel = new AtomicBoolean();
-        private volatile CompletableFuture<List<? extends Location>> runningRequest;
 
-        public WhereUsedRefactoringPlugin(WhereUsedQuery query, LSPBindings bindings, ReferenceParams params) {
+        public WhereUsedRefactoringPlugin(WhereUsedQuery query, List<LSPBindings> servers, ReferenceParams params) {
             this.query = query;
-            this.bindings = bindings;
+            this.servers = servers;
             this.params = params;
         }
 
@@ -120,20 +118,10 @@ public class Refactoring {
         }
 
         @Override
-        public void cancelRequest() {
-            cancel.set(true);
-            CompletableFuture localRunningRequest = runningRequest;
-            if(localRunningRequest != null) {
-                localRunningRequest.cancel(true);
-            }
-        }
-
-        @Override
         public Problem prepare(RefactoringElementsBag refactoringElements) {
-            try {
-                runningRequest = bindings.getTextDocumentService().references(params);
-                for (Location l : runningRequest.get()) {
-                    if(cancel.get()) {
+            BiConsumer<LSPBindings, List<? extends Location>> handleResult = (server, usages) -> {
+                for (Location l : usages) {
+                    if (isCanceled()) {
                         break;
                     }
                     FileObject file = Utils.fromURI(l.getUri());
@@ -160,29 +148,28 @@ public class Refactoring {
                         refactoringElements.add(query, new LSPRefactoringElementImpl(annotatedLine, file, bounds));
                     }
                 }
-                runningRequest = null;
-                return null;
-            } catch (CancellationException ex) {
-                return new Problem(false, Bundle.TXT_Canceled());
-            } catch (InterruptedException | ExecutionException ex) {
-                Exceptions.printStackTrace(ex);
-                return new Problem(true, ex.getLocalizedMessage());
-            }
+            };
+
+            Utils.handleBindings(servers,
+                                 server -> true,
+                                 () -> params,
+                                 (server, params) -> server.getTextDocumentService().references(params),
+                                 handleResult);
+
+            return getProblem();
         }
 
     }
 
-    private static final class RenameRefactoringPlugin implements RefactoringPlugin {
+    private static final class RenameRefactoringPlugin extends RefactoringBase implements RefactoringPlugin {
 
         private final RenameRefactoring refactoring;
-        private final LSPBindings bindings;
+        private final List<LSPBindings> servers;
         private final RenameParams params;
-        private final AtomicBoolean cancel = new AtomicBoolean();
-        private volatile CompletableFuture<WorkspaceEdit> runningRequest;
 
-        public RenameRefactoringPlugin(RenameRefactoring refactoring, LSPBindings bindings, RenameParams params) {
+        public RenameRefactoringPlugin(RenameRefactoring refactoring, List<LSPBindings> servers, RenameParams params) {
             this.refactoring = refactoring;
-            this.bindings = bindings;
+            this.servers = servers;
             this.params = params;
         }
 
@@ -202,140 +189,122 @@ public class Refactoring {
         }
 
         @Override
-        public void cancelRequest() {
-            cancel.set(true);
-            CompletableFuture localRunningRequest = runningRequest;
-            if(localRunningRequest != null) {
-                localRunningRequest.cancel(true);
-            }
-        }
-
-        @Override
         public Problem prepare(RefactoringElementsBag refactoringElements) {
-            if (cancel.get()) {
-                return new Problem(false, Bundle.TXT_Canceled());
-            }
-            Problem p = null;
-            try {
-                runningRequest = bindings.getTextDocumentService().rename(params);
-                WorkspaceEdit edit = runningRequest.get();
-                List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = edit.getDocumentChanges();
-                ModificationResult result = new ModificationResult();
-                Map<FileObject, List<Difference>> file2Diffs = new HashMap<>();
-                Map<String, String> newURI2Old = new HashMap<>();
-                Map<String, String> newFileURI2Content = new HashMap<>();
+            BiConsumer<LSPBindings, WorkspaceEdit> handleResult = (server, edit) -> {
+                try {
+                    List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = edit.getDocumentChanges();
+                    ModificationResult result = new ModificationResult();
+                    Map<FileObject, List<Difference>> file2Diffs = new HashMap<>();
+                    Map<String, String> newURI2Old = new HashMap<>();
+                    Map<String, String> newFileURI2Content = new HashMap<>();
 
-                if (documentChanges != null) {
-                    for (Either<TextDocumentEdit, ResourceOperation> part : documentChanges) {
-                        if(cancel.get()) {
-                            break;
-                        }
-                        if (part.isLeft()) {
-                            String uri = part.getLeft().getTextDocument().getUri();
-                            uri = newURI2Old.getOrDefault(uri, uri);
-                            FileObject file = Utils.fromURI(uri);
+                    if (documentChanges != null) {
+                        for (Either<TextDocumentEdit, ResourceOperation> part : documentChanges) {
+                            if (isCanceled()) {
+                                break;
+                            }
+                            if (part.isLeft()) {
+                                String uri = part.getLeft().getTextDocument().getUri();
+                                uri = newURI2Old.getOrDefault(uri, uri);
+                                FileObject file = Utils.fromURI(uri);
 
-                            if (file != null) {
-                                for (TextEdit te : part.getLeft().getEdits()) {
-                                    Difference diff = textEdit2Difference(file, te);
-                                    file2Diffs.computeIfAbsent(file, f -> new ArrayList<>())
-                                              .add(diff);
+                                if (file != null) {
+                                    for (TextEdit te : part.getLeft().getEdits()) {
+                                        Difference diff = textEdit2Difference(file, te);
+                                        file2Diffs.computeIfAbsent(file, f -> new ArrayList<>())
+                                                  .add(diff);
+                                    }
+                                } else if (newFileURI2Content.containsKey(uri)) {
+                                    FileObject temp = FileUtil.createMemoryFileSystem().getRoot().createData("temp.txt");
+                                    try (OutputStream out = temp.getOutputStream()) {
+                                        out.write(newFileURI2Content.get(uri).getBytes()); //TODO: encoding - native, OK?
+                                    }
+                                    List<Difference> diffs = new ArrayList<>();
+                                    for (TextEdit te : part.getLeft().getEdits()) {
+                                        diffs.add(textEdit2Difference(temp, te));
+                                    }
+                                    ModificationResult tempResult = new ModificationResult();
+                                    tempResult.addDifferences(temp, diffs);
+                                    newFileURI2Content.put(uri, tempResult.getResultingSource(temp));
+                                } else {
+                                    //XXX: problem...
                                 }
-                            } else if (newFileURI2Content.containsKey(uri)) {
-                                FileObject temp = FileUtil.createMemoryFileSystem().getRoot().createData("temp.txt");
-                                try (OutputStream out = temp.getOutputStream()) {
-                                    out.write(newFileURI2Content.get(uri).getBytes()); //TODO: encoding - native, OK?
-                                }
-                                List<Difference> diffs = new ArrayList<>();
-                                for (TextEdit te : part.getLeft().getEdits()) {
-                                    diffs.add(textEdit2Difference(temp, te));
-                                }
-                                ModificationResult tempResult = new ModificationResult();
-                                tempResult.addDifferences(temp, diffs);
-                                newFileURI2Content.put(uri, tempResult.getResultingSource(temp));
                             } else {
-                                //XXX: problem...
-                            }
-                        } else {
-                            switch (part.getRight().getKind()) {
-                                case ResourceOperationKind.Rename: {
-                                    RenameFile rename = (RenameFile) part.getRight();
-                                    FileObject file = Utils.fromURI(rename.getOldUri());
-                                    refactoringElements.addFileChange(refactoring, new LSPRenameFile(file, rename.getNewUri()));
-                                    newURI2Old.put(rename.getNewUri(), rename.getOldUri());
-                                    break;
+                                switch (part.getRight().getKind()) {
+                                    case ResourceOperationKind.Rename: {
+                                        RenameFile rename = (RenameFile) part.getRight();
+                                        FileObject file = Utils.fromURI(rename.getOldUri());
+                                        refactoringElements.addFileChange(refactoring, new LSPRenameFile(file, rename.getNewUri()));
+                                        newURI2Old.put(rename.getNewUri(), rename.getOldUri());
+                                        break;
+                                    }
+                                    case ResourceOperationKind.Delete: {
+                                        DeleteFile delete = (DeleteFile) part.getRight();
+                                        FileObject file = Utils.fromURI(delete.getUri());
+                                        refactoringElements.addFileChange(refactoring, new LSPDeleteFile(file));
+                                        break;
+                                    }
+                                    case ResourceOperationKind.Create: {
+                                        CreateFile create = (CreateFile) part.getRight();
+                                        String uri = create.getUri();
+                                        newFileURI2Content.put(uri, "");
+                                        break;
+                                    }
+                                    default:
+                                        addProblem(new Problem(true, "Unknown file operation: " + part.getRight().getKind()));
+                                        break;
                                 }
-                                case ResourceOperationKind.Delete: {
-                                    DeleteFile delete = (DeleteFile) part.getRight();
-                                    FileObject file = Utils.fromURI(delete.getUri());
-                                    refactoringElements.addFileChange(refactoring, new LSPDeleteFile(file));
-                                    break;
-                                }
-                                case ResourceOperationKind.Create: {
-                                    CreateFile create = (CreateFile) part.getRight();
-                                    String uri = create.getUri();
-                                    newFileURI2Content.put(uri, "");
-                                    break;
-                                }
-                                default:
-                                    p = chain(new Problem(true, "Unknown file operation: " + part.getRight().getKind()), p);
-                                    break;
                             }
                         }
-                    }
-                } else {
-                    for (Entry<String, List<TextEdit>> fileAndChanges : edit.getChanges().entrySet()) {
-                        if(cancel.get()) {
-                            break;
+                    } else {
+                        for (Entry<String, List<TextEdit>> fileAndChanges : edit.getChanges().entrySet()) {
+                            if (isCanceled()) {
+                                break;
+                            }
+                            //TODO: errors:
+                            FileObject file = Utils.fromURI(fileAndChanges.getKey());
+
+                            for (TextEdit te : fileAndChanges.getValue()) {
+                                Difference diff = textEdit2Difference(file, te);
+                                file2Diffs.computeIfAbsent(file, f -> new ArrayList<>())
+                                          .add(diff);
+                            }
                         }
-                        //TODO: errors:
-                        FileObject file = Utils.fromURI(fileAndChanges.getKey());
+                    }
 
-                        for (TextEdit te : fileAndChanges.getValue()) {
-                            Difference diff = textEdit2Difference(file, te);
-                            file2Diffs.computeIfAbsent(file, f -> new ArrayList<>())
-                                      .add(diff);
+                    if (isCanceled()) {
+                        addProblem(new Problem(false, Bundle.TXT_Canceled()));
+                    } else {
+
+                        file2Diffs.entrySet()
+                            .forEach(e -> {
+                                e.getValue()
+                                    .forEach(diff -> refactoringElements.add(refactoring, DiffElement.create(diff, e.getKey(), result)));
+                                result.addDifferences(e.getKey(), e.getValue());
+                            });
+
+                        newFileURI2Content.entrySet()
+                            .forEach(e -> {
+                                refactoringElements.add(refactoring, new LSPCreateFile(e.getKey(), e.getValue()));
+                            });
+                        refactoringElements.registerTransaction(new RefactoringCommit(Collections.singletonList(result)));
+
+                        if (isCanceled()) {
+                            addProblem(new Problem(false, Bundle.TXT_Canceled()));
                         }
                     }
+                } catch ( IOException ex) {
+                    addProblem(new Problem(true, ex.getLocalizedMessage()));
                 }
+            };
 
-                if (cancel.get()) {
-                    p = chain(new Problem(false, Bundle.TXT_Canceled()), p);
-                } else {
+            Utils.handleBindings(servers,
+                                 server -> true,
+                                 () -> params,
+                                 (server, params) -> server.getTextDocumentService().rename(params),
+                                 handleResult);
 
-                    file2Diffs.entrySet()
-                        .forEach(e -> {
-                            e.getValue()
-                                .forEach(diff -> refactoringElements.add(refactoring, DiffElement.create(diff, e.getKey(), result)));
-                            result.addDifferences(e.getKey(), e.getValue());
-                        });
-
-                    newFileURI2Content.entrySet()
-                        .forEach(e -> {
-                            refactoringElements.add(refactoring, new LSPCreateFile(e.getKey(), e.getValue()));
-                        });
-                    refactoringElements.registerTransaction(new RefactoringCommit(Collections.singletonList(result)));
-
-                    if (cancel.get()) {
-                        p = chain(new Problem(false, Bundle.TXT_Canceled()), p);
-                    }
-                }
-
-                return p;
-            } catch (CancellationException ex) {
-                return chain(new Problem(false, Bundle.TXT_Canceled()), p);
-            } catch (InterruptedException | ExecutionException | IOException ex) {
-                return chain(new Problem(true, ex.getLocalizedMessage()), p);
-            } finally {
-                runningRequest = null;
-            }
-        }
-
-        private Problem chain(Problem current, Problem existing) {
-            if (existing != null) {
-                current.setNext(existing);
-            }
-            return current;
+            return getProblem();
         }
 
         private Difference textEdit2Difference(FileObject file, TextEdit edit) {
@@ -362,6 +331,55 @@ public class Refactoring {
         int dot = uri.lastIndexOf('/');
 
         return uri.substring(dot + 1);
+    }
+
+    protected static class RefactoringBase implements Environment {
+        private final AtomicBoolean cancel = new AtomicBoolean();
+        private final List<Runnable> cancelCallbacks = new ArrayList<>();
+        private Problem problem;
+
+        public void cancelRequest() {
+            cancel.set(true);
+            List<Runnable> localCancelCallbacks;
+            synchronized (cancelCallbacks) {
+                localCancelCallbacks = new ArrayList<>(cancelCallbacks);
+            }
+            localCancelCallbacks.forEach(Runnable::run);
+        }
+
+        @Override
+        public boolean isCanceled() {
+            return cancel.get();
+        }
+
+        @Override
+        public void registerCancelCallback(Runnable callback) {
+            synchronized (cancelCallbacks) {
+                cancelCallbacks.add(callback);
+            }
+        }
+
+        @Override
+        public void handleCancellationException(CancellationException ex) {
+            addProblem(new Problem(false, Bundle.TXT_Canceled()));
+        }
+
+        @Override
+        public void handleException(Exception ex) {
+            addProblem(new Problem(true, ex.getLocalizedMessage()));
+        }
+
+        protected void addProblem(Problem current) {
+            if (problem != null) {
+                current.setNext(problem);
+            }
+            problem = current;
+        }
+
+        protected Problem getProblem() {
+            return problem;
+        }
+
     }
 
     public static class LSPRefactoringElementImpl extends SimpleRefactoringElementImplementation {
@@ -669,17 +687,17 @@ public class Refactoring {
         public RefactoringPlugin createInstance(AbstractRefactoring refactoring) {
             if (refactoring instanceof WhereUsedQuery) {
                 WhereUsedQuery q = (WhereUsedQuery) refactoring;
-                LSPBindings bindings = q.getRefactoringSource().lookup(LSPBindings.class);
+                LSPBindingsCollection bindings = q.getRefactoringSource().lookup(LSPBindingsCollection.class);
                 ReferenceParams params = q.getRefactoringSource().lookup(ReferenceParams.class);
                 if (bindings != null && params != null) {
-                    return new WhereUsedRefactoringPlugin(q, bindings, params);
+                    return new WhereUsedRefactoringPlugin(q, bindings.servers(), params);
                 }
             } else if (refactoring instanceof RenameRefactoring) {
                 RenameRefactoring r = (RenameRefactoring) refactoring;
-                LSPBindings bindings = r.getRefactoringSource().lookup(LSPBindings.class);
+                LSPBindingsCollection bindings = r.getRefactoringSource().lookup(LSPBindingsCollection.class);
                 RenameParams params = r.getRefactoringSource().lookup(RenameParams.class);
                 if (bindings != null && params != null) {
-                    return new RenameRefactoringPlugin(r, bindings, params);
+                    return new RenameRefactoringPlugin(r, bindings.servers(), params);
                 }
             }
             return null;

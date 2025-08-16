@@ -122,8 +122,9 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
             Location location = foundLocations.get(0);
             Utils.open(location.getUri(), location.getRange());
         } else {
-            //TODO: what to do when there are multiple locations?
-            //presumably show a popup
+            //TODO: show a popup
+            Location location = foundLocations.get(0);
+            Utils.open(location.getUri(), location.getRange());
         }
     }
 

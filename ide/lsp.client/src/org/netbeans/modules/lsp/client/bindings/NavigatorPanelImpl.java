@@ -97,7 +97,15 @@ public class NavigatorPanelImpl extends AbstractNavigatorPanel<Either<SymbolInfo
         InitializeResult initResult = bindings.getInitResult();
         ServerCapabilities capa = initResult.getCapabilities();
         Either<Boolean, DocumentSymbolOptions> symbolProvider = capa != null ? capa.getDocumentSymbolProvider() : null;
-        String displayName = symbolProvider != null && symbolProvider.isRight() ? symbolProvider.getRight().getLabel() : initResult.getServerInfo().getName();
+        String displayName;
+
+        if (symbolProvider != null && symbolProvider.isRight()) {
+            displayName =symbolProvider.getRight().getLabel();
+        } else if (initResult.getServerInfo() != null) {
+            displayName = initResult.getServerInfo().getName();
+        } else {
+            displayName = null;
+        }
 
         setDisplayName(displayName);
     }

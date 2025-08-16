@@ -190,12 +190,6 @@ public class Refactoring {
 
         @Override
         public Problem prepare(RefactoringElementsBag refactoringElements) {
-//            if (cancel.get()) {
-//                return new Problem(false, Bundle.TXT_Canceled());
-//            }
-//            Problem p = null;
-//            try {
-//                runningRequest = bindings.getTextDocumentService().rename(params);
             BiConsumer<LSPBindings, WorkspaceEdit> handleResult = (server, edit) -> {
                 try {
                     List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = edit.getDocumentChanges();

@@ -5,8 +5,8 @@
 ---
 **^Add meaningful description above**
 
-<details open>
-<summary>Click to collapse/expand PR instructions</summary>
+<details>
+<summary>Click to expand PR instructions</summary>
 
 By opening a pull request you confirm that, unless explicitly stated otherwise, the changes -
 
@@ -19,6 +19,8 @@ If you're a first time contributor, see the Contributing guidelines for more inf
 
 If you're a committer, please label the PR before pressing "Create pull request" so that the right test jobs can run.
 
+</details>
+
 ### PR approval and merge checklist:
 
 1. [ ] Was this PR [correctly labeled](https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=240884239#PRsandYouAreviewerGuide-PRtriggeredCIJobs(conditionalCIpipeline)), did the right tests run? When did they run?
@@ -27,5 +29,3 @@ If you're a committer, please label the PR before pressing "Create pull request"
 3. [ ] Does the PR title and description still fit after the Nth iteration? Is the description sufficient to appear in the release notes?
 
 If this PR targets the delivery branch: [don't merge](https://cwiki.apache.org/confluence/display/NETBEANS/Pull+requests+for+delivery). ([full wiki article](https://cwiki.apache.org/confluence/display/NETBEANS/PRs+and+You+-+A+reviewer+Guide))
-
-</details>

@@ -152,39 +152,74 @@ case "`uname`" in
        fi
 
        # See longer comments in nb/ide.launcher/unix/netbeans.
-       if [ "`command xrdb -query 2> /dev/null | grep Xft.dpi | cut -d ':' -f2 | xargs`" = 192 ]
-       then
-           echo "Detected 2x HiDPI scaling in Xft.dpi setting; setting GDK_SCALE=2"
-           export GDK_SCALE=2
+       detected_dpi=""
+
+       xft_dpi="`command xrdb -query 2>/dev/null | grep Xft.dpi | cut -d ':' -f2 | xargs`"
+       if [ -z "$GDK_SCALE" ] && [ -z "$J2D_UISCALE" ] && [ -n "$xft_dpi" ] && [ "$xft_dpi" -gt 96 ] && [ "$xft_dpi" -le 192 ]; then
+           detected_dpi="$xft_dpi"
+           echo -n "Detected $detected_dpi DPI in Xft.dpi setting; "
        fi
-       if [ "`command xdpyinfo 2> /dev/null | grep 'resolution:.*dots per inch' | cut -d ':' -f2 | cut -d 'x' -f1 | sort -u | xargs`" = 192 ]
-       then
-           echo "Detected 192 DPI on all screens in xdpyinfo; setting GDK_SCALE=2"
-           export GDK_SCALE=2
+
+       if [ -z "$xft_dpi" ]; then
+           xdpyinfo_dpi="`command xdpyinfo 2>/dev/null | grep 'resolution:.*dots per inch' | cut -d ':' -f2 | cut -d 'x' -f1 | sort -u | xargs`"
+           case "$xdpyinfo_dpi" in
+               *[!0-9]*) ;;
+               "") ;;
+               *)
+                   if [ -z "$GDK_SCALE" ] && [ -z "$J2D_UISCALE" ] && [ "$xdpyinfo_dpi" -gt 96 ] && [ "$xdpyinfo_dpi" -le 192 ]; then
+                       detected_dpi="$xdpyinfo_dpi"
+                       echo -n "Detected $detected_dpi DPI on all screens in xdpyinfo; "
+                   fi
+                   ;;
+           esac
        fi
 
        extra_automatic_options=""
 
+       if [ -z "$GDK_SCALE" ] && [ -z "$J2D_UISCALE" ] && [ -n "$detected_dpi" ] && [ "$detected_dpi" -gt 96 ] && [ "$detected_dpi" -le 192 ]; then
+           extra_automatic_options="-J-Dsun.java2d.uiScale=2"
+           echo -n "using explicit setting for Java UI scaling (-J-Dsun.java2d.uiScale=2)"
+           if [ "$detected_dpi" -gt 96 ] && [ "$detected_dpi" -lt 192 ]; then
+               case ${XDG_CURRENT_DESKTOP-} in
+               *GNOME*)
+                       ;;
+               *)
+                       scaling_factor=`awk -v dpi="$detected_dpi" 'BEGIN {print dpi / 192}'`
+                       extra_automatic_options="$extra_automatic_options -J-Dflatlaf.uiScale=$scaling_factor"
+                       echo -n " and FlatLaf UI scaling (-J-Dflatlaf.uiScale=$scaling_factor)"
+                       ;;
+               esac
+           fi
+           echo
+       fi
+
        # See longer comments in nb/ide.launcher/unix/netbeans.
        if [ ! -z "$KDE_FULL_SESSION" ] ; then
+           antialiasing_font_settings=""
+
            case "`command xrdb -query 2> /dev/null | grep Xft.rgba | cut -d ':' -f2 | xargs`" in
                rgb)
-                   extra_automatic_options="-J-Dawt.useSystemAAFontSettings=lcd_hrgb"
+                   antialiasing_font_settings="-J-Dawt.useSystemAAFontSettings=lcd_hrgb"
                    ;;
                bgr)
-                   extra_automatic_options="-J-Dawt.useSystemAAFontSettings=lcd_hbgr"
+                   antialiasing_font_settings="-J-Dawt.useSystemAAFontSettings=lcd_hbgr"
                    ;;
                vrgb)
-                   extra_automatic_options="-J-Dawt.useSystemAAFontSettings=lcd_vrgb"
+                   antialiasing_font_settings="-J-Dawt.useSystemAAFontSettings=lcd_vrgb"
                    ;;
                vbgr)
-                   extra_automatic_options="-J-Dawt.useSystemAAFontSettings=lcd_vbgr"
+                   antialiasing_font_settings="-J-Dawt.useSystemAAFontSettings=lcd_vbgr"
                    ;;
                *)
-                   extra_automatic_options="-J-Dawt.useSystemAAFontSettings=on"
+                   antialiasing_font_settings="-J-Dawt.useSystemAAFontSettings=on"
                    ;;
            esac
-           echo "Detected KDE; use explicit setting for font antialiasing ($extra_automatic_options)"
+           echo "Detected KDE; using explicit setting for font antialiasing ($antialiasing_font_settings)"
+           if [ -z "$extra_automatic_options" ]; then
+               extra_automatic_options="$antialiasing_font_settings"
+           else
+               extra_automatic_options="$extra_automatic_options $antialiasing_font_settings"
+           fi
        fi
 
        # Add extra_automatic_options before default_options, to allow system

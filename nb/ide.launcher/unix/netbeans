@@ -164,15 +164,10 @@ case "`uname`" in
             '"$@"'
         ;;
     *)
-        # Support 2x HiDPI scaling on Linux systems that have configured this via Xft.dpi but not via
-        # GDK_SCALE, notably Ubuntu as of 20.04.1. Xft.dpi technically relates to the size of fonts
-        # only, but Ubuntu sets it when the "Scaling" setting is changed in the "Displays" settings
-        # UI. OpenJDK supports the GDK_SCALE setting at the GraphicsConfiguration level, but not
-        # Xft.dpi (as of 2020-11-22 and LTS 11.0.9). Individual LAFs may react to the latter, though
-        # FlatLAF in particular works correctly even both are set at the same time.
-        #
-        # OpenJDK does not support fractional scalings in GDK_SCALE, so we only handle the 2x case
-        # here. OpenJDK also does not query the separate GDK_DPI_SCALE variable.
+        # Support HiDPI scaling on Linux systems that have configured this via Xft.dpi but not via
+        # GDK_SCALE, notably Ubuntu and Fedora. Xft.dpi technically relates to the size of fonts
+        # only, but Ubuntu and Fedora set it when the "Scaling" setting is changed in the "Displays"
+        # settings UI.
         #
         # We do not attempt to support per-monitor DPI scalings here. OpenJDK might support this
         # through the ubuntu.user-interface/scale-factor setting, but as of Ubuntu 20.04.1, the
@@ -181,15 +176,17 @@ case "`uname`" in
         # saying it is "not well supported yet" (presumably in their own OpenJDK fork).
         # https://intellij-support.jetbrains.com/hc/en-us/articles/360007994999-HiDPI-configuration
 
+        detected_dpi=""
+
         # If the xrdb command does not exist, no action will be taken here.
-        if [ "`command xrdb -query 2> /dev/null | grep Xft.dpi | cut -d ':' -f2 | xargs`" = 192 ]
-        then
-            echo "Detected 2x HiDPI scaling in Xft.dpi setting; setting GDK_SCALE=2"
-            export GDK_SCALE=2
+        xft_dpi="`command xrdb -query 2>/dev/null | grep Xft.dpi | cut -d ':' -f2 | xargs`"
+        if [ -z "$GDK_SCALE" ] && [ -z "$J2D_UISCALE" ] && [ -n "$xft_dpi" ] && [ "$xft_dpi" -gt 96 ] && [ "$xft_dpi" -le 192 ]; then
+            detected_dpi="$xft_dpi"
+            echo -n "Detected $detected_dpi DPI in Xft.dpi setting; "
         fi
 
-        # Handle another case that indicates a need for 2x HiDPI scaling, observed on openSUSE
-        # Tumbleweed (see NETBEANS-2360). A user with a HiDPI monitor and 2x HiDPI scaling
+        # Handle another case that indicates a need for HiDPI scaling, observed on openSUSE
+        # Tumbleweed (see NETBEANS-2360). A user with a HiDPI monitor and HiDPI scaling
         # enabled reported that "xdpyinfo | grep -B 2 resolution" yielded the following:
         #
         #   screen #0:
@@ -197,15 +194,48 @@ case "`uname`" in
         #     resolution:    192x193 dots per inch
         #
         # Xft.dpi was not set in this case, however. In the following test, we
-        # set GDK_SCALE=2 if _all_ monitors report a resolution of "192x"
-        # something (ignoring the odd "193" figure observed above).
-        if [ "`command xdpyinfo 2> /dev/null | grep 'resolution:.*dots per inch' | cut -d ':' -f2 | cut -d 'x' -f1 | sort -u | xargs`" = 192 ]
-        then
-            echo "Detected 192 DPI on all screens in xdpyinfo; setting GDK_SCALE=2"
-            export GDK_SCALE=2
+        # enable HiDPI scaling if _all_ monitors report a resolution of
+        # "(97-192)xsomething" (ignoring the odd 193 figure observed above).
+        if [ -z "$xft_dpi" ]; then
+            xdpyinfo_dpi="`command xdpyinfo 2>/dev/null | grep 'resolution:.*dots per inch' | cut -d ':' -f2 | cut -d 'x' -f1 | sort -u | xargs`"
+            case "$xdpyinfo_dpi" in
+                *[!0-9]*) ;;
+                "") ;;
+                *)
+                    if [ -z "$GDK_SCALE" ] && [ -z "$J2D_UISCALE" ] && [ "$xdpyinfo_dpi" -gt 96 ] && [ "$xdpyinfo_dpi" -le 192 ]; then
+                        detected_dpi="$xdpyinfo_dpi"
+                        echo -n "Detected $detected_dpi DPI on all screens in xdpyinfo; "
+                    fi
+                    ;;
+            esac
         fi
 
         extra_automatic_options=""
+
+        # OpenJDK does not support fractional scalings in GDK_SCALE. OpenJDK also does not query the
+        # separate GDK_DPI_SCALE variable. In theory FlatLaf can do fractional scaling, but in
+        # practice not all parts of NetBeans are scaled properly with a flatlaf.uiScale value
+        # between 1 and 2. But FlatLaf also supports fractional scaling smaller than 1, so we make
+        # Java scale by 2 with a sun.java2d.uiScale value of 2, then we make FlatLaf scale down with
+        # a flatlaf.uiScale value between 0 and 1. GNOME 48 and higher supports HiDPI scaling for
+        # Xwayland applications through its "xwayland-native-scaling" feature, so we do not apply
+        # this workaround for GNOME.
+        if [ -z "$GDK_SCALE" ] && [ -z "$J2D_UISCALE" ] && [ -n "$detected_dpi" ] && [ "$detected_dpi" -gt 96 ] && [ "$detected_dpi" -le 192 ]; then
+            extra_automatic_options="-J-Dsun.java2d.uiScale=2"
+            echo -n "using explicit setting for Java UI scaling (-J-Dsun.java2d.uiScale=2)"
+            if [ "$detected_dpi" -gt 96 ] && [ "$detected_dpi" -lt 192 ]; then
+                case ${XDG_CURRENT_DESKTOP-} in
+                *GNOME*)
+                        ;;
+                *)
+                        scaling_factor=`awk -v dpi="$detected_dpi" 'BEGIN {print dpi / 192}'`
+                        extra_automatic_options="$extra_automatic_options -J-Dflatlaf.uiScale=$scaling_factor"
+                        echo -n " and FlatLaf UI scaling (-J-Dflatlaf.uiScale=$scaling_factor)"
+                        ;;
+                esac
+            fi
+            echo
+        fi
 
         # Java/AWT/Swing will correctly detect text anti-aliasing settings on
         # GNOME, but not (always) on KDE. Force anti-aliasing on in this case
@@ -227,26 +257,33 @@ case "`uname`" in
             # Try to detect the correct subpixel antialiasing mode
             # (https://github.com/apache/netbeans/issues/4228)
 
+            antialiasing_font_settings=""
+
             # See https://docs.gtk.org/gtk4/property.Settings.gtk-xft-rgba.html
             # See https://docs.oracle.com/javase/7/docs/technotes/guides/2d/flags.html#aaFonts
             case "`command xrdb -query 2> /dev/null | grep Xft.rgba | cut -d ':' -f2 | xargs`" in
                 rgb)
-                    extra_automatic_options="-J-Dawt.useSystemAAFontSettings=lcd_hrgb"
+                    antialiasing_font_settings="-J-Dawt.useSystemAAFontSettings=lcd_hrgb"
                     ;;
                 bgr)
-                    extra_automatic_options="-J-Dawt.useSystemAAFontSettings=lcd_hbgr"
+                    antialiasing_font_settings="-J-Dawt.useSystemAAFontSettings=lcd_hbgr"
                     ;;
                 vrgb)
-                    extra_automatic_options="-J-Dawt.useSystemAAFontSettings=lcd_vrgb"
+                    antialiasing_font_settings="-J-Dawt.useSystemAAFontSettings=lcd_vrgb"
                     ;;
                 vbgr)
-                    extra_automatic_options="-J-Dawt.useSystemAAFontSettings=lcd_vbgr"
+                    antialiasing_font_settings="-J-Dawt.useSystemAAFontSettings=lcd_vbgr"
                     ;;
                 *)
-                    extra_automatic_options="-J-Dawt.useSystemAAFontSettings=on"
+                    antialiasing_font_settings="-J-Dawt.useSystemAAFontSettings=on"
                     ;;
             esac
-            echo "Detected KDE; use explicit setting for font antialiasing ($extra_automatic_options)"
+            echo "Detected KDE; using explicit setting for font antialiasing ($antialiasing_font_settings)"
+            if [ -z "$extra_automatic_options" ]; then
+                extra_automatic_options="$antialiasing_font_settings"
+            else
+                extra_automatic_options="$extra_automatic_options $antialiasing_font_settings"
+            fi
         fi
 
         # Add extra_automatic_options before default_options, to allow system

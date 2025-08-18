@@ -1,14 +1,7 @@
---add-opens=java.desktop/javax.swing.plaf.basic=ALL-UNNAMED
 --add-opens=java.desktop/javax.swing.text=ALL-UNNAMED
 --add-opens=java.desktop/javax.swing=ALL-UNNAMED
 --add-opens=java.desktop/java.awt=ALL-UNNAMED
 --add-opens=java.desktop/java.awt.event=ALL-UNNAMED
---add-opens=java.desktop/sun.awt.X11=ALL-UNNAMED
---add-opens=java.desktop/javax.swing.plaf.synth=ALL-UNNAMED
---add-opens=java.desktop/com.sun.java.swing.plaf.gtk=ALL-UNNAMED
---add-opens=java.desktop/com.sun.java.swing.plaf.windows=ALL-UNNAMED
---add-opens=java.desktop/com.apple.laf=ALL-UNNAMED
---add-opens=java.desktop/sun.awt.im=ALL-UNNAMED
 --add-exports=java.desktop/sun.awt=ALL-UNNAMED
 --add-exports=java.desktop/java.awt.peer=ALL-UNNAMED
 --add-exports=java.desktop/com.sun.beans.editors=ALL-UNNAMED
@@ -16,3 +9,6 @@
 --add-exports=java.desktop/sun.awt.im=ALL-UNNAMED
 --add-exports=java.desktop/com.sun.java.swing.plaf.motif=ALL-UNNAMED
 --add-exports=java.desktop/com.apple.eio=ALL-UNNAMED
+--add-exports=java.desktop/com.sun.java.swing.plaf.gtk=ALL-UNNAMED
+--add-exports=java.desktop/com.sun.java.swing.plaf.windows=ALL-UNNAMED
+--add-exports=java.desktop/com.apple.laf=ALL-UNNAMED

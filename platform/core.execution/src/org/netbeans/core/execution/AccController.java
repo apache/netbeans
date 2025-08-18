@@ -47,6 +47,7 @@ class AccController {
             } catch (NoSuchFieldException nsfe) { // IBM JDK1.5 has different field
                 ctx = AccessControlContext.class.getDeclaredField("domainsArray"); // NOI18N
             }
+            // TODO adds --add-opens=java.base/java.security=ALL-UNNAMED
             ctx.setAccessible(true);
             context = ctx;
         }

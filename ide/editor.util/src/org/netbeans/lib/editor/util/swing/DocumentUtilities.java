@@ -521,6 +521,7 @@ public final class DocumentUtilities {
                 } catch (NoSuchFieldException ex) {
                     throw new IllegalStateException(ex);
                 }
+                // TODO adds --add-opens=java.desktop/javax.swing.text=ALL-UNNAMED
                 f.setAccessible(true);
                 currWriterField = f;
             }

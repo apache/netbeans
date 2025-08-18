@@ -478,6 +478,7 @@ public final class PreferencesImpl extends AbstractPreferences implements Prefer
         flushTask.schedule(200);
     }
 
+    // TODO this adds --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED
     // XXX: we probably should not extends AbstractPreferences and do it all ourselfs
     // including the firing of events. For the events delivery we could just reuse common
     // RequestProcessor threads.

@@ -2872,6 +2872,7 @@ public class HandleLayer extends JPanel implements MouseListener, MouseMotionLis
     static {
         try {
             Field field = Component.class.getDeclaredField("valid"); // NOI18N
+            // TODO adds --add-opens=java.desktop/java.awt=ALL-UNNAMED
             field.setAccessible(true);
             componentValidField = field;
         } catch (NoSuchFieldException ex) {

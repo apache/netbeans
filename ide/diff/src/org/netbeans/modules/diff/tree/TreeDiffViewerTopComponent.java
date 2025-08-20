@@ -82,6 +82,14 @@ public final class TreeDiffViewerTopComponent extends TopComponent {
     private List<ExclusionPattern> filterPatterns = new ArrayList<>();
     private List<TreeEntry> selectedTreeEntries = Collections.emptyList();
 
+    /**
+     * @deprecated only for use by NetBeans internals
+     */
+    @Deprecated
+    public TreeDiffViewerTopComponent() {
+        this(new RecursiveDiffer(null, null));
+    }
+
     public TreeDiffViewerTopComponent(RecursiveDiffer recursiveDiffer) {
         this.contextMenu = new JPopupMenu();
         JMenuItem deleteSource = new JMenuItem("Delete Source");
@@ -235,9 +243,9 @@ public final class TreeDiffViewerTopComponent extends TopComponent {
         try {
             StringBuilder tooltipText = new StringBuilder();
             tooltipText.append("<html>Tree diff:<br>Source: ");
-            tooltipText.append(XMLUtil.toElementContent(recursiveDiffer.getDir1().getPath()));
+            tooltipText.append(XMLUtil.toElementContent(recursiveDiffer.getDir1() == null ? "-" : recursiveDiffer.getDir1().getPath()));
             tooltipText.append("<br>Target: ");
-            tooltipText.append(XMLUtil.toElementContent(recursiveDiffer.getDir2().getPath()));
+            tooltipText.append(XMLUtil.toElementContent(recursiveDiffer.getDir2() == null ? "-" : recursiveDiffer.getDir2().getPath()));
             tooltipText.append("</html>");
             setToolTipText(tooltipText.toString());
         } catch (CharConversionException ex) {

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.67
+#Version 2.69
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -4346,7 +4346,9 @@ intf java.lang.Iterable<org.apache.lucene.index.SegmentCommitInfo>
 meth public boolean remove(org.apache.lucene.index.SegmentCommitInfo)
 meth public byte[] getId()
 meth public final static org.apache.lucene.index.SegmentInfos readCommit(org.apache.lucene.store.Directory,java.lang.String) throws java.io.IOException
+meth public final static org.apache.lucene.index.SegmentInfos readCommit(org.apache.lucene.store.Directory,java.lang.String,int) throws java.io.IOException
 meth public final static org.apache.lucene.index.SegmentInfos readCommit(org.apache.lucene.store.Directory,org.apache.lucene.store.ChecksumIndexInput,long) throws java.io.IOException
+meth public final static org.apache.lucene.index.SegmentInfos readCommit(org.apache.lucene.store.Directory,org.apache.lucene.store.ChecksumIndexInput,long,int) throws java.io.IOException
 meth public final static org.apache.lucene.index.SegmentInfos readLatestCommit(org.apache.lucene.store.Directory) throws java.io.IOException
 meth public final static org.apache.lucene.index.SegmentInfos readLatestCommit(org.apache.lucene.store.Directory,int) throws java.io.IOException
 meth public final void commit(org.apache.lucene.store.Directory) throws java.io.IOException
@@ -9933,6 +9935,8 @@ fld public final static org.apache.lucene.util.Version LUCENE_9_11_0
 fld public final static org.apache.lucene.util.Version LUCENE_9_11_1
  anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.apache.lucene.util.Version LUCENE_9_12_0
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+fld public final static org.apache.lucene.util.Version LUCENE_9_12_1
 fld public final static org.apache.lucene.util.Version LUCENE_9_1_0
  anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.apache.lucene.util.Version LUCENE_9_2_0

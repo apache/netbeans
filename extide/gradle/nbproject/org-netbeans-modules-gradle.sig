@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.45.0
+#Version 2.47.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -607,16 +607,18 @@ CLSS public final org.netbeans.modules.gradle.api.execute.GradleDistributionMana
 innr public final GradleDistribution
 meth public java.util.List<org.netbeans.modules.gradle.api.execute.GradleDistributionManager$GradleDistribution> availableDistributions(boolean) throws java.io.IOException
 meth public java.util.List<org.netbeans.modules.gradle.api.execute.GradleDistributionManager$GradleDistribution> availableLocalDistributions()
+meth public org.netbeans.modules.gradle.api.execute.GradleDistributionManager$GradleDistribution currentDistribution() throws java.io.IOException
 meth public org.netbeans.modules.gradle.api.execute.GradleDistributionManager$GradleDistribution defaultDistribution()
 meth public org.netbeans.modules.gradle.api.execute.GradleDistributionManager$GradleDistribution distributionFromDir(java.io.File) throws java.io.IOException
 meth public org.netbeans.modules.gradle.api.execute.GradleDistributionManager$GradleDistribution distributionFromVersion(java.lang.String)
 meth public org.netbeans.modules.gradle.api.execute.GradleDistributionManager$GradleDistribution distributionFromVersion(java.lang.String,boolean)
 meth public org.netbeans.modules.gradle.api.execute.GradleDistributionManager$GradleDistribution distributionFromWrapper(java.io.File) throws java.io.IOException,java.net.URISyntaxException
+meth public org.netbeans.modules.gradle.api.execute.GradleDistributionManager$GradleDistribution latestSupportedDistribution() throws java.io.IOException
 meth public static java.net.URI getWrapperDistributionURI(java.io.File) throws java.io.IOException,java.net.URISyntaxException
 meth public static org.netbeans.modules.gradle.api.execute.GradleDistributionManager get()
 meth public static org.netbeans.modules.gradle.api.execute.GradleDistributionManager get(java.io.File)
 supr java.lang.Object
-hfds CACHE,DIST_VERSION_PATTERN,DOWNLOAD_URI,JDK_COMPAT,LAST_KNOWN_GRADLE,MINIMUM_SUPPORTED_VERSION,RP,VERSION_BLACKLIST,gradleUserHome
+hfds CACHE,DIST_VERSION_PATTERN,DOWNLOAD_URI,JDK_COMPAT,LAST_KNOWN_GRADLE,LATEST_SUPPORTED_MAJOR,MINIMUM_SUPPORTED_VERSION,RP,VERSION_BLACKLIST,gradleUserHome
 hcls DownloadTask,GradleVersionRange
 
 CLSS public final org.netbeans.modules.gradle.api.execute.GradleDistributionManager$GradleDistribution
@@ -1181,6 +1183,7 @@ CLSS public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperatio
 meth public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation basePackage(java.lang.String)
 meth public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation comments(java.lang.Boolean)
 meth public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation dsl(java.lang.String)
+meth public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation gradleVersion(java.lang.String)
 meth public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation javaVersion(java.lang.String)
 meth public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation projectName(java.lang.String)
 meth public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation testFramework(java.lang.String)

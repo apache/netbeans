@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.38.0
+#Version 9.41.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -8,8 +8,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -18,6 +20,7 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
@@ -26,6 +29,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -35,6 +39,13 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
+
+CLSS public abstract java.lang.Record
+cons protected init()
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract java.lang.String toString()
+supr java.lang.Object
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -61,6 +72,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public final org.netbeans.modules.parsing.api.indexing.IndexingManager
 meth public !varargs void refreshAllIndices(boolean,boolean,java.io.File[])
@@ -159,7 +173,11 @@ supr org.netbeans.modules.parsing.spi.indexing.SourceIndexerFactory
 
 CLSS public org.netbeans.modules.parsing.spi.indexing.ErrorsCache
 innr public abstract interface static Convertor
+innr public abstract interface static ReverseConvertor
 innr public final static !enum ErrorKind
+innr public final static Position
+innr public final static Range
+meth public static <%0 extends java.lang.Object> java.util.List<{%%0}> getErrors(org.openide.filesystems.FileObject,org.netbeans.modules.parsing.spi.indexing.ErrorsCache$ReverseConvertor<{%%0}>) throws java.io.IOException
 meth public static <%0 extends java.lang.Object> void setErrors(java.net.URL,org.netbeans.modules.parsing.spi.indexing.Indexable,java.lang.Iterable<? extends {%%0}>,org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Convertor<{%%0}>)
 meth public static boolean isInError(org.openide.filesystems.FileObject,boolean)
 meth public static java.util.Collection<? extends java.net.URL> getAllFilesInError(java.net.URL) throws java.io.IOException
@@ -171,6 +189,7 @@ CLSS public abstract interface static org.netbeans.modules.parsing.spi.indexing.
 meth public abstract int getLineNumber({org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Convertor%0})
 meth public abstract java.lang.String getMessage({org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Convertor%0})
 meth public abstract org.netbeans.modules.parsing.spi.indexing.ErrorsCache$ErrorKind getKind({org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Convertor%0})
+meth public org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Range getRange({org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Convertor%0})
 
 CLSS public final static !enum org.netbeans.modules.parsing.spi.indexing.ErrorsCache$ErrorKind
  outer org.netbeans.modules.parsing.spi.indexing.ErrorsCache
@@ -180,6 +199,32 @@ fld public final static org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Er
 meth public static org.netbeans.modules.parsing.spi.indexing.ErrorsCache$ErrorKind valueOf(java.lang.String)
 meth public static org.netbeans.modules.parsing.spi.indexing.ErrorsCache$ErrorKind[] values()
 supr java.lang.Enum<org.netbeans.modules.parsing.spi.indexing.ErrorsCache$ErrorKind>
+
+CLSS public final static org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Position
+ outer org.netbeans.modules.parsing.spi.indexing.ErrorsCache
+cons public init(int,int)
+meth public final boolean equals(java.lang.Object)
+meth public final int hashCode()
+meth public final java.lang.String toString()
+meth public int column()
+meth public int line()
+supr java.lang.Record
+hfds column,line
+
+CLSS public final static org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Range
+ outer org.netbeans.modules.parsing.spi.indexing.ErrorsCache
+cons public init(org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Position,org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Position)
+meth public final boolean equals(java.lang.Object)
+meth public final int hashCode()
+meth public final java.lang.String toString()
+meth public org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Position end()
+meth public org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Position start()
+supr java.lang.Record
+hfds end,start
+
+CLSS public abstract interface static org.netbeans.modules.parsing.spi.indexing.ErrorsCache$ReverseConvertor<%0 extends java.lang.Object>
+ outer org.netbeans.modules.parsing.spi.indexing.ErrorsCache
+meth public abstract {org.netbeans.modules.parsing.spi.indexing.ErrorsCache$ReverseConvertor%0} get(org.netbeans.modules.parsing.spi.indexing.ErrorsCache$ErrorKind,org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Range,java.lang.String)
 
 CLSS public abstract interface org.netbeans.modules.parsing.spi.indexing.IndexabilityQueryImplementation
 innr public final static IndexabilityQueryContext

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.34
+#Version 1.36
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -1429,6 +1429,9 @@ fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVer
 fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_7_0_2
 fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_7_0_20
 fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_7_0_21
+fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_7_0_22
+fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_7_0_23
+fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_7_0_24
 fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_7_0_3
 fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_7_0_4
 fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_7_0_5
@@ -1458,7 +1461,7 @@ meth public static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion 
 meth public static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion valueOf(java.lang.String)
 meth public static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion[] values()
 supr java.lang.Enum<org.netbeans.modules.glassfish.tooling.data.GlassFishVersion>
-hfds GF_1_STR,GF_1_STR_NEXT,GF_2_1_1_STR,GF_2_1_1_STR_NEXT,GF_2_1_STR,GF_2_1_STR_NEXT,GF_2_STR,GF_2_STR_NEXT,GF_3_0_1_STR,GF_3_0_1_STR_NEXT,GF_3_1_1_STR,GF_3_1_1_STR_NEXT,GF_3_1_2_2_STR,GF_3_1_2_3_STR,GF_3_1_2_4_STR,GF_3_1_2_5_STR,GF_3_1_2_STR,GF_3_1_2_STR_NEXT,GF_3_1_STR,GF_3_1_STR_NEXT,GF_3_STR,GF_3_STR_NEXT,GF_4_0_1_STR,GF_4_0_1_STR_NEXT,GF_4_1_1_STR,GF_4_1_1_STR_NEXT,GF_4_1_2_STR,GF_4_1_2_STR_NEXT,GF_4_1_STR,GF_4_1_STR_NEXT,GF_4_STR,GF_4_STR_NEXT,GF_5_0_1_STR,GF_5_0_1_STR_NEXT,GF_5_1_0_STR,GF_5_1_0_STR_NEXT,GF_5_STR,GF_5_STR_NEXT,GF_6_1_0_STR,GF_6_1_0_STR_NEXT,GF_6_2_0_STR,GF_6_2_0_STR_NEXT,GF_6_2_1_STR,GF_6_2_1_STR_NEXT,GF_6_2_2_STR,GF_6_2_2_STR_NEXT,GF_6_2_3_STR,GF_6_2_3_STR_NEXT,GF_6_2_4_STR,GF_6_2_4_STR_NEXT,GF_6_2_5_STR,GF_6_2_5_STR_NEXT,GF_6_STR,GF_6_STR_NEXT,GF_7_0_0_STR,GF_7_0_0_STR_NEXT,GF_7_0_10_STR,GF_7_0_10_STR_NEXT,GF_7_0_11_STR,GF_7_0_11_STR_NEXT,GF_7_0_12_STR,GF_7_0_12_STR_NEXT,GF_7_0_13_STR,GF_7_0_13_STR_NEXT,GF_7_0_14_STR,GF_7_0_14_STR_NEXT,GF_7_0_15_STR,GF_7_0_15_STR_NEXT,GF_7_0_16_STR,GF_7_0_16_STR_NEXT,GF_7_0_17_STR,GF_7_0_17_STR_NEXT,GF_7_0_18_STR,GF_7_0_18_STR_NEXT,GF_7_0_19_STR,GF_7_0_19_STR_NEXT,GF_7_0_1_STR,GF_7_0_1_STR_NEXT,GF_7_0_20_STR,GF_7_0_20_STR_NEXT,GF_7_0_21_STR,GF_7_0_21_STR_NEXT,GF_7_0_2_STR,GF_7_0_2_STR_NEXT,GF_7_0_3_STR,GF_7_0_3_STR_NEXT,GF_7_0_4_STR,GF_7_0_4_STR_NEXT,GF_7_0_5_STR,GF_7_0_5_STR_NEXT,GF_7_0_6_STR,GF_7_0_6_STR_NEXT,GF_7_0_7_STR,GF_7_0_7_STR_NEXT,GF_7_0_8_STR,GF_7_0_8_STR_NEXT,GF_7_0_9_STR,GF_7_0_9_STR_NEXT,GF_8_0_0_STR,GF_8_0_0_STR_NEXT,build,major,minor,stringValuesMap,update,value
+hfds GF_1_STR,GF_1_STR_NEXT,GF_2_1_1_STR,GF_2_1_1_STR_NEXT,GF_2_1_STR,GF_2_1_STR_NEXT,GF_2_STR,GF_2_STR_NEXT,GF_3_0_1_STR,GF_3_0_1_STR_NEXT,GF_3_1_1_STR,GF_3_1_1_STR_NEXT,GF_3_1_2_2_STR,GF_3_1_2_3_STR,GF_3_1_2_4_STR,GF_3_1_2_5_STR,GF_3_1_2_STR,GF_3_1_2_STR_NEXT,GF_3_1_STR,GF_3_1_STR_NEXT,GF_3_STR,GF_3_STR_NEXT,GF_4_0_1_STR,GF_4_0_1_STR_NEXT,GF_4_1_1_STR,GF_4_1_1_STR_NEXT,GF_4_1_2_STR,GF_4_1_2_STR_NEXT,GF_4_1_STR,GF_4_1_STR_NEXT,GF_4_STR,GF_4_STR_NEXT,GF_5_0_1_STR,GF_5_0_1_STR_NEXT,GF_5_1_0_STR,GF_5_1_0_STR_NEXT,GF_5_STR,GF_5_STR_NEXT,GF_6_1_0_STR,GF_6_1_0_STR_NEXT,GF_6_2_0_STR,GF_6_2_0_STR_NEXT,GF_6_2_1_STR,GF_6_2_1_STR_NEXT,GF_6_2_2_STR,GF_6_2_2_STR_NEXT,GF_6_2_3_STR,GF_6_2_3_STR_NEXT,GF_6_2_4_STR,GF_6_2_4_STR_NEXT,GF_6_2_5_STR,GF_6_2_5_STR_NEXT,GF_6_STR,GF_6_STR_NEXT,GF_7_0_0_STR,GF_7_0_0_STR_NEXT,GF_7_0_10_STR,GF_7_0_10_STR_NEXT,GF_7_0_11_STR,GF_7_0_11_STR_NEXT,GF_7_0_12_STR,GF_7_0_12_STR_NEXT,GF_7_0_13_STR,GF_7_0_13_STR_NEXT,GF_7_0_14_STR,GF_7_0_14_STR_NEXT,GF_7_0_15_STR,GF_7_0_15_STR_NEXT,GF_7_0_16_STR,GF_7_0_16_STR_NEXT,GF_7_0_17_STR,GF_7_0_17_STR_NEXT,GF_7_0_18_STR,GF_7_0_18_STR_NEXT,GF_7_0_19_STR,GF_7_0_19_STR_NEXT,GF_7_0_1_STR,GF_7_0_1_STR_NEXT,GF_7_0_20_STR,GF_7_0_20_STR_NEXT,GF_7_0_21_STR,GF_7_0_21_STR_NEXT,GF_7_0_22_STR,GF_7_0_22_STR_NEXT,GF_7_0_23_STR,GF_7_0_23_STR_NEXT,GF_7_0_24_STR,GF_7_0_24_STR_NEXT,GF_7_0_2_STR,GF_7_0_2_STR_NEXT,GF_7_0_3_STR,GF_7_0_3_STR_NEXT,GF_7_0_4_STR,GF_7_0_4_STR_NEXT,GF_7_0_5_STR,GF_7_0_5_STR_NEXT,GF_7_0_6_STR,GF_7_0_6_STR_NEXT,GF_7_0_7_STR,GF_7_0_7_STR_NEXT,GF_7_0_8_STR,GF_7_0_8_STR_NEXT,GF_7_0_9_STR,GF_7_0_9_STR_NEXT,GF_8_0_0_STR,GF_8_0_0_STR_NEXT,build,major,minor,stringValuesMap,update,value
 
 CLSS public org.netbeans.modules.glassfish.tooling.data.IdeContext
  anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
@@ -1740,7 +1743,7 @@ meth public static java.net.URL getBuilderConfig(org.netbeans.modules.glassfish.
 meth public static org.netbeans.modules.glassfish.tooling.server.config.ConfigBuilder getBuilder(org.netbeans.modules.glassfish.tooling.data.GlassFishServer)
 meth public static void destroyBuilder(org.netbeans.modules.glassfish.tooling.data.GlassFishServer)
 supr java.lang.Object
-hfds CONFIG_V3,CONFIG_V4,CONFIG_V4_1,CONFIG_V5,CONFIG_V5_0_1,CONFIG_V5_1,CONFIG_V6,CONFIG_V6_1_0,CONFIG_V6_2_0,CONFIG_V6_2_1,CONFIG_V6_2_2,CONFIG_V6_2_3,CONFIG_V6_2_4,CONFIG_V6_2_5,CONFIG_V7_0_0,CONFIG_V7_0_1,CONFIG_V7_0_10,CONFIG_V7_0_11,CONFIG_V7_0_12,CONFIG_V7_0_13,CONFIG_V7_0_14,CONFIG_V7_0_15,CONFIG_V7_0_16,CONFIG_V7_0_17,CONFIG_V7_0_18,CONFIG_V7_0_19,CONFIG_V7_0_2,CONFIG_V7_0_20,CONFIG_V7_0_21,CONFIG_V7_0_3,CONFIG_V7_0_4,CONFIG_V7_0_5,CONFIG_V7_0_6,CONFIG_V7_0_7,CONFIG_V7_0_8,CONFIG_V7_0_9,CONFIG_V8_0_0,builders,config
+hfds CONFIG_V3,CONFIG_V4,CONFIG_V4_1,CONFIG_V5,CONFIG_V5_0_1,CONFIG_V5_1,CONFIG_V6,CONFIG_V6_1_0,CONFIG_V6_2_0,CONFIG_V6_2_1,CONFIG_V6_2_2,CONFIG_V6_2_3,CONFIG_V6_2_4,CONFIG_V6_2_5,CONFIG_V7_0_0,CONFIG_V7_0_1,CONFIG_V7_0_10,CONFIG_V7_0_11,CONFIG_V7_0_12,CONFIG_V7_0_13,CONFIG_V7_0_14,CONFIG_V7_0_15,CONFIG_V7_0_16,CONFIG_V7_0_17,CONFIG_V7_0_18,CONFIG_V7_0_19,CONFIG_V7_0_2,CONFIG_V7_0_20,CONFIG_V7_0_21,CONFIG_V7_0_22,CONFIG_V7_0_23,CONFIG_V7_0_24,CONFIG_V7_0_3,CONFIG_V7_0_4,CONFIG_V7_0_5,CONFIG_V7_0_6,CONFIG_V7_0_7,CONFIG_V7_0_8,CONFIG_V7_0_9,CONFIG_V8_0_0,builders,config
 
 CLSS public org.netbeans.modules.glassfish.tooling.server.config.ConfigUtils
 cons public init()
@@ -1877,6 +1880,7 @@ fld public final static org.netbeans.modules.glassfish.tooling.server.config.Jav
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v22
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v23
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v24
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v25
 meth public java.lang.String toString()
 meth public static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform toValue(java.lang.String)
 meth public static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform valueOf(java.lang.String)

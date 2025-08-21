@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.6
+#Version 2.8
 
 CLSS public abstract interface java.io.Serializable
 
@@ -103,8 +103,10 @@ fld public final static org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo J
 fld public final static org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo JSF_CORE
 fld public final static org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo JSTL_CORE
 fld public final static org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo JSTL_CORE_FUNCTIONS
+fld public final static org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo OMNIFACES
 fld public final static org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo PASSTHROUGH
 fld public final static org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo PRIMEFACES
+fld public final static org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo PRIMEFACES_EXTENSIONS
 fld public final static org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo PRIMEFACES_MOBILE
 intf org.netbeans.modules.web.jsfapi.api.LibraryInfo
 meth public java.lang.String getDefaultPrefix()

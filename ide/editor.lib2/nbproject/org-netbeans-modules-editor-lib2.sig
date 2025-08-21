@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.47.0
+#Version 2.49.0
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -636,6 +636,11 @@ meth public final void addHighlightsChangeListener(org.netbeans.spi.editor.highl
 meth public final void removeHighlightsChangeListener(org.netbeans.spi.editor.highlighting.HighlightsChangeListener)
 supr java.lang.Object
 hfds listeners
+
+CLSS public org.netbeans.spi.editor.highlighting.support.HighlightsContainers
+cons public init()
+meth public static org.netbeans.spi.editor.highlighting.HighlightsContainer inlineHintsSettingAwareContainer(javax.swing.text.Document,org.netbeans.spi.editor.highlighting.HighlightsContainer)
+supr java.lang.Object
 
 CLSS public final org.netbeans.spi.editor.highlighting.support.OffsetsBag
 cons public init(javax.swing.text.Document)

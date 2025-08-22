@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.59.0
+#Version 2.61.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1891,7 +1891,7 @@ meth public void setGroupBy(boolean)
 meth public void setTableColumnValidity(boolean)
 meth public void tableChanged(javax.swing.event.TableModelEvent)
 supr javax.swing.JPanel
-hfds DEBUG,MAX_TABLES_IN_A_ROW,_addTableDlg,_backgroundPopup,_canvas,_checkTableColumnValidity,_cl,_desktopPane,_desktopScrollPane,_disableQBGF,_dropTarget,_firstTableInserted,_fsl,_gLocation,_inputTableAddCriteria,_inputTableModel,_queryBuilder,_queryBuilderInputTable,_resultTableModel,_scene,_selectedNode,_sqlTextArea,_tableTitlePopup,groupByMenuItem,initX,initY,offsetX,offsetY,randomVal,runQueryMenuItem,url_foreign_key,url_primary_key,viewport
+hfds DEBUG,MAX_TABLES_IN_A_ROW,_addTableDlg,_backgroundPopup,_canvas,_checkTableColumnValidity,_cl,_desktopPane,_desktopScrollPane,_disableQBGF,_dropTarget,_firstTableInserted,_fsl,_gLocation,_inputTableAddCriteria,_inputTableModel,_queryBuilder,_queryBuilderInputTable,_resultTableModel,_scene,_selectedNode,_sqlTextArea,_tableTitlePopup,groupByMenuItem,initX,initY,offsetX,offsetY,randomVal,runQueryMenuItem,viewport
 hcls CompListener,FrameSelectionListener,ObjectSelectProvider,QBGFJPanel,TableTitlePopupListener
 
 CLSS public org.netbeans.modules.db.sql.visualeditor.querybuilder.QueryBuilderGraphFrame$PerfTimer

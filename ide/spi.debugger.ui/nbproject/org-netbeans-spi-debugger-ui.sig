@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.85
+#Version 2.88
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -297,9 +297,11 @@ intf java.lang.annotation.Annotation
 meth public abstract org.netbeans.spi.debugger.ui.ColumnModelRegistration[] value()
 
 CLSS public abstract interface org.netbeans.spi.debugger.ui.Constants
+fld public final static boolean DEF_INLINE_VALUES = true
 fld public final static java.lang.String BREAKPOINT_ENABLED_COLUMN_ID = "BreakpointEnabled"
  anno 0 java.lang.Deprecated()
 fld public final static java.lang.String CALL_STACK_FRAME_LOCATION_COLUMN_ID = "CallStackFrameLocation"
+fld public final static java.lang.String KEY_INLINE_VALUES = "enable.inline.values"
 fld public final static java.lang.String LOCALS_TO_STRING_COLUMN_ID = "LocalsToString"
 fld public final static java.lang.String LOCALS_TYPE_COLUMN_ID = "LocalsType"
 fld public final static java.lang.String LOCALS_VALUE_COLUMN_ID = "LocalsValue"

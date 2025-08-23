@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.60
+#Version 1.62
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener

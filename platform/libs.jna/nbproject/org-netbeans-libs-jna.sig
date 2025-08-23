@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.22
+#Version 2.24
 
 CLSS public abstract interface com.sun.jna.AltCallingConvention
 
@@ -275,7 +275,7 @@ fld public final static int SIZE_T_SIZE
 fld public final static int WCHAR_SIZE
 fld public final static java.lang.String DEFAULT_ENCODING
 fld public final static java.lang.String VERSION = "5.17.0"
-fld public final static java.lang.String VERSION_NATIVE = "7.0.0"
+fld public final static java.lang.String VERSION_NATIVE = "7.0.4"
 fld public final static java.nio.charset.Charset DEFAULT_CHARSET
 innr public abstract interface static ffi_callback
 meth public static <%0 extends com.sun.jna.Library> {%%0} load(java.lang.Class<{%%0}>)
@@ -299,6 +299,8 @@ meth public static byte[] toByteArray(java.lang.String,java.nio.charset.Charset)
 meth public static char[] toCharArray(java.lang.String)
 meth public static com.sun.jna.Callback$UncaughtExceptionHandler getCallbackExceptionHandler()
 meth public static com.sun.jna.Library synchronizedLibrary(com.sun.jna.Library)
+meth public static com.sun.jna.NativeLibrary getNativeLibrary(com.sun.jna.Library)
+meth public static com.sun.jna.NativeLibrary getNativeLibrary(java.lang.Class<?>)
 meth public static com.sun.jna.Pointer getComponentPointer(java.awt.Component)
 meth public static com.sun.jna.Pointer getDirectBufferPointer(java.nio.Buffer)
 meth public static com.sun.jna.Pointer getWindowPointer(java.awt.Window)
@@ -402,6 +404,7 @@ fld public final static boolean HAS_JAWT
 fld public final static boolean RO_FIELDS
 fld public final static int AIX = 7
 fld public final static int ANDROID = 8
+fld public final static int DRAGONFLYBSD = 12
 fld public final static int FREEBSD = 4
 fld public final static int GNU = 9
 fld public final static int KFREEBSD = 10
@@ -422,6 +425,7 @@ meth public final static boolean is64Bit()
 meth public final static boolean isAIX()
 meth public final static boolean isARM()
 meth public final static boolean isAndroid()
+meth public final static boolean isDragonFlyBSD()
 meth public final static boolean isFreeBSD()
 meth public final static boolean isGNU()
 meth public final static boolean isIntel()
@@ -616,7 +620,7 @@ meth public void write()
 meth public void writeField(java.lang.String)
 meth public void writeField(java.lang.String,java.lang.Object)
 supr java.lang.Object
-hfds LOG,PLACEHOLDER_MEMORY,actualAlignType,alignType,array,autoRead,autoWrite,busy,encoding,fieldOrder,layoutInfo,memory,nativeStrings,readCalled,reads,size,structAlignment,structFields,typeInfo,typeMapper
+hfds LOG,PLACEHOLDER_MEMORY,actualAlignType,alignType,array,autoRead,autoWrite,busy,encoding,fieldList,fieldListLock,fieldOrder,fieldOrderLock,layoutInfo,layoutInfoLock,memory,nativeStrings,readCalled,reads,size,structAlignment,structFields,typeInfo,typeMapper,validationLock,validationMap
 hcls AutoAllocated,FFIType,LayoutInfo,NativeStringTracking,StructureSet
 
 CLSS public abstract interface static com.sun.jna.Structure$ByReference

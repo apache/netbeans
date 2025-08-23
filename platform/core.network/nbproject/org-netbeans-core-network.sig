@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.39
+#Version 1.41
 
 CLSS public abstract interface java.io.Serializable
 
@@ -204,7 +204,7 @@ meth public java.lang.String getPacScriptSource()
 meth public java.util.List<java.net.Proxy> findProxyForURL(java.net.URI) throws org.netbeans.core.network.proxy.pac.PacValidationException
 meth public static javax.script.ScriptEngine newAllowedPacEngine(java.lang.String,java.lang.StringBuilder)
 supr java.lang.Object
-hfds LOGGER,PAC_DIRECT,PAC_HTTPS_FFEXT,PAC_HTTP_FFEXT,PAC_PROXY,PAC_SOCKS,PAC_SOCKS4_FFEXT,PAC_SOCKS5_FFEXT,canUseURLCaching,pacScriptSource,resultCache,scriptEngine
+hfds LOGGER,PAC_DIRECT,PAC_HTTPS_FFEXT,PAC_HTTP_FFEXT,PAC_PROXY,PAC_SOCKS,PAC_SOCKS4_FFEXT,PAC_SOCKS5_FFEXT,RP,canUseURLCaching,pacScriptSource,resultCache,scriptEngine
 hcls PacScriptEngine
 
 CLSS public org.netbeans.core.network.proxy.pac.impl.NbPacScriptEvaluatorFactory

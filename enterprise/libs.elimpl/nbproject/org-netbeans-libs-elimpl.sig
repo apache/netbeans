@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.46.0
+#Version 1.48.0
 
 CLSS public com.sun.el.ExpressionFactoryImpl
 cons public init()

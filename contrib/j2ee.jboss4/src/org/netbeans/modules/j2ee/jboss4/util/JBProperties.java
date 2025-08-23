@@ -80,9 +80,9 @@ public class JBProperties {
     private final InstanceProperties ip;
     private final JBDeploymentManager manager;
 
-    // credentials initialized with default values
-    private String username = "admin"; // NOI18N
-    private String password = "admin"; // NOI18N
+    // credentials initialized as null - must be configured by user
+    private String username = null; // NOI18N
+    private String password = null; // NOI18N
 
     /** timestamp of the jmx-console-users.properties file when it was parsed for the last time */
     private long updateCredentialsTimestamp;

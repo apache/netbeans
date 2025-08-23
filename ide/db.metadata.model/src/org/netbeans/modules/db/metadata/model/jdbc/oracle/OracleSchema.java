@@ -19,6 +19,7 @@
 package org.netbeans.modules.db.metadata.model.jdbc.oracle;
 
 import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -138,10 +139,12 @@ public class OracleSchema extends JDBCSchema {
         Map<String, Procedure> newProcedures = new LinkedHashMap<String, Procedure>();
         try {
             DatabaseMetaData dmd = jdbcCatalog.getJDBCMetadata().getDmd();
-            Statement stmt = dmd.getConnection().createStatement();
+            PreparedStatement pstmt = dmd.getConnection().prepareStatement(
+                    "SELECT OBJECT_NAME, OBJECT_TYPE, STATUS FROM SYS.ALL_OBJECTS WHERE OWNER=? " // NOI18N
+                    + "AND ( OBJECT_TYPE = 'PROCEDURE' OR OBJECT_TYPE = 'TRIGGER' OR OBJECT_TYPE = 'FUNCTION' )"); // NOI18N
+            pstmt.setString(1, name);
             Set<String> recycleBinObjects = getRecycleBinObjects(dmd, "TRIGGER", "FUNCTION", "PROCEDURE"); // NOI18N
-            ResultSet rs = stmt.executeQuery("SELECT OBJECT_NAME, OBJECT_TYPE, STATUS FROM SYS.ALL_OBJECTS WHERE OWNER='" + name + "'" // NOI18N
-                    + " AND ( OBJECT_TYPE = 'PROCEDURE' OR OBJECT_TYPE = 'TRIGGER' OR OBJECT_TYPE = 'FUNCTION' )"); // NOI18N
+            ResultSet rs = pstmt.executeQuery();
             try {
                 while (rs.next()) {
                     String procedureName = rs.getString("OBJECT_NAME"); // NOI18N
@@ -158,7 +161,7 @@ public class OracleSchema extends JDBCSchema {
                     rs.close();
                 }
             }
-            stmt.close();
+            pstmt.close();
         } catch (SQLException e) {
             throw new MetadataException(e);
         }

@@ -249,7 +249,7 @@ public class TomcatManager implements DeploymentManager {
             }
         }
         if (checkResponse) {
-            return Utils.pingTomcat(getServerPort(), timeout, getServerHeader(), getPlainUri()); // is tomcat responding?
+            return Utils.pingTomcat(getServerPort(), timeout, getServerHeader(), getPlainUri(), tp.getUsername(), tp.getPassword()); // is tomcat responding?
         } else {
             return false; // cannot resolve the state
         }

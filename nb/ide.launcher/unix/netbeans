@@ -38,8 +38,8 @@ cd "$progdir"/..
 basedir=`pwd`
 cd "$old"
 
-# make sure own launcher is on PATH
-PATH=$PATH:$progdir
+# make sure netbeans launcher is on PATH
+PATH=$progdir:$PATH
 
 case "`uname`" in
     Darwin*)

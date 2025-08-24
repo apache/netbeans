@@ -109,20 +109,26 @@ public class FoldManagerImpl implements FoldManager, BackgroundTask {
     }
 
     @Override
-    public void run(LSPBindings bindings, FileObject file) {
+    public void run(List<LSPBindings> servers, FileObject file) {
         EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
         Document doc = ec != null ? ec.getDocument() : null;
         if (doc == null) {
             return;
         }
 
-        List<FoldingRange> ranges = computeRanges(bindings, file);
-        List<FoldInfo> infos = computeInfos(doc, ranges);
+        List<FoldInfo> allFolds = new ArrayList<>();
+
+        Utils.handleBindings(servers,
+                             capa -> Utils.isEnabled(capa.getFoldingRangeProvider()),
+                             () -> new FoldingRangeRequestParams(new TextDocumentIdentifier(Utils.toURI(file))),
+                             (server, param) -> server.getTextDocumentService().foldingRange(param),
+                             (server, result) -> allFolds.addAll(computeInfos(doc, result)));
+
         SwingUtilities.invokeLater(() -> {
             doc.render(() -> {
                 operation.getHierarchy().render(() -> {
                     try {
-                        operation.update(infos, null, null);
+                        operation.update(allFolds, null, null);
                     } catch (BadLocationException ex) {
                         LOG.log(Level.FINE, null, ex);
                     }
@@ -169,19 +175,6 @@ public class FoldManagerImpl implements FoldManager, BackgroundTask {
         return infos;
     }
    
-    static List<FoldingRange> computeRanges(LSPBindings bindings, FileObject file) {
-        if (bindings.getInitResult() != null &&
-            bindings.getInitResult().getCapabilities() != null &&
-            bindings.getInitResult().getCapabilities().getFoldingRangeProvider() != null) { //XXX
-            try {
-                return bindings.getTextDocumentService().foldingRange(new FoldingRangeRequestParams(new TextDocumentIdentifier(Utils.toURI(file)))).get();
-            } catch (InterruptedException | ExecutionException ex) {
-                LOG.log(Level.FINE, null, ex);
-            }
-        }
-        return Collections.emptyList();
-    }
-
     private static final Logger LOG = Logger.getLogger(FoldManagerImpl.class.getName());
 
     @MimeRegistration(mimeType="", service=FoldManagerFactory.class, position = 1950)

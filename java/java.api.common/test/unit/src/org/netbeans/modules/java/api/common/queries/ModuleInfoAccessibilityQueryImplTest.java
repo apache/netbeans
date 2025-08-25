@@ -46,10 +46,10 @@ public class ModuleInfoAccessibilityQueryImplTest extends NbTestCase {
 
     // Module definition which exports mymodule but not myinternal
     private static final String MODULE_INFO = """
-                                                  module mymodule {
-                                                  exports mypackage;
-                                                  }
-                                                  """;
+                                              module mymodule {
+                                              exports mypackage;
+                                              }
+                                              """;
 
     private FileObject src;
     private FileObject test;
@@ -138,64 +138,4 @@ public class ModuleInfoAccessibilityQueryImplTest extends NbTestCase {
             assertEquals(expAccessibility, accessibility);
         }
     }
-
-    /**
-     * Test of propertyChange method, of class ModuleInfoAccessibilityQueryImpl.
-     */
-    @Test
-    public void testPropertyChange() {
-        // This doesn't need testing
-    }
-
-    /**
-     * Test of fileRenamed method, of class ModuleInfoAccessibilityQueryImpl.
-     */
-    @Test
-    public void testFileRenamed() {
-        // This doesn't need testing
-    }
-
-    /**
-     * Test of fileDataCreated method, of class
-     * ModuleInfoAccessibilityQueryImpl.
-     */
-    @Test
-    public void testFileDataCreated() {
-        // This doesn't need testing
-    }
-
-    /**
-     * Test of fileChanged method, of class ModuleInfoAccessibilityQueryImpl.
-     */
-    @Test
-    public void testFileChanged() {
-        // This doesn't need testing
-    }
-
-    /**
-     * Test of fileDeleted method, of class ModuleInfoAccessibilityQueryImpl.
-     */
-    @Test
-    public void testFileDeleted() {
-        // This doesn't need testing
-    }
-
-    /**
-     * Test of fileFolderCreated method, of class
-     * ModuleInfoAccessibilityQueryImpl.
-     */
-    @Test
-    public void testFileFolderCreated() {
-        // This doesn't need testing
-    }
-
-    /**
-     * Test of fileAttributeChanged method, of class
-     * ModuleInfoAccessibilityQueryImpl.
-     */
-    @Test
-    public void testFileAttributeChanged() {
-        // This doesn't need testing
-    }
-
 }

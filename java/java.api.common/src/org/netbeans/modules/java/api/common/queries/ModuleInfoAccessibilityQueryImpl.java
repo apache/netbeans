@@ -49,7 +49,6 @@ import org.netbeans.api.java.queries.AccessibilityQuery;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.modules.java.api.common.SourceRoots;
 import org.netbeans.modules.java.api.common.impl.MultiModule;
-import org.netbeans.spi.java.queries.AccessibilityQueryImplementation;
 import org.netbeans.spi.java.queries.AccessibilityQueryImplementation2;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
@@ -64,7 +63,7 @@ import org.openide.util.Parameters;
 import org.openide.util.WeakListeners;
 
 /**
- * An implementation of the {@link AccessibilityQueryImplementation} based on the module-info.
+ * An implementation of the {@link AccessibilityQueryImplementation2} based on the module-info.
  * Accessible through the {@link QuerySupport#createModuleInfoAccessibilityQuery}.
  * @author Tomas Zezula
  */
@@ -183,7 +182,8 @@ final class ModuleInfoAccessibilityQueryImpl implements AccessibilityQueryImplem
                 todo.offer(tests.getRoots());
             }
             for (FileObject[] work : todo) {
-                readExports(work, rootsCollector).ifPresent(data::add);
+                Collections.addAll(rootsCollector, work);
+                extractExports(work).ifPresent(data::add);
             }
 
             ec = new ExportsCache(rootsCollector, data);
@@ -249,13 +249,12 @@ final class ModuleInfoAccessibilityQueryImpl implements AccessibilityQueryImplem
         return Arrays.stream(roots)
                 .map(root -> root.getFileObject(MODULE_INFO_JAVA))
                 .filter(Objects::nonNull)
+                .findFirst()
                 .map(mi -> {
-                    Set<FileObject> rootsSet = new HashSet<>();
-                    Collections.addAll(rootsSet, roots);
+                    Set<FileObject> rootsSet = Set.of(roots);
                     Set<FileObject> exportsSet = readExports(mi, rootsSet);
                     return Pair.of(rootsSet, exportsSet);
-                })
-                .findFirst();
+                });
     }
 
     @NonNull

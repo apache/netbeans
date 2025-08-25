@@ -161,6 +161,7 @@ export interface TestSuite {
     moduleName?: string;
     modulePath?: string;
     file?: string;
+    relativePath?: string;
     range?: Range;
     state: 'loaded' | 'started' | 'passed' | 'failed' | 'skipped' | 'errored';
     tests?: TestCase[];

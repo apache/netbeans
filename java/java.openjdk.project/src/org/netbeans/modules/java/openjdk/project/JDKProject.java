@@ -40,6 +40,8 @@ import javax.swing.Icon;
 import javax.swing.event.ChangeListener;
 
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.api.extexecution.print.LineConvertors;
+import org.netbeans.api.extexecution.print.LineConvertors.FileLocator;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
@@ -224,6 +226,12 @@ public class JDKProject implements Project {
                                     new BinaryForSourceQueryImpl(this, cpp.getSourceCP()),
                                     CProjectConfigurationProviderImpl.create(this),
                                     new UnitTestForSourceQueryImpl(this),
+                                    new FileLocator() {
+                                        @Override
+                                        public FileObject find(String filename) {
+                                            return FileUtil.toFileObject(new File(filename));
+                                        }
+                                    },
                                     this);
         this.lookup = LookupProviderSupport.createCompositeLookup(base, "Projects/" + PROJECT_KEY + "/Lookup");
         } catch (Throwable t) {

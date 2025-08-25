@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.openjdk.jtreg;
 
 import java.awt.event.ActionEvent;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,6 +43,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -57,6 +59,13 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.modules.gsf.testrunner.api.Report;
+import org.netbeans.modules.gsf.testrunner.api.Status;
+import org.netbeans.modules.gsf.testrunner.api.TestSession;
+import org.netbeans.modules.gsf.testrunner.api.TestSession.SessionType;
+import org.netbeans.modules.gsf.testrunner.api.Testcase;
+import org.netbeans.modules.gsf.testrunner.api.Trouble;
+import org.netbeans.modules.gsf.testrunner.ui.api.Manager;
 import org.netbeans.modules.java.openjdk.common.BuildUtils;
 import org.netbeans.modules.java.openjdk.common.BuildUtils.ExtraMakeTargets;
 import org.netbeans.modules.java.openjdk.common.ShortcutUtils;
@@ -144,7 +153,13 @@ public class ActionProviderImpl implements ActionProvider {
             assert singleMethod != null;
 
             file = singleMethod.getFile();
-            query = singleMethod.getMethodName();
+
+            if ("@test".equals(singleMethod.getMethodName())) { //TODO: @test is a bit hack, but might be necessary
+                query = null;
+            } else {
+                query = singleMethod.getMethodName();
+            }
+
             command = SingleMethod.COMMAND_RUN_SINGLE_METHOD.equals(inputCommand) ? COMMAND_TEST_SINGLE
                                                                                   : COMMAND_DEBUG_TEST_SINGLE;
         } else {
@@ -181,6 +196,9 @@ public class ActionProviderImpl implements ActionProvider {
                 File jcovTempData = null;
                 File jcovData = null;
                 final ServerSocket[] debugSocket = new ServerSocket[1];
+                Manager testManager = Manager.getInstance();
+                Project prj = FileOwnerQuery.getOwner(file);
+                TestSession testSession = prj != null ? new TestSession(file.getName(), prj, SessionType.TEST) : null; //TODO: should be TEST or DEBUG? or how this works?
                 try {
                     try {
                         io.getOut().reset();
@@ -189,7 +207,6 @@ public class ActionProviderImpl implements ActionProvider {
                     }
                     rerun.disable();
                     redebug.disable();
-                    Project prj = FileOwnerQuery.getOwner(file);
                     ActionProvider prjAP = prj != null ? prj.getLookup().lookup(ActionProvider.class) : null;
                     if (prjAP != null) {
                         Lookup targetContext = Lookup.EMPTY;
@@ -253,6 +270,9 @@ public class ActionProviderImpl implements ActionProvider {
                             io.select();
                         }
                     }
+                    if (testSession != null) {
+                        testManager.testStarted(testSession);
+                    }
                     ClassPath testSourcePath = ClassPath.getClassPath(file, ClassPath.SOURCE);
                     ClassPath extraSourcePath = allSources(file);
                     final ClassPath fullSourcePath = ClassPathSupport.createProxyClassPath(testSourcePath, extraSourcePath);
@@ -265,13 +285,16 @@ public class ActionProviderImpl implements ActionProvider {
                     options.add("-jdk:" + targetJavaHome.getAbsolutePath());
                     options.add("-retain:all");
                     options.add("-ignore:quiet");
-                    options.add("-verbose:summary,nopass");
+                    options.add("-verbose:default");
                     options.add("-w");
                     options.add(jtregWork.getAbsolutePath());
                     options.add("-r");
                     options.add(jtregReport.getAbsolutePath());
                     options.add("-xml:verify");
                     options.add("-javacoptions:-g");
+                    if (COMMAND_RUN_SINGLE.equals(command)) {
+                        options.add("-agentvm");
+                    }
                     File buildDir = BuildUtils.getBuildTargetDir(file);
                     options.add("-vmoption:-Djava.library.path=" + buildDir.getAbsolutePath() + "/support/test/jdk/jtreg/native/lib/");
                     Set<File> toRefresh = new HashSet<>();
@@ -332,12 +355,64 @@ public class ActionProviderImpl implements ActionProvider {
                     if (query != null) {
                         testPath += "?" + query;
                     }
+                    FileObject testRoot = getTestRoot(file);
                     options.add(testPath);
                     try {
                         stop.started();
                         Process jtregProcess = new ProcessBuilder(options).start();
                         StringWriter errorOutput = new StringWriter();
-                        Task outCopy = BACKGROUND.post(new CopyReaderWriter(new InputStreamReader(jtregProcess.getInputStream()), io.getOut()));
+                        Task outCopy = BACKGROUND.post(new CopyReaderWriter(new InputStreamReader(jtregProcess.getInputStream()), io.getOut(), null, new Consumer<String>() {
+                            //TODO: can this be done using the/an observer??
+                            private Testcase pendingTestcase;
+                            private Report pendingReport;
+                            @Override
+                            public void accept(String t) {
+                                if (t.startsWith("runner starting test: ")) {
+                                    if (pendingTestcase != null) {
+                                        pendingReport.setErrors(pendingReport.getErrors() + 1);
+                                        pendingReport.setPending(0);
+                                        pendingTestcase.addOutputLines(List.of("Test not finished"));
+                                        pendingTestcase = null;
+                                        pendingReport = null;
+                                    }
+                                    //TODO: testLocation - is the path that jtreg prints viable here?
+                                    String testLocation = t.substring("runner starting test: ".length());
+                                    String suiteId = TestMethodFinderImpl.relativePath2FakeClassName(testLocation); //TODO: how this will look inside NB and in VSCode?
+                                    pendingTestcase = new Testcase("@test", "", testSession); //testLocation, 
+                                    pendingTestcase.setClassName(suiteId);
+                                    pendingTestcase.setStatus(Status.PENDING);
+                                    FileObject testFile = testRoot != null ? testRoot.getFileObject(testLocation) : null;
+                                    pendingTestcase.setLocation(testFile != null ? FileUtil.toFile(testFile).getAbsolutePath() : null);
+                                    pendingReport = new Report(suiteId, testSession.getProject());
+                                    pendingReport.setTotalTests(pendingReport.getTotalTests() + 1);
+                                    pendingReport.setPending(1);
+                                    pendingReport.reportTest(pendingTestcase);
+                                    testManager.displayReport(testSession, pendingReport, false);
+                                }
+                                Status status = null;
+                                Trouble trouble = null;
+                                if (t.startsWith("Passed.")) {
+                                    status = Status.PASSED;
+                                    pendingReport.setPassed(pendingReport.getPassed() + 1);
+                                } else if (t.startsWith("Failed.")) {
+                                    status = Status.FAILED;
+                                    trouble = new Trouble(false);
+                                    trouble.setStackTrace(new String[] {
+                                        t.substring("Failed. ".length())
+                                    });
+                                    pendingReport.setFailures(pendingReport.getFailures()+ 1);
+                                } //TODO: Error.
+                                if (status != null) {
+                                    pendingTestcase.setStatus(status);
+                                    pendingTestcase.setTrouble(trouble);
+                                    pendingReport.setPending(0);
+                                    testManager.displayReport(testSession, pendingReport, true);
+                                    pendingTestcase = null;
+                                    pendingReport = null;
+                                }
+                            }
+                            
+                        }));
                         Task errCopy = BACKGROUND.post(new CopyReaderWriter(new InputStreamReader(jtregProcess.getErrorStream()), io.getErr(), errorOutput));
                         BACKGROUND.post(new CopyReaderWriter(io.getIn(), new OutputStreamWriter(jtregProcess.getOutputStream())));
                         int processResult = jtregProcess.waitFor();
@@ -360,7 +435,7 @@ public class ActionProviderImpl implements ActionProvider {
                                 }
                                 break;
                             default:
-                                printJTR(io, jtregWork, fullSourcePath, file);
+                                printJTR(io, jtregWork, fullSourcePath, testRoot, file);
                                 break;
                         }
                         success = true;
@@ -394,9 +469,22 @@ public class ActionProviderImpl implements ActionProvider {
                     progress.finished(success);
                     rerun.enable();
                     redebug.enable();
+                    if (testSession != null) {
+                        testManager.sessionFinished(testSession);
+                    }
                 }
             }
         }, io);
+    }
+
+    private static FileObject getTestRoot(FileObject testFile) {
+        FileObject testRoot = testFile;
+
+        while (testRoot != null && BuildUtils.getFileObject(testRoot, "TEST.ROOT") == null) {
+            testRoot = testRoot.getParent();
+        }
+
+        return testRoot;
     }
 
     static ClassPath allSources(FileObject file) {
@@ -562,11 +650,8 @@ public class ActionProviderImpl implements ActionProvider {
         return buildClasses != null ? FileUtil.toFile(buildClasses).getAbsoluteFile() : null;
     }
 
-    static void printJTR(InputOutput io, File jtregWork, ClassPath fullSourcePath, FileObject testFile) {
+    static void printJTR(InputOutput io, File jtregWork, ClassPath fullSourcePath, FileObject testRoot, FileObject testFile) {
         try {
-            FileObject testRoot = testFile;
-            while (testRoot != null && BuildUtils.getFileObject(testRoot, "TEST.ROOT") == null)
-                testRoot = testRoot.getParent();
             if (testRoot != null) {
                 String relPath = FileUtil.getRelativePath(testRoot, testFile);
                 relPath = relPath.replaceAll(".java$", ".jtr");
@@ -947,30 +1032,40 @@ public class ActionProviderImpl implements ActionProvider {
     }
 
     private static final class CopyReaderWriter implements Runnable {
-        private final Reader in;
+        private final BufferedReader in;
         private final Writer out;
         private final Writer secondaryOut;
+        private Consumer<String> lineProcessor;
 
         public CopyReaderWriter(Reader in, Writer out) {
             this(in, out, null);
         }
 
         public CopyReaderWriter(Reader in, Writer out, Writer secondaryOut) {
-            this.in = in;
+            this(in, out, secondaryOut, null);
+        }
+
+        public CopyReaderWriter(Reader in, Writer out, Writer secondaryOut, Consumer<String> lineProcessor) {
+            this.in = new BufferedReader(in);
             this.out = out;
             this.secondaryOut = secondaryOut;
+            this.lineProcessor = lineProcessor;
         }
 
         @Override
         public void run() {
             try {
-                char[] buf = new char[1024];
-                int read;
+                String read;
 
-                while ((read = in.read(buf)) != (-1)) {
-                    out.write(buf, 0, read);
+                while ((read = in.readLine()) != null) {
+                    out.write(read);
+                    out.write("\n"); //TODO: platform specific?
                     if (secondaryOut != null) {
-                        secondaryOut.write(buf, 0, read);
+                        secondaryOut.write(read);
+                        secondaryOut.write("\n"); //TODO: platform specific?
+                    }
+                    if (lineProcessor != null) {
+                        lineProcessor.accept(read);
                     }
                 }
             } catch (IOException ex) {

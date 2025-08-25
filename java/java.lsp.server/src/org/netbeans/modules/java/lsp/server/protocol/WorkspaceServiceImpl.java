@@ -112,6 +112,7 @@ import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
+import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.csl.api.IndexSearcher;
@@ -124,6 +125,7 @@ import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachConfigurations;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachNativeConfigurations;
+import org.netbeans.modules.java.lsp.server.progress.TestUtils;
 import org.netbeans.modules.java.lsp.server.project.LspProjectInfo;
 import org.netbeans.modules.java.lsp.server.singlesourcefile.SingleFileOptionsQueryImpl;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
@@ -399,22 +401,33 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 return server.asyncOpenFileOwner(file).thenCompose(this::getTestRoots).thenCompose(testRoots -> {
                     LOG.log(Level.INFO, "Project {2}: {0} test roots opened in {1}ms", new Object[] { testRoots.size(), (System.currentTimeMillis() - t), file});
                     BiFunction<FileObject, Collection<TestMethodController.TestMethod>, Collection<TestSuiteInfo>> f = (fo, methods) -> {
-                        String url = Utils.toUri(fo);
-                        Project owner = FileOwnerQuery.getOwner(fo);
-                        String moduleName = owner != null ? ProjectUtils.getInformation(owner).getDisplayName(): null;
-                        List<String> paths = getModuleTestPaths(owner);
-                        String modulePath = firstModulePath(paths, moduleName);
                         Map<String, TestSuiteInfo> suite2infos = new LinkedHashMap<>();
-                        for (TestMethodController.TestMethod testMethod : methods) {
-                            TestSuiteInfo suite = suite2infos.computeIfAbsent(testMethod.getTestClassName(), name -> {
-                                Position pos = testMethod.getTestClassPosition() != null ? Utils.createPosition(fo, testMethod.getTestClassPosition().getOffset()) : null;
-                                return new TestSuiteInfo(name, moduleName, modulePath, url, pos != null ? new Range(pos, pos) : null, TestSuiteInfo.State.Loaded, new ArrayList<>());
-                            });
-                            String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
-                            Position startPos = testMethod.start() != null ? Utils.createPosition(fo, testMethod.start().getOffset()) : null;
-                            Position endPos = testMethod.end() != null ? Utils.createPosition(fo, testMethod.end().getOffset()) : startPos;
-                            Range range = startPos != null ? new Range(startPos, endPos) : null;
-                            suite.getTests().add(new TestSuiteInfo.TestCaseInfo(id, testMethod.method().getMethodName(), url, range, TestSuiteInfo.State.Loaded, null));
+                        try {
+                            String url = Utils.toUri(fo);
+                            Project owner = FileOwnerQuery.getOwner(fo);
+                            String moduleName = owner != null ? ProjectUtils.getInformation(owner).getDisplayName(): null;
+                            List<FileObject> paths = TestUtils.getModuleTestPaths(owner);
+                            FileObject modulePath = TestUtils.findModulePath(moduleName, paths, fo);
+                            for (TestMethodController.TestMethod testMethod : methods) {
+                                TestSuiteInfo suite = suite2infos.computeIfAbsent(testMethod.getTestClassName(), name -> {
+                                    Position pos = testMethod.getTestClassPosition() != null ? Utils.createPosition(fo, testMethod.getTestClassPosition().getOffset()) : null;
+                                    TestSuiteInfo suiteInfo = new TestSuiteInfo(name, moduleName, TestUtils.toPath(modulePath), url, pos != null ? new Range(pos, pos) : null, TestSuiteInfo.State.Loaded, new ArrayList<>());
+                                    if (modulePath != null) {
+                                        suiteInfo.setRelativePath(FileUtil.getRelativePath(modulePath, fo));
+                                    }
+                                    return suiteInfo;
+                                });
+                                String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
+                                Position startPos = testMethod.start() != null ? Utils.createPosition(fo, testMethod.start().getOffset()) : null;
+                                Position endPos = testMethod.end() != null ? Utils.createPosition(fo, testMethod.end().getOffset()) : startPos;
+                                Range range = startPos != null ? new Range(startPos, endPos) : null;
+                                suite.getTests().add(new TestSuiteInfo.TestCaseInfo(id, testMethod.method().getMethodName(), url, range, TestSuiteInfo.State.Loaded, null));
+                            }
+                        } catch (IllegalStateException ex) {
+                            //XXX: Utils.createPosition opens document, and that may fail (e.g. the Encoding test).
+                            //it is surely not good to crash and not report anything further tests
+                            //but, is there something better that can be done?
+                            Exceptions.printStackTrace(ex);
                         }
                         return suite2infos.values();
                     };
@@ -438,9 +451,11 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                                     for (Project p : (Project[])evt.getNewValue()) {
                                         if (!old.contains(p)) {
                                             getTestRoots(p).thenAccept(tr -> {
-                                                for (Entry<FileObject, Collection<TestMethodController.TestMethod>> entry : TestMethodFinder.findTestMethods(tr, testMethodsListener.get()).entrySet()) {
-                                                    for (TestSuiteInfo tsi : f.apply(entry.getKey(), entry.getValue())) {
-                                                        client.notifyTestProgress(new TestProgressParams(Utils.toUri(entry.getKey()), tsi));
+                                                for (FileObject root : tr) {
+                                                    for (Entry<FileObject, Collection<TestMethodController.TestMethod>> entry : TestMethodFinder.findTestMethods(root).entrySet()) {
+                                                        for (TestSuiteInfo tsi : f.apply(entry.getKey(), entry.getValue())) {
+                                                            client.notifyTestProgress(new TestProgressParams(Utils.toUri(entry.getKey()), tsi));
+                                                        }
                                                     }
                                                 }
                                             });
@@ -453,14 +468,19 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     })) {
                         OpenProjects.getDefault().addPropertyChangeListener(WeakListeners.propertyChange(openProjectsListener.get(), OpenProjects.getDefault()));
                     }
+                    TestMethodFinder.addListener(testMethodsListener.get());
                     CompletableFuture<Object> future = new CompletableFuture<>();
                     JavaSource js = JavaSource.create(ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY));
                     try {
                         js.runWhenScanFinished(controller -> {
-                            Map<FileObject, Collection<TestMethodController.TestMethod>> testMethods = TestMethodFinder.findTestMethods(testRoots, testMethodsListener.get());
-                            Collection<TestSuiteInfo> suites = new ArrayList<>(testMethods.size());
-                            for (Entry<FileObject, Collection<TestMethodController.TestMethod>> entry : testMethods.entrySet()) {
-                                suites.addAll(f.apply(entry.getKey(), entry.getValue()));
+                            Collection<TestSuiteInfo> suites = new ArrayList<>();
+
+                            for (FileObject root : testRoots) {
+                                Map<FileObject, Collection<TestMethodController.TestMethod>> testMethods = TestMethodFinder.findTestMethods(root);
+
+                                for (Entry<FileObject, Collection<TestMethodController.TestMethod>> entry : testMethods.entrySet()) {
+                                    suites.addAll(f.apply(entry.getKey(), entry.getValue()));
+                                }
                             }
                             future.complete(suites);
                         }, true);
@@ -815,24 +835,6 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             LOG.log(Level.WARNING, "Mutliple test roots are not yet supported for module {0}", moduleName);
         }
         return paths.iterator().next();
-    }
-    
-    private static List<String> getModuleTestPaths(Project project) {        
-        if (project == null) {
-            return null;
-        }
-        SourceGroup[] sourceGroups = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-        Set<String> paths = new LinkedHashSet<>();
-        for (SourceGroup sourceGroup : sourceGroups) {
-            URL[] urls = UnitTestForSourceQuery.findUnitTests(sourceGroup.getRootFolder());
-            for (URL u : urls) {
-                FileObject f = URLMapper.findFileObject(u);
-                if (f != null) {
-                    paths.add(f.getPath());
-                }
-            }
-        }
-        return paths.isEmpty() ? null : new ArrayList<>(paths);
     }
     
     private class ProjectInfoWorker {

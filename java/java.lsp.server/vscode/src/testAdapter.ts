@@ -107,7 +107,8 @@ export class NbTestAdapter {
                         }
                         if (!cancellation.isCancellationRequested) {
                             try {
-                                await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? COMMAND_PREFIX + '.debug.single' : COMMAND_PREFIX + '.run.single', item.uri.toString(), idx < 0 ? undefined : item.id.slice(idx + 1), 
+                                //TODO: testRun == true, file(!)
+                                await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? COMMAND_PREFIX + '.debug.test' : COMMAND_PREFIX + '.run.test', item.uri.toString(), idx < 0 ? undefined : item.id.slice(idx + 1), 
                                     undefined /* configuration */, nestedClass);
                             } catch(err) {
                                 // test state will be handled in the code below
@@ -134,7 +135,19 @@ export class NbTestAdapter {
                 }
             }
             if (this.started) {
-                this.itemsToRun.forEach(item => this.set(item, 'skipped'));
+                this.itemsToRun.forEach(item => {
+                    var isContainer = true;
+                    if (item.children.size == 0) {
+                        isContainer = false;
+                    } else {
+                        item.children.forEach(c => {
+                            isContainer &&= c.children.size != 0;
+                        });
+                    }
+                    if (!isContainer) {
+                        this.set(item, 'skipped');
+                    }
+                });
             } 
             // TBD - message
             else {
@@ -277,7 +290,18 @@ export class NbTestAdapter {
 
     testProgress(suite: TestSuite): void {
         const currentModule = this.testController.items.get(this.getModuleItemId(suite.moduleName));
-        const currentSuite = currentModule?.children.get(suite.name);
+
+        let currentTarget = currentModule;
+        let suiteName = suite.name;
+        if (suite.relativePath) {
+            const relativePathComponents = suite.relativePath.split('/');
+            for (let i = 0; i < relativePathComponents.length - 1; i++) {
+                currentTarget = currentTarget?.children.get(relativePathComponents[i]);
+            }
+            suiteName = relativePathComponents[relativePathComponents.length - 1];
+        }
+
+        const currentSuite = currentTarget?.children.get(suiteName);
 
         switch (suite.state) {
             case 'loaded':
@@ -373,14 +397,34 @@ export class NbTestAdapter {
             this.testController.items.add(currentModule);
         }
 
+        let currentTarget = currentModule;
+        let suiteName = suite.name;
+        if (suite.relativePath) {
+            let currentUri = suite.modulePath ? Uri.parse(suite.modulePath) : null;
+            const relativePathComponents = suite.relativePath.split('/');
+            for (let i = 0; i < relativePathComponents.length - 1; i++) {
+                const currentTargetChildren: TestItem[] = []
+                let newTarget = currentTarget.children.get(relativePathComponents[i]);
+                currentUri = currentUri ? Uri.joinPath(currentUri, relativePathComponents[i]) : null;
+                if (!newTarget) {
+                    newTarget = this.testController.createTestItem(relativePathComponents[i], this.getNameWithIcon(relativePathComponents[i], 'package'), currentUri ? currentUri : undefined);
+                    currentTargetChildren.push(newTarget);
+                }
+                currentTarget.children.forEach(suite => currentTargetChildren.push(suite));
+                currentTarget.children.replace(currentTargetChildren);
+                currentTarget = newTarget;
+            }
+            suiteName = relativePathComponents[relativePathComponents.length - 1];
+        }
+
         const suiteChildren: TestItem[] = []
-        let currentSuite = currentModule.children.get(suite.name);
+        let currentSuite = currentTarget.children.get(suiteName);
         const suiteUri = suite.file ? Uri.parse(suite.file) : undefined;
         if (!currentSuite || suiteUri && currentSuite.uri?.toString() !== suiteUri.toString()) {
-            currentSuite = this.testController.createTestItem(suite.name, this.getNameWithIcon(suite.name, 'class'), suiteUri);
+            currentSuite = this.testController.createTestItem(suiteName, this.getNameWithIcon(suiteName, 'class'), suiteUri);
             suiteChildren.push(currentSuite);
         }
-        currentModule.children.forEach(suite => suiteChildren.push(suite));
+        currentTarget.children.forEach(suite => suiteChildren.push(suite));
 
         const suiteRange = asRange(suite.range);
         if (!testExecution && suiteRange && suiteRange !== currentSuite.range) {
@@ -436,7 +480,7 @@ export class NbTestAdapter {
             });
         } else {
             currentSuite.children.replace(children);
-            currentModule.children.replace(suiteChildren);
+            currentTarget.children.replace(suiteChildren);
         }
     }
 
@@ -457,10 +501,10 @@ export class NbTestAdapter {
     }
     
     getModulePath(suite: TestSuite): Uri {
-        return Uri.parse(suite.modulePath || "");
+        return Uri.parse(suite.modulePath || ""); //XXX
     }
 
-    getNameWithIcon(itemName: string, itemType: 'module' | 'class' | 'method'): string  {
+    getNameWithIcon(itemName: string, itemType: 'module' | 'class' | 'method' | 'package'): string  {
         switch (itemType) {
             case 'module':
                 return `$(project) ${itemName}`;

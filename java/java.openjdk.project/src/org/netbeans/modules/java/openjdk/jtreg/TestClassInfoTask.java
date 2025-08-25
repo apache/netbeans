@@ -159,9 +159,9 @@ public final class TestClassInfoTask implements CancellableTask<CompilationContr
                         Document doc = info.getSnapshot().getSource().getDocument(false);
                         try {
                             result.add(new TestMethod(typeElement.getQualifiedName().toString(), new SingleMethod(fileObject, mn),
-                                    doc != null ? doc.createPosition(start) : new SimplePosition(start),
-                                    doc != null ? doc.createPosition(preferred) : new SimplePosition(preferred),
-                                    doc != null ? doc.createPosition(end) : new SimplePosition(end)));
+                                    createPosition(doc, start),
+                                    createPosition(doc, preferred),
+                                    createPosition(doc, end)));
                         } catch (BadLocationException ex) {
                             //ignore
                     }
@@ -195,6 +195,10 @@ public final class TestClassInfoTask implements CancellableTask<CompilationContr
             }
         }
 
+    }
+
+    public static Position createPosition(Document doc, int offset) throws BadLocationException {
+        return doc != null ? doc.createPosition(offset) : new SimplePosition(offset);
     }
 
     private static class SimplePosition implements Position {

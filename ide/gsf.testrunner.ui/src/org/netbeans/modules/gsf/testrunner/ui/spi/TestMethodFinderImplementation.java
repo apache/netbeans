@@ -16,20 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.netbeans.modules.gsf.testrunner.ui.spi;
 
-package org.netbeans.modules.java.hints.declarative;
+import java.util.Collection;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController.TestMethod;
+import org.openide.filesystems.FileObject;
 
-import junit.framework.TestSuite;
-import org.netbeans.modules.java.hints.declarative.test.api.DeclarativeHintsTestBase;
-
-/**
- *
- * @author lahvac
- */
-public class PerformDeclarativeTest extends DeclarativeHintsTestBase {
-
-    public static TestSuite suite() {
-        return suite(PerformDeclarativeTest.class, ".*test.*");
-    }
-
+public interface TestMethodFinderImplementation {
+    public void addListener(BiConsumer<FileObject, Collection<TestMethod>> listener);
+    public Map<FileObject, Collection<TestMethod>> findTestMethods(FileObject testRoot);
 }

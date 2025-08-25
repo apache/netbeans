@@ -52,7 +52,20 @@ if [ -f "$progdir/../etc/$APPNAME".conf ] ; then
     . "$progdir/../etc/$APPNAME".conf
 fi
 
-# XXX does not correctly deal with spaces in non-userdir params
+doubleQuoteArg() {
+    # wrap all arguments as "" strings, escape any internal back-slash, double-quote, $, or back-tick characters
+    #  use printf to avoid echo interpretation behaviors such as escapes and line continuation
+    # Mac bsd_sed does not support group-0, so pattern uses group-1
+    printf '"%s"' "`printf '%s' "$@" | sed -e 's@\([$\"\`\\]\)@\\\\\\1@g' `"
+}
+
+singleQuoteArg() {
+    # wrap all arguments as '' strings, escaping any internal single-quote characters
+    #  use printf to avoid echo interpretation behaviors such as escapes and line continuation
+    # Mac bsd_sed does not support group-0, so pattern uses group-1
+    printf "'%s'" "`printf '%s' "$@" | sed -e 's@'\''@'\''\\\\'\'''\''@g' `"
+}
+
 args=""
 
 case "`uname`" in
@@ -69,9 +82,11 @@ case "`uname`" in
 esac
 while [ $# -gt 0 ] ; do
     case "$1" in
+        --jdkhome) shift; if [ $# -gt 0 ] ; then jdkhome="$1"; fi
+            ;;
         --userdir) shift; if [ $# -gt 0 ] ; then userdir="$1"; fi
             ;;
-        *) args="$args \"$1\""
+        *) args="$args `doubleQuoteArg \"$1\" `"
             ;;
     esac
     shift
@@ -121,8 +136,8 @@ case "`uname`" in
     Darwin*)
         eval exec sh '"$nbexec"' \
             --jdkhome '"$jdkhome"' \
-            -J-Xdock:name='"$APPNAME"' \
-            '"-J-Xdock:icon=$progdir/../../$APPNAME.icns"' \
+            '-J-Xdock:name="$APPNAME"' \
+            '-J-Xdock:icon="$progdir/../../$APPNAME.icns"' \
             --clusters '"$clusters"' \
             --userdir '"${userdir}"' \
             ${default_options} \

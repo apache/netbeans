@@ -1490,20 +1490,33 @@ public class SourceUtils {
         String className = rel.replace('/', '.');
         int lastDotIndex = className.lastIndexOf('.');
         String fqnForNestedClass = null;
-        if (lastDotIndex > -1 && nestedClass != null) {
-            String packageName = className.substring(0, lastDotIndex);
+        String topLevelClass = null;
+        if (nestedClass != null) {
+            String packageName;
+            if(lastDotIndex >= 0) {
+                packageName = className.substring(0, lastDotIndex);
+            } else {
+                packageName = "";
+            }
             fqnForNestedClass = nestedClass.getFQN(packageName, "$");
+            topLevelClass = packageName + ( packageName.isBlank() ? "" : "." ) + nestedClass.getTopLevelClassName();
         }
+        // This is really an ugly hack. It is pure luck, that the cache directory
+        // is placed on the CP, nothing guarantes that or at least that is non
+        // obvious. This also makes it hard/impossible to test.
         FileObject rsFile = cachedCP.findResource(rel + '.' + FileObjects.RS);
         if (rsFile != null) {
             List<String> lines = new ArrayList<>();
             try (BufferedReader in = new BufferedReader(new InputStreamReader(rsFile.getInputStream(), StandardCharsets.UTF_8))) {
                 String line;
-                while ((line = in.readLine())!=null) {
-                    if (className.equals(line)) {
+                while ((line = in.readLine()) != null) {
+                    if (topLevelClass == null && className.equals(line)) {
                         return className;
-                    } else if (fqnForNestedClass != null && fqnForNestedClass.equals(line)) {
-                        return line;
+                    } else if (topLevelClass != null && topLevelClass.equals(line)) {
+                        // The "RS" Index holds only toplevel classes, so we
+                        // assume, that if the toplevel is found here, the FQN
+                        // based on NestedClass is also present
+                        return fqnForNestedClass;
                     }
                     lines.add(line);
                 }
@@ -1512,6 +1525,10 @@ public class SourceUtils {
                 return lines.get(0);
             }
         }
-        return className;
+        if(fqnForNestedClass != null) {
+            return fqnForNestedClass;
+        } else {
+            return className;
+        }
     }
 }

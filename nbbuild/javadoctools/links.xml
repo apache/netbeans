@@ -34,7 +34,6 @@
 <link href="${javadoc.docs.org-openide-util}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-util"/>
 <link href="${javadoc.docs.org-netbeans-modules-nbjunit}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-nbjunit"/>
 <link href="${javadoc.docs.org-openide-actions}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-actions"/>
-<link href="${javadoc.docs.org-openide-options}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-options"/>
 <link href="${javadoc.docs.org-openide-compat}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-compat"/>
 <link href="${javadoc.docs.org-openide-awt}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-awt"/>
 <link href="${javadoc.docs.org-openide-dialogs}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-dialogs"/>

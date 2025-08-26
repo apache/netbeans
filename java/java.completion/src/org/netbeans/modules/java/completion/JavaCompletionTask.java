@@ -88,13 +88,13 @@ public final class JavaCompletionTask<T> extends BaseTask {
 
         T createVariableItem(CompilationInfo info, String varName, int substitutionOffset, boolean newVarName, boolean smartType);
 
-        T createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef);
+        T createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef, boolean insertTextParams);
 
-        default T createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean afterConstructorTypeParams, boolean smartType, int assignToVarOffset, boolean memberRef) {
-            return createExecutableItem(info, elem, type, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, smartType, assignToVarOffset, memberRef);
+        default T createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean afterConstructorTypeParams, boolean smartType, int assignToVarOffset, boolean memberRef, boolean insertTextParams) {
+            return createExecutableItem(info, elem, type, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, smartType, assignToVarOffset, memberRef, insertTextParams);
         }
 
-        T createThisOrSuperConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, String name);
+        T createThisOrSuperConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, String name, boolean insertTextParams);
 
         T createOverrideMethodItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean implement);
 
@@ -123,7 +123,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
 
         T createTypeCastableVariableItem(CompilationInfo info, VariableElement elem, TypeMirror type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean smartType, int assignToVarOffset);
 
-        T createTypeCastableExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef);        
+        T createTypeCastableExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef, boolean insertTextParams);
     }
     
     public static interface LambdaItemFactory<T> extends ItemFactory<T> {
@@ -3705,7 +3705,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     if (e.getEnclosingElement() != enclClass && conflictsWithLocalMethods(e.getSimpleName(), enclClass, methodsIn)) {
                         results.add(itemFactory.createStaticMemberItem(env.getController(), (DeclaredType)e.getEnclosingElement().asType(), e, et, false, anchorOffset, elements.isDeprecated(e), env.addSemicolon(), true));
                     } else {
-                        results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, null, env.getScope().getEnclosingClass() != e.getEnclosingElement(), elements.isDeprecated(e), false, env.addSemicolon(), isOfSmartType(env, getCorrectedReturnType(env, et, (ExecutableElement) e, enclClass != null ? enclClass.asType() : null), smartTypes), env.assignToVarPos(), false));
+                        results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, null, env.getScope().getEnclosingClass() != e.getEnclosingElement(), elements.isDeprecated(e), false, env.addSemicolon(), isOfSmartType(env, getCorrectedReturnType(env, et, (ExecutableElement) e, enclClass != null ? enclClass.asType() : null), smartTypes), env.assignToVarPos(), false, Utilities.isCompletionInsertTextParameters()));
                     }
                     break;
             }
@@ -4069,7 +4069,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             switch (e.getKind()) {
                 case METHOD:
                     ExecutableType et = (ExecutableType) asMemberOf(e, type, types);
-                    results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, null, typeElem != e.getEnclosingElement(), elements.isDeprecated(e), false, false, isOfSmartType(env, et, smartTypes), env.assignToVarPos(), true));
+                    results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, null, typeElem != e.getEnclosingElement(), elements.isDeprecated(e), false, false, isOfSmartType(env, et, smartTypes), env.assignToVarPos(), true, false));  // insertTextParams is hard-coded to false because memberRef is true for method-references, thus, irrelevant.
                     break;
             }
         }
@@ -4223,16 +4223,16 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     break;
                 case CONSTRUCTOR:
                     ExecutableType et = (ExecutableType) asMemberOf(e, actualType, types);
-                    results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, autoImport ? env.getReferencesCount() : null, typeElem != e.getEnclosingElement(), elements.isDeprecated(e), inImport, false, afterConstructorTypeParams, isOfSmartType(env, actualType, smartTypes), env.assignToVarPos(), false));
+                    results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, autoImport ? env.getReferencesCount() : null, typeElem != e.getEnclosingElement(), elements.isDeprecated(e), inImport, false, afterConstructorTypeParams, isOfSmartType(env, actualType, smartTypes), env.assignToVarPos(), false, Utilities.isCompletionInsertTextParameters()));
                     break;
                 case METHOD:
                     et = (ExecutableType) asMemberOf(e, actualType, types);
                     if (addCast && itemFactory instanceof TypeCastableItemFactory
                             && !types.isSubtype(type, e.getEnclosingElement().asType())
                             && type.getKind() == TypeKind.DECLARED && !hasBaseMethod(elements, (DeclaredType) type, (ExecutableElement) e)) {
-                        results.add(((TypeCastableItemFactory<T>)itemFactory).createTypeCastableExecutableItem(env.getController(), (ExecutableElement) e, et, actualType, anchorOffset, autoImport ? env.getReferencesCount() : null, typeElem != e.getEnclosingElement(), elements.isDeprecated(e), inImport, env.addSemicolon(), isOfSmartType(env, getCorrectedReturnType(env, et, (ExecutableElement) e, actualType), smartTypes), env.assignToVarPos(), false));
+                        results.add(((TypeCastableItemFactory<T>)itemFactory).createTypeCastableExecutableItem(env.getController(), (ExecutableElement) e, et, actualType, anchorOffset, autoImport ? env.getReferencesCount() : null, typeElem != e.getEnclosingElement(), elements.isDeprecated(e), inImport, env.addSemicolon(), isOfSmartType(env, getCorrectedReturnType(env, et, (ExecutableElement) e, actualType), smartTypes), env.assignToVarPos(), false, Utilities.isCompletionInsertTextParameters()));
                     } else {
-                        results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, autoImport ? env.getReferencesCount() : null, typeElem != e.getEnclosingElement(), elements.isDeprecated(e), inImport, env.addSemicolon(), isOfSmartType(env, getCorrectedReturnType(env, et, (ExecutableElement) e, actualType), smartTypes), env.assignToVarPos(), false));
+                        results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, autoImport ? env.getReferencesCount() : null, typeElem != e.getEnclosingElement(), elements.isDeprecated(e), inImport, env.addSemicolon(), isOfSmartType(env, getCorrectedReturnType(env, et, (ExecutableElement) e, actualType), smartTypes), env.assignToVarPos(), false, Utilities.isCompletionInsertTextParameters()));
                     }
                     break;
                 case CLASS:
@@ -4291,7 +4291,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         for (Element e : controller.getElementUtilities().getMembers(type, acceptor)) {
             if (e.getKind() == CONSTRUCTOR) {
                 ExecutableType et = (ExecutableType) asMemberOf(e, type, types);
-                results.add(itemFactory.createThisOrSuperConstructorItem(env.getController(), (ExecutableElement) e, et, anchorOffset, elements.isDeprecated(e), name));
+                results.add(itemFactory.createThisOrSuperConstructorItem(env.getController(), (ExecutableElement) e, et, anchorOffset, elements.isDeprecated(e), name, Utilities.isCompletionInsertTextParameters()));
             }
         }
     }

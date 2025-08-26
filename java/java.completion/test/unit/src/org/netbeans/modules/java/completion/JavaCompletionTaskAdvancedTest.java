@@ -617,6 +617,10 @@ public class JavaCompletionTaskAdvancedTest extends CompletionTestBase {
         performTest("ForEach", 940, null, "blockContentAfterForEach.pass");
     }
     
+    public void testForEachMissingType() throws Exception {
+        performTest("SimpleEmptyMethodBody", 907, "java.util.List<Integer> intData = null; java.util.Set<Undefined> undefData = null; String[] data = null; for (d : ", "forEachWithOutType.pass");
+    }
+
     // Switch-case statement tests ---------------------------------------------
     
     public void testEmptyFileAfterTypingSwitchKeyword() throws Exception {

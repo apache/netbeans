@@ -5631,7 +5631,10 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 DeclaredType iterable = iterableTE != null ? types.getDeclaredType(iterableTE) : null;
                 if (iterable != null && types.isSubtype(type, iterable)) {
                     Iterator<? extends TypeMirror> it = ((DeclaredType) type).getTypeArguments().iterator();
-                    type = it.hasNext() ? it.next() : elements.getTypeElement(JAVA_LANG_OBJECT).asType(); //NOI18N
+                    type = it.hasNext() ? it.next() : null;
+                    if (type == null || type.getKind() == TypeKind.ERROR) {
+                        type = elements.getTypeElement(JAVA_LANG_OBJECT).asType();
+                    }
                 } else {
                     return false;
                 }
@@ -5744,6 +5747,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
                                 st.add(types.erasure(te.asType()));
                             }
                         }
+                    }
+                    if (st.isEmpty() && env.getPath().getLeaf().getKind() == Kind.ENHANCED_FOR_LOOP) {
+                        st.add(controller.getElements().getTypeElement("java.lang.Object").asType());
                     }
                     smartTypes = st;
                 }

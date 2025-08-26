@@ -226,8 +226,11 @@ public class ActionProviderImpl implements ActionProvider {
     private boolean usingJUnit5() {
         return proj.getLookup().lookup(NbMavenProject.class).getMavenProject().getArtifacts()
                 .stream()
-                .anyMatch((a) -> ("org.junit.jupiter".equals(a.getGroupId()) && "junit-jupiter-engine".equals(a.getArtifactId()) ||
-                        "org.junit.platform".equals(a.getGroupId()) && "junit-platform-engine".equals(a.getArtifactId())));
+                .anyMatch((a) -> (
+                        "org.junit.jupiter".equals(a.getGroupId()) && "junit-jupiter-engine".equals(a.getArtifactId()) ||
+                        "org.junit.jupiter".equals(a.getGroupId()) && "junit-jupiter-api".equals(a.getArtifactId()) ||
+                        "org.junit.platform".equals(a.getGroupId()) && "junit-platform-engine".equals(a.getArtifactId()))
+                );
     }
 
     private boolean usingTestNG() {

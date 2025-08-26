@@ -1516,7 +1516,9 @@ public class Reformatter implements ReformatTask {
                     }
                     try {
                         spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
-                        wrapList(cs.wrapMethodParams(), cs.alignMultilineMethodParams(), false, COMMA, params);
+                        if (!isSynthetic(getCurrentPath().getCompilationUnit(), node)) {
+                            wrapList(cs.wrapMethodParams(), cs.alignMultilineMethodParams(), false, COMMA, params);
+                        }
                     } finally {
                         indent = oldIndent;
                         lastIndent = oldLastIndent;
@@ -5612,8 +5614,9 @@ public class Reformatter implements ReformatTask {
             if (tree.pos == (-1))
                 return true;
             if (leaf.getKind() == Tree.Kind.METHOD) {
-                //check for synthetic constructor:
-                return (((JCMethodDecl)leaf).mods.flags & Flags.GENERATEDCONSTR) != 0L;
+                //check for synthetic constructor and compact record constuctor
+                return (((JCMethodDecl)leaf).mods.flags & Flags.GENERATEDCONSTR) != 0L
+                  || (((JCMethodDecl)leaf).mods.flags & Flags.COMPACT_RECORD_CONSTRUCTOR) != 0L;
             }
             //check for synthetic superconstructor call:
             if (leaf.getKind() == Tree.Kind.EXPRESSION_STATEMENT) {

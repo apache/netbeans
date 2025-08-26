@@ -25,7 +25,7 @@
 
     <target name="absolute-layout" depends="build-init">
         <mkdir dir="${build.dir}/absolutelayoutclasses"/>
-        <javac srcdir="release/sources" target="${javac.target}" source="${javac.source}" destdir="${build.dir}/absolutelayoutclasses"/>
+        <javac srcdir="release/sources" release="${absolutelayout.javac.release}" destdir="${build.dir}/absolutelayoutclasses"/>
         <mkdir dir="${cluster}/modules/ext"/>
         <nb-ext-jar jarfile="${cluster}/modules/ext/AbsoluteLayout.jar">
             <manifest>

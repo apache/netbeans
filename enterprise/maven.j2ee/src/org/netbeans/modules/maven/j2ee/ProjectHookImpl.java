@@ -27,6 +27,7 @@ import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
 import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.j2ee.api.ejbjar.Car;
 import org.netbeans.modules.j2ee.api.ejbjar.Ear;
 import org.netbeans.modules.j2ee.api.ejbjar.EjbJar;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment;
@@ -133,7 +134,9 @@ public class ProjectHookImpl extends ProjectOpenedHook {
         RP.post(new Runnable() {
             @Override
             public void run() {
-                LoggingUtils.logUsage(ExecutionChecker.class, "USG_PROJECT_OPEN_MAVEN_EE", new Object[] { getServerName(), getEEversion(), getProjectType() }, "maven"); //NOI18N
+                LoggingUtils.logUsage(ExecutionChecker.class, "USG_PROJECT_OPEN_MAVEN_EE", new Object[] { //NOI18N
+                    getServerName(), getEEversion(), getProjectType() 
+                }, "maven"); //NOI18N
             }
         });
     }
@@ -192,24 +195,30 @@ public class ProjectHookImpl extends ProjectOpenedHook {
         String projectType = getProjectType();
         if (projectType != null) {
             switch (projectType) {
-                case "ear": //NOI18N
+                case "ear" -> { //NOI18N
                     Ear earProj = Ear.getEar(project.getProjectDirectory());
                     if (earProj != null) {
                         profile = earProj.getJ2eeProfile();
                     }
-                    break;
-                case "war": //NOI18N
+                }
+                case "war" -> { //NOI18N
                     WebModule webM = WebModule.getWebModule(project.getProjectDirectory());
                     if (webM != null) {
                         profile = webM.getJ2eeProfile();
                     }
-                    break;
-                case "ejb": //NOI18N
+                }
+                case "ejb" -> { //NOI18N
                     EjbJar ejbProj = EjbJar.getEjbJar(project.getProjectDirectory());
                     if (ejbProj != null) {
                         profile = ejbProj.getJ2eeProfile();
                     }
-                    break;
+                }
+                case "app-client" -> { //NOI18N
+                    Car carM = Car.getCar(project.getProjectDirectory());
+                    if (carM != null) {
+                        profile = carM.getJ2eeProfile();
+                    }
+                }
             }
         }
         if (profile != null) {

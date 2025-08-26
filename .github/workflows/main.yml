@@ -144,7 +144,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -209,7 +209,7 @@ jobs:
           show-progress: false
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
             distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
             java-version: 17
@@ -247,7 +247,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -320,7 +320,7 @@ jobs:
 
       - name: Set up JDK 25 for scripts
         if: ${{ github.event_name == 'pull_request' && !cancelled() }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: 25-ea
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -331,7 +331,7 @@ jobs:
 
       - name: Set up JDK ${{ matrix.java }} 
         if: ${{ !cancelled() }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -384,7 +384,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -444,7 +444,7 @@ jobs:
       # 13-14 min for javadoc; JDK version must be synced with nb-javac
       - name: Set up JDK 25 for javadoc
         if: env.test_javadoc == 'true' && success()
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: 25-ea
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -479,7 +479,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -524,7 +524,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -847,7 +847,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -968,7 +968,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -1131,7 +1131,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -1269,7 +1269,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -1458,7 +1458,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -1514,7 +1514,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -1574,7 +1574,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -1619,7 +1619,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -1797,7 +1797,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -1847,7 +1847,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -1898,7 +1898,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -1946,7 +1946,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -2190,7 +2190,7 @@ jobs:
 
     steps:
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -2283,7 +2283,7 @@ jobs:
 
     steps:
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -2352,7 +2352,7 @@ jobs:
         shell: cmd
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -2491,7 +2491,7 @@ jobs:
 
     steps:
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}

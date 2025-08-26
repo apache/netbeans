@@ -105,7 +105,7 @@ public class SettingsImpl {
     }
 
     public boolean isSortDocumentListByProject() {
-        return prefs.getBoolean( PROP_SORT_DOCUMENT_LIST_BY_PROJECT, false );
+        return prefs.getBoolean( PROP_SORT_DOCUMENT_LIST_BY_PROJECT, true );
     }
 
     public boolean isTabRowPerProject() {

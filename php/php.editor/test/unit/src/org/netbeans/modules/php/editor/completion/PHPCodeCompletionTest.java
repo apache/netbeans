@@ -869,6 +869,21 @@ public class PHPCodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion("testfiles/completion/lib/_base/issue202281.php", "function^Name($myInt);", false);
     }
 
+    public void testUseKeywordInClass() throws Exception {
+        checkCompletion("testfiles/completion/lib/_base/useKeywordInClass.php", "u^se", false);
+    }
+
+    public void testUseKeywordInTrait() throws Exception {
+        checkCompletion("testfiles/completion/lib/_base/useKeywordInTrait.php", "u^se", false);
+    }
+
+    public void testUseKeywordInEnum() throws Exception {
+        checkCompletion("testfiles/completion/lib/_base/useKeywordInEnum.php", "u^se", false);
+    }
+    public void testUseKeywordInInterface() throws Exception {
+        checkCompletion("testfiles/completion/lib/_base/useKeywordInInterface.php", "u^se", false);
+    }
+
     @Override
     protected Map<String, ClassPath> createClassPathsForTest() {
         //just test them as standalone files (just PHP Platform in index)

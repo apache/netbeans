@@ -47,6 +47,7 @@ public enum TwigVariableTokenId implements TokenId {
     T_TWIG_INTERPOLATION_START("twig_interpolation"), //NOI18N
     T_TWIG_INTERPOLATION_END("twig_interpolation"), //NOI18N
     T_TWIG_OTHER("twig_other"), //NOI18N
+    T_TWIG_COMMENT("twig_comment"), //NOI18N
     T_TWIG_WHITESPACE("twig_whitespace"); //NOI18N
 
     private final String primaryCategory;

@@ -365,6 +365,7 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
 
         String relativePath = null;
         for (Map.Entry<ClasspathInfo, Path> ci : classpathInfo.entrySet()) {
+            if (ci.getKey() == null) continue;
             FileObject fo = SourceUtils.getFile(ElementHandle.createTypeElementHandle(ElementKind.CLASS, className), ci.getKey());
             if (fo != null) {
                 relativePath = ci.getValue().relativize(FileUtil.toFile(fo).toPath()).toString();

@@ -74,16 +74,15 @@ import org.netbeans.spi.editor.highlighting.HighlightAttributeValue;
 import org.netbeans.spi.editor.highlighting.support.OffsetsBag;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.ErrorDescriptionFactory;
+import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.editor.hints.LazyFixList;
 import org.netbeans.spi.editor.hints.Severity;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.text.Annotation;
 import org.openide.text.NbDocument;
-import org.openide.util.RequestProcessor;
-import org.openide.util.WeakListeners;
-import org.openide.filesystems.FileUtil;
 import org.openide.text.PositionBounds;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -91,7 +90,9 @@ import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
+import org.openide.util.RequestProcessor;
 import org.openide.util.RequestProcessor.Task;
+import org.openide.util.WeakListeners;
 
 /**
  *
@@ -1393,6 +1394,42 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
 
         return result[0];
     }
+    
+    public synchronized void removeErrorForFixOnLine(Fix fix, int line) throws IOException, BadLocationException {
+        Position pos = getPosition(line, false);
+        List<ErrorDescription> errs = getErrorsForLine(pos, false);
+        
+        List<ErrorDescription> errsToRemove = new ArrayList<>(); // Should be 1, but uses List just in case
+        for (ErrorDescription err : errs) {
+            if (err.getFixes().getFixes().contains(fix)) {
+                errsToRemove.add(err);
+            }
+        }
+        
+        Map<String, List<ErrorDescription>> layers = new HashMap<>();
+        for (ErrorDescription ed : errsToRemove) {
+            for (Entry<String, List<ErrorDescription>> layer : layer2Errors.entrySet()) {
+                String key = layer.getKey();
+                List<ErrorDescription> val = layer.getValue();
+                for (ErrorDescription err : val) {
+                    if (!ed.equals(err)) {
+                        continue;
+                    }
+                    if (!layers.containsKey(key)) {
+                        layers.put(key, new ArrayList<>(val));
+                    }
+                    layers.get(key).remove(ed);
+                }
+            }
+        }
+        
+        for (Entry<String, List<ErrorDescription>> entry : layers.entrySet()) {
+            String key = entry.getKey();
+            List<ErrorDescription> val = entry.getValue();
+            setErrorDescriptions(key, val, false);
+        }
+    }
+    
     
     private static final boolean ENABLE_ASSERTS = Boolean.getBoolean(AnnotationHolder.class.getName() + ".enableAsserts200469");
     

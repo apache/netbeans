@@ -38,6 +38,9 @@ public class HighlightsContainers {
 
             public InlineHintsSettingsAwareContainer() {
                 String mimeType = DocumentUtilities.getMimeType(doc);
+                if (mimeType == null) {
+                    mimeType = "";
+                }
                 prefs = MimeLookup.getLookup(mimeType).lookup(Preferences.class);
                 prefs.addPreferenceChangeListener(WeakListeners.create(PreferenceChangeListener.class, this, prefs));
                 inlineSettingChanged();

@@ -2097,7 +2097,7 @@ public class CasualDiff {
     }
 
     protected int diffPatternCaseLabel(JCPatternCaseLabel oldT, JCPatternCaseLabel newT, int[] bounds) {
-        return diffTree( oldT.pat, newT.pat, bounds);
+        return diffTree(oldT.pat, newT.pat, bounds);
     }
 
     protected int diffCase(JCCase oldT, JCCase newT, int[] bounds) {

@@ -78,6 +78,7 @@ import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCConditional;
 import com.sun.tools.javac.tree.JCTree.JCConstantCaseLabel;
+import com.sun.tools.javac.tree.JCTree.JCPatternCaseLabel;
 import com.sun.tools.javac.tree.JCTree.JCContinue;
 import com.sun.tools.javac.tree.JCTree.JCDoWhileLoop;
 import com.sun.tools.javac.tree.JCTree.JCEnhancedForLoop;
@@ -2093,6 +2094,10 @@ public class CasualDiff {
 
     protected int diffConstantCaseLabel(JCConstantCaseLabel oldT, JCConstantCaseLabel newT, int[] bounds) {
         return diffTree((JCTree) oldT.expr, (JCTree) newT.expr, bounds);
+    }
+
+    protected int diffPatternCaseLabel(JCPatternCaseLabel oldT, JCPatternCaseLabel newT, int[] bounds) {
+        return diffTree((JCTree) oldT.pat, (JCTree) newT.pat, bounds);
     }
 
     protected int diffCase(JCCase oldT, JCCase newT, int[] bounds) {
@@ -5875,6 +5880,9 @@ public class CasualDiff {
               break;
           case CONSTANTCASELABEL:
               retVal = diffConstantCaseLabel((JCConstantCaseLabel) oldT, (JCConstantCaseLabel) newT, elementBounds);
+              break;
+          case PATTERNCASELABEL:
+              retVal = diffPatternCaseLabel((JCPatternCaseLabel) oldT, (JCPatternCaseLabel) newT, elementBounds);
               break;
           case RECORDPATTERN:
               retVal = diffRecordPattern((JCRecordPattern) oldT, (JCRecordPattern) newT, elementBounds);

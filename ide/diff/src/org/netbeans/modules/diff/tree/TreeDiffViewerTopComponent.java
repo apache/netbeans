@@ -81,6 +81,8 @@ public final class TreeDiffViewerTopComponent extends TopComponent {
     private final JPopupMenu contextMenu;
     private List<ExclusionPattern> filterPatterns = new ArrayList<>();
     private List<TreeEntry> selectedTreeEntries = Collections.emptyList();
+    
+    private DiffController currentDiff = null;
 
     /**
      * @deprecated only for use by NetBeans internals
@@ -331,6 +333,7 @@ public final class TreeDiffViewerTopComponent extends TopComponent {
         if(! selectedTreeEntries.isEmpty()) {
             try {
                 DiffController diff = DiffController.createEnhanced(
+                    currentDiff,
                     FileStreamSource.create(
                             selectedTreeEntries.get(0).getFile1(),
                             selectedTreeEntries.get(0).getBasePath1()
@@ -341,6 +344,7 @@ public final class TreeDiffViewerTopComponent extends TopComponent {
                     )
                 );
                 diffOutput.add(diff.getJComponent());
+                currentDiff = diff;
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -383,9 +387,7 @@ public final class TreeDiffViewerTopComponent extends TopComponent {
         while (!queue2.isEmpty()) {
             TreeEntry wte = queue2.remove(0);
             wte.removePropertyChangeListener("modified", modifiedListener);
-            for (TreeEntry cte : wte.getChildren()) {
-                queue2.add(cte);
-            }
+            queue2.addAll(wte.getChildren());
         }
     }
 
@@ -395,9 +397,7 @@ public final class TreeDiffViewerTopComponent extends TopComponent {
         while(! queue2.isEmpty()) {
             TreeEntry wte = queue2.remove(0);
             wte.addPropertyChangeListener("modified", modifiedListener);
-            for(TreeEntry cte: wte.getChildren()) {
-                queue2.add(cte);
-            }
+            queue2.addAll(wte.getChildren());
         }
     }
 
@@ -645,10 +645,6 @@ public final class TreeDiffViewerTopComponent extends TopComponent {
     private javax.swing.JLabel targetpathLabel;
     private javax.swing.JLabel targetpathValue;
     // End of variables declaration//GEN-END:variables
-    @Override
-    public void componentOpened() {
-        // TODO add custom code on component opening
-    }
 
     @Override
     public void componentClosed() {

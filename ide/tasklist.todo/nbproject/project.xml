@@ -182,9 +182,6 @@
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.openide.options</code-name-base>
-                    </test-dependency>
-                    <test-dependency>
                         <code-name-base>org.openide.text</code-name-base>
                     </test-dependency>
                 </test-type>

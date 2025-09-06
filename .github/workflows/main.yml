@@ -1191,9 +1191,6 @@ jobs:
       - name: platform/openide.nodes
         run: ant $OPTS -f platform/openide.nodes test
 
-      - name: platform/openide.options
-        run: ant $OPTS -f platform/openide.options test
-
       - name: platform/openide.util
         run: ant $OPTS -f platform/openide.util test
 

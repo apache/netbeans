@@ -1374,37 +1374,62 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
 
     @Override
     public void didChangeConfiguration(DidChangeConfigurationParams params) {
-        String fullConfigPrefix = client.getNbCodeCapabilities().getConfigurationPrefix();
-        String configPrefix = fullConfigPrefix.substring(0, fullConfigPrefix.length() - 1);
-        server.openedProjects().thenAccept(projects -> {
-            // PENDING: invent a pluggable mechanism for this, this does not scale and the typecast to serviceImpl is ugly
-            ((TextDocumentServiceImpl)server.getTextDocumentService()).updateJavaHintPreferences(((JsonObject) params.getSettings()).getAsJsonObject(configPrefix).getAsJsonObject(NETBEANS_JAVA_HINTS));
-            ((TextDocumentServiceImpl)server.getTextDocumentService()).updateProjectJDKHome(((JsonObject) params.getSettings()).getAsJsonObject(configPrefix).getAsJsonObject("project").getAsJsonPrimitive("jdkhome"));
-            if (projects != null && projects.length > 0) {
-                updateJavaFormatPreferences(projects[0].getProjectDirectory(), ((JsonObject) params.getSettings()).getAsJsonObject(configPrefix).getAsJsonObject("format"));
-                updateJavaImportPreferences(projects[0].getProjectDirectory(), ((JsonObject) params.getSettings()).getAsJsonObject(configPrefix).getAsJsonObject("java").getAsJsonObject("imports"));
-            }
-        });
-        String fullAltConfigPrefix = client.getNbCodeCapabilities().getAltConfigurationPrefix();
-        String altConfigPrefix = fullAltConfigPrefix.substring(0, fullAltConfigPrefix.length() - 1);
-        boolean modified = false;
-        String newVMOptions = "";
-        String newWorkingDirectory = null;
-        JsonObject javaPlus = ((JsonObject) params.getSettings()).getAsJsonObject(altConfigPrefix);
-        if (javaPlus != null) {
-            JsonObject runConfig = javaPlus.getAsJsonObject("runConfig");
+        client.getClientConfigurationManager().handleConfigurationChange((JsonObject)params.getSettings());
+    }
+
+    private BiConsumer<String, JsonElement> getRunConfigChangeListener() {
+        return (config, newValue) -> {
+            boolean modified = false;
+            String newVMOptions = "";
+            String newWorkingDirectory = null;
+            JsonObject runConfig = newValue.isJsonObject() ? newValue.getAsJsonObject() : null;
             if (runConfig != null) {
                 newVMOptions = runConfig.getAsJsonPrimitive("vmOptions").getAsString();
                 JsonPrimitive cwd = runConfig.getAsJsonPrimitive("cwd");
                 newWorkingDirectory = cwd != null ? cwd.getAsString() : null;
             }
-        }
-        for (SingleFileOptionsQueryImpl query : Lookup.getDefault().lookupAll(SingleFileOptionsQueryImpl.class)) {
-            modified |= query.setConfiguration(workspace, newVMOptions, newWorkingDirectory);
-        }
-        if (modified) {
-            ((TextDocumentServiceImpl)server.getTextDocumentService()).reRunDiagnostics();
-        }
+            for (SingleFileOptionsQueryImpl query : Lookup.getDefault().lookupAll(SingleFileOptionsQueryImpl.class)) {
+                modified |= query.setConfiguration(workspace, newVMOptions, newWorkingDirectory);
+            }
+            if (modified) {
+                ((TextDocumentServiceImpl) server.getTextDocumentService()).reRunDiagnostics();
+            }
+        };
+    }
+    
+    void registerConfigChangeListeners() {
+        String fullConfigPrefix = client.getNbCodeCapabilities().getConfigurationPrefix();
+        String fullAltConfigPrefix = client.getNbCodeCapabilities().getAltConfigurationPrefix();
+        ClientConfigurationManager confManager = client.getClientConfigurationManager();
+
+        BiConsumer<String, JsonElement> formatPrefsListener = (config, newValue)
+                -> server.openedProjects().thenAccept(projects -> {
+                    if (projects != null && projects.length > 0) {
+                        updateJavaFormatPreferences(projects[0].getProjectDirectory(), newValue.getAsJsonObject());
+                    }
+                });
+
+        BiConsumer<String, JsonElement> importPrefsListener = (config, newValue)
+                -> server.openedProjects().thenAccept(projects -> {
+                    if (projects != null && projects.length > 0) {
+                        updateJavaImportPreferences(projects[0].getProjectDirectory(), newValue.getAsJsonObject());
+                    }
+                });
+
+        // PENDING: The typecast to serviceImpl is ugly
+        BiConsumer<String, JsonElement> hintPrefsListener = (config, newValue)
+                -> ((TextDocumentServiceImpl) server.getTextDocumentService()).updateJavaHintPreferences(newValue.getAsJsonObject());
+
+        BiConsumer<String, JsonElement> projectJdkHomeListener = (config, newValue)
+                -> ((TextDocumentServiceImpl) server.getTextDocumentService()).updateProjectJDKHome(newValue.getAsJsonPrimitive());
+        
+        
+        
+        confManager.registerConfigChangeListener(fullConfigPrefix + "hints", hintPrefsListener);
+        confManager.registerConfigChangeListener(fullConfigPrefix + "project.jdkhome", projectJdkHomeListener);
+        confManager.registerConfigChangeListener(fullConfigPrefix + "format", formatPrefsListener);
+        confManager.registerConfigChangeListener(fullConfigPrefix + "java.imports", importPrefsListener);
+        confManager.registerConfigChangeListener(fullAltConfigPrefix + "runConfig", getRunConfigChangeListener());
     }
 
     void updateJavaFormatPreferences(FileObject fo, JsonObject configuration) {

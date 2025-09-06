@@ -105,6 +105,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static java.util.stream.Collectors.toCollection;
 
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.lexer.JavaTokenId;
@@ -869,6 +870,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	toLeftMargin();
         printAnnotations(tree.mods.annotations);
 	long flags = tree.mods.flags;
+        boolean isRecord= (flags & RECORD) != 0;
 	if ((flags & ENUM) != 0)
 	    printFlags(flags & ~(INTERFACE | FINAL));
 	else
@@ -884,15 +886,24 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                         ? out.col : out.leftMargin + cs.getContinuationIndentSize());
 	    }
 	} else {
-	    if ((flags & ENUM) != 0)
+	    if ((flags & ENUM) != 0) {
 		print("enum ");
-	    else {
-		if ((flags & ABSTRACT) != 0)
+            } else if (isRecord){
+		print("record ");
+            } else {
+		if ((flags & ABSTRACT) != 0) {
 		    print("abstract ");
+                }
 		print("class ");
 	    }
 	    print(tree.name);
 	    printTypeParameters(tree.typarams);
+            if (isRecord) {
+                print("(");
+                List<JCVariableDecl> components = getRecordComponents(tree);
+                wrapTrees(components, cs.wrapMethodParams(), out.col); //TODO: read from settings(!)
+                print(") ");
+            }
 	    if (tree.extending != null) {
                 wrap("extends ", cs.wrapExtendsImplementsKeyword());
 		print(tree.extending);
@@ -930,6 +941,9 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	    blankLines(enclClass.name.isEmpty() ? cs.getBlankLinesAfterAnonymousClassHeader() : (flags & ENUM) != 0 ? cs.getBlankLinesAfterEnumHeader() : cs.getBlankLinesAfterClassHeader());
             boolean firstMember = true;
             for (JCTree t : members) {
+                if (t.getKind()==Kind.VARIABLE && t instanceof JCVariableDecl vardecl && 0!=(vardecl.mods.flags & Flags.RECORD)) {
+                    continue;
+                }
                 printStat(t, true, firstMember, true, true, false);
                 firstMember = false;
             }
@@ -941,6 +955,36 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	undent(old);
 	print('}');
 	enclClass = enclClassPrev;
+    }
+
+    /**
+     * Get the record components, either by fetching the field-members or
+     * the parameters from a fitting constructor
+     * @param tree of a record
+     * @return the canonical parameters for the record
+     */
+    private List<JCVariableDecl> getRecordComponents(JCClassDecl tree) {
+        List<JCVariableDecl> components
+                = List.from(tree.defs
+                        .stream()
+                        .filter(member -> member.getKind() == Kind.VARIABLE)
+                        .map(member -> (JCVariableDecl) member)
+                        .filter(comp -> (comp.mods.flags & RECORD) != 0)
+                        .toList());
+
+        final long syntOrCompact = Flags.SYNTHETIC | Flags.COMPACT_RECORD_CONSTRUCTOR;
+        var recordParams = tree.getMembers()
+                .stream()
+                .filter(m -> m.getKind() == Kind.METHOD && m instanceof JCMethodDecl mdecl && mdecl.getReturnType() == null)
+                .map(JCMethodDecl.class::cast)
+                .filter(met -> (met.mods.flags & syntOrCompact) != 0)
+                .findFirst()
+                .map(m -> m.params);
+        if (recordParams.isPresent()) {
+            components = recordParams.get();
+        }
+
+        return components;
     }
 
     private void printEnumConstants(java.util.List<? extends JCTree> defs, boolean forceSemicolon, boolean printComments) {
@@ -1003,18 +1047,20 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                 needSpace();
                 print(tree.name);
             }
-            print(cs.spaceBeforeMethodDeclParen() ? " (" : "(");
-            if (cs.spaceWithinMethodDeclParens() && tree.params.nonEmpty())
-                print(' ');
-            boolean oldPrintingMethodParams = printingMethodParams;
-            printingMethodParams = true;
-            wrapTrees(tree.params, cs.wrapMethodParams(), cs.alignMultilineMethodParams()
-                    ? out.col : out.leftMargin + cs.getContinuationIndentSize(),
-                      true);
-            printingMethodParams = oldPrintingMethodParams;
-            if (cs.spaceWithinMethodDeclParens() && tree.params.nonEmpty())
-                needSpace();
-            print(')');
+            if ((tree.mods.flags & Flags.COMPACT_RECORD_CONSTRUCTOR)==0L) {
+                print(cs.spaceBeforeMethodDeclParen() ? " (" : "(");
+                if (cs.spaceWithinMethodDeclParens() && tree.params.nonEmpty())
+                    print(' ');
+                boolean oldPrintingMethodParams = printingMethodParams;
+                printingMethodParams = true;
+                wrapTrees(tree.params, cs.wrapMethodParams(), cs.alignMultilineMethodParams()
+                        ? out.col : out.leftMargin + cs.getContinuationIndentSize(),
+                          true);
+                printingMethodParams = oldPrintingMethodParams;
+                if (cs.spaceWithinMethodDeclParens() && tree.params.nonEmpty())
+                    needSpace();
+                print(')');
+            }
             if (tree.thrown.nonEmpty()) {
                 wrap("throws ", cs.wrapThrowsKeyword());
                 wrapTrees(tree.thrown, cs.wrapThrowsList(), cs.alignMultilineThrows()
@@ -1022,7 +1068,18 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                           true);
             }
             if (tree.body != null) {
-                printBlock(tree.body, tree.body.stats, cs.getMethodDeclBracePlacement(), cs.spaceBeforeMethodDeclLeftBrace(), true);
+                
+                List<JCStatement> stats = tree.body.stats;
+                if ((tree.mods.flags & Flags.COMPACT_RECORD_CONSTRUCTOR) != 0L) {
+                    ListBuffer<JCStatement> nstats= new ListBuffer<>();
+                    for (JCStatement stat : stats) {
+                        if (!stat.toString().contains("super();")){
+                            nstats.append(stat);
+                        }
+                    }
+                    stats=nstats.toList();
+               }
+               printBlock(tree.body, stats, cs.getMethodDeclBracePlacement(), cs.spaceBeforeMethodDeclLeftBrace(), true);
             } else {
                 if (tree.defaultValue != null) {
                     print(" default ");
@@ -1037,9 +1094,10 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     @Override
     public void visitVarDef(JCVariableDecl tree) {
         boolean notEnumConst = (tree.mods.flags & Flags.ENUM) == 0;
+        boolean isRecordComponent = (tree.mods.flags & Flags.RECORD) != 0;
         printAnnotations(tree.mods.annotations);
         if (notEnumConst) {
-            printFlags(tree.mods.flags);
+            if(!isRecordComponent) printFlags(tree.mods.flags);
             if (!suppressVariableType) {
                 if ((tree.mods.flags & VARARGS) != 0) {
                     // Variable arity method. Expecting  ArrayType, print ... instead of [].
@@ -2159,6 +2217,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             case ANNOTATION_TYPE:
             case CLASS:
             case ENUM:
+            case RECORD:
             case INTERFACE:
                 n = before ? cs.getBlankLinesBeforeClass() : cs.getBlankLinesAfterClass();
         	if (((JCClassDecl) tree).defs.nonEmpty() && !before) {

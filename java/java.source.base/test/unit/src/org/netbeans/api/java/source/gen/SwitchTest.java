@@ -657,6 +657,59 @@ public class SwitchTest extends GeneratorTestBase {
         assertEquals(golden, res);
     }
 
+    // test as advised by lahodaj
+    public void testGuardPreserved() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        String test
+                = """
+                public class Test {
+                    void m(Object o) {
+                        switch (o) {
+                            case String str when str.isEmpty() -> System.err.println();
+                            default -> {}
+                        }
+                    }
+                }
+                """;
+        String golden
+                = """
+                public class Test {
+                    void m(Object o) {
+                        switch (o) {
+                            case String str when str.isEmpty() -> {
+                            }
+                            default -> {}
+                        }
+                    }
+                }
+                """;
+        TestUtilities.copyStringToFile(testFile, test.replace("|", ""));
+        JavaSource src = getJavaSource(testFile);
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+            public void run(final WorkingCopy copy) throws IOException {
+                if (copy.toPhase(Phase.RESOLVED).compareTo(Phase.RESOLVED) < 0) {
+                    return;
+                }
+                final TreeMaker make = copy.getTreeMaker();
+                new ErrorAwareTreePathScanner<Void, Void>() {
+                    @Override
+                    public Void visitCase(CaseTree node, Void p) {
+                        if (!node.getLabels().isEmpty()) {
+                            copy.rewrite(getCurrentPath().getLeaf(),
+                                    make.CasePatterns(node.getLabels(), node.getGuard(), make.Block(List.of(), false)));
+                        }
+                        return super.visitCase(node, p);
+                    }
+                }.scan(copy.getCompilationUnit(), null);
+            }
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+
     // XXX I don't understand what these are used for
     @Override
     String getSourcePckg() {

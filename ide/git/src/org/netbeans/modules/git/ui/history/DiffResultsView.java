@@ -38,7 +38,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
 import org.netbeans.api.diff.DiffController;
 import org.netbeans.modules.git.client.GitProgressSupport;
 import org.netbeans.modules.git.ui.diff.DiffStreamSource;
@@ -143,8 +142,7 @@ class DiffResultsView implements AncestorListener, PropertyChangeListener {
             // invoked asynchronously becase treeView.getSelection() may not be ready yet
             EventQueue.invokeLater(this::showDiff);
         } else if (RepositoryRevision.PROP_EVENTS_CHANGED.equals(evt.getPropertyName())) {
-            if (evt.getSource() instanceof RepositoryRevision) {
-                RepositoryRevision revision = (RepositoryRevision) evt.getSource();
+            if (evt.getSource() instanceof RepositoryRevision revision) {
                 revision.removePropertyChangeListener(RepositoryRevision.PROP_EVENTS_CHANGED, list);
                 if (revisionsToRefresh.contains(revision) && selectedNodes != null && selectedNodes.length > 0) {
                     showDiff();
@@ -457,14 +455,10 @@ class DiffResultsView implements AncestorListener, PropertyChangeListener {
                         showDiffError(NbBundle.getMessage(DiffResultsView.class, "MSG_DiffPanel_NoRevisions")); // NOI18N
                         return;
                     }
-                    final DiffController newDiff = DiffController.createEnhanced(s1, s2);
-                    
                     if (currentTask == ShowDiffTask.this) {
-                        if (currentDiff != null) {
-                            copyUIState(currentDiff, newDiff);
-                        }
+                        DiffController newDiff = DiffController.createEnhanced(currentDiff, s1, s2);
                         currentDiff = newDiff;
-                        setBottomComponent(currentDiff.getJComponent());
+                        setBottomComponent(newDiff.getJComponent());
                         if (!setLocation(newDiff)) {
                             newDiff.addPropertyChangeListener(new PropertyChangeListener() {
                                 @Override
@@ -481,36 +475,6 @@ class DiffResultsView implements AncestorListener, PropertyChangeListener {
                     ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, e);
                 }
             });
-        }
-
-        private void copyUIState(DiffController oldView, DiffController newView) {
-            JTabbedPane oldTP = findComponent(oldView.getJComponent(), JTabbedPane.class, "diff-view-mode-switcher");
-            JTabbedPane newTP = findComponent(newView.getJComponent(), JTabbedPane.class, "diff-view-mode-switcher");
-            if (newTP != null && oldTP != null) {
-                newTP.setSelectedIndex(oldTP.getSelectedIndex());
-            }
-            JSplitPane oldSP = findComponent(oldView.getJComponent(), JSplitPane.class, "diff-view-mode-splitter");
-            JSplitPane newSP = findComponent(newView.getJComponent(), JSplitPane.class, "diff-view-mode-splitter");
-            if (newSP != null && oldSP != null) {
-                newSP.setDividerLocation(oldSP.getDividerLocation());
-            }
-        }
-
-        @SuppressWarnings("unchecked")
-        private <T extends JComponent> T findComponent(JComponent parent, Class<T> ofType, String withProp) {
-            if (ofType.isInstance(parent) && Boolean.TRUE.equals(parent.getClientProperty(withProp))) {
-                return (T) parent;
-            } else {
-                for (Component child : parent.getComponents()) {
-                    if (child instanceof JComponent) {
-                        T comp = findComponent((JComponent) child, ofType, withProp);
-                        if (comp != null) {
-                            return comp;
-                        }
-                    }
-                }
-            }
-            return null;
         }
 
         @Override

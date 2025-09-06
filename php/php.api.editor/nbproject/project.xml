@@ -75,6 +75,7 @@
                 <friend>org.nbphpcouncil.modules.php.yii2</friend>
                 <friend>org.netbeans.modules.php.api.framework</friend>
                 <friend>org.netbeans.modules.php.api.testing</friend>
+                <friend>org.netbeans.modules.php.blade</friend>
                 <friend>org.netbeans.modules.php.atoum</friend>
                 <friend>org.netbeans.modules.php.cake3</friend>
                 <friend>org.netbeans.modules.php.codeception</friend>

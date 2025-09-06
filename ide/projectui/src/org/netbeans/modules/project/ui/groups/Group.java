@@ -450,6 +450,7 @@ public abstract class Group {
             EventQueue.invokeLater(new Runnable() {
                 @Override public void run() {
                     ProjectTab.findDefault(ProjectTab.ID_LOGICAL).setGroup(Group.this);
+                    ProjectTab.findDefault(ProjectTab.ID_PHYSICAL).setGroup(Group.this);
                 }
             });
         }
@@ -549,6 +550,7 @@ public abstract class Group {
         EventQueue.invokeLater(new Runnable() {
             @Override public void run() {
                 ProjectTab.findDefault(ProjectTab.ID_LOGICAL).setGroup(g);
+                ProjectTab.findDefault(ProjectTab.ID_PHYSICAL).setGroup(g);
             }
         });
         String handleLabel;

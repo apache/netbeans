@@ -133,7 +133,7 @@ public class ProjectTab extends TopComponent
 
     private static final Logger LOG = Logger.getLogger(ProjectTab.class.getName());
 
-    private static Map<String, ProjectTab> tabs = new HashMap<String, ProjectTab>();                            
+    private static Map<String, ProjectTab> tabs = new HashMap<>();                            
                             
     private final transient ExplorerManager manager;
     private transient Node rootNode;
@@ -214,14 +214,20 @@ public class ProjectTab extends TopComponent
     public void setGroup(Group g) {
         if (id.equals(ID_LOGICAL)) {
             if (g != null) {
-                setName(NbBundle.getMessage(ProjectTab.class, "LBL_projectTabLogical_tc_with_group", g.getName()));
+                setName(NbBundle.getMessage(ProjectTab.class, "LBL_projectTabLogical_tc_with_group", g.getName())); // NOI18N
+                setToolTipText(NbBundle.getMessage(ProjectTab.class, "TT_projectTabLogical_tc_with_group", g.getName())); // NOI18N
             } else {
-                setName(NbBundle.getMessage(ProjectTab.class, "LBL_projectTabLogical_tc"));
+                setName(NbBundle.getMessage(ProjectTab.class, "LBL_projectTabLogical_tc")); // NOI18N
+                setToolTipText(NbBundle.getMessage(ProjectTab.class, "TT_projectTabLogical_tc")); // NOI18N
             }
         } else {
-            setName(NbBundle.getMessage(ProjectTab.class, "LBL_projectTab_tc"));
+            setName(NbBundle.getMessage(ProjectTab.class, "LBL_projectTab_tc")); // NOI18N
+            if (g != null) {
+                setToolTipText(NbBundle.getMessage(ProjectTab.class, "TT_projectTab_tc_with_group", g.getName())); // NOI18N
+            } else {
+                setToolTipText(NbBundle.getMessage(ProjectTab.class, "TT_projectTab_tc")); // NOI18N
+            }
         }
-        // Seems to be useless: setToolTipText(getName());
     }
 
     private void initValues() {
@@ -240,7 +246,7 @@ public class ProjectTab extends TopComponent
         }
         manager.setRootContext( rootNode );
     }
-            
+
     /** Explorer manager implementation 
      */
     @Override
@@ -386,7 +392,7 @@ public class ProjectTab extends TopComponent
         id = (String)in.readObject();
         rootNode = ((Node.Handle)in.readObject()).getNode();
         final List<String[]> exPaths = NbCollections.checkedListByCopy((List<?>) in.readObject(), String[].class, true);
-        final List<String[]> selPaths = new ArrayList<String[]>();
+        final List<String[]> selPaths = new ArrayList<>();
         try {
             selPaths.addAll(NbCollections.checkedListByCopy((List<?>) in.readObject(), String[].class, true));
         }
@@ -435,7 +441,7 @@ public class ProjectTab extends TopComponent
             LOG.log(Level.FINE, "{0}: expanding paths", id);
             btv.expandNodes(exPaths);
             LOG.log(Level.FINE, "{0}: selecting paths", id);
-            final List<Node> selectedNodes = new ArrayList<Node>();
+            final List<Node> selectedNodes = new ArrayList<>();
             Node root = manager.getRootContext();
             for (String[] sp : selPaths) {
                 LOG.log(Level.FINE, "{0}: selecting {1}", new Object[] {id, Arrays.asList(sp)});
@@ -453,7 +459,7 @@ public class ProjectTab extends TopComponent
                 EventQueue.invokeLater(new Runnable() {
                     @Override public void run() {
                         try {
-                            manager.setSelectedNodes(selectedNodes.toArray(new Node[0]));
+                            manager.setSelectedNodes(selectedNodes.toArray(Node[]::new));
                         } catch (PropertyVetoException x) {
                             LOG.log(Level.FINE, null, x);
                         }
@@ -649,7 +655,7 @@ public class ProjectTab extends TopComponent
     }
     
     private List<String[]> getSelectedPaths() {
-        List<String[]> result = new ArrayList<String[]>();
+        List<String[]> result = new ArrayList<>();
         Node root = manager.getRootContext();
         for (Node n : manager.getSelectedNodes()) {
             String[] path = NodeOp.createPath(n, root);
@@ -728,7 +734,7 @@ public class ProjectTab extends TopComponent
                         
         public List<String[]> getExpandedPaths() { 
 
-            List<String[]> result = new ArrayList<String[]>();
+            List<String[]> result = new ArrayList<>();
             
             TreeNode rtn = Visualizer.findVisualizer( rootNode );
             TreePath tp = new TreePath( rtn ); // Get the root
@@ -831,7 +837,7 @@ public class ProjectTab extends TopComponent
     // showing popup on right click in projects tab when label <No Project Open> is shown
     private class LabelPopupDisplayer extends MouseAdapter {
 
-        private Component component;
+        private final Component component;
 
         public LabelPopupDisplayer(Component comp) {
             component = comp;

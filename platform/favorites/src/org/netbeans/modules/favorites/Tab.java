@@ -112,7 +112,7 @@ implements Runnable, ExplorerManager.Provider {
     public HelpCtx getHelpCtx () {
         return new HelpCtx(Tab.HELP_ID);
     }
-    
+
     @Override
     public ExplorerManager getExplorerManager() {
         return manager;
@@ -232,7 +232,7 @@ implements Runnable, ExplorerManager.Provider {
     * obtained from specified root context node */
     private void initializeWithRootContext (Node rc) {
         // update TC's attributes
-        setToolTipText(rc.getDisplayName());
+        setToolTipText(NbBundle.getMessage(Tab.class, "TT_Favorites")); //NOI18N
         setName(rc.getDisplayName());
         updateTitle();
         // attach listener
@@ -521,8 +521,8 @@ implements Runnable, ExplorerManager.Provider {
         File chooserSelection = null;
         JFileChooser chooser = new JFileChooser ();
         chooser.setFileSelectionMode( JFileChooser.FILES_AND_DIRECTORIES );
-        chooser.setDialogTitle(NbBundle.getBundle(Actions.class).getString ("CTL_DialogTitle"));
-        chooser.setApproveButtonText(NbBundle.getBundle(Actions.class).getString ("CTL_ApproveButtonText"));
+        chooser.setDialogTitle(NbBundle.getMessage(Actions.class, "CTL_DialogTitle"));
+        chooser.setApproveButtonText(NbBundle.getMessage(Actions.class, "CTL_ApproveButtonText"));
         chooser.setSelectedFile(FileUtil.toFile(file));
         int option = chooser.showOpenDialog( WindowManager.getDefault().getMainWindow() ); // Show the chooser
         if ( option == JFileChooser.APPROVE_OPTION ) {
@@ -562,8 +562,8 @@ implements Runnable, ExplorerManager.Provider {
         final Node[] selection = getExplorerManager().getSelectedNodes();
         if( null == selection || selection.length < 1 )
             return;
-        if( view instanceof MyBeanTreeView ) {
-            ((MyBeanTreeView)view).scrollNodeToVisible(selection[0]);
+        if( view instanceof MyBeanTreeView myBeanTreeView ) {
+            myBeanTreeView.scrollNodeToVisible(selection[0]);
         }
     }
 

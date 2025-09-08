@@ -89,7 +89,7 @@ public class SvnConfigFiles {
     }
 
     /**
-     * The value for the 'store-auth-creds' key in the config cofiguration file is alway set to 'no'
+     * The value for the 'store-auth-creds' key in the config configuration file is alway set to 'no'
      * so the commandline client wan't create a file holding the authentication credentials when
      * a svn command is called. The reason for this is that the Subverion module holds the credentials
      * in files with the same format as the commandline client but with a different name.
@@ -531,7 +531,7 @@ public class SvnConfigFiles {
      * </ol> 
      *
      * @param fileName the file name
-     * @return an Ini instance holding the cofiguration file. 
+     * @return an Ini instance holding the configuration file. 
      */       
     private Ini loadSystemIniFile(String fileName) {
         // config files from userdir

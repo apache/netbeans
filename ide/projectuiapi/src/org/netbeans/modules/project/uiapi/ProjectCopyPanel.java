@@ -177,8 +177,8 @@ public class ProjectCopyPanel extends javax.swing.JPanel implements DocumentList
         gridBagConstraints.insets = new java.awt.Insets(6, 0, 0, 12);
         add(jLabel4, gridBagConstraints);
 
-        projectFolder.setColumns(30);
         projectFolder.setEditable(false);
+        projectFolder.setColumns(30);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
@@ -240,8 +240,8 @@ public class ProjectCopyPanel extends javax.swing.JPanel implements DocumentList
         gridBagConstraints.insets = new java.awt.Insets(8, 0, 0, 0);
         add(progress, gridBagConstraints);
 
-        warningTextArea.setColumns(20);
         warningTextArea.setEditable(false);
+        warningTextArea.setColumns(20);
         warningTextArea.setForeground(UIManager.getColor("nb.errorForeground"));
         warningTextArea.setLineWrap(true);
         warningTextArea.setRows(5);

@@ -49,6 +49,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -1562,6 +1563,23 @@ class NbProjectInfoBuilder {
         boolean ignoreUnresolvable = (project.getPlugins().hasPlugin("java-platform") &&
             Boolean.TRUE.equals(getProperty(project, "javaPlatform", "allowDependencies")));
 
+        // https://github.com/apache/netbeans/issues/8764
+        Function<ProjectDependency, Project> projDependencyToProject =
+            sinceGradleOrDefault(
+                "9.0",
+                () -> {
+                    Method getPath = ProjectDependency.class.getMethod("getPath");
+                    return dep -> {
+                        try {
+                            String path = (String) getPath.invoke(dep);
+                            return project.findProject(path);
+                        } catch (ReflectiveOperationException e) {
+                            throw new UnsupportedOperationException(e);
+                        }
+                    };
+                },
+                () -> ProjectDependency::getDependencyProject); // removed in Gradle 9
+
         visibleConfigurations.forEach(it -> {
             String propBase = "configuration_" + it.getName() + "_";
             model.getInfo().put(propBase + "non_resolving", !resolvable(it));
@@ -1660,7 +1678,7 @@ class NbProjectInfoBuilder {
                 String a;
                 if (d instanceof ProjectDependency) {
                     sb.append("*project:"); // NOI18N
-                    Project other = ((ProjectDependency)d).getDependencyProject();
+                    Project other = projDependencyToProject.apply((ProjectDependency) d);
                     g = other.getGroup().toString();
                     a = other.getName();
                 } else {
@@ -1679,7 +1697,7 @@ class NbProjectInfoBuilder {
             long time_project_deps = System.currentTimeMillis();
             model.registerPerf(depPrefix + "module", time_project_deps - time_inspect_conf);
             it.getDependencies().withType(ProjectDependency.class).forEach(it2 -> {
-                Project prj = it2.getDependencyProject();
+                Project prj = projDependencyToProject.apply(it2);
                 projects.put(prj.getPath(), prj.getProjectDir());
                 projectNames.add(prj.getPath());
             });

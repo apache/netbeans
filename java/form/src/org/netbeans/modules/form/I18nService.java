@@ -108,7 +108,7 @@ public interface I18nService {
      * Provides a visual component (modal dialog) usable as a property
      * customizer that allows create a new locale file for given bundle (default
      * bundle name provided). The created locale should be written as a string
-     * (locale suffix) to the given propery editor.
+     * (locale suffix) to the given property editor.
      */
     Component getCreateLocaleComponent(PropertyEditor pe, FileObject srcFile, String bundleName);
 

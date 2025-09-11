@@ -925,17 +925,17 @@ jobs:
 #      - name: java/ant.grammar
 #        run: ant $OPTS -f java/ant.grammar test
 
-      # TODO next are JDK 21+ incompatibe steps
+      # TODO next are JDK 21 or 25 incompatibe steps
       - name: java/java.mx.project
-        if: ${{ matrix.java == '17' }}
+        if: ${{ matrix.java == '17' || matrix.java == '21' }}
         run: .github/retry.sh ant $OPTS -f java/java.mx.project test
 
       - name: java/gradle.java
-        if: ${{ matrix.java == '17' }}
+        if: ${{ matrix.java == '17' || matrix.java == '21' }}
         run: .github/retry.sh ant $OPTS -f java/gradle.java test
 
       - name: extide/gradle
-        if: ${{ matrix.java == '17' }}
+        if: ${{ matrix.java == '17' || matrix.java == '21' }}
         run: ant $OPTS -f extide/gradle test
 
       - name: java/gradle.dependencies

@@ -123,6 +123,8 @@ import org.openide.util.actions.BooleanStateAction;
 import org.openide.util.lookup.Lookups;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
+import org.openide.awt.Actions;
+import org.openide.util.ContextAwareAction;
 
 /** TopComponment for viewing open projects. 
  * <P>
@@ -219,7 +221,25 @@ public class ProjectTab extends TopComponent
         collapseAllButton.setContentAreaFilled(false);
         collapseAllButton.setFocusPainted(false);
         collapseAllButton.addActionListener((ActionEvent ae ) -> {
-            collapseNodes(rootNode, this);
+            Action collapseAction = Actions.forID(
+                "Project",
+                "org.netbeans.modules.project.ui.collapseAllNodes"
+            );
+
+            if (collapseAction instanceof ContextAwareAction) {
+                collapseAction = ((ContextAwareAction) collapseAction)
+                    .createContextAwareInstance(
+                        Lookups.fixed(this.id)
+                    );
+            }
+
+            collapseAction.actionPerformed(
+                new ActionEvent(
+                    collapseAllButton,
+                    ActionEvent.ACTION_PERFORMED,
+                    "collapseAll"
+                )
+            );
         });
         collapseAllButton.setFocusable(false);
         JButton navigateToSelectedFileButton = new JButton();
@@ -230,7 +250,31 @@ public class ProjectTab extends TopComponent
         navigateToSelectedFileButton.setFocusPainted(false);
        
         navigateToSelectedFileButton.addActionListener((ActionEvent ae ) -> {
-            navigateToCurrentFile();
+            
+            ContextAwareAction template = null;
+            if (ID_LOGICAL.equals(this.id)) {
+                template = (ContextAwareAction) Actions.forID(
+                    "Window/SelectDocumentNode",
+                    "org.netbeans.modules.project.ui.SelectInProjects"
+                );
+            } else {
+                template = (ContextAwareAction) Actions.forID(
+                    "Window/SelectDocumentNode",
+                    "org.netbeans.modules.project.ui.SelectInFiles"
+                );
+            }
+
+            FileObject fo = getActiveEditorFile(); 
+            if (fo == null) {
+                return;
+            }
+
+            Lookup ctx = Lookups.fixed(fo);
+
+            Action selectInProjects = template.createContextAwareInstance(ctx);
+            selectInProjects.actionPerformed(
+                    new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null)
+            );
         });
         navigateToSelectedFileButton.setFocusable(false);
         buttonPanel.add(collapseAllButton);
@@ -559,22 +603,6 @@ public class ProjectTab extends TopComponent
             return className.contains("editor") || className.contains("multiview");
         }
         return false;
-    }
-    
-    private void navigateToCurrentFile() {
-        FileObject selectedFileInCodeEditor = getActiveEditorFile();
-        if (selectedFileInCodeEditor != null) {
-            Node nodeToSelect = findNode(selectedFileInCodeEditor);
-            if (nodeToSelect != null) {
-                try {
-                    getExplorerManager().setSelectedNodes(new Node[]{nodeToSelect});
-                    btv.scrollToNode(nodeToSelect);
-
-                } catch (Exception ex) {
-                    org.openide.util.Exceptions.printStackTrace(ex);
-                }
-            }
-        }
     }
     
     // PERSISTENCE
@@ -1089,18 +1117,7 @@ public class ProjectTab extends TopComponent
             }
         }
 
-    }
-    
-    private static void collapseNodes(Node node, ProjectTab tab) {
-        if (  node.getChildren().getNodesCount() != 0 ) {
-            for ( Node nodeIter : node.getChildren().getNodes() ) {
-                if( tab.btv.isExpanded(nodeIter) ) {
-                    collapseNodes(nodeIter, tab);
-                    tab.btv.collapseNode(nodeIter);
-                }
-            }
-        }
-    }    
+    }   
 
     @ActionID(category="Project", id="org.netbeans.modules.project.ui.collapseAllNodes")
     @ActionRegistration(displayName="#collapseAllNodes")
@@ -1171,6 +1188,18 @@ public class ProjectTab extends TopComponent
             });
             
         }
+        
+        private void collapseNodes(Node node, ProjectTab tab) {
+            if (  node.getChildren().getNodesCount() != 0 ) {
+                for ( Node nodeIter : node.getChildren().getNodes() ) {
+                    if( tab.btv.isExpanded(nodeIter) ) {
+                        collapseNodes(nodeIter, tab);
+                        tab.btv.collapseNode(nodeIter);
+                    }
+                }
+            }
+        }
+
     }
     
     @ActionID(category="Project", id="org.netbeans.modules.project.ui.NodeSelectionProjectAction")

@@ -1597,6 +1597,61 @@ public class FlowTest extends NbTestCase {
                     "4");
     }
 
+    public void testParameters() throws Exception {
+        performTest("""
+                    package test;
+                    public class Test {
+                        static void t(int ii) {
+                            System.err.println(i`i);
+                        }
+                    }
+                    """,
+                    "int ii");
+    }
+
+    public void testLambdaParameters() throws Exception {
+        performTest("""
+                    package test;
+                    public class Test {
+                        static void t() {
+                            I i = ii -> System.err.println(i`i);
+                        }
+                        interface I {
+                            public void consume(int ii);
+                        }
+                    }
+                    """,
+                    "int ii");
+    }
+
+    public void testCatchParameters() throws Exception {
+        performTest("""
+                    package test;
+                    public class Test {
+                        static void t() {
+                            try {
+                            } catch (Throwable tt) {
+                                System.err.println(t`t);
+                            }
+                        }
+                    }
+                    """,
+                    "Throwable tt");
+    }
+
+    public void testBindingVariables() throws Exception {
+        sourceLevel = "21";
+        performTest("""
+                    package test;
+                    public class Test {
+                        static void t(Object o) {
+                            boolean b = o instanceof Integer ii && i`i == 0;
+                        }
+                    }
+                    """,
+                    "Integer ii");
+    }
+
     private void performFinalCandidatesTest(String code, boolean allowErrors, String... finalCandidates) throws Exception {
         prepareTest(code, allowErrors);
 

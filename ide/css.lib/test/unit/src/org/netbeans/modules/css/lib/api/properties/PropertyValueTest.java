@@ -290,7 +290,7 @@ public class PropertyValueTest extends CssTestBase {
                 "repeat", "!length", "-", "repeating-radial-gradient", "space", "!percentage",
                 "fixed", "border-box", "center", "no-repeat", "none", "left", "right",
                 "top", "element", "scroll", "repeat-y", "linear-gradient", "repeat-x",
-                "image", "!uri", "cross-fade", "radial-gradient", "bottom", "local", 
+                "image", "!uri", "cross-fade", "radial-gradient", "conic-gradient", "bottom", "local", 
                 "calc", "var", "mod", "log", "cos", "sign", "atan", "min", "sqrt",
                 "hypot", "sin", "pow", "rem", "exp", "clamp", "atan2", "tan", "max",
                 "acos", "abs", "asin");
@@ -304,7 +304,7 @@ public class PropertyValueTest extends CssTestBase {
                 + "content-box", "repeat-y", "linear-gradient", "repeat-x", "image",
                 "round", "!length", "-", "repeat", "repeating-radial-gradient", "space",
                 "fixed", "!percentage", "!uri", "border-box", "cross-fade",
-                "radial-gradient", "no-repeat", "auto", "none", "local", "calc",
+                "radial-gradient", "conic-gradient", "no-repeat", "auto", "none", "local", "calc",
                 "var", "mod", "log", "cos", "sign", "atan", "min", "sqrt", "hypot",
                 "sin", "pow", "rem", "exp", "clamp", "atan2", "tan", "max", "acos",
                 "abs", "asin");

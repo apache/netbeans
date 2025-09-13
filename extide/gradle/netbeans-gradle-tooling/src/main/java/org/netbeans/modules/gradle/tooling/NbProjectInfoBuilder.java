@@ -1705,7 +1705,7 @@ class NbProjectInfoBuilder {
             model.registerPerf(depPrefix + "project", time_file_deps - time_project_deps);
             Set<File> fileDeps = new HashSet<>();
             it.getDependencies().withType(FileCollectionDependency.class).forEach(it2 -> {
-                fileDeps.addAll(it2.resolve());
+                it2.getFiles().forEach(fileDeps::add);
             });
             long time_collect = System.currentTimeMillis();
             model.registerPerf(depPrefix + "file", time_collect - time_file_deps);

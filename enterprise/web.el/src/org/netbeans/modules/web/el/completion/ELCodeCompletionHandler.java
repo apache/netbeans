@@ -539,7 +539,7 @@ public final class ELCodeCompletionHandler implements CodeCompletionHandler2 {
             if (!prefix.matches(property.name)) {
                 continue;
             }
-            ELRawObjectPropertyCompletionItem item = new ELRawObjectPropertyCompletionItem(property.name);
+            ELRawObjectPropertyCompletionItem item = new ELRawObjectPropertyCompletionItem(property.name, property.clazz);
             item.setAnchorOffset(context.getCaretOffset() - prefix.length());
             item.setSmart(true);
             proposals.add(item);

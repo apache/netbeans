@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.7
+#Version 2.9
 
 CLSS public abstract interface java.io.Serializable
 
@@ -584,12 +584,18 @@ fld public final static org.netbeans.modules.css.lib.api.NodeType margin_sym
 fld public final static org.netbeans.modules.css.lib.api.NodeType media
 fld public final static org.netbeans.modules.css.lib.api.NodeType mediaBody
 fld public final static org.netbeans.modules.css.lib.api.NodeType mediaBodyItem
+fld public final static org.netbeans.modules.css.lib.api.NodeType mediaComparisonOperator
+fld public final static org.netbeans.modules.css.lib.api.NodeType mediaCondition
+fld public final static org.netbeans.modules.css.lib.api.NodeType mediaConditionWithoutOr
 fld public final static org.netbeans.modules.css.lib.api.NodeType mediaExpression
 fld public final static org.netbeans.modules.css.lib.api.NodeType mediaFeature
+fld public final static org.netbeans.modules.css.lib.api.NodeType mediaFeatureRangeContext
 fld public final static org.netbeans.modules.css.lib.api.NodeType mediaFeatureValue
+fld public final static org.netbeans.modules.css.lib.api.NodeType mediaInParens
 fld public final static org.netbeans.modules.css.lib.api.NodeType mediaQuery
 fld public final static org.netbeans.modules.css.lib.api.NodeType mediaQueryList
 fld public final static org.netbeans.modules.css.lib.api.NodeType mediaQueryOperator
+fld public final static org.netbeans.modules.css.lib.api.NodeType mediaRangeExplicitValue
 fld public final static org.netbeans.modules.css.lib.api.NodeType mediaType
 fld public final static org.netbeans.modules.css.lib.api.NodeType moz_document
 fld public final static org.netbeans.modules.css.lib.api.NodeType moz_document_function

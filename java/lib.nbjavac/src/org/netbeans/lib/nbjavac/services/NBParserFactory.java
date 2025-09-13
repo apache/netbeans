@@ -180,7 +180,7 @@ public class NBParserFactory extends ParserFactory {
             if (result instanceof JCEnhancedForLoop) {
                 JCEnhancedForLoop tree = (JCEnhancedForLoop) result;
                 if (getEndPos(tree.var) == Position.NOPOS) {
-                    endPosTable.storeEnd(tree.var, getEndPos(tree.var.vartype));
+                    ((EndPosTableImpl) endPosTable).setEnd(tree.var, getEndPos(tree.var.vartype));
                 }
             }
             return result;
@@ -205,6 +205,18 @@ public class NBParserFactory extends ParserFactory {
             @Override public void storeEnd(JCTree tree, int endpos) {
                 if (endpos >= 0)
                     delegate.storeEnd(tree, endpos);
+            }
+
+            public void setEnd(JCTree tree, int endpos) {
+                if (endpos >= 0) {
+                    int oldErrorEndPos = delegate.errorEndPos;
+                    try {
+                        delegate.errorEndPos = -1;
+                        delegate.storeEnd(tree, endpos);
+                    } finally {
+                        delegate.errorEndPos = oldErrorEndPos;
+                    }
+                }
             }
 
             @Override

@@ -195,6 +195,13 @@ public class ClassPathProviderImpl implements ClassPathProvider {
                 for (String s : pckge.split("\\.")) {
                     packageDir = packageDir.getParent();
                 }
+
+                String realPackage = FileUtil.getRelativePath(packageDir, file.getParent()).replace('/', '.');
+
+                if (!pckge.equals(realPackage) ||
+                    (!FileUtil.isParentOf(rootDesc.testRoot, packageDir) && !rootDesc.testRoot.equals(packageDir))) {
+                    packageDir = file.getParent();
+                }
             }
 
             roots.add(packageDir);

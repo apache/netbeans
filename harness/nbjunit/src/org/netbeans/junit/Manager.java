@@ -112,7 +112,7 @@ public class Manager extends Object {
             return path;
         } else {
             throw new IOException("Cannot determine NbJUnit home. Please make sure you have "+NBJUNIT_HOME
-                        +" propery set in your "+JUNIT_PROPERTIES_FILENAME+" file.");
+                        +" property set in your "+JUNIT_PROPERTIES_FILENAME+" file.");
         }
 
     }    

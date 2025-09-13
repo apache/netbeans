@@ -157,16 +157,22 @@ if [ -z "$jdkhome" ] ; then
                 jdkhome="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"
             fi
             ;;
-            *) javac=`which javac`
-            if [ -z "$javac" ] ; then
-                java=`which java`
-                if [ ! -z "$java" ] ; then
-                    java=`resolve_symlink "$java"`
-                    jdkhome=`dirname $java`"/.."
-                fi
+            *)
+            if [ ! -z "${JAVA_HOME}" ]; then
+                jdkhome="${JAVA_HOME}"
             else
-                javac=`resolve_symlink "$javac"`
-                jdkhome=`dirname $javac`"/.."
+                # Doesn't work with jenv-style shims
+                javac=`which javac`
+                if [ -z "$javac" ] ; then
+                    java=`which java`
+                    if [ ! -z "$java" ] ; then
+                        java=`resolve_symlink "$java"`
+                        jdkhome=`dirname $java`"/.."
+                    fi
+                else
+                    javac=`resolve_symlink "$javac"`
+                    jdkhome=`dirname $javac`"/.."
+                fi
             fi
             ;;
         esac

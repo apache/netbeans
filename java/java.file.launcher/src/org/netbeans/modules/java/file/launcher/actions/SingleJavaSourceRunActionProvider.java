@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.file.launcher.actions;
 
 import java.nio.charset.Charset;
+import java.util.Locale;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.Future;
@@ -53,6 +54,19 @@ public final class SingleJavaSourceRunActionProvider implements ActionProvider {
             ActionProvider.COMMAND_RUN_SINGLE,
             ActionProvider.COMMAND_DEBUG_SINGLE
         };
+    }
+
+    private String getTaskName(String command, String fileName){
+        if(command == null || command.isEmpty()) return fileName;
+        String action = command.contains(".")
+                ? command.substring(0, command.indexOf('.'))
+                : command;
+        String capitalized = action.substring(0, 1).toUpperCase(Locale.ROOT)
+                + action.substring(1).toLowerCase(Locale.ROOT);
+        String baseName = fileName.contains(".")
+                ? fileName.substring(0, fileName.lastIndexOf('.'))
+                : fileName;
+        return String.format("%s (%s)", capitalized, baseName);
     }
 
     @NbBundle.Messages({
@@ -91,7 +105,7 @@ public final class SingleJavaSourceRunActionProvider implements ActionProvider {
         LaunchProcess process = invokeActionHelper(command, fileObject, params);
         ExecutionService exeService = ExecutionService.newService(
                     process,
-                    descriptor, fileObject.getNameExt());
+                    descriptor, this.getTaskName(command, fileObject.getNameExt()));
 
         Future<Integer> future = exeService.run();
         if (NbPreferences.forModule(JavaPlatformManager.class).getBoolean(SingleSourceFileUtil.GLOBAL_STOP_AND_RUN_OPTION, false)) {

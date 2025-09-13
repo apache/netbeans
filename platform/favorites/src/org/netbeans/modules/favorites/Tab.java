@@ -31,8 +31,10 @@ import java.util.Collections;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.JFileChooser;
+import javax.swing.KeyStroke;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
@@ -112,7 +114,7 @@ implements Runnable, ExplorerManager.Provider {
     public HelpCtx getHelpCtx () {
         return new HelpCtx(Tab.HELP_ID);
     }
-    
+
     @Override
     public ExplorerManager getExplorerManager() {
         return manager;
@@ -232,7 +234,12 @@ implements Runnable, ExplorerManager.Provider {
     * obtained from specified root context node */
     private void initializeWithRootContext (Node rc) {
         // update TC's attributes
-        setToolTipText(rc.getDisplayName());
+        String hotkey = ""; // NOI18N
+        Action action = org.openide.awt.Actions.forID("Window/SelectDocumentNode", "org.netbeans.modules.favorites.Select"); // NOI18N
+        if (action != null && action.getValue(Action.ACCELERATOR_KEY) instanceof KeyStroke ks) {
+            hotkey = org.openide.awt.Actions.keyStrokeToString(ks);
+        }
+        setToolTipText(NbBundle.getMessage(Tab.class, "TT_Favorites", hotkey)); //NOI18N
         setName(rc.getDisplayName());
         updateTitle();
         // attach listener
@@ -521,8 +528,8 @@ implements Runnable, ExplorerManager.Provider {
         File chooserSelection = null;
         JFileChooser chooser = new JFileChooser ();
         chooser.setFileSelectionMode( JFileChooser.FILES_AND_DIRECTORIES );
-        chooser.setDialogTitle(NbBundle.getBundle(Actions.class).getString ("CTL_DialogTitle"));
-        chooser.setApproveButtonText(NbBundle.getBundle(Actions.class).getString ("CTL_ApproveButtonText"));
+        chooser.setDialogTitle(NbBundle.getMessage(Actions.class, "CTL_DialogTitle"));
+        chooser.setApproveButtonText(NbBundle.getMessage(Actions.class, "CTL_ApproveButtonText"));
         chooser.setSelectedFile(FileUtil.toFile(file));
         int option = chooser.showOpenDialog( WindowManager.getDefault().getMainWindow() ); // Show the chooser
         if ( option == JFileChooser.APPROVE_OPTION ) {
@@ -562,8 +569,8 @@ implements Runnable, ExplorerManager.Provider {
         final Node[] selection = getExplorerManager().getSelectedNodes();
         if( null == selection || selection.length < 1 )
             return;
-        if( view instanceof MyBeanTreeView ) {
-            ((MyBeanTreeView)view).scrollNodeToVisible(selection[0]);
+        if( view instanceof MyBeanTreeView myBeanTreeView ) {
+            myBeanTreeView.scrollNodeToVisible(selection[0]);
         }
     }
 

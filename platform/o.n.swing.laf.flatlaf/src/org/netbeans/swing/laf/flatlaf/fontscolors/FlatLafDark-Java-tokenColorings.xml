@@ -37,18 +37,18 @@
     <fontcolor name="mod-annotation-type" default="identifier"/>
     <fontcolor name="mod-annotation-type-declaration" default="identifier"><font style="bold"/></fontcolor>
     <fontcolor name="mod-class" default="identifier"/>
-    <fontcolor name="mod-class-declaration" default="identifier"/>
+    <fontcolor name="mod-class-declaration" default="identifier"><font style="bold"/></fontcolor>
     <fontcolor name="mod-constructor" default="identifier"/>
-    <fontcolor name="mod-constructor-declaration" default="identifier"/>
+    <fontcolor name="mod-constructor-declaration" default="identifier"><font style="bold"/></fontcolor>
     <fontcolor name="mod-deprecated" strikeThrough="ffc3c3c3"/>
     <fontcolor name="mod-enum" default="identifier"/>
-    <fontcolor name="mod-enum-declaration" default="identifier"/>
+    <fontcolor name="mod-enum-declaration" default="identifier"><font style="bold"/></fontcolor>
     <fontcolor name="mod-field" default="field"/>
     <fontcolor name="mod-field-declaration" default="field"/>
     <fontcolor name="mod-interface" default="identifier"/>
     <fontcolor name="mod-interface-declaration" default="identifier"><font style="bold"/></fontcolor>
     <fontcolor name="mod-local-variable" default="identifier"/>
-    <fontcolor name="mod-local-variable-declaration" default="identifier"/>
+    <fontcolor name="mod-local-variable-declaration" default="identifier"><font style="bold"/></fontcolor>
     <fontcolor name="mod-method" default="method"/>
     <fontcolor name="mod-method-declaration" default="method" foreColor="ffffc66d"/>
     <fontcolor name="mod-package-private"/>
@@ -57,6 +57,7 @@
     <fontcolor name="mod-private"/>
     <fontcolor name="mod-protected"/>
     <fontcolor name="mod-public"/>
+    <fontcolor name="mod-record-declaration" default="identifier"><font style="bold"/></fontcolor>
     <fontcolor name="mod-static"><font style="italic"/></fontcolor>
     <fontcolor name="mod-unused" foreColor="gray" waveUnderlined="gray"/>
     <fontcolor name="number" default="number"/>

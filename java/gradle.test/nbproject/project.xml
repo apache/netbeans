@@ -26,11 +26,29 @@
             <code-name-base>org.netbeans.modules.gradle.test</code-name-base>
             <module-dependencies>
                 <dependency>
-                    <code-name-base>org.netbeans.modules.libs.gradle</code-name-base>
+                    <code-name-base>org.netbeans.api.java.classpath</code-name-base>
+                    <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>8</release-version>
-                        <specification-version>8.0.1</specification-version>
+                        <release-version>1</release-version>
+                        <specification-version>1.41.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.libs.javacapi</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>8.53</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.extexecution</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>1.45</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -48,24 +66,6 @@
                     <compile-dependency/>
                     <run-dependency>
                         <specification-version>1.17</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.api.java.classpath</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>1.41.1</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.modules.extexecution</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>2</release-version>
-                        <specification-version>1.45</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -116,6 +116,14 @@
                     <compile-dependency/>
                     <run-dependency>
                         <specification-version>1.3.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.libs.gradle</code-name-base>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>8</release-version>
+                        <specification-version>8.0.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

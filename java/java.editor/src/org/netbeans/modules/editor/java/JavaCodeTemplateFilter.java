@@ -23,8 +23,6 @@ import com.sun.source.tree.CaseLabelTree;
 import com.sun.source.tree.Tree;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.text.Document;
@@ -34,6 +32,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
+import java.util.Set;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource.Phase;
@@ -74,7 +73,7 @@ public class JavaCodeTemplateFilter implements CodeTemplateFilter {
                 final AtomicBoolean cancel = new AtomicBoolean();
                 BaseProgressUtils.runOffEventDispatchThread(() -> {
                     try {
-                        ParserManager.parse(Collections.singleton(source), new UserTask() {
+                        ParserManager.parse(Set.of(source), new UserTask() {
                             @Override
                             public void run(ResultIterator resultIterator) throws Exception {
                                 if (cancel.get()) {
@@ -205,22 +204,12 @@ public class JavaCodeTemplateFilter implements CodeTemplateFilter {
         if (treeKindCtx == null && stringCtx == null) {
             return false;
         }
-        EnumSet<Tree.Kind> treeKindContexts = EnumSet.noneOf(Tree.Kind.class);
-        HashSet stringContexts = new HashSet();
-        getTemplateContexts(template, treeKindContexts, stringContexts);
-        return treeKindContexts.isEmpty() && stringContexts.isEmpty() && treeKindCtx != Tree.Kind.STRING_LITERAL || treeKindContexts.contains(treeKindCtx) || stringContexts.contains(stringCtx);
-    }
-    
-    private void getTemplateContexts(CodeTemplate template, EnumSet<Tree.Kind> treeKindContexts, HashSet<String> stringContexts) {
         List<String> contexts = template.getContexts();
-        if (contexts != null) {
-            for(String context : contexts) {
-                try {
-                    treeKindContexts.add(Tree.Kind.valueOf(context));
-                } catch (IllegalArgumentException iae) {
-                    stringContexts.add(context);
-                }
-            }
+        if (contexts == null || contexts.isEmpty()) {
+            return treeKindCtx != Tree.Kind.STRING_LITERAL;
+        } else {
+            return (treeKindCtx != null && contexts.contains(treeKindCtx.name()))
+                || (stringCtx != null && contexts.contains(stringCtx));
         }
     }
 

@@ -53,6 +53,7 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.queries.FileEncodingQuery;
 import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.Utils;
+import org.netbeans.modules.lsp.client.Utils.CancelableBaseEnvironment;
 import org.netbeans.modules.lsp.client.Utils.Environment;
 import org.netbeans.modules.lsp.client.bindings.refactoring.ModificationResult.Difference;
 import org.netbeans.modules.lsp.client.bindings.refactoring.tree.DiffElement;
@@ -333,31 +334,8 @@ public class Refactoring {
         return uri.substring(dot + 1);
     }
 
-    protected static class RefactoringBase implements Environment {
-        private final AtomicBoolean cancel = new AtomicBoolean();
-        private final List<Runnable> cancelCallbacks = new ArrayList<>();
+    protected static class RefactoringBase extends CancelableBaseEnvironment {
         private Problem problem;
-
-        public void cancelRequest() {
-            cancel.set(true);
-            List<Runnable> localCancelCallbacks;
-            synchronized (cancelCallbacks) {
-                localCancelCallbacks = new ArrayList<>(cancelCallbacks);
-            }
-            localCancelCallbacks.forEach(Runnable::run);
-        }
-
-        @Override
-        public boolean isCanceled() {
-            return cancel.get();
-        }
-
-        @Override
-        public void registerCancelCallback(Runnable callback) {
-            synchronized (cancelCallbacks) {
-                cancelCallbacks.add(callback);
-            }
-        }
 
         @Override
         public void handleCancellationException(CancellationException ex) {

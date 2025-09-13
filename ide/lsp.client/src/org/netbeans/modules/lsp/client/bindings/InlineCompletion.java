@@ -22,8 +22,9 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.event.CaretEvent;
@@ -44,10 +45,10 @@ import org.netbeans.editor.BaseKit.InsertTabAction;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.editor.indent.api.IndentUtils;
-import org.netbeans.modules.lsp.client.EnhancedTextDocumentService.InlineCompletionItem;
 import org.netbeans.modules.lsp.client.EnhancedTextDocumentService.InlineCompletionParams;
 import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.Utils;
+import org.netbeans.modules.lsp.client.Utils.CancelableBaseEnvironment;
 import org.netbeans.spi.editor.AbstractEditorAction;
 import org.netbeans.spi.editor.highlighting.HighlightsLayer;
 import org.netbeans.spi.editor.highlighting.HighlightsLayerFactory;
@@ -62,7 +63,8 @@ import org.openide.util.RequestProcessor.Task;
 
 //TODO: shutdown
 public class InlineCompletion {
-    private static final RequestProcessor WORKER = new RequestProcessor(InlineCompletion.class.getName(), 1, false, false);
+    private static final RequestProcessor PREPARE_WORKER = new RequestProcessor(InlineCompletion.class.getName() + "-prepare", 1, false, false);
+    private static final RequestProcessor RUN_WORKER = new RequestProcessor(InlineCompletion.class.getName() + "-run", 1, false, false);
 
     @OnStart
     public static class Start implements Runnable {
@@ -84,8 +86,8 @@ public class InlineCompletion {
         private AtomicReference<FileObject> currentFile = new AtomicReference<>();
         private AtomicReference<Document> currentDocument = new AtomicReference<>();
         private AtomicInteger currentCaretPos = new AtomicInteger();
-        private AtomicReference<CompletableFuture<?>> currentQuery = new AtomicReference<>();
-        private final Task query = WORKER.create(this::doQuery);
+        private AtomicReference<CancelableBaseEnvironment> currentQuery = new AtomicReference<>();
+        private final Task query = PREPARE_WORKER.create(this::doQuery);
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
@@ -140,56 +142,48 @@ public class InlineCompletion {
                     ProposalItem.clearProposal(doc);
                 }
 
-                CompletableFuture<?> currentRunningQuery = currentQuery.get();
+                CancelableBaseEnvironment currentRunningQuery = currentQuery.get();
 
                 if (currentRunningQuery != null) {
-                    if (!currentRunningQuery.isDone()) {
-                        currentRunningQuery.cancel(true);
-                    }
-
+                    currentRunningQuery.cancelRequest();
                     currentQuery.compareAndSet(currentRunningQuery, null);
                 }
 
-                LSPBindings bindings = LSPBindings.getBindings(file);
+                CancelableBaseEnvironment env = new CancelableBaseEnvironment();
+                currentQuery.set(env);
 
-                if (bindings != null) {
-                    //TODO: check if the server has inline completion
-                    boolean hasInlineCompletion = true;
-                    if (hasInlineCompletion) {
-                        ProposalItem.clearProposal(doc); //TODO: is this appropriate time?
-
-                        try {
-                            InlineCompletionParams inlineCompletionParams = new InlineCompletionParams(new TextDocumentIdentifier(Utils.toURI(file)), Utils.createPosition(doc, caretPos), null);
-                            CompletableFuture<InlineCompletionItem[]> inlineCompletion =
-                                    bindings.getTextDocumentService()
-                                            .inlineCompletion(inlineCompletionParams);
-
-                            currentQuery.set(inlineCompletion);
-
-                            inlineCompletion.handle((proposals, exc) -> {
-                                currentQuery.compareAndSet(inlineCompletion, null);
-
-                                if (exc != null) {
-                                    exc.printStackTrace();
-                                    return null;
-                                }
-                                if (proposals != null && proposals.length > 0 && thisVersion == DocumentUtilities.getDocumentVersion(doc)) {
-                                    //TODO: more proper re-indent possible?
-                                    try {
-                                        int indent = IndentUtils.lineIndent(doc, IndentUtils.lineStartOffset(doc, caretPos));
-                                        String proposalText = proposals[0].getInsertText().replaceAll("\n", "\n" + IndentUtils.createIndentString(doc, indent));
-                                        ProposalItem.putProposal(bindings, doc, caretPos, proposalText);
-                                    } catch (BadLocationException ex) {
-                                        Exceptions.printStackTrace(ex);
-                                    }
-                                }
-                                return null;
-                            });
-                        } catch (BadLocationException ex) {
-                            Exceptions.printStackTrace(ex);
-                        }
+                RUN_WORKER.post(() -> {
+                    if (env.isCanceled()) {
+                        return ;
                     }
-                }
+
+                    List<LSPBindings> bindings = LSPBindings.getBindings(file);
+                    AtomicBoolean wasProposal = new AtomicBoolean();
+
+                    Utils.handleBindings(bindings,
+                                         capa -> true, //TODO
+                                         () -> new InlineCompletionParams(new TextDocumentIdentifier(Utils.toURI(file)), Utils.createPosition(doc, caretPos), null),
+                                         (server, params) -> server.getTextDocumentService()
+                                                                   .inlineCompletion(params),
+                                         (server, proposals) -> {
+                                             if (wasProposal.getAndSet(true)) {
+                                                 //only first:
+                                                 return ;
+                                             }
+                                             if (!wasProposal.getAndSet(true) && proposals != null && proposals.length > 0 && thisVersion == DocumentUtilities.getDocumentVersion(doc)) {
+                                                 //TODO: more proper re-indent possible?
+                                                 try {
+                                                     int indent = IndentUtils.lineIndent(doc, IndentUtils.lineStartOffset(doc, caretPos));
+                                                     String proposalText = proposals[0].getInsertText().replaceAll("\n", "\n" + IndentUtils.createIndentString(doc, indent));
+                                                     ProposalItem.putProposal(server, doc, caretPos, proposalText);
+                                                 } catch (BadLocationException ex) {
+                                                     Exceptions.printStackTrace(ex);
+                                                 }
+                                             }
+                                         },
+                                         env
+                                        );
+                });
             }
         }
     }

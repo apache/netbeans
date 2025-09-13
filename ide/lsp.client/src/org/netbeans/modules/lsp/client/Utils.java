@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
@@ -434,5 +435,46 @@ public class Utils {
         public void registerCancelCallback(Runnable callback);
         public void handleCancellationException(CancellationException ex);
         public void handleException(Exception ex);
+    }
+
+    public static class CancelableBaseEnvironment implements Environment {
+        private final AtomicBoolean cancel = new AtomicBoolean();
+        private final List<Runnable> cancelCallbacks = new ArrayList<>();
+
+        public void cancelRequest() {
+            cancel.set(true);
+            List<Runnable> localCancelCallbacks;
+            synchronized (cancelCallbacks) {
+                localCancelCallbacks = new ArrayList<>(cancelCallbacks);
+            }
+            localCancelCallbacks.forEach(Runnable::run);
+        }
+
+        @Override
+        public boolean isCanceled() {
+            return cancel.get();
+        }
+
+        @Override
+        public void registerCancelCallback(Runnable callback) {
+            synchronized (cancelCallbacks) {
+                cancelCallbacks.add(callback);
+            }
+
+            if (cancel.get()) {
+                callback.run();
+            }
+        }
+
+        @Override
+        public void handleCancellationException(CancellationException ex) {
+            handleException(ex);
+        }
+
+        @Override
+        public void handleException(Exception ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
     }
 }

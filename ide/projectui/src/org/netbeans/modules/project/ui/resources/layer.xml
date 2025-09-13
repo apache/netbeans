@@ -130,6 +130,14 @@
         </folder>
     </folder>
 
+    <folder name="Favorites">
+        <file name="NetBeansProjects.shadow">
+            <attr name="originalFile" methodvalue="org.netbeans.modules.project.ui.ProjectUtilities.getProjectsFolder"/>
+            <attr name="originalFileSystem" stringvalue="org.netbeans.modules.masterfs.MasterFileSystem"/>
+            <attr name="position" intvalue="110"/>
+        </file>
+    </folder>
+
     <folder name="QuickSearch">
         <folder name="Projects">
             <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.project.ui.quicksearch.Bundle"/>

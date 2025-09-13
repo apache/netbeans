@@ -56,6 +56,7 @@ public class ProxyURLStreamHandlerFactory implements URLStreamHandlerFactory, Lo
                     throw new Exception("No, or multiple, URLStreamHandler-valued fields in URL: " + candidates);
                 }
                 Field f = candidates.get(0);
+                // TODO adds -J--add-opens=java.base/java.net=ALL-UNNAMED
                 f.setAccessible(true);
                 originalJarHandler = (URLStreamHandler) f.get(new URL("jar:file:/sample.jar!/"));
                 LOG.log(Level.FINE, "found originalJarHandler: {0}", originalJarHandler);

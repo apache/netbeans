@@ -1,6 +1,6 @@
 Name: Gradle
 Description: Gradle Build System
-Version: 7.4
+Version: 8.11.1
 License: Gradle
 Origin: Gradle Inc.
 URL: https://gradle.org/
@@ -386,10 +386,11 @@ org.eclipse.jgit:org.eclipse.jgit
 ------------------------------------------------------------------------------
 BSD-style
 
-com.jcraft:jsch
 com.jcraft:jzlib
+com.github.mwiede:jsch
 
-Copyright (c) 2000-2011 ymnk, JCraft,Inc. All rights reserved.
+Copyright (c) 2002-2015 Atsuhiko Yamanaka, JCraft,Inc.
+All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:

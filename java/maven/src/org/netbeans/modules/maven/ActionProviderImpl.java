@@ -570,6 +570,7 @@ public class ActionProviderImpl implements ActionProvider {
             Object retValue = DialogDisplayer.getDefault().notify(dd);
             if (retValue == DialogDescriptor.OK_OPTION) {
                 pnl.applyValues(mapping);
+                maps.getActions().remove(mapping); // deduplicate
                 if (maps.getActions().size() > 10) {
                     maps.getActions().remove(0);
                 }

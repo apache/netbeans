@@ -646,6 +646,15 @@
          and will open files in the same instance just as 
          <a href="https://github.com/apache/netbeans/pull/8756">#8756 illustrates</a>.
          </p>
+         <p>
+             The launcher also modifies the <code>PATH</code> variable
+             by appending its own diretory - making sure typing <code>netbeans</code>
+             gets handled in the internal NetBeans terminal at all.
+             In the unusual and rare cases when <b>opt-out</b> of this
+             behavior maybe needed, just
+             set the environment variable to <code>nope</code> to instruct
+             the launcher to avoid these environment variable modifications.
+         </p>
     </api>
      </li>
   </ul>

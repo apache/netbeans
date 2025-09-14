@@ -38,9 +38,6 @@ cd "$progdir"/..
 basedir=`pwd`
 cd "$old"
 
-# make sure own launcher is on PATH
-PATH=$PATH:$progdir
-
 case "`uname`" in
     Darwin*)
         # set default userdir and cachedir on Mac OS X
@@ -67,6 +64,13 @@ fi
 # fi
 
 export DEFAULT_USERDIR_ROOT
+
+if [ "$NETBEANS_USERDIR" = "nope" ]; then
+    # setting NETBEANS_USERDIR to none is an opt-out
+else
+    # make sure own launcher directory is on PATH as a fallback
+    PATH=$PATH:$progdir
+fi
 
 # #68373: look for userdir, but do not modify "$@"
 if [ -z "$NETBEANS_USERDIR" ]; then

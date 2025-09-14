@@ -31,15 +31,15 @@ public class ELDeclarationFinderTest extends ELTestBaseForTestProject {
     }
 
     public void testSimpleBean() throws Exception {
-        checkDeclaration("projects/testWebProject/web/navigation/navigation01.xhtml", "#{bea^n}", "Bean.java", 314);
+        checkDeclaration("projects/testWebProject/web/navigation/navigation01.xhtml", "#{bea^n}", "Bean.java", 1022);
     }
 
     public void testBeanProperty() throws Exception {
-        checkDeclaration("projects/testWebProject/web/navigation/navigation02.xhtml", "#{bean.myArr^ay}", "Bean.java", 525);
+        checkDeclaration("projects/testWebProject/web/navigation/navigation02.xhtml", "#{bean.myArr^ay}", "Bean.java", 1233);
     }
 
     public void testBeanPropertyField() throws Exception {
-        checkDeclaration("projects/testWebProject/web/navigation/navigation03.xhtml", "#{bean.myCypris.ge^tName()}", "Cypris.java", 103);
+        checkDeclaration("projects/testWebProject/web/navigation/navigation03.xhtml", "#{bean.myCypris.ge^tName()}", "Cypris.java", 910);
     }
 
     public void testResourceBundleIdentifier() throws Exception {
@@ -47,11 +47,11 @@ public class ELDeclarationFinderTest extends ELTestBaseForTestProject {
     }
 
     public void testResourceBundleKeyAsSuffix() throws Exception {
-        checkDeclaration("projects/testWebProject/web/navigation/navigation04.xhtml", "#{bundle.cokoliv^Jineho}", "Messages.properties", 48);
+        checkDeclaration("projects/testWebProject/web/navigation/navigation04.xhtml", "#{bundle.cokoliv^Jineho}", "Messages.properties", 833);
     }
 
     public void testResourceBundleKeyAsProperty() throws Exception {
-        checkDeclaration("projects/testWebProject/web/navigation/navigation04.xhtml", "#{bundle['cokoliv^Jineho']}", "Messages.properties", 48);
+        checkDeclaration("projects/testWebProject/web/navigation/navigation04.xhtml", "#{bundle['cokoliv^Jineho']}", "Messages.properties", 833);
     }
     
 }

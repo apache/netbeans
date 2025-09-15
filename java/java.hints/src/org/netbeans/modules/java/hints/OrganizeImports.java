@@ -37,6 +37,7 @@ import javax.tools.Diagnostic;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -160,10 +161,11 @@ public class OrganizeImports {
             }
         }
         final CodeStyle cs = CodeStyle.getDefault(copy.getFileObject());
-        Set<Element> starImports = new HashSet<Element>();
-        Set<Element> staticStarImports = new HashSet<Element>();
-        Set<Element> toImport = getUsedElements(copy, cu, starImports, staticStarImports);
-        List<ImportTree> imps = new LinkedList<ImportTree>();  
+        final Set<Element> starImports = new HashSet<>();
+        final Set<Element> staticStarImports = new HashSet<>();
+        final Set<Element> moduleImports = new HashSet<>();
+        Set<Element> toImport = getUsedElements(copy, cu, starImports, staticStarImports, moduleImports);
+        final List<ImportTree> imps = new LinkedList<>();  
         TreeMaker maker = copy.getTreeMaker();
         
         if (addImports != null) {
@@ -181,13 +183,13 @@ public class OrganizeImports {
                     Element importedScope = trees.getElement(TreePath.getPath(cu, ((MemberSelectTree)qualIdent).getExpression()));
                     
                     if (importTree.isStatic()) {
-                        if (staticStarImports != null && 
+                        if (!staticStarImports.isEmpty() && 
                             staticStarImports.contains(importedScope) &&
                             !starImportScopes.contains(importedScope)) {
                             imp = maker.Import(qualIdent, true);
                         }
                     } else {
-                        if (starImports != null && 
+                        if (!starImports.isEmpty() && 
                             starImports.contains(importedScope) &&
                             !starImportScopes.contains(importedScope)) {
                             imp = maker.Import(qualIdent, false);
@@ -196,6 +198,14 @@ public class OrganizeImports {
                     if (imp != null) {
                         starImportScopes.add(importedScope);
                         imps.add(imp);
+                    }
+                } else if (importTree.isModule()) {
+                    Element importedScope = copy.getElements().getModuleElement(qualIdent.toString());
+                    if ((qualIdent instanceof ExpressionTree) &&
+                        !moduleImports.isEmpty() &&
+                        moduleImports.contains(importedScope) &&
+                        !starImportScopes.contains(importedScope)) {
+                        imps.add(maker.ImportModule((ExpressionTree)qualIdent));
                     }
                 }
             }
@@ -213,21 +223,27 @@ public class OrganizeImports {
                         return 0;
                     String s1 = o1.getQualifiedIdentifier().toString();
                     String s2 = o2.getQualifiedIdentifier().toString();
-                    int bal = groups.getGroupId(s1, o1.isStatic()) - groups.getGroupId(s2, o2.isStatic());
+                    int bal;
+                    if (o1.isModule()) bal = o2.isModule() ? 0 : 1; // Place module imports last
+                    else if (o2.isModule()) bal = -1;               // Place module imports last
+                    else bal = groups.getGroupId(s1, o1.isStatic()) - groups.getGroupId(s2, o2.isStatic());
                     return bal == 0 ? s1.compareTo(s2) : bal;
                 }
             });
         }
         CompilationUnitTree cut = maker.CompilationUnit(cu.getPackageAnnotations(), cu.getPackageName(), imps, cu.getTypeDecls(), cu.getSourceFile());
         ((JCCompilationUnit)cut).packge = ((JCCompilationUnit)cu).packge;
-        if (starImports != null || staticStarImports != null) {
+        if (!starImports.isEmpty() || !staticStarImports.isEmpty()) {
             ((JCCompilationUnit)cut).starImportScope = ((JCCompilationUnit)cu).starImportScope;
+        }
+        if (!moduleImports.isEmpty()) {
+            ((JCCompilationUnit)cut).moduleImportScope = ((JCCompilationUnit)cu).moduleImportScope;
         }
         CompilationUnitTree ncu = toImport.isEmpty() ? cut : GeneratorUtilities.get(copy).addImports(cut, toImport);
         copy.rewrite(cu, ncu);
     }
 
-    private static Set<Element> getUsedElements(final CompilationInfo info, final CompilationUnitTree cut, final Set<Element> starImports, final Set<Element> staticStarImports) {
+    private static Set<Element> getUsedElements(final CompilationInfo info, final CompilationUnitTree cut, final Set<Element> starImports, final Set<Element> staticStarImports, final Set<Element> moduleImports) {
         final Set<Element> ret = new HashSet<Element>();
         final Trees trees = info.getTrees();
         final Types types = info.getTypes();
@@ -273,7 +289,7 @@ public class OrganizeImports {
                         case FIELD:
                         case METHOD:
                             if (element.getModifiers().contains(Modifier.STATIC)) {
-                                Element glob = global(element, staticStarImports);
+                                Element glob = global(element, staticStarImports, moduleImports);
                                 if (glob != null)
                                     ret.add(glob);
                             }
@@ -283,14 +299,14 @@ public class OrganizeImports {
                         case RECORD:
                         case ENUM:
                         case INTERFACE:
-                            Element glob = global(element, starImports);
+                            Element glob = global(element, starImports, moduleImports);
                             if (glob != null)
                                 ret.add(glob);
                     }
                 }
             }
 
-            private Element global(Element element, Set<Element> stars) {
+            private Element global(Element element, Set<Element> stars, Set<Element> modules) {
                 for (Symbol sym : ((JCCompilationUnit)cut).namedImportScope.getSymbolsByName((Name)element.getSimpleName())) {
                     if (element == sym || element.asType().getKind() == TypeKind.ERROR && element.getKind() == sym.getKind())
                         return sym;
@@ -303,6 +319,14 @@ public class OrganizeImports {
                     if (element == sym || element.asType().getKind() == TypeKind.ERROR && element.getKind() == sym.getKind()) {
                         if (stars != null) {
                             stars.add(sym.owner);
+                        }
+                        return sym;
+                    }
+                }
+                for (Symbol sym : ((JCCompilationUnit)cut).moduleImportScope.getSymbolsByName((Name)element.getSimpleName())) {
+                    if (element == sym || element.asType().getKind() == TypeKind.ERROR && element.getKind() == sym.getKind()) {
+                        if (modules != null) {
+                            modules.add(sym.packge().modle);
                         }
                         return sym;
                     }

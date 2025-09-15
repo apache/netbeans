@@ -571,7 +571,7 @@ public abstract class NbLaunchDelegate {
             mainSource = false;
         } else {
             FileObject fileRoot = sourceCP != null ? sourceCP.findOwnerRoot(toRun) : null;
-            mainSource = fileRoot != null && UnitTestForSourceQuery.findUnitTests(fileRoot).length > 0;
+            mainSource = fileRoot == null || UnitTestForSourceQuery.findSources(fileRoot).length == 0;
         }
         ActionProvider provider = null;
         String command = null;

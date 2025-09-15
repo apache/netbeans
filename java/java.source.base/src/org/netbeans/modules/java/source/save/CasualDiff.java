@@ -100,6 +100,7 @@ import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCModifiers;
 import com.sun.tools.javac.tree.JCTree.JCModuleDecl;
+import com.sun.tools.javac.tree.JCTree.JCModuleImport;
 import com.sun.tools.javac.tree.JCTree.JCNewArray;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.JCTree.JCOpens;
@@ -934,6 +935,18 @@ public class CasualDiff {
                 printer.print("static ");
             }
         }
+        localPointer = diffTree(oldT.getQualifiedIdentifier(), newT.getQualifiedIdentifier(), qualBounds);
+        copyTo(localPointer, bounds[1]);
+
+        return bounds[1];
+    }
+
+    protected int diffModuleImport(JCModuleImport oldT, JCModuleImport newT, int[] bounds) {
+        int localPointer = bounds[0];
+
+        int[] qualBounds = getBounds(oldT.getQualifiedIdentifier());
+        assert oldT.isModule() == newT.isModule();
+        copyTo(localPointer, qualBounds[0]);
         localPointer = diffTree(oldT.getQualifiedIdentifier(), newT.getQualifiedIdentifier(), qualBounds);
         copyTo(localPointer, bounds[1]);
 
@@ -3287,6 +3300,8 @@ public class CasualDiff {
               return ((JCCompilationUnit)t1).sourcefile.equals(((JCCompilationUnit)t2).sourcefile);
           case IMPORT:
               return matchImport((JCImport)t1, (JCImport)t2);
+          case MODULEIMPORT:
+              return matchModuleImport((JCModuleImport)t1, (JCModuleImport)t2);
           case CLASSDEF:
               return ((JCClassDecl)t1).sym == ((JCClassDecl)t2).sym;
           case METHODDEF:
@@ -5676,6 +5691,9 @@ public class CasualDiff {
           case IMPORT:
               retVal = diffImport((JCImport)oldT, (JCImport)newT, elementBounds);
               break;
+          case MODULEIMPORT:
+              retVal = diffModuleImport((JCModuleImport)oldT, (JCModuleImport)newT, elementBounds);
+              break;
           case CLASSDEF:
               retVal = diffClassDef((JCClassDecl)oldT, (JCClassDecl)newT, elementBounds);
               break;
@@ -5976,6 +5994,10 @@ public class CasualDiff {
 
     private boolean matchImport(JCImport t1, JCImport t2) {
         return t1.staticImport == t2.staticImport && treesMatch(t1.qualid, t2.qualid);
+    }
+
+    private boolean matchModuleImport(JCModuleImport t1, JCModuleImport t2) {
+        return treesMatch(t1.getQualifiedIdentifier(), t2.getQualifiedIdentifier());
     }
 
     private boolean matchBlock(JCBlock t1, JCBlock t2) {

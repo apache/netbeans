@@ -35,7 +35,6 @@ import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.QualifiedNameable;
-import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.TreeMaker;
@@ -651,7 +650,7 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
         Set<? extends Element> newImports = importAnalysis.getImports();
         if (copy != null && newImports != null && !newImports.isEmpty()) {
             imps = GeneratorUtilitiesAccessor.getInstance()
-                                             .addImports(GeneratorUtilities.get(copy), tree, imps, newImports)
+                                             .addImports(GeneratorUtilities.get(copy), tree, imps, newImports, el -> overlay.moduleOf(elements, el))
                                              .getImports();
         }
         

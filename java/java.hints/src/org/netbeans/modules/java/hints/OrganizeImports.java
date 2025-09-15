@@ -233,12 +233,8 @@ public class OrganizeImports {
         }
         CompilationUnitTree cut = maker.CompilationUnit(cu.getPackageAnnotations(), cu.getPackageName(), imps, cu.getTypeDecls(), cu.getSourceFile());
         ((JCCompilationUnit)cut).packge = ((JCCompilationUnit)cu).packge;
-        if (!starImports.isEmpty() || !staticStarImports.isEmpty()) {
-            ((JCCompilationUnit)cut).starImportScope = ((JCCompilationUnit)cu).starImportScope;
-        }
-        if (!moduleImports.isEmpty()) {
-            ((JCCompilationUnit)cut).moduleImportScope = ((JCCompilationUnit)cu).moduleImportScope;
-        }
+        ((JCCompilationUnit)cut).starImportScope = ((JCCompilationUnit)cu).starImportScope;
+        ((JCCompilationUnit)cut).moduleImportScope = ((JCCompilationUnit)cu).moduleImportScope;
         CompilationUnitTree ncu = toImport.isEmpty() ? cut : GeneratorUtilities.get(copy).addImports(cut, toImport);
         copy.rewrite(cu, ncu);
     }

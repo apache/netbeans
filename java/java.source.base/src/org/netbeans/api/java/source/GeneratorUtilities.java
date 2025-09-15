@@ -1315,7 +1315,7 @@ public final class GeneratorUtilities {
         // Add modulesToImport to the importScope, to check name clashes, if any
         if (!modulesToImport.isEmpty()) {
             for (ModuleElement m : modulesToImport) {
-                for (Element e : m.getEnclosedElements()) {
+                for (PackageElement e : elementUtilities.transitivelyExportedPackages(m)) {
                     if (e instanceof Symbol p) {
                         importScope.appendSubScope(p.members());
                     }
@@ -1412,10 +1412,19 @@ public final class GeneratorUtilities {
                     el = currentToImportElement.getEnclosingElement();
                     break;
             }
-            final int cnt;
+            final int cnt;  // Count of imports that may replace the currentToImportElement
             if (explicitNamedImports.contains(currentToImportElement)) {
-                cnt = 0;
+                cnt = 0;    // Explicit named imports must not be replaced by another
             } else {
+                /// Check if the import is replaced by a star import or module import
+                ///
+                /// Logic:
+                /// - This refers to the count of imports of the enclosing element, if any.
+                /// - A replacing star import or module import is indicated by a negative count.
+                ///     - If the replacement has already been included in the imports, the count is set as -2.
+                ///     - If the replacement is yet to be included in the imports, the count is set as -1.
+                /// - Otherwise, a non-negative count indicates that the import is below the threshold for replacement.
+
                 Integer enclosingStarCnt = el == null ? null : isStatic ? typeCounts.get((TypeElement)el) :  pkgCounts.get((PackageElement)el);
                 if (isStatic) {
                     cnt = enclosingStarCnt == null ? 0 : enclosingStarCnt;
@@ -1425,9 +1434,15 @@ public final class GeneratorUtilities {
                         ModuleElement m = elements.getModuleOf(currentToImportElement);
                         Integer mc = m == null ? null : modCounts.get(m);
                         if (mc != null && mc < 0) {
-                            // No need to add an import unless a self import
-                            modCount = mc == -1 && m == currentToImportElement ? -1 : -2;
-                            if (el != null) pkgCounts.replace((PackageElement)el, -2);
+                            modCount = mc;
+                            if (modCount == -1) {
+                                // Import the module
+                                currentToImportElement = m;
+                                el = null;
+                                // Mark to skip importing this module subsequently.
+                                modCounts.put(m, -2);
+                            }
+                            // Else, no need to add the current import as its module has already been imported.
                         }
                     }
                     cnt = modCount < 0 ? modCount : enclosingStarCnt == null ? 0 : enclosingStarCnt;

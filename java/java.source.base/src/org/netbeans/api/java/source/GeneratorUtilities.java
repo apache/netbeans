@@ -1204,7 +1204,12 @@ public final class GeneratorUtilities {
                 } else {
                     pkgCounts.put((PackageElement)el, cnt);
                     if (cnt >= -1 && modCounts != null) {
-                        ModuleElement ml = elements.getModuleOf(e);
+                        ModuleElement ml;
+                        try {
+                            ml = elements.getModuleOf(e);
+                        } catch (IllegalArgumentException ex) {
+                            ml = null;
+                        }
                         if (ml != null) {
                             modCounts.merge(ml, 1, Integer::sum);
                         }
@@ -1221,7 +1226,7 @@ public final class GeneratorUtilities {
                 // because more module classes may be used in the future.
                 if (modCounts != null) {
                     ModuleElement m = elements.getModuleElement(imp.getQualifiedIdentifier().toString());
-                    if (m != null) modCounts.replace(m, -2); // -2 = do not touch the module import
+                    if (m != null) modCounts.put(m, -2); // -2 = do not touch the module import
                     modulesToImport.remove(m);
                     continue;
                 }
@@ -1431,7 +1436,12 @@ public final class GeneratorUtilities {
                 } else {
                     int modCount = 0;
                     if (modCounts != null) {
-                        ModuleElement m = elements.getModuleOf(currentToImportElement);
+                        ModuleElement m;
+                        try {
+                            m = elements.getModuleOf(currentToImportElement);
+                        } catch (IllegalArgumentException ex) {
+                            m = null;
+                        }
                         Integer mc = m == null ? null : modCounts.get(m);
                         if (mc != null && mc < 0) {
                             modCount = mc;

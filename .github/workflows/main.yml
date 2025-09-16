@@ -2084,9 +2084,8 @@ jobs:
 #      - name: web.debug
 #        run: ant $OPTS -f enterprise/web.debug test
 
-# Fails
-#      - name: web.el
-#        run: ant $OPTS -f enterprise/web.el test
+      - name: web.el
+        run: ant $OPTS -f enterprise/web.el test
 
 # Fails
 #      - name: web.freeform

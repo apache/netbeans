@@ -21,7 +21,6 @@ package org.netbeans.modules.php.editor.csl;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,8 +33,6 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.ColoringAttributes;
 import org.netbeans.modules.csl.api.OccurrencesFinder;
 import org.netbeans.modules.csl.api.OffsetRange;
-import org.netbeans.modules.csl.spi.ParserResult;
-import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.Scheduler;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
 import org.netbeans.modules.php.editor.api.PhpElementKind;
@@ -56,7 +53,7 @@ import org.netbeans.modules.php.editor.parser.PHPParseResult;
  *
  * @author Radek Matous
  */
-public class OccurrencesFinderImpl extends OccurrencesFinder {
+public class OccurrencesFinderImpl extends OccurrencesFinder<PHPParseResult> {
     private Map<OffsetRange, ColoringAttributes> range2Attribs = Collections.emptyMap();
     private int caretPosition;
     private volatile boolean cancelled;
@@ -78,7 +75,7 @@ public class OccurrencesFinderImpl extends OccurrencesFinder {
     }
 
     @Override
-    public void run(Result result, SchedulerEvent event) {
+    public void run(PHPParseResult result, SchedulerEvent event) {
         if (cancelled) {
             cancelled = false;
             return;
@@ -87,7 +84,7 @@ public class OccurrencesFinderImpl extends OccurrencesFinder {
         Preferences node = MarkOccurencesSettings.getCurrentNode();
         Map<OffsetRange, ColoringAttributes> localRange2Attribs = new HashMap<>();
         if (node.getBoolean(MarkOccurencesSettings.ON_OFF, true)) {
-            for (OffsetRange r : compute((ParserResult) result, caretPosition)) {
+            for (OffsetRange r : compute(result, caretPosition)) {
                 localRange2Attribs.put(r, ColoringAttributes.MARK_OCCURRENCES);
             }
         }
@@ -107,18 +104,12 @@ public class OccurrencesFinderImpl extends OccurrencesFinder {
         }
     }
 
-    private Collection<OffsetRange> compute(final ParserResult parameter, final int offset) {
-        final PHPParseResult parseResult = (PHPParseResult) parameter;
-        Set<OffsetRange> result = new TreeSet<>(new Comparator<OffsetRange>() {
-            @Override
-            public int compare(OffsetRange o1, OffsetRange o2) {
-                return o1.compareTo(o2);
-            }
-        });
+    private Collection<OffsetRange> compute(final PHPParseResult parseResult, final int offset) {
+        Set<OffsetRange> result = new TreeSet<>();
         final TokenHierarchy<?> tokenHierarchy = parseResult.getSnapshot().getTokenHierarchy();
         TokenSequence<PHPTokenId> tokenSequence = tokenHierarchy != null ? LexUtilities.getPHPTokenSequence(tokenHierarchy, offset) : null;
         if (cancelled) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         OffsetRange referenceSpan = tokenSequence != null ? DeclarationFinderImpl.getReferenceSpan(tokenSequence, offset, parseResult.getModel()) : OffsetRange.NONE;
         if (!referenceSpan.equals(OffsetRange.NONE)) {
@@ -138,11 +129,11 @@ public class OccurrencesFinderImpl extends OccurrencesFinder {
         Collection<OffsetRange> result = new TreeSet<>();
         OccurencesSupport occurencesSupport = model.getOccurencesSupport(referenceSpan);
         if (cancelled) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         Occurence caretOccurence = occurencesSupport.getOccurence();
         if (cancelled) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         if (caretOccurence != null) {
             final EnumSet<Accuracy> handledAccuracyFlags = EnumSet.<Occurence.Accuracy>of(
@@ -205,7 +196,7 @@ public class OccurrencesFinderImpl extends OccurrencesFinder {
     }
 
     private static final class OccurrenceHighlighterImpl implements OccurrenceHighlighter {
-        private Set<OffsetRange> offsetRanges = new TreeSet<>();
+        private final Set<OffsetRange> offsetRanges = new TreeSet<>();
 
         @Override
         public void add(OffsetRange offsetRange) {

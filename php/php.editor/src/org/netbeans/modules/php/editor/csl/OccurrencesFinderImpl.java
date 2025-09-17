@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.prefs.Preferences;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
@@ -81,9 +80,8 @@ public class OccurrencesFinderImpl extends OccurrencesFinder<PHPParseResult> {
             return;
         }
 
-        Preferences node = MarkOccurencesSettings.getCurrentNode();
         Map<OffsetRange, ColoringAttributes> localRange2Attribs = new HashMap<>();
-        if (node.getBoolean(MarkOccurencesSettings.ON_OFF, true)) {
+        if (isMarkOccurrencesEnabled()) {
             for (OffsetRange r : compute(result, caretPosition)) {
                 localRange2Attribs.put(r, ColoringAttributes.MARK_OCCURRENCES);
             }
@@ -94,14 +92,22 @@ public class OccurrencesFinderImpl extends OccurrencesFinder<PHPParseResult> {
             return;
         }
 
-        if (!localRange2Attribs.isEmpty()) {
-            // store the new occurrences if any were found
-            range2Attribs = Collections.unmodifiableMap(localRange2Attribs);
-        } else if (!node.getBoolean(MarkOccurencesSettings.KEEP_MARKS, true)) {
-            // clear occurrences if "Keep Marks" is not selected. If "Keep Marks"
-            // is enabled, the old ranges must be retained.
-            range2Attribs = Collections.emptyMap();
-        }
+        // store the new occurrences if any were found
+        range2Attribs = Collections.unmodifiableMap(localRange2Attribs);
+    }
+
+    @Override
+    public boolean isKeepMarks() {
+        return MarkOccurencesSettings
+                .getCurrentNode()
+                .getBoolean(MarkOccurencesSettings.KEEP_MARKS, true);
+    }
+
+    @Override
+    public boolean isMarkOccurrencesEnabled() {
+        return MarkOccurencesSettings
+                .getCurrentNode()
+                .getBoolean(MarkOccurencesSettings.ON_OFF, true);
     }
 
     private Collection<OffsetRange> compute(final PHPParseResult parseResult, final int offset) {

@@ -30,14 +30,13 @@ import org.netbeans.modules.css.editor.module.CssModuleSupport;
 import org.netbeans.modules.css.editor.module.spi.EditorFeatureContext;
 import org.netbeans.modules.css.editor.module.spi.FeatureCancel;
 import org.netbeans.modules.css.lib.api.CssParserResult;
-import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.Scheduler;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
 
 /**
  * @author mfukala@netbeans.org
  */
-public class CssOccurrencesFinder extends OccurrencesFinder {
+public class CssOccurrencesFinder extends OccurrencesFinder<CssParserResult> {
 
     private int caretDocumentPosition;
     private Map<OffsetRange, ColoringAttributes> occurrencesMap = Collections.emptyMap();
@@ -63,13 +62,12 @@ public class CssOccurrencesFinder extends OccurrencesFinder {
     private void resume() {
         featureCancel = new FeatureCancel();
     }
-    
+
     @Override
-    public void run(Result result, SchedulerEvent event) {
+    public void run(CssParserResult parserResultWrapper, SchedulerEvent event) {
         resume();
-        
+
         try {
-            CssParserResult parserResultWrapper = (CssParserResult)result;
             EditorFeatureContext context = new EditorFeatureContext(parserResultWrapper, caretDocumentPosition);
             Set<OffsetRange> occurrences = CssModuleSupport.getMarkOccurrences(context, featureCancel);
 

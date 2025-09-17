@@ -29,6 +29,7 @@ import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.css.editor.module.CssModuleSupport;
 import org.netbeans.modules.css.editor.module.spi.EditorFeatureContext;
 import org.netbeans.modules.css.editor.module.spi.FeatureCancel;
+import org.netbeans.modules.css.editor.options.MarkOccurencesSettings;
 import org.netbeans.modules.css.lib.api.CssParserResult;
 import org.netbeans.modules.parsing.spi.Scheduler;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
@@ -96,5 +97,18 @@ public class CssOccurrencesFinder extends OccurrencesFinder<CssParserResult> {
         return null;
     }
 
+    @Override
+    public boolean isKeepMarks() {
+        return MarkOccurencesSettings
+                .getCurrentNode()
+                .getBoolean(MarkOccurencesSettings.KEEP_MARKS, true);
+    }
+
+    @Override
+    public boolean isMarkOccurrencesEnabled() {
+        return MarkOccurencesSettings
+                .getCurrentNode()
+                .getBoolean(MarkOccurencesSettings.ON_OFF, true);
+    }
 
 }

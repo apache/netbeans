@@ -209,6 +209,16 @@
                     </folder>
                 </folder>
             </folder>
+            <folder name="MarkOccurrences">
+                <folder name="text">
+                    <folder name="css">
+                        <file name="MarkOccurences.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.spi.options.OptionsPanelController"/>
+                            <attr name="instanceCreate" newvalue="org.netbeans.modules.css.editor.options.MarkOccurencesOptionsPanelController"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
         </folder>
     </folder>
 

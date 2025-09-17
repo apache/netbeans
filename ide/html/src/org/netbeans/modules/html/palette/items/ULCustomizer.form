@@ -219,7 +219,7 @@
           <Connection code="new NumberEditor(jSpinner1, &quot;#&quot;)" type="code"/>
         </Property>
         <Property name="value" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="new Integer(ul.getCount())" type="code"/>
+          <Connection code="Integer.valueOf(ul.getCount())" type="code"/>
         </Property>
       </Properties>
       <AccessibilityProperties>

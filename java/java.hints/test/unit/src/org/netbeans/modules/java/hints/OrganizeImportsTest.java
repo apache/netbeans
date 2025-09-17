@@ -96,6 +96,92 @@ public class OrganizeImportsTest extends NbTestCase {
                               """);
     }
     
+    public void testModuleSimpleNoUsage() throws Exception {
+        HintTest.create()
+                .sourceLevel(25)
+                .input("""
+                       package test;
+                       import module java.base;
+                       import java.awt.*;
+                       public class Test {
+                            java.util.List l = java.util.Arrays.asList(1,2,3);
+                            List ui;
+                            Button b;
+                       }
+                       """)
+                .run(OrganizeImports.class)
+                .findWarning("1:0-1:24:verifier:MSG_OragnizeImports")
+                .applyFix()
+                .assertOutput("""
+                              package test;
+                              import java.awt.*;
+                              public class Test {
+                                  java.util.List l = java.util.Arrays.asList(1,2,3);
+                                  List ui;
+                                  Button b;
+                              }
+                              """);
+    }
+    
+    public void testModuleTransitiveSimple() throws Exception {
+        HintTest.create()
+                .sourceLevel(25)
+                .input("""
+                       package test;
+                       import java.lang.Thread;
+                       import module java.desktop;
+                       public class Test {
+                           java.util.List l = java.util.List.of(XMLConstants.XML_NS_URI);
+                           List ui;
+                           Button b;
+                           Clipboard cp;
+                       }
+                       """)
+                .run(OrganizeImports.class)
+                .findWarning("1:0-1:24:verifier:MSG_OragnizeImports")
+                .applyFix()
+                .assertOutput("""
+                              package test;
+                              import module java.desktop;
+                              public class Test {
+                                  java.util.List l = java.util.List.of(XMLConstants.XML_NS_URI);
+                                  List ui;
+                                  Button b;
+                                  Clipboard cp;
+                              }
+                              """);
+    }
+    
+    public void testModuleTransitiveCommon() throws Exception {
+        HintTest.create()
+                .sourceLevel(25)
+                .input("""
+                       package test;
+                       import module java.sql;
+                       import module java.desktop;
+                       public class Test {
+                           java.util.List l = java.util.List.of(XMLConstants.XML_NS_URI);
+                           List ui;
+                           Button b;
+                           Clipboard cp;
+                       }
+                       """)
+                .run(OrganizeImports.class)
+                .findWarning("1:0-1:23:verifier:MSG_OragnizeImports")
+                .applyFix()
+                .assertOutput("""
+                              package test;
+                              import module java.desktop;
+                              import module java.sql;
+                              public class Test {
+                                  java.util.List l = java.util.List.of(XMLConstants.XML_NS_URI);
+                                  List ui;
+                                  Button b;
+                                  Clipboard cp;
+                              }
+                              """);
+    }
+    
     public void testModuleSimpleAllNamed() throws Exception {
         HintTest.create()
                 .sourceLevel(25)

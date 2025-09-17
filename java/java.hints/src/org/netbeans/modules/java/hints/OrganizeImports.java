@@ -22,14 +22,18 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.ModuleElement;
+import javax.lang.model.element.PackageElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.Types;
 import javax.swing.text.JTextComponent;
@@ -81,6 +85,7 @@ import org.netbeans.spi.java.hints.JavaFix;
 import org.netbeans.spi.java.hints.TriggerTreeKind;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import org.openide.util.Pair;
 
 /**
  *
@@ -175,6 +180,7 @@ public class OrganizeImports {
         } else if (!toImport.isEmpty() || isBulkMode) {
             // track import star import scopes, so only one star import/scope appears in imps - #251977
             Set<Element> starImportScopes = new HashSet<>();
+            Map<ModuleElement, Pair<ExpressionTree, ModuleElement>> transitiveScopeToModuleImport = new HashMap<>();
             Trees trees = copy.getTrees();
             for (ImportTree importTree : cu.getImports()) {
                 Tree qualIdent = importTree.getQualifiedIdentifier();
@@ -200,13 +206,27 @@ public class OrganizeImports {
                         imps.add(imp);
                     }
                 } else if (importTree.isModule()) {
-                    Element importedScope = copy.getElements().getModuleElement(qualIdent.toString());
-                    if ((qualIdent instanceof ExpressionTree) &&
-                        !moduleImports.isEmpty() &&
-                        moduleImports.contains(importedScope) &&
-                        !starImportScopes.contains(importedScope)) {
-                        imps.add(maker.ImportModule((ExpressionTree)qualIdent));
+                    ModuleElement importedScope = copy.getElements().getModuleElement(qualIdent.toString());
+                    if (qualIdent instanceof ExpressionTree moduleIdentifier) {
+                        if (importedScope == null) {
+                            //do not mark unresolvable element imports as unused
+                            imps.add(maker.ImportModule(moduleIdentifier));
+                        } else if (!moduleImports.isEmpty() && !starImportScopes.contains(importedScope)) {
+                            if (moduleImports.contains(importedScope)) {
+                                imps.add(maker.ImportModule(moduleIdentifier));
+                                starImportScopes.add(importedScope);
+                            } else {
+                                collectTransitivelyUsedModules(importedScope, moduleIdentifier, moduleImports, copy, transitiveScopeToModuleImport);
+                            }
+                        }
                     }
+                }
+            }
+            // Add any used modules that are only referred by a transitive import
+            for (Map.Entry<ModuleElement, Pair<ExpressionTree, ModuleElement>> t : transitiveScopeToModuleImport.entrySet()) {
+                if (!starImportScopes.contains(t.getKey()) && !starImportScopes.contains(t.getValue().second())) {
+                    imps.add(maker.ImportModule(t.getValue().first()));
+                    starImportScopes.add(t.getValue().second());
                 }
             }
         } else {
@@ -224,8 +244,8 @@ public class OrganizeImports {
                     String s1 = o1.getQualifiedIdentifier().toString();
                     String s2 = o2.getQualifiedIdentifier().toString();
                     int bal;
-                    if (o1.isModule()) bal = o2.isModule() ? 0 : 1; // Place module imports last
-                    else if (o2.isModule()) bal = -1;               // Place module imports last
+                    if (o1.isModule()) bal = o2.isModule() ? 0 : 1; // Place element imports last
+                    else if (o2.isModule()) bal = -1;               // Place element imports last
                     else bal = groups.getGroupId(s1, o1.isStatic()) - groups.getGroupId(s2, o2.isStatic());
                     return bal == 0 ? s1.compareTo(s2) : bal;
                 }
@@ -234,9 +254,24 @@ public class OrganizeImports {
         CompilationUnitTree cut = maker.CompilationUnit(cu.getPackageAnnotations(), cu.getPackageName(), imps, cu.getTypeDecls(), cu.getSourceFile());
         ((JCCompilationUnit)cut).packge = ((JCCompilationUnit)cu).packge;
         ((JCCompilationUnit)cut).starImportScope = ((JCCompilationUnit)cu).starImportScope;
-        ((JCCompilationUnit)cut).moduleImportScope = ((JCCompilationUnit)cu).moduleImportScope;
+        if (!moduleImports.isEmpty()) {
+            ((JCCompilationUnit)cut).moduleImportScope = ((JCCompilationUnit)cu).moduleImportScope;
+        }
         CompilationUnitTree ncu = toImport.isEmpty() ? cut : GeneratorUtilities.get(copy).addImports(cut, toImport);
         copy.rewrite(cu, ncu);
+    }
+        
+    private static void collectTransitivelyUsedModules(final ModuleElement importedModule, final ExpressionTree importIdentifier, final Set<Element> usedModules, final CompilationInfo info, final Map<ModuleElement, Pair<ExpressionTree, ModuleElement>> transitiveModulesToImportingIdentifier) {
+        if (importedModule != null) {
+            if (usedModules.contains(importedModule))
+                return;
+            Pair<ExpressionTree, ModuleElement> root = Pair.of(importIdentifier, importedModule);            
+            for (PackageElement pack : info.getElementUtilities().transitivelyExportedPackages(importedModule)) {
+                if ((pack.getEnclosingElement() instanceof ModuleElement transitiveModule) && transitiveModule != importedModule && usedModules.contains(transitiveModule)) {
+                    transitiveModulesToImportingIdentifier.putIfAbsent(transitiveModule, root);
+                }
+            }
+        }
     }
 
     private static Set<Element> getUsedElements(final CompilationInfo info, final CompilationUnitTree cut, final Set<Element> starImports, final Set<Element> staticStarImports, final Set<Element> moduleImports) {

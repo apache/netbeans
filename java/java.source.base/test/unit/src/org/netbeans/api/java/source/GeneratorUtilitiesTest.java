@@ -733,6 +733,35 @@ public class GeneratorUtilitiesTest extends NbTestCase {
         preferences.putBoolean("allowConvertToStarImport", false);
     }
 
+    public void testAddImportsWithModule6() throws Exception {
+        Preferences preferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
+        preferences.putBoolean("allowConvertToStarImport", true);
+        performTest(
+                """
+                package test;
+                import java.util.List;
+                public class Test {
+                    private List l = new ArrayList<>();
+                    private Button b;
+                    private void op(List list) {
+                        int size = list.size();
+                    }
+                }
+                """,
+                "25", new AddImportsTask(false, List.of("java.desktop", "java.sql"), "java.awt.Button", "java.util.AbstractList", "java.util.ArrayList", "java.util.Collection", "java.util.Collections", "javax.xml.XMLConstants", "java.sql.PreparedStatement", "java.awt.datatransfer.Clipboard"),
+                (CompilationInfo info) -> {
+                    assertEquals(0, info.getDiagnostics().size());
+                    List<? extends ImportTree> imports = info.getCompilationUnit().getImports();
+                    assertEquals(4, imports.size());
+                    assertEquals("java.util.*", imports.get(0).getQualifiedIdentifier().toString());
+                    assertEquals("java.util.List", imports.get(1).getQualifiedIdentifier().toString());
+                    assertTrue(imports.get(2).isModule());
+                    assertEquals("java.desktop", imports.get(2).getQualifiedIdentifier().toString());
+                    assertTrue(imports.get(3).isModule());
+                    assertEquals("java.sql", imports.get(3).getQualifiedIdentifier().toString());
+                }, false);
+        preferences.putBoolean("allowConvertToStarImport", false);
+    }
 
     public void testGetterNamingConvention0() throws Exception {//#165241
         performTest("package test;\npublic class Test {\nprivate int eMai;\npublic Test(){\n}\n }\n", new GetterSetterTask(34, false), new Validator() {

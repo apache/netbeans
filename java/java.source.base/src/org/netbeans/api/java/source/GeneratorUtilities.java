@@ -133,6 +133,7 @@ import org.netbeans.modules.java.source.save.DiffContext;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
+import org.openide.util.Pair;
 
 
 /**
@@ -1154,6 +1155,8 @@ public final class GeneratorUtilities {
         }
         // capture module counts if module imports are present
         Map<ModuleElement, Integer> modCounts = jcut.moduleImportScope != null || !modulesToImport.isEmpty() ? new LinkedHashMap<>() : null;
+        Set<ModuleElement> transitivelyImportedUsedModules = modCounts != null ? new HashSet<>() : null;
+
         for (Element e : elementsToImport) {
             boolean isStatic = false;
             Element el = null;
@@ -1226,8 +1229,11 @@ public final class GeneratorUtilities {
                 // because more module classes may be used in the future.
                 if (modCounts != null) {
                     ModuleElement m = elements.getModuleElement(imp.getQualifiedIdentifier().toString());
-                    if (m != null) modCounts.put(m, -2); // -2 = do not touch the module import
-                    modulesToImport.remove(m);
+                    if (m != null) {
+                        modCounts.put(m, -2); // -2 = do not touch the module import
+                        collectTransitivelyImportedUsedModules(m, modCounts.keySet(), copy, transitivelyImportedUsedModules);
+                        modulesToImport.remove(m);
+                    }
                     continue;
                 }
             }
@@ -1292,15 +1298,8 @@ public final class GeneratorUtilities {
         // remove those star imports that do not satisfy the thresholds
         for (Iterator<ImportTree> ii = imports.iterator(); ii.hasNext();) {
             ImportTree imp = ii.next();
-            if (imp.isModule()) {
-                if (modCounts != null) {
-                    // remove module imports if they are unused
-                    ModuleElement m = elements.getModuleElement(imp.getQualifiedIdentifier().toString());
-                    if (m != null && !modCounts.containsKey(m)) {
-                        ii.remove();
-                    }
-                }
-                continue;
+            if (imp.isModule()) {                
+                continue;   // The module imports should be retained
             }
             if (!isStarImport(imp)) {
                 continue;
@@ -1319,17 +1318,25 @@ public final class GeneratorUtilities {
         
         // Add modulesToImport to the importScope, to check name clashes, if any
         if (!modulesToImport.isEmpty()) {
+            assert modCounts != null && transitivelyImportedUsedModules != null;
+            modulesToImport.removeIf(transitivelyImportedUsedModules::contains);
             for (ModuleElement m : modulesToImport) {
                 for (PackageElement e : elementUtilities.transitivelyExportedPackages(m)) {
                     if (e instanceof Symbol p) {
                         importScope.appendSubScope(p.members());
                     }
+                    collectTransitivelyImportedUsedModule(e, m, modCounts.keySet(), transitivelyImportedUsedModules);
                 }
-                if (modCounts != null) {
-                    modCounts.replace(m, -1);
-                }
+                modCounts.replace(m, -1);
             }
         }        
+        if (transitivelyImportedUsedModules != null && modCounts != null) {
+            // Mark all transitively imported modules as already imported,
+            // and skip importing it or its members. This is done by setting the 
+            // value for it to -2 in modCounts.
+            transitivelyImportedUsedModules.forEach(m -> modCounts.computeIfPresent(m, (k, old) -> old != null && old < 0 ? old : Integer.valueOf(-2)));
+        }
+
         // check for possible name clashes originating from adding the package or module imports
         Set<Element> explicitNamedImports = new HashSet<>();
         for (Element element : elementsToImport) {
@@ -1499,6 +1506,22 @@ public final class GeneratorUtilities {
         
         // return a copy of the unit with changed imports section
         return make.CompilationUnit(cut.getPackage(), imports, cut.getTypeDecls(), cut.getSourceFile());
+    }
+
+    private static void collectTransitivelyImportedUsedModules(final ModuleElement importedModule, final Set<ModuleElement> usedModules, final CompilationInfo info, final Set<ModuleElement> transitivelyImportedUsedModules) {
+        if (importedModule != null) {
+            if (transitivelyImportedUsedModules.contains(importedModule))
+                return;
+            for (PackageElement pack : info.getElementUtilities().transitivelyExportedPackages(importedModule)) {
+                collectTransitivelyImportedUsedModule(pack, importedModule, usedModules, transitivelyImportedUsedModules);
+            }
+        }
+    }
+
+    private static void collectTransitivelyImportedUsedModule(final PackageElement transitivePackage, final ModuleElement importedModule, final Set<ModuleElement> usedModules, final Set<ModuleElement> transitivelyImportedUsedModules) {
+        if ((transitivePackage.getEnclosingElement() instanceof ModuleElement transitiveModule) && transitiveModule != importedModule && usedModules.contains(transitiveModule)) {
+            transitivelyImportedUsedModules.add(transitiveModule);
+        }
     }
 
     /**

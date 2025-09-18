@@ -293,6 +293,24 @@
         <![CDATA[${TYPE default="Object"} ${OBJ newVarName default="obj"} = new ${TYPE}(${cursor});]]>
         </code>
     </codetemplate>
+
+    <codetemplate abbreviation="vm" contexts="CLASS">
+        <code>
+<![CDATA[void main() {
+    ${cursor}
+}
+]]>
+        </code>
+    </codetemplate>
+
+    <codetemplate abbreviation="svm" contexts="CLASS">
+        <code>
+<![CDATA[static void main() {
+    ${cursor}
+}
+]]>
+        </code>
+    </codetemplate>
         
     <codetemplate abbreviation="psvm" contexts="CLASS">
         <code>

@@ -537,7 +537,13 @@ public final class EditorPreferencesKeys {
     public static final String JAVADOC_PREFERRED_SIZE = SimpleValueNames.JAVADOC_PREFERRED_SIZE;
     public static final String POPUP_MENU_ENABLED = SimpleValueNames.POPUP_MENU_ENABLED;
     public static final String SHOW_DEPRECATED_MEMBERS = SimpleValueNames.SHOW_DEPRECATED_MEMBERS;
-    
+
+    /**
+     * Whether the code completion should insert text for the parameters of executable items.
+     * Values: java.lang.Boolean
+     */
+    public static final String COMPLETION_INSERT_TEXT_PARAMETERS = "completion-insert-text-parameters"; // NOI18N
+
     /** List of the action names that should be shown in the popup menu.
     * Null name means separator.
     * Values: java.util.List containing java.lang.String instances

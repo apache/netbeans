@@ -13,12 +13,12 @@ run {
 }
 
 task testJar(type: Jar) {
-    classifier = 'tests'
+    archiveClassifier = 'tests'
     from sourceSets.test.output
 }
 
 task testSourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'test-sources'
+    archiveClassifier = 'test-sources'
     from sourceSets.test.allSource
 }
 

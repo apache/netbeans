@@ -19,7 +19,8 @@
 
 plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("io.micronaut.application") version "3.5.1"
+// ExtensionPropertiesExtractorTest#testTaskListProperty fails with next point release
+    id("io.micronaut.application") version "3.6.5"
 }
 
 version = "0.1"

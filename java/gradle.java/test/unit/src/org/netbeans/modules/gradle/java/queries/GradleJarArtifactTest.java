@@ -274,7 +274,7 @@ public class GradleJarArtifactTest extends NbTestCase {
                     "",
                     "",
                     "task sourcesJar(type: Jar) {",
-                    "    classifier = 'sources'",
+                    "    archiveClassifier = 'sources'",
                     "    from sourceSets.main.allSource",
                     "}",
                     "assemble.dependsOn sourcesJar"

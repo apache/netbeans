@@ -30,9 +30,12 @@ import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
 import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.model.FileScope;
+import org.netbeans.modules.php.editor.model.InterfaceScope;
+import org.netbeans.modules.php.editor.model.Model;
+import org.netbeans.modules.php.editor.model.Scope;
+import org.netbeans.modules.php.editor.model.VariableScope;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
-import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration.Modifier;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
@@ -73,7 +76,8 @@ public class IncorrectNonAbstractMethodHintError extends HintErrorRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
-            CheckVisitor checkVisitor = new CheckVisitor();
+            Model model = phpParseResult.getModel();
+            CheckVisitor checkVisitor = new CheckVisitor(model);
             phpParseResult.getProgram().accept(checkVisitor);
             Set<MethodDeclaration> incorrectNonAbstractMethods = checkVisitor.getIncorrectNonAbstractMethods();
             addIcorrectNonAbstractMethodHints(incorrectNonAbstractMethods, hints, context.doc);
@@ -107,7 +111,14 @@ public class IncorrectNonAbstractMethodHintError extends HintErrorRule {
     //~ Inner classes
     private static final class CheckVisitor extends DefaultVisitor {
 
+        private final Model model;
+
         private final Set<MethodDeclaration> incorrectNonAbstractMethods = new HashSet<>();
+
+        public CheckVisitor(Model model) {
+            super();
+            this.model = model;
+        }
 
         @Override
         public void visit(MethodDeclaration node) {
@@ -116,8 +127,10 @@ public class IncorrectNonAbstractMethodHintError extends HintErrorRule {
             }
             if (!Modifier.isAbstract(node.getModifier())) {
                 FunctionDeclaration function = node.getFunction();
-                Block body = function.getBody();
-                if (body == null) {
+                final VariableScope variableScope = model.getVariableScope(function.getEndOffset() - 1);
+                Scope inScope = variableScope.getInScope();
+                boolean isInterface = inScope instanceof InterfaceScope;
+                if (!isInterface && variableScope.getBlockRange().getLength() <= 1) {
                     incorrectNonAbstractMethods.add(node);
                 }
             }

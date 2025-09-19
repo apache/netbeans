@@ -25,6 +25,7 @@ package org.netbeans.modules.maven.execute.model;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Class NetbeansActionMapping.
@@ -391,4 +392,71 @@ public class NetbeansActionMapping implements java.io.Serializable {
     {
         return modelEncoding;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + Objects.hashCode(this.actionName);
+        hash = 89 * hash + Objects.hashCode(this.displayName);
+        hash = 89 * hash + (this.recursive ? 1 : 0);
+        hash = 89 * hash + Objects.hashCode(this.packagings);
+        hash = 89 * hash + Objects.hashCode(this.goals);
+        hash = 89 * hash + Objects.hashCode(this.properties);
+        hash = 89 * hash + Objects.hashCode(this.options);
+        hash = 89 * hash + Objects.hashCode(this.activatedProfiles);
+        hash = 89 * hash + Objects.hashCode(this.basedir);
+        hash = 89 * hash + Objects.hashCode(this.preAction);
+        hash = 89 * hash + Objects.hashCode(this.reactor);
+        hash = 89 * hash + Objects.hashCode(this.modelEncoding);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final NetbeansActionMapping other = (NetbeansActionMapping) obj;
+        if (this.recursive != other.recursive) {
+            return false;
+        }
+        if (!Objects.equals(this.actionName, other.actionName)) {
+            return false;
+        }
+        if (!Objects.equals(this.displayName, other.displayName)) {
+            return false;
+        }
+        if (!Objects.equals(this.basedir, other.basedir)) {
+            return false;
+        }
+        if (!Objects.equals(this.preAction, other.preAction)) {
+            return false;
+        }
+        if (!Objects.equals(this.reactor, other.reactor)) {
+            return false;
+        }
+        if (!Objects.equals(this.modelEncoding, other.modelEncoding)) {
+            return false;
+        }
+        if (!Objects.equals(this.packagings, other.packagings)) {
+            return false;
+        }
+        if (!Objects.equals(this.goals, other.goals)) {
+            return false;
+        }
+        if (!Objects.equals(this.properties, other.properties)) {
+            return false;
+        }
+        if (!Objects.equals(this.options, other.options)) {
+            return false;
+        }
+        return Objects.equals(this.activatedProfiles, other.activatedProfiles);
+    }
+    
 }

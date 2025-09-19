@@ -29,7 +29,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -47,6 +46,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
+import javax.lang.model.element.Element;
+import javax.lang.model.util.Elements;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -74,7 +75,10 @@ import org.codehaus.plexus.util.FileUtils;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
-import org.netbeans.api.java.queries.JavadocForBinaryQuery;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.source.ClasspathInfo;
+import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.progress.aggregate.AggregateProgressHandle;
 import org.netbeans.api.progress.aggregate.BasicAggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.ProgressContributor;
@@ -105,6 +109,7 @@ import org.netbeans.modules.maven.queries.RepositoryForBinaryQueryImpl.Coordinat
 import org.netbeans.modules.maven.spi.IconResources;
 import org.netbeans.modules.maven.spi.nodes.DependencyTypeIconBadge;
 import org.netbeans.modules.maven.spi.queries.ForeignClassBundler;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.java.project.support.ui.PackageView;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -113,7 +118,6 @@ import org.openide.awt.HtmlBrowser;
 import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataObject;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
@@ -122,6 +126,7 @@ import org.openide.nodes.Node;
 import org.openide.nodes.PropertySupport;
 import org.openide.nodes.Sheet;
 import org.openide.util.ContextAwareAction;
+import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -1398,11 +1403,11 @@ public class DependencyNode extends AbstractNode implements PreferenceChangeList
 
         @Override
         public Action[] getActions(boolean context) {
-            List<Action> result = new ArrayList<Action>();
+            List<Action> result = new ArrayList<>();
             result.addAll(Arrays.asList(super.getActions(false)));
             result.add(new OpenJavadocAction());
 
-            return result.toArray(new Action[0]);
+            return result.toArray(Action[]::new);
         }
 
         @Messages("BTN_View_Javadoc=Show Javadoc")
@@ -1425,45 +1430,37 @@ public class DependencyNode extends AbstractNode implements PreferenceChangeList
                 FileObject jar = FileUtil.getArchiveFile(fil);
                 FileObject root = FileUtil.getArchiveRoot(jar);
                 String rel = FileUtil.getRelativePath(root, fil);
-                rel = rel.replaceAll("[.]class$", ".html"); //NOI18N
-                JavadocForBinaryQuery.Result res = JavadocForBinaryQuery.findJavadoc(root.toURL());
-                if (fil.isFolder()) {
-                    rel = rel + "/package-summary.html"; //NOI18N
+                if (rel == null) {
+                    return;
                 }
-                URL javadocUrl = findJavadoc(rel, res.getRoots());
-                if (javadocUrl != null) {
-                    HtmlBrowser.URLDisplayer.getDefault().showURL(javadocUrl);
-                } else {
-                    StatusDisplayer.getDefault().setStatusText(ERR_No_Javadoc_Found(fil.getPath()));
+                if (rel.endsWith(".class")) {
+                    rel = rel.substring(0, rel.length() - 6);
+                }
+                String fqn = rel.replace('/', '.').replace("$", ".");
+
+                ClassPath cp = ClassPathSupport.createClassPath(root);
+                ClasspathInfo cpInfo = ClasspathInfo.create(ClassPath.EMPTY, cp, ClassPath.EMPTY);
+
+                JavaSource js = JavaSource.create(cpInfo);
+                try {
+                    js.runUserActionTask(cc -> {
+                        cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                        Elements elements = cc.getElements();
+                        Element element = fil.isFolder() ? elements.getPackageElement(fqn) : elements.getTypeElement(fqn);
+                        URL javadocUrl = (element != null) ? SourceUtils.getPreferredJavadoc(element) : null;
+
+                        SwingUtilities.invokeLater(() -> {
+                            if (javadocUrl != null) {
+                                HtmlBrowser.URLDisplayer.getDefault().showURL(javadocUrl);
+                            } else {
+                                StatusDisplayer.getDefault().setStatusText(ERR_No_Javadoc_Found(fil.getPath()));
+                            }
+                        });
+                    }, true);
+                } catch (IOException ioex) {
+                    Exceptions.printStackTrace(ioex);
                 }
             }
-
-            /**
-             * Locates a javadoc page by a relative name and an array of javadoc roots
-             * @param resource the relative name of javadoc page
-             * @param urls the array of javadoc roots
-             * @return the URL of found javadoc page or null if there is no such a page.
-             */
-            URL findJavadoc(String resource, URL[] urls) {
-                for (int i = 0; i < urls.length; i++) {
-                    String base = urls[i].toExternalForm();
-                    if (!base.endsWith("/")) { // NOI18N
-                        base = base + "/"; // NOI18N
-                    }
-                    try {
-                        URL u = new URL(base + resource);
-                        FileObject fo = URLMapper.findFileObject(u);
-                        if (fo != null) {
-                            return u;
-                        }
-                    } catch (MalformedURLException ex) {
-//                            ErrorManager.getDefault().log(ErrorManager.ERROR, "Cannot create URL for "+base+resource+". "+ex.toString());   //NOI18N
-                        continue;
-                    }
-                }
-                return null;
-            }
-
         }
     }
 

@@ -201,6 +201,9 @@ public final class TerminalSupportImpl {
                         // (exception supressed in FetchHostInfoTask.compute)
                         if (!ConnectionManager.getInstance().isConnectedTo(env)) {
                             return;
+                        }  else {
+                            // because we can reuse an existing connection we need to try update a recent connection list
+                            ConnectionManager.getInstance().addConnectionToRecentConnections(env);
                         }
 
                         try {

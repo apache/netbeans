@@ -18,8 +18,7 @@
  */
 package org.netbeans.modules.java.hints.jdk;
 
-import org.netbeans.api.java.queries.CompilerOptionsQuery;
-import org.netbeans.modules.java.hints.errors.Utilities;
+import org.netbeans.modules.java.hints.Feature;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.editor.hints.Severity;
@@ -45,8 +44,6 @@ import org.openide.util.NbBundle;
         minSourceVersion = "19")
 public class CanUseVT {
 
-    private static final int VT_PREVIEW_JDK_VERSION = 19;
-
     @TriggerPatterns({
         @TriggerPattern(value = "java.util.concurrent.Executors.newFixedThreadPool($size)", constraints = @ConstraintVariableType(variable = "$size", type = "int")),
         @TriggerPattern(value = "java.util.concurrent.Executors.newFixedThreadPool($size, $factory)", constraints = {
@@ -56,7 +53,7 @@ public class CanUseVT {
         @TriggerPattern(value = "java.util.concurrent.Executors.newCachedThreadPool($factory)", constraints
                 = @ConstraintVariableType(variable = "$factory", type = "java.util.concurrent.ThreadFactory"))})
     public static ErrorDescription compute(HintContext ctx) {
-        if (Utilities.isJDKVersionLower(VT_PREVIEW_JDK_VERSION) && !CompilerOptionsQuery.getOptions(ctx.getInfo().getFileObject()).getArguments().contains("--enable-preview")) {
+        if (!Feature.VIRTUAL_THREADS.isEnabled(ctx.getInfo())) {
             return null;
         }
         if (ctx.getVariables().get("$factory") != null) {

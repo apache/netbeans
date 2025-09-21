@@ -26,11 +26,9 @@ import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.PatternTree;
 import com.sun.source.tree.StatementTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.source.tree.VariableTree;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -48,9 +46,8 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.WorkingCopy;
-import org.netbeans.api.java.queries.CompilerOptionsQuery;
 import org.netbeans.api.java.source.support.CancellableTreePathScanner;
-import org.netbeans.modules.java.hints.errors.Utilities;
+import org.netbeans.modules.java.hints.Feature;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
@@ -76,13 +73,11 @@ import org.openide.util.NbBundle;
         minSourceVersion = "19")
 public class ConvertToRecordPattern {
 
-    private static final int RECORD_PATTERN_PREVIEW_JDK_VERSION = 19;
-
     @TriggerPatterns({
         @TriggerPattern(value = "if ($expr instanceof $typeI0 $var0 ) { $statements$;} else $else$;")
     })
     public static ErrorDescription trivial(HintContext ctx) {
-        if (Utilities.isJDKVersionLower(RECORD_PATTERN_PREVIEW_JDK_VERSION) && !CompilerOptionsQuery.getOptions(ctx.getInfo().getFileObject()).getArguments().contains("--enable-preview")) {
+        if (!Feature.RECORD_PATTERN.isEnabled(ctx.getInfo())) {
             return null;
         }
         ElementKind kind = ctx.getInfo().getTrees().getElement(ctx.getVariables().get("$typeI0")).getKind();
@@ -102,7 +97,7 @@ public class ConvertToRecordPattern {
                     localVarList.add(node.getName().toString());
                     Map<String, TreePath> outerVariables = new HashMap<>();
                     Map<String, String> innerVariables = new HashMap<>();
-                    boolean match = MatcherUtilities.matches(ctx, getCurrentPath(), "$type $var1 = $expr3.$meth1()", outerVariables, new HashMap<String, Collection<? extends TreePath>>(), innerVariables);
+                    boolean match = MatcherUtilities.matches(ctx, getCurrentPath(), "$type $var1 = $expr3.$meth1()", outerVariables, new HashMap<>(), innerVariables);
 
                     if (match && outerVariables.get("$expr3").getLeaf().toString().equals(variableName)) {
                         varNames.put(innerVariables.get("$meth1"), innerVariables.get("$var1"));
@@ -135,7 +130,7 @@ public class ConvertToRecordPattern {
 
         public FixImpl(CompilationInfo info, TreePath main, Set<TreePath> replaceOccurrences, List<? extends RecordComponentElement> recordSig, Map<String, String> varNames, Set<String> localVarList) {
             super(info, main);
-            this.recordSig = recordSig.stream().map(elem -> ElementHandle.create(elem)).collect(Collectors.toList());
+            this.recordSig = recordSig.stream().map(elem -> ElementHandle.create(elem)).toList();
             this.varNames = varNames;
             this.replaceOccurrences = replaceOccurrences.stream().map(tp -> TreePathHandle.create(tp, info)).collect(Collectors.toSet());
             this.localVarList = new HashSet<>(localVarList);
@@ -184,9 +179,9 @@ public class ConvertToRecordPattern {
             }
             InstanceOfTree cond = wc.getTreeMaker().InstanceOf(iot.getExpression(), wc.getTreeMaker().RecordPattern((ExpressionTree) pattern.
                     getVariable().getType(), bindTree, pattern.getVariable()));
-            List<Tree> removeList = replaceOccurrences.stream().map(tph -> tph.resolve(wc).getLeaf()).collect(Collectors.toList());
-            for (Tree t : removeList) {
-                bt = wc.getTreeMaker().removeBlockStatement((BlockTree) bt, (StatementTree) t);
+            for (TreePathHandle tph : replaceOccurrences) {
+                StatementTree st = (StatementTree) tph.resolve(wc).getLeaf();
+                bt = wc.getTreeMaker().removeBlockStatement((BlockTree) bt, st);
             }
             wc.rewrite(it, wc.getTreeMaker().If(wc.getTreeMaker().Parenthesized(cond), bt, it.getElseStatement()));
         }

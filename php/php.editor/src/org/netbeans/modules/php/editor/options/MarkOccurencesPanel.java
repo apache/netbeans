@@ -26,13 +26,14 @@ import java.util.List;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.swing.JCheckBox;
+import javax.swing.JPanel;
 import org.openide.util.Exceptions;
 
 /**
  *
  * @author  Petr Hrebejk
  */
-public class MarkOccurencesPanel extends javax.swing.JPanel {
+public class MarkOccurencesPanel extends JPanel {
 
     private static final boolean DEFAULT_VALUE = true; // May need to be splited if the defaunts ar not all on
     private List<JCheckBox> boxes;

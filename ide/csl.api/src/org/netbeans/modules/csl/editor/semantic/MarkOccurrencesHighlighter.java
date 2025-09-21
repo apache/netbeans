@@ -126,7 +126,7 @@ public final class MarkOccurrencesHighlighter extends ParserResultTask<ParserRes
             }
 
             boolean updateHighlights = false;
-            if(seqs.isEmpty()) {
+            if (seqs.isEmpty()) {
                 OccurrencesFinder finder = language.getOccurrencesFinder();
                 if (finder == null || !finder.isMarkOccurrencesEnabled() || !finder.isKeepMarks()) {
                     updateHighlights = true;
@@ -135,7 +135,7 @@ public final class MarkOccurrencesHighlighter extends ParserResultTask<ParserRes
                 updateHighlights = true;
             }
 
-            if(updateHighlights) {
+            if (updateHighlights) {
                 // Update both editor highlighs and sidebar marks
                 layer.setColorings(seqs);
                 OccurrencesMarkProvider.get(doc).setOccurrences(OccurrencesMarkProvider.createMarks(doc, bag, ES_COLOR, NbBundle.getMessage(MarkOccurrencesHighlighter.class, "LBL_ES_TOOLTIP")));
@@ -144,7 +144,7 @@ public final class MarkOccurrencesHighlighter extends ParserResultTask<ParserRes
             SpiSupportAccessor.getInstance().removeCancelSupport(cancel);
         }
     }
-    
+
     @NonNull
     List<OffsetRange> processImpl(ParserResult info, Document doc, int caretPosition) {
         OccurrencesFinder finder = language.getOccurrencesFinder();

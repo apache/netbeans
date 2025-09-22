@@ -22,7 +22,9 @@ import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ImportTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 
@@ -34,10 +36,14 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import java.util.EnumSet;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.prefs.Preferences;
 import java.util.regex.Pattern;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
 
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -946,6 +952,632 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
         //System.err.println(res);
         assertEquals(golden, res);
     }
+
+    public void testWithModuleImport() throws Exception {
+        testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
+        assertTrue(testFile.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testFile,
+            "package hierbas.del.litoral;\n" +
+            "import module java.base;\n" +
+            "public class Test {\n" +
+            "}\n"
+            );
+        String golden =
+            "package hierbas.del.litoral;\n" +
+            "import module java.base;\n" +
+            "public class Test {\n\n" +
+            "    List test;\n" +
+            "}\n";
+
+        JavaSource src = getJavaSource(testFile);
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+                ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                workingCopy.rewrite(clazz, make.addClassMember(clazz, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "test", make.QualIdent("java.util.List"), null)));
+            }
+
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testWithModuleImportClash1() throws Exception {
+        testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
+        assertTrue(testFile.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testFile,
+            "package hierbas.del.litoral;\n" +
+            "import module java.base;\n" +
+            "public class Test {\n" +
+            "}\n"
+            );
+        String golden =
+            "package hierbas.del.litoral;\n" +
+            "import module java.base;\n" +
+            "public class Test {\n\n" +
+            "    java.awt.List test;\n" +
+            "}\n";
+
+        JavaSource src = getJavaSource(testFile);
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+                ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                workingCopy.rewrite(clazz, make.addClassMember(clazz, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "test", make.QualIdent("java.awt.List"), null)));
+            }
+
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testWithModuleImportClash2() throws Exception {
+        testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
+        assertTrue(testFile.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testFile,
+            "package hierbas.del.litoral;\n" +
+            "import java.awt.List;\n" +
+            "import module java.base;\n" +
+            "public class Test {\n" +
+            "}\n"
+            );
+        String golden =
+            "package hierbas.del.litoral;\n" +
+            "import java.awt.List;\n\n" +
+            "import module java.base;\n" +
+            "public class Test {\n\n" +
+            "    List test1;\n" +
+            "    java.util.List test2;\n" +
+            "}\n";
+
+        JavaSource src = getJavaSource(testFile);
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+                ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                ClassTree newClass = clazz;
+                newClass = make.addClassMember(newClass, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "test1", make.QualIdent("java.awt.List"), null));
+                newClass = make.addClassMember(newClass, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "test2", make.QualIdent("java.util.List"), null));
+                workingCopy.rewrite(clazz, newClass);
+            }
+
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testWithModuleImportClash3() throws Exception {
+        testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
+        assertTrue(testFile.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testFile,
+            "package hierbas.del.litoral;\n" +
+            "import module java.se;\n" +
+            "public class Test {\n" +
+            "}\n"
+            );
+        String golden =
+            "package hierbas.del.litoral;\n" +
+            "import java.awt.List;\n\n" +
+            "import module java.se;\n" +
+            "public class Test {\n\n" +
+            "    List test1;\n" +
+            "    java.util.List test2;\n" +
+            "}\n";
+
+        JavaSource src = getJavaSource(testFile);
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+                ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                ClassTree newClass = clazz;
+                newClass = make.addClassMember(newClass, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "test1", make.QualIdent("java.awt.List"), null));
+                newClass = make.addClassMember(newClass, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "test2", make.QualIdent("java.util.List"), null));
+                workingCopy.rewrite(clazz, newClass);
+            }
+
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testWithModuleImportClash4() throws Exception {
+        beginTx();
+        File testModule = new File(getWorkDir(), "module-info.java");
+        TestUtilities.copyStringToFile(testModule,
+            """
+            module m {
+                requires transitive java.se; //to get java.util.List and java.awt.List:
+                exports api;
+            }
+            """
+            );
+        File testApi = new File(getWorkDir(), "api/List.java");
+        assertTrue(testApi.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testApi,
+            """
+            package api;
+            public class List {}
+            """
+            );
+        testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
+        assertTrue(testFile.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testFile,
+            "package hierbas.del.litoral;\n" +
+            "import module m;\n" +
+            "public class Test {\n" +
+            "}\n"
+            );
+        String golden =
+            "package hierbas.del.litoral;\n" +
+            "import java.awt.List;\n\n" +
+            "import module m;\n" +
+            "public class Test {\n\n" +
+            "    List test1;\n" +
+            "    java.util.List test2;\n" +
+            "    api.List test3;\n" +
+            "}\n";
+
+        ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create (BootClassPathUtil.getBootClassPath(), BootClassPathUtil.getModuleBootPath(), ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(getSourcePath()), ClassPath.EMPTY, null, true, false, false, true, false, null);
+        JavaSource src = JavaSource.create(cpInfo, FileUtil.toFileObject(testFile));
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+                ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                ClassTree newClass = clazz;
+                newClass = make.addClassMember(newClass, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "test1", make.QualIdent("java.awt.List"), null));
+                newClass = make.addClassMember(newClass, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "test2", make.QualIdent("java.util.List"), null));
+                newClass = make.addClassMember(newClass, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "test3", make.QualIdent("api.List"), null));
+                workingCopy.rewrite(clazz, newClass);
+            }
+
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testPackageImportClash() throws Exception {
+        beginTx();
+        File testApi = new File(getWorkDir(), "api/List.java");
+        assertTrue(testApi.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testApi,
+            """
+            package api;
+            public class List {}
+            """
+            );
+        testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
+        assertTrue(testFile.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testFile,
+            "package hierbas.del.litoral;\n" +
+            "import api.*;\n" +
+            "import java.awt.*;\n" +
+            "import java.util.*;\n" +
+            "public class Test {\n" +
+            "}\n"
+            );
+        String golden =
+            "package hierbas.del.litoral;\n" +
+            "import api.*;\n" +
+            "import java.awt.*;\n" +
+            "import java.awt.List;\n" +
+            "import java.util.*;\n" +
+            "public class Test {\n\n" +
+            "    List test1;\n" +
+            "    java.util.List test2;\n" +
+            "    api.List test3;\n" +
+            "}\n";
+
+        ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create (BootClassPathUtil.getBootClassPath(), ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(getSourcePath()), ClassPath.EMPTY, null, true, false, false, true, false, null);
+        JavaSource src = JavaSource.create(cpInfo, FileUtil.toFileObject(testFile));
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+                ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                ClassTree newClass = clazz;
+                newClass = make.addClassMember(newClass, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "test1", make.QualIdent("java.awt.List"), null));
+                newClass = make.addClassMember(newClass, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "test2", make.QualIdent("java.util.List"), null));
+                newClass = make.addClassMember(newClass, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "test3", make.QualIdent("api.List"), null));
+                workingCopy.rewrite(clazz, newClass);
+            }
+
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testStaticImportNoClash() throws Exception {
+        beginTx();
+        File testA = new File(getWorkDir(), "api/A.java");
+        assertTrue(testA.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testA,
+            """
+            package api;
+            public class A {
+                public static void test() {}
+                public static void test(int i) {}
+            }
+            """
+            );
+        testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
+        assertTrue(testFile.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testFile,
+                """
+                package hierbas.del.litoral;
+                import static api.A.*;
+                public class Test {
+                    public static void run() {
+                    }
+                }
+                """
+            );
+        String golden =
+            """
+            package hierbas.del.litoral;
+            import static api.A.*;
+            public class Test {
+                public static void run() {
+                    test();
+                    test(1);
+                }
+            }
+            """;
+
+        ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create (BootClassPathUtil.getBootClassPath(), ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(getSourcePath()), ClassPath.EMPTY, null, true, false, false, true, false, null);
+        JavaSource src = JavaSource.create(cpInfo, FileUtil.toFileObject(testFile));
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+                ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                MethodTree testMethodDeclaration = (MethodTree) clazz.getMembers().get(1);
+                TypeElement aClass = workingCopy.getElements().getTypeElement("api.A");
+                ExecutableElement testMethod = aClass.getEnclosedElements().stream().filter(el -> el.getKind() == ElementKind.METHOD).map(el -> ((ExecutableElement) el)).filter(el -> el.getSimpleName().contentEquals("test") && el.getParameters().isEmpty()).findAny().orElseThrow();
+                MethodInvocationTree invocation1 = make.MethodInvocation(List.of(), make.QualIdent(testMethod), List.of());
+                ExecutableElement testMethod2 = aClass.getEnclosedElements().stream().filter(el -> el.getKind() == ElementKind.METHOD).map(el -> ((ExecutableElement) el)).filter(el -> el.getSimpleName().contentEquals("test") && el.getParameters().size() == 1).findAny().orElseThrow();
+                MethodInvocationTree invocation2 = make.MethodInvocation(List.of(), make.QualIdent(testMethod2), List.of(make.Literal(1)));
+                //XXX
+                workingCopy.rewrite(testMethodDeclaration.getBody(), make.addBlockStatement(make.addBlockStatement(testMethodDeclaration.getBody(), make.ExpressionStatement(invocation1)), make.ExpressionStatement(invocation2)));
+            }
+
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testStaticImportNoNewImport() throws Exception {
+        beginTx();
+        File testA = new File(getWorkDir(), "api/A.java");
+        assertTrue(testA.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testA,
+            """
+            package api;
+            public class A {
+                public static void test() {}
+                public static void test(int i) {}
+            }
+            """
+            );
+        File testB = new File(getWorkDir(), "api/B.java");
+        TestUtilities.copyStringToFile(testB,
+            """
+            package api;
+            public class B {
+                public static void test() {}
+                public static void test(int i) {}
+            }
+            """
+            );
+        testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
+        assertTrue(testFile.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testFile,
+                """
+                package hierbas.del.litoral;
+                import static api.A.*;
+                public class Test {
+                    public static void run() {
+                    }
+                }
+                """
+            );
+        String golden =
+            """
+            package hierbas.del.litoral;
+            import static api.A.*;
+            import api.B;
+            public class Test {
+                public static void run() {
+                    B.test();
+                    B.test();
+                    B.test(1);
+                }
+            }
+            """;
+
+        ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create (BootClassPathUtil.getBootClassPath(), ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(getSourcePath()), ClassPath.EMPTY, null, true, false, false, true, false, null);
+        JavaSource src = JavaSource.create(cpInfo, FileUtil.toFileObject(testFile));
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+                ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                MethodTree testMethodDeclaration = (MethodTree) clazz.getMembers().get(1);
+                TypeElement bClass = workingCopy.getElements().getTypeElement("api.B");
+                ExecutableElement testMethod = bClass.getEnclosedElements().stream().filter(el -> el.getKind() == ElementKind.METHOD).map(el -> ((ExecutableElement) el)).filter(el -> el.getSimpleName().contentEquals("test") && el.getParameters().isEmpty()).findAny().orElseThrow();
+                MethodInvocationTree invocation1 = make.MethodInvocation(List.of(), make.QualIdent(testMethod), List.of());
+                MethodInvocationTree invocation2 = make.MethodInvocation(List.of(), make.QualIdent(testMethod), List.of());
+                ExecutableElement testMethod2 = bClass.getEnclosedElements().stream().filter(el -> el.getKind() == ElementKind.METHOD).map(el -> ((ExecutableElement) el)).filter(el -> el.getSimpleName().contentEquals("test") && el.getParameters().size() == 1).findAny().orElseThrow();
+                MethodInvocationTree invocation3 = make.MethodInvocation(List.of(), make.QualIdent(testMethod2), List.of(make.Literal(1)));
+                workingCopy.rewrite(testMethodDeclaration.getBody(), make.addBlockStatement(make.addBlockStatement(make.addBlockStatement(testMethodDeclaration.getBody(), make.ExpressionStatement(invocation1)), make.ExpressionStatement(invocation2)), make.ExpressionStatement(invocation3)));
+            }
+
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testClashWithVisibleThroughClasses() throws Exception {
+        beginTx();
+        File testA = new File(getWorkDir(), "api/A.java");
+        assertTrue(testA.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testA,
+            """
+            package api;
+            public class A {
+                public static void test() {}
+                public static void test(int i) {}
+            }
+            """
+            );
+        testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
+        assertTrue(testFile.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testFile,
+                """
+                package hierbas.del.litoral;
+                import static api.A.*;
+                public class Test {
+                    public static void test() {
+                    }
+                }
+                """
+            );
+        String golden =
+            """
+            package hierbas.del.litoral;
+            import api.A;
+            import static api.A.*;
+            public class Test {
+                public static void test() {
+                    A.test();
+                    A.test(1);
+                }
+            }
+            """;
+
+        ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create (BootClassPathUtil.getBootClassPath(), ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(getSourcePath()), ClassPath.EMPTY, null, true, false, false, true, false, null);
+        JavaSource src = JavaSource.create(cpInfo, FileUtil.toFileObject(testFile));
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+                ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                MethodTree testMethodDeclaration = (MethodTree) clazz.getMembers().get(1);
+                TypeElement aClass = workingCopy.getElements().getTypeElement("api.A");
+                ExecutableElement testMethod = aClass.getEnclosedElements().stream().filter(el -> el.getKind() == ElementKind.METHOD).map(el -> ((ExecutableElement) el)).filter(el -> el.getSimpleName().contentEquals("test") && el.getParameters().isEmpty()).findAny().orElseThrow();
+                MethodInvocationTree invocation1 = make.MethodInvocation(List.of(), make.QualIdent(testMethod), List.of());
+                ExecutableElement testMethod2 = aClass.getEnclosedElements().stream().filter(el -> el.getKind() == ElementKind.METHOD).map(el -> ((ExecutableElement) el)).filter(el -> el.getSimpleName().contentEquals("test") && el.getParameters().size() == 1).findAny().orElseThrow();
+                MethodInvocationTree invocation2 = make.MethodInvocation(List.of(), make.QualIdent(testMethod2), List.of(make.Literal(1)));
+                workingCopy.rewrite(testMethodDeclaration.getBody(), make.addBlockStatement(make.addBlockStatement(testMethodDeclaration.getBody(), make.ExpressionStatement(invocation1)), make.ExpressionStatement(invocation2)));
+            }
+
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testVisibleThroughClasses1() throws Exception {
+        beginTx();
+        testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
+        assertTrue(testFile.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testFile,
+                """
+                package hierbas.del.litoral;
+                public class Test {
+                    public static void test() {
+                    }
+                    public static void test(int i) {
+                    }
+                }
+                """
+            );
+        String golden =
+            """
+            package hierbas.del.litoral;
+            public class Test {
+                public static void test() {
+                    test();
+                    test(1);
+                }
+                public static void test(int i) {
+                }
+            }
+            """;
+
+        ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create (BootClassPathUtil.getBootClassPath(), ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(getSourcePath()), ClassPath.EMPTY, null, true, false, false, true, false, null);
+        JavaSource src = JavaSource.create(cpInfo, FileUtil.toFileObject(testFile));
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+                ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                MethodTree testMethodDeclaration = (MethodTree) clazz.getMembers().get(1);
+                TypeElement testClass = workingCopy.getElements().getTypeElement("hierbas.del.litoral.Test");
+                ExecutableElement testMethod = testClass.getEnclosedElements().stream().filter(el -> el.getKind() == ElementKind.METHOD).map(el -> ((ExecutableElement) el)).filter(el -> el.getSimpleName().contentEquals("test") && el.getParameters().isEmpty()).findAny().orElseThrow();
+                MethodInvocationTree invocation1 = make.MethodInvocation(List.of(), make.QualIdent(testMethod), List.of());
+                ExecutableElement testMethod2 = testClass.getEnclosedElements().stream().filter(el -> el.getKind() == ElementKind.METHOD).map(el -> ((ExecutableElement) el)).filter(el -> el.getSimpleName().contentEquals("test") && el.getParameters().size() == 1).findAny().orElseThrow();
+                MethodInvocationTree invocation2 = make.MethodInvocation(List.of(), make.QualIdent(testMethod2), List.of(make.Literal(1)));
+                workingCopy.rewrite(testMethodDeclaration.getBody(), make.addBlockStatement(make.addBlockStatement(testMethodDeclaration.getBody(), make.ExpressionStatement(invocation1)), make.ExpressionStatement(invocation2)));
+            }
+
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testVisibleThroughClasses2() throws Exception {
+        beginTx();
+        testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
+        assertTrue(testFile.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testFile,
+                """
+                package hierbas.del.litoral;
+                public class Test {
+                    public static class Nested {
+                        public static void test() {
+                        }
+                    }
+                    public static void test(int i) {
+                    }
+                }
+                """
+            );
+        String golden =
+            """
+            package hierbas.del.litoral;
+            public class Test {
+                public static class Nested {
+                    public static void test() {
+                        test();
+                        Test.test(1);
+                    }
+                }
+                public static void test(int i) {
+                }
+            }
+            """;
+
+        ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create (BootClassPathUtil.getBootClassPath(), ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(getSourcePath()), ClassPath.EMPTY, null, true, false, false, true, false, null);
+        JavaSource src = JavaSource.create(cpInfo, FileUtil.toFileObject(testFile));
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+                ClassTree clazz = (ClassTree) ((ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0)).getMembers().get(1);
+                MethodTree testMethodDeclaration = (MethodTree) clazz.getMembers().get(1);
+                TypeElement testClass = workingCopy.getElements().getTypeElement("hierbas.del.litoral.Test");
+                TypeElement testNestedClass = workingCopy.getElements().getTypeElement("hierbas.del.litoral.Test.Nested");
+                ExecutableElement testMethod = testNestedClass.getEnclosedElements().stream().filter(el -> el.getKind() == ElementKind.METHOD).map(el -> ((ExecutableElement) el)).filter(el -> el.getSimpleName().contentEquals("test") && el.getParameters().isEmpty()).findAny().orElseThrow();
+                MethodInvocationTree invocation1 = make.MethodInvocation(List.of(), make.QualIdent(testMethod), List.of());
+                ExecutableElement testMethod2 = testClass.getEnclosedElements().stream().filter(el -> el.getKind() == ElementKind.METHOD).map(el -> ((ExecutableElement) el)).filter(el -> el.getSimpleName().contentEquals("test") && el.getParameters().size() == 1).findAny().orElseThrow();
+                MethodInvocationTree invocation2 = make.MethodInvocation(List.of(), make.QualIdent(testMethod2), List.of(make.Literal(1)));
+                workingCopy.rewrite(testMethodDeclaration.getBody(), make.addBlockStatement(make.addBlockStatement(testMethodDeclaration.getBody(), make.ExpressionStatement(invocation1)), make.ExpressionStatement(invocation2)));
+            }
+
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testVisibleThroughClasses3() throws Exception {
+        beginTx();
+        String code =
+                """
+                package hierbas.del.litoral;
+                public class Test {
+                    private Object x() {
+                        return nu|ll
+                    }
+                }
+                """;
+        int pos = code.indexOf('|');
+
+        code = code.substring(0, pos) + code.substring(pos + 1);
+
+        testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
+        assertTrue(testFile.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testFile, code);
+        String golden =
+            """
+            package hierbas.del.litoral;
+            public class Test {
+                private Object x() {
+                    return new Test() {
+                        Object o = Test.this;
+                    }
+                }
+            }
+            """;
+
+        ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create (BootClassPathUtil.getBootClassPath(), ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(getSourcePath()), ClassPath.EMPTY, null, true, false, false, true, false, null);
+        JavaSource src = JavaSource.create(cpInfo, FileUtil.toFileObject(testFile));
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+                TreePath tp = workingCopy.getTreeUtilities().pathFor(pos);
+                TypeElement testClass = workingCopy.getElements().getTypeElement("hierbas.del.litoral.Test");
+                VariableTree field = make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)),
+                                                   "o",
+                                                   make.QualIdent("java.lang.Object"),
+                                                   make.MemberSelect(make.QualIdent(testClass), "this"));
+                ClassTree innerClass = make.Class(make.Modifiers(EnumSet.noneOf(Modifier.class)),
+                                                  testClass.getSimpleName(),
+                                                  List.of(),
+                                                  null,
+                                                  List.of(),
+                                                  List.of(),
+                                                  Collections.singletonList(field));
+                NewClassTree nct = make.NewClass(null, List.of(), make.QualIdent(testClass), List.of(), innerClass);
+                workingCopy.rewrite(tp.getLeaf(), nct);
+            }
+
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    //TODO: non-public classes not imported by module imports!
 
     String getGoldenPckg() {
         return "";

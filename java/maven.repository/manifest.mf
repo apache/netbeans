@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.maven.repository/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/maven/repository/Bundle.properties
 AutoUpdate-Show-In-Client: false
-OpenIDE-Module-Specification-Version: 1.71
+OpenIDE-Module-Specification-Version: 1.72
 

@@ -52,6 +52,7 @@ public class CheckLinks extends MatchingTask {
     private boolean checkexternal = true;
     private boolean checkspaces = true;
     private boolean checkforbidden = true;
+    private boolean failbroken = false;
     private List<Mapper> mappers = new LinkedList<>();
     private List<Filter> filters = new ArrayList<>();
     private File report;
@@ -76,7 +77,16 @@ public class CheckLinks extends MatchingTask {
     public void setCheckforbidden(boolean s) {
         checkforbidden = s;
     }
-    
+
+    /**
+     * Allows to fail build on broken links. Default to false.
+     *
+     * @param fail fail build on broken links
+     */
+    public void setFailbroken(boolean fail) {
+        failbroken = fail;
+    }
+
     /** Set the base directory from which to scan files.
      */
     public void setBasedir (File basedir) {
@@ -142,6 +152,9 @@ public class CheckLinks extends MatchingTask {
             testMessage = b.toString();
         }
         JUnitReportWriter.writeReport(this, null, report, Collections.singletonMap("testBrokenLinks", testMessage));
+        if (!errors.isEmpty() && failbroken) {
+            throw new BuildException("Broken links found in Javadoc");
+        }
     }
     
     private static Pattern hrefOrAnchor = Pattern.compile("<(a|code|div|img|link|h1|h2|h3|h4|h5|li|section|span)(\\s+class=\"[\\w\\-]*\")?(\\s+shape=\"rect\")?(?:\\s+rel=\"stylesheet\")?\\s+(href|name|id|src)=\"([^\"#]*)(#[^\"$]+)?\"(\\s+shape=\"rect\")?(?:\\s+type=\"text/css\")?(\\s+class=\"[\\w\\-]*\")?\\s*/?>", Pattern.CASE_INSENSITIVE);

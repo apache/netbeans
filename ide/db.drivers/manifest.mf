@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.db.drivers
 OpenIDE-Module-Layer: org/netbeans/modules/db/drivers/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/db/drivers/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.59
+OpenIDE-Module-Specification-Version: 1.60
 AutoUpdate-Show-In-Client: false

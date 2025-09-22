@@ -27,9 +27,9 @@ body:
         Latest releases are always available from https://netbeans.apache.org/download/
       multiple: false
       options:
-        - "Apache NetBeans 26"
-#        - "Apache NetBeans 27 latest release candidate"
-        - "Apache NetBeans 27 latest daily build"
+        - "Apache NetBeans 27"
+#        - "Apache NetBeans 28 latest release candidate"
+        - "Apache NetBeans 28 latest daily build"
     validations:
       required: true
   - type: textarea
@@ -73,12 +73,10 @@ body:
       multiple: false
       options:
         - "No / Don't know"
+        - "Apache NetBeans 27"
         - "Apache NetBeans 26"
         - "Apache NetBeans 25"
-        - "Apache NetBeans 24"
-        - "Apache NetBeans 23"
-        - "Apache NetBeans 22"
-        - "Apache NetBeans 21 or earlier"
+        - "Apache NetBeans 24 or earlier"
     validations:
       required: true
   - type: input
@@ -103,12 +101,11 @@ body:
         below if necessary.
       multiple: true
       options:
-        - "Apache NetBeans provided installer"
         - "Apache NetBeans binary zip"
+        - "FoAN provided installer"
         - "Apache NetBeans Snap Package"
         - "Third-party package"
         - "Own source build"
-        - "Apache VSNetBeans for VSCode"
         - "Apache NetBeans platform"
         - "Other"
     validations:

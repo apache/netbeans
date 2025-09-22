@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.modules.css.prep
 OpenIDE-Module-Layer: org/netbeans/modules/css/prep/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/css/prep/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.59
+OpenIDE-Module-Specification-Version: 1.60
 

@@ -53,7 +53,7 @@ public final class DropTargetGlassPane extends JPanel implements DropTargetListe
     // XXX PENDING
     private final Informer informer;
     
-    private WindowDnDManager windowDragAndDrop;
+    private final WindowDnDManager windowDragAndDrop;
     
     /** Current location of cursor in over the glass pane,
      * or <code>null</code> in the case there it is not above
@@ -144,8 +144,8 @@ public final class DropTargetGlassPane extends JPanel implements DropTargetListe
                 return;
             }
             
-            if (droppable instanceof EnhancedDragPainter) {
-                currentPainter = (EnhancedDragPainter)droppable;
+            if (droppable instanceof EnhancedDragPainter edp) {
+                currentPainter = edp;
             } else {
                 currentPainter = null;
             }
@@ -291,8 +291,9 @@ public final class DropTargetGlassPane extends JPanel implements DropTargetListe
     
     private Stroke stroke;
     private Stroke getIndicationStroke() {
-        if( null == stroke )
-            stroke = new BasicStroke(3);
+        if (stroke == null) {
+            stroke = new BasicStroke(3, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10.0f, new float[] {10.0f}, 0.0f);
+        }
         return stroke;
     }        
     
@@ -304,6 +305,7 @@ public final class DropTargetGlassPane extends JPanel implements DropTargetListe
     /** Implements <code>DropTargetListener</code> method.
      * accepts/rejects the drag operation if move or copy operation
      * is specified. */
+    @Override
     public void dragEnter(DropTargetDragEvent evt) {
         if(DEBUG) {
             debugLog(""); // NOI18N
@@ -325,6 +327,7 @@ public final class DropTargetGlassPane extends JPanel implements DropTargetListe
 
     /** Implements <code>DropTargetListener</code> method.
      * Unsets the glass pane to show 'drag under' gestures. */
+    @Override
     public void dragExit(DropTargetEvent evt) {
         if(DEBUG) {
             debugLog(""); // NOI18N
@@ -341,6 +344,7 @@ public final class DropTargetGlassPane extends JPanel implements DropTargetListe
     /** Implements <code>DropTargetListener</code> method.
      * Informs the glass pane about the location of dragged cursor above
      * the component. */
+    @Override
     public void dragOver(DropTargetDragEvent evt) {
         if(DEBUG) {
             debugLog(""); // NOI18N
@@ -367,7 +371,7 @@ public final class DropTargetGlassPane extends JPanel implements DropTargetListe
         }
         if( as != null ) {
             as.autoscroll( location );
-            lastAutoscroll = new WeakReference<Autoscroll>( as );
+            lastAutoscroll = new WeakReference<>(as);
         } else {
             lastAutoscroll = null;
         }
@@ -383,7 +387,8 @@ public final class DropTargetGlassPane extends JPanel implements DropTargetListe
 
     /** Implements <code>DropTargetListener</code> method.
      * When changed the drag action accepts/rejects the drag operation
-     * appropriatelly */
+     * appropriately */
+    @Override
     public void dropActionChanged(DropTargetDragEvent evt) {
         if(DEBUG) {
             debugLog(""); // NOI18N
@@ -415,7 +420,8 @@ public final class DropTargetGlassPane extends JPanel implements DropTargetListe
     }
 
     /** Implements <code>DropTargetListener</code> method. 
-     * Perfoms the actual drop operation. */
+     * Performs the actual drop operation. */
+    @Override
     public void drop(DropTargetDropEvent evt) {
         if(DEBUG) {
             debugLog(""); // NOI18N
@@ -460,11 +466,9 @@ public final class DropTargetGlassPane extends JPanel implements DropTargetListe
             observer.setDropSuccess(success);
             evt.dropComplete(false);
             //evt.dropComplete(success);
-            SwingUtilities.invokeLater( new Runnable() {
-                public void run() {
-                    windowDragAndDrop.dragFinished();
-                    windowDragAndDrop.dragFinishedEx();
-                }
+            SwingUtilities.invokeLater(() -> {
+                windowDragAndDrop.dragFinished();
+                windowDragAndDrop.dragFinishedEx();
             });
         }
     }

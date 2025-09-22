@@ -21,10 +21,12 @@ package org.netbeans.api.java.source.gen;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.tree.JCTree;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
@@ -238,9 +240,6 @@ public class SwitchTest extends GeneratorTestBase {
     }
 
     public void testCaseMultiTest() throws Exception {
-        if (!enhancedSwitchAvailable())
-            return;
-
         class TestCase {
             public final String caseText;
             public final BiFunction<WorkingCopy, CaseTree, CaseTree> convertCase;
@@ -369,9 +368,6 @@ public class SwitchTest extends GeneratorTestBase {
     }
 
     public void testStatement2Rule() throws Exception {
-        if (!enhancedSwitchAvailable())
-            return;
-
         testFile = new File(getWorkDir(), "Test.java");
         String test = "public class Test {\n" +
                       "    void m(int p) {\n" +
@@ -417,9 +413,6 @@ public class SwitchTest extends GeneratorTestBase {
     }
 
     public void testRule2Statement() throws Exception {
-        if (!enhancedSwitchAvailable())
-            return;
-
         testFile = new File(getWorkDir(), "Test.java");
         String test = "public class Test {\n" +
                       "    void m(int p) {\n" +
@@ -467,9 +460,6 @@ public class SwitchTest extends GeneratorTestBase {
     }
 
     public void testDefaultRewrite() throws Exception {
-        if (!enhancedSwitchAvailable())
-            return;
-
         testFile = new File(getWorkDir(), "Test.java");
         String test = "public class Test {\n" +
                       "    void m(int p) {\n" +
@@ -511,9 +501,6 @@ public class SwitchTest extends GeneratorTestBase {
     }
 
     public void testStatement2RuleNoSpace() throws Exception {
-        if (!enhancedSwitchAvailable())
-            return;
-
         testFile = new File(getWorkDir(), "Test.java");
         String test = "public class Test {\n" +
                       "    void m(int p) {\n" +
@@ -561,9 +548,6 @@ public class SwitchTest extends GeneratorTestBase {
     }
 
     public void testNestedSwitches() throws Exception {
-        if (!enhancedSwitchAvailable())
-            return;
-
         testFile = new File(getWorkDir(), "Test.java");
         String test = "public class Test {\n" +
                       "    void m(int p) {\n" +
@@ -613,14 +597,64 @@ public class SwitchTest extends GeneratorTestBase {
         assertEquals(golden, res);
     }
     
-    private boolean enhancedSwitchAvailable() {
-        try {
-            Class.forName("com.sun.source.tree.CaseTree$CaseKind", false, JCTree.class.getClassLoader());
-            return true;
-        } catch (ClassNotFoundException ex) {
-            //OK
-            return false;
-        }
+    //github issue 8296:
+    public void testPatternSwitch1() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        String test = """
+                      public class Test {
+                          void m(Object o) {
+                              switch (o) {
+                                  case String s -> s.getClass();
+                              }
+                          }
+                      }
+                      """;
+        String golden = """
+                        public class Test {
+                            void m(Object o) {
+                                switch (o) {
+                                    case String nue -> nue.getClass();
+                                    default -> {
+                                    }
+                                }
+                            }
+                        }
+                        """;
+        TestUtilities.copyStringToFile(testFile, test.replace("|", ""));
+        JavaSource src = getJavaSource(testFile);
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+            public void run(final WorkingCopy copy) throws IOException {
+                if (copy.toPhase(Phase.RESOLVED).compareTo(Phase.RESOLVED) < 0) {
+                    return;
+                }
+                final TreeMaker make = copy.getTreeMaker();
+                new ErrorAwareTreePathScanner<Void, Void>() {
+                    @Override
+                    public Void visitVariable(VariableTree node, Void p) {
+                        if (node.getName().contentEquals("s")) {
+                            copy.rewrite(node, make.setLabel(node, "nue"));
+                        }
+                        return super.visitVariable(node, p);
+                    }
+                    @Override
+                    public Void visitIdentifier(IdentifierTree node, Void p) {
+                        if (node.getName().contentEquals("s")) {
+                            copy.rewrite(node, make.setLabel(node, "nue"));
+                        }
+                        return super.visitIdentifier(node, p);
+                    }
+                    @Override
+                    public Void visitSwitch(SwitchTree node, Void p) {
+                        copy.rewrite(node, make.addSwitchCase(node, make.Case(List.of(), make.Block(List.of(), false))));
+                        return super.visitSwitch(node, p);
+                    }
+                }.scan(copy.getCompilationUnit(), null);
+            }
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
     }
 
     // XXX I don't understand what these are used for

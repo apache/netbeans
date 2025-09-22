@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.go.lang
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/go/lang/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.10
+OpenIDE-Module-Specification-Version: 1.11
 AutoUpdate-Show-In-Client: false
 

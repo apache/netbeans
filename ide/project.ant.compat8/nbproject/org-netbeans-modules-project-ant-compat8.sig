@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.94
+#Version 1.96
 
 CLSS public abstract interface java.io.Serializable
 
@@ -226,8 +226,8 @@ meth public boolean refreshBuildScript(java.lang.String,java.net.URL,boolean) th
 meth public int getBuildScriptState(java.lang.String,java.net.URL)
 meth public void generateBuildScriptFromStylesheet(java.lang.String,java.net.URL) throws java.io.IOException
 supr java.lang.Object
-hfds GENFILES_PROPERTIES_PATH,KEY_SUFFIX_DATA_CRC,KEY_SUFFIX_SCRIPT_CRC,KEY_SUFFIX_STYLESHEET_CRC_PLUS_VERSION,ORACLE_IS_STANDALONE,STYLESHEET_VERSIONS,crcCache,crcCacheTimestampsXorSizes,dir,extender,h
-hcls EolFilterOutputStream
+hfds GENFILES_PROPERTIES_PATH,KEY_SUFFIX_DATA_CRC,KEY_SUFFIX_SCRIPT_CRC,KEY_SUFFIX_STYLESHEET_CRC_PLUS_VERSION,ORACLE_IS_STANDALONE,STYLESHEET_VERSIONS,crcCache,dir,extender,fileFootprintCache,h
+hcls EolFilterOutputStream,TimeStampAndSize
 
 CLSS public final org.netbeans.spi.project.support.ant.PathMatcher
 cons public init(java.lang.String,java.lang.String,java.io.File)

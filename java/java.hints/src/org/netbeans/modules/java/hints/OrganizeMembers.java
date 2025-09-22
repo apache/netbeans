@@ -45,7 +45,7 @@ import org.netbeans.api.editor.EditorActionRegistration;
 import org.netbeans.api.java.source.*;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.ModificationResult.Difference;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.editor.BaseAction;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.GuardedDocument;
@@ -73,7 +73,7 @@ import org.openide.util.NbBundle;
 @Hint(displayName = "#DN_org.netbeans.modules.java.hints.OrganizeMembers", description = "#DESC_org.netbeans.modules.java.hints.OrganizeMembers", category = "class_structure", enabled = false)
 public class OrganizeMembers {
 
-    @TriggerTreeKind(Kind.CLASS)
+    @TriggerTreeKind({Kind.CLASS, Kind.RECORD, Kind.ENUM})
     public static ErrorDescription checkMembers(final HintContext context) {
         for (Diagnostic<?> d : context.getInfo().getDiagnostics()) {
             if (Hacks.isSyntaxError(d)) {
@@ -122,49 +122,44 @@ public class OrganizeMembers {
         ClassTree clazz = (ClassTree) path.getLeaf();
         clazz = gu.importComments(clazz, copy.getCompilationUnit());
         TreeMaker maker = copy.getTreeMaker();
+
         ClassTree nue = maker.Class(clazz.getModifiers(), clazz.getSimpleName(), clazz.getTypeParameters(), clazz.getExtendsClause(), clazz.getImplementsClause(), clazz.getPermitsClause(), Collections.<Tree>emptyList());
-        List<Tree> members = new ArrayList<>(clazz.getMembers().size());
-        Map<Tree, Tree> memberMap = new HashMap<>(clazz.getMembers().size());
+        List<Tree> members = new ArrayList<>();
+        Map<Tree, Tree> memberMap = new HashMap<>();
         
-        List<Tree> enumValues = new ArrayList<>();
+        List<Tree> fixedMembers = new ArrayList<>();
         for (Tree tree : clazz.getMembers()) {
-            if (copy.getTreeUtilities().isSynthetic(new TreePath(path, tree))) {
+            // isSynthetic does not consider record components to be synthetic
+            if (copy.getTreeUtilities().isSynthetic(new TreePath(path, tree))
+                    && !(tree.getKind() == Kind.VARIABLE && copy.getTreeUtilities().isRecordComponent((VariableTree)tree))) {
                 continue;
             }
-            Tree member;
-            switch (tree.getKind()) {
-                case CLASS:
-                case INTERFACE:
-                case ENUM:
-                case ANNOTATION_TYPE:
-                    member = maker.setLabel(tree, ((ClassTree)tree).getSimpleName());
-                    break;
-                case VARIABLE:
-                    member = maker.setLabel(tree, ((VariableTree)tree).getName());
-                    if (copy.getTreeUtilities().isEnumConstant((VariableTree)tree)) {
-                        enumValues.add(member);
+            Tree member = switch (tree.getKind()) {
+                case CLASS, INTERFACE, ENUM, RECORD, ANNOTATION_TYPE -> 
+                    maker.setLabel(tree, ((ClassTree)tree).getSimpleName());
+                case VARIABLE -> {
+                    VariableTree vt = (VariableTree)tree;
+                    Tree mem = maker.setLabel(tree, vt.getName());
+                    if (copy.getTreeUtilities().isEnumConstant(vt) || copy.getTreeUtilities().isRecordComponent(vt)) {
+                        fixedMembers.add(mem);
                     }
-                    break;
-                case METHOD:
-                    member = maker.setLabel(tree, ((MethodTree)tree).getName());
-                    break;
-                case BLOCK:
-                    member = maker.asReplacementOf(maker.Block(((BlockTree)tree).getStatements(), ((BlockTree)tree).isStatic()), tree, true);
-                    break;
-                default:
-                    member = tree;    
-            }
+                    yield mem;
+                }
+                case METHOD -> maker.setLabel(tree, ((MethodTree)tree).getName());
+                case BLOCK -> maker.asReplacementOf(maker.Block(((BlockTree)tree).getStatements(), ((BlockTree)tree).isStatic()), tree, true);
+                default -> tree;    
+            };
             members.add(member);
             memberMap.put(member, tree);
         }
         // fool the generator utilities with cloned members, so it does not take positions into account
-        if (enumValues.isEmpty()) {
+        if (fixedMembers.isEmpty()) {
             nue = GeneratorUtilities.get(copy).insertClassMembers(nue, members);
         } else {
-            members.removeAll(enumValues);
+            members.removeAll(fixedMembers);
             int max = nue.getMembers().size();
-            // insert the enum values in the original order
-            for (Tree t : enumValues) {
+            // insert the enum values or record components in the original order
+            for (Tree t : fixedMembers) {
                 nue = maker.insertClassMember(nue, max++, t);
             }
             nue = GeneratorUtilities.get(copy).insertClassMembers(nue, members);
@@ -181,8 +176,8 @@ public class OrganizeMembers {
     }
     
     private static boolean checkGuarded(Document doc, List<? extends Difference> diffs) {
-        if (doc instanceof GuardedDocument) {
-            MarkBlockChain chain = ((GuardedDocument) doc).getGuardedBlockChain();
+        if (doc instanceof GuardedDocument guardedDocument) {
+            MarkBlockChain chain = guardedDocument.getGuardedBlockChain();
             for (Difference diff : diffs) {
                 if ((chain.compareBlock(diff.getStartPosition().getOffset(), diff.getEndPosition().getOffset()) & MarkBlock.OVERLAP) != 0) {
                     return true;
@@ -226,7 +221,7 @@ public class OrganizeMembers {
             final Source source = Source.create(doc);
             if (source != null) {
                 final AtomicBoolean cancel = new AtomicBoolean();
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     @Override
                     public void run() {
                         try {

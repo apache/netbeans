@@ -19,6 +19,8 @@
 
 package org.netbeans.api.java.source;
 
+import com.sun.source.tree.Tree;
+import com.sun.source.util.TreePath;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -52,6 +54,7 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.java.queries.SourceForBinaryQuery.Result;
 import org.netbeans.api.java.source.ClasspathInfo.PathKind;
+import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.modules.java.source.ClassIndexTestCase;
 import org.netbeans.modules.java.source.TestUtil;
 import org.netbeans.modules.java.source.parsing.ClassParser;
@@ -586,6 +589,39 @@ public class SourceUtilsTest extends ClassIndexTestCase {
                           .collect(Collectors.joining(":"));
             assertEquals(tc.mainMethod, mainMethodSignature);
         }
+    }
+
+    public void testResolveImportWithModuleImport() throws Exception {
+        File work = getWorkDir();
+        FileObject workFO = FileUtil.toFileObject(work);
+
+        assertNotNull(workFO);
+
+        FileObject src = FileUtil.createFolder(workFO, "src");
+        FileObject build = FileUtil.createFolder(workFO, "build");
+        FileObject cache = FileUtil.createFolder(workFO, "cache");
+        FileObject testFile = FileUtil.createData(src, "Test.java");
+        SourceUtilsTestUtil.setSourceLevel(testFile, Integer.toString(SourceVersion.latest().ordinal()));
+        SourceUtilsTestUtil.setCompilerOptions(src, Arrays.asList("--enable-preview"));
+        SourceUtilsTestUtil.prepareTest(src, build, cache);
+
+        TestUtilities.copyStringToFile(testFile,
+                                       """
+                                       import module java.base;
+                                       public class Test {
+                                       }
+                                       """);
+        js = JavaSource.forFileObject(testFile);
+        assertNotNull("JavaSource found", js);
+        String[] toInsert = new String[1];
+        Set<? extends FileObject> modified = js.runModificationTask(copy -> {
+            copy.toPhase(Phase.RESOLVED);
+            Tree clazz = copy.getCompilationUnit().getTypeDecls().get(0);
+            TreePath clazzTP = TreePath.getPath(copy.getCompilationUnit(), clazz);
+            toInsert[0] = SourceUtils.resolveImport(copy, clazzTP, "java.util.List");
+        }).getModifiedFileObjects();
+        assertEquals("List", toInsert[0]);
+        assertTrue(modified.isEmpty());
     }
 
     //<editor-fold defaultstate="collapsed" desc="Helper methods & Mock services">

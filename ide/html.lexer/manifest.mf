@@ -1,5 +1,5 @@
 OpenIDE-Module: org.netbeans.modules.html.lexer/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/lib/html/lexer/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.67
+OpenIDE-Module-Specification-Version: 1.68
 OpenIDE-Module-Layer: org/netbeans/lib/html/lexer/layer.xml
 AutoUpdate-Show-In-Client: false

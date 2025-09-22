@@ -3,7 +3,7 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.libs.graaljs/2
 OpenIDE-Module-Layer: org/netbeans/libs/graaljs/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/graaljs/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.30
+OpenIDE-Module-Specification-Version: 1.31
 OpenIDE-Module-Provides: javax.script.ScriptEngine.js,org.netbeans.libs.graaljs
 OpenIDE-Module-Hide-Classpath-Packages: com.oracle.truffle.js.scriptengine.**, 
     com.oracle.js.parser.**, com.oracle.truffle.js.**

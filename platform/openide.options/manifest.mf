@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.openide.options
-OpenIDE-Module-Specification-Version: 6.66
-OpenIDE-Module-Localizing-Bundle: org/openide/options/Bundle.properties
-OpenIDE-Module-Deprecated: true
-AutoUpdate-Essential-Module: true
-

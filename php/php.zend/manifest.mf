@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.php.zend
 OpenIDE-Module-Layer: org/netbeans/modules/php/zend/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/php/zend/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.61
+OpenIDE-Module-Specification-Version: 1.62
 

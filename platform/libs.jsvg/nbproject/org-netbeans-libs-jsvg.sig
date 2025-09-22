@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.22.0
+#Version 2.1
 
 CLSS public final com.github.weisj.jsvg.SVGDocument
 supr java.lang.Object
@@ -22,6 +22,13 @@ supr java.lang.Object
 hfds P_KEY_CACHE_OFFSCREEN_IMAGE,P_KEY_IMAGE_ANTIALIASING,P_KEY_MASK_CLIP_RENDERING,P_KEY_SOFT_CLIPPING
 hcls Key,Value
 
+CLSS public final !enum com.github.weisj.jsvg.attributes.Animatable
+fld public final static com.github.weisj.jsvg.attributes.Animatable NO
+fld public final static com.github.weisj.jsvg.attributes.Animatable YES
+meth public static com.github.weisj.jsvg.attributes.Animatable valueOf(java.lang.String)
+meth public static com.github.weisj.jsvg.attributes.Animatable[] values()
+supr java.lang.Enum<com.github.weisj.jsvg.attributes.Animatable>
+
 CLSS public final com.github.weisj.jsvg.attributes.AttributeParser
 supr java.lang.Object
 
@@ -29,14 +36,12 @@ CLSS public final !enum com.github.weisj.jsvg.attributes.ColorInterpolation
 intf com.github.weisj.jsvg.attributes.HasMatchName
 supr java.lang.Enum
 
+CLSS public final com.github.weisj.jsvg.attributes.Coordinate
+supr java.lang.Object
+
 CLSS public abstract interface !annotation com.github.weisj.jsvg.attributes.Default
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=SOURCE)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[FIELD])
-intf java.lang.annotation.Annotation
-
-CLSS public abstract interface !annotation com.github.weisj.jsvg.attributes.Degrees
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=SOURCE)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[FIELD, PARAMETER, LOCAL_VARIABLE, METHOD])
 intf java.lang.annotation.Annotation
 
 CLSS public final !enum com.github.weisj.jsvg.attributes.FillRule
@@ -47,6 +52,13 @@ fld public final static com.github.weisj.jsvg.attributes.FillRule Nonzero
 supr java.lang.Enum
 
 CLSS public abstract interface com.github.weisj.jsvg.attributes.HasMatchName
+
+CLSS public final !enum com.github.weisj.jsvg.attributes.Inherited
+fld public final static com.github.weisj.jsvg.attributes.Inherited NO
+fld public final static com.github.weisj.jsvg.attributes.Inherited YES
+meth public static com.github.weisj.jsvg.attributes.Inherited valueOf(java.lang.String)
+meth public static com.github.weisj.jsvg.attributes.Inherited[] values()
+supr java.lang.Enum<com.github.weisj.jsvg.attributes.Inherited>
 
 CLSS public abstract com.github.weisj.jsvg.attributes.MarkerOrientation
 supr java.lang.Object
@@ -90,11 +102,6 @@ meth public static com.github.weisj.jsvg.attributes.PaintOrder$Phase valueOf(jav
 meth public static com.github.weisj.jsvg.attributes.PaintOrder$Phase[] values()
 supr java.lang.Enum<com.github.weisj.jsvg.attributes.PaintOrder$Phase>
 
-CLSS public abstract interface !annotation com.github.weisj.jsvg.attributes.Percentage
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=SOURCE)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[FIELD, PARAMETER, LOCAL_VARIABLE, METHOD])
-intf java.lang.annotation.Annotation
-
 CLSS public abstract interface !annotation com.github.weisj.jsvg.attributes.PresentationAttribute
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=SOURCE)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
@@ -114,17 +121,14 @@ meth public static com.github.weisj.jsvg.attributes.PreserveAspectRatio$MeetOrSl
 meth public static com.github.weisj.jsvg.attributes.PreserveAspectRatio$MeetOrSlice[] values()
 supr java.lang.Enum<com.github.weisj.jsvg.attributes.PreserveAspectRatio$MeetOrSlice>
 
-CLSS public abstract interface !annotation com.github.weisj.jsvg.attributes.Radian
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=SOURCE)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[FIELD, PARAMETER, LOCAL_VARIABLE, METHOD])
-intf java.lang.annotation.Annotation
-
 CLSS public final !enum com.github.weisj.jsvg.attributes.SpreadMethod
 fld public final static com.github.weisj.jsvg.attributes.SpreadMethod Pad
 fld public final static com.github.weisj.jsvg.attributes.SpreadMethod Reflect
 fld public final static com.github.weisj.jsvg.attributes.SpreadMethod Repeat
 supr java.lang.Enum
 hfds cycleMethod
+
+CLSS public abstract interface com.github.weisj.jsvg.attributes.SuffixUnit
 
 CLSS public final !enum com.github.weisj.jsvg.attributes.UnitType
 fld public final static com.github.weisj.jsvg.attributes.UnitType ObjectBoundingBox
@@ -280,12 +284,24 @@ hfds LOGGER
 CLSS public abstract interface com.github.weisj.jsvg.attributes.paint.PaintParser
 fld public final static java.awt.Color DEFAULT_COLOR
 
-CLSS public abstract interface com.github.weisj.jsvg.attributes.paint.SVGPaint
+CLSS public final com.github.weisj.jsvg.attributes.paint.PredefinedPaints
 fld public final static com.github.weisj.jsvg.attributes.paint.AwtSVGPaint DEFAULT_PAINT
 fld public final static com.github.weisj.jsvg.attributes.paint.SVGPaint CONTEXT_FILL
 fld public final static com.github.weisj.jsvg.attributes.paint.SVGPaint CONTEXT_STROKE
 fld public final static com.github.weisj.jsvg.attributes.paint.SVGPaint CURRENT_COLOR
+fld public final static com.github.weisj.jsvg.attributes.paint.SVGPaint INHERITED
 fld public final static com.github.weisj.jsvg.attributes.paint.SVGPaint NONE
+supr java.lang.Object
+
+CLSS public final com.github.weisj.jsvg.attributes.paint.RGBColor
+fld public final static com.github.weisj.jsvg.attributes.paint.RGBColor DEFAULT
+fld public final static com.github.weisj.jsvg.attributes.paint.RGBColor INHERITED
+intf com.github.weisj.jsvg.attributes.value.ColorValue
+intf java.awt.Paint
+supr java.lang.Object
+hfds a,b,color,g,r
+
+CLSS public abstract interface com.github.weisj.jsvg.attributes.paint.SVGPaint
 
 CLSS public abstract interface com.github.weisj.jsvg.attributes.paint.SimplePaintSVGPaint
 intf com.github.weisj.jsvg.attributes.paint.SVGPaint
@@ -352,6 +368,12 @@ fld public final static com.github.weisj.jsvg.attributes.text.TextAnchor Start
 meth public static com.github.weisj.jsvg.attributes.text.TextAnchor valueOf(java.lang.String)
 meth public static com.github.weisj.jsvg.attributes.text.TextAnchor[] values()
 supr java.lang.Enum<com.github.weisj.jsvg.attributes.text.TextAnchor>
+
+CLSS public abstract interface com.github.weisj.jsvg.attributes.value.ColorValue
+
+CLSS public abstract interface com.github.weisj.jsvg.attributes.value.LengthValue
+
+CLSS public abstract interface com.github.weisj.jsvg.attributes.value.PercentageValue
 
 CLSS public com.github.weisj.jsvg.geometry.AWTSVGShape
 intf com.github.weisj.jsvg.geometry.MeasurableShape
@@ -437,6 +459,9 @@ hfds LOGGER,currentCommand
 CLSS public final com.github.weisj.jsvg.geometry.path.Terminal
 supr com.github.weisj.jsvg.geometry.path.PathCommand
 
+CLSS public final com.github.weisj.jsvg.geometry.size.Angle
+supr java.lang.Object
+
 CLSS public final !enum com.github.weisj.jsvg.geometry.size.AngleUnit
 supr java.lang.Enum
 
@@ -459,13 +484,19 @@ fld public float width
 supr java.awt.geom.Dimension2D
 
 CLSS public final com.github.weisj.jsvg.geometry.size.Length
+intf com.github.weisj.jsvg.attributes.value.LengthValue
 supr java.lang.Object
 
 CLSS public final com.github.weisj.jsvg.geometry.size.MeasureContext
 supr java.lang.Object
-hfds em,ex,vh,vw
+
+CLSS public final com.github.weisj.jsvg.geometry.size.Percentage
+intf com.github.weisj.jsvg.attributes.value.PercentageValue
+intf java.lang.Comparable
+supr java.lang.Object
 
 CLSS public final !enum com.github.weisj.jsvg.geometry.size.Unit
+intf com.github.weisj.jsvg.attributes.SuffixUnit
 supr java.lang.Enum
 
 CLSS public final com.github.weisj.jsvg.geometry.util.GeometryUtil
@@ -474,9 +505,9 @@ hfds EPS
 
 CLSS public final static !enum com.github.weisj.jsvg.geometry.util.GeometryUtil$Space
  outer com.github.weisj.jsvg.geometry.util.GeometryUtil
-fld public final static com.github.weisj.jsvg.geometry.util.GeometryUtil$Space Device
-fld public final static com.github.weisj.jsvg.geometry.util.GeometryUtil$Space Root
-fld public final static com.github.weisj.jsvg.geometry.util.GeometryUtil$Space User
+fld public final static com.github.weisj.jsvg.geometry.util.GeometryUtil$Space DEVICE
+fld public final static com.github.weisj.jsvg.geometry.util.GeometryUtil$Space ROOT
+fld public final static com.github.weisj.jsvg.geometry.util.GeometryUtil$Space USER
 meth public static com.github.weisj.jsvg.geometry.util.GeometryUtil$Space valueOf(java.lang.String)
 meth public static com.github.weisj.jsvg.geometry.util.GeometryUtil$Space[] values()
 supr java.lang.Enum<com.github.weisj.jsvg.geometry.util.GeometryUtil$Space>
@@ -514,9 +545,7 @@ meth public java.lang.String toString()
 supr java.lang.Object
 
 CLSS public abstract com.github.weisj.jsvg.nodes.AbstractPolyShape
-intf com.github.weisj.jsvg.nodes.prototype.HasFillRule
 supr com.github.weisj.jsvg.nodes.ShapeNode
-hfds fillRule
 
 CLSS public abstract com.github.weisj.jsvg.nodes.AbstractSVGNode
 intf com.github.weisj.jsvg.nodes.SVGNode
@@ -559,9 +588,6 @@ fld public final static java.lang.String TAG = "image"
 supr com.github.weisj.jsvg.nodes.RenderableSVGNode
 hfds LOGGER,height,imgResource,overflow,preserveAspectRatio,width,x,y
 
-CLSS public final com.github.weisj.jsvg.nodes.InplaceBoxBlurFilter
-supr java.lang.Object
-
 CLSS public final com.github.weisj.jsvg.nodes.Line
 fld public final static java.lang.String TAG = "line"
 supr com.github.weisj.jsvg.nodes.ShapeNode
@@ -593,9 +619,7 @@ supr com.github.weisj.jsvg.nodes.MetaSVGNode
 
 CLSS public final com.github.weisj.jsvg.nodes.Path
 fld public final static java.lang.String TAG = "path"
-intf com.github.weisj.jsvg.nodes.prototype.HasFillRule
 supr com.github.weisj.jsvg.nodes.ShapeNode
-hfds fillRule
 
 CLSS public final com.github.weisj.jsvg.nodes.Pattern
 fld public final static java.lang.String TAG = "pattern"
@@ -678,11 +702,15 @@ supr com.github.weisj.jsvg.nodes.MetaSVGNode
 
 CLSS public final com.github.weisj.jsvg.nodes.animation.Animate
 fld public final static java.lang.String TAG = "animate"
-supr com.github.weisj.jsvg.nodes.MetaSVGNode
+supr com.github.weisj.jsvg.nodes.animation.BaseAnimationNode
 
 CLSS public final com.github.weisj.jsvg.nodes.animation.AnimateTransform
 fld public final static java.lang.String TAG = "animatetransform"
-supr com.github.weisj.jsvg.nodes.MetaSVGNode
+supr com.github.weisj.jsvg.nodes.animation.BaseAnimationNode
+hfds type
+
+CLSS public abstract com.github.weisj.jsvg.nodes.animation.BaseAnimationNode
+supr com.github.weisj.jsvg.nodes.AbstractSVGNode
 
 CLSS public final com.github.weisj.jsvg.nodes.animation.Set
 fld public final static java.lang.String TAG = "set"
@@ -827,7 +855,7 @@ supr java.lang.Enum<com.github.weisj.jsvg.nodes.filter.FeTurbulence$Type>
 CLSS public final com.github.weisj.jsvg.nodes.filter.Filter
 fld public final static java.lang.String TAG = "filter"
 supr com.github.weisj.jsvg.nodes.container.ContainerNode
-hfds DEFAULT_FILTER_COORDINATE,DEFAULT_FILTER_SIZE,LOGGER,NO_CLIP_BOUNDS,colorInterpolation,filterPrimitiveUnits,filterUnits,height,isValid,width,x,y
+hfds DEFAULT_FILTER_COORDINATE_X,DEFAULT_FILTER_COORDINATE_Y,DEFAULT_FILTER_HEIGHT,DEFAULT_FILTER_WIDTH,LOGGER,NO_CLIP_BOUNDS,colorInterpolation,filterPrimitiveUnits,filterUnits,height,isValid,width,x,y
 
 CLSS public final com.github.weisj.jsvg.nodes.filter.Filter$FilterBounds
 supr java.lang.Object
@@ -904,15 +932,12 @@ CLSS public abstract interface com.github.weisj.jsvg.nodes.prototype.HasClip
 
 CLSS public abstract interface com.github.weisj.jsvg.nodes.prototype.HasContext
 innr public abstract interface static ByDelegate
-intf com.github.weisj.jsvg.nodes.prototype.HasFillRule
 intf com.github.weisj.jsvg.nodes.prototype.HasFontContext
 intf com.github.weisj.jsvg.nodes.prototype.HasFontRenderContext
 intf com.github.weisj.jsvg.nodes.prototype.HasPaintContext
 
 CLSS public abstract interface com.github.weisj.jsvg.nodes.prototype.HasContext$ByDelegate
 intf com.github.weisj.jsvg.nodes.prototype.HasContext
-
-CLSS public abstract interface com.github.weisj.jsvg.nodes.prototype.HasFillRule
 
 CLSS public abstract interface com.github.weisj.jsvg.nodes.prototype.HasFilter
 
@@ -932,6 +957,7 @@ intf com.github.weisj.jsvg.nodes.prototype.HasGeometryContext
 CLSS public abstract interface com.github.weisj.jsvg.nodes.prototype.HasPaintContext
 
 CLSS public abstract interface com.github.weisj.jsvg.nodes.prototype.HasShape
+intf com.github.weisj.jsvg.nodes.SVGNode
 
 CLSS public final static !enum com.github.weisj.jsvg.nodes.prototype.HasShape$Box
  outer com.github.weisj.jsvg.nodes.prototype.HasShape
@@ -970,10 +996,7 @@ fld public final static com.github.weisj.jsvg.nodes.prototype.spec.Category Stru
 fld public final static com.github.weisj.jsvg.nodes.prototype.spec.Category TextContent
 fld public final static com.github.weisj.jsvg.nodes.prototype.spec.Category TextContentChild
 fld public final static com.github.weisj.jsvg.nodes.prototype.spec.Category TransferFunctionElement
-meth public boolean isEffectivelyAllowed()
-meth public static com.github.weisj.jsvg.nodes.prototype.spec.Category valueOf(java.lang.String)
-meth public static com.github.weisj.jsvg.nodes.prototype.spec.Category[] values()
-supr java.lang.Enum<com.github.weisj.jsvg.nodes.prototype.spec.Category>
+supr java.lang.Enum
 hfds effectivelyAllowed
 
 CLSS public abstract interface !annotation com.github.weisj.jsvg.nodes.prototype.spec.ElementCategories
@@ -1000,7 +1023,22 @@ meth public abstract !hasdefault boolean charData()
 meth public abstract !hasdefault com.github.weisj.jsvg.nodes.prototype.spec.Category[] categories()
 meth public abstract !hasdefault java.lang.Class<? extends com.github.weisj.jsvg.nodes.SVGNode>[] anyOf()
 
-CLSS public final com.github.weisj.jsvg.nodes.text.Glyph
+CLSS public com.github.weisj.jsvg.nodes.text.AbstractGlyphRun$PaintableEmoji
+supr java.lang.Object
+
+CLSS public com.github.weisj.jsvg.nodes.text.EmojiGlyph
+supr com.github.weisj.jsvg.nodes.text.Glyph
+
+CLSS public com.github.weisj.jsvg.nodes.text.Glyph
+supr java.lang.Object
+
+CLSS public abstract com.github.weisj.jsvg.nodes.text.GlyphRunTextOutput
+intf com.github.weisj.jsvg.nodes.text.TextOutput
+supr java.lang.Object
+
+CLSS public final com.github.weisj.jsvg.nodes.text.NullTextOutput
+fld public final static com.github.weisj.jsvg.nodes.text.NullTextOutput INSTANCE
+intf com.github.weisj.jsvg.nodes.text.TextOutput
 supr java.lang.Object
 
 CLSS public final com.github.weisj.jsvg.nodes.text.Text
@@ -1025,6 +1063,8 @@ meth public int glyphCount()
 meth public java.lang.String toString()
 supr java.lang.Object
 hfds controllableLetterSpacingCount,fixedGlyphLength,glyphCount,glyphLength,letterSpacingLength
+
+CLSS public abstract interface com.github.weisj.jsvg.nodes.text.TextOutput
 
 CLSS public final com.github.weisj.jsvg.nodes.text.TextPath
 fld public final static java.lang.String TAG = "textpath"
@@ -1063,17 +1103,34 @@ hfds LOGGER
 CLSS public final com.github.weisj.jsvg.parser.AttributeNode
 supr java.lang.Object
 
+CLSS public final static !enum com.github.weisj.jsvg.parser.AttributeNode$ElementRelation
+ outer com.github.weisj.jsvg.parser.AttributeNode
+fld public final static com.github.weisj.jsvg.parser.AttributeNode$ElementRelation GEOMETRY_DATA
+fld public final static com.github.weisj.jsvg.parser.AttributeNode$ElementRelation PAINTED_CHILD
+fld public final static com.github.weisj.jsvg.parser.AttributeNode$ElementRelation TEMPLATE
+meth public static com.github.weisj.jsvg.parser.AttributeNode$ElementRelation valueOf(java.lang.String)
+meth public static com.github.weisj.jsvg.parser.AttributeNode$ElementRelation[] values()
+supr java.lang.Enum<com.github.weisj.jsvg.parser.AttributeNode$ElementRelation>
+
 CLSS public com.github.weisj.jsvg.parser.DefaultParserProvider
 intf com.github.weisj.jsvg.parser.ParserProvider
 supr java.lang.Object
 
+CLSS public com.github.weisj.jsvg.parser.DocumentLimits
+cons public init(int,int,int)
+fld public final static com.github.weisj.jsvg.parser.DocumentLimits DEFAULT
+fld public final static int DEFAULT_MAX_NESTING_DEPTH = 30
+fld public final static int DEFAULT_MAX_PATH_COUNT = 2000
+fld public final static int DEFAULT_MAX_USE_NESTING_DEPTH = 15
+meth public int maxNestingDepth()
+meth public int maxPathCount()
+meth public int maxUseNestingDepth()
+supr java.lang.Object
+hfds maxNestingDepth,maxPathCount,maxUseNestingDepth
+
 CLSS public abstract interface com.github.weisj.jsvg.parser.DomProcessor
 
 CLSS public abstract interface com.github.weisj.jsvg.parser.ElementLoader
-
-CLSS public abstract interface com.github.weisj.jsvg.parser.ElementLoader$ExternalDocumentPolicy
-fld public final static com.github.weisj.jsvg.parser.ElementLoader$ExternalDocumentPolicy ALLOW_RELATIVE
-fld public final static com.github.weisj.jsvg.parser.ElementLoader$ExternalDocumentPolicy DENY
 
 CLSS public final com.github.weisj.jsvg.parser.LoadHelper
 supr java.lang.Object
@@ -1081,11 +1138,6 @@ supr java.lang.Object
 CLSS public abstract interface com.github.weisj.jsvg.parser.LoaderContext
 
 CLSS public abstract interface com.github.weisj.jsvg.parser.LoaderContext$Builder
-
-CLSS public com.github.weisj.jsvg.parser.MutableLoaderContext
-intf com.github.weisj.jsvg.parser.LoaderContext
-intf com.github.weisj.jsvg.parser.LoaderContext$Builder
-supr java.lang.Object
 
 CLSS public final com.github.weisj.jsvg.parser.NodeSupplier
 supr java.lang.Object
@@ -1101,6 +1153,12 @@ CLSS public abstract interface com.github.weisj.jsvg.parser.ParserProvider
 
 CLSS public abstract interface com.github.weisj.jsvg.parser.ResourceLoader
 
+CLSS public abstract interface com.github.weisj.jsvg.parser.ResourcePolicy
+fld public final static com.github.weisj.jsvg.parser.ResourcePolicy ALLOW_ALL
+fld public final static com.github.weisj.jsvg.parser.ResourcePolicy ALLOW_RELATIVE
+fld public final static com.github.weisj.jsvg.parser.ResourcePolicy DENY_ALL
+fld public final static com.github.weisj.jsvg.parser.ResourcePolicy DENY_EXTERNAL
+
 CLSS public final com.github.weisj.jsvg.parser.SVGDocumentBuilder
 supr java.lang.Object
 
@@ -1110,10 +1168,14 @@ supr java.lang.Object
 CLSS public final !enum com.github.weisj.jsvg.parser.SeparatorMode
 fld public final static com.github.weisj.jsvg.parser.SeparatorMode COMMA_AND_WHITESPACE
 fld public final static com.github.weisj.jsvg.parser.SeparatorMode COMMA_ONLY
+fld public final static com.github.weisj.jsvg.parser.SeparatorMode SEMICOLON_ONLY
 fld public final static com.github.weisj.jsvg.parser.SeparatorMode WHITESPACE_ONLY
+meth public boolean allowWhitespace()
+meth public char separator()
 meth public static com.github.weisj.jsvg.parser.SeparatorMode valueOf(java.lang.String)
 meth public static com.github.weisj.jsvg.parser.SeparatorMode[] values()
 supr java.lang.Enum<com.github.weisj.jsvg.parser.SeparatorMode>
+hfds allowWhitespace,separator
 
 CLSS public final com.github.weisj.jsvg.parser.StaxSVGLoader
 supr java.lang.Object
@@ -1157,12 +1219,21 @@ CLSS public com.github.weisj.jsvg.parser.resources.SVGResource
 intf com.github.weisj.jsvg.parser.resources.RenderableResource
 supr java.lang.Object
 
+CLSS public final com.github.weisj.jsvg.renderer.AnimationState
+cons public init(long,long)
+fld public final static com.github.weisj.jsvg.renderer.AnimationState NO_ANIMATION
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.String toString()
+meth public long timestamp()
+supr java.lang.Object
+hfds currentTime,startTime
+
 CLSS public final com.github.weisj.jsvg.renderer.ContextElementAttributes
 supr java.lang.Object
 
 CLSS public com.github.weisj.jsvg.renderer.ElementBounds
 supr java.lang.Object
-hfds boundingBox,context,geometryBox,node,strokeBox
 
 CLSS public final com.github.weisj.jsvg.renderer.FontRenderContext
 supr java.lang.Object
@@ -1189,6 +1260,11 @@ supr java.lang.Object
 CLSS public final com.github.weisj.jsvg.renderer.NodeRenderer
 supr java.lang.Object
 
+CLSS public com.github.weisj.jsvg.renderer.NullOutput
+intf com.github.weisj.jsvg.renderer.Output
+intf com.github.weisj.jsvg.renderer.Output$SafeState
+supr java.lang.Object
+
 CLSS public abstract interface com.github.weisj.jsvg.renderer.Output
 
 CLSS public abstract interface static com.github.weisj.jsvg.renderer.Output$SafeState
@@ -1201,6 +1277,14 @@ supr java.lang.Object
 
 CLSS public final com.github.weisj.jsvg.renderer.RenderContext
 supr java.lang.Object
+
+CLSS public final static !enum com.github.weisj.jsvg.renderer.RenderContext$EstablishRootMeasure
+ outer com.github.weisj.jsvg.renderer.RenderContext
+fld public final static com.github.weisj.jsvg.renderer.RenderContext$EstablishRootMeasure No
+fld public final static com.github.weisj.jsvg.renderer.RenderContext$EstablishRootMeasure Yes
+meth public static com.github.weisj.jsvg.renderer.RenderContext$EstablishRootMeasure valueOf(java.lang.String)
+meth public static com.github.weisj.jsvg.renderer.RenderContext$EstablishRootMeasure[] values()
+supr java.lang.Enum<com.github.weisj.jsvg.renderer.RenderContext$EstablishRootMeasure>
 
 CLSS public com.github.weisj.jsvg.renderer.ShapeOutput
 intf com.github.weisj.jsvg.renderer.Output
@@ -1251,6 +1335,12 @@ supr java.lang.Object
 
 CLSS public final com.github.weisj.jsvg.renderer.jdk.SVGRadialGradientPaint
 supr com.github.weisj.jsvg.renderer.jdk.SVGMultipleGradientPaint
+
+CLSS public final com.github.weisj.jsvg.util.AttributeUtil
+supr java.lang.Object
+
+CLSS public final com.github.weisj.jsvg.util.AttributeUtil$AxisPair
+supr java.lang.Object
 
 CLSS public final com.github.weisj.jsvg.util.BlittableImage
 supr java.lang.Object
@@ -1314,6 +1404,11 @@ hfds LOGGER,SUPPORTED_MIME_TYPES
 CLSS public final com.github.weisj.jsvg.util.ShapeUtil
 supr java.lang.Object
 hfds NON_RECTILINEAR_TRANSFORM_MASK
+
+CLSS public final com.github.weisj.jsvg.util.SystemUtil
+fld public final static boolean isMacOS
+fld public final static java.lang.String OS_NAME
+supr java.lang.Object
 
 CLSS public abstract interface java.awt.Composite
 meth public abstract java.awt.CompositeContext createContext(java.awt.image.ColorModel,java.awt.image.ColorModel,java.awt.RenderingHints)

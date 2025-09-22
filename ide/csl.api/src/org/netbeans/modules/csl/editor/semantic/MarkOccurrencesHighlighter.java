@@ -108,7 +108,7 @@ public final class MarkOccurrencesHighlighter extends ParserResultTask<ParserRes
             }
 
             List<OffsetRange> bag = processImpl(info, doc, caretPosition);
-            if (bag.isEmpty() || cancel.isCancelled()) {
+            if (cancel.isCancelled()) {
                 //the occurrences finder haven't found anything, just ignore the result
                 //and keep the previous occurrences
                 return ;

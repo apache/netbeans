@@ -25,6 +25,19 @@
     <apidef name="javasource_base">Java Source API</apidef>
 </apidefs>
 <changes>
+    <change id="ModuleImports">
+        <api name="javasource_base" />
+        <summary>API Support for module imports</summary>
+        <version major="1" minor="2.79"/>
+        <date day="1" month="6" year="2025"/>
+        <author login="jlahoda"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+                Adding TreeMaker.ImportModule and ElementUtilities.transitivelyExportedPackages
+                to support module imports.
+        </description>
+        <class name="TreeMaker" package="org.netbeans.api.java.source"/>
+    </change>
     <change id="TreeMaker.ClassPermits">
         <api name="javasource_base" />
         <summary>Adding TreeMaker.Class overload that takes permitted subclasses</summary>

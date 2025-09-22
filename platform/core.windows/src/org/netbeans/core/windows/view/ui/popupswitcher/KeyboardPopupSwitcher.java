@@ -361,7 +361,6 @@ public final class KeyboardPopupSwitcher implements WindowFocusListener {
             cleanupInterrupter();
             if( null != instance )
                 instance.hideCurrentPopup();
-            System.err.println("showing popup with " + defaultDocumentsOnly);
             instance = new KeyboardPopupSwitcher(hits + 1, true, defaultDocumentsOnly);
             instance.showPopup();
         }

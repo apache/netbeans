@@ -77,7 +77,7 @@ jobs:
     steps:
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           persist-credentials: false
           submodules: false
@@ -110,7 +110,7 @@ jobs:
     steps:
 
       - name: Download sources
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: nativeexecution-external-sources
 
@@ -144,7 +144,7 @@ jobs:
 #    steps:
 #
 #      - name: Download sources
-#        uses: actions/download-artifact@v4
+#        uses: actions/download-artifact@v5
 #        with:
 #          name: nativeexecution-external-sources
 #
@@ -174,7 +174,7 @@ jobs:
     steps:
 
       - name: Download sources
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: nativeexecution-external-sources
 
@@ -203,7 +203,7 @@ jobs:
     steps:
 
       - name: Download sources
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: nativeexecution-external-sources
 
@@ -238,7 +238,7 @@ jobs:
       run: mkdir -p myfiles/
 
     - name: Download artifacts from predecessor jobs
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v5
       with:
         path: myfiles/
 

@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.php.nette2/1
 OpenIDE-Module-Layer: org/netbeans/modules/php/nette2/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/php/nette2/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.38
+OpenIDE-Module-Specification-Version: 1.39
 

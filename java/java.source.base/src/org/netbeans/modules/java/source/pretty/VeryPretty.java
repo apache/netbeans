@@ -73,6 +73,7 @@ import com.sun.source.doctree.ValueTree;
 import com.sun.source.doctree.VersionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.SwitchExpressionTree;
+import com.sun.source.tree.YieldTree;
 import com.sun.source.util.DocTreePathScanner;
 import com.sun.source.util.DocTreeScanner;
 
@@ -856,6 +857,13 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     }
 
     @Override
+    public void visitModuleImport(JCModuleImport tree) {
+        print("import module ");
+        print(tree.module);
+        print(';');
+    }
+
+    @Override
     public void visitClassDef(JCClassDecl tree) {
         JCClassDecl enclClassPrev = enclClass;
 	enclClass = tree;
@@ -1413,8 +1421,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                 print(tree.getGuard());
             }
         }
-        Object caseKind = tree.getCaseKind();
-        if (caseKind == null || !String.valueOf(caseKind).equals("RULE")) {
+        if (tree.getCaseKind() != CaseTree.CaseKind.RULE) {
             print(':');
             newline();
             indent();
@@ -1422,7 +1429,12 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             undent(old);
         } else {
             print(" -> "); //TODO: configure spaces!
-            printStat(tree.stats.head);
+            if (tree.stats.head.getKind() == Kind.YIELD) {
+                print((JCTree) ((YieldTree) tree.stats.head).getValue());
+                print(";");
+            } else {
+                printStat(tree.stats.head);
+            }
             undent(old);
         }
     }
@@ -3012,8 +3024,13 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         int lastGroup = -1;
         for (JCTree importStat : imports) {
             if (importGroups != null) {
-                Name name = fullName(((JCImport)importStat).qualid);
-                int group = name != null ? importGroups.getGroupId(name.toString(), ((JCImport)importStat).staticImport) : -1;
+                int group;
+                if (importStat instanceof JCImport imp) {
+                    Name name = fullName(imp.qualid);
+                    group = name != null ? importGroups.getGroupId(name.toString(), imp.staticImport) : -1;
+                } else {
+                    group = -1;
+                }
                 if (lastGroup >= 0 && lastGroup != group)
                     blankline();
                 lastGroup = group;

@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.lib.chrome_devtools_protocol/2
 OpenIDE-Module-Localizing-Bundle: org/netbeans/lib/chrome_devtools_protocol/Bundle.properties
-OpenIDE-Module-Specification-Version: 2.2
+OpenIDE-Module-Specification-Version: 2.3

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.76
+#Version 1.78
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -340,9 +340,9 @@ hfds serialVersionUID
 
 CLSS public abstract interface org.openide.windows.OutputListener
 intf java.util.EventListener
-meth public abstract void outputLineAction(org.openide.windows.OutputEvent)
-meth public abstract void outputLineCleared(org.openide.windows.OutputEvent)
-meth public abstract void outputLineSelected(org.openide.windows.OutputEvent)
+meth public void outputLineAction(org.openide.windows.OutputEvent)
+meth public void outputLineCleared(org.openide.windows.OutputEvent)
+meth public void outputLineSelected(org.openide.windows.OutputEvent)
 
 CLSS public abstract org.openide.windows.OutputWriter
 cons protected init(java.io.Writer)

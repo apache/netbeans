@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.php.samples
 OpenIDE-Module-Layer: org/netbeans/modules/php/samples/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/php/samples/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.57
+OpenIDE-Module-Specification-Version: 1.58
 

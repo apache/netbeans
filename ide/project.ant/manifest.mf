@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.project.ant/1
-OpenIDE-Module-Specification-Version: 1.96
+OpenIDE-Module-Specification-Version: 1.97
 OpenIDE-Module-Layer: org/netbeans/modules/project/ant/resources/mf-layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/project/ant/Bundle.properties

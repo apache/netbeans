@@ -23,12 +23,12 @@
 ide/db.sql.visualeditor/external/javacc-7.0.10.jar java/performance/external/javacc-7.0.10.jar
 
 # bundled maven conflicts with other libraries
-java/maven.embedder/external/apache-maven-3.9.10-bin.zip ide/slf4j.api/external/slf4j-api-1.7.36.jar
-java/maven.embedder/external/apache-maven-3.9.10-bin.zip platform/libs.asm/external/asm-9.8.jar
-java/maven.embedder/external/apache-maven-3.9.10-bin.zip platform/o.apache.commons.codec/external/commons-codec-1.18.0.jar
-java/maven.embedder/external/apache-maven-3.9.10-bin.zip ide/c.google.guava.failureaccess/external/failureaccess-1.0.3.jar
-java/maven.embedder/external/apache-maven-3.9.10-bin.zip ide/c.google.guava/external/guava-33.4.6-jre.jar
-java/maven.embedder/external/apache-maven-3.9.10-bin.zip java/maven.indexer/external/javax.annotation-api-1.3.2.jar
+java/maven.embedder/external/apache-maven-3.9.11-bin.zip ide/slf4j.api/external/slf4j-api-1.7.36.jar
+java/maven.embedder/external/apache-maven-3.9.11-bin.zip platform/libs.asm/external/asm-9.8.jar
+java/maven.embedder/external/apache-maven-3.9.11-bin.zip platform/o.apache.commons.codec/external/commons-codec-1.18.0.jar
+java/maven.embedder/external/apache-maven-3.9.11-bin.zip ide/c.google.guava.failureaccess/external/failureaccess-1.0.3.jar
+java/maven.embedder/external/apache-maven-3.9.11-bin.zip ide/c.google.guava/external/guava-33.4.6-jre.jar
+java/maven.embedder/external/apache-maven-3.9.11-bin.zip java/maven.indexer/external/javax.annotation-api-1.3.2.jar
 
 # Used to parse data during build, but need to as a lib for ide cluster
 nbbuild/external/json-simple-1.1.1.jar ide/libs.json_simple/external/json-simple-1.1.1.jar
@@ -38,9 +38,9 @@ webcommon/javascript2.jade/external/jflex-1.4.3.jar webcommon/javascript2.lexer/
 
 # javax.annotation-api is used by multiple modules.
 enterprise/javaee8.api/external/javax.annotation-api-1.3.2.jar java/maven.indexer/external/javax.annotation-api-1.3.2.jar
-enterprise/javaee8.api/external/javax.annotation-api-1.3.2.jar java/maven.embedder/external/apache-maven-3.9.10-bin.zip
+enterprise/javaee8.api/external/javax.annotation-api-1.3.2.jar java/maven.embedder/external/apache-maven-3.9.11-bin.zip
 enterprise/javaee8.api/external/javax.annotation-api-1.3.2.jar enterprise/websvc.restlib/external/javax.annotation-api-1.3.2.jar
-enterprise/websvc.restlib/external/javax.annotation-api-1.3.2.jar java/maven.embedder/external/apache-maven-3.9.10-bin.zip
+enterprise/websvc.restlib/external/javax.annotation-api-1.3.2.jar java/maven.embedder/external/apache-maven-3.9.11-bin.zip
 
 # jaxb-api-osgi is used by multiple modules.
 enterprise/javaee.api/external/jaxb-api-osgi-2.2.7.jar enterprise/javaee7.api/external/jaxb-api-osgi-2.2.7.jar
@@ -59,7 +59,7 @@ extide/gradle/external/gradle-7.4-bin.zip ide/libs.commons_compress/external/com
 extide/gradle/external/gradle-7.4-bin.zip ide/o.apache.commons.lang/external/commons-lang-2.6.jar
 extide/gradle/external/gradle-7.4-bin.zip ide/o.eclipse.jgit/external/org.eclipse.jgit-7.2.0.202503040940-r.jar
 extide/gradle/external/gradle-7.4-bin.zip java/debugger.jpda.truffle/external/antlr4-runtime-4.7.2.jar
-extide/gradle/external/gradle-7.4-bin.zip java/maven.embedder/external/apache-maven-3.9.10-bin.zip
+extide/gradle/external/gradle-7.4-bin.zip java/maven.embedder/external/apache-maven-3.9.11-bin.zip
 extide/gradle/external/gradle-7.4-bin.zip platform/libs.junit4/external/hamcrest-core-1.3.jar
 extide/gradle/external/gradle-7.4-bin.zip platform/libs.junit4/external/junit-4.13.2.jar
 extide/gradle/external/gradle-7.4-bin.zip platform/libs.testng/external/jcommander-1.78.jar
@@ -96,8 +96,8 @@ nb/ide.launcher/external/launcher-external-binaries-3-282bbc032bcd.zip platform/
 nb/ide.launcher/external/launcher-external-binaries-3-282bbc032bcd.zip harness/apisupport.harness/external/launcher-external-binaries-3-282bbc032bcd.zip
 
 # only one is part of the product:
-java/libs.javacapi/external/nb-javac-jdk-24-ga-api.jar java/libs.nbjavacapi/external/nb-javac-jdk-24-ga-api.jar
-java/libs.javacapi/external/nb-javac-jdk-24-ga.jar java/libs.nbjavacapi/external/nb-javac-jdk-24-ga.jar
+java/libs.javacapi/external/nb-javac-jdk-25+31.1-api.jar java/libs.nbjavacapi/external/nb-javac-jdk-25+31.1-api.jar
+java/libs.javacapi/external/nb-javac-jdk-25+31.1.jar java/libs.nbjavacapi/external/nb-javac-jdk-25+31.1.jar
 
 # Used only in unittests for mysql db specific tests
 ide/db.metadata.model/external/mysql-connector-j-8.0.31.jar ide/db.mysql/external/mysql-connector-j-8.0.31.jar

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.22
+#Version 2.24
 
 CLSS public abstract interface com.sun.jna.AltCallingConvention
 
@@ -155,7 +155,7 @@ meth public void write()
 meth public void writeField(java.lang.String)
 meth public void writeField(java.lang.String,java.lang.Object)
 supr java.lang.Object
-hfds LOG,PLACEHOLDER_MEMORY,actualAlignType,alignType,array,autoRead,autoWrite,busy,encoding,fieldOrder,layoutInfo,memory,nativeStrings,readCalled,reads,size,structAlignment,structFields,typeInfo,typeMapper
+hfds LOG,PLACEHOLDER_MEMORY,actualAlignType,alignType,array,autoRead,autoWrite,busy,encoding,fieldList,fieldListLock,fieldOrder,fieldOrderLock,layoutInfo,layoutInfoLock,memory,nativeStrings,readCalled,reads,size,structAlignment,structFields,typeInfo,typeMapper,validationLock,validationMap
 hcls AutoAllocated,FFIType,LayoutInfo,NativeStringTracking,StructureSet
 
 CLSS public abstract interface static com.sun.jna.Structure$ByReference
@@ -2469,16 +2469,21 @@ meth public abstract int XGetWindowAttributes(com.sun.jna.platform.unix.X11$Disp
 meth public abstract int XGetWindowProperty(com.sun.jna.platform.unix.X11$Display,com.sun.jna.platform.unix.X11$Window,com.sun.jna.platform.unix.X11$Atom,com.sun.jna.NativeLong,com.sun.jna.NativeLong,boolean,com.sun.jna.platform.unix.X11$Atom,com.sun.jna.platform.unix.X11$AtomByReference,com.sun.jna.ptr.IntByReference,com.sun.jna.ptr.NativeLongByReference,com.sun.jna.ptr.NativeLongByReference,com.sun.jna.ptr.PointerByReference)
 meth public abstract int XGrabKey(com.sun.jna.platform.unix.X11$Display,int,int,com.sun.jna.platform.unix.X11$Window,int,int,int)
 meth public abstract int XGrabKeyboard(com.sun.jna.platform.unix.X11$Display,com.sun.jna.platform.unix.X11$Window,int,int,int,com.sun.jna.NativeLong)
+meth public abstract int XLowerWindow(com.sun.jna.platform.unix.X11$Display,com.sun.jna.platform.unix.X11$Window)
 meth public abstract int XMapRaised(com.sun.jna.platform.unix.X11$Display,com.sun.jna.platform.unix.X11$Window)
 meth public abstract int XMapSubwindows(com.sun.jna.platform.unix.X11$Display,com.sun.jna.platform.unix.X11$Window)
 meth public abstract int XMapWindow(com.sun.jna.platform.unix.X11$Display,com.sun.jna.platform.unix.X11$Window)
 meth public abstract int XMaskEvent(com.sun.jna.platform.unix.X11$Display,com.sun.jna.NativeLong,com.sun.jna.platform.unix.X11$XEvent)
+meth public abstract int XMoveResizeWindow(com.sun.jna.platform.unix.X11$Display,com.sun.jna.platform.unix.X11$Window,int,int,int,int)
+meth public abstract int XMoveWindow(com.sun.jna.platform.unix.X11$Display,com.sun.jna.platform.unix.X11$Window,int,int)
 meth public abstract int XNextEvent(com.sun.jna.platform.unix.X11$Display,com.sun.jna.platform.unix.X11$XEvent)
 meth public abstract int XPeekEvent(com.sun.jna.platform.unix.X11$Display,com.sun.jna.platform.unix.X11$XEvent)
 meth public abstract int XPending(com.sun.jna.platform.unix.X11$Display)
 meth public abstract int XPutImage(com.sun.jna.platform.unix.X11$Display,com.sun.jna.platform.unix.X11$Drawable,com.sun.jna.platform.unix.X11$GC,com.sun.jna.platform.unix.X11$XImage,int,int,int,int,int,int)
 meth public abstract int XQueryKeymap(com.sun.jna.platform.unix.X11$Display,byte[])
 meth public abstract int XQueryTree(com.sun.jna.platform.unix.X11$Display,com.sun.jna.platform.unix.X11$Window,com.sun.jna.platform.unix.X11$WindowByReference,com.sun.jna.platform.unix.X11$WindowByReference,com.sun.jna.ptr.PointerByReference,com.sun.jna.ptr.IntByReference)
+meth public abstract int XRaiseWindow(com.sun.jna.platform.unix.X11$Display,com.sun.jna.platform.unix.X11$Window)
+meth public abstract int XResizeWindow(com.sun.jna.platform.unix.X11$Display,com.sun.jna.platform.unix.X11$Window,int,int)
 meth public abstract int XSelectInput(com.sun.jna.platform.unix.X11$Display,com.sun.jna.platform.unix.X11$Window,com.sun.jna.NativeLong)
 meth public abstract int XSendEvent(com.sun.jna.platform.unix.X11$Display,com.sun.jna.platform.unix.X11$Window,int,com.sun.jna.NativeLong,com.sun.jna.platform.unix.X11$XEvent)
 meth public abstract int XSetBackground(com.sun.jna.platform.unix.X11$Display,com.sun.jna.platform.unix.X11$GC,com.sun.jna.NativeLong)
@@ -7160,6 +7165,50 @@ fld public final static com.sun.jna.platform.win32.WinDef$DWORD PROCESS_MODE_BAC
 fld public final static com.sun.jna.platform.win32.WinDef$DWORD REALTIME_PRIORITY_CLASS
 fld public final static int LOAD_LIBRARY_AS_DATAFILE = 2
 fld public final static int MAX_PIPE_NAME_LENGTH = 256
+fld public final static int PF_3DNOW_INSTRUCTIONS_AVAILABLE = 7
+fld public final static int PF_ALPHA_BYTE_INSTRUCTIONS = 5
+fld public final static int PF_ARM_64BIT_LOADSTORE_ATOMIC = 25
+fld public final static int PF_ARM_DIVIDE_INSTRUCTION_AVAILABLE = 24
+fld public final static int PF_ARM_EXTERNAL_CACHE_AVAILABLE = 26
+fld public final static int PF_ARM_FMAC_INSTRUCTIONS_AVAILABLE = 27
+fld public final static int PF_ARM_NEON_INSTRUCTIONS_AVAILABLE = 19
+fld public final static int PF_ARM_V81_ATOMIC_INSTRUCTIONS_AVAILABLE = 34
+fld public final static int PF_ARM_V82_DP_INSTRUCTIONS_AVAILABLE = 43
+fld public final static int PF_ARM_V83_JSCVT_INSTRUCTIONS_AVAILABLE = 44
+fld public final static int PF_ARM_V83_LRCPC_INSTRUCTIONS_AVAILABLE = 45
+fld public final static int PF_ARM_V8_CRC32_INSTRUCTIONS_AVAILABLE = 31
+fld public final static int PF_ARM_V8_CRYPTO_INSTRUCTIONS_AVAILABLE = 30
+fld public final static int PF_ARM_V8_INSTRUCTIONS_AVAILABLE = 29
+fld public final static int PF_ARM_VFP_32_REGISTERS_AVAILABLE = 18
+fld public final static int PF_AVX2_INSTRUCTIONS_AVAILABLE = 40
+fld public final static int PF_AVX512F_INSTRUCTIONS_AVAILABLE = 41
+fld public final static int PF_AVX_INSTRUCTIONS_AVAILABLE = 39
+fld public final static int PF_CHANNELS_ENABLED = 16
+fld public final static int PF_COMPARE64_EXCHANGE128 = 15
+fld public final static int PF_COMPARE_EXCHANGE128 = 14
+fld public final static int PF_COMPARE_EXCHANGE_DOUBLE = 2
+fld public final static int PF_FASTFAIL_AVAILABLE = 23
+fld public final static int PF_FLOATING_POINT_EMULATED = 1
+fld public final static int PF_FLOATING_POINT_PRECISION_ERRATA = 0
+fld public final static int PF_MMX_INSTRUCTIONS_AVAILABLE = 3
+fld public final static int PF_NX_ENABLED = 12
+fld public final static int PF_PAE_ENABLED = 9
+fld public final static int PF_PPC_MOVEMEM_64BIT_OK = 4
+fld public final static int PF_RDPID_INSTRUCTION_AVAILABLE = 33
+fld public final static int PF_RDRAND_INSTRUCTION_AVAILABLE = 28
+fld public final static int PF_RDTSCP_INSTRUCTION_AVAILABLE = 32
+fld public final static int PF_RDTSC_INSTRUCTION_AVAILABLE = 8
+fld public final static int PF_RDWRFSGSBASE_AVAILABLE = 22
+fld public final static int PF_SECOND_LEVEL_ADDRESS_TRANSLATION = 20
+fld public final static int PF_SSE3_INSTRUCTIONS_AVAILABLE = 13
+fld public final static int PF_SSE4_1_INSTRUCTIONS_AVAILABLE = 37
+fld public final static int PF_SSE4_2_INSTRUCTIONS_AVAILABLE = 38
+fld public final static int PF_SSE_DAZ_MODE_AVAILABLE = 11
+fld public final static int PF_SSSE3_INSTRUCTIONS_AVAILABLE = 36
+fld public final static int PF_VIRT_FIRMWARE_ENABLED = 21
+fld public final static int PF_XMMI64_INSTRUCTIONS_AVAILABLE = 10
+fld public final static int PF_XMMI_INSTRUCTIONS_AVAILABLE = 6
+fld public final static int PF_XSAVE_ENABLED = 17
 fld public final static int THREAD_MODE_BACKGROUND_BEGIN = 65536
 fld public final static int THREAD_MODE_BACKGROUND_END = 131072
 fld public final static int THREAD_PRIORITY_ABOVE_NORMAL = 1
@@ -7231,6 +7280,7 @@ meth public abstract boolean GetVolumeNameForVolumeMountPoint(java.lang.String,c
 meth public abstract boolean GetVolumePathName(java.lang.String,char[],int)
 meth public abstract boolean GetVolumePathNamesForVolumeName(java.lang.String,char[],int,com.sun.jna.ptr.IntByReference)
 meth public abstract boolean GlobalMemoryStatusEx(com.sun.jna.platform.win32.WinBase$MEMORYSTATUSEX)
+meth public abstract boolean IsProcessorFeaturePresent(int)
 meth public abstract boolean IsWow64Process(com.sun.jna.platform.win32.WinNT$HANDLE,com.sun.jna.ptr.IntByReference)
 meth public abstract boolean Module32FirstW(com.sun.jna.platform.win32.WinNT$HANDLE,com.sun.jna.platform.win32.Tlhelp32$MODULEENTRY32W)
 meth public abstract boolean Module32NextW(com.sun.jna.platform.win32.WinNT$HANDLE,com.sun.jna.platform.win32.Tlhelp32$MODULEENTRY32W)
@@ -18262,6 +18312,7 @@ fld public final static byte SYSTEM_AUDIT_CALLBACK_OBJECT_ACE_TYPE = 15
 fld public final static byte SYSTEM_AUDIT_OBJECT_ACE_TYPE = 7
 fld public final static byte SYSTEM_MANDATORY_LABEL_ACE_TYPE = 17
 fld public final static byte VALID_INHERIT_FLAGS = 31
+fld public final static com.sun.jna.platform.win32.Guid$GUID GUID_CONSOLE_DISPLAY_STATE
 fld public final static com.sun.jna.platform.win32.WinDef$LCID LOCALE_INVARIANT
 fld public final static com.sun.jna.platform.win32.WinDef$LCID LOCALE_NEUTRAL
 fld public final static com.sun.jna.platform.win32.WinDef$LCID LOCALE_SYSTEM_DEFAULT
@@ -20535,6 +20586,20 @@ fld public final static int MONITORINFOF_PRIMARY = 1
 fld public final static int MONITOR_DEFAULTTONEAREST = 2
 fld public final static int MONITOR_DEFAULTTONULL = 0
 fld public final static int MONITOR_DEFAULTTOPRIMARY = 1
+fld public final static int PBT_APMBATTERYLOW = 9
+fld public final static int PBT_APMOEMEVENT = 11
+fld public final static int PBT_APMPOWERSTATUSCHANGE = 10
+fld public final static int PBT_APMQUERYSTANDBY = 1
+fld public final static int PBT_APMQUERYSTANDBYFAILED = 3
+fld public final static int PBT_APMQUERYSUSPEND = 0
+fld public final static int PBT_APMQUERYSUSPENDFAILED = 2
+fld public final static int PBT_APMRESUMEAUTOMATIC = 18
+fld public final static int PBT_APMRESUMECRITICAL = 6
+fld public final static int PBT_APMRESUMESTANDBY = 8
+fld public final static int PBT_APMRESUMESUSPEND = 7
+fld public final static int PBT_APMSTANDBY = 5
+fld public final static int PBT_APMSUSPEND = 4
+fld public final static int PBT_POWERSETTINGCHANGE = 32787
 fld public final static int RDW_ALLCHILDREN = 128
 fld public final static int RDW_ERASE = 4
 fld public final static int RDW_ERASENOW = 512
@@ -20713,6 +20778,7 @@ fld public final static int WM_KEYDOWN = 256
 fld public final static int WM_KEYUP = 257
 fld public final static int WM_MDIMAXIMIZE = 549
 fld public final static int WM_PAINT = 15
+fld public final static int WM_POWERBROADCAST = 536
 fld public final static int WM_QUIT = 18
 fld public final static int WM_SESSION_CHANGE = 689
 fld public final static int WM_SHOWWINDOW = 24
@@ -20767,6 +20833,7 @@ innr public static HARDWAREINPUT
 innr public static HDEVNOTIFY
 innr public static HHOOK
 innr public static HMONITOR
+innr public static HPOWERNOTIFY
 innr public static INPUT
 innr public static KBDLLHOOKSTRUCT
 innr public static KEYBDINPUT
@@ -20776,12 +20843,15 @@ innr public static MONITORINFOEX
 innr public static MOUSEINPUT
 innr public static MSG
 innr public static MSLLHOOKSTRUCT
+innr public static POWERBROADCAST_SETTING
 innr public static RAWINPUTDEVICELIST
 innr public static SIZE
 innr public static WINDOWINFO
 innr public static WINDOWPLACEMENT
 innr public static WNDCLASSEX
 intf com.sun.jna.platform.win32.WinDef
+meth public abstract com.sun.jna.platform.win32.WinDef$BOOL UnregisterPowerSettingNotification(com.sun.jna.platform.win32.WinUser$HPOWERNOTIFY)
+meth public abstract com.sun.jna.platform.win32.WinUser$HPOWERNOTIFY RegisterPowerSettingNotification(com.sun.jna.platform.win32.WinNT$HANDLE,com.sun.jna.platform.win32.Guid$GUID,int)
 
 CLSS public static com.sun.jna.platform.win32.WinUser$BLENDFUNCTION
  outer com.sun.jna.platform.win32.WinUser
@@ -20878,6 +20948,12 @@ supr com.sun.jna.platform.win32.WinNT$HANDLE
 CLSS public abstract interface static com.sun.jna.platform.win32.WinUser$HOOKPROC
  outer com.sun.jna.platform.win32.WinUser
 intf com.sun.jna.win32.StdCallLibrary$StdCallCallback
+
+CLSS public static com.sun.jna.platform.win32.WinUser$HPOWERNOTIFY
+ outer com.sun.jna.platform.win32.WinUser
+cons public init()
+cons public init(com.sun.jna.Pointer)
+supr com.sun.jna.platform.win32.WinDef$PVOID
 
 CLSS public static com.sun.jna.platform.win32.WinUser$INPUT
  outer com.sun.jna.platform.win32.WinUser
@@ -21030,6 +21106,16 @@ fld public com.sun.jna.platform.win32.WinDef$POINT pt
 fld public int flags
 fld public int mouseData
 fld public int time
+supr com.sun.jna.Structure
+
+CLSS public static com.sun.jna.platform.win32.WinUser$POWERBROADCAST_SETTING
+ outer com.sun.jna.platform.win32.WinUser
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["PowerSetting", "DataLength", "Data"])
+cons public init(com.sun.jna.Pointer)
+fld public byte[] Data
+fld public com.sun.jna.platform.win32.Guid$GUID PowerSetting
+fld public int DataLength
+meth public final void read()
 supr com.sun.jna.Structure
 
 CLSS public static com.sun.jna.platform.win32.WinUser$RAWINPUTDEVICELIST

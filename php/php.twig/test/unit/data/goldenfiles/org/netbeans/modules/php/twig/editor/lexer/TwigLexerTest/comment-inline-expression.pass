@@ -1,0 +1,8 @@
+TOP token #0 T_TWIG_VAR_START [{{]
+token #0 T_TWIG_WHITESPACE [\n    ]
+token #1 T_TWIG_STRING ["Hello World"]
+token #2 T_TWIG_PUNCTUATION [|]
+token #3 T_TWIG_NAME [upper]
+token #4 T_TWIG_WHITESPACE [ ]
+token #5 T_TWIG_COMMENT [# this is an inline comment\n]
+TOP token #2 T_TWIG_VAR_END [}}]

@@ -20,6 +20,7 @@ package org.netbeans.modules.maven.junit;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -37,6 +39,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import javax.lang.model.element.ElementKind;
 import javax.swing.event.ChangeListener;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.artifact.Artifact;
@@ -50,6 +54,9 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.api.java.source.ClasspathInfo;
+import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gsf.testrunner.api.RerunHandler;
@@ -71,6 +78,7 @@ import org.netbeans.modules.maven.api.execute.RunConfig;
 import org.netbeans.modules.maven.api.execute.RunUtils;
 import org.netbeans.modules.maven.api.output.OutputProcessor;
 import org.netbeans.modules.maven.api.output.OutputVisitor;
+import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -449,15 +457,23 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
                             int windowslimitcount = 0;
                             for (Testcase tc : tests) {
                                 //TODO just when is the classname null??
-                                if (tc.getClassName() != null) {
+                                String tcName= tc.getClassName();
+                                if (tcName != null) {
                                     Collection<String> lst = methods.get(tc.getClassName());
                                     if (lst == null) {
                                         lst = new ArrayList<>();
                                         methods.put(tc.getClassName(), lst);
                                         windowslimitcount = windowslimitcount + tc.getClassName().length() + 1; // + 1 for ,
                                     }
-                                    lst.add(tc.getName());
-                                    windowslimitcount = windowslimitcount + tc.getName().length() + 1; // + 1 for # or +
+                                    String mName = tc.getName();
+
+                                    if (tcName!=null
+                                            && mName.startsWith(tcName)
+                                            && mName.charAt(tcName.length())=='.'){
+                                        mName = mName.substring(tcName.length()+1);
+                                    }
+                                    lst.add(mName);
+                                    windowslimitcount = windowslimitcount + mName.length() + 1; // + 1 for # or +
                                 }
                             }
                             boolean exceedsWindowsLimit = Utilities.isWindows() && windowslimitcount > 6000; //just be conservative here, the limit is more (8000+)
@@ -692,15 +708,20 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
     
     private File locateOutputDirAndWait(String candidateClass, boolean consume) {
         String suffix = reportNameSuffix == null ? "" : "-" + reportNameSuffix;
-        File outputDir = locateOutputDir(candidateClass, suffix, consume);
-        if (outputDir == null && surefireRunningInParallel) {
-            // try waiting a bit to give time for the result file to be created
-            try {
+        File outputDir = null;
+        // Test report might be in flight, so scan for it multiple times.
+        // Problems were observed with surefire running tests in parallel and
+        // also single threaded mode at leat on linus.
+        try {
+            for (int i = 1; i <= 40; i++) {
+                outputDir = locateOutputDir(candidateClass, suffix, consume);
+                if (outputDir != null) {
+                    LOG.log(Level.FINE, "Found output dir for test {0} in {1}. iteration ", new Object[]{candidateClass, i});
+                    break;
+                }
                 Thread.sleep(500);
-            } catch (InterruptedException ex) {
-                Exceptions.printStackTrace(ex);
             }
-            outputDir = locateOutputDir(candidateClass, suffix, consume);
+        } catch (InterruptedException ex) {
         }
         return outputDir;
     }
@@ -721,6 +742,22 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
         if (outputDir == null || report == null || session == null) {
             LOG.log(Level.FINE, "No session for outdir {0}", outputDir);
             return;
+        }
+        Map<ClasspathInfo,Path> classpathInfo = Map.of();
+        NbMavenProject nbMavenProject = session.getProject()
+                .getLookup()
+                .lookup(NbMavenProject.class);
+        if(nbMavenProject != null) {
+            classpathInfo = nbMavenProject
+                    .getMavenProject()
+                    .getTestCompileSourceRoots()
+                    .stream()
+                    .map(p -> (p.endsWith("/") || p.endsWith("\\")) ? p : (p + "/"))
+                    .map(p -> new File(p))
+                    .collect(Collectors.toMap(
+                        f -> ClasspathInfo.create(f),
+                        f -> f.toPath()
+                    ));
         }
         if (report.length() > 50 * 1024 * 1024) {
             LOG.log(Level.INFO, "Skipping report file as size is too big (> 50MB): {0}", report.getPath());
@@ -818,7 +855,19 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
                         classname = classname.substring(0, classname.length() - nameSuffix.length());
                     }
                     test.setClassName(classname);
-                    test.setLocation(test.getClassName().replace('.', '/') + ".java");
+                    String relativePath = null;
+                    for (Entry<ClasspathInfo, Path> ci : classpathInfo.entrySet()) {
+                        FileObject fo = SourceUtils.getFile(ElementHandle.createTypeElementHandle(ElementKind.CLASS, classname), ci.getKey());
+                        if (fo != null) {
+                            relativePath = ci.getValue().relativize(FileUtil.toFile(fo).toPath()).toString();
+                            break;
+                        }
+                    }
+                    if (relativePath != null) {
+                        test.setLocation(relativePath);
+                    } else {
+                        test.setLocation(classname.replace('.', '/').split("\\$")[0] + ".java");
+                    }
                 }
                 session.addTestCase(test);
             }

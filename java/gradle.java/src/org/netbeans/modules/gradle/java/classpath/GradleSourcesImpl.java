@@ -92,9 +92,9 @@ import org.openide.util.Pair;
     "OTHER_RESOURCES={0} Resources [{2}]",
 
     "# {0} - directory name",
-    "GATLING_SCENARIOES=Gatling Scenarioes [0]",
+    "GATLING_SCENARIOS=Gatling Scenarios [0]",
     "# {0} - directory name",
-    "GATLING_SCENARIOES_UNIQUE=Gatling Scenarioes",
+    "GATLING_SCENARIOS_UNIQUE=Gatling Scenarios",
     "GATLING_DATA=Gatling Test Data",
     "GATLING_BODIES=Gatling Request Bodies",
     "# {0} - directory name",
@@ -154,7 +154,7 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
     public synchronized SourceGroup[] getSourceGroups(String type) {
         checkChanges(false);
         ArrayList<SourceGroup> ret = new ArrayList<>();
-        Set<SourceType> stype = soureType2SourceType(type);
+        Set<SourceType> stype = sourсeType2SourceType(type);
         for (SourceType st : stype) {
             Set<File> processed = new HashSet<>();
             for (String group : gradleSources.keySet()) {
@@ -240,8 +240,11 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
                     key.append("OTHER");  //NOI18N
             }
         }
-        if (lang == GradleJavaSourceSet.SourceType.SCALA){
-            key.append("SCENARIOES");  //NOI18N
+        if ((lang == GradleJavaSourceSet.SourceType.SCALA) ||
+                (lang == GradleJavaSourceSet.SourceType.JAVA) ||
+                (lang == GradleJavaSourceSet.SourceType.KOTLIN) ||
+                (lang == GradleJavaSourceSet.SourceType.GROOVY)){
+            key.append("SCENARIOS");  //NOI18N
             if (unique) {
                 key.append("_UNIQUE"); //NOI18N
             }
@@ -331,15 +334,15 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
         return ret && gp.getSourceSets().containsKey(hint);
     }
 
-    private static Set<SourceType> soureType2SourceType(String type) {
+    private static Set<SourceType> sourсeType2SourceType(String type) {
         switch (type) {
             case JavaProjectConstants.SOURCES_TYPE_JAVA: return EnumSet.of(SourceType.JAVA, SourceType.GROOVY);
             case JavaProjectConstants.SOURCES_TYPE_RESOURCES: return EnumSet.of(SourceType.RESOURCES);
             case SOURCE_TYPE_GENERATED: return EnumSet.of(SourceType.GENERATED);
             case SOURCE_TYPE_GROOVY: return EnumSet.of(SourceType.GROOVY); // Should be in the Groovy support module theoretically
             case SOURCE_TYPE_KOTLIN: return EnumSet.of(SourceType.KOTLIN);
+            default: return Collections.emptySet();
         }
-        return Collections.emptySet();
     }
 
     private final class GradleSourceGroup implements SourceGroup {

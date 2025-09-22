@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.extexecution.impl
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/extexecution/impl/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.54
+OpenIDE-Module-Specification-Version: 1.55
 OpenIDE-Module-Provides: org.netbeans.spi.extexecution.open.OptionOpenHandler, org.netbeans.spi.extexecution.open.FileOpenHandler, org.netbeans.spi.extexecution.open.HttpOpenHandler

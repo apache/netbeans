@@ -1917,7 +1917,7 @@ public class Utilities {
         JavaFileObject prev = log.useSource(new DummyJFO());
         Enter enter = Enter.instance(jti.getContext());
         
-        Log.DiagnosticHandler discardHandler = new Log.DiscardDiagnosticHandler(log) {
+        Log.DiagnosticHandler discardHandler = log.new DiscardDiagnosticHandler() {
             private Diagnostic.Kind f = filter == null ? Diagnostic.Kind.ERROR : filter;
             @Override
             public void report(JCDiagnostic diag) {

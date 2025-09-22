@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.192.0
+#Version 0.194.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -967,7 +967,7 @@ meth public {org.netbeans.api.java.source.ElementHandle%0} resolve(org.netbeans.
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
-hfds NORMALIZATION_CACHE,kind,log,signatures
+hfds kind,log,signatures
 hcls ElementHandleAccessorImpl
 
 CLSS public final org.netbeans.api.java.source.ElementUtilities
@@ -994,6 +994,9 @@ meth public java.util.List<? extends javax.lang.model.element.ExecutableElement>
 meth public java.util.List<? extends javax.lang.model.element.ExecutableElement> findUnimplementedMethods(javax.lang.model.element.TypeElement)
 meth public java.util.List<? extends javax.lang.model.element.ExecutableElement> findUnimplementedMethods(javax.lang.model.element.TypeElement,boolean)
 meth public java.util.Map<? extends javax.lang.model.element.Element,com.sun.source.tree.Scope> findElementsAndOrigins(com.sun.source.tree.Scope,org.netbeans.api.java.source.ElementUtilities$ElementAcceptor)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public java.util.Set<javax.lang.model.element.PackageElement> transitivelyExportedPackages(javax.lang.model.element.ModuleElement)
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public javax.lang.model.element.Element findElement(java.lang.String)
@@ -1375,8 +1378,12 @@ meth public com.sun.source.tree.CaseTree removeCaseStatement(com.sun.source.tree
 meth public com.sun.source.tree.CatchTree Catch(com.sun.source.tree.VariableTree,com.sun.source.tree.BlockTree)
 meth public com.sun.source.tree.ClassTree AnnotationType(com.sun.source.tree.ModifiersTree,java.lang.CharSequence,java.util.List<? extends com.sun.source.tree.Tree>)
 meth public com.sun.source.tree.ClassTree Class(com.sun.source.tree.ModifiersTree,java.lang.CharSequence,java.util.List<? extends com.sun.source.tree.TypeParameterTree>,com.sun.source.tree.Tree,java.util.List<? extends com.sun.source.tree.Tree>,java.util.List<? extends com.sun.source.tree.Tree>)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public com.sun.source.tree.ClassTree Class(com.sun.source.tree.ModifiersTree,java.lang.CharSequence,java.util.List<? extends com.sun.source.tree.TypeParameterTree>,com.sun.source.tree.Tree,java.util.List<? extends com.sun.source.tree.Tree>,java.util.List<? extends com.sun.source.tree.Tree>,java.util.List<? extends com.sun.source.tree.Tree>)
 meth public com.sun.source.tree.ClassTree Enum(com.sun.source.tree.ModifiersTree,java.lang.CharSequence,java.util.List<? extends com.sun.source.tree.Tree>,java.util.List<? extends com.sun.source.tree.Tree>)
 meth public com.sun.source.tree.ClassTree Interface(com.sun.source.tree.ModifiersTree,java.lang.CharSequence,java.util.List<? extends com.sun.source.tree.TypeParameterTree>,java.util.List<? extends com.sun.source.tree.Tree>,java.util.List<? extends com.sun.source.tree.Tree>)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public com.sun.source.tree.ClassTree Interface(com.sun.source.tree.ModifiersTree,java.lang.CharSequence,java.util.List<? extends com.sun.source.tree.TypeParameterTree>,java.util.List<? extends com.sun.source.tree.Tree>,java.util.List<? extends com.sun.source.tree.Tree>,java.util.List<? extends com.sun.source.tree.Tree>)
 meth public com.sun.source.tree.ClassTree addClassImplementsClause(com.sun.source.tree.ClassTree,com.sun.source.tree.Tree)
 meth public com.sun.source.tree.ClassTree addClassMember(com.sun.source.tree.ClassTree,com.sun.source.tree.Tree)
 meth public com.sun.source.tree.ClassTree addClassTypeParameter(com.sun.source.tree.ClassTree,com.sun.source.tree.TypeParameterTree)
@@ -1437,6 +1444,7 @@ meth public com.sun.source.tree.IdentifierTree Identifier(java.lang.CharSequence
 meth public com.sun.source.tree.IdentifierTree Identifier(javax.lang.model.element.Element)
 meth public com.sun.source.tree.IfTree If(com.sun.source.tree.ExpressionTree,com.sun.source.tree.StatementTree,com.sun.source.tree.StatementTree)
 meth public com.sun.source.tree.ImportTree Import(com.sun.source.tree.Tree,boolean)
+meth public com.sun.source.tree.ImportTree ImportModule(com.sun.source.tree.ExpressionTree)
 meth public com.sun.source.tree.InstanceOfTree InstanceOf(com.sun.source.tree.ExpressionTree,com.sun.source.tree.Tree)
 meth public com.sun.source.tree.LabeledStatementTree LabeledStatement(java.lang.CharSequence,com.sun.source.tree.StatementTree)
 meth public com.sun.source.tree.LambdaExpressionTree LambdaExpression(java.util.List<? extends com.sun.source.tree.VariableTree>,com.sun.source.tree.Tree)
@@ -1611,6 +1619,7 @@ meth public boolean isModuleInfo(com.sun.source.tree.CompilationUnitTree)
 meth public boolean isPackageInfo(com.sun.source.tree.CompilationUnitTree)
 meth public boolean isPartOfCompoundVariableDeclaration(com.sun.source.tree.Tree)
  anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public boolean isRecordComponent(com.sun.source.tree.VariableTree)
 meth public boolean isStaticContext(com.sun.source.tree.Scope)
 meth public boolean isSynthetic(com.sun.source.util.TreePath)
 meth public boolean isVarType(com.sun.source.util.TreePath)
@@ -1792,7 +1801,7 @@ meth public void tag(com.sun.source.tree.Tree,java.lang.Object)
  anno 2 org.netbeans.api.annotations.common.NonNull()
 supr org.netbeans.api.java.source.CompilationController
 hfds NOT_LINKED,REWRITE_WHOLE_FILE,afterCommit,changes,docChanges,externalChanges,instance,introducedTrees,invalidateSourceAfter,overlay,rewriteHints,textualChanges,tree2Tag,treeMaker,usedComments,userInfo
-hcls CommentReplicator,CopyEntry,Translator,TreeCollector
+hcls CommentReplicator,CopyEntry,TreeCollector
 
 CLSS public org.netbeans.api.java.source.matching.Matcher
 intf org.openide.util.Cancellable

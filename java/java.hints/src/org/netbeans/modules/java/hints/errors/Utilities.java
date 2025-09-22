@@ -3339,16 +3339,16 @@ public class Utilities {
             if (isSwitchExpression) {
                 switchType = SWITCH_TYPE.SWITCH_EXPRESSION;
                 if (statements.get(0).getKind() == Tree.Kind.RETURN) {
-                    body = ((JCTree.JCReturn) statements.get(0)).getExpression();
+                    body = ((ReturnTree) statements.get(0)).getExpression();
                 } else {
-                    JCTree.JCExpressionStatement jceTree = (JCTree.JCExpressionStatement) statements.get(0);
-                    body = ((JCTree.JCAssign) jceTree.expr).rhs;
-                    leftVariable = ((JCTree.JCAssign) jceTree.expr).lhs;
+                    ExpressionStatementTree esTree = (ExpressionStatementTree) statements.get(0);
+                    body = ((AssignmentTree) esTree.getExpression()).getExpression();
+                    leftVariable = ((AssignmentTree) esTree.getExpression()).getVariable();
                 }
                 if (body.getKind() == Tree.Kind.TYPE_CAST) {
-                        typeCastTree = ((JCTree.JCTypeCast)body).getType();
-                        body = ((JCTree.JCTypeCast)body).getExpression();
-                    }
+                    typeCastTree = ((TypeCastTree) body).getType();
+                    body = ((TypeCastTree) body).getExpression();
+                }
                 newCases.add(make.CasePatterns(patterns, ct.getGuard(), make.ExpressionStatement((ExpressionTree) body)));
             } else {
                 newCases.add(make.CasePatterns(patterns, ct.getGuard(), body));
@@ -3400,12 +3400,12 @@ public class Utilities {
         if (statement.getKind() != Kind.EXPRESSION_STATEMENT) {
             return null;
         }
-        JCTree.JCExpressionStatement jceTree = (JCTree.JCExpressionStatement) statement;
-        if (jceTree.expr.getKind() != Kind.ASSIGNMENT) {
+        ExpressionStatementTree esTree = (ExpressionStatementTree) statement;
+        if (esTree.getExpression().getKind() != Kind.ASSIGNMENT) {
             return null;
         }
-        JCTree.JCAssign assignTree = (JCTree.JCAssign) jceTree.expr;
-        return ((JCTree.JCIdent) assignTree.lhs).name;
+        AssignmentTree assignTree = (AssignmentTree) esTree.getExpression();
+        return ((IdentifierTree) assignTree.getVariable()).getName();
     }
 
     public static boolean isJDKVersionLower(int previewUntilJDK){

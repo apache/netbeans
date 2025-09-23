@@ -127,6 +127,7 @@ import com.sun.tools.javac.tree.JCTree.JCUses;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.JCTree.JCWhileLoop;
 import com.sun.tools.javac.tree.JCTree.JCWildcard;
+import com.sun.tools.javac.tree.JCTree.JCYield;
 import com.sun.tools.javac.tree.JCTree.LetExpr;
 import com.sun.tools.javac.tree.JCTree.Tag;
 import com.sun.tools.javac.tree.JCTree.TypeBoundKind;
@@ -2423,6 +2424,16 @@ public class CasualDiff {
                 localPointer = diffTree(oldT.expr, newT.expr, exprBounds);
             }
         }
+        copyTo(localPointer, bounds[1]);
+
+        return bounds[1];
+    }
+
+    protected int diffYield(JCYield oldT, JCYield newT, int[] bounds) {
+        int localPointer = bounds[0];
+        int[] exprBounds = getBounds(oldT.value);
+        copyTo(bounds[0], exprBounds[0]);
+        localPointer = diffTree(oldT.value, newT.value, exprBounds);
         copyTo(localPointer, bounds[1]);
 
         return bounds[1];
@@ -5757,6 +5768,9 @@ public class CasualDiff {
               break;
           case RETURN:
               retVal = diffReturn((JCReturn)oldT, (JCReturn)newT, elementBounds);
+              break;
+          case YIELD:
+              retVal = diffYield((JCYield)oldT, (JCYield)newT, elementBounds);
               break;
           case THROW:
               retVal = diffThrow((JCThrow)oldT, (JCThrow)newT,elementBounds);

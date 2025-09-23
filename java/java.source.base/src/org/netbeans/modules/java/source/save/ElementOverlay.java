@@ -432,7 +432,7 @@ public class ElementOverlay {
         return (PackageElement) resolve(ast, elements, "", modle);
     }
     
-    private ModuleElement moduleOf(Elements elements, Element el) {
+    public ModuleElement moduleOf(Elements elements, Element el) {
         if (el instanceof TypeElementWrapper)
             return moduleOf(elements, ((TypeElementWrapper) el).delegateTo);
         if (el instanceof FakeTypeElement)

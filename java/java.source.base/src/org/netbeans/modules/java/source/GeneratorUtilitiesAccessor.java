@@ -22,7 +22,9 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ImportTree;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ModuleElement;
 import org.netbeans.api.java.source.GeneratorUtilities;
 
 public abstract class GeneratorUtilitiesAccessor {
@@ -60,6 +62,6 @@ public abstract class GeneratorUtilitiesAccessor {
     protected GeneratorUtilitiesAccessor() {
     }
 
-    public abstract CompilationUnitTree addImports(GeneratorUtilities gu, CompilationUnitTree cut, List<? extends ImportTree> cutImports, Set<? extends Element> toImport);
+    public abstract CompilationUnitTree addImports(GeneratorUtilities gu, CompilationUnitTree cut, List<? extends ImportTree> cutImports, Set<? extends Element> toImport, Function<Element, ModuleElement> moduleOf);
 
 }

@@ -137,7 +137,7 @@ jobs:
     timeout-minutes: 40
     strategy:
       matrix:
-        java: [ '17', '21', '25-ea' ]
+        java: [ '17', '21', '25' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false
@@ -242,7 +242,7 @@ jobs:
         java: [ 17 ]
         include:
           - os: ubuntu-latest
-            java: 25-ea
+            java: 25
       fail-fast: false
     steps:
 
@@ -322,7 +322,7 @@ jobs:
         if: ${{ github.event_name == 'pull_request' && !cancelled() }}
         uses: actions/setup-java@v5
         with:
-          java-version: 25-ea
+          java-version: 25
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Check Commit Headers
@@ -446,7 +446,7 @@ jobs:
         if: env.test_javadoc == 'true' && success()
         uses: actions/setup-java@v5
         with:
-          java-version: 25-ea
+          java-version: 25
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Build javadoc
@@ -843,7 +843,7 @@ jobs:
     timeout-minutes: 50
     strategy:
       matrix:
-        java: [ '17', '21', '25-ea' ]
+        java: [ '17', '21', '25' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false
@@ -958,7 +958,7 @@ jobs:
 
 
   platform-modules-test1:
-    name: Platform Modules batch1 on Linux/JDK ${{ matrix.java }} (some on 8)
+    name: Platform Modules batch1 on Linux/JDK ${{ matrix.java }}
     # equals env.test_platform == 'true'
     if: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
@@ -1450,10 +1450,10 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17', '25-ea' ]
+        java: [ '17', '25' ]
         config: [ 'batch1', 'batch2' ]
         exclude:
-          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '25-ea' }}
+          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '25' }}
       fail-fast: false
     steps:
 
@@ -1507,7 +1507,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17', '21', '25-ea' ]
+        java: [ '17', '21', '25' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false

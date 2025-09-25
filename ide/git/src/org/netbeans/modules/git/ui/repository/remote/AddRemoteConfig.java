@@ -26,6 +26,7 @@ import org.netbeans.modules.git.Git;
 import org.netbeans.modules.git.client.GitClient;
 import org.netbeans.modules.git.client.GitClientExceptionHandler;
 import org.netbeans.modules.git.client.GitProgressSupport;
+import org.netbeans.modules.git.utils.GitUtils;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -40,18 +41,28 @@ import org.openide.util.NbBundle;
 public class AddRemoteConfig {
 
     public void addRemote(File repository) {
-        AddRemotePanel panel = new AddRemotePanel();
-        DialogDescriptor dd = new DialogDescriptor(panel,
+        RemoteRepository remoteRepository = new RemoteRepository(null);
+        AddRemotePanel arp = new AddRemotePanel(remoteRepository.getPanel());
+        DialogDescriptor dd = new DialogDescriptor(arp,
             NbBundle.getMessage(RemoteRepositoryPanel.class, "LBL_AddRemoteConfig.title"));
+
+        Runnable validityUpdate = () -> {
+            dd.setValid(!arp.getRemoteName().isBlank() && remoteRepository.isValid());
+        };
+        arp.txtRemoteName.addActionListener(actionEvent -> validityUpdate.run());
+        remoteRepository.addChangeListener(changeEvent -> validityUpdate.run());
+
         if (DialogDisplayer.getDefault().notify(dd) != NotifyDescriptor.OK_OPTION) {
             return;
         }
 
-        final String remoteName = panel.getRemoteName();
-        final String remoteUrl = panel.getRemoteURL();
+        final String remoteName = arp.getRemoteName();
+        final String remoteUrl = remoteRepository.getURI().toPrivateString();
         if (remoteName.isEmpty() || remoteUrl.isEmpty()) {
             return;
         }
+
+        remoteRepository.store();
 
         GitProgressSupport supp = new GitProgressSupport() {
             @Override
@@ -62,7 +73,7 @@ public class AddRemoteConfig {
                         remoteName,
                         Collections.singletonList(remoteUrl),
                         Collections.<String>emptyList(),
-                        Collections.singletonList("+refs/heads/*:refs/remotes/" + remoteName + "/*"),
+                        Collections.singletonList(GitUtils.getGlobalRefSpec(remoteName)),
                         Collections.<String>emptyList());
                     client.setRemote(cfg, getProgressMonitor());
                 } catch (GitException ex) {

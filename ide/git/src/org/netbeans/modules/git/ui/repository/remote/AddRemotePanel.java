@@ -18,22 +18,22 @@
  */
 package org.netbeans.modules.git.ui.repository.remote;
 
+import java.util.Objects;
+
 /**
  *
  * @author Christian Lenz
  */
 public class AddRemotePanel extends javax.swing.JPanel {
 
-    public AddRemotePanel() {
+    public AddRemotePanel(javax.swing.JPanel urlPanel) {
+        Objects.requireNonNull(urlPanel);
         initComponents();
+        panelUrlWrapper.add(urlPanel);
     }
 
     public String getRemoteName() {
         return txtRemoteName.getText().trim();
-    }
-
-    public String getRemoteURL() {
-        return txtRemoteURL.getText().trim();
     }
 
     /**
@@ -46,48 +46,43 @@ public class AddRemotePanel extends javax.swing.JPanel {
     private void initComponents() {
 
         lblRemoteName = new javax.swing.JLabel();
-        lblRemoteURL = new javax.swing.JLabel();
         txtRemoteName = new javax.swing.JTextField();
-        txtRemoteURL = new javax.swing.JTextField();
+        panelUrlWrapper = new javax.swing.JPanel();
 
         org.openide.awt.Mnemonics.setLocalizedText(lblRemoteName, "Remote Name:");
 
-        org.openide.awt.Mnemonics.setLocalizedText(lblRemoteURL, "Remote URL:");
+        panelUrlWrapper.setLayout(new java.awt.BorderLayout());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblRemoteName)
-                    .addComponent(lblRemoteURL))
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtRemoteName, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
-                    .addComponent(txtRemoteURL))
-                .addGap(20, 20, 20))
+                    .addComponent(panelUrlWrapper, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblRemoteName)
+                        .addGap(12, 12, 12)
+                        .addComponent(txtRemoteName, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblRemoteName)
                     .addComponent(txtRemoteName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(15, 15, 15)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblRemoteURL)
-                    .addComponent(txtRemoteURL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelUrlWrapper, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel lblRemoteName;
-    private javax.swing.JLabel lblRemoteURL;
-    private javax.swing.JTextField txtRemoteName;
-    private javax.swing.JTextField txtRemoteURL;
+    javax.swing.JLabel lblRemoteName;
+    javax.swing.JPanel panelUrlWrapper;
+    javax.swing.JTextField txtRemoteName;
     // End of variables declaration//GEN-END:variables
 }

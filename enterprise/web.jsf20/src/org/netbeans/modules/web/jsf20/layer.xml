@@ -29,6 +29,15 @@
       <file name="jsf20.xml" url="jsf20.xml">
         <attr name="displayName" bundlevalue="org/netbeans/modules/web/jsf20/Bundle#jsf20"/>
       </file>
+      <file name="jsf30.xml" url="jsf30.xml">
+        <attr name="displayName" bundlevalue="org/netbeans/modules/web/jsf20/Bundle#jsf30"/>
+      </file>
+      <file name="jsf40.xml" url="jsf40.xml">
+        <attr name="displayName" bundlevalue="org/netbeans/modules/web/jsf20/Bundle#jsf40"/>
+      </file>
+      <file name="jsf41.xml" url="jsf41.xml">
+        <attr name="displayName" bundlevalue="org/netbeans/modules/web/jsf20/Bundle#jsf41"/>
+      </file>
     </folder>
   </folder>
 </filesystem>

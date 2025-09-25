@@ -41,16 +41,17 @@ import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
 
 /**
- * provider URLs of libraries defined in javax.faces.FACELETS_LIBRARIES context param of deployment descriptor
+ * provider URLs of libraries defined in [javax|jakarta].faces.FACELETS_LIBRARIES context param of deployment descriptor
  *
  * @author marekfukala
  */
 public class WebFaceletTaglibResourceProvider implements ConfigurationResourceProvider {
 
-    private WebModule wm;
-
     private static final String FACELETS_LIBRARIES_OLD_PROPERTY_NAME = "facelets.LIBRARIES"; //NOI18N
     private static final String FACELETS_LIBRARIES_PROPERTY_NAME = "javax.faces.FACELETS_LIBRARIES"; //NOI18N
+    private static final String FACELETS_LIBRARIES_JAKARTA_PROPERTY_NAME = "jakarta.faces.FACELETS_LIBRARIES"; //NOI18N
+
+    private final WebModule wm;
 
     public WebFaceletTaglibResourceProvider(WebModule wm) {
         this.wm = wm;
@@ -65,7 +66,7 @@ public class WebFaceletTaglibResourceProvider implements ConfigurationResourcePr
                 // This is executed just in case that the model is ready. Otherwise it leads to uncancelable work.
                 // Another reports against non-consistents result from the first and second invocation should be
                 // consulted with tzetula for better options how to fix this. Related issue is bug #232878.
-                faceletsLibrariesList = model.runReadAction(new MetadataModelAction<WebAppMetadata, String>() {
+                faceletsLibrariesList = model.runReadAction(new MetadataModelAction<>() {
                     @Override
                     public String run(WebAppMetadata metadata) throws Exception {
                         //TODO can be init param specified by some annotation or the dd must be present?
@@ -73,8 +74,9 @@ public class WebFaceletTaglibResourceProvider implements ConfigurationResourcePr
                         if (ddRoot != null) {
                             InitParam[] contextParams = ddRoot.getContextParam();
                             for (InitParam param : contextParams) {
-                                if (FACELETS_LIBRARIES_PROPERTY_NAME.equals(param.getParamName()) ||
-                                        FACELETS_LIBRARIES_OLD_PROPERTY_NAME.equals(param.getParamName())) {
+                                if (FACELETS_LIBRARIES_PROPERTY_NAME.equals(param.getParamName())
+                                        || FACELETS_LIBRARIES_OLD_PROPERTY_NAME.equals(param.getParamName())
+                                        || FACELETS_LIBRARIES_JAKARTA_PROPERTY_NAME.equals(param.getParamName())) {
                                     return param.getParamValue();
                                 }
                             }

@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,7 +53,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.Parameters;
-import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
 
 /**
@@ -60,6 +60,12 @@ import org.openide.util.WeakListeners;
  * @author Petr Pisl, ads, Martin Fousek
  */
 public final class JsfVersionUtils {
+
+    private static final Set<String> SPECIFICATION_TITLES = Set.of(
+            "JavaServer Faces", // 1-2
+            "Jakarta Server Faces", // 3
+            "Jakarta Faces" // 4+
+    );
 
     private static final LinkedHashMap<JsfVersion, String> SPECIFIC_CLASS_NAMES = new LinkedHashMap<>();
 
@@ -197,7 +203,7 @@ public final class JsfVersionUtils {
     @CheckForNull
     public static JsfVersion forServerLibrary(@NonNull ServerLibrary lib) {
         Parameters.notNull("serverLibrary", lib); //NOI18N
-        if ("JavaServer Faces".equals(lib.getSpecificationTitle())) { // NOI18N
+        if (SPECIFICATION_TITLES.contains(lib.getSpecificationTitle())) { // NOI18N
             if (Version.fromJsr277NotationWithFallback("4.1").equals(lib.getSpecificationVersion())) { //NOI18N
                 return JsfVersion.JSF_4_1;
             } else if (Version.fromJsr277NotationWithFallback("4.0").equals(lib.getSpecificationVersion())) { //NOI18N

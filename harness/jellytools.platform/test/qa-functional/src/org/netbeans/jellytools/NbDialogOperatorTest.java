@@ -38,15 +38,11 @@ public class NbDialogOperatorTest extends JellyTestCase {
         "testBtCancel",
         "testBtClose",
         "testBtHelp",
-        "testBtNo",
         "testBtOK",
-        "testBtYes",
         "testCancel",
         "testClose",
         "testHelp",
-        "testNo",
         "testOK",
-        "testYes"
     };
 
     /** constructor required by JUnit
@@ -123,29 +119,6 @@ public class NbDialogOperatorTest extends JellyTestCase {
         assertTrue("Cancel not pushed.", getResult().equals(DialogDescriptor.CANCEL_OPTION));
     }
 
-    /** Test Yes button getter. */
-    public void testBtYes() {
-        new NbDialogOperator(TEST_DIALOG_TITLE).btYes().push();
-        assertTrue("Yes not detected correctly.", getResult().equals(DialogDescriptor.YES_OPTION));
-    }
-
-    /** Test Yes button pushing. */
-    public void testYes() {
-        new NbDialogOperator(TEST_DIALOG_TITLE).yes();
-        assertTrue("Yes not pushed.", getResult().equals(DialogDescriptor.YES_OPTION));
-    }
-
-    /** Test No button getter. */
-    public void testBtNo() {
-        new NbDialogOperator(TEST_DIALOG_TITLE).btNo().push();
-        assertTrue("No not detected correctly.", getResult().equals(DialogDescriptor.NO_OPTION));
-    }
-
-    /** Test No button pushing. */
-    public void testNo() {
-        new NbDialogOperator(TEST_DIALOG_TITLE).no();
-        assertTrue("No not pushed.", getResult().equals(DialogDescriptor.NO_OPTION));
-    }
     private TestLabel label;
 
     /** Opens modal dialog with OK, Cancel, Yes, No, Close and Help buttons. 
@@ -155,8 +128,6 @@ public class NbDialogOperatorTest extends JellyTestCase {
         Object[] options = new Object[]{
             DialogDescriptor.OK_OPTION,
             DialogDescriptor.CANCEL_OPTION,
-            DialogDescriptor.YES_OPTION,
-            DialogDescriptor.NO_OPTION,
             DialogDescriptor.CLOSED_OPTION
         };
         label = new TestLabel(TEST_DIALOG_LABEL);

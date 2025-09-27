@@ -108,23 +108,23 @@ public final class JavaCompletionItemFactory implements JavaCompletionTask.TypeC
     }
 
     @Override
-    public JavaCompletionItem createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef) {
-        return createExecutableItem(info, elem, type, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, false, smartType, assignToVarOffset, memberRef);
+    public JavaCompletionItem createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef, boolean insertTextParams) {
+        return createExecutableItem(info, elem, type, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, false, smartType, assignToVarOffset, memberRef, insertTextParams);
     }
 
     @Override
-    public JavaCompletionItem createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean afterConstructorTypeParams, boolean smartType, int assignToVarOffset, boolean memberRef) {
-        return JavaCompletionItem.createExecutableItem(info, elem, type, null, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, afterConstructorTypeParams, smartType, assignToVarOffset, memberRef, whiteList);
+    public JavaCompletionItem createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean afterConstructorTypeParams, boolean smartType, int assignToVarOffset, boolean memberRef, boolean insertTextParams) {
+        return JavaCompletionItem.createExecutableItem(info, elem, type, null, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, afterConstructorTypeParams, smartType, assignToVarOffset, memberRef, insertTextParams, whiteList);
     }
 
     @Override
-    public JavaCompletionItem createTypeCastableExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef) {
-        return JavaCompletionItem.createExecutableItem(info, elem, type, castType, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, false, smartType, assignToVarOffset, memberRef, whiteList);
+    public JavaCompletionItem createTypeCastableExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef, boolean insertTextParams) {
+        return JavaCompletionItem.createExecutableItem(info, elem, type, castType, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, false, smartType, assignToVarOffset, memberRef, insertTextParams, whiteList);
     }
 
     @Override
-    public JavaCompletionItem createThisOrSuperConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, String name) {
-        return JavaCompletionItem.createThisOrSuperConstructorItem(info, elem, type, substitutionOffset, isDeprecated, name, whiteList);
+    public JavaCompletionItem createThisOrSuperConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, String name, boolean insertTextParams) {
+        return JavaCompletionItem.createThisOrSuperConstructorItem(info, elem, type, substitutionOffset, isDeprecated, name, insertTextParams, whiteList);
     }
 
     @Override

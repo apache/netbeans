@@ -18,10 +18,14 @@
  */
 package org.netbeans.modules.refactoring.java.api;
 
+import com.sun.source.tree.VariableTree;
 import java.util.Set;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.VariableElement;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
 import org.openide.util.lookup.Lookups;
@@ -196,6 +200,25 @@ public final class ChangeParametersRefactoring extends AbstractRefactoring {
      * Parameter can be added, changed or moved to another position.
      */
     public static final class ParameterInfo {
+        /**
+         * Return the type of the given parameter as it appears in the source code.
+         *
+         * @param info the relevant {@code CompilationInfo}
+         * @param parameter the parameter for which the type should be detected
+         * @return the parameter type as it appears in the source code
+         * @since 1.92
+         */
+        public static String parameterTypeFromSource(CompilationInfo info, VariableElement parameter) {
+            VariableTree parTree = (VariableTree) info.getTrees().getTree(parameter);
+            ExecutableElement method = (ExecutableElement) parameter.getEnclosingElement();
+            int index = method.getParameters().indexOf(parameter);
+            if (method.isVarArgs() && index == method.getParameters().size() - 1) {
+                return parTree.getType().toString().replace("[]", "..."); // NOI18N
+            } else {
+                return parTree.getType().toString();
+            }
+        }
+
         int origIndex;
         String name;
         String type;

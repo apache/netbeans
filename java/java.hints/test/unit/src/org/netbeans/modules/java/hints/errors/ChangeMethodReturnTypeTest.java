@@ -18,11 +18,7 @@
  */
 package org.netbeans.modules.java.hints.errors;
 
-import com.sun.source.util.TreePath;
-import java.util.List;
-import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsTestBase;
-import org.netbeans.spi.editor.hints.Fix;
 import org.openide.util.NbBundle;
 
 /**
@@ -88,11 +84,6 @@ public class ChangeMethodReturnTypeTest extends ErrorHintsTestBase {
                        -1,
                        "FIX_ChangeMethodReturnType List&lt;Object>",
                        "package test; import java.util.Collections;import java.util.List; public class Test { private List<Object> t() { return 1 == 1 ? Collections.emptyList() : Collections.emptyList(); } }");
-    }
-
-    @Override
-    protected String toDebugString(CompilationInfo info, Fix f) {
-        return f.getText();
     }
 
     static {

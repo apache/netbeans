@@ -124,7 +124,6 @@ import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
-import static com.sun.source.tree.Tree.Kind.*;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.Trees;
@@ -153,6 +152,8 @@ import org.netbeans.modules.java.source.JavaSourceAccessor;
 import org.netbeans.spi.java.hints.JavaFix;
 import org.netbeans.spi.java.hints.JavaFixUtilities;
 import org.openide.util.Pair;
+
+import static com.sun.source.tree.Tree.Kind.*;
 
 /**
  *
@@ -190,12 +191,12 @@ public class Utilities {
         return makeNameUnique(info, s, name, Collections.<String>emptySet(), prefix, suffix, acceptExistingPrefixes);
     }
     
-    private static final Map<String, String> TYPICAL_KEYWORD_CONVERSIONS = new HashMap<String, String>() {{
-        put("class", "clazz");
-        put("interface", "intf");
-        put("new", "nue");
-        put("static", "statik");
-    }};
+    private static final Map<String, String> TYPICAL_KEYWORD_CONVERSIONS = Map.of(
+        "class", "clazz",
+        "interface", "intf",
+        "new", "nue",
+        "static", "statik"
+    );
     
     public static String makeNameUnique(CompilationInfo info, Scope s, String name, String prefix, String suffix) {
         return makeNameUnique(info, s, name, Collections.<String>emptySet(), prefix, suffix);
@@ -1815,18 +1816,16 @@ public class Utilities {
         }
     }
 
-    private static final Set<String> PRIMITIVE_NAMES = new HashSet<String>(8);
-    
-    static {
-        PRIMITIVE_NAMES.add("java.lang.Integer"); // NOI18N
-        PRIMITIVE_NAMES.add("java.lang.Character"); // NOI18N
-        PRIMITIVE_NAMES.add("java.lang.Long"); // NOI18N
-        PRIMITIVE_NAMES.add("java.lang.Byte"); // NOI18N
-        PRIMITIVE_NAMES.add("java.lang.Short"); // NOI18N
-        PRIMITIVE_NAMES.add("java.lang.Boolean"); // NOI18N
-        PRIMITIVE_NAMES.add("java.lang.Float"); // NOI18N
-        PRIMITIVE_NAMES.add("java.lang.Double"); // NOI18N
-    }
+    private static final Set<String> PRIMITIVE_NAMES = Set.of(
+        "java.lang.Integer", // NOI18N
+        "java.lang.Character", // NOI18N
+        "java.lang.Long", // NOI18N
+        "java.lang.Byte", // NOI18N
+        "java.lang.Short", // NOI18N
+        "java.lang.Boolean", // NOI18N
+        "java.lang.Float", // NOI18N
+        "java.lang.Double" // NOI18N
+    );
 
     public static TypeKind getPrimitiveKind(CompilationInfo ci, TypeMirror tm) {
         if (tm == null) {
@@ -3394,7 +3393,7 @@ public class Utilities {
         } else {
             return null;
         }
-   }
+    }
     
     private static Name getLeftTreeName(StatementTree statement) {
         if (statement.getKind() != Kind.EXPRESSION_STATEMENT) {
@@ -3408,10 +3407,4 @@ public class Utilities {
         return ((IdentifierTree) assignTree.getVariable()).getName();
     }
 
-    public static boolean isJDKVersionLower(int previewUntilJDK){
-        if(Integer.valueOf(SourceVersion.latest().name().split(UNDERSCORE)[1]).compareTo(previewUntilJDK)<=0)
-            return true;
-
-        return false;
-    }
 }

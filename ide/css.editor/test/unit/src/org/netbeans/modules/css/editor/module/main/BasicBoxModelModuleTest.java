@@ -55,8 +55,6 @@ public class BasicBoxModelModuleTest extends CssModuleTestBase {
             System.out.println(token);
         }
         
-        
-        
     }
     
 }

@@ -54,7 +54,11 @@ http://www.w3.org/TR/css-break-3/ \
 http://www.w3.org/TR/css-position-3/ \
 http://www.w3.org/TR/css-sizing-3/ \
 http://www.w3.org/TR/css-contain-3/ \
-http://www.w3.org/TR/css-text-4/
+http://www.w3.org/TR/css-text-4/ \
+http://www.w3.org/TR/filter-effects-1/ \
+http://www.w3.org/TR/css-logical-1/ \
+http://www.w3.org/TR/css-overflow-3/ \
+http://www.w3.org/TR/css-scroll-snap-1/
 
 3. Check that the contents still looks sane and mirroring worked
 

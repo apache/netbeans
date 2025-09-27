@@ -80,7 +80,7 @@ private:
     NbLauncher(const NbLauncher& orig);
     bool readClusterFile();
     bool parseArgs(int argc, char *argv[]);
-    bool parseConfigFile(const char* path);    
+    bool parseConfigFile(const char* path, const bool searchUserDir);
     bool getOption(char *&str, const char *opt);
     void addCluster(const char *cl);
     void addExtraClusters();

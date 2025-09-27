@@ -65,8 +65,17 @@ fi
 
 export DEFAULT_USERDIR_ROOT
 
+if ! [ "$NETBEANS_USERDIR" = "nope" ]; then
+    # make sure own launcher directory is on PATH as a fallback
+    PATH=$PATH:$progdir
+fi
+
 # #68373: look for userdir, but do not modify "$@"
-userdir="${netbeans_default_userdir}"
+if [ -z "$NETBEANS_USERDIR" ]; then
+    userdir="${netbeans_default_userdir}"
+else
+    userdir="$NETBEANS_USERDIR"
+fi
 cachedir="${netbeans_default_cachedir}"
 
 founduserdir=""
@@ -138,6 +147,8 @@ launchNbexec() {
     then
         sh=/bin/bash
     fi
+    NETBEANS_USERDIR=${userdir}
+    export NETBEANS_USERDIR
     if [ "${founduserdir}" = "yes" ]; then
         exec $sh "$nbexec" "$@"
     else

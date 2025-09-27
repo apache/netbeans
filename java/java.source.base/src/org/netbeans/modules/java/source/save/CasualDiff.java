@@ -3076,6 +3076,11 @@ public class CasualDiff {
         localPointer = diffTree(oldT.annotationType, newT.annotationType, annotationBounds);
         JavaTokenId[] parens = null;
         if (oldT.args.nonEmpty()) {
+            if (newT.args.isEmpty()) {
+                //non-empty to empty:
+                copyTo(localPointer, annotationBounds[1]);
+                return endPos(oldT);
+            }
             copyTo(localPointer, localPointer = getOldPos(oldT.args.head));
         } else {
             // check, if there are already written parenthesis

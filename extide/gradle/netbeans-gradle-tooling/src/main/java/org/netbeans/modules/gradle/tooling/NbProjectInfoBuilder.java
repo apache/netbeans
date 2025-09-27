@@ -223,7 +223,7 @@ class NbProjectInfoBuilder {
 
     NbProjectInfoBuilder(Project project) {
         this.project = project;
-        this.adapter = sinceGradleOrDefault("7.6", () -> new GradleInternalAdapter.Gradle76(project), () -> new GradleInternalAdapter(project));
+        this.adapter = sinceGradleOrDefault("7.6", () -> new GradleInternalAdapter(project), () -> new GradleInternalAdapter.GradlePre76(project));
     }
     
     private NbProjectInfoModel model = new NbProjectInfoModel();
@@ -367,11 +367,19 @@ class NbProjectInfoBuilder {
     }
     
     private void detectConfigurationArtifacts(NbProjectInfoModel model) {
+        // JDK-8301046: Don't use Configuration::getName as a method reference. The bug, when
+        // compiling `Configuration::getName` against Gradle >= 8.4, causes javac to pick the
+        // wrong receiver target (invokeinterface on Named::getName) in the lambda bootstrap
+        // method params rather than the (correct per JLS) invokevirtual on the callsite's
+        // erasure type (Configuration). This will break at runtime when calling Gradle <8.4,
+        // as in earlier versions the Configuration class does not implement Named, and throws
+        // a BootstrapMethodError wrapping a LambdaConversionException. The lambda form:
+        // `c -> c.getName()` bootstraps correctly but costs an extra method def/indirection.
         List<Configuration> configs = project.getConfigurations()
             .stream()
             .filter(Configuration::isCanBeConsumed)
             .filter(c -> !c.isCanBeResolved())
-            .sorted(Comparator.comparing(Configuration::getName))
+            .sorted(Comparator.comparing(c -> c.getName())) // JDK-8301046
             .collect(Collectors.toList());
         Map<String, Object> data = new HashMap<>();
         for (Configuration c : configs) {
@@ -1362,18 +1370,24 @@ class NbProjectInfoBuilder {
             }
         }
         Map<String, Object> archives = new HashMap<>();
-        beforeGradle("5.2", () -> {
-            // The jar.getCassifier() and jar.getArchievePath() are deprecated since 5.2
-            // These methods got removed in 8.0
-            project.getTasks().withType(Jar.class).forEach(jar -> {
-                archives.put(jar.getClassifier(), jar.getArchivePath());
-            });
-        });
-        sinceGradle("5.2", () -> {
-            project.getTasks().withType(Jar.class).forEach(jar -> {
-                archives.put(jar.getArchiveClassifier().get(), jar.getDestinationDirectory().file(jar.getArchiveFileName().get()).get().getAsFile());
-            });
-        });
+        Consumer<Jar> jarToArchivesClassifierAndPath =
+            sinceGradleOrDefault(
+                "5.2",
+                () -> jar -> archives.put(jar.getArchiveClassifier().get(), jar.getDestinationDirectory().file(jar.getArchiveFileName().get()).get().getAsFile()),
+                () -> {
+                    // The jar.getCassifier() and jar.getArchievePath() are deprecated since 5.2
+                    // These methods got removed in 8.0
+                    Method getClassifier = Jar.class.getMethod("getClassifier");
+                    Method getArchivePath = Jar.class.getMethod("getArchivePath");
+                    return jar -> {
+                        try {
+                            archives.put((String) getClassifier.invoke(jar), (File) getArchivePath.invoke(jar));
+                        } catch (ReflectiveOperationException e) {
+                            sneakyThrow(e);
+                        }
+                    };
+                });
+        project.getTasks().withType(Jar.class).forEach(jarToArchivesClassifierAndPath);
         model.getInfo().put("archives", archives);
     }
 
@@ -1567,17 +1581,7 @@ class NbProjectInfoBuilder {
         Function<ProjectDependency, Project> projDependencyToProject =
             sinceGradleOrDefault(
                 "9.0",
-                () -> {
-                    Method getPath = ProjectDependency.class.getMethod("getPath");
-                    return dep -> {
-                        try {
-                            String path = (String) getPath.invoke(dep);
-                            return project.findProject(path);
-                        } catch (ReflectiveOperationException e) {
-                            throw new UnsupportedOperationException(e);
-                        }
-                    };
-                },
+                () -> dep -> project.findProject(dep.getPath()), // getPath() added in Gradle 8.11
                 () -> ProjectDependency::getDependencyProject); // removed in Gradle 9
 
         visibleConfigurations.forEach(it -> {
@@ -1884,20 +1888,23 @@ class NbProjectInfoBuilder {
     private static <T extends Throwable> void sneakyThrow(Throwable exception) throws T {
             throw (T) exception;
     }        
-    
-    private <T, E extends Throwable> T sinceGradleOrDefault(String version, ExceptionCallable<T, E> c, Supplier<T> def) {
+
+    private <T, E extends Throwable> T sinceGradleOrDefault(
+            String version, ExceptionCallable<T, E> c, ExceptionCallable<T, E> def) {
+        ExceptionCallable<T, E> impl;
         if (GRADLE_VERSION.compareTo(GradleVersion.version(version)) >= 0) {
-            try {
-                return c.call();
-            } catch (RuntimeException | Error e) {
-                throw e;
-            } catch (Throwable t) {
-                sneakyThrow(t);
-                return null;
-            }
+            impl = c;
         } else if (def != null) {
-            return def.get();
+            impl = def;
         } else {
+            return null;
+        }
+        try {
+            return impl.call();
+        } catch (RuntimeException | Error e) {
+            throw e;
+        } catch (Throwable t) {
+            sneakyThrow(t);
             return null;
         }
     }

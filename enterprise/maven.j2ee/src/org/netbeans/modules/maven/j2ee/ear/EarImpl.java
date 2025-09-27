@@ -20,12 +20,16 @@
 package org.netbeans.modules.maven.j2ee.ear;
 
 import java.beans.PropertyChangeListener;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
@@ -33,8 +37,6 @@ import org.apache.maven.model.Plugin;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
-import org.codehaus.plexus.util.StringInputStream;
-import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -107,15 +109,11 @@ public class EarImpl implements EarImplementation, EarImplementation2,
         if (isApplicationXmlGenerated()) {
             String version = PluginPropertyUtils.getPluginProperty(project, Constants.GROUP_APACHE_PLUGINS,
                     Constants.PLUGIN_EAR, "version", "generate-application-xml", null); //NOI18N
-            // the default version in maven plugin is also 1.3
             //TODO what if the default changes?
             if (version != null) {
                 version = version.trim();
-                // 5, 6, 7 are not valid versions in NB it is 1.5, 1.6, 1.7
-                if (!version.startsWith("1.")) { // NOI18N
-                    version = "1." + version; // NOI18N
-                }
-                return Profile.fromPropertiesString(version);
+                profile = getProfile(version);
+                return profile;
             }
         } else {
             DDProvider prov = DDProvider.getDefault();
@@ -125,22 +123,37 @@ public class EarImpl implements EarImplementation, EarImplementation2,
                     Application app = prov.getDDRoot(dd);
                     String appVersion = app.getVersion().toString();
                     appVersion = appVersion.trim();
-                    // 5, 6, 7 are not valid versions in NB it is 1.5, 1.6, 1.7
-                    if (!appVersion.startsWith("1.")) { // NOI18N
-                        appVersion = "1." + appVersion; // NOI18N
-                    }
-                    return Profile.fromPropertiesString(appVersion);
+                    profile = getProfile(appVersion);
+                    return profile;
                 } catch (IOException exc) {
                     ErrorManager.getDefault().notify(exc);
                 }
             } else {
                 //TODO try to check the pom model again and user 'version' element if existing..
-                return Profile.JAVA_EE_6_FULL;
+                return Profile.JAKARTA_EE_8_FULL;
             }
         }
         // hardwire?
 //        System.out.println("eariml: getj2eepaltform");
-        return Profile.JAVA_EE_5;
+        return Profile.JAKARTA_EE_8_FULL;
+    }
+    
+    /**
+     * Get {@code Profile} based on the EAR version written in the pom.xml file
+     * @param version
+     * @return Profile
+     */
+    private static Profile getProfile(String version) {
+        return switch (version) {
+                case "11" -> Profile.JAKARTA_EE_11_FULL;
+                case "10" -> Profile.JAKARTA_EE_10_FULL;
+                case "9" -> Profile.JAKARTA_EE_9_1_FULL;
+                case "8" -> Profile.JAKARTA_EE_8_FULL;
+                case "7" -> Profile.JAVA_EE_7_FULL;
+                case "6" -> Profile.JAVA_EE_6_FULL;
+                case "5" -> Profile.JAVA_EE_5;
+                default -> Profile.JAKARTA_EE_8_FULL;
+            };
     }
 
     @Override
@@ -239,7 +252,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
                 "generateApplicationXml", //NOI18N
                 "generate-application-xml", null);//NOI18N
         //either the default or explicitly set generation of application.xml file
-        return (str == null || Boolean.valueOf(str));
+        return (str == null || Boolean.parseBoolean(str));
     }
 
     boolean isValid() {
@@ -257,15 +270,21 @@ public class EarImpl implements EarImplementation, EarImplementation2,
      */
     @Override
     public String getModuleVersion() {
-        Profile prf = getJ2eeProfile();
-        if (prf == Profile.JAKARTA_EE_11_FULL || prf == Profile.JAKARTA_EE_11_FULL) return Application.VERSION_11;
-        if (prf == Profile.JAKARTA_EE_10_FULL || prf == Profile.JAKARTA_EE_10_FULL) return Application.VERSION_10;
-        if (prf == Profile.JAKARTA_EE_9_1_FULL || prf == Profile.JAKARTA_EE_9_FULL) return Application.VERSION_9;
-        if (prf == Profile.JAKARTA_EE_8_FULL || prf == Profile.JAVA_EE_8_FULL) return Application.VERSION_8;
-        if (prf == Profile.JAVA_EE_7_FULL) return Application.VERSION_7;
-        if (prf == Profile.JAVA_EE_6_FULL) return Application.VERSION_6;
-        if (prf == Profile.JAVA_EE_5) return Application.VERSION_5;
-        return Application.VERSION_1_4;
+        Profile profile = getJ2eeProfile();
+        if (null == profile) {
+            return Application.VERSION_8;
+        } else {
+            return switch (profile) {
+                case JAKARTA_EE_11_FULL -> Application.VERSION_11;
+                case JAKARTA_EE_10_FULL -> Application.VERSION_10;
+                case JAKARTA_EE_9_1_FULL, JAKARTA_EE_9_FULL -> Application.VERSION_9;
+                case JAKARTA_EE_8_FULL, JAVA_EE_8_FULL -> Application.VERSION_8;
+                case JAVA_EE_7_FULL -> Application.VERSION_7;
+                case JAVA_EE_6_FULL -> Application.VERSION_6;
+                case JAVA_EE_5 -> Application.VERSION_5;
+                default -> Application.VERSION_8;
+            };
+        }
     }
 
     /**
@@ -359,15 +378,16 @@ public class EarImpl implements EarImplementation, EarImplementation2,
                 FileObject content = getDeploymentDescriptor();
                 if (content == null) {
 //                    System.out.println("getDeploymentDescriptor.application dd is null");
-                    StringInputStream str = new StringInputStream(
-                            "<application xmlns=\"http://java.sun.com/xml/ns/j2ee\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/application_1_4.xsd\" version=\"1.4\">" +//NOI18N
+                    String str = 
+                            "<application xmlns=\"http://xmlns.jcp.org/xml/ns/javaee\" " + //NOI18N
+                            "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" " + //NOI18N
+                            "xsi:schemaLocation=\"http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/application-client_8.xsd\" version=\"8\">" + //NOI18N
                             "<description>description</description>" +//NOI18N
-                            "<display-name>" + mavenproject().getMavenProject().getArtifactId() + "</display-name></application>");//NOI18N
+                            "<display-name>" + mavenproject().getMavenProject().getArtifactId() + "</display-name></application>";//NOI18N
                     try {
-                        return DDProvider.getDefault().getDDRoot(new InputSource(str));
-                    } catch (SAXException ex) {
-                        ex.printStackTrace();
-                    } catch (IOException ex) {
+                        ByteArrayInputStream bais = new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8));
+                        return DDProvider.getDefault().getDDRoot(new InputSource(bais));
+                    } catch (SAXException | IOException ex) {
                         ex.printStackTrace();
                     }
                 } else {
@@ -397,7 +417,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
             fileNameMapping = "standard"; //NOI18N
         }
 
-        List<J2eeModule> toRet = new ArrayList<J2eeModule>();
+        List<J2eeModule> toRet = new ArrayList<>();
         EarImpl.MavenModule[] mm = readPomModules();
         //#162173 order by dependency list, artifacts is unsorted set.
         for (Dependency d : deps) {
@@ -405,7 +425,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
                 for (Artifact a : artifactSet) {
                     if (a.getGroupId().equals(d.getGroupId()) &&
                             a.getArtifactId().equals(d.getArtifactId()) &&
-                            StringUtils.equals(a.getClassifier(), d.getClassifier())) {
+                            Objects.equals(a.getClassifier(), d.getClassifier())) {
                         URI uri = Utilities.toURI(FileUtil.normalizeFile(a.getFile()));
                         //#174744 - it's of essence we use the URI based method. items in local repo might not be available yet.
                         Project owner = FileOwnerQuery.getOwner(uri);
@@ -443,7 +463,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
                 }
             }
         }
-        return toRet.toArray(new J2eeModule[0]);
+        return toRet.toArray(J2eeModule[]::new);
     }
 
     @Override
@@ -453,7 +473,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
         Set<Artifact> artifactSet = mp.getArtifacts();
         @SuppressWarnings("unchecked")
         List<Dependency> deps = mp.getRuntimeDependencies();
-        List<Project> toRet = new ArrayList<Project>();
+        List<Project> toRet = new ArrayList<>();
         EarImpl.MavenModule[] mm = readPomModules();
         //#162173 order by dependency list, artifacts is unsorted set.
         for (Dependency d : deps) {
@@ -461,7 +481,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
                 for (Artifact a : artifactSet) {
                     if (a.getGroupId().equals(d.getGroupId()) &&
                             a.getArtifactId().equals(d.getArtifactId()) &&
-                            StringUtils.equals(a.getClassifier(), d.getClassifier())) {
+                            Objects.equals(a.getClassifier(), d.getClassifier())) {
                         URI uri = Utilities.toURI(FileUtil.normalizeFile(a.getFile()));
                         //#174744 - it's of essence we use the URI based method. items in local repo might not be available yet.
                         Project owner = FileOwnerQuery.getOwner(uri);
@@ -540,8 +560,8 @@ public class EarImpl implements EarImplementation, EarImplementation2,
 
     private static final class ContentIterator implements Iterator {
 
-        private List<FileObject> filesUnderRoot;
-        private FileObject root;
+        private final List<FileObject> filesUnderRoot;
+        private final FileObject root;
 
 
         private ContentIterator(FileObject root) {
@@ -562,9 +582,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
             filesUnderRoot.remove(0);
             if (nextFile.isFolder()) {
                 nextFile.refresh();
-                for (FileObject child : nextFile.getChildren()) {
-                    filesUnderRoot.add(child);
-                }
+                filesUnderRoot.addAll(Arrays.asList(nextFile.getChildren()));
             }
             return new RootedFileObject(root, nextFile);
         }
@@ -577,8 +595,8 @@ public class EarImpl implements EarImplementation, EarImplementation2,
 
     private static final class RootedFileObject implements J2eeModule.RootedEntry {
 
-        private FileObject file;
-        private FileObject root;
+        private final FileObject file;
+        private final FileObject root;
 
 
         private RootedFileObject(FileObject root, FileObject file) {
@@ -724,10 +742,9 @@ public class EarImpl implements EarImplementation, EarImplementation2,
     }
 
     private MavenModule[] checkConfiguration(MavenProject prj, Object conf) {
-        List<MavenModule> toRet = new ArrayList<MavenModule>();
-        if (conf instanceof Xpp3Dom) {
+        List<MavenModule> toRet = new ArrayList<>();
+        if (conf instanceof Xpp3Dom dom) {
             ExpressionEvaluator eval = PluginPropertyUtils.createEvaluator(project);
-            Xpp3Dom dom = (Xpp3Dom) conf;
             Xpp3Dom modules = dom.getChild("modules"); //NOI18N
             if (modules != null) {
                 int index = 0;
@@ -746,20 +763,16 @@ public class EarImpl implements EarImplementation, EarImplementation2,
                             } catch (ExpressionEvaluationException e) {
                                 //log silently
                             }
-                            if ("groupId".equals(param.getName())) { //NOI18N
-                                mm.groupId = value;
-                            } else if ("artifactId".equals(param.getName())) { //NOI18N
-                                mm.artifactId = value;
-                            } else if ("classifier".equals(param.getName())) { //NOI18N
-                                mm.classifier = value;
-                            } else if ("uri".equals(param.getName())) { //NOI18N
-                                mm.uri = value;
-                            } else if ("bundleDir".equals(param.getName())) { //NOI18N
-                                mm.bundleDir = value;
-                            } else if ("bundleFileName".equals(param.getName())) { //NOI18N
-                                mm.bundleFileName = value;
-                            } else if ("excluded".equals(param.getName())) { //NOI18N
-                                mm.excluded = Boolean.valueOf(value);
+                            if (null != param.getName()) {
+                                switch (param.getName()) {
+                                    case "groupId" -> mm.groupId = value;
+                                    case "artifactId" -> mm.artifactId = value;
+                                    case "classifier" -> mm.classifier = value;
+                                    case "uri" -> mm.uri = value;
+                                    case "bundleDir"-> mm.bundleDir = value;
+                                    case "bundleFileName"-> mm.bundleFileName = value;
+                                    case "excluded"-> mm.excluded = Boolean.parseBoolean(value);
+                                }
                             }
                         }
                     }
@@ -769,7 +782,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
                 }
             }
         }
-        return toRet.toArray(new MavenModule[0]);
+        return toRet.toArray(MavenModule[]::new);
     }
 
     private static class MavenModule {
@@ -836,7 +849,6 @@ public class EarImpl implements EarImplementation, EarImplementation2,
 
     }
 
-
     private static class ProxyJ2eeModule implements J2eeModuleImplementation2 {
         private final J2eeModule module;
         private final EarImpl.MavenModule mavenModule;
@@ -897,7 +909,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
         public void addPropertyChangeListener(PropertyChangeListener listener) {
             module.addPropertyChangeListener(listener);
         }
-
+        
         @Override
         public void removePropertyChangeListener(PropertyChangeListener listener) {
             module.removePropertyChangeListener(listener);
@@ -905,12 +917,28 @@ public class EarImpl implements EarImplementation, EarImplementation2,
 
         @Override
         public boolean equals(Object obj) {
-            return module.equals(obj);
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final ProxyJ2eeModule other = (ProxyJ2eeModule) obj;
+            return Objects.equals(this.module, other.module)
+                    && Objects.equals(this.mavenModule, other.mavenModule)
+                    && Objects.equals(this.fileNameMapping, other.fileNameMapping);
         }
 
         @Override
         public int hashCode() {
-            return module.hashCode();
+            int hash = 5;
+            hash = 31 * hash + Objects.hashCode(this.module);
+            hash = 31 * hash + Objects.hashCode(this.mavenModule);
+            hash = 31 * hash + Objects.hashCode(this.fileNameMapping);
+            return hash;
         }
 
     }

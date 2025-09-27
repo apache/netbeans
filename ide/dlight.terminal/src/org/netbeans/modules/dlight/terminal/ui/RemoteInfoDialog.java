@@ -69,6 +69,7 @@ public final class RemoteInfoDialog extends javax.swing.JPanel {
         hostField = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         portField = new javax.swing.JTextField();
+        btnDeleteHost = new javax.swing.JButton();
 
         buttonGroup1.add(btnKnownHosts);
         btnKnownHosts.setSelected(true);
@@ -115,7 +116,7 @@ public final class RemoteInfoDialog extends javax.swing.JPanel {
         pnlConnectionInfo.setLayout(pnlConnectionInfoLayout);
         pnlConnectionInfoLayout.setHorizontalGroup(
             pnlConnectionInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 324, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
             .addGroup(pnlConnectionInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(pnlConnectionInfoLayout.createSequentialGroup()
                     .addContainerGap()
@@ -125,7 +126,7 @@ public final class RemoteInfoDialog extends javax.swing.JPanel {
                         .addComponent(jLabel3))
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(pnlConnectionInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(userField, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
+                        .addComponent(userField, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
                         .addComponent(hostField, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
                         .addComponent(portField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addContainerGap()))
@@ -154,6 +155,13 @@ public final class RemoteInfoDialog extends javax.swing.JPanel {
         hostField.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(RemoteInfoDialog.class, "RemoteInfoDialog.hostField.AccessibleContext.accessibleName")); // NOI18N
         portField.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(RemoteInfoDialog.class, "RemoteInfoDialog.portField.AccessibleContext.accessibleName")); // NOI18N
 
+        btnDeleteHost.setText(org.openide.util.NbBundle.getMessage(RemoteInfoDialog.class, "RemoteInfoDialog.btnDeleteHost.text")); // NOI18N
+        btnDeleteHost.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteHostActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -163,10 +171,14 @@ public final class RemoteInfoDialog extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pnlConnectionInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnKnownHosts)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnKnownHosts)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbKnownHosts, 0, 254, Short.MAX_VALUE))
+                            .addComponent(btnNewHost))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbKnownHosts, 0, 224, Short.MAX_VALUE))
-                    .addComponent(btnNewHost))
+                        .addComponent(btnDeleteHost)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -175,7 +187,8 @@ public final class RemoteInfoDialog extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbKnownHosts, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnKnownHosts))
+                    .addComponent(btnKnownHosts)
+                    .addComponent(btnDeleteHost))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnNewHost)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -196,7 +209,29 @@ public final class RemoteInfoDialog extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnNewHostItemStateChanged
 
+  private void btnDeleteHostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteHostActionPerformed
+    ExecutionEnvironment selected = (ExecutionEnvironment) cbKnownHosts.getSelectedItem();
+    if (selected != null) {
+        ConnectionManager.getInstance().deleteConnectionFromRecentConnections(selected);
+        cbKnownHosts.removeItem(selected);
+        if (cbKnownHosts.getItemCount() == 0) {
+            btnKnownHosts.setEnabled(false);
+            btnNewHost.setSelected(true);
+        }
+        Preferences prefs = NbPreferences.forModule(RemoteInfoDialog.class);
+        String eeID = prefs.get(LAST_SELECTED_HOST, "");
+        if (!eeID.isEmpty()) {
+            ExecutionEnvironment ee = ExecutionEnvironmentFactory.fromUniqueID(eeID);
+            if (ee.equals(selected)) {
+                prefs.remove(LAST_SELECTED_HOST);
+                last = null;
+            }
+         }
+    }
+  }//GEN-LAST:event_btnDeleteHostActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDeleteHost;
     private javax.swing.JRadioButton btnKnownHosts;
     private javax.swing.JRadioButton btnNewHost;
     private javax.swing.ButtonGroup buttonGroup1;
@@ -255,6 +290,7 @@ public final class RemoteInfoDialog extends javax.swing.JPanel {
 
     private void selectMode(boolean knownHosts) {
         cbKnownHosts.setEnabled(knownHosts);
+        btnDeleteHost.setEnabled(knownHosts);
         Component[] components = pnlConnectionInfo.getComponents();
         for (Component component : components) {
             component.setEnabled(!knownHosts);

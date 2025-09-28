@@ -170,7 +170,7 @@ public class InlineCompletion {
                                                  //only first:
                                                  return ;
                                              }
-                                             if (!wasProposal.getAndSet(true) && proposals != null && proposals.length > 0 && thisVersion == DocumentUtilities.getDocumentVersion(doc)) {
+                                             if (proposals != null && proposals.length > 0 && thisVersion == DocumentUtilities.getDocumentVersion(doc)) {
                                                  //TODO: more proper re-indent possible?
                                                  try {
                                                      int indent = IndentUtils.lineIndent(doc, IndentUtils.lineStartOffset(doc, caretPos));

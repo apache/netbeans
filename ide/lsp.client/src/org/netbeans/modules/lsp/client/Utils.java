@@ -468,7 +468,7 @@ public class Utils {
 
         @Override
         public void handleCancellationException(CancellationException ex) {
-            handleException(ex);
+            //ignore cancels
         }
 
         @Override

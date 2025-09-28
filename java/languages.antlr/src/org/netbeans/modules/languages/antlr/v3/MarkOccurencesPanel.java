@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.php.editor.options;
+package org.netbeans.modules.languages.antlr.v3;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -29,10 +29,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import org.openide.util.Exceptions;
 
-/**
- *
- * @author  Petr Hrebejk
- */
 public class MarkOccurencesPanel extends JPanel {
 
     private static final boolean DEFAULT_VALUE = true; // May need to be splited if the defaunts ar not all on
@@ -141,6 +137,7 @@ public class MarkOccurencesPanel extends JPanel {
         onOffCheckBox.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(MarkOccurencesPanel.class, "MarkOccurrencesPanel.onOffCheckBox.AccessibleContext.accessibleName")); // NOI18N
         onOffCheckBox.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(MarkOccurencesPanel.class, "ACSD_OnOff_CB")); // NOI18N
 
+        keepMarksCheckBox.setMnemonic('s');
         org.openide.awt.Mnemonics.setLocalizedText(keepMarksCheckBox, org.openide.util.NbBundle.getMessage(MarkOccurencesPanel.class, "MarkOccurencesPanel.keepMarksCheckBox.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -151,6 +148,7 @@ public class MarkOccurencesPanel extends JPanel {
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 20, 8, 0);
         add(keepMarksCheckBox, gridBagConstraints);
+        keepMarksCheckBox.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(MarkOccurencesPanel.class, "MarkOccurencesPanel.keepMarksCheckBox.text")); // NOI18N
 
         getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(MarkOccurencesPanel.class, "MarkOccurrencesPanel.AccessibleContext.accessibleName")); // NOI18N
         getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(MarkOccurencesPanel.class, "MarkOccurrencesPanel.AccessibleContext.accessibleDescription")); // NOI18N

@@ -92,7 +92,7 @@ public class GradleInternalAdapter {
     }
     
     protected boolean isFixedValue(String description, ValueSupplier.ExecutionTimeValue etv) {
-        return etv.isFixedValue();
+        return etv.hasFixedValue();
     }
     
     public boolean isMutableType(Object potentialValue) {
@@ -192,17 +192,17 @@ public class GradleInternalAdapter {
         }
     }
 
-    public static class Gradle76 extends GradleInternalAdapter {
+    public static class GradlePre76 extends GradleInternalAdapter {
         private static Optional<Method> refHasValue;
 
-        public Gradle76(Project project) {
+        public GradlePre76(Project project) {
             super(project);
         }
         
         @Override
         protected boolean isFixedValue(String description, ValueSupplier.ExecutionTimeValue etv) {
             if (refHasValue == null) {
-                refHasValue = safeCall(() -> ValueSupplier.ExecutionTimeValue.class.getMethod("hasFixedValue"), "Gradle 7.6+ ExecutionTimeValue");
+                refHasValue = safeCall(() -> ValueSupplier.ExecutionTimeValue.class.getMethod("isFixedValue"), "Gradle <7.6 ExecutionTimeValue");
             }
             if (refHasValue.isPresent()) {
                 return safeCall(() -> (Boolean)refHasValue.get().invoke(etv), description).orElse(false);

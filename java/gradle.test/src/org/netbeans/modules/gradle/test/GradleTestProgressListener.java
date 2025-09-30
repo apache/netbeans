@@ -355,17 +355,23 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
                     .values()
                     .stream()
                     .flatMap(gradleJavaSourceSet -> gradleJavaSourceSet.getSourceDirs(SourceType.JAVA).stream())
+                    .distinct()
                     .collect(
                             Collectors.toMap(
                                     f -> ClasspathInfo.create(f),
-                                    f -> f.toPath()
+                                    f -> f.toPath(),
+                                    // Should not happen, each path is only considered once (see distinct() before)
+                                    // in any case this would catch it
+                                    (f1, f2) -> f1
                             )
                     );
         }
 
         String relativePath = null;
         for (Map.Entry<ClasspathInfo, Path> ci : classpathInfo.entrySet()) {
-            if (ci.getKey() == null) continue;
+            if (ci.getKey() == null) {
+                continue;
+            }
             FileObject fo = SourceUtils.getFile(ElementHandle.createTypeElementHandle(ElementKind.CLASS, className), ci.getKey());
             if (fo != null) {
                 relativePath = ci.getValue().relativize(FileUtil.toFile(fo).toPath()).toString();

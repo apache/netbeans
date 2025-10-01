@@ -35,4 +35,5 @@ KEYWORD    public protected(set)                      null
 KEYWORD    public(set)                                null
 KEYWORD    readonly                                   null
 KEYWORD    static                                     null
+KEYWORD    use                                        null
 KEYWORD    var                                        null

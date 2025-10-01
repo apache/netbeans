@@ -1344,6 +1344,9 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         if (!foundConst && !foundFunction) {
             autoCompleteKeywords(completionResult, request, PHP_SET_VISIBILITY_KEYWORDS);
             autoCompleteKeywords(completionResult, request, PHP_ASYMMETRIC_VISIBILITY_KEYWORDS);
+            if (!completeAfterModificatorsKeywords(tokenSequence, caretOffset, th, info.getSnapshot().getSource().getFileObject())){
+                autoCompleteKeywords(completionResult, request, Arrays.asList("use"));
+            }
         }
         if (offerMagicAndInherited(tokenSequence, caretOffset, th)) {
             EnclosingClass enclosingClass = findEnclosingClass(info, lexerToASTOffset(info, caretOffset));
@@ -1549,6 +1552,29 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             ));
         }
         return completeTypes;
+    }
+
+    private boolean completeAfterModificatorsKeywords(TokenSequence<PHPTokenId> tokenSequence, int caretOffset, TokenHierarchy<?> th, FileObject fileObject) {
+        boolean completeAfterModificatorsKeywords = false;
+        tokenSequence.move(caretOffset);
+        if (!(!tokenSequence.moveNext() && !tokenSequence.movePrevious())) {
+            Token<PHPTokenId> token = tokenSequence.token();
+            int tokenIdOffset = tokenSequence.token().offset(th);
+            completeAfterModificatorsKeywords = CompletionContextFinder.lineContainsAny(token, caretOffset - tokenIdOffset, tokenSequence, Arrays.asList(
+                PHPTokenId.PHP_PUBLIC,
+                PHPTokenId.PHP_PUBLIC_SET,
+                PHPTokenId.PHP_PRIVATE,
+                PHPTokenId.PHP_PRIVATE_SET,
+                PHPTokenId.PHP_PROTECTED,
+                PHPTokenId.PHP_PROTECTED_SET,
+                PHPTokenId.PHP_ABSTRACT,
+                PHPTokenId.PHP_STATIC,
+                PHPTokenId.PHP_VAR,
+                PHPTokenId.PHP_READONLY,
+                PHPTokenId.PHP_FINAL
+            ));
+        }
+        return completeAfterModificatorsKeywords;
     }
 
     private static Set<String> toNames(Set<? extends PhpElement> elements) {

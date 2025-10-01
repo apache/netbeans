@@ -102,9 +102,10 @@ public final class GradleDistributionManager {
         GradleVersion.version("8.8"), // JDK-22
         GradleVersion.version("8.10"),// JDK-23
         GradleVersion.version("8.14"),// JDK-24
+        GradleVersion.version("9.1.0"),// JDK-25
     };
 
-    private static final GradleVersion LAST_KNOWN_GRADLE = GradleVersion.version("9.0"); //NOI18N
+    private static final GradleVersion LAST_KNOWN_GRADLE = GradleVersion.version("9.1.0"); //NOI18N
 
     private static final int LATEST_SUPPORTED_MAJOR = 9;
 

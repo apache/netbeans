@@ -206,6 +206,7 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
         // example the hieararchy can be:
         // - Gradle Test Executor <Number> started
         // - Test class <Class> started
+        // - @ParameterizedTest method name
         // => We flatten the list (suites are registered base on executed
         //    cases (see caseStart)
         TestSuite testSuite = runningSuites.get(session).remove(suiteName);

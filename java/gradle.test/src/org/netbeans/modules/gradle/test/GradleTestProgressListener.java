@@ -209,7 +209,10 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
         // - @ParameterizedTest method name
         // => We flatten the list (suites are registered base on executed
         //    cases (see caseStart)
-        TestSuite testSuite = runningSuites.get(session).remove(suiteName);
+        // => Not all paths enter caseStart (particularly forked suites), so
+        //    the map of suites for a given session object may not exist
+        Map<String, TestSuite> suitesByName = runningSuites.get(session);
+        TestSuite testSuite = suitesByName != null ? suitesByName.remove(suiteName) : null;
         if (testSuite != null) {
             Report report = session.getReport(result.getEndTime() - result.getStartTime());
             session.finishSuite(testSuite);

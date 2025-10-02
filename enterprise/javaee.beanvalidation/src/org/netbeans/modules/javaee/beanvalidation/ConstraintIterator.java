@@ -22,19 +22,23 @@ package org.netbeans.modules.javaee.beanvalidation;
 import java.awt.Component;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
+import org.netbeans.api.j2ee.core.Profile;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
+import org.netbeans.api.project.Sources;
+import org.netbeans.modules.javaee.project.api.JavaEEProjectSettings;
+import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.project.support.ui.templates.JavaTemplates;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
@@ -50,8 +54,10 @@ import org.openide.util.NbBundle;
  *
  * @author alexeybutenko
  */
-public class ConstraintIterator implements TemplateWizard.Iterator{
-    
+public class ConstraintIterator implements TemplateWizard.Iterator {
+
+    private static final String JAVAX_CONSTRAINT_CLASS = "javax/validation/Constraint.class";
+
     private transient WizardDescriptor.Panel<WizardDescriptor>[] panels;
     private int index;
     private final String VALIDATOR_TEMPLATE = "Validator.java"; //NOI18N
@@ -61,30 +67,32 @@ public class ConstraintIterator implements TemplateWizard.Iterator{
         FileObject dir = Templates.getTargetFolder( wizard );
         DataFolder df = DataFolder.findFolder( dir );
         FileObject template = Templates.getTemplate( wizard );
+        Project project = Templates.getProject(wizard);
+        boolean jakartaPackage = isJakartaPackage(project);
 
         DataObject dTemplate = DataObject.find( template );
         List<String> targetElements = (List<String>) wizard.getProperty(WizardProperties.TARGET_ELEMENTS);
         if (targetElements == null) {
-            targetElements = new ArrayList<String>();
+            targetElements = new ArrayList<>();
         }
         String validatorClassName = (String) wizard.getProperty(WizardProperties.VALIDATOR_CLASS_NAME);
         String validatorType = (String)wizard.getProperty(WizardProperties.VALIDATOR_TYPE);
         boolean generateValidator = validatorClassName !=null;
 
-        HashMap<String, Object> templateProperties = new HashMap<String, Object>();
+        Map<String, Object> templateProperties = new HashMap<>();
         templateProperties.put(WizardProperties.TARGET_ELEMENTS, targetElements);
+        templateProperties.put(WizardProperties.JAKARTA_PACKAGE, jakartaPackage);
         if (generateValidator) {
             templateProperties.put(WizardProperties.VALIDATOR_CLASS_NAME, validatorClassName);
             templateProperties.put(WizardProperties.VALIDATOR_TYPE, validatorType);
         }
-        DataObject dobj = null;
         String constraintClass = wizard.getTargetName();
-        dobj = dTemplate.createFromTemplate(df, constraintClass, templateProperties);
+        DataObject dobj = dTemplate.createFromTemplate(df, constraintClass, templateProperties);
         if (generateValidator) {
             FileObject validatorTemplate = template.getParent().getFileObject(VALIDATOR_TEMPLATE);
-            DataObject validatorDataObject = createValidator(df, validatorTemplate, validatorClassName, validatorType, constraintClass);
-            if (validatorDataObject !=null) {
-                return new HashSet<DataObject>(Arrays.asList(new DataObject[]{dobj, validatorDataObject}));
+            DataObject validatorDataObject = createValidator(df, validatorTemplate, validatorClassName, validatorType, constraintClass, jakartaPackage);
+            if (validatorDataObject != null) {
+                return Set.of(dobj, validatorDataObject);
             }
         }
         return Collections.singleton(dobj);
@@ -110,8 +118,8 @@ public class ConstraintIterator implements TemplateWizard.Iterator{
         // Creating steps.
         Object prop = wizard.getProperty(WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
         String[] beforeSteps = null;
-        if (prop instanceof String[]) {
-            beforeSteps = (String[])prop;
+        if (prop instanceof String[] strings) {
+            beforeSteps = strings;
         }
         String[] steps = createSteps(beforeSteps, panels);
 
@@ -123,8 +131,7 @@ public class ConstraintIterator implements TemplateWizard.Iterator{
                 // chooser to appear in the list of steps.
                 steps[i] = c.getName();
             }
-            if (c instanceof JComponent) { // assume Swing components
-                JComponent jc = (JComponent) c;
+            if (c instanceof JComponent jc) { // assume Swing components
                 // Step #.
                 jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i);
                 // Step name (actually the whole list for reference).
@@ -196,12 +203,13 @@ public class ConstraintIterator implements TemplateWizard.Iterator{
     public void removeChangeListener(ChangeListener l) {
     }
 
-    private static DataObject createValidator(DataFolder df, FileObject template, String className, String type, String constraintClass) {
+    private static DataObject createValidator(DataFolder df, FileObject template, String className, String type, String constraintClass, boolean jakartaPackage) {
         try {
             DataObject dTemplate = DataObject.find(template);
-            HashMap<String, Object> templateProperties = new HashMap<String, Object>();
+            Map<String, Object> templateProperties = new HashMap<>();
             templateProperties.put(WizardProperties.VALIDATOR_TYPE, type);
             templateProperties.put(WizardProperties.CONSTRAINT_CLASS_NAME, constraintClass);
+            templateProperties.put(WizardProperties.JAKARTA_PACKAGE, jakartaPackage);
             return dTemplate.createFromTemplate(df, className,templateProperties);
 
         } catch (IOException ex) {
@@ -209,11 +217,34 @@ public class ConstraintIterator implements TemplateWizard.Iterator{
         }
         return null;
     }
+    
+    private static boolean isJakartaPackage(Project project) {
+        Profile profile = JavaEEProjectSettings.getProfile(project);
+        if (profile != null) {
+            return profile.isAtLeast(Profile.JAKARTA_EE_9_WEB);
+        }
+
+        Sources sources = ProjectUtils.getSources(project);
+        if (sources == null) {
+            return true;
+        }
+
+        SourceGroup[] sourceGroups = sources.getSourceGroups("java");
+        if (sourceGroups.length > 0) {
+            ClassPathProvider cpp = project.getLookup().lookup(ClassPathProvider.class);
+            ClassPath classPath = cpp.findClassPath(sourceGroups[0].getRootFolder(), ClassPath.COMPILE);
+            if (classPath != null && classPath.findResource(JAVAX_CONSTRAINT_CLASS) != null) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     static class WizardProperties {
         public static final String CONSTRAINT_CLASS_NAME = "constraint";    //NOI18N
         public static final String VALIDATOR_CLASS_NAME = "validator";    //NOI18N
         public static final String VALIDATOR_TYPE = "validatorType";    //NOI18N
         public static final String TARGET_ELEMENTS = "targetElements";    //NOI18N
+        public static final String JAKARTA_PACKAGE = "jakartaPackage";
     }
 }

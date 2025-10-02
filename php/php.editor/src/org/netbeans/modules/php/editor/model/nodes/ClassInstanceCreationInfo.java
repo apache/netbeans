@@ -20,7 +20,6 @@ package org.netbeans.modules.php.editor.model.nodes;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -31,8 +30,6 @@ import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassName;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
-import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatementPart;
-import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 
 /**
  * Info for anonymous classes.
@@ -104,27 +101,6 @@ public class ClassInstanceCreationInfo extends ASTNodeInfo<ClassInstanceCreation
 
     public List<Attribute> getAttributes() {
         return getOriginalNode().getAttributes();
-    }
-
-    //~ Inner classes
-    private static final class UsedTraitsVisitor extends DefaultVisitor {
-
-        private final List<UseTraitStatementPart> useParts = new LinkedList<>();
-
-
-        @Override
-        public void visit(UseTraitStatementPart node) {
-            useParts.add(node);
-        }
-
-        public Collection<QualifiedName> getUsedTraits() {
-            Collection<QualifiedName> retval = new HashSet<>();
-            for (UseTraitStatementPart useTraitStatementPart : useParts) {
-                retval.add(QualifiedName.create(useTraitStatementPart.getName()));
-            }
-            return retval;
-        }
-
     }
 
 }

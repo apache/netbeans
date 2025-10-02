@@ -925,6 +925,9 @@ jobs:
 #      - name: java/ant.grammar
 #        run: ant $OPTS -f java/ant.grammar test
 
+      - name: java/gradle.test
+        run: ant $OPTS -f java/gradle.test test
+
       # TODO next are JDK 21 or 25 incompatibe steps
       - name: java/java.mx.project
         if: ${{ matrix.java == '17' || matrix.java == '21' }}

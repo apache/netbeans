@@ -29,6 +29,7 @@ import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.j2ee.persistence.api.PersistenceEnvironment;
+import org.netbeans.modules.j2ee.persistence.dd.common.Persistence;
 import org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit;
 import org.netbeans.modules.j2ee.persistence.editor.JPAEditorUtil;
 import org.netbeans.modules.j2ee.persistence.jpqleditor.ui.JPQLEditorTopComponent;
@@ -55,6 +56,7 @@ public class JPQLEditorController {
     };
 
     public void executeJPQLQuery(final String jpql,
+            final Persistence persistence,
             final PersistenceUnit pu,
             final PersistenceEnvironment pe,
             final int maxRowCount,
@@ -103,7 +105,7 @@ public class JPQLEditorController {
 
                             ph.progress(50);
                             ph.setDisplayName(NbBundle.getMessage(JPQLEditorTopComponent.class, "queryExecutionPassControlToProvider"));
-                            jpqlResult = queryExecutor.execute(jpql, pu, pe, props, provider, maxRowCount, ph, true);
+                            jpqlResult = queryExecutor.execute(jpql, persistence, pu, pe, props, provider, maxRowCount, ph, true);
                             ph.progress(80);
                             ph.setDisplayName(NbBundle.getMessage(JPQLEditorTopComponent.class, "queryExecutionProcessResults"));
 

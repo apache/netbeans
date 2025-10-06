@@ -1,7 +1,7 @@
 Name: GSon
 Description: JSon serialization/deserialization library
 Origin: GitHub
-Version: 2.12.1
+Version: 2.13.1
 License: Apache-2.0
 
                                  Apache License

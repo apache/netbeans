@@ -24,7 +24,7 @@ ide/db.sql.visualeditor/external/javacc-7.0.10.jar java/performance/external/jav
 
 # bundled maven conflicts with other libraries
 java/maven.embedder/external/apache-maven-3.9.11-bin.zip ide/slf4j.api/external/slf4j-api-1.7.36.jar
-java/maven.embedder/external/apache-maven-3.9.11-bin.zip platform/libs.asm/external/asm-9.8.jar
+java/maven.embedder/external/apache-maven-3.9.11-bin.zip platform/libs.asm/external/asm-9.9.jar
 java/maven.embedder/external/apache-maven-3.9.11-bin.zip platform/o.apache.commons.codec/external/commons-codec-1.18.0.jar
 java/maven.embedder/external/apache-maven-3.9.11-bin.zip ide/c.google.guava.failureaccess/external/failureaccess-1.0.3.jar
 java/maven.embedder/external/apache-maven-3.9.11-bin.zip ide/c.google.guava/external/guava-33.4.6-jre.jar

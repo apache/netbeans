@@ -19,9 +19,6 @@
 
 package org.netbeans.libs.git.jgit.commands;
 
-import java.security.AccessController;
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
 import java.text.MessageFormat;
 import org.eclipse.jgit.lib.Repository;
 import org.netbeans.libs.git.GitException;
@@ -49,17 +46,7 @@ public abstract class GitCommand {
         if (prepareCommand()) {
             try {
                 monitor.started(getCommandDescription());
-                try {
-                    AccessController.doPrivileged(new PrivilegedExceptionAction<Void>() {
-                        @Override
-                        public Void run () throws GitException {
-                            GitCommand.this.run();
-                            return null;
-                        }
-                    });
-                } catch (PrivilegedActionException e) {
-                    throw (GitException) e.getException();
-                }
+                run();
             } catch (RuntimeException ex) {
                 if (ex.getMessage() != null && ex.getMessage().contains("Unknown repository format")) { //NOI18N
                     throw new GitException("It seems the config file for repository at [" + repository.getWorkTree() + "] is corrupted.\nEnsure it's valid.", ex); //NOI18N

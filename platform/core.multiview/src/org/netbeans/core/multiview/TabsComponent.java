@@ -98,6 +98,9 @@ class TabsComponent extends JPanel {
         add(bar, BorderLayout.NORTH);
         startToggling();
         setToolbarBarVisible(toolVis);
+
+        // Style editor toolbar separately from main toolbar [style].nb-editor-toolbar   = background: #FFFFFF
+        bar.putClientProperty("FlatLaf.styleClass", "nb-editor-toolbar");
     }
 
 

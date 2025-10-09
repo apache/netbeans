@@ -71,6 +71,7 @@ public abstract class FileComarator extends EntityComparator<FileDescriptor> imp
 
     abstract void setText(@NonNull final String text);
 
+    @Override
     public abstract int compare(FileDescriptor e1, FileDescriptor e2);
 
     void fireChange() {
@@ -86,6 +87,7 @@ public abstract class FileComarator extends EntityComparator<FileDescriptor> imp
             super(usePreferred, caseSensitive, preferOpPrjs);
         }
 
+        @Override
         void setText(@NonNull final String text) {
         }
 
@@ -147,6 +149,7 @@ public abstract class FileComarator extends EntityComparator<FileDescriptor> imp
             this.text = text;
         }
 
+        @Override
         void setText(@NonNull final String text) {
             final boolean fire = !Objects.equals(this.text, text);
             this.text = text;
@@ -253,14 +256,10 @@ public abstract class FileComarator extends EntityComparator<FileDescriptor> imp
             final boolean usePreferred,
             final boolean caseSensitive,
             final boolean preferOpPrjs) {
-        switch (kind) {
-            case LEXICOGRAPHIC:
-                return new Alphabet(usePreferred, caseSensitive, preferOpPrjs);
-            case LEVENSHTEIN:
-                return new Levenshtein(text, usePreferred, caseSensitive, preferOpPrjs);
-            default:
-                throw new IllegalArgumentException(String.valueOf(kind));
-        }
+        return switch (kind) {
+            case LEXICOGRAPHIC -> new Alphabet(usePreferred, caseSensitive, preferOpPrjs);
+            case LEVENSHTEIN -> new Levenshtein(text, usePreferred, caseSensitive, preferOpPrjs);
+        };
     }
 }
 

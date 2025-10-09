@@ -223,6 +223,7 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
                             Level.FINE,
                             "Select first item.");  //NOI18N
                         resultList.setSelectedIndex(0);
+                        selectedItems = null;
                     } else if (selectedItems != null && !selectedItems.isEmpty()) {
                         LOG.log(
                             Level.FINE,

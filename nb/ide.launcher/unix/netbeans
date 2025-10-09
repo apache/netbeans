@@ -38,12 +38,18 @@ cd "$progdir"/..
 basedir=`pwd`
 cd "$old"
 
-case "`uname`" in
+case "`uname -s -m`" in
     Darwin*)
         # set default userdir and cachedir on Mac OS X
         DEFAULT_USERDIR_ROOT="${HOME}/Library/Application Support/NetBeans"
         DEFAULT_CACHEDIR_ROOT=${HOME}/Library/Caches/NetBeans
         ;;
+    CYGWIN*_64)
+	exec $progdir/netbeans64.exe $*
+	;;
+    CYGWIN*)
+	exec $progdir/netbeans.exe $*
+	;;
     *) 
         # set default userdir and cachedir on unix systems
         DEFAULT_USERDIR_ROOT=${HOME}/.netbeans

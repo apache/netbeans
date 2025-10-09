@@ -235,7 +235,7 @@ public final class GoToSettings {
     }
 
     public boolean isSortingPreferOpenProjects() {
-        return getSortingNode().getBoolean(KEY_SORTING_PRJ, true);
+        return getSortingNode().getBoolean(KEY_SORTING_PRJ, false);
     }
 
     public void setSortingPreferOpenProjects(final boolean value) {

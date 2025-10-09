@@ -53,12 +53,14 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
     private static final String AFFECTED_BUILD_TASK  = "affectedBuildTasks";//NOI18N
     private static final String TEST_TASK_NAME       = "testTaskName";      //NOI18N
     private static final String CLEAN_TEST_TASK_NAME = "cleanTestTaskName"; //NOI18N
+    private static final String SOURCE_SET_NAMES     = "sourceSetNames";    //NOI18N
 
     private static final Set<String> SUPPORTED = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(
             SELECTED_CLASS,
             SELECTED_CLASS_NAME,
             SELECTED_METHOD,
             SELECTED_PACKAGE,
+            SOURCE_SET_NAMES,
             AFFECTED_BUILD_TASK
     )));
 
@@ -123,6 +125,7 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
                 GradleJavaSourceSet ss = gjp.containingSourceSet(f);
                 if (ss != null) {
                     Set<GradleJavaSourceSet.SourceType> types = ss.getSourceTypes(f);
+                    map.merge(SOURCE_SET_NAMES, ss.getName(), (oldVal, newVal) -> oldVal.trim() + "," + newVal.trim());
                     for (GradleJavaSourceSet.SourceType type : types) {
                         buildTasks.add(ss.getBuildTaskName(type));
                     }

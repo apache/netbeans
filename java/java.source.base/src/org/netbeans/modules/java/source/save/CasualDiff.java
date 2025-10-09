@@ -2152,11 +2152,9 @@ public class CasualDiff {
         }
         do { } while (tokenSequence.moveNext() && JavaTokenId.COLON != tokenSequence.token().id() && JavaTokenId.ARROW != tokenSequence.token().id());
         boolean reindentStatements = false;
-        boolean diffAsBody = false;
         if (Objects.equals(oldT.getCaseKind(), newT.getCaseKind())) {
             tokenSequence.moveNext();
             copyTo(localPointer, localPointer = tokenSequence.offset());
-            diffAsBody = oldT.getCaseKind() == CaseTree.CaseKind.RULE;
         } else {
             if (JavaTokenId.COLON == tokenSequence.token().id()) {
                 //: => ->
@@ -2178,54 +2176,47 @@ public class CasualDiff {
                 reindentStatements = true;
             }
         }
-        if (diffAsBody) {
-            int old = printer.indent();
-            localPointer = diffInnerComments(oldT, newT, localPointer);
-            int[] bodyBounds = getBounds(oldT.getBody());
-            copyTo(localPointer, bodyBounds[0]);
-            localPointer = diffTree(oldT.getBody(), newT.getBody(), bodyBounds);
-            if (oldT.getBody().getKind() != Kind.BLOCK) {
-                tokenSequence.move(localPointer);
-                moveToSrcRelevant(tokenSequence, Direction.FORWARD);
-                if (tokenSequence.token().id() == JavaTokenId.SEMICOLON && newT.getBody().getKind() == Kind.BLOCK) {
-                    localPointer = tokenSequence.offset() + tokenSequence.token().length();
-                }
-            } else if (newT.getBody().getKind() != Kind.BLOCK && newT.getBody().getKind() != Kind.THROW) {
-                printer.print(";");
+        PositionEstimator est = EstimatorFactory.statements(
+                filterHidden(oldT.stats),
+                filterHidden(newT.stats),
+                diffContext
+        );
+        int old = printer.indent();
+        SortedSet<int[]> oldReindentRegions = printer.reindentRegions;
+        printer.reindentRegions = new TreeSet<>(new Comparator<int[]>() { //XXX: copied from the initializer!!
+            @Override public int compare(int[] o1, int[] o2) {
+                return o1[0] - o2[0];
             }
-            printer.undent(old);
-        } else {
-            PositionEstimator est = EstimatorFactory.statements(
-                    filterHidden(oldT.stats),
-                    filterHidden(newT.stats),
-                    diffContext
-            );
-            int old = printer.indent();
-            SortedSet<int[]> oldReindentRegions = printer.reindentRegions;
-            printer.reindentRegions = new TreeSet<>(new Comparator<int[]>() { //XXX: copied from the initializer!!
-                @Override public int compare(int[] o1, int[] o2) {
-                    return o1[0] - o2[0];
-                }
-            });
-            int reindentStart = localPointer;
-            localPointer = diffInnerComments(oldT, newT, localPointer);
-            JCClassDecl oldEnclosing = printer.enclClass;
-            printer.enclClass = null;
-            localPointer = diffList(filterHidden(oldT.stats), filterHidden(newT.stats), localPointer, est, Measure.MEMBER, printer);
-            printer.enclClass = oldEnclosing;
-            if (localPointer < endPos(oldT)) {
-                copyTo(localPointer, localPointer = endPos(oldT));
-            }
-            if (reindentStatements) {
-                printer.reindentRegions = oldReindentRegions;
-                printer.reindentRegions.add(new int[] {reindentStart, localPointer});
-            } else {
-                oldReindentRegions.addAll(printer.reindentRegions);
-                printer.reindentRegions = oldReindentRegions;
-            }
-            printer.undent(old);
+        });
+        int reindentStart = localPointer;
+        localPointer = diffInnerComments(oldT, newT, localPointer);
+        JCClassDecl oldEnclosing = printer.enclClass;
+        printer.enclClass = null;
+        localPointer = diffList(filterCaseStatements(oldT), filterCaseStatements(newT), localPointer, est, Measure.MEMBER, printer);
+        printer.enclClass = oldEnclosing;
+        if (localPointer < endPos(oldT)) {
+            copyTo(localPointer, localPointer = endPos(oldT));
         }
+        if (reindentStatements) {
+            printer.reindentRegions = oldReindentRegions;
+            printer.reindentRegions.add(new int[] {reindentStart, localPointer});
+        } else {
+            oldReindentRegions.addAll(printer.reindentRegions);
+            printer.reindentRegions = oldReindentRegions;
+        }
+        printer.undent(old);
         return localPointer;
+    }
+
+    private List<JCTree> filterCaseStatements(JCCase c) {
+        List<JCTree> filtered = filterHidden(c.stats);
+
+        if (c.getCaseKind() == CaseTree.CaseKind.RULE &&
+            filtered.size() == 1 && filtered.get(0) instanceof JCYield yield) {
+            filtered = List.of(make.Exec(yield.value));
+        }
+
+        return filtered;
     }
 
     protected int diffSynchronized(JCSynchronized oldT, JCSynchronized newT, int[] bounds) {

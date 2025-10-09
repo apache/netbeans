@@ -59,7 +59,8 @@ import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
 import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.api.java.queries.UnitTestForSourceQuery;
+import org.netbeans.api.java.source.ClasspathInfo;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -84,6 +85,7 @@ import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.netbeans.spi.project.SingleMethod;
 
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.BaseUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -570,8 +572,18 @@ public abstract class NbLaunchDelegate {
         } else if (launchType == LaunchType.RUN_TEST) {
             mainSource = false;
         } else {
-            FileObject fileRoot = sourceCP != null ? sourceCP.findOwnerRoot(toRun) : null;
-            mainSource = fileRoot == null || UnitTestForSourceQuery.findSources(fileRoot).length == 0;
+            mainSource = false;
+            if (sourceCP != null) {
+                FileObject root = sourceCP.findOwnerRoot(toRun);
+                if (root != null) {
+                    String relativePath = FileUtil.getRelativePath(root, toRun);
+                    if (relativePath != null && relativePath.toLowerCase().endsWith(".java")) {
+                        String className = relativePath.substring(0, relativePath.length() - 5).replace('/', '.');
+                        ClasspathInfo cpi = ClasspathInfo.create(toRun);
+                        mainSource = SourceUtils.isMainClass(className, cpi, true);
+                    }
+                }
+            }
         }
         ActionProvider provider = null;
         String command = null;

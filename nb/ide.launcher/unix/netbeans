@@ -65,7 +65,7 @@ fi
 
 export DEFAULT_USERDIR_ROOT
 
-if ! [ "$NETBEANS_USERDIR" = "nope" ]; then
+if ! [ "$NETBEANS_USERDIR" = "IGNORE" ]; then
     # make sure own launcher directory is on PATH as a fallback
     PATH=$PATH:$progdir
 fi

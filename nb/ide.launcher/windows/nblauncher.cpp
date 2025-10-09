@@ -88,7 +88,7 @@ int NbLauncher::start(int argc, char *argv[]) {
     if (userDirViaEnv != NULL) {
         logMsg("NbLauncher::using NETBEANS_USERDIR env variable (%s)", userDirViaEnv);
         string udve = userDirViaEnv;
-        if (udve == "nope") {
+        if (udve == "IGNORE") {
             skipUserDir = true;
             userDirViaEnv = NULL;
         } else {

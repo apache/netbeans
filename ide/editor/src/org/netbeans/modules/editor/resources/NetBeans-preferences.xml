@@ -52,6 +52,9 @@
     <entry category="private" javaType="java.lang.Boolean" name="completion-case-sensitive" xml:space="preserve">
         <value><![CDATA[false]]></value>
     </entry>
+    <entry category="private" javaType="java.lang.Boolean" name="completion-insert-text-parameters" xml:space="preserve">
+        <value><![CDATA[true]]></value>
+    </entry>
     <entry category="private" javaType="java.lang.Boolean" name="completion-instant-substitution" xml:space="preserve">
         <value><![CDATA[true]]></value>
     </entry>

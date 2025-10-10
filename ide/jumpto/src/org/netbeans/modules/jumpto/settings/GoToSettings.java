@@ -198,7 +198,7 @@ public final class GoToSettings {
     private static final String KEY_HIGHLIGHTING_MODE = "mode";         //NOI18N
     private static final String KEY_HIGHLIGHTING_TYPE = "type";         //NOI18N
     private static final String KEY_SORTING_TYPE = "type";              //NOI18N
-    private static final String KEY_SORTING_PRJ = "preffer-projects";   //NOI18N
+    private static final String KEY_SORTING_PRJ = "prefer-projects";   //NOI18N
     private static final GoToSettings INSTANCE = new GoToSettings();
 
     private GoToSettings() {

@@ -26,7 +26,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
@@ -63,6 +62,7 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.jumpto.SearchHistory;
 import org.netbeans.modules.jumpto.common.UiUtils;
+import org.netbeans.modules.jumpto.settings.GoToSettings;
 import org.netbeans.modules.jumpto.type.UiOptions;
 import org.netbeans.spi.jumpto.symbol.SymbolDescriptor;
 import org.openide.awt.Mnemonics;
@@ -74,15 +74,15 @@ import org.openide.util.Pair;
  *
  * @author  Petr Hrebejk
  */
-class GoToPanelImpl extends javax.swing.JPanel implements GoToPanel {
+class GoToPanelImpl extends JPanel implements GoToPanel<SymbolDescriptor> {
 
-    private static Icon WAIT_ICON = ImageUtilities.loadImageIcon("org/netbeans/modules/jumpto/resources/wait.gif", false); // NOI18N
-    private static Icon WARN_ICON = ImageUtilities.loadImageIcon("org/netbeans/modules/jumpto/resources/warning.png", false); // NOI18N
+    private static final Icon WAIT_ICON = ImageUtilities.loadImageIcon("org/netbeans/modules/jumpto/resources/wait.gif", false); // NOI18N
+    private static final Icon WARN_ICON = ImageUtilities.loadImageIcon("org/netbeans/modules/jumpto/resources/warning.png", false); // NOI18N
 
     private static final int BRIGHTER_COLOR_COMPONENT = 10;
-    private ContentProvider contentProvider;
+    private final ContentProvider contentProvider;
     private boolean containsScrollPane;
-    private JLabel messageLabel;
+    private final JLabel messageLabel;
     private SymbolDescriptor selectedSymbol;
 
     // Time when the serach stared (for debugging purposes)
@@ -131,6 +131,8 @@ class GoToPanelImpl extends javax.swing.JPanel implements GoToPanel {
         matchesList.addListSelectionListener(pl);
         caseSensitive.setSelected(UiOptions.GoToSymbolDialog.getCaseSensitive());
         caseSensitive.addItemListener(pl);
+        preferOpen.setSelected(GoToSettings.getDefault().isSortingPreferOpenProjects());
+        preferOpen.addItemListener(pl);
 
         searchHistory = new SearchHistory(GoToPanelImpl.class, nameField);
     }
@@ -144,6 +146,10 @@ class GoToPanelImpl extends javax.swing.JPanel implements GoToPanel {
     @Override
     public boolean isCaseSensitive () {
         return this.caseSensitive.isSelected();
+    }
+    
+    private boolean isPreferOpenProjects() {
+        return this.preferOpen.isSelected();
     }
 
     @Override
@@ -163,7 +169,7 @@ class GoToPanelImpl extends javax.swing.JPanel implements GoToPanel {
             final boolean finished) {
         assert SwingUtilities.isEventDispatchThread();
         matchesList.setModel(model);
-        if (model.getSize() > 0 || getText() == null || getText().trim().length() == 0 ) {
+        if (model.getSize() > 0 || getText() == null || getText().isBlank() ) {
             matchesList.setSelectedIndex(0);
             setListPanelContent(null,false);
             if ( time != -1 ) {
@@ -194,21 +200,19 @@ class GoToPanelImpl extends javax.swing.JPanel implements GoToPanel {
 
     /** Sets the initial text to find in case the user did not start typing yet. */
     public void setInitialText( final String text ) {
-        SwingUtilities.invokeLater( new Runnable() {
-            public void run() {
-                String textInField = nameField.getText();
-                if ( textInField == null || textInField.trim().length() == 0 ) {
-                    nameField.setText(text);
-                    nameField.setCaretPosition(text.length());
-                    nameField.setSelectionStart(0);
-                    nameField.setSelectionEnd(text.length());
-                }
+        SwingUtilities.invokeLater(() -> {
+            String textInField = nameField.getText();
+            if (textInField == null || textInField.isBlank()) {
+                nameField.setText(text);
+                nameField.setCaretPosition(text.length());
+                nameField.setSelectionStart(0);
+                nameField.setSelectionEnd(text.length());
             }
         });
     }
 
     public void setSelectedSymbol() {
-        selectedSymbol = ((SymbolDescriptor) matchesList.getSelectedValue());
+        selectedSymbol = matchesList.getSelectedValue();
     }
 
     public SymbolDescriptor getSelectedSymbol() {
@@ -242,9 +246,10 @@ class GoToPanelImpl extends javax.swing.JPanel implements GoToPanel {
         jLabelList = new JLabel();
         listPanel = new JPanel();
         matchesScrollPane1 = new JScrollPane();
-        matchesList = new JList();
+        matchesList = new JList<>();
         jLabelWarning = new JLabel();
         caseSensitive = new JCheckBox();
+        preferOpen = new JCheckBox();
         jLabelLocation = new JLabel();
         jTextFieldLocation = new JTextField();
 
@@ -265,11 +270,7 @@ class GoToPanelImpl extends javax.swing.JPanel implements GoToPanel {
 
         nameField.setFont(new Font("Monospaced", 0, getFontSize()));
         nameField.setBorder(BorderFactory.createEtchedBorder());
-        nameField.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                nameFieldActionPerformed(evt);
-            }
-        });
+        nameField.addActionListener(this::nameFieldActionPerformed);
         nameField.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent evt) {
                 nameFieldKeyPressed(evt);
@@ -330,12 +331,17 @@ class GoToPanelImpl extends javax.swing.JPanel implements GoToPanel {
 
         Mnemonics.setLocalizedText(caseSensitive, NbBundle.getMessage(GoToPanelImpl.class, "CTL_CaseSensitive")); // NOI18N
         gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new Insets(0, 0, 8, 0);
         add(caseSensitive, gridBagConstraints);
         caseSensitive.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(GoToPanelImpl.class, "AD_CaseSensitive")); // NOI18N
+
+        Mnemonics.setLocalizedText(preferOpen, NbBundle.getMessage(GoToPanelImpl.class, "CTL_PreferOpenProjects")); // NOI18N
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER;
+        gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new Insets(0, 0, 8, 0);
+        add(preferOpen, gridBagConstraints);
 
         jLabelLocation.setText(NbBundle.getMessage(GoToPanelImpl.class, "LBL_GoToSymbol_LocationJLabel")); // NOI18N
         gridBagConstraints = new GridBagConstraints();
@@ -408,9 +414,10 @@ class GoToPanelImpl extends javax.swing.JPanel implements GoToPanel {
     private JLabel jLabelWarning;
     private JTextField jTextFieldLocation;
     private JPanel listPanel;
-    private JList matchesList;
+    private JList<SymbolDescriptor> matchesList;
     private JScrollPane matchesScrollPane1;
     private JTextField nameField;
+    private JCheckBox preferOpen;
     // End of variables declaration//GEN-END:variables
 
     private String getText() {
@@ -453,14 +460,12 @@ class GoToPanelImpl extends javax.swing.JPanel implements GoToPanel {
     @CheckForNull
     private Pair<String,JComponent> listActionFor(KeyEvent ev) {
         InputMap map = matchesList.getInputMap();
-        Object o = map.get(KeyStroke.getKeyStrokeForEvent(ev));
-        if (o instanceof String) {
-            return Pair.<String,JComponent>of((String)o, matchesList);
+        if (map.get(KeyStroke.getKeyStrokeForEvent(ev)) instanceof String str) {
+            return Pair.<String,JComponent>of(str, matchesList);
         }
         map = matchesScrollPane1.getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-        o = map.get(KeyStroke.getKeyStrokeForEvent(ev));
-        if (o instanceof String) {
-            return Pair.<String,JComponent>of((String)o, matchesScrollPane1);
+        if (map.get(KeyStroke.getKeyStrokeForEvent(ev)) instanceof String str) {
+            return Pair.<String,JComponent>of(str, matchesScrollPane1);
         }
         return null;
     }
@@ -514,22 +519,18 @@ class GoToPanelImpl extends javax.swing.JPanel implements GoToPanel {
 
         private final GoToPanelImpl dialog;
 
-
-
         PatternListener( GoToPanelImpl dialog  ) {
-            this.dialog = dialog;
-        }
-
-        PatternListener( DocumentEvent e, GoToPanelImpl dialog  ) {
             this.dialog = dialog;
         }
 
         // DocumentListener ----------------------------------------------------
 
+        @Override
         public void changedUpdate( DocumentEvent e ) {
             update();
         }
 
+        @Override
         public void removeUpdate( DocumentEvent e ) {
             // handling http://netbeans.org/bugzilla/show_bug.cgi?id=203528
             if (dialog.pastedFromClipboard) {
@@ -539,13 +540,20 @@ class GoToPanelImpl extends javax.swing.JPanel implements GoToPanel {
             }
         }
 
+        @Override
         public void insertUpdate( DocumentEvent e ) {
             update();
         }
 
+        @Override
         public void itemStateChanged(ItemEvent e) {
             UiOptions.GoToSymbolDialog.setCaseSensitive(dialog.isCaseSensitive());
-            update();
+            boolean restart = false;
+            if (GoToSettings.getDefault().isSortingPreferOpenProjects() != dialog.isPreferOpenProjects()) {
+                GoToSettings.getDefault().setSortingPreferOpenProjects(dialog.isPreferOpenProjects());
+                restart = true; // todo comparator should be able to handle this without restart
+            }
+            update(restart);
         }
 
         // ListSelectionListener -----------------------------------------------
@@ -553,18 +561,23 @@ class GoToPanelImpl extends javax.swing.JPanel implements GoToPanel {
         @Override
         public void valueChanged(@NonNull final ListSelectionEvent ev) {
             // got "Not computed yet" text sometimes
-            final Object obj = dialog.matchesList.getSelectedValue();
-            if (obj instanceof SymbolDescriptor) {
-                final SymbolDescriptor selectedValue = ((SymbolDescriptor) obj);
-                final String fileName = selectedValue.getFileDisplayPath();
-                dialog.jTextFieldLocation.setText(fileName);
+            SymbolDescriptor selected = dialog.matchesList.getSelectedValue();
+            if (selected != null) {
+                dialog.jTextFieldLocation.setText(selected.getFileDisplayPath());
             } else {
                 dialog.jTextFieldLocation.setText("");  //NOI18N
             }
         }
-
+        
         private void update() {
+            this.update(false);
+        }
+
+        private void update(boolean restart) {
             dialog.time = System.currentTimeMillis();
+            if (restart) {
+                dialog.contentProvider.setListModel(dialog, null);
+            }
             String text = dialog.getText();
             if (dialog.contentProvider.setListModel(dialog,text)) {
                 dialog.setListPanelContent(NbBundle.getMessage(GoToPanelImpl.class, "TXT_Searching"),true); // NOI18N
@@ -575,7 +588,7 @@ class GoToPanelImpl extends javax.swing.JPanel implements GoToPanel {
 
     public static interface ContentProvider {
 
-        public ListCellRenderer getListCellRenderer(JList list,  ButtonModel caseSensitive);
+        public ListCellRenderer<SymbolDescriptor> getListCellRenderer(JList<SymbolDescriptor> list, ButtonModel caseSensitive);
 
         public boolean setListModel( GoToPanel panel, String text  );
 

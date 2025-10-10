@@ -104,7 +104,7 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
     private static final char LINE_NUMBER_SEPARATOR = ':';    //NOI18N
     private static final Pattern PATTERN_WITH_LINE_NUMBER = Pattern.compile("(.*)"+LINE_NUMBER_SEPARATOR+"(\\d*)");    //NOI18N
 
-    private static final ListModel EMPTY_LIST_MODEL = new DefaultListModel();
+    private static final ListModel<FileDescriptor> EMPTY_LIST_MODEL = new DefaultListModel<>();
     private static final RequestProcessor slidingRp = new RequestProcessor("FileSearchAction-sliding",1);
     //Threading: Throughput 1 required due to inherent sequential code in Work.Request.exclude
     private static final RequestProcessor rp = new RequestProcessor ("FileSearchAction-worker",1);
@@ -153,7 +153,7 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
     @Override
     @NonNull
     public ListCellRenderer getListCellRenderer(
-            @NonNull final JList list,
+            @NonNull final JList<FileDescriptor> list,
             @NonNull final Document nameDocument,
             @NonNull final ButtonModel caseSensitive,
             @NonNull final ButtonModel colorPrefered,
@@ -184,8 +184,8 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
             return false;
         }
         boolean exact = text.endsWith(" "); // NOI18N
-        text = text.trim();
-        if ( text.length() == 0 || !Utils.isValidInput(text)) {
+        text = text.strip();
+        if (text.isEmpty() || !Utils.isValidInput(text)) {
             currentSearch.filter(
                     SearchType.EXACT_NAME,
                     text,
@@ -218,6 +218,7 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
             }
             if (currentSearch.isNarrowing(searchType, text, getSearchScope(panel), true)) {
                 itemsComparator.setUsePreferred(panel.isPreferedProject());
+                itemsComparator.setPrefereOpenProjects(panel.isPrefereOpenProjects());
                 itemsComparator.setText(text);
                 filterFactory.setLineNumber(lineNr);
                 filterFactory.setSearchByFolders(panel.isSearchByFolders());
@@ -478,7 +479,7 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
     // Private classes ---------------------------------------------------------
     private class DialogButtonListener implements ActionListener {
 
-        private FileSearchPanel panel;
+        private final FileSearchPanel panel;
 
         public DialogButtonListener(FileSearchPanel panel) {
             this.panel = panel;
@@ -590,12 +591,7 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
         @Override
         public void run() {
             icon = delegate.getIcon();
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    refreshCallback.run();
-                }
-            });
+            SwingUtilities.invokeLater(refreshCallback::run);
         }
 
     }
@@ -684,7 +680,6 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
         @Override
         public Models.Filter<FileDescriptor> call() throws Exception {
             return new AbstractModelFilter<FileDescriptor>() {
-                @NonNull
                 @Override
                 protected String getItemValue(@NonNull final FileDescriptor item) {
                     return searchByFolders ? item.getOwnerPath() : item.getFileName();

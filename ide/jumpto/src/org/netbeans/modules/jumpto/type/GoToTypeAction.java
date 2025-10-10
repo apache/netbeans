@@ -126,7 +126,6 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
         this.multiSelection = multiSelection;
         this.currentSearch = new CurrentSearch(() -> new AbstractModelFilter<TypeDescriptor>() {
             @Override
-            @NonNull
             protected String getItemValue(@NonNull final TypeDescriptor item) {
                 return item.getSimpleName();
             }
@@ -204,17 +203,18 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
 
 
     @Override
-    public ListCellRenderer getListCellRenderer(
-            @NonNull final JList list,
+    @SuppressWarnings("unchecked")
+    public ListCellRenderer<TypeDescriptor> getListCellRenderer(
+            @NonNull final JList<TypeDescriptor> list,
             @NonNull final ButtonModel caseSensitive) {
         Parameters.notNull("list", list);   //NOI18N
         Parameters.notNull("caseSensitive", caseSensitive); //NOI18N
-        return ItemRenderer.Builder.create(
+        ItemRenderer<TypeDescriptor> renderer = ItemRenderer.Builder.create(
                 list,
                 caseSensitive,
                 new TypeDescriptorConvertor()).build();
+        return (ListCellRenderer) renderer;
     }
-
 
     @Override
     public boolean setListModel( GoToPanel panel, String text ) {
@@ -249,7 +249,7 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
         }
 
         final boolean exact = text.endsWith(" "); // NOI18N
-        text = text.trim();
+        text = text.strip();
         if ( text.isEmpty() || !Utils.isValidInput(text)) {
             currentSearch.filter(
                     SearchType.EXACT_NAME,

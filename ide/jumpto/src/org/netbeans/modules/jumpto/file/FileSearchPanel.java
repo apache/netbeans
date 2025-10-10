@@ -23,7 +23,6 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,8 +43,6 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -56,11 +53,11 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.jumpto.SearchHistory;
 import org.netbeans.modules.jumpto.common.UiUtils;
+import org.netbeans.modules.jumpto.settings.GoToSettings;
 import org.netbeans.spi.jumpto.file.FileDescriptor;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
-import org.openide.util.NbCollections;
 import org.openide.util.Pair;
 
 /**
@@ -85,7 +82,7 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
     private List<?> selectedItems;
     /* package */ long time;
 
-    private FileDescriptor[] selectedFile;
+    private FileDescriptor[] selectedFiles;
 
     private final SearchHistory searchHistory;
 
@@ -117,6 +114,7 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
         caseSensitiveCheckBox.setSelected(FileSearchOptions.getCaseSensitive());
         hiddenFilesCheckBox.setSelected(FileSearchOptions.getShowHiddenFiles());
         mainProjectCheckBox.setSelected(FileSearchOptions.getPreferMainProject());
+        preferOpenCheckBox.setSelected(GoToSettings.getDefault().isSortingPreferOpenProjects());
         searchByFolders.setSelected(FileSearchOptions.getSearchByFolders());
 
         if ( currentProject == null ) {
@@ -130,6 +128,7 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
         }
         
         mainProjectCheckBox.addActionListener(this);
+        preferOpenCheckBox.addActionListener(this);
         caseSensitiveCheckBox.addActionListener(this);
         hiddenFilesCheckBox.addActionListener(this);
         hiddenFilesCheckBox.setVisible(false);
@@ -141,27 +140,25 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
                 caseSensitiveCheckBox.getModel(),
                 mainProjectCheckBox.getModel(),
                 searchByFolders.getModel()));
-        resultList.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                selectedItems = resultList.getSelectedValuesList();
-                LOG.log(
-                    Level.FINE,
-                    "New selected items: {0}",  //NOI18N
-                    selectedItems);
-            }
+
+        resultList.addListSelectionListener(e -> {
+            selectedItems = resultList.getSelectedValuesList();
+            LOG.log(Level.FINE, "New selected items: {0}", selectedItems); //NOI18N
         });
         contentProvider.setListModel( this, null );
                 
         fileNameTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
             public void changedUpdate(DocumentEvent e) {
                 update();
             }
             
+            @Override
             public void insertUpdate(DocumentEvent e) {
                 update();
             }
             
+            @Override
             public void removeUpdate(DocumentEvent e) {
                 // handling http://netbeans.org/bugzilla/show_bug.cgi?id=203119
                 if (pastedFromClipboard) {
@@ -188,20 +185,15 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
 
     //Good for setting model form any thread
     void setModel(
-            @NonNull final ListModel model,
+            @NonNull final ListModel<FileDescriptor> model,
             final boolean done) {
         // XXX measure time here
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                LOG.log(
-                    Level.FINE,
-                    "Reset selected items");    //NOI18N
-                selectedItems = null;
-                resultList.setModel(model);
-                if (done) {
-                    setListPanelContent(null,false);
-                }
+        SwingUtilities.invokeLater(() -> {
+            LOG.log(Level.FINE, "Reset selected items");    //NOI18N
+            selectedItems = null;
+            resultList.setModel(model);
+            if (done) {
+                setListPanelContent(null,false);
             }
         });
     }
@@ -304,6 +296,10 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
         return mainProjectCheckBox.isSelected();
     }
     
+    public boolean isPrefereOpenProjects() {
+        return preferOpenCheckBox.isSelected();
+    }
+    
     public boolean isCaseSensitive() {
         return caseSensitiveCheckBox.isSelected();
     }
@@ -346,11 +342,12 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
         resultLabel = new javax.swing.JLabel();
         listPanel = new javax.swing.JPanel();
         resultScrollPane = new javax.swing.JScrollPane();
-        resultList = new javax.swing.JList();
+        resultList = new javax.swing.JList<>();
         jLabelWarningMessage = new javax.swing.JLabel();
         caseSensitiveCheckBox = new javax.swing.JCheckBox();
-        hiddenFilesCheckBox = new javax.swing.JCheckBox();
+        preferOpenCheckBox = new javax.swing.JCheckBox();
         mainProjectCheckBox = new javax.swing.JCheckBox();
+        hiddenFilesCheckBox = new javax.swing.JCheckBox();
         searchByFolders = new javax.swing.JCheckBox();
         jLabelLocation = new javax.swing.JLabel();
         jTextFieldLocation = new javax.swing.JTextField();
@@ -370,11 +367,7 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
         add(fileNameLabel, gridBagConstraints);
 
         fileNameTextField.setFont(new java.awt.Font("Monospaced", 0, getFontSize()));
-        fileNameTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fileNameTextFieldActionPerformed(evt);
-            }
-        });
+        fileNameTextField.addActionListener(this::fileNameTextFieldActionPerformed);
         fileNameTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 fileNameTextFieldKeyPressed(evt);
@@ -407,11 +400,7 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
                 resultListMouseReleased(evt);
             }
         });
-        resultList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                resultListValueChanged(evt);
-            }
-        });
+        resultList.addListSelectionListener(this::resultListValueChanged);
         resultScrollPane.setViewportView(resultList);
         resultList.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FileSearchPanel.class, "AN_MatchingList")); // NOI18N
         resultList.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FileSearchPanel.class, "AD_MatchingList")); // NOI18N
@@ -430,33 +419,40 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
         caseSensitiveCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
         add(caseSensitiveCheckBox, gridBagConstraints);
         caseSensitiveCheckBox.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FileSearchPanel.class, "AD_CaseSensitive")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(hiddenFilesCheckBox, org.openide.util.NbBundle.getMessage(FileSearchPanel.class, "LBL_HiddenFiles")); // NOI18N
-        hiddenFilesCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        org.openide.awt.Mnemonics.setLocalizedText(preferOpenCheckBox, org.openide.util.NbBundle.getMessage(FileSearchPanel.class, "LBL_PreferOpenProjects")); // NOI18N
+        preferOpenCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 8, 0, 0);
-        add(hiddenFilesCheckBox, gridBagConstraints);
-        hiddenFilesCheckBox.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FileSearchPanel.class, "AD_HiddenFiles")); // NOI18N
+        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
+        add(preferOpenCheckBox, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(mainProjectCheckBox, org.openide.util.NbBundle.getMessage(FileSearchPanel.class, "LBL_PreferMainProject")); // NOI18N
         mainProjectCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 8, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
         add(mainProjectCheckBox, gridBagConstraints);
         mainProjectCheckBox.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FileSearchPanel.class, "AD_PreferMainProject")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(searchByFolders, "Search by Folders");
+        org.openide.awt.Mnemonics.setLocalizedText(hiddenFilesCheckBox, org.openide.util.NbBundle.getMessage(FileSearchPanel.class, "LBL_HiddenFiles")); // NOI18N
+        hiddenFilesCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
+        add(hiddenFilesCheckBox, gridBagConstraints);
+        hiddenFilesCheckBox.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FileSearchPanel.class, "AD_HiddenFiles")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(searchByFolders, org.openide.util.NbBundle.getMessage(FileSearchPanel.class, "LBL_SearchByPath")); // NOI18N
         searchByFolders.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 8, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
         add(searchByFolders, gridBagConstraints);
 
         jLabelLocation.setLabelFor(jTextFieldLocation);
@@ -478,39 +474,37 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
         add(jTextFieldLocation, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
-private void fileNameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileNameTextFieldActionPerformed
-    if (contentProvider.hasValidContent()) {
-        contentProvider.closeDialog();
-        setSelectedFile();
-    }
-}//GEN-LAST:event_fileNameTextFieldActionPerformed
+    private void fileNameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileNameTextFieldActionPerformed
+        if (contentProvider.hasValidContent()) {
+            contentProvider.closeDialog();
+            setSelectedFile();
+        }
+    }//GEN-LAST:event_fileNameTextFieldActionPerformed
 
-private void resultListMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_resultListMouseReleased
-    if ( evt.getClickCount() == 2 ) {
-        fileNameTextFieldActionPerformed(null);
-    }
-}//GEN-LAST:event_resultListMouseReleased
+    private void resultListMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_resultListMouseReleased
+        if (evt.getClickCount() == 2) {
+            fileNameTextFieldActionPerformed(null);
+        }
+    }//GEN-LAST:event_resultListMouseReleased
 
-private void resultListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_resultListValueChanged
-        final Object svObject = resultList.getSelectedValue();
-        if ( svObject instanceof FileDescriptor ) {
-            jTextFieldLocation.setText(((FileDescriptor)svObject).getFileDisplayPath());
+    private void resultListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_resultListValueChanged
+        FileDescriptor selected = resultList.getSelectedValue();
+        if (selected != null) {
+            jTextFieldLocation.setText(selected.getFileDisplayPath());
         } else {
             jTextFieldLocation.setText(""); //NOI18N
         }
-}//GEN-LAST:event_resultListValueChanged
+    }//GEN-LAST:event_resultListValueChanged
 
     @CheckForNull
-    private Pair<String,JComponent> listActionFor(KeyEvent ev) {
+    private Pair<String, JComponent> listActionFor(KeyEvent ev) {
         InputMap map = resultList.getInputMap();
-        Object o = map.get(KeyStroke.getKeyStrokeForEvent(ev));
-        if (o instanceof String) {
-            return Pair.<String,JComponent>of((String)o, resultList);
+        if (map.get(KeyStroke.getKeyStrokeForEvent(ev)) instanceof String str) {
+            return Pair.of(str, resultList);
         }
         map = resultScrollPane.getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-        o = map.get(KeyStroke.getKeyStrokeForEvent(ev));
-        if (o instanceof String) {
-            return Pair.<String,JComponent>of((String)o, resultScrollPane);
+        if (map.get(KeyStroke.getKeyStrokeForEvent(ev)) instanceof String string) {
+            return Pair.of(string, resultScrollPane);
         }
         return null;
     }
@@ -561,20 +555,17 @@ private void resultListValueChanged(javax.swing.event.ListSelectionEvent evt) {/
         if (isListScrollAction) {
             assert actionTarget != null;
             final Action a = actionTarget.getActionMap().get(actionKey);
-            a.actionPerformed(new ActionEvent(actionTarget, 0, (String)actionKey));
+            a.actionPerformed(new ActionEvent(actionTarget, 0, actionKey));
             evt.consume();
         } else {
             //handling http://netbeans.org/bugzilla/show_bug.cgi?id=203119
             Object o = fileNameTextField.getInputMap().get(KeyStroke.getKeyStrokeForEvent(evt));
-            if (o instanceof String) {
-                String action = (String) o;
-                if ("paste-from-clipboard".equals(action)) {
-                    String selectedTxt = fileNameTextField.getSelectedText();
-                    String txt = fileNameTextField.getText();
-                    if (selectedTxt != null && txt != null) {
-                        if (selectedTxt.length() == txt.length()) {
-                            pastedFromClipboard = true;
-                        }
+            if (o instanceof String action && "paste-from-clipboard".equals(action)) {
+                String selectedTxt = fileNameTextField.getSelectedText();
+                String txt = fileNameTextField.getText();
+                if (selectedTxt != null && txt != null) {
+                    if (selectedTxt.length() == txt.length()) {
+                        pastedFromClipboard = true;
                     }
                 }
             }
@@ -591,12 +582,14 @@ private void resultListValueChanged(javax.swing.event.ListSelectionEvent evt) {/
     private javax.swing.JTextField jTextFieldLocation;
     private javax.swing.JPanel listPanel;
     private javax.swing.JCheckBox mainProjectCheckBox;
+    private javax.swing.JCheckBox preferOpenCheckBox;
     private javax.swing.JLabel resultLabel;
-    private javax.swing.JList resultList;
+    private javax.swing.JList<FileDescriptor> resultList;
     private javax.swing.JScrollPane resultScrollPane;
     private javax.swing.JCheckBox searchByFolders;
     // End of variables declaration//GEN-END:variables
     
+    @Override
     public void actionPerformed(ActionEvent e) {
         if ( e.getSource() == caseSensitiveCheckBox ) {
             FileSearchOptions.setCaseSensitive(caseSensitiveCheckBox.isSelected());
@@ -610,22 +603,23 @@ private void resultListValueChanged(javax.swing.event.ListSelectionEvent evt) {/
         else if ( e.getSource() == searchByFolders ) {
             FileSearchOptions.setSearchByFolders(searchByFolders.isSelected());
         }
+        else if ( e.getSource() == preferOpenCheckBox ) {
+            GoToSettings.getDefault().setSortingPreferOpenProjects(preferOpenCheckBox.isSelected());
+        }
 
         update();
     }
     
     /** Sets the initial text to find in case the user did not start typing yet. */
     public void setInitialText( final String text ) {
-        SwingUtilities.invokeLater( new Runnable() {
-            public void run() {
-                String textInField = fileNameTextField.getText();
-                if ( textInField == null || textInField.trim().length() == 0 ) {
-                    fileNameTextField.setText(text);
-                    final int len = fileNameTextField.getText().length();   //The text may be changed by DocumentFilter
-                    fileNameTextField.setCaretPosition(len);
-                    fileNameTextField.setSelectionStart(0);
-                    fileNameTextField.setSelectionEnd(len);
-                }
+        SwingUtilities.invokeLater(() -> {
+            String textInField = fileNameTextField.getText();
+            if (textInField == null || textInField.isBlank()) {
+                fileNameTextField.setText(text);
+                final int len = fileNameTextField.getText().length();   //The text may be changed by DocumentFilter
+                fileNameTextField.setCaretPosition(len);
+                fileNameTextField.setSelectionStart(0);
+                fileNameTextField.setSelectionEnd(len);
             }
         });
     }
@@ -644,34 +638,21 @@ private void resultListValueChanged(javax.swing.event.ListSelectionEvent evt) {/
     }        
     
     public void setSelectedFile() {
-        List<FileDescriptor> list = NbCollections.checkedListByCopy(Arrays.asList(resultList.getSelectedValues()), FileDescriptor.class, true);
-        selectedFile = list.toArray(new FileDescriptor[0]);
+        selectedFiles = resultList.getSelectedValuesList().toArray(FileDescriptor[]::new);
     }
 
     public FileDescriptor[] getSelectedFiles() {
-        return selectedFile;
+        return selectedFiles;
     }
 
-   public Project getCurrentProject() {
+    public Project getCurrentProject() {
        return currentProject;
-   }
-
-//    public boolean accept(Object obj) {
-//        if ( obj instanceof FileDescription ) {
-//            FileDescription fd = (FileDescription)obj;
-//            return isShowHiddenFiles() ? true : fd.isVisible();
-//        }
-//        return true;
-//    }
-//
-//    public void scheduleUpdate(Runnable run) {
-//        SwingUtilities.invokeLater( run );
-//    }
+    }
 
     public static interface ContentProvider {
 
-        public ListCellRenderer getListCellRenderer(
-                @NonNull JList list,
+        public ListCellRenderer<FileDescriptor> getListCellRenderer(
+                @NonNull JList<FileDescriptor> list,
                 @NonNull Document nameDocument,
                 @NonNull ButtonModel caseSensitive,
                 @NonNull ButtonModel colorPrefered,

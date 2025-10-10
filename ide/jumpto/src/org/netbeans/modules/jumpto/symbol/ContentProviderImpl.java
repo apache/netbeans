@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,7 +44,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.modules.jumpto.EntityComparator;
 import org.netbeans.modules.jumpto.common.AbstractModelFilter;
 import org.netbeans.modules.jumpto.common.CurrentSearch;
 import org.netbeans.modules.jumpto.common.Factory;
@@ -177,7 +175,7 @@ final class ContentProviderImpl implements GoToPanelImpl.ContentProvider {
         }
         final boolean exact = text.endsWith(" "); // NOI18N
         final boolean isCaseSensitive = panel.isCaseSensitive();
-        text = text.trim();
+        text = text.strip();
         if ( text.isEmpty() || !Utils.isValidInput(text)) {
             currentSearch.filter(
                     SearchType.EXACT_NAME,

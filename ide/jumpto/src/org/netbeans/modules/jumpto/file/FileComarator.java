@@ -44,7 +44,7 @@ public abstract class FileComarator extends EntityComparator<FileDescriptor> imp
 
     private final ChangeSupport support;
     protected final boolean caseSensitive;
-    protected final boolean preferOpPrjs;
+    protected boolean preferOpPrjs;
     protected boolean usePreferred;
 
     private FileComarator(
@@ -61,10 +61,16 @@ public abstract class FileComarator extends EntityComparator<FileDescriptor> imp
         return usePreferred;
     }
 
-    void setUsePreferred(final boolean usePreferred) {
-        final boolean fire = this.usePreferred ^ usePreferred;
-        this.usePreferred = usePreferred;
-        if (fire) {
+    void setUsePreferred(boolean usePreferred) {
+        if (this.usePreferred != usePreferred) {
+            this.usePreferred = usePreferred;
+            support.fireChange();
+        }
+    }
+
+    void setPrefereOpenProjects(boolean prefereOpenProjects) {
+        if (this.preferOpPrjs != prefereOpenProjects) {
+            this.preferOpPrjs = prefereOpenProjects;
             support.fireChange();
         }
     }

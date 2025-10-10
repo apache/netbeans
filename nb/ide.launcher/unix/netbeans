@@ -45,11 +45,11 @@ case "`uname -s -m`" in
         DEFAULT_CACHEDIR_ROOT=${HOME}/Library/Caches/NetBeans
         ;;
     CYGWIN*_64)
-	exec $progdir/netbeans64.exe $*
-	;;
+        exec "$progdir/netbeans64.exe" $*
+        ;;
     CYGWIN*)
-	exec $progdir/netbeans.exe $*
-	;;
+        exec "$progdir/netbeans.exe" $*
+        ;;
     *) 
         # set default userdir and cachedir on unix systems
         DEFAULT_USERDIR_ROOT=${HOME}/.netbeans

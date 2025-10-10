@@ -494,9 +494,16 @@ public class AugmentedAnnotations {
                     return null;
                 }
 
-                while (topLevel.getEnclosingElement() != null && topLevel.getEnclosingElement().getKind() == ElementKind.PACKAGE && originFO != null) {
-                    originFO = originFO.getParent();
+                originFO = originFO.getParent();
+
+                String name = topLevel.getQualifiedName().toString();
+
+                for (int i = 0; i < name.length() && originFO != null; i++) {
+                    if (name.charAt(i) == '.') {
+                        originFO = originFO.getParent();
+                    }
                 }
+
                 return new RootHolder(originFO);
             } finally {
                 if (LOG.isLoggable(Level.FINE)) {

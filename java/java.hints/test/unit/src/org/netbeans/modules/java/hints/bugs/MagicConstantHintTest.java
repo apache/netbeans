@@ -19,6 +19,9 @@
 package org.netbeans.modules.java.hints.bugs;
 
 import java.io.IOException;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import org.junit.Test;
 import org.netbeans.modules.java.hints.test.api.HintTest;
 import org.netbeans.modules.java.source.annotations.AugmentedAnnotations;
@@ -36,6 +39,12 @@ public class MagicConstantHintTest {
                          "</item>\n" +
                          "</root>\n");
 
+        String modifiers =
+            Arrays.stream(Modifier.class.getDeclaredFields())
+                  .filter(f -> (f.getModifiers() & Modifier.STATIC) != 0)
+                  .map(f -> f.getName())
+                  .collect(Collectors.joining(", "));
+
         HintTest.create()
                 .input("package test;\n" +
                        "public class Test {\n" +
@@ -44,7 +53,7 @@ public class MagicConstantHintTest {
                        "    }\n" +
                        "}\n")
                 .run(MagicConstantHint.class)
-                .assertWarnings("3:13-3:48:verifier:" + Bundle.ERR_NotAValidValue());
+                .assertWarnings("3:13-3:48:verifier:" + Bundle.ERR_NotAValidValue(modifiers));
 
         HintTest.create()
                 .input("package test;\n" +
@@ -76,7 +85,7 @@ public class MagicConstantHintTest {
                        "    }\n" +
                        "}\n")
                 .run(MagicConstantHint.class)
-                .assertWarnings("3:13-3:47:verifier:" + Bundle.ERR_NotAValidValue());
+                .assertWarnings("3:13-3:47:verifier:" + Bundle.ERR_NotAValidValue("PUBLIC"));
 
         HintTest.create()
                 .input("package test;\n" +
@@ -112,7 +121,7 @@ public class MagicConstantHintTest {
                        "    public static final int V = 0;\n" +
                        "}\n")
                 .run(MagicConstantHint.class)
-                .assertWarnings("4:17-4:18:verifier:" + Bundle.ERR_NotAValidValue());
+                .assertWarnings("4:17-4:18:verifier:" + Bundle.ERR_NotAValidValue("V"));
 
         HintTest.create()
                 .input("package test;\n" +

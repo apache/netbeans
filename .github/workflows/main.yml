@@ -674,6 +674,9 @@ jobs:
       - name: ide/javascript2.debug
         run: ant $OPTS -f ide/javascript2.debug test
 
+      - name: ide/jumpto
+        run: ant $OPTS -f ide/jumpto test
+
       - name: ide/languages.hcl
         run: ant $OPTS -f ide/languages.hcl test
 

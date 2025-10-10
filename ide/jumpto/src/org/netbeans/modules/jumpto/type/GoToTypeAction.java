@@ -35,14 +35,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
@@ -62,7 +60,6 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.jumpto.type.TypeBrowser;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.editor.JumpList;
-import org.netbeans.modules.jumpto.EntityComparator;
 import org.netbeans.modules.jumpto.common.AbstractModelFilter;
 import org.netbeans.modules.jumpto.common.CurrentSearch;
 import org.netbeans.modules.jumpto.common.ItemRenderer;
@@ -125,11 +122,10 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
         putValue("PopupMenuText", NbBundle.getBundle(GoToTypeAction.class).getString("editor-popup-TXT_GoToType")); // NOI18N
         this.title = title;
         this.typeFilter = typeFilter;
-        this.implicitTypeProviders = typeProviders.length == 0 ? null : Collections.unmodifiableCollection(Arrays.asList(typeProviders));
+        this.implicitTypeProviders = typeProviders.length == 0 ? null : List.of(typeProviders);
         this.multiSelection = multiSelection;
         this.currentSearch = new CurrentSearch(() -> new AbstractModelFilter<TypeDescriptor>() {
             @Override
-            @NonNull
             protected String getItemValue(@NonNull final TypeDescriptor item) {
                 return item.getSimpleName();
             }
@@ -164,7 +160,7 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
     }
 
     public Iterable<? extends TypeDescriptor> getSelectedTypes(final boolean visible, String initSearchText) {
-        Iterable<? extends TypeDescriptor> result = Collections.emptyList();
+        Iterable<? extends TypeDescriptor> result = List.of();
         try {
             panel = new GoToPanel(this, multiSelection);
             dialog = createDialog(panel);
@@ -207,17 +203,18 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
 
 
     @Override
-    public ListCellRenderer getListCellRenderer(
-            @NonNull final JList list,
+    @SuppressWarnings("unchecked")
+    public ListCellRenderer<TypeDescriptor> getListCellRenderer(
+            @NonNull final JList<TypeDescriptor> list,
             @NonNull final ButtonModel caseSensitive) {
         Parameters.notNull("list", list);   //NOI18N
         Parameters.notNull("caseSensitive", caseSensitive); //NOI18N
-        return ItemRenderer.Builder.create(
+        ItemRenderer<TypeDescriptor> renderer = ItemRenderer.Builder.create(
                 list,
                 caseSensitive,
                 new TypeDescriptorConvertor()).build();
+        return (ListCellRenderer) renderer;
     }
-
 
     @Override
     public boolean setListModel( GoToPanel panel, String text ) {
@@ -252,12 +249,12 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
         }
 
         final boolean exact = text.endsWith(" "); // NOI18N
-        text = text.trim();
+        text = text.strip();
         if ( text.isEmpty() || !Utils.isValidInput(text)) {
             currentSearch.filter(
                     SearchType.EXACT_NAME,
                     text,
-                    Collections.singletonMap(AbstractModelFilter.OPTION_CLEAR, Boolean.TRUE));
+                    Map.of(AbstractModelFilter.OPTION_CLEAR, Boolean.TRUE));
             panel.revalidateModel();
             return false;
         }

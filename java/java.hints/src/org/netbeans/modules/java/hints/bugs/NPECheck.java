@@ -540,14 +540,10 @@ public class NPECheck {
         return getStateFromAnnotations(info, e, State.POSSIBLE_NULL);
     }
 
-    private static final AnnotationMirrorGetter OVERRIDE_ANNOTATIONS = Lookup.getDefault().lookup(AnnotationMirrorGetter.class);
-    
     private static State getStateFromAnnotations(CompilationInfo info, Element e, State def) {
         if (e == null) return def;
         
-        Iterable<? extends AnnotationMirror> mirrors = OVERRIDE_ANNOTATIONS != null ? OVERRIDE_ANNOTATIONS.getAnnotationMirrors(info, e) : null;
-        
-        if (mirrors == null) mirrors = e.getAnnotationMirrors();
+        Iterable<? extends AnnotationMirror> mirrors = info.getElementUtilities().getAugmentedAnnotationMirrors(e);
         
         for (AnnotationMirror am : mirrors) {
             String simpleName = ((TypeElement) am.getAnnotationType().asElement()).getSimpleName().toString();
@@ -568,10 +564,6 @@ public class NPECheck {
         return def;
     }
     
-    public interface AnnotationMirrorGetter {
-        public Iterable<? extends AnnotationMirror> getAnnotationMirrors(CompilationInfo info, Element el);
-    }
-        
     private static final class VisitorImpl extends CancellableTreeScanner<State, Void> {
         
         private final HintContext ctx;

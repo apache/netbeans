@@ -64,6 +64,7 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -90,6 +91,7 @@ import javax.lang.model.util.Types;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.modules.java.source.annotations.AugmentedAnnotations;
 import org.netbeans.modules.java.source.builder.ElementsService;
 import org.netbeans.modules.java.source.base.SourceLevelUtils;
 import org.openide.util.Pair;
@@ -1129,6 +1131,20 @@ public final class ElementUtilities {
         }
 
         return exported;
+    }
+
+    /**
+     * Get any annotations which with the given {@code Element} has been annotated,
+     * as if by calling {@link Element#getAnnotationMirrors()}, and add any externally
+     * defined annotations for the {@code Element}.
+     *
+     * @param e the {@code Element} for which the annotations should be retrieved
+     * @return the annotations with which the given {@code Element} has been
+     *         annotated and any externally attached annotations.
+     * @since 2.81
+     */
+    public List<? extends AnnotationMirror> getAugmentedAnnotationMirrors(Element e) {
+        return AugmentedAnnotations.getAugmentedAnnotationMirrors(info, e);
     }
 
     // private implementation --------------------------------------------------

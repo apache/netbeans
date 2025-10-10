@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="java">
+        <folder name="annotations">
+            <folder name="external">
+                <folder name="java">
+                    <folder name="beans">
+                        <file name="annotations.xml" url="annotations/java.beans.annotations.xml" />
+                    </folder>
+                    <folder name="awt">
+                        <folder name="geom">
+                            <file name="annotations.xml" url="annotations/java.awt.geom.annotations.xml" />
+                        </folder>
+                        <folder name="im">
+                            <file name="annotations.xml" url="annotations/java.awt.im.annotations.xml" />
+                        </folder>
+                        <folder name="dnd">
+                            <file name="annotations.xml" url="annotations/java.awt.dnd.annotations.xml" />
+                        </folder>
+                        <folder name="event">
+                            <file name="annotations.xml" url="annotations/java.awt.event.annotations.xml" />
+                        </folder>
+                        <folder name="datatransfer">
+                            <file name="annotations.xml" url="annotations/java.awt.datatransfer.annotations.xml" />
+                        </folder>
+                        <file name="annotations.xml" url="annotations/java.awt.annotations.xml" />
+                    </folder>
+                    <folder name="text">
+                        <file name="annotations.xml" url="annotations/java.text.annotations.xml" />
+                    </folder>
+                    <folder name="time">
+                        <folder name="format">
+                            <file name="annotations.xml" url="annotations/java.time.format.annotations.xml" />
+                        </folder>
+                        <file name="annotations.xml" url="annotations/java.time.annotations.xml" />
+                    </folder>
+                    <folder name="security">
+                        <file name="annotations.xml" url="annotations/java.security.annotations.xml" />
+                    </folder>
+                    <folder name="util">
+                        <folder name="jar">
+                            <file name="annotations.xml" url="annotations/java.util.jar.annotations.xml" />
+                        </folder>
+                        <folder name="zip">
+                            <file name="annotations.xml" url="annotations/java.util.zip.annotations.xml" />
+                        </folder>
+                        <folder name="stream">
+                            <file name="annotations.xml" url="annotations/java.util.stream.annotations.xml" />
+                        </folder>
+                        <folder name="regex">
+                            <file name="annotations.xml" url="annotations/java.util.regex.annotations.xml" />
+                        </folder>
+                        <folder name="function">
+                            <file name="annotations.xml" url="annotations/java.util.function.annotations.xml" />
+                        </folder>
+                        <folder name="concurrent">
+                            <folder name="locks">
+                                <file name="annotations.xml" url="annotations/java.util.concurrent.locks.annotations.xml" />
+                            </folder>
+                            <folder name="atomic">
+                                <file name="annotations.xml" url="annotations/java.util.concurrent.atomic.annotations.xml" />
+                            </folder>
+                            <file name="annotations.xml" url="annotations/java.util.concurrent.annotations.xml" />
+                        </folder>
+                        <file name="annotations.xml" url="annotations/java.util.annotations.xml" />
+                    </folder>
+                    <folder name="lang">
+                        <folder name="ref">
+                            <file name="annotations.xml" url="annotations/java.lang.ref.annotations.xml" />
+                        </folder>
+                        <folder name="reflect">
+                            <file name="annotations.xml" url="annotations/java.lang.reflect.annotations.xml" />
+                        </folder>
+                        <file name="annotations.xml" url="annotations/java.lang.annotations.xml" />
+                        <folder name="invoke">
+                            <file name="annotations.xml" url="annotations/java.lang.invoke.annotations.xml" />
+                        </folder>
+                    </folder>
+                    <folder name="nio">
+                        <folder name="file">
+                            <folder name="spi">
+                                <file name="annotations.xml" url="annotations/java.nio.file.spi.annotations.xml" />
+                            </folder>
+                            <file name="annotations.xml" url="annotations/java.nio.file.annotations.xml" />
+                        </folder>
+                        <folder name="charset">
+                            <file name="annotations.xml" url="annotations/java.nio.charset.annotations.xml" />
+                        </folder>
+                        <folder name="channels">
+                            <file name="annotations.xml" url="annotations/java.nio.channels.annotations.xml" />
+                        </folder>
+                        <file name="annotations.xml" url="annotations/java.nio.annotations.xml" />
+                    </folder>
+                    <folder name="math">
+                        <file name="annotations.xml" url="annotations/java.math.annotations.xml" />
+                    </folder>
+                    <folder name="sql">
+                        <file name="annotations.xml" url="annotations/java.sql.annotations.xml" />
+                    </folder>
+                    <folder name="io">
+                        <file name="annotations.xml" url="annotations/java.io.annotations.xml" />
+                    </folder>
+                    <folder name="net">
+                        <file name="annotations.xml" url="annotations/java.net.annotations.xml" />
+                    </folder>
+                </folder>
+                <folder name="javax">
+                    <folder name="annotation">
+                        <folder name="processing">
+                            <file name="annotations.xml" url="annotations/javax.annotation.processing.annotations.xml" />
+                        </folder>
+                    </folder>
+                    <folder name="naming">
+                        <folder name="event">
+                            <file name="annotations.xml" url="annotations/javax.naming.event.annotations.xml" />
+                        </folder>
+                    </folder>
+                    <folder name="accessibility">
+                        <file name="annotations.xml" url="annotations/javax.accessibility.annotations.xml" />
+                    </folder>
+                    <folder name="tools">
+                        <file name="annotations.xml" url="annotations/javax.tools.annotations.xml" />
+                    </folder>
+                    <folder name="swing">
+                        <folder name="text">
+                            <folder name="html">
+                                <file name="annotations.xml" url="annotations/javax.swing.text.html.annotations.xml" />
+                            </folder>
+                        </folder>
+                        <folder name="tree">
+                            <file name="annotations.xml" url="annotations/javax.swing.tree.annotations.xml" />
+                        </folder>
+                        <folder name="plaf">
+                            <folder name="basic">
+                                <file name="annotations.xml" url="annotations/javax.swing.plaf.basic.annotations.xml" />
+                            </folder>
+                            <file name="annotations.xml" url="annotations/javax.swing.plaf.annotations.xml" />
+                        </folder>
+                        <folder name="event">
+                            <file name="annotations.xml" url="annotations/javax.swing.event.annotations.xml" />
+                        </folder>
+                        <file name="annotations.xml" url="annotations/javax.swing.annotations.xml" />
+                        <folder name="table">
+                            <file name="annotations.xml" url="annotations/javax.swing.table.annotations.xml" />
+                        </folder>
+                        <folder name="border">
+                            <file name="annotations.xml" url="annotations/javax.swing.border.annotations.xml" />
+                        </folder>
+                    </folder>
+                    <folder name="xml">
+                        <folder name="bind">
+                            <folder name="annotation">
+                                <file name="annotations.xml" url="annotations/javax.xml.bind.annotation.annotations.xml" />
+                            </folder>
+                        </folder>
+                    </folder>
+                </folder>
+                <folder name="org">
+                    <folder name="w3c">
+                        <folder name="dom">
+                            <file name="annotations.xml" url="annotations/org.w3c.dom.annotations.xml" />
+                        </folder>
+                    </folder>
+                </folder>
+                <folder name="com">
+                    <folder name="sun">
+                        <folder name="jdi">
+                            <folder name="event">
+                                <file name="annotations.xml" url="annotations/com.sun.jdi.event.annotations.xml" />
+                            </folder>
+                            <folder name="request">
+                                <file name="annotations.xml" url="annotations/com.sun.jdi.request.annotations.xml" />
+                            </folder>
+                            <file name="annotations.xml" url="annotations/com.sun.jdi.annotations.xml" />
+                        </folder>
+                    </folder>
+                </folder>
+</folder>
+</folder>
+</folder>
+</filesystem>

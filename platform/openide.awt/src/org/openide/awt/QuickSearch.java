@@ -36,6 +36,7 @@ import javax.swing.text.DocumentFilter;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.util.ImageUtilities;
 import org.openide.util.RequestProcessor;
+import org.openide.util.Utilities;
 
 /**
  * Quick search infrastructure for an arbitrary component.
@@ -52,7 +53,9 @@ public class QuickSearch {
     @StaticResource
     private static final String ICON_FIND_WITH_MENU = "org/openide/awt/resources/quicksearch/findMenu.png"; // NOI18N
     private static final Object CLIENT_PROPERTY_KEY = new Object();
-    
+    private static final KeyStroke NEXT_ALTERNATIVE_KEY_STROKE = Utilities.stringToKey("D-G");
+    private static final KeyStroke PREVIOUS_ALTERNATIVE_KEY_STROKE = Utilities.stringToKey("DS-G");
+
     private final JComponent component;
     private final Object constraints;
     private final Callback callback;
@@ -288,10 +291,12 @@ public class QuickSearch {
     }
     
     private void fireShowNextSelection(boolean forward) {
-        if (asynchronous) {
-            rp.post(new LazyFire(QS_FIRE.NEXT, forward));
-        } else {
-            callback.showNextSelection(forward);
+        if (hasSearchText) {
+            if (asynchronous) {
+                rp.post(new LazyFire(QS_FIRE.NEXT, forward));
+            } else {
+                callback.showNextSelection(forward);
+            }
         }
     }
     
@@ -354,6 +359,23 @@ public class QuickSearch {
         if(isAlwaysShown()) {
             displaySearchField();
         }
+        component.getActionMap().put("openQuickSearch", new AbstractAction() {
+          @Override
+          public void actionPerformed(ActionEvent evt) {
+            if (searchPanel != null && isEnabled()) {
+                searchTextField.selectAll();
+                return;
+            }
+            if (searchPanel != null || !isEnabled()) {
+                return;
+            }
+            searchTextField.setText("");
+            displaySearchField();
+          }
+        });
+        InputMap im = component.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        im.put(Utilities.stringToKey("D-F"), "openQuickSearch");
+        im.put(Utilities.stringToKey("F3"), "openQuickSearch");
     }
     
     private void displaySearchField() {
@@ -678,7 +700,7 @@ public class QuickSearch {
                 }
             );
         }
-        
+
         @Override
         public boolean isManagingFocus() {
             return true;
@@ -707,9 +729,14 @@ public class QuickSearch {
             } else {
                 if (!hasSearchText) {
                     int keyCode = ke.getKeyCode();
+                    KeyStroke ks = KeyStroke.getKeyStrokeForEvent(ke);
                     if (keyCode == KeyEvent.VK_DOWN || keyCode == KeyEvent.VK_UP ||
                         keyCode == KeyEvent.VK_LEFT || keyCode == KeyEvent.VK_RIGHT ||
-                        keyCode == KeyEvent.VK_TAB || keyCode == KeyEvent.VK_F3) {
+                        keyCode == KeyEvent.VK_TAB || keyCode == KeyEvent.VK_F3 ||
+                        keyCode == KeyEvent.VK_ENTER && ke.getModifiersEx() == KeyEvent.SHIFT_DOWN_MASK ||
+                        NEXT_ALTERNATIVE_KEY_STROKE.equals(ks) ||
+                        PREVIOUS_ALTERNATIVE_KEY_STROKE.equals(ks))
+                    {
                         // Ignore movement events when search text was not set
                         return ;
                     }
@@ -748,6 +775,7 @@ public class QuickSearch {
         @Override
         public void keyPressed(KeyEvent e) {
             int keyCode = e.getKeyCode();
+            KeyStroke ks = KeyStroke.getKeyStrokeForEvent(e);
 
             if (keyCode == KeyEvent.VK_ESCAPE) {
                 removeSearchField();
@@ -763,12 +791,22 @@ public class QuickSearch {
                 callback.quickSearchCanceled();
                 hasSearchText = false;
                 e.consume();
-            } else if (keyCode == KeyEvent.VK_UP || (keyCode == KeyEvent.VK_F3 && e.isShiftDown())) {
+            } else if (keyCode == KeyEvent.VK_UP ||
+                    keyCode == KeyEvent.VK_F3 && e.getModifiersEx() == KeyEvent.SHIFT_DOWN_MASK ||
+                    keyCode == KeyEvent.VK_ENTER && e.getModifiersEx() == KeyEvent.SHIFT_DOWN_MASK ||
+                    PREVIOUS_ALTERNATIVE_KEY_STROKE.equals(ks))
+            {
                 fireShowNextSelection(false);
                 // Stop processing the event here. Otherwise it's dispatched
                 // to the tree too (which scrolls)
                 e.consume();
-            } else if (keyCode == KeyEvent.VK_DOWN || keyCode == KeyEvent.VK_F3) {
+            } else if (keyCode == KeyEvent.VK_DOWN ||
+                    keyCode == KeyEvent.VK_F3 && e.getModifiersEx() == 0 ||
+                    /* We can't use ENTER to go to the next match, as this keystroke is used to
+                    invoke the row's default action. */
+                    /* keyCode == KeyEvent.VK_ENTER && e.getModifiersEx() == 0 || */
+                    NEXT_ALTERNATIVE_KEY_STROKE.equals(ks))
+            {
                 fireShowNextSelection(true);
                 // Stop processing the event here. Otherwise it's dispatched
                 // to the tree too (which scrolls)

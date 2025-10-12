@@ -70,7 +70,10 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.lexer.JavaTokenId;
+import org.netbeans.api.java.queries.SourceJavadocAttacher;
+import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CodeStyleUtils;
 import org.netbeans.api.java.source.CompilationController;
@@ -98,6 +101,7 @@ import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.lsp.CompletionCollector;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
@@ -162,9 +166,50 @@ public class JavaCompletionCollector implements CompletionCollector {
                     @Override
                     public Future<String> create(CompilationInfo compilationInfo, Element element, Callable<Boolean> cancel) {
                         ElementJavadoc doc = ElementJavadoc.create(compilationInfo, element, cancel);
+                        if (doc.getGotoSourceAction() == null && doc.getURL() == null) {
+                            // try to attach sources and get doc from them
+                            CompletableFuture<String> docFromSources = docFromAttachedSources(compilationInfo, element, cancel, doc);
+                            if (docFromSources != null) {
+                                return docFromSources;
+                            }
+                        }
                         return ((CompletableFuture<String>) doc.getTextAsync()).thenApplyAsync(content -> {
                             return Utilities.resolveLinks(content, doc);
                         });
+                    }
+
+                    private CompletableFuture<String> docFromAttachedSources(CompilationInfo compilationInfo, Element element, Callable<Boolean> cancel, ElementJavadoc currentDoc) {
+                        final TypeElement te = compilationInfo.getElementUtilities().outermostTypeElement(element);
+                        final ClasspathInfo cpInfo = compilationInfo.getClasspathInfo();
+                        final ClassPath cp = ClassPathSupport.createProxyClassPath(
+                                cpInfo.getClassPath(ClasspathInfo.PathKind.BOOT),
+                                cpInfo.getClassPath(ClasspathInfo.PathKind.COMPILE),
+                                cpInfo.getClassPath(ClasspathInfo.PathKind.SOURCE));
+                        final FileObject resource = cp.findResource(te.getQualifiedName().toString().replace('.', '/') + ".class");
+                        if (resource != null) {
+                            final FileObject root = cp.findOwnerRoot(resource);
+                            if (root != null) {
+                                CompletableFuture<String> future = new CompletableFuture<>();
+                                try {
+                                    SourceJavadocAttacher.attachSources(root.toURL(), new SourceJavadocAttacher.AttachmentListener() {
+                                        @Override
+                                        public void attachmentSucceeded() {
+                                            ElementJavadoc ejd = ElementJavadoc.create(compilationInfo, element, cancel);
+                                            future.complete(Utilities.resolveLinks(ejd.getText(), ejd));
+                                        }
+
+                                        @Override
+                                        public void attachmentFailed() {
+                                            future.complete(Utilities.resolveLinks(currentDoc.getText(), currentDoc));
+                                        }
+                                    });
+                                }catch (Throwable t) {
+                                    future.completeExceptionally(t);
+                                }
+                                return future;
+                            }
+                        }
+                        return null;
                     }
                 }, () -> false);
                 ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.95
+#Version 7.97
 
 CLSS public java.awt.Canvas
 cons public init()

@@ -47,15 +47,15 @@ jobs:
           show-progress: false
 
       - name: Set up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
-          java-version: 21
+          java-version: 25
           distribution: 'zulu'
 
       - name: Check Dependencies
         run: |
-          DEPS=org.apache.maven:maven-artifact:3.9.9,org.apache.maven.indexer:search-backend-smo:7.1.5
-          mvn eu.maveniverse.maven.plugins:toolbox:gav-copy-transitive -Dgav=$DEPS -DsinkSpec="flat(./lib)"
+          DEPS=org.apache.maven:maven-artifact:3.9.11,org.apache.maven.indexer:search-backend-smo:7.1.6
+          mvn eu.maveniverse.maven.plugins:toolbox:0.13.7:gav-resolve-transitive -Dgav=$DEPS -DsinkSpec="flat(./lib)"
           echo "<pre>" >> $GITHUB_STEP_SUMMARY
           java -cp "lib/*" .github/scripts/BinariesListUpdates.java ./ | tee -a $GITHUB_STEP_SUMMARY
           echo "</pre>" >> $GITHUB_STEP_SUMMARY

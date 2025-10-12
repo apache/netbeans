@@ -18,16 +18,14 @@
  */
 package org.netbeans.modules.nativeexecution.ui;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.regex.Matcher;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.regex.Pattern;
 import org.netbeans.modules.nativeexecution.api.util.Authentication;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -35,8 +33,7 @@ import org.openide.util.Exceptions;
  */
 public class SSHKeyFileFilter implements FileFilter {
 
-    private static final Pattern p = Pattern.compile("-+ *BEGIN.*PRIVATE.*KEY *-+.*"); // NOI18N
-    private static final Charset cs = StandardCharsets.US_ASCII;
+    private static final Pattern pattern = Pattern.compile("-+ *BEGIN.*PRIVATE.*KEY *-+.*"); // NOI18N
     private static final SSHKeyFileFilter instance = new SSHKeyFileFilter();
 
     private SSHKeyFileFilter() {
@@ -63,28 +60,28 @@ public class SSHKeyFileFilter implements FileFilter {
             return false;
         }
 
-        FileInputStream fis = null;
-        byte[] buffer = new byte[30];
-
         // fast sanity check
-        try {
-            fis = new FileInputStream(file);
-            fis.read(buffer, 0, 30);
 
-            Matcher m = p.matcher(new String(buffer, 0, 30, cs));
-            if (!m.matches()) {
+        // header contains the name of the tool so we don't know how long it is
+        // read until new line but with a limit and avoid buffering the key
+        int limit = 40;
+
+        try (InputStream is = new BufferedInputStream(Files.newInputStream(file.toPath()), limit)) {
+
+            StringBuilder head = new StringBuilder(limit);
+            int c;
+            for (int n = 0; n < limit; n++) {
+                c = is.read();
+                if (c == -1 || c == '\n' || c == '\r') {
+                    break;
+                }
+                head.append((char) c);  
+            }
+            if (!pattern.matcher(head).matches()) {
                 return false;
             }
         } catch (IOException ex) {
             return false;
-        } finally {
-            try {
-                if (fis != null) {
-                    fis.close();
-                }
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
         }
 
         return Authentication.isValidSSHKeyFile(file.getAbsolutePath());

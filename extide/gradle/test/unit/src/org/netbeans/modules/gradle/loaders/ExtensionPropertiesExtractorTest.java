@@ -19,15 +19,12 @@
 package org.netbeans.modules.gradle.loaders;
 
 import java.io.File;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
-import static junit.framework.TestCase.assertNotNull;
 import org.gradle.internal.impldep.com.google.common.collect.Streams;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
@@ -116,7 +113,7 @@ public class ExtensionPropertiesExtractorTest extends NbTestCase {
         assertEquals(BuildPropertiesSupport.PropertyKind.STRUCTURE, prop.getKind());
         String s = prop.getStringValue();
         assertNotNull("Paths and directories are convertible to String", s);
-        assertTrue(s.endsWith(Paths.get("micronaut", "build", "distributions").toString()));
+        assertTrue(s.endsWith(Path.of("micronaut", "build", "distributions").toString()));
 
         assertTrue(support.keys(prop).isEmpty());
         assertFalse(support.items(prop, null).iterator().hasNext());
@@ -187,8 +184,8 @@ public class ExtensionPropertiesExtractorTest extends NbTestCase {
         Iterator<BuildPropertiesSupport.Property> iter = it.iterator();
         assertTrue(iter.hasNext());
         
-        List<String> l = Streams.stream(iter).map(BuildPropertiesSupport.Property::getStringValue).collect(Collectors.toList());
-        assertEquals(Arrays.asList("x", "y", "z"), l);
+        List<String> l = Streams.stream(iter).map(BuildPropertiesSupport.Property::getStringValue).toList();
+        assertEquals(List.of("x", "y", "z"), l);
     }
 
     public void testMapExtensionProperty2() throws Exception {
@@ -244,7 +241,7 @@ public class ExtensionPropertiesExtractorTest extends NbTestCase {
         List<String> sorted = new ArrayList<>(keys);
         Collections.sort(sorted);
         
-        assertEquals(Arrays.asList("normalKey", "semi;;key", "semi;\\;key", "semi;key"), sorted);
+        assertEquals(List.of("normalKey", "semi;;key", "semi;\\;key", "semi;key"), sorted);
     }
     
 
@@ -274,7 +271,7 @@ public class ExtensionPropertiesExtractorTest extends NbTestCase {
         assertEquals(BuildPropertiesSupport.PropertyKind.STRUCTURE, prop.getKind());
         String s = prop.getStringValue();
         assertNotNull("Paths and directories are convertible to String", s);
-        assertTrue(s.endsWith(Paths.get("micronaut", "build", "native", "nativeTestCompile").toString()));
+        assertTrue(s.endsWith(Path.of("micronaut", "build", "native", "nativeTestCompile").toString()));
 
         assertTrue(support.keys(prop).isEmpty());
         assertFalse(support.items(prop, null).iterator().hasNext());

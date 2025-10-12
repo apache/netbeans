@@ -30,6 +30,7 @@
         <file>src/org/netbeans/modules/java/hints/resources/match.png</file>
         <file>src/org/netbeans/modules/java/hints/resources/half-match.png</file>
         <file>src/org/netbeans/modules/java/hints/resources/no-match.png</file>
+        <file>src/org/netbeans/modules/java/hints/resources/regexp.png</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>

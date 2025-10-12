@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.31
+#Version 1.35
 
 CLSS public abstract interface java.io.Serializable
 
@@ -8,8 +8,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -18,6 +20,7 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
@@ -92,6 +95,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public final org.netbeans.api.lsp.CallHierarchyEntry
 cons public init(org.netbeans.api.lsp.StructureElement,java.lang.String)
@@ -323,6 +329,20 @@ meth public static java.util.concurrent.CompletableFuture<java.util.List<org.net
  anno 1 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
 hfds endOffset,fileObject,startOffset
+
+CLSS public org.netbeans.api.lsp.InlayHint
+cons public init(org.netbeans.api.lsp.Position,java.lang.String)
+meth public java.lang.String getText()
+meth public org.netbeans.api.lsp.Position getPosition()
+supr java.lang.Object
+hfds position,text
+
+CLSS public final org.netbeans.api.lsp.InlineValue
+meth public java.lang.String getExpression()
+meth public org.netbeans.api.lsp.Range getRange()
+meth public static org.netbeans.api.lsp.InlineValue createInlineVariable(org.netbeans.api.lsp.Range,java.lang.String)
+supr java.lang.Object
+hfds expression,range
 
 CLSS public final org.netbeans.api.lsp.LazyCodeAction
 cons public init(java.lang.String,java.lang.String,org.netbeans.api.lsp.Command,java.util.function.Supplier<org.netbeans.api.lsp.WorkspaceEdit>)
@@ -672,6 +692,32 @@ meth public static org.netbeans.api.lsp.HyperlinkLocation createHyperlinkLocatio
 CLSS public abstract interface org.netbeans.spi.lsp.HyperlinkTypeDefLocationProvider
  anno 0 org.netbeans.spi.editor.mimelookup.MimeLocation(java.lang.Class<? extends org.netbeans.spi.editor.mimelookup.InstanceProvider> instanceProviderClass=class org.netbeans.spi.editor.mimelookup.InstanceProvider, java.lang.String subfolderName="HyperlinkTypeDefLocationProviders")
 meth public abstract java.util.concurrent.CompletableFuture<org.netbeans.api.lsp.HyperlinkLocation> getHyperlinkTypeDefLocation(javax.swing.text.Document,int)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+
+CLSS public abstract interface org.netbeans.spi.lsp.InlayHintsProvider
+ anno 0 org.netbeans.spi.editor.mimelookup.MimeLocation(java.lang.Class<? extends org.netbeans.spi.editor.mimelookup.InstanceProvider> instanceProviderClass=class org.netbeans.spi.editor.mimelookup.InstanceProvider, java.lang.String subfolderName="CodeLensProvider")
+innr public final static Context
+meth public abstract java.util.Set<java.lang.String> supportedHintTypes()
+meth public abstract java.util.concurrent.CompletableFuture<java.util.List<? extends org.netbeans.api.lsp.InlayHint>> inlayHints(org.netbeans.spi.lsp.InlayHintsProvider$Context)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+
+CLSS public final static org.netbeans.spi.lsp.InlayHintsProvider$Context
+ outer org.netbeans.spi.lsp.InlayHintsProvider
+cons public init(org.openide.filesystems.FileObject,org.netbeans.api.lsp.Range,java.util.Set<java.lang.String>)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NullAllowed()
+ anno 3 org.netbeans.api.annotations.common.NonNull()
+meth public java.util.Set<java.lang.String> getRequestedHintTypes()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.api.lsp.Range getRange()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public org.openide.filesystems.FileObject getFile()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+supr java.lang.Object
+hfds file,range,requestedHintTypes
+
+CLSS public abstract interface org.netbeans.spi.lsp.InlineValuesProvider
+meth public abstract java.util.concurrent.CompletableFuture<java.util.List<? extends org.netbeans.api.lsp.InlineValue>> inlineValues(org.openide.filesystems.FileObject,int)
  anno 1 org.netbeans.api.annotations.common.NonNull()
 
 CLSS public abstract interface org.netbeans.spi.lsp.SignatureInformationCollector

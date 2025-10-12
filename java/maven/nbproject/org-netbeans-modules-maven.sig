@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.167.0
+#Version 2.169.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -2092,6 +2092,7 @@ CLSS public org.netbeans.modules.maven.execute.CommandLineOutputHandler
 cons public init(org.openide.windows.InputOutput,org.netbeans.api.project.Project,org.netbeans.api.progress.ProgressHandle,org.netbeans.modules.maven.api.execute.RunConfig,boolean)
 fld public final static java.util.regex.Pattern reactorSummaryLine
 fld public final static java.util.regex.Pattern startPatternM2
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="")
 fld public final static java.util.regex.Pattern startPatternM3
 innr public static ContextImpl
 meth protected final void checkSleepiness()
@@ -2099,8 +2100,8 @@ meth protected org.openide.windows.InputOutput getIO()
 meth public org.netbeans.modules.maven.execute.cmd.ExecutionEventObject$Tree getExecutionTree()
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
 supr org.netbeans.modules.maven.execute.AbstractOutputHandler
-hfds END_TO_START_Mappings,LOG,PROCESSOR,SEC_MOJO_EXEC,addMojoFold,addProjectFold,contextImpl,currentProject,currentTag,currentTreeNode,executionTree,firstFailure,foldsBroken,forkCount,handle,inStackTrace,inp,inputOutput,linePattern,mavenSomethingPlugin,mavencoreurls,outTask,parser,projectCount,reactorFailure,reactorSize,somethingMavenPlugin,stackTraceElement,state,stdOut
-hcls FindByEvents,FindByName,Input,Output,ProgressState
+hfds END_TO_START_Mappings,LOG,PROCESSOR,SEC_MOJO_EXEC,addMojoFold,addProjectFold,contextImpl,currentProject,currentTag,currentTreeNode,executionTree,firstFailure,foldsBroken,handle,inStackTrace,inp,inputOutput,linePattern,mavenSomethingPlugin,mavencoreurls,outTask,parser,projectCount,reactorFailure,reactorSize,somethingMavenPlugin,stackTraceElement,stdOut
+hcls FindByEvents,FindByName,Input,Output
 
 CLSS public static org.netbeans.modules.maven.execute.CommandLineOutputHandler$ContextImpl
  outer org.netbeans.modules.maven.execute.CommandLineOutputHandler

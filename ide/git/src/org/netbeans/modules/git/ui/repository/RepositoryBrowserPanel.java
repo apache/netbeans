@@ -90,6 +90,8 @@ import org.netbeans.modules.git.ui.merge.MergeRevisionAction;
 import org.netbeans.modules.git.ui.push.PushAction;
 import org.netbeans.modules.git.ui.push.PushMapping;
 import org.netbeans.modules.git.ui.push.PushToUpstreamAction;
+import org.netbeans.modules.git.ui.repository.remote.AddRemoteConfig;
+import org.netbeans.modules.git.ui.repository.remote.RemoveRemoteAction;
 import org.netbeans.modules.git.ui.repository.remote.RemoveRemoteConfig;
 import org.netbeans.modules.git.ui.stash.ApplyStashAction;
 import org.netbeans.modules.git.ui.stash.SaveStashAction;
@@ -2091,6 +2093,26 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
         @Override
         public String getName () {
             return NbBundle.getMessage(RepositoryBrowserPanel.class, "LBL_RepositoryPanel.RemotesNode.name"); //NOI18N
+        }
+
+        @Override
+        protected Action[] getPopupActions(boolean context) {
+            if (options.contains(Option.ENABLE_POPUP)) {
+                final File repo = lookupRepository(this);
+                List<Action> actions = new LinkedList<>();
+                actions.add(new AbstractAction(NbBundle.getMessage(RepositoryBrowserPanel.class, "LBL_RepositoryPanel.RemotesNode.add")) { //NOI18N
+                    @Override
+                    public void actionPerformed (ActionEvent e) {
+                        EventQueue.invokeLater(() -> {
+                            new AddRemoteConfig().addRemote(repo);
+                        });
+                    }
+                });
+
+                return actions.toArray(Action[]::new);
+            } else {
+                return new Action[0];
+            }
         }
     }
 

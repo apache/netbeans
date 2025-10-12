@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.57.0
+#Version 1.59.0
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable

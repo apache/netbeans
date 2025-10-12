@@ -22,7 +22,6 @@ package org.netbeans.modules.java.source;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ModuleTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.source.util.Trees;
@@ -90,7 +89,6 @@ import org.netbeans.spi.java.classpath.ClassPathImplementation;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Pair;
 import org.openide.util.Parameters;
 
 /**
@@ -102,6 +100,7 @@ import org.openide.util.Parameters;
 public final class JavaSourceUtilImpl extends org.netbeans.modules.java.preprocessorbridge.spi.JavaSourceUtilImpl {
     private static final Logger LOGGER = Logger.getLogger(JavaSourceUtilImpl.class.getName());
     
+    @Override
     protected long createTaggedCompilationController(FileObject file, int position, long currenTag, Object[] out) throws IOException {
         assert file != null;
         final JavaSource js = JavaSource.forFileObject(file);
@@ -290,12 +289,8 @@ public final class JavaSourceUtilImpl extends org.netbeans.modules.java.preproce
                     public String parseModuleName() throws IOException {
                         cc.toPhase(JavaSource.Phase.PARSED);
                         final CompilationUnitTree cu = cc.getCompilationUnit();
-                        for (Tree decl : cu.getTypeDecls()) {
-                            if (decl.getKind() == Tree.Kind.MODULE) {
-                                return ((ModuleTree) decl).getName().toString();
-                            }
-                        }
-                        return null;
+                        ModuleTree mt = cu.getModule();
+                        return mt != null ? mt.getName().toString() : null;
                     }
 
                     @Override

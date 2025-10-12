@@ -542,9 +542,6 @@
                         <code-name-base>org.openide.filesystems</code-name-base>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.openide.options</code-name-base>
-                    </test-dependency>
-                    <test-dependency>
                         <code-name-base>org.openide.text</code-name-base>
                     </test-dependency>
                     <test-dependency>
@@ -635,10 +632,6 @@
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.openide.nodes</code-name-base>
-                        <compile-dependency/>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.openide.options</code-name-base>
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>

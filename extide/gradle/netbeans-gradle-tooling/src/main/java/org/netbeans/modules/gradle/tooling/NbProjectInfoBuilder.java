@@ -49,7 +49,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.codehaus.groovy.runtime.InvokerHelper;
@@ -202,6 +202,28 @@ class NbProjectInfoBuilder {
 
     private static final GradleVersion GRADLE_VERSION = GradleVersion.current().getBaseVersion();
 
+    /** Jar.getClassifier() was deprecated since Gradle 5.2, removed in 8.0 */
+    private static final Method GRADLE_JAR_GET_CLASSIFIER;
+
+    /** Jar.getArchivePath() was deprecated since Gradle 5.2, removed in 8.0 */
+    private static final Method GRADLE_JAR_GET_ARCHIVEPATH;
+
+    static {
+        Method getClassifier = null;
+        Method getArchivePath = null;
+        if (GRADLE_VERSION.compareTo(GradleVersion.version("8.0")) < 0) {
+            try {
+                getClassifier = Jar.class.getMethod("getClassifier");
+                getArchivePath = Jar.class.getMethod("getArchivePath");
+            } catch (ReflectiveOperationException e) {
+                LOG.error("Did not find expected method(s) on {}", Jar.class, e);
+            }
+        }
+        // null on newer versions
+        GRADLE_JAR_GET_CLASSIFIER = getClassifier;
+        GRADLE_JAR_GET_ARCHIVEPATH = getArchivePath;
+    }
+
     final Project project;
     final GradleInternalAdapter adapter;
 
@@ -222,7 +244,7 @@ class NbProjectInfoBuilder {
 
     NbProjectInfoBuilder(Project project) {
         this.project = project;
-        this.adapter = sinceGradleOrDefault("7.6", () -> new GradleInternalAdapter.Gradle76(project), () -> new GradleInternalAdapter(project));
+        this.adapter = sinceGradleOrDefault("7.6", () -> new GradleInternalAdapter(project), () -> new GradleInternalAdapter.GradlePre76(project));
     }
     
     private NbProjectInfoModel model = new NbProjectInfoModel();
@@ -366,11 +388,19 @@ class NbProjectInfoBuilder {
     }
     
     private void detectConfigurationArtifacts(NbProjectInfoModel model) {
+        // JDK-8301046: Don't use Configuration::getName as a method reference. The bug, when
+        // compiling `Configuration::getName` against Gradle >= 8.4, causes javac to pick the
+        // wrong receiver target (invokeinterface on Named::getName) in the lambda bootstrap
+        // method params rather than the (correct per JLS) invokevirtual on the callsite's
+        // erasure type (Configuration). This will break at runtime when calling Gradle <8.4,
+        // as in earlier versions the Configuration class does not implement Named, and throws
+        // a BootstrapMethodError wrapping a LambdaConversionException. The lambda form:
+        // `c -> c.getName()` bootstraps correctly but costs an extra method def/indirection.
         List<Configuration> configs = project.getConfigurations()
             .stream()
             .filter(Configuration::isCanBeConsumed)
             .filter(c -> !c.isCanBeResolved())
-            .sorted(Comparator.comparing(Configuration::getName))
+            .sorted(Comparator.comparing(c -> c.getName())) // JDK-8301046
             .collect(Collectors.toList());
         Map<String, Object> data = new HashMap<>();
         for (Configuration c : configs) {
@@ -1360,19 +1390,22 @@ class NbProjectInfoBuilder {
                 model.noteProblem(e, false);
             }
         }
-        Map<String, Object> archives = new HashMap<>();
-        beforeGradle("5.2", () -> {
-            // The jar.getCassifier() and jar.getArchievePath() are deprecated since 5.2
-            // These methods got removed in 8.0
-            project.getTasks().withType(Jar.class).forEach(jar -> {
-                archives.put(jar.getClassifier(), jar.getArchivePath());
-            });
-        });
-        sinceGradle("5.2", () -> {
-            project.getTasks().withType(Jar.class).forEach(jar -> {
-                archives.put(jar.getArchiveClassifier().get(), jar.getDestinationDirectory().file(jar.getArchiveFileName().get()).get().getAsFile());
-            });
-        });
+        Map<String, File> archives = new HashMap<>();
+        Consumer<Jar> jarToArchivesClassifierAndPath =
+            sinceGradleOrDefault(
+                "5.2",
+                () -> jar -> archives.put(jar.getArchiveClassifier().get(), jar.getDestinationDirectory().file(jar.getArchiveFileName().get()).get().getAsFile()),
+                () -> jar -> {
+                        try {
+                            archives.put(
+                                (String) GRADLE_JAR_GET_CLASSIFIER.invoke(jar),
+                                (File) GRADLE_JAR_GET_ARCHIVEPATH.invoke(jar));
+                        } catch (ReflectiveOperationException e) {
+                            sneakyThrow(e);
+                        }
+                    }
+                );
+        project.getTasks().withType(Jar.class).forEach(jarToArchivesClassifierAndPath);
         model.getInfo().put("archives", archives);
     }
 
@@ -1562,6 +1595,13 @@ class NbProjectInfoBuilder {
         boolean ignoreUnresolvable = (project.getPlugins().hasPlugin("java-platform") &&
             Boolean.TRUE.equals(getProperty(project, "javaPlatform", "allowDependencies")));
 
+        // https://github.com/apache/netbeans/issues/8764
+        Function<ProjectDependency, Project> projDependencyToProject =
+            sinceGradleOrDefault(
+                "9.0",
+                () -> dep -> project.findProject(dep.getPath()), // getPath() added in Gradle 8.11
+                () -> ProjectDependency::getDependencyProject); // removed in Gradle 9
+
         visibleConfigurations.forEach(it -> {
             String propBase = "configuration_" + it.getName() + "_";
             model.getInfo().put(propBase + "non_resolving", !resolvable(it));
@@ -1660,7 +1700,7 @@ class NbProjectInfoBuilder {
                 String a;
                 if (d instanceof ProjectDependency) {
                     sb.append("*project:"); // NOI18N
-                    Project other = ((ProjectDependency)d).getDependencyProject();
+                    Project other = projDependencyToProject.apply((ProjectDependency) d);
                     g = other.getGroup().toString();
                     a = other.getName();
                 } else {
@@ -1679,7 +1719,7 @@ class NbProjectInfoBuilder {
             long time_project_deps = System.currentTimeMillis();
             model.registerPerf(depPrefix + "module", time_project_deps - time_inspect_conf);
             it.getDependencies().withType(ProjectDependency.class).forEach(it2 -> {
-                Project prj = it2.getDependencyProject();
+                Project prj = projDependencyToProject.apply(it2);
                 projects.put(prj.getPath(), prj.getProjectDir());
                 projectNames.add(prj.getPath());
             });
@@ -1687,7 +1727,7 @@ class NbProjectInfoBuilder {
             model.registerPerf(depPrefix + "project", time_file_deps - time_project_deps);
             Set<File> fileDeps = new HashSet<>();
             it.getDependencies().withType(FileCollectionDependency.class).forEach(it2 -> {
-                fileDeps.addAll(it2.resolve());
+                it2.getFiles().forEach(fileDeps::add);
             });
             long time_collect = System.currentTimeMillis();
             model.registerPerf(depPrefix + "file", time_collect - time_file_deps);
@@ -1866,20 +1906,23 @@ class NbProjectInfoBuilder {
     private static <T extends Throwable> void sneakyThrow(Throwable exception) throws T {
             throw (T) exception;
     }        
-    
-    private <T, E extends Throwable> T sinceGradleOrDefault(String version, ExceptionCallable<T, E> c, Supplier<T> def) {
+
+    private <T, E extends Throwable> T sinceGradleOrDefault(
+            String version, ExceptionCallable<T, E> c, ExceptionCallable<T, E> def) {
+        ExceptionCallable<T, E> impl;
         if (GRADLE_VERSION.compareTo(GradleVersion.version(version)) >= 0) {
-            try {
-                return c.call();
-            } catch (RuntimeException | Error e) {
-                throw e;
-            } catch (Throwable t) {
-                sneakyThrow(t);
-                return null;
-            }
+            impl = c;
         } else if (def != null) {
-            return def.get();
+            impl = def;
         } else {
+            return null;
+        }
+        try {
+            return impl.call();
+        } catch (RuntimeException | Error e) {
+            throw e;
+        } catch (Throwable t) {
+            sneakyThrow(t);
             return null;
         }
     }

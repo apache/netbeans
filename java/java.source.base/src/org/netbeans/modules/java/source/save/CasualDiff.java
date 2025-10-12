@@ -100,6 +100,7 @@ import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCModifiers;
 import com.sun.tools.javac.tree.JCTree.JCModuleDecl;
+import com.sun.tools.javac.tree.JCTree.JCModuleImport;
 import com.sun.tools.javac.tree.JCTree.JCNewArray;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.JCTree.JCOpens;
@@ -126,6 +127,7 @@ import com.sun.tools.javac.tree.JCTree.JCUses;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.JCTree.JCWhileLoop;
 import com.sun.tools.javac.tree.JCTree.JCWildcard;
+import com.sun.tools.javac.tree.JCTree.JCYield;
 import com.sun.tools.javac.tree.JCTree.LetExpr;
 import com.sun.tools.javac.tree.JCTree.Tag;
 import com.sun.tools.javac.tree.JCTree.TypeBoundKind;
@@ -934,6 +936,18 @@ public class CasualDiff {
                 printer.print("static ");
             }
         }
+        localPointer = diffTree(oldT.getQualifiedIdentifier(), newT.getQualifiedIdentifier(), qualBounds);
+        copyTo(localPointer, bounds[1]);
+
+        return bounds[1];
+    }
+
+    protected int diffModuleImport(JCModuleImport oldT, JCModuleImport newT, int[] bounds) {
+        int localPointer = bounds[0];
+
+        int[] qualBounds = getBounds(oldT.getQualifiedIdentifier());
+        assert oldT.isModule() == newT.isModule();
+        copyTo(localPointer, qualBounds[0]);
         localPointer = diffTree(oldT.getQualifiedIdentifier(), newT.getQualifiedIdentifier(), qualBounds);
         copyTo(localPointer, bounds[1]);
 
@@ -2415,6 +2429,16 @@ public class CasualDiff {
         return bounds[1];
     }
 
+    protected int diffYield(JCYield oldT, JCYield newT, int[] bounds) {
+        int localPointer = bounds[0];
+        int[] exprBounds = getBounds(oldT.value);
+        copyTo(bounds[0], exprBounds[0]);
+        localPointer = diffTree(oldT.value, newT.value, exprBounds);
+        copyTo(localPointer, bounds[1]);
+
+        return bounds[1];
+    }
+
     protected int diffThrow(JCThrow oldT, JCThrow newT, int[] bounds) {
         int localPointer = bounds[0];
         // expr
@@ -3052,6 +3076,11 @@ public class CasualDiff {
         localPointer = diffTree(oldT.annotationType, newT.annotationType, annotationBounds);
         JavaTokenId[] parens = null;
         if (oldT.args.nonEmpty()) {
+            if (newT.args.isEmpty()) {
+                //non-empty to empty:
+                copyTo(localPointer, annotationBounds[1]);
+                return endPos(oldT);
+            }
             copyTo(localPointer, localPointer = getOldPos(oldT.args.head));
         } else {
             // check, if there are already written parenthesis
@@ -3287,6 +3316,8 @@ public class CasualDiff {
               return ((JCCompilationUnit)t1).sourcefile.equals(((JCCompilationUnit)t2).sourcefile);
           case IMPORT:
               return matchImport((JCImport)t1, (JCImport)t2);
+          case MODULEIMPORT:
+              return matchModuleImport((JCModuleImport)t1, (JCModuleImport)t2);
           case CLASSDEF:
               return ((JCClassDecl)t1).sym == ((JCClassDecl)t2).sym;
           case METHODDEF:
@@ -5676,6 +5707,9 @@ public class CasualDiff {
           case IMPORT:
               retVal = diffImport((JCImport)oldT, (JCImport)newT, elementBounds);
               break;
+          case MODULEIMPORT:
+              retVal = diffModuleImport((JCModuleImport)oldT, (JCModuleImport)newT, elementBounds);
+              break;
           case CLASSDEF:
               retVal = diffClassDef((JCClassDecl)oldT, (JCClassDecl)newT, elementBounds);
               break;
@@ -5739,6 +5773,9 @@ public class CasualDiff {
               break;
           case RETURN:
               retVal = diffReturn((JCReturn)oldT, (JCReturn)newT, elementBounds);
+              break;
+          case YIELD:
+              retVal = diffYield((JCYield)oldT, (JCYield)newT, elementBounds);
               break;
           case THROW:
               retVal = diffThrow((JCThrow)oldT, (JCThrow)newT,elementBounds);
@@ -5976,6 +6013,10 @@ public class CasualDiff {
 
     private boolean matchImport(JCImport t1, JCImport t2) {
         return t1.staticImport == t2.staticImport && treesMatch(t1.qualid, t2.qualid);
+    }
+
+    private boolean matchModuleImport(JCModuleImport t1, JCModuleImport t2) {
+        return treesMatch(t1.getQualifiedIdentifier(), t2.getQualifiedIdentifier());
     }
 
     private boolean matchBlock(JCBlock t1, JCBlock t2) {

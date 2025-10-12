@@ -18,13 +18,16 @@
  */
 package org.netbeans.api.diff;
 
+import java.awt.Component;
 import org.netbeans.spi.diff.DiffControllerImpl;
 import org.netbeans.spi.diff.DiffControllerProvider;
 import org.openide.util.Lookup;
 
-import javax.swing.*;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import javax.swing.JComponent;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 
 /**
  * Encapsulates a single Diff window that displays differences between two files (sources).
@@ -53,6 +56,10 @@ public final class DiffController {
     public enum LocationType { LineNumber, DifferenceIndex };
 
     private final DiffControllerImpl impl;
+
+    private DiffController(DiffControllerImpl impl) {
+        this.impl = impl;
+    }
 
     /**
      * Creates a Diff Controller for supplied left and right sources.
@@ -90,9 +97,56 @@ public final class DiffController {
             return new DiffController(new DiffControllerViewBridge(view));
         }
     }
-        
-    private DiffController(DiffControllerImpl impl) {
-        this.impl = impl;
+
+    /**
+     * Creates a Diff Controller for supplied left and right sources capable of creating enhanced UI.
+     * 
+     * Same as {@link #createEnhanced(org.netbeans.api.diff.StreamSource, org.netbeans.api.diff.StreamSource) } but
+     * will try to copy UI state like diff mode or divider location from the provided controller.
+     *
+     * @param other Controller to copy UI state like diff modes or divider location from, may be null.
+     * @param base defines content of the Base Diff pane
+     * @param modified defines content of the Modified (possibly editable) Diff pane
+     * @return DiffController implementation of the DiffController class
+     * @throws java.io.IOException when the reading from input streams fails.
+     * @since 1.81
+     */
+    public static DiffController createEnhanced(DiffController other, StreamSource base, StreamSource modified) throws IOException {
+        DiffController newController = createEnhanced(base, modified);
+        if (other != null) {
+            copyUIState(other, newController);
+        }
+        return newController;
+    }
+    
+    private static void copyUIState(DiffController oldView, DiffController newView) {
+        JTabbedPane oldTP = findComponent(oldView.getJComponent(), JTabbedPane.class, "diff-view-mode-switcher"); // NOI18N
+        JTabbedPane newTP = findComponent(newView.getJComponent(), JTabbedPane.class, "diff-view-mode-switcher"); // NOI18N
+        if (newTP != null && oldTP != null) {
+            newTP.setSelectedIndex(oldTP.getSelectedIndex());
+        }
+        JSplitPane oldSP = findComponent(oldView.getJComponent(), JSplitPane.class, "diff-view-mode-splitter"); // NOI18N
+        JSplitPane newSP = findComponent(newView.getJComponent(), JSplitPane.class, "diff-view-mode-splitter"); // NOI18N
+        if (newSP != null && oldSP != null) {
+            newSP.setDividerLocation(oldSP.getDividerLocation());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends JComponent> T findComponent(JComponent parent, Class<T> ofType, String withProp) {
+        if (ofType.isInstance(parent) && Boolean.TRUE.equals(parent.getClientProperty(withProp))) {
+            return (T) parent;
+        } else {
+            for (Component child : parent.getComponents()) {
+                if (child instanceof JComponent jc) {
+                    T comp = findComponent(jc, ofType, withProp);
+                    if (comp != null) {
+                        return comp;
+                    }
+                }
+            }
+        }
+        return null;
     }
     
     /**
@@ -166,16 +220,19 @@ public final class DiffController {
             this.view = view;
         }
 
+        @Override
         public void setLocation(DiffController.DiffPane pane, DiffController.LocationType type, int location) {
             if (type == DiffController.LocationType.DifferenceIndex) {
                 view.setCurrentDifference(location);
             }
         }
 
+        @Override
         public JComponent getJComponent() {
             return (JComponent) view.getComponent();
         }
 
+        @Override
         public int getDifferenceCount() {
             return view.getDifferenceCount();
         }

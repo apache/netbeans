@@ -179,7 +179,7 @@ public final class Antlr4Language extends DefaultLanguageConfig {
 
     @Override
     public OccurrencesFinder getOccurrencesFinder() {
-        return new AntlrOccurrencesFinder();
+        return new AntlrOccurrencesFinder(MarkOccurencesSettings.getCurrentNode());
     }
 
     @Override

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.62
+#Version 1.64
 
 CLSS public abstract interface java.io.Serializable
 
@@ -187,6 +187,7 @@ meth public void remove(java.io.File[],boolean,org.netbeans.libs.git.progress.Pr
 meth public void removeNotificationListener(org.netbeans.libs.git.progress.NotificationListener)
 meth public void removeRemote(java.lang.String,org.netbeans.libs.git.progress.ProgressMonitor) throws org.netbeans.libs.git.GitException
 meth public void rename(java.io.File,java.io.File,boolean,org.netbeans.libs.git.progress.ProgressMonitor) throws org.netbeans.libs.git.GitException
+meth public void renameBranch(java.lang.String,java.lang.String,org.netbeans.libs.git.progress.ProgressMonitor) throws org.netbeans.libs.git.GitException
 meth public void reset(java.io.File[],java.lang.String,boolean,org.netbeans.libs.git.progress.ProgressMonitor) throws org.netbeans.libs.git.GitException
 meth public void reset(java.lang.String,org.netbeans.libs.git.GitClient$ResetType,org.netbeans.libs.git.progress.ProgressMonitor) throws org.netbeans.libs.git.GitException
 meth public void setCallback(org.netbeans.libs.git.GitClientCallback)

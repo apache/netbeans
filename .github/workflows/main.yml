@@ -110,9 +110,6 @@ env:
   # 'GraalVM' label for tests requirering GraalVM
   test_graalvm: ${{ contains(github.event.pull_request.labels.*.name, 'GraalVM') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
 
-  # 'VSCode Extension' label for building and testing the VSCode Extension
-  test_vscode_extension: ${{ contains(github.event.pull_request.labels.*.name, 'VSCode Extension') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
-
   # 'Ant', 'Gradle', 'Maven' and 'MX' labels trigger the build-tools job
   test_build_tools: ${{ contains(github.event.pull_request.labels.*.name, 'Ant') || contains(github.event.pull_request.labels.*.name, 'Gradle') || contains(github.event.pull_request.labels.*.name, 'Maven') || contains(github.event.pull_request.labels.*.name, 'MX') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
 
@@ -140,14 +137,14 @@ jobs:
     timeout-minutes: 40
     strategy:
       matrix:
-        java: [ '17', '21', '25-ea' ]
+        java: [ '17', '21', '25' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -212,7 +209,7 @@ jobs:
           show-progress: false
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
             distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
             java-version: 17
@@ -245,12 +242,12 @@ jobs:
         java: [ 17 ]
         include:
           - os: ubuntu-latest
-            java: 25-ea
+            java: 25
       fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -323,9 +320,9 @@ jobs:
 
       - name: Set up JDK 25 for scripts
         if: ${{ github.event_name == 'pull_request' && !cancelled() }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
-          java-version: 25-ea
+          java-version: 25
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Check Commit Headers
@@ -334,7 +331,7 @@ jobs:
 
       - name: Set up JDK ${{ matrix.java }} 
         if: ${{ !cancelled() }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -387,7 +384,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -447,9 +444,9 @@ jobs:
       # 13-14 min for javadoc; JDK version must be synced with nb-javac
       - name: Set up JDK 25 for javadoc
         if: env.test_javadoc == 'true' && success()
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
-          java-version: 25-ea
+          java-version: 25
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Build javadoc
@@ -469,8 +466,8 @@ jobs:
 
   build-from-src-zip:
     name: Build ${{ matrix.config }} from src.zip on JDK ${{ matrix.java }}
-    # equals env.test_platform == 'true' || test_vscode_extension == 'true'
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'VSCode Extension') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+    # equals env.test_platform == 'true' 
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -482,7 +479,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -515,20 +512,6 @@ jobs:
           cd tmpbuild
           ant $OPTS -quiet build -Dcluster.config=${{ matrix.config }}
 
-      # extra round for VSCodeExt which is built with 'release' config
-      - name: Set up node
-        if: ${{ (matrix.config == 'release') && success() }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.18.1
-
-      - name: Build NBVSCodeExt from ${{ matrix.config }}-src zip
-        if: ${{ (matrix.config == 'release') && success() }}
-        run: |
-          cd tmpbuild/java/java.lsp.server
-          ant $OPTS build-vscode-ext -D3rdparty.modules=.*externalcodeformatter.*
-
-
   ide-modules-test:
     name: IDE Modules on Linux/JDK ${{ matrix.java }}
     needs: base-build
@@ -541,7 +524,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -603,6 +586,9 @@ jobs:
 
       - name: ide/db.sql.editor
         run: ant $OPTS -f ide/db.sql.editor test
+
+      - name: ide/dlight.nativeexecution
+        run: ant $OPTS -f ide/dlight.nativeexecution test
 
       - name: ide/docker.api
         run: ant $OPTS -f ide/docker.api test
@@ -857,14 +843,14 @@ jobs:
     timeout-minutes: 50
     strategy:
       matrix:
-        java: [ '17', '21', '25-ea' ]
+        java: [ '17', '21', '25' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -939,17 +925,20 @@ jobs:
 #      - name: java/ant.grammar
 #        run: ant $OPTS -f java/ant.grammar test
 
-      # TODO next are JDK 21+ incompatibe steps
+      - name: java/gradle.test
+        run: ant $OPTS -f java/gradle.test test
+
+      # TODO next are JDK 21 or 25 incompatibe steps
       - name: java/java.mx.project
-        if: ${{ matrix.java == '17' }}
+        if: ${{ matrix.java == '17' || matrix.java == '21' }}
         run: .github/retry.sh ant $OPTS -f java/java.mx.project test
 
       - name: java/gradle.java
-        if: ${{ matrix.java == '17' }}
+        if: ${{ matrix.java == '17' || matrix.java == '21' }}
         run: .github/retry.sh ant $OPTS -f java/gradle.java test
 
       - name: extide/gradle
-        if: ${{ matrix.java == '17' }}
+        if: ${{ matrix.java == '17' || matrix.java == '21' }}
         run: ant $OPTS -f extide/gradle test
 
       - name: java/gradle.dependencies
@@ -972,7 +961,7 @@ jobs:
 
 
   platform-modules-test1:
-    name: Platform Modules batch1 on Linux/JDK ${{ matrix.java }} (some on 8)
+    name: Platform Modules batch1 on Linux/JDK ${{ matrix.java }}
     # equals env.test_platform == 'true'
     if: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
@@ -985,7 +974,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -1148,7 +1137,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -1207,9 +1196,6 @@ jobs:
 
       - name: platform/openide.nodes
         run: ant $OPTS -f platform/openide.nodes test
-
-      - name: platform/openide.options
-        run: ant $OPTS -f platform/openide.options test
 
       - name: platform/openide.util
         run: ant $OPTS -f platform/openide.util test
@@ -1286,7 +1272,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -1467,15 +1453,15 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17', '25-ea' ]
+        java: [ '17', '25' ]
         config: [ 'batch1', 'batch2' ]
         exclude:
-          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '25-ea' }}
+          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '25' }}
       fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -1524,14 +1510,14 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17', '21', '25-ea' ]
+        java: [ '17', '21', '25' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -1591,7 +1577,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -1636,7 +1622,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -1814,7 +1800,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -1864,7 +1850,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -1915,7 +1901,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -1963,7 +1949,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -2104,9 +2090,8 @@ jobs:
 #      - name: web.debug
 #        run: ant $OPTS -f enterprise/web.debug test
 
-# Fails
-#      - name: web.el
-#        run: ant $OPTS -f enterprise/web.el test
+      - name: web.el
+        run: ant $OPTS -f enterprise/web.el test
 
 # Fails
 #      - name: web.freeform
@@ -2207,7 +2192,7 @@ jobs:
 
     steps:
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -2300,7 +2285,7 @@ jobs:
 
     steps:
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -2369,7 +2354,7 @@ jobs:
         shell: cmd
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -2377,7 +2362,7 @@ jobs:
       # linux specific setup
       - name: Setup PHP
         if: contains(matrix.os, 'ubuntu')
-        uses: shivammathur/setup-php@ccf2c627fe61b1b4d924adfcbd19d661a18133a0 # v2.35.2
+        uses: shivammathur/setup-php@ec406be512d7077f68eed36e63f4d91bc006edc4 # v2.35.4
         with:
           php-version: '8.3'
           tools: pecl
@@ -2508,7 +2493,7 @@ jobs:
 
     steps:
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
@@ -2604,55 +2589,6 @@ jobs:
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
 
-
-  vscode-extension-test:
-    name: VSCode Extension Tests on JDK ${{ matrix.java }}
-    # equals env.test_vscode_extension == 'true'
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'VSCode Extension') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
-    needs: base-build
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    strategy:
-      matrix:
-        java: [ '17' ]
-      fail-fast: false
-
-    steps:
-      - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v4
-        with:
-          java-version: ${{ matrix.java }}
-          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Set up node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.18.1
-
-      - name: Setup Xvfb
-        run: |
-          echo "DISPLAY=:99.0" >> $GITHUB_ENV
-          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-
-      - name: Download Build
-        uses: actions/download-artifact@v5
-        with:
-          name: build
-
-      - name: Extract
-        run: tar --zstd -xf build.tar.zst
-
-      - name: build-vscode-ext
-        run: |
-          cd java/java.lsp.server
-          ant $OPTS build-vscode-ext -D3rdparty.modules=.*externalcodeformatter.*
-
-      - name: test-vscode-ext
-        run: |
-          cd java/java.lsp.server
-          env "netbeans.extra.options=-J-Dnetbeans.logger.console=true" ant $OPTS test-vscode-ext
- 
-
 # cleanup job depends on everything so that it is forced to run last even if a long job fails early.
 # 'paperwork' is left out intentionally, since it doesn't run unit tests (hopefully doesn't need restarts)
 # and shouldn't prevent cleanup on validation failure - which might be common during dev time
@@ -2681,7 +2617,6 @@ jobs:
       - lsp-test
       - mysql-db-test
       - graalvm-test
-      - vscode-extension-test
 
     # cleanup if the primary build job succeeded and
     #  * nothing else failed (allows manual restarts)

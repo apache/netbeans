@@ -29,10 +29,13 @@ import org.openide.util.NbPreferences;
  * @author Andrei Badea, Petr Hrebejk
  */
 public class FileSearchOptions  {
-        
+
+    public static final int MIN_HEIGHT = 350;
+    public static final int MIN_WIDTH = 650;
+
     private static final String CASE_SENSITIVE = "caseSensitive"; // NOI18N
-    private static final String SHOW_HIDDEN_FILES = "showHiddenFiles"; // NOI18N 
-    private static final String PREFER_MAIN_PROJECT = "preferMainProject"; // NOI18N    
+    private static final String SHOW_HIDDEN_FILES = "showHiddenFiles"; // NOI18N
+    private static final String PREFER_MAIN_PROJECT = "preferMainProject"; // NOI18N
     private static final String SEARCH_BY_FOLDERS = "searchByFolders"; // NOI18N
     private static final String WIDTH = "width"; // NOI18N
     private static final String HEIGHT = "height"; // NOI18N
@@ -46,7 +49,7 @@ public class FileSearchOptions  {
     public static void setCaseSensitive( boolean caseSensitive) {
         getNode().putBoolean(CASE_SENSITIVE, caseSensitive);
     }
-    
+
     public static boolean getShowHiddenFiles() {
         return getNode().getBoolean(SHOW_HIDDEN_FILES, false);
     }
@@ -62,7 +65,7 @@ public class FileSearchOptions  {
     public static void setPreferMainProject( boolean preferMainProject) {
         getNode().putBoolean(PREFER_MAIN_PROJECT, preferMainProject);
     }
-    
+
     public static void setSearchByFolders(boolean preferMainProject) {
         getNode().putBoolean(SEARCH_BY_FOLDERS, preferMainProject);
     }
@@ -95,12 +98,12 @@ public class FileSearchOptions  {
             Exceptions.printStackTrace(ex);
         }
     }
-    
+
     private static synchronized Preferences getNode() {
-        if ( node == null ) {                
+        if ( node == null ) {
             node = NbPreferences.forModule(FileSearchOptions.class);
         }
         return node;
     }
-    
+
 }

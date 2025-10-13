@@ -52,6 +52,7 @@ import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.StaticResource;
+import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.jumpto.SearchHistory;
@@ -73,6 +74,7 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
 
     @StaticResource
     private static final String WAIT_ICON_RES = "org/netbeans/modules/jumpto/resources/wait.gif";    // NOI18N
+    private static final String GLOBAL_OPTIONS_CATEGORY = "Editor/goto"; //NOI18N
     private static Icon WAIT_ICON = ImageUtilities.loadImageIcon(WAIT_ICON_RES, false);
     public static final String SEARCH_IN_PROGRES = NbBundle.getMessage(FileSearchPanel.class, "TXT_SearchingOtherProjects"); // NOI18N
     private static Icon WARN_ICON = ImageUtilities.loadImageIcon("org/netbeans/modules/jumpto/resources/warning.png", false); // NOI18N
@@ -81,7 +83,7 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
     private final ContentProvider contentProvider;
     private final Project currentProject;
     private boolean containsScrollPane;
-    private JLabel messageLabel;
+    private final JLabel messageLabel;
     private List<?> selectedItems;
     /* package */ long time;
 
@@ -113,7 +115,7 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
         messageLabel.setEnabled(true);
         messageLabel.setText(NbBundle.getMessage(FileSearchPanel.class, "TXT_NoTypesFound")); // NOI18N
         messageLabel.setFont(resultList.getFont());
-        
+
         caseSensitiveCheckBox.setSelected(FileSearchOptions.getCaseSensitive());
         hiddenFilesCheckBox.setSelected(FileSearchOptions.getShowHiddenFiles());
         mainProjectCheckBox.setSelected(FileSearchOptions.getPreferMainProject());
@@ -128,13 +130,13 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
                 "FMT_CurrentProjectLabel",
                 ProjectUtils.getInformation(currentProject).getDisplayName()));
         }
-        
+
         mainProjectCheckBox.addActionListener(this);
         caseSensitiveCheckBox.addActionListener(this);
         hiddenFilesCheckBox.addActionListener(this);
         hiddenFilesCheckBox.setVisible(false);
 	searchByFolders.addActionListener(this);
-        
+
         resultList.setCellRenderer( contentProvider.getListCellRenderer(
                 resultList,
                 fileNameTextField.getDocument(),
@@ -151,17 +153,17 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
                     selectedItems);
             }
         });
-        contentProvider.setListModel( this, null );
-                
+        contentProvider.setListModel(this, null, false);
+
         fileNameTextField.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
                 update();
             }
-            
+
             public void insertUpdate(DocumentEvent e) {
                 update();
             }
-            
+
             public void removeUpdate(DocumentEvent e) {
                 // handling http://netbeans.org/bugzilla/show_bug.cgi?id=203119
                 if (pastedFromClipboard) {
@@ -280,9 +282,9 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
            containsScrollPane = true;
            revalidate();
            repaint();
-        }        
-        else if ( message != null ) { 
-           jTextFieldLocation.setText(""); 
+        }
+        else if ( message != null ) {
+           jTextFieldLocation.setText("");
            messageLabel.setText(message);
            messageLabel.setIcon( waitIcon ? WAIT_ICON : null);
            if ( containsScrollPane ) {
@@ -292,29 +294,34 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
            }
            revalidate();
            repaint();
-       }                
+       }
     }
-    
+
     public boolean isShowHiddenFiles() {
         return hiddenFilesCheckBox.isSelected();
     }
-    
+
     public boolean isPreferedProject() {
         return mainProjectCheckBox.isSelected();
     }
-    
+
     public boolean isCaseSensitive() {
         return caseSensitiveCheckBox.isSelected();
     }
-    
+
     public boolean isSearchByFolders() {
         return searchByFolders.isSelected();
     }
 
     private void update() {
+        update(false);
+    }
+
+    // Forcing a refresh is costly, but reloads the configuration settings
+    private void update(boolean forceRefresh) {
         time = System.currentTimeMillis();
         final String text = getText();
-        if (contentProvider.setListModel(this, text)) {
+        if (contentProvider.setListModel(this, text, forceRefresh)) {
             setListPanelContent(NbBundle.getMessage(FileSearchPanel.class, "TXT_Searching"),true);
         }
     }
@@ -351,11 +358,12 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
         hiddenFilesCheckBox = new javax.swing.JCheckBox();
         mainProjectCheckBox = new javax.swing.JCheckBox();
         searchByFolders = new javax.swing.JCheckBox();
+        gotoSettingsBtn = new javax.swing.JButton();
         jLabelLocation = new javax.swing.JLabel();
         jTextFieldLocation = new javax.swing.JTextField();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 8, 8, 8));
-        setPreferredSize(new java.awt.Dimension(540, 280));
+        setPreferredSize(new java.awt.Dimension(575, 280));
         setLayout(new java.awt.GridBagLayout());
 
         fileNameLabel.setFont(fileNameLabel.getFont());
@@ -421,6 +429,7 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 8, 0);
         add(listPanel, gridBagConstraints);
@@ -429,6 +438,7 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
         caseSensitiveCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 0, 0, 0);
         add(caseSensitiveCheckBox, gridBagConstraints);
         caseSensitiveCheckBox.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FileSearchPanel.class, "AD_CaseSensitive")); // NOI18N
 
@@ -436,7 +446,7 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
         hiddenFilesCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 8, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(4, 8, 0, 0);
         add(hiddenFilesCheckBox, gridBagConstraints);
         hiddenFilesCheckBox.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FileSearchPanel.class, "AD_HiddenFiles")); // NOI18N
 
@@ -444,24 +454,36 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
         mainProjectCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 8, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(4, 8, 0, 0);
         add(mainProjectCheckBox, gridBagConstraints);
         mainProjectCheckBox.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FileSearchPanel.class, "AD_PreferMainProject")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(searchByFolders, "Search by Folders");
         searchByFolders.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 8, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(4, 8, 0, 0);
         add(searchByFolders, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(gotoSettingsBtn, org.openide.util.NbBundle.getMessage(FileSearchPanel.class, "CTL_Manage")); // NOI18N
+        gotoSettingsBtn.setMargin(new java.awt.Insets(2, 10, 2, 10));
+        gotoSettingsBtn.setMaximumSize(new java.awt.Dimension(80, 24));
+        gotoSettingsBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                gotoSettingsBtnActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 8, 0, 0);
+        add(gotoSettingsBtn, gridBagConstraints);
 
         jLabelLocation.setLabelFor(jTextFieldLocation);
         org.openide.awt.Mnemonics.setLocalizedText(jLabelLocation, org.openide.util.NbBundle.getMessage(FileSearchPanel.class, "LBL_Location")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(8, 0, 4, 0);
         add(jLabelLocation, gridBagConstraints);
@@ -525,8 +547,6 @@ private void resultListValueChanged(javax.swing.event.ListSelectionEvent evt) {/
             "selectPreviousRowExtendSelection".equals(actionKey) || // NOI18N
             "selectNextRow".equals(actionKey) || // NOI18N
             "selectNextRowExtendSelection".equals(actionKey) || // NOI18N
-            // "selectFirstRow".equals(action) || // NOI18N
-            // "selectLastRow".equals(action) || // NOI18N
             "scrollUp".equals(actionKey) || // NOI18N
             "scrollUpExtendSelection".equals(actionKey) || // NOI18N
             "scrollDown".equals(actionKey) || // NOI18N
@@ -579,11 +599,18 @@ private void resultListValueChanged(javax.swing.event.ListSelectionEvent evt) {/
             }
         }
     }//GEN-LAST:event_fileNameTextFieldKeyPressed
-    
+
+    private void gotoSettingsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gotoSettingsBtnActionPerformed
+        OptionsDisplayer.getDefault().open(GLOBAL_OPTIONS_CATEGORY, true);
+
+        update(true);
+    }//GEN-LAST:event_gotoSettingsBtnActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox caseSensitiveCheckBox;
     private javax.swing.JLabel fileNameLabel;
     private javax.swing.JTextField fileNameTextField;
+    private javax.swing.JButton gotoSettingsBtn;
     private javax.swing.JCheckBox hiddenFilesCheckBox;
     private javax.swing.JLabel jLabelLocation;
     private javax.swing.JLabel jLabelWarningMessage;
@@ -595,16 +622,17 @@ private void resultListValueChanged(javax.swing.event.ListSelectionEvent evt) {/
     private javax.swing.JScrollPane resultScrollPane;
     private javax.swing.JCheckBox searchByFolders;
     // End of variables declaration//GEN-END:variables
-    
+
+    @Override
     public void actionPerformed(ActionEvent e) {
         if ( e.getSource() == caseSensitiveCheckBox ) {
             FileSearchOptions.setCaseSensitive(caseSensitiveCheckBox.isSelected());
         }
         else if ( e.getSource() == hiddenFilesCheckBox ) {
-            FileSearchOptions.setShowHiddenFiles(hiddenFilesCheckBox.isSelected());            
+            FileSearchOptions.setShowHiddenFiles(hiddenFilesCheckBox.isSelected());
         }
-        else if ( e.getSource() == mainProjectCheckBox ) {            
-            FileSearchOptions.setPreferMainProject(isPreferedProject());            
+        else if ( e.getSource() == mainProjectCheckBox ) {
+            FileSearchOptions.setPreferMainProject(isPreferedProject());
         }
         else if ( e.getSource() == searchByFolders ) {
             FileSearchOptions.setSearchByFolders(searchByFolders.isSelected());
@@ -612,7 +640,7 @@ private void resultListValueChanged(javax.swing.event.ListSelectionEvent evt) {/
 
         update();
     }
-    
+
     /** Sets the initial text to find in case the user did not start typing yet. */
     public void setInitialText( final String text ) {
         SwingUtilities.invokeLater( new Runnable() {
@@ -640,8 +668,8 @@ private void resultListValueChanged(javax.swing.event.ListSelectionEvent evt) {/
 
     private int getFontSize () {
         return this.resultLabel.getFont().getSize();
-    }        
-    
+    }
+
     public void setSelectedFile() {
         List<FileDescriptor> list = NbCollections.checkedListByCopy(Arrays.asList(resultList.getSelectedValues()), FileDescriptor.class, true);
         selectedFile = list.toArray(new FileDescriptor[0]);
@@ -655,18 +683,6 @@ private void resultListValueChanged(javax.swing.event.ListSelectionEvent evt) {/
        return currentProject;
    }
 
-//    public boolean accept(Object obj) {
-//        if ( obj instanceof FileDescription ) {
-//            FileDescription fd = (FileDescription)obj;
-//            return isShowHiddenFiles() ? true : fd.isVisible();
-//        }
-//        return true;
-//    }
-//
-//    public void scheduleUpdate(Runnable run) {
-//        SwingUtilities.invokeLater( run );
-//    }
-
     public static interface ContentProvider {
 
         public ListCellRenderer getListCellRenderer(
@@ -676,7 +692,7 @@ private void resultListValueChanged(javax.swing.event.ListSelectionEvent evt) {/
                 @NonNull ButtonModel colorPrefered,
                 @NonNull ButtonModel searchFolders);
 
-        public boolean setListModel( FileSearchPanel panel, String text );
+        public boolean setListModel(FileSearchPanel panel, String text, boolean forceRefresh);
 
         public void closeDialog();
 

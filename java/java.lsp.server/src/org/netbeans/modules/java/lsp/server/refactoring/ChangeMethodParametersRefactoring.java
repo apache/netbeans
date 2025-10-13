@@ -40,7 +40,6 @@ import net.java.html.json.Function;
 import net.java.html.json.Model;
 import net.java.html.json.ModelOperation;
 import net.java.html.json.Property;
-import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
@@ -281,7 +280,7 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
                 }
                 refactoring.setParameterInfo(params);
                 refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(file));
-                client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, "ChangeMethodParameters")));
+                sendRefactoringChanges(client, refactoring, "ChangeMethodParameters");
             } catch (Exception ex) {
                 if (client == null) {
                     Exceptions.printStackTrace(

@@ -46,6 +46,7 @@ import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
+import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.netbeans.api.htmlui.HTMLDialog;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.ClasspathInfo;
@@ -60,7 +61,12 @@ import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
 import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
+import static org.netbeans.modules.java.lsp.server.refactoring.CodeRefactoring.perform;
+import static org.netbeans.modules.java.lsp.server.refactoring.CodeRefactoring.prepare;
+import static org.netbeans.modules.java.lsp.server.refactoring.CodeRefactoring.warningsMessageParams;
 import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.modules.refactoring.api.Problem;
+import org.netbeans.modules.refactoring.api.RefactoringSession;
 import org.netbeans.modules.refactoring.java.api.ChangeParametersRefactoring;
 import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils;
 import org.openide.filesystems.FileObject;
@@ -281,7 +287,28 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
                 }
                 refactoring.setParameterInfo(params);
                 refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(file));
-                client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, "ChangeMethodParameters")));
+                RefactoringSession session = RefactoringSession.create("ChangeMethodParameters");
+                Problem p = prepare(refactoring, session);
+                if (p == null) {
+                    client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, session)));
+                } else if (p.isFatal()) {
+                    throw new IllegalStateException(p.getMessage());
+                } else {
+                    ShowMessageRequestParams smrp = warningsMessageParams(p);
+                    client.showMessageRequest(smrp).thenAccept(ai -> {
+                        if (ai.getTitle().equalsIgnoreCase("Yes")) {
+                            try {
+                                client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, session)));
+                            } catch (Exception ex) {
+                                if (client == null) {
+                                    Exceptions.printStackTrace(Exceptions.attachSeverity(ex, Level.SEVERE));
+                                } else {
+                                    client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+                                }
+                            }
+                        }
+                    });
+                }
             } catch (Exception ex) {
                 if (client == null) {
                     Exceptions.printStackTrace(

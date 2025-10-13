@@ -41,6 +41,7 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import net.java.html.json.ComputedProperty;
 import net.java.html.json.Function;
@@ -53,6 +54,7 @@ import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
+import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.netbeans.api.htmlui.HTMLDialog;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.lexer.JavaTokenId;
@@ -75,8 +77,12 @@ import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
+import static org.netbeans.modules.java.lsp.server.refactoring.CodeRefactoring.perform;
+import static org.netbeans.modules.java.lsp.server.refactoring.CodeRefactoring.warningsMessageParams;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.modules.refactoring.api.Problem;
+import org.netbeans.modules.refactoring.api.RefactoringSession;
 import org.netbeans.modules.refactoring.java.api.JavaMoveMembersProperties;
 import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -99,37 +105,46 @@ import org.openide.util.lookup.ServiceProvider;
 public final class MoveRefactoring extends CodeRefactoring {
 
     private static final String MOVE_REFACTORING_KIND = "refactor.move";
-    private static final String MOVE_REFACTORING_COMMAND =  "nbls.java.refactor.move";
-    private static final ClassPath EMPTY_PATH = ClassPathSupport.createClassPath(new URL[0]);
+    private static final String MOVE_REFACTORING_COMMAND = "nbls.java.refactor.move";
+    private static final ClassPath EMPTY_PATH = ClassPathSupport.
+            createClassPath(new URL[0]);
 
     private final Gson gson = new Gson();
 
     @Override
     @NbBundle.Messages({
-        "DN_Move=Move...",
-    })
-    public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
+        "DN_Move=Move...",})
+    public List<CodeAction> getCodeActions(NbCodeLanguageClient client,
+            ResultIterator resultIterator, CodeActionParams params) throws Exception {
         List<String> only = params.getContext().getOnly();
         if (only == null || !only.contains(CodeActionKind.Refactor)) {
             return Collections.emptyList();
         }
-        CompilationController info = resultIterator.getParserResult() != null ? CompilationController.get(resultIterator.getParserResult()) : null;
-        if (info == null || !JavaRefactoringUtils.isRefactorable(info.getFileObject())) {
+        CompilationController info = resultIterator.getParserResult() != null ? CompilationController.
+                get(resultIterator.getParserResult()) : null;
+        if (info == null || !JavaRefactoringUtils.isRefactorable(info.
+                getFileObject())) {
             return Collections.emptyList();
         }
         info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
         int offset = getOffset(info, params.getRange().getStart());
-        TokenSequence<JavaTokenId> ts = info.getTokenHierarchy().tokenSequence(JavaTokenId.language());
+        TokenSequence<JavaTokenId> ts = info.getTokenHierarchy().tokenSequence(
+                JavaTokenId.language());
         ts.move(offset);
-        if (ts.moveNext() && ts.token().id() != JavaTokenId.WHITESPACE && ts.offset() == offset) {
+        if (ts.moveNext() && ts.token().id() != JavaTokenId.WHITESPACE && ts.
+                offset() == offset) {
             offset += 1;
         }
         String uri = Utils.toUri(info.getFileObject());
         Element element = elementForOffset(info, offset);
         if (element != null) {
-            return Collections.singletonList(createCodeAction(client, Bundle.DN_Move(), MOVE_REFACTORING_KIND, null, MOVE_REFACTORING_COMMAND, uri, new ElementData(element)));
+            return Collections.singletonList(createCodeAction(client, Bundle.
+                    DN_Move(), MOVE_REFACTORING_KIND, null,
+                    MOVE_REFACTORING_COMMAND, uri, new ElementData(element)));
         } else {
-            return Collections.singletonList(createCodeAction(client, Bundle.DN_Move(), MOVE_REFACTORING_KIND, null, MOVE_REFACTORING_COMMAND, uri));
+            return Collections.singletonList(createCodeAction(client, Bundle.
+                    DN_Move(), MOVE_REFACTORING_KIND, null,
+                    MOVE_REFACTORING_COMMAND, uri));
         }
     }
 
@@ -141,12 +156,13 @@ public final class MoveRefactoring extends CodeRefactoring {
     @Override
     @NbBundle.Messages({
         "DN_DefaultPackage=<default package>",
-        "DN_CreateNewClass=<create new class>",
-    })
-    public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
+        "DN_CreateNewClass=<create new class>",})
+    public CompletableFuture<Object> processCommand(NbCodeLanguageClient client,
+            String command, List<Object> arguments) {
         try {
             if (arguments.size() > 0) {
-                String uri = gson.fromJson(gson.toJson(arguments.get(0)), String.class);
+                String uri = gson.fromJson(gson.toJson(arguments.get(0)),
+                        String.class);
                 FileObject file = Utils.fromUri(uri);
                 JavaSource js = JavaSource.forFileObject(file);
                 if (js != null) {
@@ -155,16 +171,23 @@ public final class MoveRefactoring extends CodeRefactoring {
                             js.runUserActionTask(ci -> {
                                 ci.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                                 if (arguments.size() > 1) {
-                                    Element element = gson.fromJson(gson.toJson(arguments.get(1)), ElementData.class).resolve(ci);
+                                    Element element = gson.fromJson(gson.toJson(
+                                            arguments.get(1)), ElementData.class).
+                                            resolve(ci);
                                     if (element != null) {
-                                        if (element.getKind().isClass() || element.getKind().isInterface()) {
-                                            Pages.showMoveClassUI(ci, client, file, element);
+                                        if (element.getKind().isClass() || element.
+                                                getKind().isInterface()) {
+                                            Pages.showMoveClassUI(ci, client,
+                                                    file, element);
                                         } else {
-                                            Pages.showMoveMembersUI(ci, client, file, element);
+                                            Pages.showMoveMembersUI(ci, client,
+                                                    file, element);
                                         }
                                     }
                                 } else {
-                                    Pages.showMoveClassUI(ci, client, file, null);
+                                    Pages.
+                                            showMoveClassUI(ci, client, file,
+                                                    null);
                                 }
                             }, true);
                             return null;
@@ -174,25 +197,29 @@ public final class MoveRefactoring extends CodeRefactoring {
                     }, RequestProcessor.getDefault());
                 }
             } else {
-                throw new IllegalArgumentException(String.format("Illegal number of arguments received for command: %s", command));
+                throw new IllegalArgumentException(String.format(
+                        "Illegal number of arguments received for command: %s",
+                        command));
             }
         } catch (JsonSyntaxException | IllegalArgumentException | MalformedURLException ex) {
-            client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+            client.showMessage(new MessageParams(MessageType.Error, ex.
+                    getLocalizedMessage()));
         }
         return CompletableFuture.completedFuture(true);
     }
 
     @HTMLDialog(url = "ui/MoveClass.html", resources = {"refactoring.css"})
     static HTMLDialog.OnSubmit showMoveClassUI(
-        CompilationController ci,
-        NbCodeLanguageClient client,
-        FileObject file,
-        Element element
+            CompilationController ci,
+            NbCodeLanguageClient client,
+            FileObject file,
+            Element element
     ) {
         MoveElementUI model = new MoveElementUI();
         model.withMoveClass(true)
                 .withFrom(file.getName())
-                .assignData(client, file, element != null ? TreePathHandle.create(element, ci) : null);
+                .assignData(client, file, element != null ? TreePathHandle.
+                        create(element, ci) : null);
         model.applyBindings();
         return (id) -> {
             if ("accept".equals(id)) {
@@ -204,20 +231,23 @@ public final class MoveRefactoring extends CodeRefactoring {
 
     @HTMLDialog(url = "ui/MoveMembers.html", resources = {"refactoring.css"})
     static HTMLDialog.OnSubmit showMoveMembersUI(
-        CompilationController ci,
-        NbCodeLanguageClient client,
-        FileObject file,
-        Element element
+            CompilationController ci,
+            NbCodeLanguageClient client,
+            FileObject file,
+            Element element
     ) {
         ElementUtilities eu = ci.getElementUtilities();
         Element enclosingElement = element.getEnclosingElement();
         String parentName = createLabel(ci, enclosingElement);
         ElementUI[] members = enclosingElement.getEnclosedElements().stream()
-                .filter(memberElement -> (memberElement.getKind().isField() || memberElement.getKind() == ElementKind.METHOD) && !eu.isSynthetic(memberElement))
+                .filter(memberElement -> (memberElement.getKind().isField() || memberElement.
+                getKind() == ElementKind.METHOD) && !eu.isSynthetic(memberElement))
                 .map(memberElement -> {
                     String label = createLabel(ci, memberElement);
                     ElementData data = new ElementData(memberElement);
-                    ElementUI memberElementUI = new ElementUI(memberElement == element, label, memberElement.getKind().name(), data.getSignature());
+                    ElementUI memberElementUI = new ElementUI(
+                            memberElement == element, label, memberElement.
+                                    getKind().name(), data.getSignature());
                     return memberElementUI;
                 }).toArray(ElementUI[]::new);
         MoveElementUI model = new MoveElementUI();
@@ -256,7 +286,8 @@ public final class MoveRefactoring extends CodeRefactoring {
         private TreePathHandle handle;
 
         @ModelOperation
-        void assignData(MoveElementUI ui, NbCodeLanguageClient client, FileObject file, TreePathHandle handle) {
+        void assignData(MoveElementUI ui, NbCodeLanguageClient client,
+                FileObject file, TreePathHandle handle) {
             this.client = client;
             this.file = file;
             this.handle = handle;
@@ -267,7 +298,9 @@ public final class MoveRefactoring extends CodeRefactoring {
             Project[] openProjects = OpenProjects.getDefault().getOpenProjects();
             List<NamedPath> projectNames = new ArrayList<>(openProjects.length);
             for (int i = 0; i < openProjects.length; i++) {
-                projectNames.add(new NamedPath(ProjectUtils.getInformation(openProjects[i]).getDisplayName(), Utils.toUri(openProjects[i].getProjectDirectory())));
+                projectNames.add(new NamedPath(ProjectUtils.getInformation(
+                        openProjects[i]).getDisplayName(), Utils.toUri(
+                                openProjects[i].getProjectDirectory())));
             }
             return projectNames;
         }
@@ -277,10 +310,12 @@ public final class MoveRefactoring extends CodeRefactoring {
             Project project = getSelectedProject(selectedProject);
             if (project != null) {
                 Sources sources = ProjectUtils.getSources(project);
-                SourceGroup[] groups = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+                SourceGroup[] groups = sources.getSourceGroups(
+                        JavaProjectConstants.SOURCES_TYPE_JAVA);
                 List<NamedPath> projectRoots = new ArrayList<>(groups.length);
                 for (int i = 0; i < groups.length; i++) {
-                    projectRoots.add(new NamedPath(groups[i].getDisplayName(), Utils.toUri(groups[i].getRootFolder())));
+                    projectRoots.add(new NamedPath(groups[i].getDisplayName(),
+                            Utils.toUri(groups[i].getRootFolder())));
                 }
                 return projectRoots;
             }
@@ -288,22 +323,28 @@ public final class MoveRefactoring extends CodeRefactoring {
         }
 
         @ComputedProperty
-        static List<String> availablePackages(boolean moveClass, NamedPath selectedRoot) {
+        static List<String> availablePackages(boolean moveClass,
+                NamedPath selectedRoot) {
             FileObject rootFolder = getSelectedRoot(selectedRoot);
             if (rootFolder != null) {
                 List<String> packages;
                 if (moveClass) {
                     packages = new ArrayList<>();
                     packages.add(Bundle.DN_DefaultPackage());
-                    Enumeration<? extends FileObject> children = rootFolder.getChildren(true);
+                    Enumeration<? extends FileObject> children = rootFolder.
+                            getChildren(true);
                     while (children.hasMoreElements()) {
                         FileObject child = children.nextElement();
                         if (child.isFolder()) {
-                            packages.add(FileUtil.getRelativePath(rootFolder, child).replace('/', '.'));
+                            packages.add(FileUtil.getRelativePath(rootFolder,
+                                    child).replace('/', '.'));
                         }
                     }
                 } else {
-                    packages = ClasspathInfo.create(rootFolder).getClassIndex().getPackageNames("", false, EnumSet.of(ClassIndex.SearchScope.SOURCE)).stream().collect(Collectors.toList());
+                    packages = ClasspathInfo.create(rootFolder).getClassIndex().
+                            getPackageNames("", false, EnumSet.of(
+                                    ClassIndex.SearchScope.SOURCE)).stream().
+                            collect(Collectors.toList());
                 }
                 packages.sort((s1, s2) -> s1.compareTo(s2));
                 return packages;
@@ -312,14 +353,20 @@ public final class MoveRefactoring extends CodeRefactoring {
         }
 
         @ComputedProperty
-        static List<ElementUI> availableClasses(boolean moveClass, NamedPath selectedRoot, String selectedPackage) {
+        static List<ElementUI> availableClasses(boolean moveClass,
+                NamedPath selectedRoot, String selectedPackage) {
             FileObject rootFolder = getSelectedRoot(selectedRoot);
             if (rootFolder != null && selectedPackage != null) {
-                FileObject fo = rootFolder.getFileObject(selectedPackage.replace('.', '/'));
-                ClassPath sourcePath = ClassPath.getClassPath(fo, ClassPath.SOURCE);
-                final ClasspathInfo info = ClasspathInfo.create(EMPTY_PATH, EMPTY_PATH, sourcePath);
-                Set<ClassIndex.SearchScopeType> searchScopeType = new HashSet<>(1);
-                final Set<String> packageSet = Collections.singleton(selectedPackage);
+                FileObject fo = rootFolder.getFileObject(selectedPackage.
+                        replace('.', '/'));
+                ClassPath sourcePath = ClassPath.getClassPath(fo,
+                        ClassPath.SOURCE);
+                final ClasspathInfo info = ClasspathInfo.create(EMPTY_PATH,
+                        EMPTY_PATH, sourcePath);
+                Set<ClassIndex.SearchScopeType> searchScopeType = new HashSet<>(
+                        1);
+                final Set<String> packageSet = Collections.singleton(
+                        selectedPackage);
                 searchScopeType.add(new ClassIndex.SearchScopeType() {
                     @Override
                     public Set<? extends String> getPackages() {
@@ -338,14 +385,20 @@ public final class MoveRefactoring extends CodeRefactoring {
                 });
                 List<ElementUI> ret = new ArrayList<>();
                 if (moveClass) {
-                    ret.add(new ElementUI(false, Bundle.DN_CreateNewClass(), null));
+                    ret.add(new ElementUI(false, Bundle.DN_CreateNewClass(),
+                            null));
                 }
-                for (ElementHandle<TypeElement> eh : info.getClassIndex().getDeclaredTypes("", ClassIndex.NameKind.PREFIX, searchScopeType)) {
+                for (ElementHandle<TypeElement> eh : info.getClassIndex().
+                        getDeclaredTypes("", ClassIndex.NameKind.PREFIX,
+                                searchScopeType)) {
                     ElementData data = new ElementData(eh);
-                    String shortName = eh.getQualifiedName().substring(selectedPackage.length() + 1);
+                    String shortName = eh.getQualifiedName().substring(
+                            selectedPackage.length() + 1);
                     int idx = shortName.indexOf('.');
-                    if (fo.getFileObject(idx < 0 ? shortName : shortName.substring(0, idx), "java") != null) {
-                        ret.add(new ElementUI(false, shortName, data.getKind(), data.getSignature()));
+                    if (fo.getFileObject(idx < 0 ? shortName : shortName.
+                            substring(0, idx), "java") != null) {
+                        ret.add(new ElementUI(false, shortName, data.getKind(),
+                                data.getSignature()));
                     }
                 }
                 ret.sort((e1, e2) -> e1.getLabel().compareTo(e2.getLabel()));
@@ -370,36 +423,64 @@ public final class MoveRefactoring extends CodeRefactoring {
             try {
                 org.netbeans.modules.refactoring.api.MoveRefactoring refactoring;
                 if (handle == null) {
-                    refactoring = new org.netbeans.modules.refactoring.api.MoveRefactoring(Lookups.fixed(file));
-                    refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(file));
+                    refactoring = new org.netbeans.modules.refactoring.api.MoveRefactoring(
+                            Lookups.fixed(file));
+                    refactoring.getContext().add(JavaRefactoringUtils.
+                            getClasspathInfoFor(file));
                 } else {
                     InstanceContent ic = new InstanceContent();
-                    refactoring = new org.netbeans.modules.refactoring.api.MoveRefactoring(new AbstractLookup(ic));
-                    List<TreePathHandle> selectedElements = ui.getMembers().stream().filter(member -> member.isSelected()).map(selectedMember -> {
-                        ElementHandle memberHandle = ElementHandleAccessor.getInstance().create(ElementKind.valueOf(selectedMember.getKind()), selectedMember.getSignature().toArray(new String[selectedMember.getSignature().size()]));
-                        return TreePathHandle.from(memberHandle, ClasspathInfo.create(file));
-                    }).collect(Collectors.toList());
+                    refactoring = new org.netbeans.modules.refactoring.api.MoveRefactoring(
+                            new AbstractLookup(ic));
+                    List<TreePathHandle> selectedElements = ui.getMembers().
+                            stream().filter(member -> member.isSelected()).map(
+                            selectedMember -> {
+                                ElementHandle memberHandle = ElementHandleAccessor.
+                                        getInstance().create(ElementKind.
+                                                valueOf(selectedMember.getKind()),
+                                                selectedMember.getSignature().
+                                                        toArray(new String[selectedMember.
+                                                                getSignature().
+                                                                size()]));
+                                return TreePathHandle.from(memberHandle,
+                                        ClasspathInfo.create(file));
+                            }).collect(Collectors.toList());
                     ic.set(selectedElements, null);
                     if (handle.getKind() == Tree.Kind.CLASS) {
-                        refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(handle.getFileObject()));
+                        refactoring.getContext().add(JavaRefactoringUtils.
+                                getClasspathInfoFor(handle.getFileObject()));
                     } else {
-                        JavaMoveMembersProperties properties = new JavaMoveMembersProperties(selectedElements.toArray(new TreePathHandle[0]));
-                        properties.setVisibility(JavaMoveMembersProperties.Visibility.valueOf(ui.getSelectedVisibility().name()));
+                        JavaMoveMembersProperties properties = new JavaMoveMembersProperties(
+                                selectedElements.toArray(new TreePathHandle[0]));
+                        properties.setVisibility(
+                                JavaMoveMembersProperties.Visibility.valueOf(ui.
+                                        getSelectedVisibility().name()));
                         properties.setDelegate(ui.isKeepMethodSelected());
-                        properties.setUpdateJavaDoc(ui.getSelectedJavaDoc() == JavaDoc.UPDATE);
-                        properties.setAddDeprecated(ui.isDeprecateMethodSelected());
+                        properties.setUpdateJavaDoc(
+                                ui.getSelectedJavaDoc() == JavaDoc.UPDATE);
+                        properties.setAddDeprecated(ui.
+                                isDeprecateMethodSelected());
                         refactoring.getContext().add(properties);
                     }
                 }
                 ElementUI selectedClass = ui.getSelectedClass();
                 if (selectedClass != null) {
-                    if (selectedClass.getKind() != null && selectedClass.getSignature() != null) {
-                        ElementHandle eh = ElementHandleAccessor.getInstance().create(ElementKind.valueOf(selectedClass.getKind()), selectedClass.getSignature().toArray(new String[selectedClass.getSignature().size()]));
-                        refactoring.setTarget(Lookups.singleton(TreePathHandle.from(eh, ClasspathInfo.create(file))));
+                    if (selectedClass.getKind() != null && selectedClass.
+                            getSignature() != null) {
+                        ElementHandle eh = ElementHandleAccessor.getInstance().
+                                create(ElementKind.valueOf(selectedClass.
+                                        getKind()),
+                                        selectedClass.getSignature().toArray(
+                                                new String[selectedClass.
+                                                        getSignature().size()]));
+                        refactoring.setTarget(Lookups.singleton(TreePathHandle.
+                                from(eh, ClasspathInfo.create(file))));
                     } else {
-                        FileObject rootFolder = getSelectedRoot(ui.getSelectedRoot());
-                        if (rootFolder != null && ui.getSelectedPackage()!= null) {
-                            refactoring.setTarget(Lookups.singleton(rootFolder.getFileObject(ui.getSelectedPackage().replace('.', '/')).toURL()));
+                        FileObject rootFolder = getSelectedRoot(ui.
+                                getSelectedRoot());
+                        if (rootFolder != null && ui.getSelectedPackage() != null) {
+                            refactoring.setTarget(Lookups.singleton(rootFolder.
+                                    getFileObject(ui.getSelectedPackage().
+                                            replace('.', '/')).toURL()));
                         } else {
                             refactoring.setTarget(Lookup.EMPTY);
                         }
@@ -407,14 +488,36 @@ public final class MoveRefactoring extends CodeRefactoring {
                 } else {
                     refactoring.setTarget(Lookup.EMPTY);
                 }
-                client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, "Move")));
+                RefactoringSession session = RefactoringSession.create("Move");
+                Problem p = prepare(refactoring, session);
+                if (p == null) {
+                    client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, session)));
+                } else if (p.isFatal()) {
+                    throw new IllegalStateException(p.getMessage());
+                } else {
+                    ShowMessageRequestParams smrp = warningsMessageParams(p);
+                    client.showMessageRequest(smrp).thenAccept(ai -> {
+                        if (ai.getTitle().equalsIgnoreCase("Yes")) {
+                            try {
+                                client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, session)));
+                            } catch (Exception ex) {
+                                if (client == null) {
+                                    Exceptions.printStackTrace(Exceptions.attachSeverity(ex,Level.SEVERE));
+                                } else {
+                                    client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+                                }
+                            }
+                        }
+                    });
+                }
             } catch (Exception ex) {
                 if (client == null) {
                     Exceptions.printStackTrace(
-                        Exceptions.attachSeverity(ex, Level.SEVERE)
+                            Exceptions.attachSeverity(ex, Level.SEVERE)
                     );
                 } else {
-                    client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+                    client.showMessage(new MessageParams(MessageType.Error, ex.
+                            getLocalizedMessage()));
                 }
             }
         }
@@ -425,7 +528,8 @@ public final class MoveRefactoring extends CodeRefactoring {
             }
             try {
                 String path = selectedProject.getPath();
-                return path != null ? FileOwnerQuery.getOwner(Utils.fromUri(path)) : null;
+                return path != null ? FileOwnerQuery.getOwner(Utils.
+                        fromUri(path)) : null;
             } catch (MalformedURLException ex) {
                 return null;
             }
@@ -499,19 +603,24 @@ public final class MoveRefactoring extends CodeRefactoring {
     }
 
     private static Element elementForOffset(CompilationInfo info, int offset) throws RuntimeException {
-        List<? extends TypeElement> topLevelElements = info.getTopLevelElements();
+        List<? extends TypeElement> topLevelElements = info.
+                getTopLevelElements();
         Trees trees = info.getTrees();
         SourcePositions sourcePositions = trees.getSourcePositions();
         CompilationUnitTree compilationUnit = info.getCompilationUnit();
         for (TypeElement typeElement : topLevelElements) {
             ClassTree topLevelClass = trees.getTree(typeElement);
-            long startPosition = sourcePositions.getStartPosition(compilationUnit, topLevelClass);
-            long endPosition = sourcePositions.getEndPosition(compilationUnit, topLevelClass);
+            long startPosition = sourcePositions.getStartPosition(
+                    compilationUnit, topLevelClass);
+            long endPosition = sourcePositions.getEndPosition(compilationUnit,
+                    topLevelClass);
             if (offset > startPosition && offset < endPosition) {
                 for (Element element : typeElement.getEnclosedElements()) {
                     Tree member = trees.getTree(element);
-                    long startMember = sourcePositions.getStartPosition(compilationUnit, member);
-                    long endMember = sourcePositions.getEndPosition(compilationUnit, member);
+                    long startMember = sourcePositions.getStartPosition(
+                            compilationUnit, member);
+                    long endMember = sourcePositions.getEndPosition(
+                            compilationUnit, member);
                     if (offset > startMember && offset < endMember) {
                         return element;
                     }

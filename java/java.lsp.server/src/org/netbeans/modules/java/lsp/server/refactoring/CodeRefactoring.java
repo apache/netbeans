@@ -21,6 +21,7 @@ package org.netbeans.modules.java.lsp.server.refactoring;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -28,10 +29,13 @@ import java.util.Map;
 import java.util.Set;
 import org.eclipse.lsp4j.CreateFile;
 import org.eclipse.lsp4j.DeleteFile;
+import org.eclipse.lsp4j.MessageActionItem;
+import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.RenameFile;
 import org.eclipse.lsp4j.ResourceOperation;
+import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
@@ -45,6 +49,7 @@ import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.RefactoringSession;
 import org.netbeans.modules.refactoring.api.impl.APIAccessor;
 import org.netbeans.modules.refactoring.api.impl.SPIAccessor;
+import org.netbeans.modules.refactoring.java.plugins.JavaPluginUtils;
 import org.netbeans.modules.refactoring.java.spi.hooks.JavaModificationResult;
 import org.netbeans.modules.refactoring.plugins.FileMovePlugin;
 import org.netbeans.modules.refactoring.spi.RefactoringCommit;
@@ -60,18 +65,12 @@ public abstract class CodeRefactoring extends CodeActionsProvider {
 
     protected static final WorkspaceEdit perform(AbstractRefactoring refactoring, String name) throws Exception {
         RefactoringSession session = RefactoringSession.create(name);
-        Problem p = refactoring.checkParameters();
-        if (p != null && p.isFatal()) {
-            throw new IllegalStateException(p.getMessage());
-        }
-        p = refactoring.preCheck();
-        if (p != null && p.isFatal()) {
-            throw new IllegalStateException(p.getMessage());
-        }
-        p = refactoring.prepare(session);
-        if (p != null && p.isFatal()) {
-            throw new IllegalStateException(p.getMessage());
-        }
+        Problem p = prepare(refactoring, session);
+        if(p!=null && p.isFatal()) 
+           throw new IllegalStateException(p.getMessage());
+        return perform(refactoring, session);
+    }
+    protected static final WorkspaceEdit perform(AbstractRefactoring refactoring, RefactoringSession session) throws Exception {
         List<Either<TextDocumentEdit, ResourceOperation>> resultChanges = new ArrayList<>();
         Map<String, String> renames = new HashMap<>();
         List<RefactoringElementImplementation> fileChanges = APIAccessor.DEFAULT.getFileChanges(session);
@@ -79,7 +78,7 @@ public abstract class CodeRefactoring extends CodeActionsProvider {
             if (rei instanceof FileMovePlugin.MoveFile) {
                 String oldURI = Utils.toUri(rei.getParentFile());
                 int slash = oldURI.lastIndexOf('/');
-                URL url = ((org.netbeans.modules.refactoring.api.MoveRefactoring)refactoring).getTarget().lookup(URL.class);
+                URL url = ((org.netbeans.modules.refactoring.api.MoveRefactoring) refactoring).getTarget().lookup(URL.class);
                 String newURI = url.toString() + oldURI.substring(slash + 1);
                 renames.put(oldURI, newURI);
                 ResourceOperation op = new RenameFile(oldURI, newURI);
@@ -135,5 +134,29 @@ public abstract class CodeRefactoring extends CodeActionsProvider {
         }
         session.finished();
         return new WorkspaceEdit(resultChanges);
+    }
+
+    protected static final Problem prepare(AbstractRefactoring refactoring, RefactoringSession session) {
+        Problem p = refactoring.checkParameters();
+        p = JavaPluginUtils.chainProblems(p, refactoring.preCheck());
+        p = JavaPluginUtils.chainProblems(p, refactoring.prepare(session));
+        return p;
+    }
+
+    protected static final ShowMessageRequestParams warningsMessageParams(
+            Problem p) {
+        final MessageActionItem yes = new MessageActionItem("Yes");
+        final MessageActionItem no = new MessageActionItem("No");
+        ShowMessageRequestParams smrp = new ShowMessageRequestParams(Arrays.asList(yes, no));
+        StringBuilder msgs = new StringBuilder();
+        while (p != null) {
+            msgs.append(p.getMessage());
+            msgs.append('\n');
+            p = p.getNext();
+        }
+        smrp.setMessage(String.format("Refactoring will lead to following problems \n %s ,"
+                + "Do you want to proceed with the problems ?", msgs.toString()));
+        smrp.setType(MessageType.Warning);
+        return smrp;
     }
 }

@@ -34,6 +34,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -46,6 +47,7 @@ import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
+import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.ClasspathInfo;
@@ -61,14 +63,20 @@ import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
+import static org.netbeans.modules.java.lsp.server.refactoring.CodeRefactoring.perform;
+import static org.netbeans.modules.java.lsp.server.refactoring.CodeRefactoring.prepare;
+import static org.netbeans.modules.java.lsp.server.refactoring.CodeRefactoring.warningsMessageParams;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
+import org.netbeans.modules.refactoring.api.Problem;
+import org.netbeans.modules.refactoring.api.RefactoringSession;
 import org.netbeans.modules.refactoring.java.api.ExtractInterfaceRefactoring;
 import org.netbeans.modules.refactoring.java.api.ExtractSuperclassRefactoring;
 import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils;
 import org.netbeans.modules.refactoring.java.api.MemberInfo;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -244,7 +252,28 @@ public final class ExtractSuperclassOrInterfaceRefactoring extends CodeRefactori
                 refactoring = r;
             }
             refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(file));
-            client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, EXTRACT_SUPERCLASS_REFACTORING_COMMAND.equals(command) ? "Extract Superclass" : "Extract Interface")));
+            RefactoringSession session = RefactoringSession.create(EXTRACT_SUPERCLASS_REFACTORING_COMMAND.equals(command) ? "Extract Superclass" : "Extract Interface");
+            Problem p = prepare(refactoring, session);
+            if (p == null) {
+                client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, session)));
+            } else if (p.isFatal()) {
+                throw new IllegalStateException(p.getMessage());
+            } else {
+                ShowMessageRequestParams smrp = warningsMessageParams(p);
+                client.showMessageRequest(smrp).thenAccept(ai -> {
+                    if (ai.getTitle().equalsIgnoreCase("Yes")) {
+                        try {
+                            client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, session)));
+                        } catch (Exception ex) {
+                            if (client == null) {
+                                Exceptions.printStackTrace(Exceptions.attachSeverity(ex, Level.SEVERE));
+                            } else {
+                                client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+                            }
+                        }
+                    }
+                });
+            }
         } catch (Exception ex) {
             client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
         }

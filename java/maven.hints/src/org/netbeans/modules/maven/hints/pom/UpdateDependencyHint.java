@@ -91,13 +91,12 @@ public class UpdateDependencyHint implements POMErrorFixProvider {
         Build build = project.getBuild();
         if (build != null) {
             addHintsToPlugins(build.getPlugins(), build.getPluginManagement(), hints);
+            addHintsTo(build.getExtensions(), hints);
         }
 
         Reporting reporting = project.getReporting();
         if (reporting != null) {
-            if (reporting.getReportPlugins() != null) {
-                addHintsTo(reporting.getReportPlugins(), hints);
-            }
+            addHintsTo(reporting.getReportPlugins(), hints);
         }
 
         List<Profile> profiles = project.getProfiles();
@@ -115,25 +114,25 @@ public class UpdateDependencyHint implements POMErrorFixProvider {
     }
 
     private void addHintsToDependencies(List<Dependency> deps, DependencyManagement depman, Map<POMComponent, ErrorDescription> hints) {
-        if (deps != null) {
-            addHintsTo(deps, hints);
-        }
-        if (depman != null && depman.getDependencies() != null) {
+        addHintsTo(deps, hints);
+        if (depman != null) {
             addHintsTo(depman.getDependencies(), hints);
         }
     }
 
     private void addHintsToPlugins(List<Plugin> plugins, PluginManagement plugman, Map<POMComponent, ErrorDescription> hints) {
-        if (plugins != null) {
-            addHintsTo(plugins, hints);
-        }
-        if (plugman != null && plugman.getPlugins() != null) {
+        addHintsTo(plugins, hints);
+        if (plugman != null) {
             addHintsTo(plugman.getPlugins(), hints);
         }
     }
 
     // components typically implement VersionablePOMComponent, exceptions would be annotation processor lists
     private void addHintsTo(List<? extends POMComponent> components, Map<POMComponent, ErrorDescription> hints) {
+        
+        if (components == null) {
+            return;
+        }
 
         for (POMComponent comp : components) {
 
@@ -305,8 +304,8 @@ public class UpdateDependencyHint implements POMErrorFixProvider {
 
     @Override
     public String getSavedValue(JComponent customizer, String key) {
-        if (KEY_NO_MAJOR_UPGRADE.equals(key) && customizer instanceof UpdateDependencyHintCustomizer) {
-            return Boolean.toString(((UpdateDependencyHintCustomizer)customizer).getSavedNoMajorUpgradeOption());
+        if (KEY_NO_MAJOR_UPGRADE.equals(key) && customizer instanceof UpdateDependencyHintCustomizer hintCustomizer) {
+            return Boolean.toString(hintCustomizer.getSavedNoMajorUpgradeOption());
         }
         return null;
     }

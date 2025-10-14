@@ -137,7 +137,7 @@ public class FormLoaderSettings implements HelpCtx.Provider   {
      * @return listener generation style.
      */
     public int getListenerGenerationStyle() {
-        return getPreferences().getInt(PROP_LISTENER_GENERATION_STYLE, 0);
+        return getPreferences().getInt(PROP_LISTENER_GENERATION_STYLE, JavaCodeGenerator.LAMBDAS);
     }
 
     /**

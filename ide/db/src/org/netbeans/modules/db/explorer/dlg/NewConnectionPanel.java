@@ -777,8 +777,8 @@ public class NewConnectionPanel extends ConnectionDialog.FocusablePanel {
         JdbcUrl jdbcurl = (JdbcUrl) item;
 
         if (jdbcurl == null) {
-            for (Entry<String, UrlField> entry : urlFields.entrySet()) {
-                for (JComponent c : entry.getValue().getComponents()) {
+            for (UrlField uf : urlFields.values()) {
+                for (JComponent c : uf.getComponents()) {
                     c.setVisible(false);
                 }
             }

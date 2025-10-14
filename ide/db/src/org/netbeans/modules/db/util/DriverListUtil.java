@@ -396,7 +396,7 @@ public class DriverListUtil {
 
         url = add("H2 Database Engine",
             "org.h2.Driver",
-            "jdbc:h2:<FILE>", true);
+            "jdbc:h2:<FILE>");
         /* I think H2 can sometimes use a password with the database, even though it's a file-based
         database. So keep the username/password displayed in this case.  */
         // url.setUsernamePasswordDisplayed(false);
@@ -433,10 +433,7 @@ public class DriverListUtil {
         
         for (JdbcUrl url : templateUrls) {
             if (url.getClassName().equals(driver.getClassName())) {
-                JdbcUrl newurl = new JdbcUrl(url, driver);
-                newurl.setUsernamePasswordDisplayed(url.isUsernamePasswordDisplayed());
-                newurl.setDatabaseFileValidator(url.getDatabaseFileValidator());
-                driverUrls.add(newurl);
+                driverUrls.add(new JdbcUrl(url, driver));
             }
         }
 

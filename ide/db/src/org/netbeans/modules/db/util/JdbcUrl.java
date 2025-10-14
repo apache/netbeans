@@ -112,6 +112,8 @@ public class JdbcUrl extends HashMap<String, String> {
         this.samplePassword = template.getSamplePassword();
         this.sampleUser = template.getSampleUser();
         this.sampleUrl = template.getSampleUrl();
+        this.usernamePasswordDisplayed = template.isUsernamePasswordDisplayed();
+        this.databaseFileValidator = template.getDatabaseFileValidator();
         this.driver = driver;
     }
 

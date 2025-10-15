@@ -63,7 +63,8 @@ import org.openide.xml.XMLUtil;
 )
 @TopComponent.Registration(
         mode = "editor",
-        openAtStartup = false
+        openAtStartup = false,
+        position = 0
 )
 @Messages({
     "CTL_TreeDiffViewerTopComponent=Tree diff",

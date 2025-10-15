@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.26
+#Version 2.28
 
 CLSS public abstract interface !annotation com.fasterxml.jackson.annotation.JacksonAnnotation
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)

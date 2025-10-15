@@ -510,13 +510,7 @@ public class DetectorTest extends TestBase {
     }
 
     public void testRecord1() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_14"); //NOI18N
-        } catch (IllegalArgumentException ex) {
-            //OK, no RELEASE_14, skip tests
-            return ;
-        }
-        enablePreview();
+        setSourceLevel("16");
         performTest("Record",
                     "public record Test(String s) {}\n" +
                     "class T {\n" +
@@ -538,13 +532,7 @@ public class DetectorTest extends TestBase {
     }
 
     public void testRecord2() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_14"); //NOI18N
-        } catch (IllegalArgumentException ex) {
-            //OK, no RELEASE_14, skip tests
-            return;
-        }
-        enablePreview();
+        setSourceLevel("16");
         performTest("Records",
                     "public class Records {\n" +
                     "    public interface Super {}\n" +
@@ -578,13 +566,7 @@ public class DetectorTest extends TestBase {
     }
     
     public void testSealed() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_15"); //NOI18N
-        } catch (IllegalArgumentException ex) {
-            //OK, no RELEASE_14, skip tests
-            return;
-        }
-        enablePreview();
+        setSourceLevel("17");
         performTest("SealedTest",
                 "sealed class Test{}\n"
                 + "non-sealed class Child extends Test{}\n",
@@ -597,13 +579,7 @@ public class DetectorTest extends TestBase {
     }
 
     public void testSealed2() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_15"); //NOI18N
-        } catch (IllegalArgumentException ex) {
-            //OK, no RELEASE_14, skip tests
-            return;
-        }
-        enablePreview();
+        setSourceLevel("17");
         performTest("SealedTest",
                 "sealed class Test permits Child{}\n"
                 + "non-sealed class Child extends Test{}\n",
@@ -618,13 +594,7 @@ public class DetectorTest extends TestBase {
     }
 
     public void testSwitchPattern() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_19"); //NOI18N
-        } catch (IllegalArgumentException ex) {
-            //OK, no RELEASE_19, skip tests
-            return;
-        }
-        enablePreview();
+        setSourceLevel("21");
         performTest("TestSwitchPattern.java",
                 "public class TestSwitchPattern {\n"
                 + "    String strColor = \"color\";\n"
@@ -643,6 +613,8 @@ public class DetectorTest extends TestBase {
                 + "[PUBLIC, CLASS], 3:8-3:14\n"
                 + "[LOCAL_VARIABLE, DECLARATION], 3:15-3:18\n"
                 + "[LOCAL_VARIABLE], 4:16-4:19\n"
+                + "[PUBLIC, CLASS], 5:17-5:23\n"
+                + "[LOCAL_VARIABLE, DECLARATION], 5:24-5:25\n"
                 + "[KEYWORD], 5:26-5:30\n"
                 + "[LOCAL_VARIABLE], 5:31-5:32\n"
                 + "[PUBLIC, METHOD], 5:33-5:39\n"
@@ -656,13 +628,7 @@ public class DetectorTest extends TestBase {
     }
 
     public void testRecordPattern() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_19"); //NOI18N
-        } catch (IllegalArgumentException ex) {
-            //OK, no RELEASE_19, skip tests
-            return;
-        }
-        enablePreview();
+        setSourceLevel("21");
         performTest("TestRecordPattern.java",
                 "public class TestRecordPattern {\n"
                 + "    record Person(int name, int a){}\n"
@@ -684,7 +650,11 @@ public class DetectorTest extends TestBase {
                 + "[LOCAL_VARIABLE, DECLARATION], 3:15-3:18\n"
                 + "[PACKAGE_PRIVATE, CONSTRUCTOR], 3:25-3:31\n"
                 + "[LOCAL_VARIABLE], 4:16-4:19\n"
+                + "[STATIC, PACKAGE_PRIVATE, RECORD], 5:17-5:23\n"
+                + "[LOCAL_VARIABLE, DECLARATION], 5:28-5:29\n"
+                + "[LOCAL_VARIABLE, UNUSED, DECLARATION], 5:35-5:36\n"
                 + "[KEYWORD], 5:38-5:42\n"
+                + "[LOCAL_VARIABLE], 5:43-5:44\n"
                 + "[PUBLIC, CLASS], 5:52-5:58\n"
                 + "[STATIC, PUBLIC, FIELD], 5:59-5:62\n"
                 + "[PUBLIC, METHOD], 5:63-5:70\n"
@@ -694,7 +664,7 @@ public class DetectorTest extends TestBase {
     }
 
     public void testYield() throws Exception {
-        enablePreview();
+        setSourceLevel("17");
         performTest("YieldTest.java",
                     "public class YieldTest {\n" +
                     "    private int map(int i) {\n" +
@@ -709,12 +679,6 @@ public class DetectorTest extends TestBase {
     }
 
     public void testRawStringLiteral() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_15");
-        } catch (IllegalArgumentException iae) {
-            //OK, presumably no support for raw string literals
-            return ;
-        }
         setSourceLevel("15");
         performTest("RawStringLiteral",
                     "public class RawStringLiteral {\n" +
@@ -739,12 +703,6 @@ public class DetectorTest extends TestBase {
     }
 
     public void testBindingPattern() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_16");
-        } catch (IllegalArgumentException iae) {
-            //OK, presumably no support for pattern matching
-            return ;
-        }
         setSourceLevel("16");
         performTest("BindingPattern",
                     "public class BindingPattern {\n" +
@@ -1070,12 +1028,6 @@ public class DetectorTest extends TestBase {
     }
 
     public void testRawStringLiteralNETBEANS_5118() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_15");
-        } catch (IllegalArgumentException iae) {
-            //OK, presumably no support for raw string literals
-            return ;
-        }
         setSourceLevel("15");
         performTest("RawStringLiteral",
                     "public class RawStringLiteral {\n" +
@@ -1113,6 +1065,29 @@ public class DetectorTest extends TestBase {
                     "[ : Iterator<String>], 2:14-2:15",
                     "[PARAMETER], 2:17-2:18",
                     "[ABSTRACT, PUBLIC, METHOD], 2:19-2:27");
+    }
+
+    public void testCaseRuleBodyHighlight() throws Exception {
+        performTest("CaseTest",
+                """
+                public class CaseTest {
+                    private void t(Object o) {
+                        switch (o) {
+                            case Object oo -> {
+                                o = null;
+                            }
+                        }
+                    }
+                }
+                """,
+                "[PUBLIC, CLASS, DECLARATION], 0:13-0:21",
+                "[PRIVATE, METHOD, UNUSED, DECLARATION], 1:17-1:18",
+                "[PUBLIC, CLASS], 1:19-1:25",
+                "[PARAMETER, DECLARATION], 1:26-1:27",
+                "[PARAMETER], 2:16-2:17",
+                "[PUBLIC, CLASS], 3:17-3:23",
+                "[LOCAL_VARIABLE, UNUSED, DECLARATION], 3:24-3:26",
+                "[PARAMETER], 4:16-4:17");
     }
 
     private void performTest(String fileName) throws Exception {

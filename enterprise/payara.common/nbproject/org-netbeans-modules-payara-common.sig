@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.22
+#Version 2.24
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -2061,8 +2061,6 @@ CLSS public abstract org.netbeans.modules.payara.spi.Decorator
 cons public init()
 fld public final static java.awt.Image DISABLED_BADGE
 fld public final static java.lang.String DISABLED = "disabled "
-meth public boolean canCDIProbeDisable()
-meth public boolean canCDIProbeEnable()
 meth public boolean canCopy()
 meth public boolean canDeployTo()
 meth public boolean canDisable()

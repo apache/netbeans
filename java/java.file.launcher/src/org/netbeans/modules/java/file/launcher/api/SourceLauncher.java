@@ -55,6 +55,18 @@ public final class SourceLauncher {
         return msrp != null && msrp.isSourceLauncher(file);
     }
 
+    /**Returns {@code true} if and only if the given file is known as a
+     * file that is handled by a source file launcher, for which index is created.
+     *
+     * @param file the file to test
+     * @return {@code true} if and only if the file is known as a file handled by the
+     *         source launcher. {@code false} otherwise.
+     */
+    public static boolean isIndexedSourceLauncherFile(FileObject file) {
+        MultiSourceRootProvider msrp = Lookup.getDefault().lookup(MultiSourceRootProvider.class);
+        return msrp != null && msrp.isRegisteredSourceLauncher(file);
+    }
+
     public static String joinCommandLines(Iterable<? extends String> inputLines) {
         Map<String, String> joinedOptions = new HashMap<>();
 

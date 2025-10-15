@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 6.67
+#Version 6.69
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1198,7 +1198,7 @@ meth public static java.awt.Image createDisabledImage(java.awt.Image)
 meth public static java.net.URL findImageBaseURL(java.awt.Image)
 meth public static javax.swing.Icon createDisabledIcon(javax.swing.Icon)
 supr java.lang.Object
-hfds DARK_LAF_SUFFIX,ERR,LOGGER,NO_ICON,PNG_READER,TOOLTIP_SEPAR,cache,classLoaderLoader,component,compositeCache,dummyIconComponentButton,dummyIconComponentLabel,extraInitialSlashes,imageIconFilter,imageToolTipCache,localizedCache,mediaTrackerID,svgLoaderLoader,tracker
+hfds DARK_LAF_SUFFIX,LOGGER,NO_ICON,PNG_READER,TOOLTIP_SEPAR,cache,classLoaderLoader,component,compositeCache,dummyIconComponentButton,dummyIconComponentLabel,extraInitialSlashes,imageIconFilter,imageToolTipCache,localizedCache,mediaTrackerID,svgLoaderLoader,tracker
 hcls ActiveRef,CachedLookupLoader,CompositeImageKey,DisabledButtonFilter,IconImageIcon,MergedIcon,ToolTipImage,ToolTipImageKey
 
 CLSS public abstract org.openide.util.Lookup
@@ -1901,6 +1901,7 @@ meth public static javax.swing.event.DocumentListener document(javax.swing.event
 supr java.lang.Object
 
 CLSS public org.openide.util.WeakSet<%0 extends java.lang.Object>
+ anno 0 java.lang.Deprecated(null forRemoval=true)
 cons public init()
 cons public init(int)
 cons public init(int,float)

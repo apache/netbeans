@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.13.0
+#Version 2.15.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -121,6 +121,7 @@ meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$It
 meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createTypeParameterItem(javax.lang.model.element.TypeParameterElement,int)
 meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createVariableItem(org.netbeans.api.java.source.CompilationInfo,java.lang.String,int,boolean,boolean)
 meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createVariableItem(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.element.VariableElement,javax.lang.model.type.TypeMirror,int,org.netbeans.api.java.source.support.ReferencesCount,boolean,boolean,boolean,int)
+meth public {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createExecutableItem(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.element.ExecutableElement,javax.lang.model.type.ExecutableType,int,org.netbeans.api.java.source.support.ReferencesCount,boolean,boolean,boolean,boolean,boolean,boolean,int,boolean)
 
 CLSS public abstract interface static org.netbeans.modules.java.completion.JavaCompletionTask$LambdaItemFactory<%0 extends java.lang.Object>
  outer org.netbeans.modules.java.completion.JavaCompletionTask

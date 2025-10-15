@@ -33,7 +33,11 @@ public class AddRemotePanel extends javax.swing.JPanel {
     }
 
     public String getRemoteName() {
-        return txtRemoteName.getText().trim();
+        if(txtRemoteName.getText().isBlank()) {
+            return "";
+        }
+
+        return txtRemoteName.getText().strip();
     }
 
     /**

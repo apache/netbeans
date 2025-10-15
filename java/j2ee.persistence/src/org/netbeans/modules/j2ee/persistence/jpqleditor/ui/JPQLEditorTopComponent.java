@@ -347,7 +347,7 @@ public final class JPQLEditorTopComponent extends TopComponent {
 
                                 ph2.progress(50);
                                 ph2.setDisplayName(NbBundle.getMessage(JPQLEditorTopComponent.class, "queryParsingPassControlToProvider"));
-                                jpqlResult = queryExecutor.execute(jpql, selectedConfigObject, pe, props, provider, 0, ph2, false);
+                                jpqlResult = queryExecutor.execute(jpql, puObject.getPersistence(), selectedConfigObject, pe, props, provider, 0, ph2, false);
                                 ph2.progress(80);
                                 ph2.setDisplayName(NbBundle.getMessage(JPQLEditorTopComponent.class, "queryParsingProcessResults"));
 
@@ -869,6 +869,7 @@ private void runJPQLButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             PersistenceUnit pu = (PersistenceUnit) puConfigMap.get(puComboBox.getSelectedItem());
             ph.start(100);
             controller.executeJPQLQuery(jpqlEditor.getText(),
+                    puObject.getPersistence(),
                     pu,
                     pe,
                     getMaxRowCount(),

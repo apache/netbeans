@@ -717,6 +717,6 @@ public class J2EEProfilerSPI implements org.netbeans.modules.j2ee.deployment.pro
                 return platform;
             }
         }
-        throw new IllegalArgumentException("Platfrom "+platformName+" not found"); // NOI18N        
+        throw new IllegalArgumentException("Platform "+platformName+" not found"); // NOI18N        
     }
 }

@@ -50,17 +50,17 @@ public class CustomizerPane extends JPanel
     public static final String HELP_CTX_PROPERTY = "helpCtxProperty";
     
     private Component currentCustomizer;
-    private JPanel errorPanel;
-    private JLabel errorIcon;
-    private JTextArea errorMessageValue;
+    private final JPanel errorPanel;
+    private final JLabel errorIcon;
+    private final JTextArea errorMessageValue;
     private HelpCtx currentHelpCtx;
     
-    private GridBagConstraints fillConstraints;
+    private final GridBagConstraints fillConstraints;
     private GridBagConstraints errMessConstraints = new GridBagConstraints();
     
-    private ProjectCustomizer.CategoryComponentProvider componentProvider;
+    private final ProjectCustomizer.CategoryComponentProvider componentProvider;
     
-    private HashMap<ProjectCustomizer.Category, JComponent> panelCache = new HashMap<ProjectCustomizer.Category, JComponent>();
+    private final HashMap<ProjectCustomizer.Category, JComponent> panelCache = new HashMap<>();
     
     // maximum dimension of the customizer is 3/4 of screen size
     private static final int MAX_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height * 3 / 4;
@@ -169,6 +169,7 @@ public class CustomizerPane extends JPanel
         panelCache.clear();
     }
     
+    @Override
     public Dimension getPreferredSize() {
         if (isPreferredSizeSet()) {
             return super.getPreferredSize();
@@ -196,6 +197,7 @@ public class CustomizerPane extends JPanel
     
     // HelpCtx.Provider implementation -----------------------------------------
     
+    @Override
     public HelpCtx getHelpCtx() {        
         return currentHelpCtx;        
         /*
@@ -230,16 +232,14 @@ public class CustomizerPane extends JPanel
         }
 
         JComponent newCustomizer = panelCache.get(newCategory);
-        if (newCustomizer == null && !panelCache.containsKey(newCustomizer)) {
+        if (newCustomizer == null) {
             newCustomizer = componentProvider.create( newCategory );
             panelCache.put(newCategory, newCustomizer);
         }
 
         if ( newCustomizer != null ) {
-            Utilities.getCategoryChangeSupport(newCategory).addPropertyChangeListener(new PropertyChangeListener() {
-                public @Override void propertyChange(PropertyChangeEvent evt) {
-                    setErrorMessage(newCategory.getErrorMessage(), newCategory.isValid());
-                }
+            Utilities.getCategoryChangeSupport(newCategory).addPropertyChangeListener(evt -> {
+                setErrorMessage(newCategory.getErrorMessage(), newCategory.isValid());
             });
             currentCustomizer = newCustomizer;            
             currentHelpCtx = HelpCtx.findHelp( currentCustomizer );
@@ -296,7 +296,7 @@ public class CustomizerPane extends JPanel
 
     private void setErrorMessage(String errMessage, boolean valid) {
         customizerPanel.remove(errorPanel);
-        if (errMessage != null && !errMessage.trim().isEmpty()) {
+        if (errMessage != null && !errMessage.isBlank()) {
             errorIcon.setIcon(ImageUtilities.loadImageIcon(valid ? "org/netbeans/modules/dialogs/warning.gif" : "org/netbeans/modules/dialogs/error.gif", true));
             errorMessageValue.setText(errMessage);
             errorMessageValue.setForeground(UIManager.getColor(valid ? "nb.warningForeground" : "nb.errorForeground")); // NOI18N
@@ -313,6 +313,7 @@ public class CustomizerPane extends JPanel
      */        
     private class CategoryChangeListener implements PropertyChangeListener {
         
+        @Override
         public void propertyChange(PropertyChangeEvent evt) {
             
             if ( CategoryModel.PROP_CURRENT_CATEGORY.equals( evt.getPropertyName() ) ) {                                

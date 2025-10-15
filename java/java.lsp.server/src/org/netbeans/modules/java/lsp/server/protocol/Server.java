@@ -143,6 +143,7 @@ import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.netbeans.modules.progress.spi.InternalHandle;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
+import org.openide.LifecycleManager;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
@@ -463,6 +464,7 @@ public final class Server {
         private final OpenedDocuments openedDocuments = new OpenedDocuments();
         
         private final LspSession lspSession;
+        private boolean shutdownReqReceived = false;
         
         LanguageServerImpl(LspSession session) {
             this.lspSession = session;
@@ -1105,11 +1107,14 @@ public final class Server {
 
         @Override
         public CompletableFuture<Object> shutdown() {
+            shutdownReqReceived = true; 
             return CompletableFuture.completedFuture(null);
         }
 
         @Override
         public void exit() {
+            int exitCode = shutdownReqReceived ? 0 : 1;
+            LifecycleManager.getDefault().exit(exitCode);
         }
 
         @JsonDelegate

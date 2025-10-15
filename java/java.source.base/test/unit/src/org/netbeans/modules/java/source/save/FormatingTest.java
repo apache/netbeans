@@ -6753,6 +6753,35 @@ public class FormatingTest extends NbTestCase {
                 + "}\n";
         reformat(doc, content, golden);
     }
+    
+    // #6573
+    public void testRecordConstructorReformat() throws Exception {
+        sourceLevel="16";
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = testSourceDO.getLookup().lookup(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = 
+                """
+                package hierbas.del.litoral;
+                
+                public class Test {
+                
+                    public record Rec(int a, int b) {
+                
+                        public Rec { // add no space for synthetic params
+                        }
+                    }
+                }
+                """;
+        String golden = content;
+                
+        reformat(doc, content, golden);
+    }    
 
     // verify closing '}' position during record formatting
     public void testRecordClosingBrace7043() throws Exception {

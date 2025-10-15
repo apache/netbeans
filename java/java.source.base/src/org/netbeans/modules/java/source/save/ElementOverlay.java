@@ -389,7 +389,7 @@ public class ElementOverlay {
                this.packages.size();
     }
 
-    public Collection<? extends Element> getAllVisibleThrough(ASTService ast, Elements elements, String what, ClassTree tree, ModuleElement modle) {
+    public Collection<? extends Element> getAllVisibleThrough(ASTService ast, Elements elements, String what, ClassTree tree, Element currentPackage, ModuleElement modle) {
         Collection<Element> result = new ArrayList<Element>();
         Element current = what != null ? resolve(ast, elements, what, modle) : null;
 
@@ -408,31 +408,51 @@ public class ElementOverlay {
                 }
             }
         } else {
-            result.addAll(getAllMembers(ast, elements, current));
+            result.addAll(getAllMembers(ast, elements, current, currentPackage, false));
         }
 
         return result;
     }
 
-    private Collection<? extends Element> getAllMembers(ASTService ast, Elements elements, Element el) {
+    private Collection<? extends Element> getAllMembers(ASTService ast, Elements elements, Element el, Element currentPackage, boolean inherited) {
         List<Element> result = new ArrayList<Element>();
 
-        result.addAll(el.getEnclosedElements());
+        el.getEnclosedElements()
+          .stream()
+          .filter(encl -> !inherited || //include all members from the current class
+                          encl.getModifiers().contains(Modifier.PUBLIC) || //public members are inherited
+                          encl.getModifiers().contains(Modifier.PROTECTED) || //protected memebers are inherited
+                          (!encl.getModifiers().contains(Modifier.PRIVATE) && //private member are never inherited
+                           resolvedPackageOf(ast, elements, encl) == currentPackage)) //package-private members are inherited only inside the same package
+          .forEach(result::add);
 
         for (Element parent : getAllSuperElements(ast, elements, el)) {
             if (!el.equals(parent)) {
-                result.addAll(getAllMembers(ast, elements, parent));
+                result.addAll(getAllMembers(ast, elements, parent, currentPackage, true));
             }
         }
 
         return result;
     }
 
+    private Element resolvedPackageOf(ASTService ast, Elements elements, Element el) {
+        ModuleElement modle = moduleOf(elements, el);
+        PackageElement pack = packageOf(el);
+
+        return resolve(ast, elements, pack.getQualifiedName().toString(), modle);
+    }
+
     public PackageElement unnamedPackage(ASTService ast, Elements elements, ModuleElement modle) {
         return (PackageElement) resolve(ast, elements, "", modle);
     }
     
-    private ModuleElement moduleOf(Elements elements, Element el) {
+    public PackageElement packageOf(Element el) {
+        while ((el != null) && (el.getKind() != ElementKind.PACKAGE)) el = el.getEnclosingElement();
+
+        return (PackageElement) el;
+    }
+
+    public ModuleElement moduleOf(Elements elements, Element el) {
         if (el instanceof TypeElementWrapper)
             return moduleOf(elements, ((TypeElementWrapper) el).delegateTo);
         if (el instanceof FakeTypeElement)

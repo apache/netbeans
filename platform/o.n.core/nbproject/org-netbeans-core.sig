@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 3.78
+#Version 3.80
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1520,6 +1520,7 @@ CLSS public org.netbeans.core.ProxySettings
 cons public init()
 fld public final static int AUTO_DETECT_PAC = 3
 fld public final static int AUTO_DETECT_PROXY = 1
+fld public final static int DEFAULT_TIMEOUT = 10000
 fld public final static int DIRECT_CONNECTION = 0
 fld public final static int MANUAL_SET_PAC = 4
 fld public final static int MANUAL_SET_PROXY = 2
@@ -1527,6 +1528,7 @@ fld public final static java.lang.String DIRECT = "DIRECT"
 fld public final static java.lang.String HTTP_CONNECTION_TEST_URL = "https://netbeans.apache.org"
 fld public final static java.lang.String NOT_PROXY_HOSTS = "proxyNonProxyHosts"
 fld public final static java.lang.String PAC = "PAC"
+fld public final static java.lang.String PAC_SCRIPT_TIMEOUT = "pacScriptTimeout"
 fld public final static java.lang.String PROXY_AUTHENTICATION_PASSWORD = "proxyAuthenticationPassword"
 fld public final static java.lang.String PROXY_AUTHENTICATION_USERNAME = "proxyAuthenticationUsername"
 fld public final static java.lang.String PROXY_HTTPS_HOST = "proxyHttpsHost"
@@ -1553,6 +1555,7 @@ innr public static NbProxyCredentialsProvider
 meth public static boolean useAuthentication()
 meth public static boolean useProxyAllProtocols()
 meth public static char[] getAuthenticationPassword()
+meth public static int getPacScriptTimeout()
 meth public static int getProxyType()
 meth public static java.lang.String getAuthenticationUsername()
 meth public static java.lang.String getHttpHost()

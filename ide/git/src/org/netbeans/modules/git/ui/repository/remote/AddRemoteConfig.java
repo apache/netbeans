@@ -20,6 +20,7 @@ package org.netbeans.modules.git.ui.repository.remote;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.List;
 import org.netbeans.libs.git.GitException;
 import org.netbeans.libs.git.GitRemoteConfig;
 import org.netbeans.modules.git.Git;
@@ -71,11 +72,11 @@ public class AddRemoteConfig {
                     GitClient client = getClient();
                     GitRemoteConfig cfg = new GitRemoteConfig(
                         remoteName,
-                        Collections.singletonList(remoteUrl),
-                        Collections.<String>emptyList(),
-                        Collections.singletonList(GitUtils.getGlobalRefSpec(remoteName)),
-                        Collections.<String>emptyList());
-                    client.setRemote(cfg, getProgressMonitor());
+                        List.of(remoteUrl),
+                        List.of(),
+                        List.of(GitUtils.getGlobalRefSpec(remoteName)),
+                        List.of());
+                        client.setRemote(cfg, getProgressMonitor());
                 } catch (GitException ex) {
                     GitClientExceptionHandler.notifyException(ex, true);
                 }

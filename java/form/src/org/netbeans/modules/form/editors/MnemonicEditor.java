@@ -133,9 +133,11 @@ public class MnemonicEditor extends PropertyEditorSupport implements NamedProper
     public void setValue(Object newValue) throws IllegalArgumentException {
         if  (newValue instanceof Integer) {
             super.setValue(newValue);
+            return;
         } else if (newValue instanceof Character) {
             char c = (Character) newValue;
             super.setValue((int)c);
+            return;
         } else if (newValue instanceof String) {
             String text = (String) newValue;
             if (text.length() >= 1) {

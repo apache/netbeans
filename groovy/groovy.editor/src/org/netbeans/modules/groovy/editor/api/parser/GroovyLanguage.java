@@ -68,7 +68,7 @@ import org.openide.windows.TopComponent;
 @MIMEResolver.ExtensionRegistration(
     mimeType = GROOVY_MIME_TYPE,
     displayName = "#GroovyResolver",
-    extension = "groovy",
+    extension = {"groovy", "gvy", "gy", "gsh"},
     position = 281
 )
 @LanguageRegistration(

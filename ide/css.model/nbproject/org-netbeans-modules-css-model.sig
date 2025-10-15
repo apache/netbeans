@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.58
+#Version 1.60
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -248,6 +248,13 @@ meth public abstract java.util.List<org.netbeans.modules.css.model.api.Rule> get
 meth public abstract void addPage(org.netbeans.modules.css.model.api.Page)
 meth public abstract void addRule(org.netbeans.modules.css.model.api.Rule)
 
+CLSS public abstract interface org.netbeans.modules.css.model.api.MediaCondition
+intf org.netbeans.modules.css.model.api.Element
+meth public abstract java.util.Collection<org.netbeans.modules.css.model.api.MediaExpression> getMediaExpressions()
+meth public abstract java.util.Collection<org.netbeans.modules.css.model.api.MediaInParens> getMediaInParens()
+meth public abstract void addMediaExpression(org.netbeans.modules.css.model.api.MediaExpression)
+meth public abstract void addMediaInParens(org.netbeans.modules.css.model.api.MediaInParens)
+
 CLSS public abstract interface org.netbeans.modules.css.model.api.MediaExpression
 intf org.netbeans.modules.css.model.api.Element
 meth public abstract org.netbeans.modules.css.model.api.MediaFeature getMediaFeature()
@@ -262,6 +269,11 @@ CLSS public abstract interface org.netbeans.modules.css.model.api.MediaFeatureVa
 intf org.netbeans.modules.css.model.api.Element
 meth public abstract org.netbeans.modules.css.model.api.Expression getExpression()
 meth public abstract void setExpression(org.netbeans.modules.css.model.api.Expression)
+
+CLSS public abstract interface org.netbeans.modules.css.model.api.MediaInParens
+intf org.netbeans.modules.css.model.api.Element
+meth public abstract org.netbeans.modules.css.model.api.MediaExpression getMediaExpression()
+meth public abstract void setMediaExpression(org.netbeans.modules.css.model.api.MediaExpression)
 
 CLSS public abstract interface org.netbeans.modules.css.model.api.MediaQuery
 intf org.netbeans.modules.css.model.api.Element

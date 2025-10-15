@@ -25,6 +25,20 @@
         <apidef name="JavaRefactoringAPI">Java Refactoring API</apidef>
     </apidefs>
     <changes>
+        <change id="parameterTypeFromSource">
+            <api name="JavaRefactoringAPI"/>
+            <summary>Added parameterTypeFromSource method to ParameterInfo.</summary>
+            <version major="1" minor="92"/>
+            <date day="7" month="7" year="2025"/>
+            <author login="jlahoda"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Ability to get the parameter type as it appears in the source code.
+                </p>    
+            </description>
+            <class package="org.netbeans.modules.refactoring.java.api" name="ChangeParametersRefactoring"/>
+        </change>
         <change id="FilterDependency">
             <api name="JavaRefactoringAPI"/>
             <summary>Added BINARYFILE, DEPENDENCY, PLATFORM constants to JavaWhereUsedFilters.</summary>

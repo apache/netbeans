@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.lsp.server.refactoring;
 
 import com.google.gson.Gson;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
@@ -62,6 +63,7 @@ import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.refactoring.java.api.ChangeParametersRefactoring;
+import org.netbeans.modules.refactoring.java.api.ChangeParametersRefactoring.ParameterInfo;
 import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
@@ -197,10 +199,11 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
         ParameterUI[] params = new ParameterUI[method.getParameters().size()];
         for (int i = 0; i < method.getParameters().size(); i++) {
             VariableElement param = method.getParameters().get(i);
-            ChangeParametersRefactoring.ParameterInfo info = new ChangeParametersRefactoring.ParameterInfo(i, param.getSimpleName().toString(), Utilities.getTypeName(ci, param.asType(), true).toString(), null);
+            ChangeParametersRefactoring.ParameterInfo info = new ChangeParametersRefactoring.ParameterInfo(i, param.getSimpleName().toString(), ParameterInfo.parameterTypeFromSource(ci, param), null);
             params[i] = new ParameterUI(info.getType(), info.getName());
             params[i].assignInfo(info);
         }
+        MethodTree methodTree = ci.getTrees().getTree(method);
         Modifier mod;
         if (method.getModifiers().contains(javax.lang.model.element.Modifier.PUBLIC)) {
             mod = Modifier.PUBLIC;
@@ -213,7 +216,7 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
         }
         ChangeMethodParameterUI model = new ChangeMethodParameterUI();
         model.withName(method.getSimpleName().toString())
-                .withReturnType(Utilities.getTypeName(ci, method.getReturnType(), true).toString())
+                .withReturnType(methodTree.getReturnType().toString())
                 .withSelectedModifier(mod)
                 .withIsStatic(method.getModifiers().contains(javax.lang.model.element.Modifier.STATIC))
                 .withParameters(params)

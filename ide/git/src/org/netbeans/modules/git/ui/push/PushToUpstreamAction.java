@@ -47,7 +47,6 @@ import org.netbeans.modules.git.ui.repository.RepositoryInfo.PushMode;
 import org.netbeans.modules.git.utils.GitUtils;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 import org.openide.util.RequestProcessor.Task;
@@ -100,7 +99,13 @@ public class PushToUpstreamAction extends MultipleRepositoryAction {
                 }
                 RepositoryInfo.PushMode pushMode = info.getPushMode();
                 GitBranch trackedBranch = getTrackedBranch(activeBranch, pushMode, errorLabel);
-                GitRemoteConfig cfg = getRemoteConfigForActiveBranch(trackedBranch, info, errorLabel);                        
+
+                if (trackedBranch == null && info.getRemotes().size() > 1) {
+                    SystemAction.get(PushAction.class).push(repository, activeBranch);
+                    return;
+                }
+
+                GitRemoteConfig cfg = getRemoteConfigForActiveBranch(trackedBranch, info, errorLabel);
                 if (cfg == null) {
                     return;
                 }
@@ -128,12 +133,14 @@ public class PushToUpstreamAction extends MultipleRepositoryAction {
                         GitBranch remoteBranch = getClient()
                                 .listRemoteBranches(uri, getProgressMonitor())
                                 .get(remoteBranchName);
-                        GitRevisionInfo rev = getClient().getCommonAncestor(new String[]{activeBranch.getId(), remoteBranch.getId()}, getProgressMonitor());
-                        // conflict if
-                        // A) rev == null : completely unrelated commits
-                        // B) ancestor is neither remote branch (opposite means EQUAL or PUSH needed but not CONFLICT)
-                        //    nor local head (opposite means EQUAL or pull needed but not CONFLICT)
-                        conflicted = rev == null || (!remoteBranch.getId().equals(rev.getRevision()) && !activeBranch.getId().equals(rev.getRevision()));
+                        if (remoteBranch != null) {
+                            GitRevisionInfo rev = getClient().getCommonAncestor(new String[]{activeBranch.getId(), remoteBranch.getId()}, getProgressMonitor());
+                            // conflict if
+                            // A) rev == null : completely unrelated commits
+                            // B) ancestor is neither remote branch (opposite means EQUAL or PUSH needed but not CONFLICT)
+                            //    nor local head (opposite means EQUAL or pull needed but not CONFLICT)
+                            conflicted = rev == null || (!remoteBranch.getId().equals(rev.getRevision()) && !activeBranch.getId().equals(rev.getRevision()));
+                        }
                     } catch (GitException ex) {
                         Logger.getLogger(PushBranchesStep.class.getName()).log(Level.INFO, activeBranch.getId() + ", " + remoteBranchName, ex); //NOI18N
                     }
@@ -193,7 +200,6 @@ public class PushToUpstreamAction extends MultipleRepositoryAction {
                 GitUtils.notifyError(errorLabel, MSG_Err_noRemote());
                 return null;
             } else {
-                GitUtils.notifyError(errorLabel, MSG_Err_moreRemotes(remotes.size()));
                 return null;
             }
         } else {

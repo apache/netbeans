@@ -106,6 +106,18 @@ public class PushBranchesStep extends AbstractWizardPanel implements WizardDescr
      */
     public void fillRemoteBranches (final GitRemoteConfig cfg, final Map<String, GitBranch> branches,
             final Map<String, String> tags) {
+        fillRemoteBranches(cfg, branches, tags, null);
+    }
+
+    /**
+     *
+     * @param cfg configuration of the remote repository including URLs of remote
+     * @param branches list of all branches in the remote repo
+     * @param tags list of all tags in the remote repo
+     * @param branchToSelect branch that should be preselected in the list
+     */
+    public void fillRemoteBranches (final GitRemoteConfig cfg, final Map<String, GitBranch> branches,
+            final Map<String, String> tags, final GitBranch branchToSelect) {
         fillLocalObjects(Collections.<PushMapping>emptyList());
         new GitProgressSupport.NoOutputLogging() {
             @Override
@@ -161,6 +173,11 @@ public class PushBranchesStep extends AbstractWizardPanel implements WizardDescr
                             }
                         }
                         boolean preselected = !conflicted && updateNeeded;
+
+                        // If a specific branch should be selected, override preselection
+                        if (branchToSelect != null && branch.getName().equals(branchToSelect.getName())) {
+                            preselected = true;
+                        }
 
                         //add current branch in the list for update or for adding
                         l.add(new PushMapping.PushBranchMapping(remoteBranch == null ? null : remoteBranch.getName(),

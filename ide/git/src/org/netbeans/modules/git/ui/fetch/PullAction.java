@@ -52,6 +52,7 @@ import org.netbeans.modules.git.ui.actions.ActionProgress.DefaultActionProgress;
 import org.netbeans.modules.git.ui.actions.ActionProgressSupport;
 import org.netbeans.modules.git.ui.actions.GitAction;
 import org.netbeans.modules.git.ui.actions.SingleRepositoryAction;
+import org.netbeans.modules.git.ui.branch.SetTrackingAction;
 import org.netbeans.modules.git.ui.merge.MergeRevisionAction;
 import org.netbeans.modules.git.ui.output.OutputLogger;
 import org.netbeans.modules.git.ui.rebase.RebaseAction;
@@ -65,6 +66,7 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.awt.Mnemonics;
 import org.openide.util.NbBundle;
+import org.openide.util.actions.SystemAction;
 
 /**
  *
@@ -107,6 +109,10 @@ public class PullAction extends SingleRepositoryAction {
     }
     
     private void pull (final File repository) {
+        pull(repository, null);
+    }
+
+    public void pull (final File repository, final GitBranch branchToSelect) {
         RepositoryInfo info = RepositoryInfo.getInstance(repository);
         try {
             info.refreshRemotes();
@@ -117,7 +123,7 @@ public class PullAction extends SingleRepositoryAction {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run () {
-                PullWizard wiz = new PullWizard(repository, remotes);
+                PullWizard wiz = new PullWizard(repository, remotes, branchToSelect);
                 if (wiz.show()) {
                     Utils.logVCSExternalRepository("GIT", wiz.getFetchUri()); //NOI18N
                     pull(repository, wiz.getFetchUri(), wiz.getFetchRefSpecs(), wiz.getBranchToMerge(), wiz.getRemoteToPersist());
@@ -144,6 +150,7 @@ public class PullAction extends SingleRepositoryAction {
         private final String branchToMerge;
         private final String target;
         private final String remoteNameToUpdate;
+        private boolean pullSuccessful = false;
 
         public GitProgressSupportImpl (List<String> fetchRefSpecs, String branchToMerge, String target, String remoteNameToUpdate) {
             this.fetchRefSpecs = fetchRefSpecs;
@@ -182,48 +189,50 @@ public class PullAction extends SingleRepositoryAction {
                         return;
                     }
                 }
-                GitUtils.runWithoutIndexing(new Callable<Void>() {
-                    @Override
-                    public Void call () throws Exception {
-                        for (String branch : toDelete) {
-                            client.deleteBranch(branch, true, getProgressMonitor());
-                            getLogger().outputLine(Bundle.MSG_PullAction_branchDeleted(branch));
-                        }
-                        setDisplayName(Bundle.MSG_PullAction_fetching());
-                        Map<String, GitTransportUpdate> fetchResult = FetchAction.fetchRepeatedly(
-                                client, getProgressMonitor(), target, fetchRefSpecs);
-                        if (isCanceled()) {
-                            return null;
-                        }
-                        FetchUtils.log(repository, fetchResult, getLogger());
-                        if (!isCanceled()) {
-                            setDisplayName(Bundle.MSG_PullAction_progress_syncBranches());
-                            FetchUtils.syncTrackingBranches(repository, fetchResult, GitProgressSupportImpl.this, GitProgressSupportImpl.this.getProgress(), false);
-                        }
-                        if (isCanceled() || branchToMerge == null) {
-                            return null;
-                        }
-                        new BranchSynchronizer(branchToMerge, repository, new BranchSynchronizer.GitProgressSupportDelegate() {
-
-                            @Override
-                            public GitClient getClient () throws GitException {
-                                return client;
-                            }
-
-                            @Override
-                            public OutputLogger getLogger () {
-                                return GitProgressSupportImpl.this.getLogger();
-                            }
-                            
-                            @Override
-                            public ProgressDelegate getProgress () {
-                                return GitProgressSupportImpl.this.getProgress();
-                            }
-                            
-                        }).execute();
+                GitUtils.runWithoutIndexing(() -> {
+                    for (String branch : toDelete) {
+                        client.deleteBranch(branch, true, getProgressMonitor());
+                        getLogger().outputLine(Bundle.MSG_PullAction_branchDeleted(branch));
+                    }
+                    setDisplayName(Bundle.MSG_PullAction_fetching());
+                    Map<String, GitTransportUpdate> fetchResult = FetchAction.fetchRepeatedly(
+                        client, getProgressMonitor(), target, fetchRefSpecs);
+                    if (isCanceled()) {
                         return null;
                     }
-                }, repository);
+                    FetchUtils.log(repository, fetchResult, getLogger());
+                    if (!isCanceled()) {
+                        setDisplayName(Bundle.MSG_PullAction_progress_syncBranches());
+                        FetchUtils.syncTrackingBranches(repository, fetchResult, GitProgressSupportImpl.this, GitProgressSupportImpl.this.getProgress(), false);
+                    }
+                    if (isCanceled() || branchToMerge == null) {
+                        return null;
+                    }
+                    new BranchSynchronizer(branchToMerge, repository, new BranchSynchronizer.GitProgressSupportDelegate() {
+                        
+                        @Override
+                        public GitClient getClient () throws GitException {
+                            return client;
+                        }
+                        
+                        @Override
+                        public OutputLogger getLogger () {
+                            return GitProgressSupportImpl.this.getLogger();
+                        }
+                        
+                        @Override
+                        public ProgressDelegate getProgress () {
+                            return GitProgressSupportImpl.this.getProgress();
+                        }
+                        
+                    }).execute();
+                    
+                    if (!isCanceled()) {
+                        pullSuccessful = true;
+                    }
+                    
+                    return null;
+                }, repository);                
             } catch (GitException ex) {
                 setError(true);
                 GitClientExceptionHandler.notifyException(ex, true);
@@ -231,6 +240,20 @@ public class PullAction extends SingleRepositoryAction {
                 setDisplayName(NbBundle.getMessage(GitAction.class, "LBL_Progress.RefreshingStatuses")); //NOI18N
                 Git.getInstance().getFileStatusCache().refreshAllRoots(Collections.<File, Collection<File>>singletonMap(repository, Git.getInstance().getSeenRoots(repository)));
                 GitUtils.headChanged(repository);
+
+                // Check if tracking should be set up after successful pull
+                if (pullSuccessful && branchToMerge != null) {
+                    RepositoryInfo info = RepositoryInfo.getInstance(repository);
+                    info.refresh();
+                    GitBranch activeBranch = info.getActiveBranch();
+                    if (activeBranch != null && activeBranch.getTrackedBranch() == null) {
+                        // branchToMerge is the remote branch name (e.g., "origin/master")
+                        if (shallSetupTracking(activeBranch, branchToMerge)) {
+                            SystemAction.get(SetTrackingAction.class).setupTrackedBranchImmediately(
+                                    repository, activeBranch.getName(), branchToMerge);
+                        }
+                    }
+                }
             }
         }
     }
@@ -378,5 +401,17 @@ public class PullAction extends SingleRepositoryAction {
             }
         }
     }
-    
+
+    @NbBundle.Messages({
+        "LBL_Pull.setupTracking=Set Up Remote Tracking?",
+        "# {0} - remote branch name", "# {1} - branch name", "MSG_Pull.setupTracking=Pulled from \"{0}\".\n"
+                + "Do you want to set up branch \"{1}\" to track the remote branch?"
+    })
+    private static boolean shallSetupTracking (GitBranch branch, String remoteBranchName) {
+        return NotifyDescriptor.YES_OPTION == DialogDisplayer.getDefault().notify(new NotifyDescriptor.Confirmation(
+                Bundle.MSG_Pull_setupTracking(remoteBranchName, branch.getName()),
+                Bundle.LBL_Pull_setupTracking(),
+                NotifyDescriptor.YES_NO_OPTION, NotifyDescriptor.QUESTION_MESSAGE));
+    }
+
 }

@@ -78,6 +78,7 @@ import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCConditional;
 import com.sun.tools.javac.tree.JCTree.JCConstantCaseLabel;
+import com.sun.tools.javac.tree.JCTree.JCPatternCaseLabel;
 import com.sun.tools.javac.tree.JCTree.JCContinue;
 import com.sun.tools.javac.tree.JCTree.JCDoWhileLoop;
 import com.sun.tools.javac.tree.JCTree.JCEnhancedForLoop;
@@ -2144,7 +2145,7 @@ public class CasualDiff {
         if (oldT.guard != null && newT.guard != null) {
             int[] guardBounds = getBounds(oldT.guard);
             copyTo(localPointer, guardBounds[0]);
-            diffTree(oldT.guard, newT.guard, guardBounds);
+            localPointer = diffTree(oldT.guard, newT.guard, guardBounds);
         } else if (oldT.guard != null && newT.guard == null) {
             //TODO:
         } else if (oldT.guard == null && newT.guard != null) {
@@ -2153,7 +2154,11 @@ public class CasualDiff {
         do { } while (tokenSequence.moveNext() && JavaTokenId.COLON != tokenSequence.token().id() && JavaTokenId.ARROW != tokenSequence.token().id());
         boolean reindentStatements = false;
         if (Objects.equals(oldT.getCaseKind(), newT.getCaseKind())) {
+            localPointer= tokenSequence.offset();
             tokenSequence.moveNext();
+            if (origText.charAt(localPointer-1)==' ') {
+                localPointer--;
+            }
             copyTo(localPointer, localPointer = tokenSequence.offset());
         } else {
             if (JavaTokenId.COLON == tokenSequence.token().id()) {

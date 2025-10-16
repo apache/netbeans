@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.26
+#Version 1.27
 
 CLSS public abstract interface java.io.Serializable
 
@@ -124,15 +124,15 @@ meth public org.junit.jupiter.api.AssertionFailureBuilder message(java.lang.Obje
 meth public org.junit.jupiter.api.AssertionFailureBuilder reason(java.lang.String)
 meth public org.opentest4j.AssertionFailedError build()
 meth public static org.junit.jupiter.api.AssertionFailureBuilder assertionFailure()
-meth public void buildAndThrow() throws org.opentest4j.AssertionFailedError
+meth public void buildAndThrow()
 supr java.lang.Object
 hfds actual,cause,expected,includeValuesInMessage,message,mismatch,reason
 
 CLSS public org.junit.jupiter.api.Assertions
 cons protected init()
 innr public abstract interface static TimeoutFailureFactory
-meth public !varargs static void assertAll(java.lang.String,org.junit.jupiter.api.function.Executable[]) throws org.opentest4j.MultipleFailuresError
-meth public !varargs static void assertAll(org.junit.jupiter.api.function.Executable[]) throws org.opentest4j.MultipleFailuresError
+meth public !varargs static void assertAll(java.lang.String,org.junit.jupiter.api.function.Executable[])
+meth public !varargs static void assertAll(org.junit.jupiter.api.function.Executable[])
 meth public static <%0 extends java.lang.Object, %1 extends java.lang.Throwable> {%%0} assertTimeoutPreemptively(java.time.Duration,org.junit.jupiter.api.function.ThrowingSupplier<{%%0}>,java.util.function.Supplier<java.lang.String>,org.junit.jupiter.api.Assertions$TimeoutFailureFactory<{%%1}>) throws {%%1}
 meth public static <%0 extends java.lang.Object> {%%0} assertDoesNotThrow(org.junit.jupiter.api.function.ThrowingSupplier<{%%0}>)
 meth public static <%0 extends java.lang.Object> {%%0} assertDoesNotThrow(org.junit.jupiter.api.function.ThrowingSupplier<{%%0}>,java.lang.String)
@@ -157,10 +157,10 @@ meth public static <%0 extends java.lang.Throwable> {%%0} assertThrows(java.lang
 meth public static <%0 extends java.lang.Throwable> {%%0} assertThrowsExactly(java.lang.Class<{%%0}>,org.junit.jupiter.api.function.Executable)
 meth public static <%0 extends java.lang.Throwable> {%%0} assertThrowsExactly(java.lang.Class<{%%0}>,org.junit.jupiter.api.function.Executable,java.lang.String)
 meth public static <%0 extends java.lang.Throwable> {%%0} assertThrowsExactly(java.lang.Class<{%%0}>,org.junit.jupiter.api.function.Executable,java.util.function.Supplier<java.lang.String>)
-meth public static void assertAll(java.lang.String,java.util.Collection<org.junit.jupiter.api.function.Executable>) throws org.opentest4j.MultipleFailuresError
-meth public static void assertAll(java.lang.String,java.util.stream.Stream<org.junit.jupiter.api.function.Executable>) throws org.opentest4j.MultipleFailuresError
-meth public static void assertAll(java.util.Collection<org.junit.jupiter.api.function.Executable>) throws org.opentest4j.MultipleFailuresError
-meth public static void assertAll(java.util.stream.Stream<org.junit.jupiter.api.function.Executable>) throws org.opentest4j.MultipleFailuresError
+meth public static void assertAll(java.lang.String,java.util.Collection<org.junit.jupiter.api.function.Executable>)
+meth public static void assertAll(java.lang.String,java.util.stream.Stream<org.junit.jupiter.api.function.Executable>)
+meth public static void assertAll(java.util.Collection<org.junit.jupiter.api.function.Executable>)
+meth public static void assertAll(java.util.stream.Stream<org.junit.jupiter.api.function.Executable>)
 meth public static void assertArrayEquals(boolean[],boolean[])
 meth public static void assertArrayEquals(boolean[],boolean[],java.lang.String)
 meth public static void assertArrayEquals(boolean[],boolean[],java.util.function.Supplier<java.lang.String>)
@@ -488,18 +488,18 @@ cons protected init()
 meth public static <%0 extends java.lang.Object> {%%0} abort()
 meth public static <%0 extends java.lang.Object> {%%0} abort(java.lang.String)
 meth public static <%0 extends java.lang.Object> {%%0} abort(java.util.function.Supplier<java.lang.String>)
-meth public static void assumeFalse(boolean) throws org.opentest4j.TestAbortedException
-meth public static void assumeFalse(boolean,java.lang.String) throws org.opentest4j.TestAbortedException
-meth public static void assumeFalse(boolean,java.util.function.Supplier<java.lang.String>) throws org.opentest4j.TestAbortedException
-meth public static void assumeFalse(java.util.function.BooleanSupplier) throws org.opentest4j.TestAbortedException
-meth public static void assumeFalse(java.util.function.BooleanSupplier,java.lang.String) throws org.opentest4j.TestAbortedException
-meth public static void assumeFalse(java.util.function.BooleanSupplier,java.util.function.Supplier<java.lang.String>) throws org.opentest4j.TestAbortedException
-meth public static void assumeTrue(boolean) throws org.opentest4j.TestAbortedException
-meth public static void assumeTrue(boolean,java.lang.String) throws org.opentest4j.TestAbortedException
-meth public static void assumeTrue(boolean,java.util.function.Supplier<java.lang.String>) throws org.opentest4j.TestAbortedException
-meth public static void assumeTrue(java.util.function.BooleanSupplier) throws org.opentest4j.TestAbortedException
-meth public static void assumeTrue(java.util.function.BooleanSupplier,java.lang.String) throws org.opentest4j.TestAbortedException
-meth public static void assumeTrue(java.util.function.BooleanSupplier,java.util.function.Supplier<java.lang.String>) throws org.opentest4j.TestAbortedException
+meth public static void assumeFalse(boolean)
+meth public static void assumeFalse(boolean,java.lang.String)
+meth public static void assumeFalse(boolean,java.util.function.Supplier<java.lang.String>)
+meth public static void assumeFalse(java.util.function.BooleanSupplier)
+meth public static void assumeFalse(java.util.function.BooleanSupplier,java.lang.String)
+meth public static void assumeFalse(java.util.function.BooleanSupplier,java.util.function.Supplier<java.lang.String>)
+meth public static void assumeTrue(boolean)
+meth public static void assumeTrue(boolean,java.lang.String)
+meth public static void assumeTrue(boolean,java.util.function.Supplier<java.lang.String>)
+meth public static void assumeTrue(java.util.function.BooleanSupplier)
+meth public static void assumeTrue(java.util.function.BooleanSupplier,java.lang.String)
+meth public static void assumeTrue(java.util.function.BooleanSupplier,java.util.function.Supplier<java.lang.String>)
 meth public static void assumingThat(boolean,org.junit.jupiter.api.function.Executable)
 meth public static void assumingThat(java.util.function.BooleanSupplier,org.junit.jupiter.api.function.Executable)
 supr java.lang.Object

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 3.39
+#Version 3.40
 
 CLSS public abstract interface java.io.Serializable
 
@@ -15,6 +15,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -213,13 +214,13 @@ hfds throwable
 
 CLSS public org.netbeans.api.debugger.jpda.ExceptionBreakpoint
 fld public final static int TYPE_EXCEPTION_CATCHED = 1
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int TYPE_EXCEPTION_CATCHED_UNCATCHED = 3
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int TYPE_EXCEPTION_CAUGHT = 1
 fld public final static int TYPE_EXCEPTION_CAUGHT_UNCAUGHT = 3
 fld public final static int TYPE_EXCEPTION_UNCATCHED = 2
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int TYPE_EXCEPTION_UNCAUGHT = 2
 fld public final static java.lang.String PROP_CATCH_TYPE = "catchType"
 fld public final static java.lang.String PROP_CLASS_EXCLUSION_FILTERS = "classExclusionFilters"

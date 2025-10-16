@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.50
+#Version 1.51
 
 CLSS public abstract interface java.io.Serializable
 
@@ -26,6 +26,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -77,18 +78,18 @@ CLSS public final org.netbeans.api.search.SearchHistory
 fld public final static java.lang.String ADD_TO_HISTORY = "add-to-history"
 fld public final static java.lang.String ADD_TO_REPLACE = "add-to-replace"
 fld public final static java.lang.String LAST_SELECTED = "last-selected"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.List<org.netbeans.api.search.ReplacePattern> getReplacePatterns()
 meth public java.util.List<org.netbeans.api.search.SearchPattern> getSearchPatterns()
 meth public org.netbeans.api.search.SearchPattern getLastSelected()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.netbeans.api.search.SearchHistory getDefault()
 meth public void add(org.netbeans.api.search.SearchPattern)
 meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void addReplace(org.netbeans.api.search.ReplacePattern)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setLastSelected(org.netbeans.api.search.SearchPattern)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void storeFileNamePattern(java.lang.String)
 supr java.lang.Object
 hfds INSTANCE,MAX_PATTERN_LENGTH,MAX_SEARCH_PATTERNS_ITEMS,PREFS_NODE,PROP_REPLACE_PATTERN_PREFIX,PROP_SEARCH_PATTERN_PREFIX,pcs,prefs,replacePatternsList,searchPatternsList

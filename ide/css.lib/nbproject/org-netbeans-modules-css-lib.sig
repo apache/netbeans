@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.9
+#Version 2.10
 
 CLSS public abstract interface java.io.Serializable
 
@@ -1007,6 +1007,7 @@ fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCate
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory CONTAIN
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory CONTENT
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory DEFAULT
+fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory FILTER_EFFECTS
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory FIREFOX
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory FLEXIBLE_BOX_LAYOUT
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory FONTS
@@ -1017,13 +1018,16 @@ fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCate
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory INTERNET_EXPLORER
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory LINE
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory LISTS_AND_COUNTERS
+fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory LOGICAL
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory MARQUEE
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory MULTI_COLUMN_LAYOUT
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory OPERA
+fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory OVERFLOW
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory PAGED_MEDIA
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory POSITIONING
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory RUBY
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory SAFARI
+fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory SCROLL_SNAP
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory SIZING
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory SPEECH
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory TEXT

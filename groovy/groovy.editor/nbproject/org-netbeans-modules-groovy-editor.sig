@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.98
+#Version 1.99
 
 CLSS public abstract interface java.io.Serializable
 
@@ -399,6 +399,8 @@ cons public init()
 meth public abstract java.util.Map<org.netbeans.modules.csl.api.OffsetRange,org.netbeans.modules.csl.api.ColoringAttributes> getOccurrences()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public abstract void setCaretPosition(int)
+meth public boolean isKeepMarks()
+meth public boolean isMarkOccurrencesEnabled()
 supr org.netbeans.modules.parsing.spi.ParserResultTask<{org.netbeans.modules.csl.api.OccurrencesFinder%0}>
 
 CLSS public abstract interface org.netbeans.modules.csl.api.StructureScanner
@@ -1653,6 +1655,8 @@ CLSS public org.netbeans.modules.groovy.editor.api.parser.GroovyOccurrencesFinde
 cons public init()
 meth protected final boolean isCancelled()
 meth protected final void resume()
+meth public boolean isKeepMarks()
+meth public boolean isMarkOccurrencesEnabled()
 meth public final java.lang.Class<? extends org.netbeans.modules.parsing.spi.Scheduler> getSchedulerClass()
 meth public final void cancel()
 meth public int getPriority()

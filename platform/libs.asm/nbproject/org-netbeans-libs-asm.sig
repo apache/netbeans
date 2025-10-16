@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 5.32
+#Version 5.33
 
 CLSS public abstract interface java.io.Serializable
 
@@ -572,6 +572,7 @@ fld public final static int V22 = 66
 fld public final static int V23 = 67
 fld public final static int V24 = 68
 fld public final static int V25 = 69
+fld public final static int V26 = 70
 fld public final static int V9 = 53
 fld public final static int V_PREVIEW = -65536
 fld public final static java.lang.Integer DOUBLE
@@ -1173,9 +1174,12 @@ supr org.objectweb.asm.RecordComponentVisitor
 
 CLSS public abstract org.objectweb.asm.commons.Remapper
 cons public init()
+ anno 0 java.lang.Deprecated()
+cons public init(int)
 meth protected org.objectweb.asm.signature.SignatureVisitor createRemappingSignatureAdapter(org.objectweb.asm.signature.SignatureVisitor)
  anno 0 java.lang.Deprecated()
 meth protected org.objectweb.asm.signature.SignatureVisitor createSignatureRemapper(org.objectweb.asm.signature.SignatureVisitor)
+meth public !varargs java.lang.String mapInvokeDynamicMethodName(java.lang.String,java.lang.String,org.objectweb.asm.Handle,java.lang.Object[])
 meth public java.lang.Object mapValue(java.lang.Object)
 meth public java.lang.String map(java.lang.String)
 meth public java.lang.String mapAnnotationAttributeName(java.lang.String,java.lang.String)
@@ -1183,6 +1187,7 @@ meth public java.lang.String mapDesc(java.lang.String)
 meth public java.lang.String mapFieldName(java.lang.String,java.lang.String,java.lang.String)
 meth public java.lang.String mapInnerClassName(java.lang.String,java.lang.String,java.lang.String)
 meth public java.lang.String mapInvokeDynamicMethodName(java.lang.String,java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String mapMethodDesc(java.lang.String)
 meth public java.lang.String mapMethodName(java.lang.String,java.lang.String,java.lang.String)
 meth public java.lang.String mapModuleName(java.lang.String)
@@ -1192,6 +1197,7 @@ meth public java.lang.String mapSignature(java.lang.String,boolean)
 meth public java.lang.String mapType(java.lang.String)
 meth public java.lang.String[] mapTypes(java.lang.String[])
 supr java.lang.Object
+hfds api
 
 CLSS public org.objectweb.asm.commons.SerialVersionUIDAdder
 cons protected init(int,org.objectweb.asm.ClassVisitor)
@@ -1232,8 +1238,13 @@ supr org.objectweb.asm.signature.SignatureVisitor
 hfds classNames,remapper,signatureVisitor
 
 CLSS public org.objectweb.asm.commons.SimpleRemapper
+cons public init(int,java.lang.String,java.lang.String)
+cons public init(int,java.util.Map<java.lang.String,java.lang.String>)
 cons public init(java.lang.String,java.lang.String)
+ anno 0 java.lang.Deprecated()
 cons public init(java.util.Map<java.lang.String,java.lang.String>)
+ anno 0 java.lang.Deprecated()
+meth public !varargs java.lang.String mapInvokeDynamicMethodName(java.lang.String,java.lang.String,org.objectweb.asm.Handle,java.lang.Object[])
 meth public java.lang.String map(java.lang.String)
 meth public java.lang.String mapAnnotationAttributeName(java.lang.String,java.lang.String)
 meth public java.lang.String mapFieldName(java.lang.String,java.lang.String,java.lang.String)

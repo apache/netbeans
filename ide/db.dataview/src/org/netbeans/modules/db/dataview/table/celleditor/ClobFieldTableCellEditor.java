@@ -32,7 +32,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.modules.db.dataview.util.FileBackedClob;
 import org.netbeans.modules.db.dataview.util.LobHelper;
 import org.openide.DialogDisplayer;
@@ -269,7 +269,7 @@ public class ClobFieldTableCellEditor extends AbstractCellEditor
         Throwable t;
         // Only show dialog, if the filesize is large enougth and has a use for the user
         if (size == null || size > (1024 * 1024)) {
-            t = ProgressUtils.showProgressDialogAndRun(ft, title, false);
+            t = BaseProgressUtils.showProgressDialogAndRun(ft, title, false);
         } else {
             t = ft.run(null);
         }

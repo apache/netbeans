@@ -71,7 +71,7 @@ import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.editor.BaseAction;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.editor.java.JavaKit;
@@ -138,7 +138,7 @@ public class RemoveSurroundingCodeAction extends BaseAction implements LookupLis
         final JavaSource js = JavaSource.forDocument(doc);
         if (js != null) {
             final AtomicBoolean cancel = new AtomicBoolean();
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                 @Override
                 public void run() {
                     try {

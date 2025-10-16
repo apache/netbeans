@@ -36,7 +36,7 @@ import javax.swing.text.JTextComponent;
 import org.netbeans.api.java.source.*;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import org.netbeans.api.java.source.ui.ElementHeaders;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.lib.editor.codetemplates.spi.*;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.java.preprocessorbridge.api.JavaSourceUtil;
@@ -1103,7 +1103,7 @@ public class JavaCodeTemplateProcessor implements CodeTemplateProcessor {
             final FileObject fo = NbEditorUtilities.getFileObject(doc);
             if (fo != null) {
                 final AtomicBoolean cancel = new AtomicBoolean();
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     @Override
                     public void run() {
                         try {

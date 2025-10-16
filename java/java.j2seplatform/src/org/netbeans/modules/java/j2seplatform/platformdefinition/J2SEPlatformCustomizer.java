@@ -31,13 +31,11 @@ import java.io.File;
 import java.util.Collection;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.net.URL;
 import java.net.URI;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
@@ -69,7 +67,7 @@ import org.openide.util.NbBundle;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressRunnable;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.modules.java.j2seplatform.platformdefinition.jrtfs.NBJRTUtil;
 import org.netbeans.spi.java.classpath.PathResourceImplementation;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -78,9 +76,6 @@ import org.openide.DialogDisplayer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataFolder;
-import org.openide.modules.SpecificationVersion;
-import org.openide.nodes.AbstractNode;
-import org.openide.nodes.Children;
 import org.openide.util.Cancellable;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
@@ -691,7 +686,7 @@ public class J2SEPlatformCustomizer extends JTabbedPane {
                             }
                         }
                         final ProgressRunnable<Void> task = new Task();
-                        ProgressUtils.showProgressDialogAndRun(task, Bundle.TXT_JavadocSearch(file.getAbsolutePath()), false);
+                        BaseProgressUtils.showProgressDialogAndRun(task, Bundle.TXT_JavadocSearch(file.getAbsolutePath()), false);
                     }
                     if (!result.isEmpty()) {
                         return result.stream()

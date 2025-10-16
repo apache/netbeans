@@ -39,6 +39,7 @@ import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.project.classpath.ProjectClassPathModifier;
 import org.netbeans.api.progress.aggregate.AggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.AggregateProgressHandle;
+import org.netbeans.api.progress.aggregate.BasicAggregateProgressFactory;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
@@ -166,10 +167,11 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         final JpaControllerUtil.EmbeddedPkSupport embeddedPkSupport = new JpaControllerUtil.EmbeddedPkSupport();
 
         final String title = NbBundle.getMessage(PersistenceClientIterator.class, "TITLE_Progress_Jsf_Pages"); //NOI18N
-        final ProgressContributor progressContributor = AggregateProgressFactory.createProgressContributor(title);
+        final ProgressContributor progressContributor = BasicAggregateProgressFactory.createProgressContributor(title);
         final AggregateProgressHandle handle =
-                AggregateProgressFactory.createHandle(title, new ProgressContributor[]{progressContributor}, null, null);
+                BasicAggregateProgressFactory.createHandle(title, new ProgressContributor[]{progressContributor}, null, null);
         final ProgressPanel progressPanel = new ProgressPanel();
+        // TODO last usage of org.netbeans.api.progress.nb
         final JComponent progressComponent = AggregateProgressFactory.createProgressComponent(handle);
 
         final ProgressReporter reporter = new ProgressReporterDelegate(

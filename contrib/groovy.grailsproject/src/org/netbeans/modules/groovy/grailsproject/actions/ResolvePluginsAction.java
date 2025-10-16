@@ -23,7 +23,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.groovy.grailsproject.GrailsProject;
 import org.netbeans.modules.groovy.grailsproject.ProgressSupport;
 import org.openide.DialogDisplayer;
@@ -46,7 +45,7 @@ public class ResolvePluginsAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        final ProgressHandle handle = ProgressHandleFactory.createHandle(NbBundle.getMessage(ResolvePluginsAction.class, "LBL_Resolving_Project_Plugins_progress"));
+        final ProgressHandle handle = ProgressHandle.createHandle(NbBundle.getMessage(ResolvePluginsAction.class, "LBL_Resolving_Project_Plugins_progress"));
 
         final Dialog dialog = DialogDisplayer.getDefault().createDialog(
                 ProgressSupport.createProgressDialog(NbBundle.getMessage(ResolvePluginsAction.class, "LBL_Resolving_Project_Plugins"),

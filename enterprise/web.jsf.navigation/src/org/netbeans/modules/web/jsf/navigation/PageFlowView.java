@@ -40,7 +40,6 @@ import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -255,7 +254,7 @@ public class PageFlowView extends TopComponent implements Lookup.Provider {
         "PageFlowView.lbl.graph.initialization=Initializing PageFlow Graph"
     })
     private synchronized void processScene() {
-        final ProgressHandle progressHandle = ProgressHandleFactory.createHandle(Bundle.PageFlowView_lbl_graph_initialization());
+        final ProgressHandle progressHandle = ProgressHandle.createHandle(Bundle.PageFlowView_lbl_graph_initialization());
         progressHandle.start();
         initTask = RP.submit(new Runnable() {
             @Override

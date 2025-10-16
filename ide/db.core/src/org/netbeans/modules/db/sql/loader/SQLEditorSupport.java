@@ -38,7 +38,6 @@ import javax.swing.text.Document;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.core.api.multiview.MultiViews;
 import org.netbeans.modules.db.api.sql.execute.SQLExecuteCookie;
 import org.netbeans.modules.db.api.sql.execute.SQLExecution;
@@ -565,7 +564,7 @@ public class SQLEditorSupport extends DataEditorSupport
                     return;
                 }
 
-                ProgressHandle handle = ProgressHandleFactory.createHandle(
+                ProgressHandle handle = ProgressHandle.createHandle(
                         NbBundle.getMessage(SQLEditorSupport.class,
                         "LBL_ExecutingStatements"), this);
                 handle.start();

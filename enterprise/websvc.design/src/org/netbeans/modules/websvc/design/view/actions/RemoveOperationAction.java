@@ -37,12 +37,10 @@ import javax.swing.AbstractAction;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
-import org.netbeans.modules.websvc.api.jaxws.project.config.Service;
 import org.netbeans.modules.websvc.core.MethodGenerator;
 import org.netbeans.modules.websvc.design.javamodel.MethodModel;
 import org.netbeans.modules.websvc.design.javamodel.ProjectService;
@@ -88,7 +86,7 @@ public class RemoveOperationAction extends AbstractAction{
                 (singleSelection?"MSG_OPERATION_DELETE":"MSG_OPERATIONS_DELETE"), methodName));
         Object retVal = DialogDisplayer.getDefault().notify(desc);
         if (retVal == NotifyDescriptor.YES_OPTION) {
-            final ProgressHandle handle = ProgressHandleFactory.createHandle(NbBundle.
+            final ProgressHandle handle = ProgressHandle.createHandle(NbBundle.
                     getMessage(RemoveOperationAction.class,
                     (singleSelection?"MSG_RemoveOperation":"MSG_RemoveOperations"), methodName)); //NOI18N
             Task task = new Task(new Runnable() {

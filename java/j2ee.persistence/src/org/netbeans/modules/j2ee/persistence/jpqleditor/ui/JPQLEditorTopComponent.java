@@ -318,7 +318,7 @@ public final class JPQLEditorTopComponent extends TopComponent {
                     if (Thread.interrupted() || isSqlTranslationProcessDone) {
                         return;    // Cancel the task
                     }
-                    ph2 = ProgressHandleFactory.createHandle(
+                    ph2 = ProgressHandle.createHandle(
                             NbBundle.getMessage(JPQLEditorTopComponent.class, "progressTaskname"));
                     ph2.start(100);
                     FileObject pXml = puObject.getPrimaryFile();

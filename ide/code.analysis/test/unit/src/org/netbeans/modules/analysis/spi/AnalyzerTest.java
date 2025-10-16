@@ -20,7 +20,6 @@ package org.netbeans.modules.analysis.spi;
 
 import org.junit.Test;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.analysis.spi.Analyzer.Context;
 
 /**
@@ -31,7 +30,7 @@ public class AnalyzerTest {
     
     @Test
     public void testZeroWorkUnits() {
-        ProgressHandle handle = ProgressHandleFactory.createHandle("test");
+        ProgressHandle handle = ProgressHandle.createHandle("test");
         handle.start(1000);
         Context ctxInit = new Context(null, null, null, handle, 0, 100);
         

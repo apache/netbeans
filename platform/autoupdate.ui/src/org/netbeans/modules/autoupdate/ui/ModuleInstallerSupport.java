@@ -208,7 +208,7 @@ public class ModuleInstallerSupport  {
         }
 
         if (oc != null) {
-            ProgressHandle activeHandle = ProgressHandleFactory.createHandle(
+            ProgressHandle activeHandle = ProgressHandle.createHandle(
                     displayName != null ? active_handle_single(displayName) : active_handle());
             Restarter restarter = oc.getSupport().doOperation(activeHandle);
             assert restarter == null : "No Restater need to make units active";

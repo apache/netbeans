@@ -34,15 +34,17 @@ public class UnusedTest extends NbTestCase {
     public void testUnused() throws Exception {
         HintTest
                 .create()
-                .input("package test;\n" +
-                       "public class Test {\n" +
-                       "    private class UnusedClass {}\n" +
-                       "    private void unusedMethod() {}\n" +
-                       "    private int unusedField;\n" +
-                       "    private void test(int unusedParam) {}\n" +
-                       "    public void test2() {test(1);}\n" +
-                       "    private Test() {}\n" +
-                       "}\n")
+                .input("""
+                       package test;
+                       public class Test {
+                           private class UnusedClass {}
+                           private void unusedMethod() {}
+                           private int unusedField;
+                           private void test(int unusedParam) {}
+                           public void test2() {test(1);}
+                           private Test() {}
+                       }
+                       """)
                 .run(Unused.class)
                 .assertWarnings("2:18-2:29:verifier:" + Bundle.ERR_NotUsed("UnusedClass"),
                                 "3:17-3:29:verifier:" + Bundle.ERR_NotUsed("unusedMethod"),
@@ -55,12 +57,14 @@ public class UnusedTest extends NbTestCase {
         HintTest
                 .create()
                 .sourceLevel("17")
-                .input("package test;\n" +
-                       "public class Test {\n" +
-                       "    boolean test(Object o) {\n" +
-                       "        return o instanceof String s;\n" +
-                       "    }\n" +
-                       "}\n")
+                .input("""
+                       package test;
+                       public class Test {
+                           boolean test(Object o) {
+                               return o instanceof String s;
+                           }
+                       }
+                       """)
                 .run(Unused.class)
                 .findWarning("3:35-3:36:verifier:Variable s is never read")
                 .assertFixes();
@@ -69,19 +73,23 @@ public class UnusedTest extends NbTestCase {
     public void testUnusedNoPackagePrivate() throws Exception {
         HintTest
                 .create()
-                .input("package test;\n" +
-                       "public class Test {\n" +
-                       "    void packagePrivate() {}\n" +
-                       "}\n")
+                .input("""
+                       package test;
+                       public class Test {
+                           void packagePrivate() {}
+                       }
+                       """)
                 .run(Unused.class)
                 .assertWarnings("2:9-2:23:verifier:" + Bundle.ERR_NotUsed("packagePrivate"));
         HintTest
                 .create()
                 .preference(Unused.DETECT_UNUSED_PACKAGE_PRIVATE, false)
-                .input("package test;\n" +
-                       "public class Test {\n" +
-                       "    void packagePrivate() {}\n" +
-                       "}\n")
+                .input("""
+                       package test;
+                       public class Test {
+                           void packagePrivate() {}
+                       }
+                       """)
                 .run(Unused.class)
                 .assertWarnings();
     }

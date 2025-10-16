@@ -573,6 +573,11 @@ public final class ElementOpen {
         int[] span = null;
         switch(forTree.getKind()) {
             case CLASS:
+                if ((int) target[1] >= 0 && (int) target[2] == -1) {
+                    // Compact Source file (JEP 512)  issue implicit class end position not found in code 
+                    // see JDK-8364015
+                    target[2] = (int) info.getTrees().getSourcePositions().getEndPosition(cu, cu);
+                }
             case INTERFACE:
             case ENUM:
             case ANNOTATION_TYPE:

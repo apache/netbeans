@@ -40,7 +40,7 @@ import javax.swing.KeyStroke;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.java.queries.SourceLevelQuery.Profile;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.WizardValidationException;
@@ -559,7 +559,7 @@ final class RemotePlatformNode extends AbstractNode {
         test.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ProgressUtils.showProgressDialogAndRun(new Runnable() {
+                BaseProgressUtils.showProgressDialogAndRun(new Runnable() {
                         @Override
                         public void run() {
                             try {

@@ -70,13 +70,13 @@ import org.netbeans.api.editor.EditorUtilities;
 import org.netbeans.api.editor.caret.EditorCaret;
 import org.netbeans.api.editor.fold.FoldHierarchy;
 import org.netbeans.api.lexer.TokenHierarchy;
-import org.netbeans.api.progress.ProgressUtils;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.lib.editor.util.swing.PositionRegion;
 import org.netbeans.modules.editor.indent.api.Indent;
 import org.netbeans.modules.editor.indent.api.Reformat;
 import org.netbeans.api.editor.NavigationHistory;
 import org.netbeans.api.editor.caret.CaretMoveContext;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.spi.editor.caret.CaretMoveHandler;
 import org.netbeans.modules.editor.lib2.RectangularSelectionUtils;
 import org.netbeans.modules.editor.lib2.view.DocumentView;
@@ -1826,7 +1826,7 @@ public class ActionFactory {
 
                 try {
                 final AtomicBoolean canceled = new AtomicBoolean();
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                    BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     public void run() {
                         if (canceled.get()) return;
                         final Reformat formatter = indentOnly ? null : Reformat.get(doc);

@@ -21,7 +21,7 @@ package org.netbeans.modules.web.jsf.palette.items;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.text.JTextComponent;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
@@ -57,7 +57,7 @@ public class PaletteUtils {
     protected static JsfLibrariesSupport getJsfLibrariesSupport(JTextComponent targetComponent) {
         AtomicBoolean cancel = new AtomicBoolean();
         JsfLibrariesGetter jsfLibrariesGetter = new JsfLibrariesGetter(targetComponent, cancel);
-        ProgressUtils.runOffEventDispatchThread(jsfLibrariesGetter, Bundle.PaletteUtils_lbl_preparing_palette_component(), cancel, false, 100, 3000);
+        BaseProgressUtils.runOffEventDispatchThread(jsfLibrariesGetter, Bundle.PaletteUtils_lbl_preparing_palette_component(), cancel, false, 100, 3000);
         return jsfLibrariesGetter.getJsfLibrariesSupport();
     }
 

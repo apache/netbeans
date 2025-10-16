@@ -19,7 +19,7 @@
 package org.netbeans.modules.cordova.platforms.ios;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.cordova.platforms.api.WebKitDebuggingSupport;
 import org.netbeans.modules.web.browser.api.BrowserSupport;
@@ -54,7 +54,7 @@ public class IOSBrowserActionProvider implements ActionProvider {
     @Override
     public void invokeAction(final String command, final Lookup context) throws IllegalArgumentException {
         try {
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                 @Override
                 public void run() {
                     WebKitDebuggingSupport.getDefault().stopDebugging(true);

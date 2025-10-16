@@ -40,7 +40,7 @@ import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.editor.BaseAction;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.java.editor.imports.ComputeImports.Pair;
@@ -127,7 +127,7 @@ public class FastImportAction extends BaseAction {
                 }
             };
 
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
                 public void run() {
                     try {

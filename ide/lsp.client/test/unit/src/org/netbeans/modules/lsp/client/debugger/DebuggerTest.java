@@ -125,7 +125,8 @@ public class DebuggerTest extends NbTestCase {
                         .addConfiguration(Map.of("type", "java+",
                                                  "request", "launch",
                                                  "file", FileUtil.toFile(testFile).getAbsolutePath(),
-                                                 "classPaths", List.of("any")))
+                                                 "classPaths", List.of("any"),
+                                                 "testRun", false))
                         .launch();
         waitFor(true, () -> DebuggerManager.getDebuggerManager().getSessions().length > 0);
         assertEquals(1, DebuggerManager.getDebuggerManager().getSessions().length);
@@ -198,7 +199,8 @@ public class DebuggerTest extends NbTestCase {
                         .addConfiguration(Map.of("type", "java+",
                                                  "request", "launch",
                                                  "file", FileUtil.toFile(testFile).getAbsolutePath(),
-                                                 "classPaths", List.of("any")))
+                                                 "classPaths", List.of("any"),
+                                                 "testRun", false))
                         .launch();
         waitFor(true, () -> DebuggerManager.getDebuggerManager().getSessions().length > 0);
         assertEquals(1, DebuggerManager.getDebuggerManager().getSessions().length);

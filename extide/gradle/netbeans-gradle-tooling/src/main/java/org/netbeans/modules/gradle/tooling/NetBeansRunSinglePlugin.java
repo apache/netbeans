@@ -19,8 +19,10 @@
 
 package org.netbeans.modules.gradle.tooling;
 
+import java.util.Arrays;
 import static java.util.Arrays.asList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.logging.Logger;
@@ -29,7 +31,9 @@ import org.gradle.api.logging.LogLevel;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
+import org.gradle.api.file.FileCollection;
 import org.gradle.api.tasks.JavaExec;
+import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetContainer;
 import org.gradle.api.tasks.TaskProvider;
 import org.gradle.process.CommandLineArgumentProvider;
@@ -47,6 +51,7 @@ class NetBeansRunSinglePlugin implements Plugin<Project> {
     private static final String RUN_SINGLE_ARGS = "runArgs";
     private static final String RUN_SINGLE_JVM_ARGS = "runJvmArgs";
     private static final String RUN_SINGLE_CWD = "runWorkingDir";
+    private static final String RUN_SINGLE_SOURCE_SET_NAMES = "runSourceSetNames";
 
     private static final String DEPRECATE_RUN_SINGLE = 
             "runSingle task is deprecated. Inspect your configuration and use just 'run' task instead of 'runSingle'";
@@ -64,6 +69,20 @@ class NetBeansRunSinglePlugin implements Plugin<Project> {
     }
     
     private void configureJavaExec(Project project, JavaExec je) {
+        Object sourceSetValue = project.findProperty(RUN_SINGLE_SOURCE_SET_NAMES);
+        if (sourceSetValue != null) {
+            SourceSetContainer sourceSets = project.getExtensions().findByType(SourceSetContainer.class);
+            if (sourceSets != null) {
+                FileCollection updatedClasspath = Arrays.stream(sourceSetValue.toString().split(","))
+                        .map(String::trim)
+                        .map(sourceSets::findByName)
+                        .filter(Objects::nonNull)
+                        .map(SourceSet::getRuntimeClasspath)
+                        .reduce(project.getObjects().fileCollection(), FileCollection::plus);
+
+                je.setClasspath(updatedClasspath);
+            }
+        }
         if (project.hasProperty(RUN_SINGLE_MAIN)) {
             String mainClass = project.property(RUN_SINGLE_MAIN).toString();
             if (GRADLE_VERSION.compareTo(GradleVersion.version("6.4")) < 0) {

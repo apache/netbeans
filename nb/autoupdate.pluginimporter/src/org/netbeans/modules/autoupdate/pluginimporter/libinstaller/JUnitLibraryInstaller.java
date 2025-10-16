@@ -42,7 +42,6 @@ import org.netbeans.api.autoupdate.UpdateUnit;
 import org.netbeans.api.autoupdate.UpdateUnitProvider;
 import org.netbeans.api.autoupdate.UpdateUnitProviderFactory;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import static org.netbeans.modules.autoupdate.pluginimporter.libinstaller.Bundle.*;
 import org.netbeans.modules.autoupdate.ui.api.PluginManager;
 import org.openide.DialogDescriptor;
@@ -148,13 +147,13 @@ public class JUnitLibraryInstaller {
     private static void install(OperationContainer<InstallSupport> oc, UpdateElement jUnitElement, UpdateUnit jUnitLib, boolean useUserdirAsFallback) throws OperationException {
         // download
         LOG.log(Level.FINE, "Try to download {0}", jUnitElement);
-        ProgressHandle downloadHandle = ProgressHandleFactory.createHandle (download_handle());
+        ProgressHandle downloadHandle = ProgressHandle.createHandle (download_handle());
         Validator validator = oc.getSupport().doDownload(downloadHandle, null, useUserdirAsFallback);
         // install
-        ProgressHandle validateHandle = ProgressHandleFactory.createHandle (validate_handle());
+        ProgressHandle validateHandle = ProgressHandle.createHandle (validate_handle());
         Installer installer = oc.getSupport().doValidate(validator, validateHandle);
         LOG.log(Level.FINE, "Try to install {0}", jUnitElement);
-        ProgressHandle installHandle = ProgressHandleFactory.createHandle (install_handle());
+        ProgressHandle installHandle = ProgressHandle.createHandle (install_handle());
         Restarter restarter = oc.getSupport().doInstall(installer, installHandle);
         assert restarter == null : "Not need to restart while installing " + jUnitLib;
         LOG.log(Level.FINE, "Done {0}", jUnitElement);

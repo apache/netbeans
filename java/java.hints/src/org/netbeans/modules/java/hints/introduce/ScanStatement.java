@@ -31,6 +31,7 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
+import com.sun.source.tree.YieldTree;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.ArrayList;
@@ -71,6 +72,7 @@ final class ScanStatement extends ErrorAwareTreePathScanner<Void, Void> {
     private final Map<Tree, Iterable<? extends TreePath>> assignmentsForUse;
     final Set<TreePathHandle> usedTypeVariables = new HashSet<TreePathHandle>();
     boolean hasReturns = false;
+    boolean hasYields = false;
     private boolean hasBreaks = false;
     private boolean hasContinues = false;
     private boolean secondPass = false;
@@ -237,6 +239,15 @@ final class ScanStatement extends ErrorAwareTreePathScanner<Void, Void> {
     }
 
     @Override
+    public Void visitYield(YieldTree node, Void p) {
+        if (isMethodCode() && phase == PHASE_INSIDE_SELECTION) {
+            selectionExits.add(getCurrentPath());
+            hasYields = true;
+        }
+        return super.visitYield(node, p);
+    }
+
+    @Override
     public Void visitBreak(BreakTree node, Void p) {
         if (isMethodCode() && phase == PHASE_INSIDE_SELECTION && !treesSeensInSelection.contains(info.getTreeUtilities().getBreakContinueTargetTree(getCurrentPath()))) {
             selectionExits.add(getCurrentPath());
@@ -313,6 +324,7 @@ final class ScanStatement extends ErrorAwareTreePathScanner<Void, Void> {
         i += hasReturns ? 1 : 0;
         i += hasBreaks ? 1 : 0;
         i += hasContinues ? 1 : 0;
+        i += hasYields ? 1 : 0;
         if (i > 1) {
             return "ERR_Too_Many_Different_Exits"; // NOI18N
         }
@@ -325,6 +337,7 @@ final class ScanStatement extends ErrorAwareTreePathScanner<Void, Void> {
         for (TreePath tp : selectionExits) {
             if (tp.getLeaf().getKind() == Tree.Kind.RETURN) {
                 if (!exitsFromAllBranches) {
+                    //TODO: the same for yield
                     ReturnTree rt = (ReturnTree) tp.getLeaf();
                     TreePath currentReturnValue = rt.getExpression() != null ? new TreePath(tp, rt.getExpression()) : null;
                     if (!returnValueComputed) {

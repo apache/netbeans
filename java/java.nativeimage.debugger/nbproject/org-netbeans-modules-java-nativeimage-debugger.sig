@@ -1,10 +1,11 @@
 #Signature file v4.1
-#Version 0.19
+#Version 0.20
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -17,9 +18,9 @@ meth public java.lang.String toString()
 
 CLSS public final org.netbeans.modules.java.nativeimage.debugger.api.NIDebugRunner
 meth public static org.netbeans.modules.nativeimage.api.debug.NIDebugger attach(java.io.File,long,java.lang.String,org.netbeans.api.project.Project,java.util.function.Consumer<org.netbeans.api.debugger.DebuggerEngine>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.netbeans.modules.nativeimage.api.debug.NIDebugger start(java.io.File,java.util.List<java.lang.String>,java.lang.String,org.netbeans.api.project.Project,java.lang.String,org.netbeans.api.extexecution.ExecutionDescriptor,java.util.function.Consumer<org.netbeans.api.debugger.DebuggerEngine>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.netbeans.modules.nativeimage.api.debug.NIDebugger start(java.io.File,org.netbeans.modules.nativeimage.api.debug.StartDebugParameters,org.netbeans.api.project.Project,java.util.function.Consumer<org.netbeans.api.debugger.DebuggerEngine>)
 supr java.lang.Object
 

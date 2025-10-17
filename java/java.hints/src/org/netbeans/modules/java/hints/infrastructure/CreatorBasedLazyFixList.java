@@ -28,6 +28,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.spi.ErrorRule;
 import org.netbeans.modules.java.hints.spi.ErrorRule.Data;
@@ -125,7 +127,15 @@ public class CreatorBasedLazyFixList implements LazyFixList {
                     data.setData(diagnosticMessage);
                 }
                 
-                List<Fix> currentRuleFixes = rule.run(info, diagnosticKey, offset, path, data);
+                List<Fix> currentRuleFixes;
+                
+                try {
+                    currentRuleFixes = rule.run(info, diagnosticKey, offset, path, data);
+                } catch (Exception ex) {
+                    Logger.getLogger(CreatorBasedLazyFixList.class.getName())
+                            .log(Level.WARNING, rule.getDisplayName()+ " rule failed", ex);
+                    continue;
+                }
                 
                 if (currentRuleFixes == CANCELLED) {
                     cancelled.set(true);

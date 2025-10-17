@@ -1029,7 +1029,7 @@ outer:  do {
 
         TaskFutureWrapper wrap = fixedDelay ? 
             new FixedDelayTask(command, initialDelayMillis, periodMillis) :
-            new FixedRateTask(command, initialDelay, periodMillis);
+            new FixedRateTask(command, initialDelayMillis, periodMillis);
         Task t = create(wrap);
         wrap.t = t;
         t.cancelled = wrap.cancelled;

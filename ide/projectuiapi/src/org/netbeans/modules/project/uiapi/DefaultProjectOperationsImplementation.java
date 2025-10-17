@@ -19,10 +19,8 @@
 
 package org.netbeans.modules.project.uiapi;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dialog;
-import java.awt.GridBagConstraints;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,8 +38,6 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
@@ -50,7 +46,6 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
@@ -171,7 +166,7 @@ public final class DefaultProjectOperationsImplementation {
             }
         }
         
-        final ProgressHandle handle = ProgressHandleFactory.createHandle(NbBundle.getMessage(DefaultProjectOperationsImplementation.class, "LBL_Delete_Project_Caption"));
+        final ProgressHandle handle = ProgressHandle.createHandle(NbBundle.getMessage(DefaultProjectOperationsImplementation.class, "LBL_Delete_Project_Caption"));
         final DefaultProjectDeletePanel deletePanel = new DefaultProjectDeletePanel(handle, displayName, FileUtil.getFileDisplayName(projectFolder), !dataFiles.isEmpty());
         
         String caption = NbBundle.getMessage(DefaultProjectOperationsImplementation.class, "LBL_Delete_Project_Caption");
@@ -228,7 +223,7 @@ public final class DefaultProjectOperationsImplementation {
     
     //<editor-fold defaultstate="collapsed" desc="Copy Operation">
     public static void copyProject(final Project project) {
-        final ProgressHandle handle = ProgressHandleFactory.createHandle(NbBundle.getMessage(DefaultProjectOperationsImplementation.class, "LBL_Copy_Project_Handle"));
+        final ProgressHandle handle = ProgressHandle.createHandle(NbBundle.getMessage(DefaultProjectOperationsImplementation.class, "LBL_Copy_Project_Handle"));
         final ProjectCopyPanel panel = new ProjectCopyPanel(handle, project, false);
         //#76559
         handle.start(MAX_WORK);
@@ -325,7 +320,7 @@ public final class DefaultProjectOperationsImplementation {
     
     //<editor-fold defaultstate="collapsed" desc="Move Operation">
     public static void moveProject(final Project project) {
-        final ProgressHandle handle = ProgressHandleFactory.createHandle(NbBundle.getMessage(DefaultProjectOperationsImplementation.class, "LBL_Move_Project_Handle"));
+        final ProgressHandle handle = ProgressHandle.createHandle(NbBundle.getMessage(DefaultProjectOperationsImplementation.class, "LBL_Move_Project_Handle"));
         final ProjectCopyPanel panel = new ProjectCopyPanel(handle, project, true);
         //#76559
         handle.start(MAX_WORK);
@@ -361,7 +356,7 @@ public final class DefaultProjectOperationsImplementation {
     }
     
     public static void renameProject(final Project project, final String nueName) {
-        final ProgressHandle handle = ProgressHandleFactory.createHandle(NbBundle.getMessage(DefaultProjectOperationsImplementation.class, "LBL_Rename_Project_Handle"));
+        final ProgressHandle handle = ProgressHandle.createHandle(NbBundle.getMessage(DefaultProjectOperationsImplementation.class, "LBL_Rename_Project_Handle"));
         final DefaultProjectRenamePanel panel = new DefaultProjectRenamePanel(handle, project, nueName);
 
         //#76559

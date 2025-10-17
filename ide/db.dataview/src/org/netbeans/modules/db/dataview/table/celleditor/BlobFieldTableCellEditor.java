@@ -39,7 +39,7 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.modules.db.dataview.util.CharsetSelector;
 import org.netbeans.modules.db.dataview.util.EncodingHelper;
 import org.netbeans.modules.db.dataview.util.FileBackedBlob;
@@ -266,7 +266,7 @@ public class BlobFieldTableCellEditor extends AbstractCellEditor
         Throwable t;
         // Only show dialog, if the filesize is large enougth and has a use for the user
         if (size == null || size > (1024 * 1024)) {
-            t = ProgressUtils.showProgressDialogAndRun(ft, title, false);
+            t = BaseProgressUtils.showProgressDialogAndRun(ft, title, false);
         } else {
             t = ft.run(null);
         }

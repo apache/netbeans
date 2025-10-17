@@ -26,7 +26,6 @@ import javax.enterprise.deploy.spi.exceptions.TargetException;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.j2ee.jboss4.JBDeploymentManager;
 import org.netbeans.modules.j2ee.jboss4.ide.ui.JBPluginProperties;
 import org.netbeans.modules.j2ee.jboss4.nodes.JBAbilitiesSupport;
@@ -75,7 +74,7 @@ public class UndeployModuleCookieImpl implements UndeployModuleCookie {
     public Task undeploy() {
         final JBDeploymentManager dm = (JBDeploymentManager) lookup.lookup(JBDeploymentManager.class);
         final String nameWoExt = fileName.substring(0, fileName.lastIndexOf('.'));
-        final ProgressHandle handle = ProgressHandleFactory.createHandle(NbBundle.getMessage(UndeployModuleCookieImpl.class,
+        final ProgressHandle handle = ProgressHandle.createHandle(NbBundle.getMessage(UndeployModuleCookieImpl.class,
                 "LBL_UndeployProgress", nameWoExt));
         
         Runnable r = new Runnable() {

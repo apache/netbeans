@@ -297,9 +297,6 @@
                 <test-type>
                     <name>unit</name>
                     <test-dependency>
-                        <code-name-base>org.netbeans.api.progress.nb</code-name-base>
-                    </test-dependency>
-                    <test-dependency>
                         <code-name-base>org.netbeans.core.startup</code-name-base>
                         <compile-dependency/>
                     </test-dependency>

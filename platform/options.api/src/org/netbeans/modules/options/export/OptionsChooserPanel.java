@@ -43,7 +43,6 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.swing.outline.CheckRenderDataProvider;
 import org.netbeans.swing.outline.DefaultOutlineModel;
 import org.netbeans.swing.outline.Outline;
@@ -235,7 +234,7 @@ public final class OptionsChooserPanel extends JPanel {
             };
 	    exportTask = RP.create(runnable);
 
-	    final ProgressHandle ph = ProgressHandleFactory.createHandle(Bundle.ProgressHandle_Export_DisplayName(), exportTask);
+	    final ProgressHandle ph = ProgressHandle.createHandle(Bundle.ProgressHandle_Export_DisplayName(), exportTask);
 	    exportTask.addTaskListener(new TaskListener() {
 		@Override
 		public void taskFinished(org.openide.util.Task task) {

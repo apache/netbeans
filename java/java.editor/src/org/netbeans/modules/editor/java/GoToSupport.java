@@ -99,7 +99,7 @@ import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.lsp.HyperlinkLocation;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.editor.ext.ToolTipSupport;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
 import org.netbeans.lib.editor.util.StringEscapeUtils;
@@ -218,7 +218,7 @@ public class GoToSupport {
 
     private static void performGoTo(final Document doc, final int offset, final boolean goToSource, final boolean javadoc) {
         final AtomicBoolean cancel = new AtomicBoolean();
-        ProgressUtils.runOffEventDispatchThread(new Runnable() {
+        BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
             @Override
             public void run() {
                 performGoToImpl(doc, offset, goToSource, javadoc, cancel);

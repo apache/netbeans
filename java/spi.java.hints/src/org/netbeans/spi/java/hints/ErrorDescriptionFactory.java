@@ -49,8 +49,6 @@ import javax.swing.SwingUtilities;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.GeneratorUtilities;
-import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.lexer.TokenSequence;
@@ -172,7 +170,7 @@ public class ErrorDescriptionFactory {
             case METHOD -> {
                 return info.getTreeUtilities().findNameSpan((MethodTree) tree);
             }
-            case ANNOTATION_TYPE, CLASS, ENUM, INTERFACE -> {
+            case ANNOTATION_TYPE, CLASS, ENUM, RECORD, INTERFACE -> {
                 return info.getTreeUtilities().findNameSpan((ClassTree) tree);
             }
             case VARIABLE -> {
@@ -488,6 +486,7 @@ public class ErrorDescriptionFactory {
             return NbBundle.getMessage(ErrorDescriptionFactory.class, "LBL_FIX_Suppress_Waning",  keyNames.toString() );  // NOI18N
         }
 
+        @Override
         public void performRewrite(TransformationContext ctx) throws IOException {
             WorkingCopy copy = ctx.getWorkingCopy();
             TreePath path = ctx.getPath();

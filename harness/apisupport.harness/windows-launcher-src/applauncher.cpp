@@ -74,6 +74,10 @@ bool AppLauncher::initBaseNames() {
     return true;
 }
 
+const char* AppLauncher::findUserDirViaEnvVar() {
+    return "IGNORE";
+}
+
 bool AppLauncher::findUserDir(const char *str) {
     logMsg("AppLauncher::findUserDir()");
     if (!NbLauncher::findUserDir(str)) {    // will set userDir and possibly userHome.

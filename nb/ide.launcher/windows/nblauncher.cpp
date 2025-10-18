@@ -34,6 +34,7 @@
 using namespace std;
 
 const char *NbLauncher::NBEXEC_FILE_PATH = NBEXEC_DLL;
+const char *ENV_NETBEANS_USERDIR="NETBEANS_USERDIR";
 const char *NbLauncher::OPT_NB_DEFAULT_USER_DIR = "netbeans_default_userdir=";
 const char *NbLauncher::OPT_NB_DEFAULT_CACHE_DIR = "netbeans_default_cachedir=";
 const char *NbLauncher::OPT_NB_DEFAULT_OPTIONS = "netbeans_default_options=";
@@ -74,6 +75,10 @@ int NbLauncher::start(char *cmdLine) {
     return start(args.getCount(), args.getArgs());
 }
 
+const char* NbLauncher::findUserDirViaEnvVar() {
+    return getenv(ENV_NETBEANS_USERDIR);
+}
+
 int NbLauncher::start(int argc, char *argv[]) {
     SetErrorMode(SetErrorMode(0) | SEM_FAILCRITICALERRORS | SEM_NOOPENFILEERRORBOX);
     
@@ -82,13 +87,26 @@ int NbLauncher::start(int argc, char *argv[]) {
         return -1;
     }
 
-    parseConfigFile((baseDir + "\\etc\\" + getAppName() + ".conf").c_str());
+    bool skipUserDir = false;
+    const char *userDirViaEnv = findUserDirViaEnvVar();
+    if (userDirViaEnv != NULL) {
+        logMsg("NbLauncher::using NETBEANS_USERDIR env variable (%s)", userDirViaEnv);
+        string udve = userDirViaEnv;
+        if (udve == "IGNORE") {
+            skipUserDir = true;
+            userDirViaEnv = NULL;
+        } else {
+            userDir = userDirViaEnv;
+        }
+    }
+
+    parseConfigFile((baseDir + "\\etc\\" + getAppName() + ".conf").c_str(), userDirViaEnv == NULL);
 
     if (!parseArgs(argc, argv)) {
         return -1;
     }
     string oldUserDir = userDir;
-    parseConfigFile((userDir + "\\etc\\" + getAppName() + ".conf").c_str());
+    parseConfigFile((userDir + "\\etc\\" + getAppName() + ".conf").c_str(), userDirViaEnv == NULL);
     userDir = oldUserDir;
 
     addExtraClusters();
@@ -114,6 +132,18 @@ int NbLauncher::start(int argc, char *argv[]) {
     if (!userDir.empty()) {
         newArgs.add(ARG_NAME_USER_DIR);
         newArgs.add(userDir.c_str());
+        if (!skipUserDir) {
+            string toSet = ENV_NETBEANS_USERDIR;
+            toSet = toSet + "=" + userDir;
+            putenv(toSet.c_str());
+
+            const char* path = getenv("PATH");
+            if (path != NULL) {
+                string setPath = "PATH=";
+                setPath = setPath + path + ";" + baseDir + "\\bin\\";
+                putenv(setPath.c_str());
+            }
+        }
     }
     if (!defUserDirRoot.empty()) {
         newArgs.add(ARG_DEFAULT_USER_DIR_ROOT);
@@ -460,7 +490,7 @@ bool NbLauncher::getOption(char *&str, const char *opt) {
     return false;
 }
 
-bool NbLauncher::parseConfigFile(const char* path) {
+bool NbLauncher::parseConfigFile(const char* path, const bool searchUserDir) {
     logMsg("parseConfigFile(%s)", path);
     FILE *file = fopen(path, "r");
     if (!file) {
@@ -474,7 +504,7 @@ bool NbLauncher::parseConfigFile(const char* path) {
         if (*str == '#') {
             continue;
         }
-        if (getOption(str, getDefUserDirOptName())) {
+        if (searchUserDir && getOption(str, getDefUserDirOptName())) {
              findUserDir(str);
              logMsg("User dir: %s", userDir.c_str());
         } else if (getOption(str, getDefCacheDirOptName())) {

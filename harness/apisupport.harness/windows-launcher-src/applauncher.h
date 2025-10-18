@@ -51,6 +51,7 @@ protected:
     virtual void adjustHeapSize();
     virtual bool findUserDir(const char *str);
     virtual bool findCacheDir(const char *str);
+    virtual const char* findUserDirViaEnvVar();
     virtual const char * getDefUserDirOptName();
     virtual const char * getDefCacheDirOptName();
     virtual const char * getDefOptionsOptName();

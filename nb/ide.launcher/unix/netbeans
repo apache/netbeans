@@ -38,11 +38,17 @@ cd "$progdir"/..
 basedir=`pwd`
 cd "$old"
 
-case "`uname`" in
+case "`uname -s -m`" in
     Darwin*)
         # set default userdir and cachedir on Mac OS X
         DEFAULT_USERDIR_ROOT="${HOME}/Library/Application Support/NetBeans"
         DEFAULT_CACHEDIR_ROOT=${HOME}/Library/Caches/NetBeans
+        ;;
+    CYGWIN*_64)
+        exec "$progdir/netbeans64.exe" "$@"
+        ;;
+    CYGWIN*)
+        exec "$progdir/netbeans.exe" "$@"
         ;;
     *) 
         # set default userdir and cachedir on unix systems
@@ -65,8 +71,17 @@ fi
 
 export DEFAULT_USERDIR_ROOT
 
+if ! [ "$NETBEANS_USERDIR" = "IGNORE" ]; then
+    # make sure own launcher directory is on PATH as a fallback
+    PATH=$PATH:$progdir
+fi
+
 # #68373: look for userdir, but do not modify "$@"
-userdir="${netbeans_default_userdir}"
+if [ -z "$NETBEANS_USERDIR" ]; then
+    userdir="${netbeans_default_userdir}"
+else
+    userdir="$NETBEANS_USERDIR"
+fi
 cachedir="${netbeans_default_cachedir}"
 
 founduserdir=""
@@ -138,6 +153,8 @@ launchNbexec() {
     then
         sh=/bin/bash
     fi
+    NETBEANS_USERDIR=${userdir}
+    export NETBEANS_USERDIR
     if [ "${founduserdir}" = "yes" ]; then
         exec $sh "$nbexec" "$@"
     else

@@ -621,6 +621,43 @@
         clusters' fully qualified paths separated by path.separator (semicolon on Windows, colon on Unices)
      </api></li>
   </ul>
+  <p>
+      When the <code>netbeans</code> launcher starts, it also manipulates
+      (reads and writes) following properties:
+  </p>
+  <ul>
+     <li><api name="NETBEANS_USERDIR" category="devel" group="property" type="export">
+         <p>
+         If this <em>environment variable</em> is set to a valid value,
+         then its value is used as default user dir 
+         instead of <code>netbeans_default_userdir</code> read from
+         the config file.
+         </p>
+         <p>
+         When the value of user dir is finally determined by the launcher
+         (by considering default values, value of this environment variable
+         and <code>--userdir</code> CLI switch, etc.) the launcher sets
+         <code>NETBEANS_USERDIR</code> environment variable for itself 
+         and its subprocesses.
+         </p>
+         <p>
+         That way executing <code>netbeans</code> in the NetBeans internal
+         terminal will know what's the userdir of the surrouding NetBeans
+         and will open files in the same instance just as 
+         <a href="https://github.com/apache/netbeans/pull/8756">#8756 illustrates</a>.
+         </p>
+         <p>
+         The launcher also modifies the <code>PATH</code> variable
+         by appending its own diretory - making sure typing <code>netbeans</code>
+         gets handled in the internal NetBeans terminal at all.
+         In the unusual and rare cases when <b>opt-out</b> of this
+         behavior maybe needed, just
+         set the environment variable to <code>IGNORE</code> to instruct
+         the launcher to avoid these environment variable modifications.
+         </p>
+    </api>
+     </li>
+  </ul>
  </answer>
 
 

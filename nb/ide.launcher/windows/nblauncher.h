@@ -66,6 +66,7 @@ protected:
     virtual bool initBaseNames();
     virtual void addSpecificOptions(CmdArgs &args);
     virtual bool findUserDir(const char *str);
+    virtual const char* findUserDirViaEnvVar();
     virtual bool findCacheDir(const char *str);
     virtual const char * getAppName();
     virtual const char * getDefUserDirOptName();
@@ -80,7 +81,7 @@ private:
     NbLauncher(const NbLauncher& orig);
     bool readClusterFile();
     bool parseArgs(int argc, char *argv[]);
-    bool parseConfigFile(const char* path);    
+    bool parseConfigFile(const char* path, const bool searchUserDir);
     bool getOption(char *&str, const char *opt);
     void addCluster(const char *cl);
     void addExtraClusters();

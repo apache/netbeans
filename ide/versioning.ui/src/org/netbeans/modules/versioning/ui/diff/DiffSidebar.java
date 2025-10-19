@@ -76,6 +76,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 import javax.swing.plaf.TextUI;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.queries.FileEncodingQuery;
 import org.netbeans.modules.versioning.core.api.VCSFileProxy;
 import org.openide.util.Mutex;
@@ -518,7 +519,7 @@ class DiffSidebar extends JPanel implements DocumentListener, ComponentListener,
                 if (component != null) {
                     TextUI textUI = component.getUI();
                     int clickOffset = textUI.viewToModel(component, new Point(0, e.getY()));
-                    line = Utilities.getLineOffset(document, clickOffset);
+                    line = LineDocumentUtils.getLineIndex(document, clickOffset);
                 }
             }catch (BadLocationException ble){
                 LOG.log(Level.WARNING, "getLineFromMouseEvent", ble); // NOI18N

@@ -323,8 +323,8 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
             initialOffset = getFormatStableStart(joinedTS, start, end, rangesToIgnore);
             if (DEBUG_PERFORMANCE) {
                 System.err.println("[IndPer] Locating FormatStableStart took "+(System.currentTimeMillis()-startTime1)+" ms");
-                System.err.println("[IndPer] Current line index is: "+(Utilities.getLineOffset(doc, start)));
-                System.err.println("[IndPer] FormatStableStart line starts at index: "+(Utilities.getLineOffset(doc, initialOffset)));
+                System.err.println("[IndPer] Current line index is: "+(LineDocumentUtils.getLineIndex(doc, start)));
+                System.err.println("[IndPer] FormatStableStart line starts at index: "+(LineDocumentUtils.getLineIndex(doc, initialOffset)));
                 System.err.println("[IndPer] Number of ranges to ignore: "+rangesToIgnore.ranges.size());
             }
             if (DEBUG && !rangesToIgnore.isEmpty()) {
@@ -403,8 +403,8 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
         }
 
         // apply line data into concrete indentation:
-        int lineStart = Utilities.getLineOffset(getDocument(), context.startOffset());
-        int lineEnd = Utilities.getLineOffset(getDocument(), context.endOffset());
+        int lineStart = LineDocumentUtils.getLineIndex(getDocument(), context.startOffset());
+        int lineEnd = LineDocumentUtils.getLineIndex(getDocument(), context.endOffset());
         assert formattingContext.getIndentationData() != null;
         List<List<Line>> indentationData = formattingContext.getIndentationData();
 
@@ -998,16 +998,16 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
     private List<LinePair> calculateLinePairs(List<JoinedTokenSequence.CodeBlock<T1>> blocks, int startOffset, int endOffset) throws BadLocationException {
         List<LinePair> lps = new ArrayList<LinePair>();
         LinePair lastOne = null;
-        int startLine = Utilities.getLineOffset(getDocument(), startOffset);
-        int endLine = Utilities.getLineOffset(getDocument(), endOffset);
+        int startLine = LineDocumentUtils.getLineIndex(getDocument(), startOffset);
+        int endLine = LineDocumentUtils.getLineIndex(getDocument(), endOffset);
         for (JoinedTokenSequence.CodeBlock<T1> block : blocks) {
             for (JoinedTokenSequence.TokenSequenceWrapper<T1> tsw : block.tss) {
                 if (tsw.isVirtual()) {
                     continue;
                 }
                 LinePair lp = new LinePair();
-                lp.startingLine = Utilities.getLineOffset(getDocument(), LexUtilities.getTokenSequenceStartOffset(tsw.getTokenSequence()));
-                lp.endingLine = Utilities.getLineOffset(getDocument(), LexUtilities.getTokenSequenceEndOffset(tsw.getTokenSequence()));
+                lp.startingLine = LineDocumentUtils.getLineIndex(getDocument(), LexUtilities.getTokenSequenceStartOffset(tsw.getTokenSequence()));
+                lp.endingLine = LineDocumentUtils.getLineIndex(getDocument(), LexUtilities.getTokenSequenceEndOffset(tsw.getTokenSequence()));
                 if (lp.startingLine > endLine) {
                     break;
                 }
@@ -1845,7 +1845,7 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
     }
         
     private void debugIndentation(int lineOffset, List<IndentCommand> iis, String text, boolean indentable) throws BadLocationException {
-        int index = Utilities.getLineOffset(getDocument(), lineOffset);
+        int index = LineDocumentUtils.getLineIndex(getDocument(), lineOffset);
         char ch = ' ';
         if (indentable) {
             ch = '*';
@@ -1911,7 +1911,7 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
         }
 
         private void recalculateLineIndex(BaseDocument doc) throws BadLocationException {
-            index = Utilities.getLineOffset(doc, offset);
+            index = LineDocumentUtils.getLineIndex(doc, offset);
             int rowStart = LineDocumentUtils.getLineStartOffset(doc, offset);
 
             // Java formatter is fiddling with lines it should not. This is a check

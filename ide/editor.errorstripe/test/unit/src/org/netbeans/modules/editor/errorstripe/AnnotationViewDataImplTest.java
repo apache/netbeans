@@ -34,6 +34,7 @@ import java.util.SortedMap;
 import javax.swing.JEditorPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Position;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.AnnotationDesc;
 import org.netbeans.editor.AnnotationType;
 import org.netbeans.editor.AnnotationTypes;
@@ -426,7 +427,7 @@ public class AnnotationViewDataImplTest extends NbTestCase {
 
         public int getLine() {
             try {
-                return Utilities.getLineOffset(doc, getOffset());
+                return LineDocumentUtils.getLineIndex(doc, getOffset());
             } catch (BadLocationException e) {
                 IllegalStateException exc = new IllegalStateException();
                 

@@ -2293,7 +2293,7 @@ public class ActionFactory {
         public JMenuItem getPopupMenuItem(JTextComponent target) {
             EditorUI ui = Utilities.getEditorUI(target);
             try {
-                return ui.getDocument().getAnnotations().createMenu(Utilities.getKit(target), Utilities.getLineOffset(ui.getDocument(),target.getCaret().getDot()));
+                return ui.getDocument().getAnnotations().createMenu(Utilities.getKit(target), LineDocumentUtils.getLineIndex(ui.getDocument(),target.getCaret().getDot()));
             } catch (BadLocationException ex) {
                 return null;
             }
@@ -2356,7 +2356,7 @@ public class ActionFactory {
                 try {
                     Caret caret = target.getCaret();
                     BaseDocument doc = Utilities.getDocument(target);
-                    int caretLine = Utilities.getLineOffset(doc, caret.getDot());
+                    int caretLine = LineDocumentUtils.getLineIndex(doc, caret.getDot());
                     AnnotationDesc aDesc = doc.getAnnotations().activateNextAnnotation(caretLine);
                 } catch (BadLocationException e) {
                     e.printStackTrace();

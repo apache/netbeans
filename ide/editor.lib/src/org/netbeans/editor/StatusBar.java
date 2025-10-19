@@ -63,6 +63,7 @@ import javax.swing.UIManager;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import org.netbeans.api.editor.EditorRegistry;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.FontColorNames;
 import org.netbeans.api.editor.settings.FontColorSettings;
@@ -630,8 +631,8 @@ public class StatusBar implements PropertyChangeListener, DocumentListener {
                         if (hasSelection) {
                             try {
                                 //count of selected lines
-                                int lineEnd = Utilities.getLineOffset(doc, component.getSelectionEnd());
-                                int lineStart = Utilities.getLineOffset(doc, component.getSelectionStart());
+                                int lineEnd = LineDocumentUtils.getLineIndex(doc, component.getSelectionEnd());
+                                int lineStart = LineDocumentUtils.getLineIndex(doc, component.getSelectionStart());
                                 s += "/" + (lineEnd - lineStart + 1);
                             } catch (BadLocationException ex) {
                             }

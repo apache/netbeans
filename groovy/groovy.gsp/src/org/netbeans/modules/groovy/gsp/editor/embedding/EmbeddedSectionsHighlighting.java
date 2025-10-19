@@ -27,6 +27,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyleConstants;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.AttributesUtilities;
 import org.netbeans.api.editor.settings.FontColorSettings;
@@ -173,8 +174,8 @@ public class EmbeddedSectionsHighlighting extends AbstractHighlightsContainer im
 
                             try {
                                 int docLen = document.getLength();
-                                int startLine = Utilities.getLineOffset((BaseDocument) document, Math.min(sectionStart, docLen));
-                                int endLine = Utilities.getLineOffset((BaseDocument) document, Math.min(sectionEnd, docLen));
+                                int startLine = LineDocumentUtils.getLineIndex((BaseDocument) document, Math.min(sectionStart, docLen));
+                                int endLine = LineDocumentUtils.getLineIndex((BaseDocument) document, Math.min(sectionEnd, docLen));
 
                                 if (startLine != endLine) {
                                     // multiline scriplet section

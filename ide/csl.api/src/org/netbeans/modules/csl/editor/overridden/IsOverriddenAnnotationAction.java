@@ -41,6 +41,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.AnnotationDesc;
 import org.netbeans.editor.Annotations;
 import org.netbeans.editor.BaseDocument;
@@ -176,7 +177,7 @@ public final class IsOverriddenAnnotationAction extends AbstractAction {
             doc.render(new Runnable() {
                 public void run() {
                     try {
-                        int line = Utilities.getLineOffset((BaseDocument) doc, currentPosition);
+                        int line = LineDocumentUtils.getLineIndex((BaseDocument) doc, currentPosition);
                         int startOffset = Utilities.getRowStartFromLineOffset((BaseDocument) doc, line);
                         p[0] = comp.modelToView(startOffset).getLocation();
                         AnnotationDesc desc = annotations.getActiveAnnotation(line);

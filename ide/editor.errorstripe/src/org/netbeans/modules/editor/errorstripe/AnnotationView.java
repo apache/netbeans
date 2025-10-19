@@ -52,6 +52,7 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyledDocument;
 import javax.swing.text.View;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.fold.FoldHierarchy;
 import org.netbeans.api.editor.fold.FoldHierarchyEvent;
 import org.netbeans.api.editor.fold.FoldHierarchyListener;
@@ -619,7 +620,7 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
                 if (positionOffset == -1) {
                     return null;
                 }
-                int line = Utilities.getLineOffset(doc, positionOffset);
+                int line = LineDocumentUtils.getLineIndex(doc, positionOffset);
                 
                 if (ERR.isLoggable(VIEW_TO_MODEL_IMPORTANCE)) {
                     ERR.log(VIEW_TO_MODEL_IMPORTANCE, "AnnotationView.viewToModel: line=" + line); // NOI18N
@@ -643,7 +644,7 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
                 if (positionOffset == -1) {
                     return null;
                 }
-                int    line = Utilities.getLineOffset(doc, positionOffset) + 1;
+                int    line = LineDocumentUtils.getLineIndex(doc, positionOffset) + 1;
                 int[] span = getLinesSpan(line);
                 double normalizedOffset = modelToView(span[0]);
                 

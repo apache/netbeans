@@ -917,7 +917,7 @@ public class ExtKit extends BaseKit {
                                         endPos = LineDocumentUtils.getLineEndOffset(doc, caretInfo.getDot());
                                     }
 
-                                    int lineCount = Utilities.getRowCount(doc, startPos, endPos);
+                                    int lineCount = LineDocumentUtils.getLineCount(doc, startPos, endPos);
                                     boolean comment = forceComment != null ? forceComment : !allComments(doc, startPos, lineCount);
 
                                     if (comment) {
@@ -951,7 +951,7 @@ public class ExtKit extends BaseKit {
                                     endPos = LineDocumentUtils.getLineEndOffset(doc, caret.getDot());
                                 }
 
-                                int lineCount = Utilities.getRowCount(doc, startPos, endPos);
+                                int lineCount = LineDocumentUtils.getLineCount(doc, startPos, endPos);
                                 boolean comment = forceComment != null ? forceComment : !allComments(doc, startPos, lineCount);
 
                                 if (comment) {

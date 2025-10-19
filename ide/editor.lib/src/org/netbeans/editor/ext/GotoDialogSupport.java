@@ -207,7 +207,7 @@ public class GotoDialogSupport implements ActionListener {
                 
                 BaseDocument doc = Utilities.getDocument(c);
                 if (doc != null) {
-                    int rowCount = Utilities.getRowCount(doc);
+                    int rowCount = LineDocumentUtils.getLineCount(doc);
                     if (line > rowCount)
                         line = rowCount;
                     

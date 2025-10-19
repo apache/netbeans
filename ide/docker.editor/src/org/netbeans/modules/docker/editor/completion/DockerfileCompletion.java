@@ -212,7 +212,7 @@ public final class DockerfileCompletion implements CodeCompletionHandler2 {
             }
             if (prev != null  &&
                     prev.id() == DockerfileTokenId.ONBUILD &&
-                    LineDocumentUtils.getLineStart(doc,seq.offset()) ==  LineDocumentUtils.getLineStart(doc,anchor)) {
+                    LineDocumentUtils.getLineStart(doc, seq.offset()) ==  LineDocumentUtils.getLineStart(doc, anchor)) {
                 //Commands after onbuild
                 return commands(prefix, anchor, true);
             }

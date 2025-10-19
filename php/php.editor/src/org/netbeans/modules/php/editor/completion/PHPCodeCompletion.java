@@ -2559,7 +2559,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             if (doc == null) {
                 return null;
             }
-            int lineBegin = LineDocumentUtils.getLineStart(doc, caretOffset);
+            int lineBegin = LineDocumentUtils.getLineStart2(doc, caretOffset);
             if (lineBegin != -1) {
                 int lineEnd = LineDocumentUtils.getLineEnd(doc, caretOffset);
                 String line = doc.getText(lineBegin, lineEnd - lineBegin);

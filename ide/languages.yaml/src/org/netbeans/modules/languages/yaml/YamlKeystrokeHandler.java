@@ -133,7 +133,7 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
                 caret.setDot(send + 2);
                 return true;
             }
-            int lineStart = LineDocumentUtils.getLineStart(doc, dotPos);
+            int lineStart = LineDocumentUtils.getLineStart2(doc, dotPos);
             int lineEnd = LineDocumentUtils.getLineEnd(doc, dotPos);
             char[] line = doc.getChars(lineStart, lineEnd - lineStart);
 
@@ -279,7 +279,7 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
         // Basically, use the same indent as the current line, unless the caret is immediately preceeded by a ":" (possibly with whitespace
         // in between)
 
-        int lineBegin = LineDocumentUtils.getLineStart(doc, offset);
+        int lineBegin = LineDocumentUtils.getLineStart2(doc, offset);
         int lineEnd = LineDocumentUtils.getLineEnd(doc, offset);
 
         if (lineBegin == offset && lineEnd == offset) {
@@ -368,7 +368,7 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
 
     public static int getLineIndent(BaseDocument doc, int offset) {
         try {
-            int start = LineDocumentUtils.getLineStart(doc, offset);
+            int start = LineDocumentUtils.getLineStart2(doc, offset);
             int end;
 
             if (LineDocumentUtils.isLineWhitespace(doc, start)) {

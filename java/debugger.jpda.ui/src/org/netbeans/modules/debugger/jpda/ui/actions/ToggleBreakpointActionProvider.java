@@ -45,6 +45,7 @@ import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.LineBreakpoint;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.java.source.CancellableTask;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
@@ -260,7 +261,7 @@ implements PropertyChangeListener {
         final int rowStartOffset = Utilities.getRowStartFromLineOffset(doc, lineNumber - 1);
         final int rowEndOffset;
         try {
-            rowEndOffset = Utilities.getRowEnd(doc, rowStartOffset);
+            rowEndOffset = LineDocumentUtils.getLineEndOffset(doc, rowStartOffset);
         } catch (BadLocationException ex) {
             return lineNumber;
         }

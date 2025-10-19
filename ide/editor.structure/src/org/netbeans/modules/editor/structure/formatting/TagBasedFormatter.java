@@ -28,6 +28,7 @@ import java.util.List;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.TokenItem;
 import org.netbeans.editor.Utilities;
@@ -92,7 +93,7 @@ public abstract class TagBasedFormatter extends ExtFormatter  {
         }
         
         if (tag != null && !isWSTag(currentToken) && tagStartLine == Utilities.getLineOffset(doc, currentToken.getOffset())){
-            return currentToken.getOffset() - Utilities.getRowIndent(doc, currentToken.getOffset()) - Utilities.getRowStart(doc, currentToken.getOffset());
+            return currentToken.getOffset() - Utilities.getRowIndent(doc, currentToken.getOffset()) - LineDocumentUtils.getLineStartOffset(doc, currentToken.getOffset());
         }
         
         return getShiftWidth(); // default;
@@ -292,7 +293,7 @@ public abstract class TagBasedFormatter extends ExtFormatter  {
                             doc.insertString(closingTagPos.getOffset(), "\n", null); //NOI18N
                             int newCaretPos = closingTagPos.getOffset() - 1;
                             changeRowIndent(doc, closingTagPos.getOffset() + 1, initialIndent);
-                            newCaretPos = Utilities.getRowEnd(doc, newCaretPos);
+                            newCaretPos = LineDocumentUtils.getLineEndOffset(doc, newCaretPos);
                             txtComponent.setCaretPosition(newCaretPos);
                         } else{
                             /*  <t>
@@ -416,7 +417,7 @@ public abstract class TagBasedFormatter extends ExtFormatter  {
         int initialIndent = 0;
         
         int lineStart = Utilities.getRowStartFromLineOffset(doc, line);
-        int lineEnd = Utilities.getRowEnd(doc, lineStart);
+        int lineEnd = LineDocumentUtils.getLineEndOffset(doc, lineStart);
         int nextNonWhiteLineStart = Utilities.getFirstNonWhiteFwd(doc, lineEnd);
         
         if (nextNonWhiteLineStart > 0){

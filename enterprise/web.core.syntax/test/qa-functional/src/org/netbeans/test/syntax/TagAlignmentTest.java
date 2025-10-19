@@ -21,6 +21,7 @@ package org.netbeans.test.syntax;
 import java.io.File;
 import java.io.IOException;
 import junit.framework.Test;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.jellytools.EditorOperator;
@@ -119,7 +120,7 @@ public class TagAlignmentTest extends J2eeTestCase {
         CompletionTest.waitTypingFinished(doc);
         int newPossition = op.txtEditorPane().getCaretPosition();
         int newLine = Utilities.getLineOffset(doc, newPossition) + 1;
-        int newOffset = newPossition - Utilities.getRowStart(doc, newPossition);
+        int newOffset = newPossition - LineDocumentUtils.getLineStartOffset(doc, newPossition);
         if (debug) {
             Thread.sleep(3000); // to be visible ;-)
         }

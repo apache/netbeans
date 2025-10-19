@@ -24,6 +24,7 @@ import java.util.Set;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.lexer.Token;
@@ -521,7 +522,7 @@ public class GroovyTypedTextInterceptor implements TypedTextInterceptor {
             return true;
         } else {
             // test that we are in front of ) , " or ' ... etc.
-            int eol = Utilities.getRowEnd(doc, dotPos);
+            int eol = LineDocumentUtils.getLineEndOffset(doc, dotPos);
 
             if ((dotPos == eol) || (eol == -1)) {
                 return false;

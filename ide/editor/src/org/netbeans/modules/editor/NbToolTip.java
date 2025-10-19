@@ -53,6 +53,7 @@ import java.util.logging.Logger;
 import javax.swing.JEditorPane;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.EditorKit;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.settings.EditorStyleConstants;
 import org.netbeans.editor.EditorUI;
 import org.netbeans.lib.editor.hyperlink.HyperlinkOperation;
@@ -279,7 +280,7 @@ public class NbToolTip extends FileChangeAdapter {
             int relY = p.y - r.y;
             if (eui != null && relY < eui.getLineHeight()) {
                 // Check that p is on a line with text before its EOL.
-                if (offset < Utilities.getRowEnd(doc, offset)) {
+                if (offset < LineDocumentUtils.getLineEndOffset(doc, offset)) {
                     return offset;
                 }
             }

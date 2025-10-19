@@ -22,6 +22,7 @@ package org.netbeans.modules.css.refactoring;
 import java.util.Collections;
 import javax.swing.Icon;
 import javax.swing.text.Position.Bias;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.ElementKind;
@@ -122,13 +123,13 @@ public class WhereUsedElement extends SimpleRefactoringElementImplementation {
             sta = Utilities.getRowFirstNonWhite(bdoc, start);
 
             if (sta == -1) {
-                sta = Utilities.getRowStart(bdoc, start);
+                sta = LineDocumentUtils.getLineStartOffset(bdoc, start);
             }
 
             en = Utilities.getRowLastNonWhite(bdoc, start);
 
             if (en == -1) {
-                en = Utilities.getRowEnd(bdoc, start);
+                en = LineDocumentUtils.getLineEndOffset(bdoc, start);
             } else {
                 // Last nonwhite - left side of the last char, not inclusive
                 en++;

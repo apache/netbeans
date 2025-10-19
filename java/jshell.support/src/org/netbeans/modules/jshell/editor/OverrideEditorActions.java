@@ -271,7 +271,7 @@ public class OverrideEditorActions {
                 return true;
             }
             try {
-                int end = LineDocumentUtils.getLineEnd(ld, input.getPartBegin());
+                int end = LineDocumentUtils.getLineEndOffset(ld, input.getPartBegin());
                 return offset > end;
             } catch (BadLocationException ex) {
                 return true;
@@ -308,7 +308,7 @@ public class OverrideEditorActions {
                 return true;
             }
             try {
-                int end = LineDocumentUtils.getLineEnd(ld, region.getStartOffset());
+                int end = LineDocumentUtils.getLineEndOffset(ld, region.getStartOffset());
                 // delegate for all but the first line
                 return pos > end;
             } catch (BadLocationException ex) {

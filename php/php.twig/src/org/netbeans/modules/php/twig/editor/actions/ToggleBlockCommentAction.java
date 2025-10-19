@@ -26,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseAction;
@@ -276,8 +277,8 @@ public class ToggleBlockCommentAction extends BaseAction {
                 offsetCommentStart = getStart();
                 offsetCommentEnd = getEnd();
             } else {
-                offsetCommentStart = Utilities.getRowStart(baseDocument, getStart());
-                offsetCommentEnd = Utilities.getRowEnd(baseDocument, getEnd());
+                offsetCommentStart = LineDocumentUtils.getLineStartOffset(baseDocument, getStart());
+                offsetCommentEnd = LineDocumentUtils.getLineEndOffset(baseDocument, getEnd());
             }
             baseDocument.insertString(offsetCommentStart, TwigTopLexer.OPEN_COMMENT, null);
             baseDocument.insertString(offsetCommentEnd + TwigTopLexer.OPEN_COMMENT.length(), TwigTopLexer.CLOSE_COMMENT, null);

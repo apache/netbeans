@@ -30,6 +30,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.AttributesUtilities;
 import org.netbeans.api.editor.settings.FontColorSettings;
@@ -225,7 +226,7 @@ public class EmbeddingHighlightsContainer extends AbstractHighlightsContainer im
                                     int endLO = Utilities.getLineOffset((BaseDocument) document, endOffset);
                                     if (startLO != endLO) {
                                         //not just one line block - test boundaries
-                                        if ((Utilities.getFirstNonWhiteBwd((BaseDocument) document, Utilities.getRowEnd((BaseDocument) document, startOffset)) + 1) == startOffset) {
+                                        if ((Utilities.getFirstNonWhiteBwd((BaseDocument) document, LineDocumentUtils.getLineEndOffset((BaseDocument) document, startOffset)) + 1) == startOffset) {
                                             //just <script-style> tag on the first line -> move start to next line
                                             startOffset = Utilities.getRowStartFromLineOffset((BaseDocument) document, startLO + 1);
                                         }

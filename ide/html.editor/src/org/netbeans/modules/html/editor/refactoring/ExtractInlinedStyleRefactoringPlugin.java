@@ -30,6 +30,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Position.Bias;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.html.editor.lib.api.elements.ElementUtils;
@@ -329,7 +330,7 @@ public class ExtractInlinedStyleRefactoringPlugin implements RefactoringPlugin {
                                         if (Utilities.getFirstNonWhiteFwd(doc, appendOffset.get()) == -1) {
                                             //just WS at the rest of the line
                                             //=>put the section at the beginning of the next line
-                                            int newPos = Utilities.getRowEnd(doc, appendOffset.get()) + 1;
+                                            int newPos = LineDocumentUtils.getLineEndOffset(doc, appendOffset.get()) + 1;
                                             appendOffset.set(newPos);
                                         } else {
                                             //put right after the open curly bracket

@@ -193,12 +193,12 @@ public class Utilities {
     * @param doc document to operate on
     * @param offset position in document where to start searching
     * @return position of the start of the row or -1 for invalid position
-    * @deprecated use {@link LineDocumentUtils}
+    * @deprecated use {@link LineDocumentUtils#getLineStartOffset}
     */
     @Deprecated
     public static int getRowStart(BaseDocument doc, int offset)
     throws BadLocationException {
-        return LineDocumentUtils.getLineStart(doc, offset);
+        return LineDocumentUtils.getLineStartOffset(doc, offset);
     }
 
     /** Get the starting position of the row while providing relative count
@@ -328,7 +328,7 @@ public class Utilities {
     @Deprecated
     public static int getRowEnd(BaseDocument doc, int offset)
     throws BadLocationException {
-        return LineDocumentUtils.getLineEnd(doc, offset);
+        return LineDocumentUtils.getLineEndOffset(doc, offset);
     }
     
     private static int findBestSpan(JTextComponent c, int lineBegin, int lineEnd, int x)
@@ -964,8 +964,8 @@ public class Utilities {
      */
     public static void reformatLine(BaseDocument doc, int pos)
     throws BadLocationException {
-        int lineStart = getRowStart(doc, pos);
-        int lineEnd = getRowEnd(doc, pos);
+        int lineStart = LineDocumentUtils.getLineStartOffset(doc, pos);
+        int lineEnd = LineDocumentUtils.getLineEndOffset(doc, pos);
         reformat(doc, lineStart, lineEnd);
     }
 

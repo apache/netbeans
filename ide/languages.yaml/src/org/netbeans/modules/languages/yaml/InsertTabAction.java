@@ -90,7 +90,7 @@ public class InsertTabAction extends BaseAction {
         }
 
         private void replaceTab() throws BadLocationException {
-            final int rowStart = LineDocumentUtils.getLineStart(baseDocument, caretOffset);
+            final int rowStart = LineDocumentUtils.getLineStartOffset(baseDocument, caretOffset);
             assert caretOffset >= rowStart : "Caret: " + caretOffset + " rowStart: " + rowStart;
             final String indentString = baseDocument.getText(rowStart, caretOffset - rowStart);
             if (indentString.contains(TAB_CHARACTER)) {

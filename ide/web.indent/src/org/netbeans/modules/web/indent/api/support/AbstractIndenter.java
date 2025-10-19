@@ -34,6 +34,7 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.settings.SimpleValueNames;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.Token;
@@ -292,9 +293,9 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
         JoinedTokenSequence<T1> joinedTS = JoinedTokenSequence.createFromCodeBlocks(blocks);
 
         // start on the beginning of line:
-        int start = Utilities.getRowStart(doc, startOffset);
+        int start = LineDocumentUtils.getLineStartOffset(doc, startOffset);
         // end after the last line:
-        int end = Utilities.getRowEnd(doc, endOffset)+1;
+        int end = LineDocumentUtils.getLineEndOffset(doc, endOffset)+1;
         if (end > doc.getLength()) {
             end = doc.getLength();
         }
@@ -361,7 +362,7 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
         // will try to find our language there:
 
         // find line start and move to previous line if possible:
-        int lineStart = Utilities.getRowStart(getDocument(), start);
+        int lineStart = LineDocumentUtils.getLineStartOffset(getDocument(), start);
         if (lineStart > 0) {
             lineStart--;
         }
@@ -371,7 +372,7 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
             offset = 0;
         }
         // find beginning of this line
-        lineStart = Utilities.getRowStart(getDocument(), offset);
+        lineStart = LineDocumentUtils.getLineStartOffset(getDocument(), offset);
 
         // use line start as beginning for our language search:
         if (ts.move(lineStart, true)) {
@@ -1102,7 +1103,7 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
                 int firstNonWhite = Utilities.getRowFirstNonWhite(doc, rowStartOffset);
 
                 // find line ending offset
-                int rowEndOffset = Utilities.getRowEnd(doc, rowStartOffset);
+                int rowEndOffset = LineDocumentUtils.getLineEndOffset(doc, rowStartOffset);
                 int nextLineStartOffset = rowEndOffset+1;
 
                 // check whether line can be skip completely:
@@ -1229,7 +1230,7 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
 
     private boolean doesLineStartWithOurLanguage(BaseDocument doc, int lineIndex, JoinedTokenSequence<T1> joinedTS) throws BadLocationException {
         int rowStartOffset = Utilities.getRowStartFromLineOffset(doc, lineIndex);
-        int rowEndOffset = Utilities.getRowEnd(doc, rowStartOffset);
+        int rowEndOffset = LineDocumentUtils.getLineEndOffset(doc, rowStartOffset);
         int firstNonWhite = Utilities.getRowFirstNonWhite(doc, rowStartOffset);
         if (firstNonWhite != -1) {
             // there is something on the line:
@@ -1783,7 +1784,7 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
         // possible tabs get replaced:
         line.tabIndentation = nonWS == -1 || line.existingLineIndent != (nonWS - line.offset);
         line.lineStartOffset = line.offset;
-        line.lineEndOffset = Utilities.getRowEnd(getDocument(), line.offset);
+        line.lineEndOffset = LineDocumentUtils.getLineEndOffset(getDocument(), line.offset);
         line.lineIndent = new ArrayList<IndentCommand>();
         line.lineIndent.add(new IndentCommand(IndentCommand.Type.NO_CHANGE, line.offset, getIndentationSize()));
         line.preliminaryNextLineIndent = new ArrayList<IndentCommand>();
@@ -1911,7 +1912,7 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
 
         private void recalculateLineIndex(BaseDocument doc) throws BadLocationException {
             index = Utilities.getLineOffset(doc, offset);
-            int rowStart = Utilities.getRowStart(doc, offset);
+            int rowStart = LineDocumentUtils.getLineStartOffset(doc, offset);
 
             // Java formatter is fiddling with lines it should not. This is a check
             // that if line start is different then issue a warning. See also

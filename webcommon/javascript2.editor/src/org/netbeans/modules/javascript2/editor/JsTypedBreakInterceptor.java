@@ -98,7 +98,7 @@ public class JsTypedBreakInterceptor implements TypedBreakInterceptor {
         TokenHierarchy<BaseDocument> tokenHierarchy = TokenHierarchy.get(doc);
         int offset = context.getCaretOffset();
 
-        int lineBegin = LineDocumentUtils.getLineStart(doc, offset);
+        int lineBegin = LineDocumentUtils.getLineStart2(doc, offset);
         int lineEnd = LineDocumentUtils.getLineEnd(doc, offset);
 
         if (lineBegin == offset && lineEnd == offset) {
@@ -386,7 +386,7 @@ public class JsTypedBreakInterceptor implements TypedBreakInterceptor {
             // (and a comment from the beginning, not a trailing comment)
             boolean previousLineWasComment = false;
             boolean nextLineIsComment = false;
-            int rowStart = LineDocumentUtils.getLineStart(doc, offset);
+            int rowStart = LineDocumentUtils.getLineStart2(doc, offset);
             if (rowStart > 0) {
                 int prevBegin = Utilities.getRowFirstNonWhite(doc, rowStart - 1);
                 if (prevBegin != -1) {
@@ -534,7 +534,7 @@ public class JsTypedBreakInterceptor implements TypedBreakInterceptor {
                 }
                 return indent;
             }
-            currentOffset = LineDocumentUtils.getLineStart(doc, currentOffset) - 1;
+            currentOffset = LineDocumentUtils.getLineStart2(doc, currentOffset) - 1;
         }
 
         return indent;
@@ -603,7 +603,7 @@ public class JsTypedBreakInterceptor implements TypedBreakInterceptor {
             return false;
         }
 
-        int caretRowStartOffset = LineDocumentUtils.getLineStart(doc, caretOffset);
+        int caretRowStartOffset = LineDocumentUtils.getLineStart2(doc, caretOffset);
         ts = LexUtilities.getPositionedSequence(doc, caretOffset, language);
         if (ts == null) {
             return false;
@@ -728,7 +728,7 @@ public class JsTypedBreakInterceptor implements TypedBreakInterceptor {
 
     private int getCurlyIndent(BaseDocument doc, int offset) {
         try {
-            int lineStart = LineDocumentUtils.getLineStart(doc, offset);
+            int lineStart = LineDocumentUtils.getLineStart2(doc, offset);
             TokenSequence<? extends JsTokenId> ts = LexUtilities.getTokenSequence(
                     doc, lineStart, language);
 
@@ -820,7 +820,7 @@ public class JsTypedBreakInterceptor implements TypedBreakInterceptor {
     /** Compute the balance of begin/end tokens on the line */
     private static int getLineBalance(BaseDocument doc, int offset, TokenId up, TokenId down) {
         try {
-            int begin = LineDocumentUtils.getLineStart(doc, offset);
+            int begin = LineDocumentUtils.getLineStart2(doc, offset);
             int end = LineDocumentUtils.getLineEnd(doc, offset);
 
             TokenSequence<? extends JsTokenId> ts = LexUtilities.getJsTokenSequence(doc, begin);

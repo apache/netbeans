@@ -51,6 +51,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
 import org.netbeans.spi.editor.completion.support.CompletionUtilities;
 import org.netbeans.swing.plaf.LFCustoms;
@@ -248,8 +249,8 @@ public class JspCompletionItem implements CompletionItem {
 
                 public void run() {
                     try {
-                        int startOffset = Utilities.getRowStart(doc, dotPos);
-                        int endOffset = Utilities.getRowEnd(doc, dotPos);
+                        int startOffset = LineDocumentUtils.getLineStart2(doc, dotPos);
+                        int endOffset = LineDocumentUtils.getLineEnd(doc, dotPos);
                         indent.reindent(startOffset, endOffset);
                     } catch (BadLocationException ex) {
                         //ignore

@@ -67,7 +67,7 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
         final BaseDocument doc = (BaseDocument) context.getDocument();
         int offset = context.getCaretOffset();
         boolean insertMatching = TypingHooksUtils.isInsertMatchingEnabled();
-        int lineBegin = LineDocumentUtils.getLineStart(doc, offset);
+        int lineBegin = LineDocumentUtils.getLineStart2(doc, offset);
         int lineEnd = LineDocumentUtils.getLineEnd(doc, offset);
         if (lineBegin == offset && lineEnd == offset) {
             // Pressed return on a blank newline - do nothing
@@ -215,7 +215,7 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
             // We should only continue comments if the previous line had a comment
             // (and a comment from the beginning, not a trailing comment)
             boolean previousLineWasComment = false;
-            int rowStart = LineDocumentUtils.getLineStart(doc, offset);
+            int rowStart = LineDocumentUtils.getLineStart2(doc, offset);
             if (rowStart > 0) {
                 int prevBegin = LineDocumentUtils.getLineFirstNonWhitespace(doc, rowStart - 1);
                 if (prevBegin != -1) {
@@ -680,7 +680,7 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
             }
             int indent = GsfUtilities.getLineIndent(doc, ts.offset());
             int beforeFirstNonWhite = Utilities.getRowFirstNonWhite(doc, insertOffset);
-            int rowStart = LineDocumentUtils.getLineStart(doc, insertOffset);
+            int rowStart = LineDocumentUtils.getLineStart2(doc, insertOffset);
             StringBuilder sb = new StringBuilder("\n"); // NOI18N
             int newCaretOffset = 1;
             int newCaretOffset2 = insertOffset;

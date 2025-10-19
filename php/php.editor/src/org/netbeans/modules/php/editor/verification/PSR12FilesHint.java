@@ -44,7 +44,7 @@ public class PSR12FilesHint extends PSR12Hint {
         FilesVisitor filesVisitor = new FilesVisitor(this, fileObject, baseDocument);
         try {
             int lastPosition = baseDocument.getLength();
-            int lineStart = LineDocumentUtils.getLineStart(baseDocument, lastPosition);
+            int lineStart = LineDocumentUtils.getLineStart2(baseDocument, lastPosition);
             if (!endsWithSingleLF(baseDocument)) {
                 filesVisitor.createHint(new OffsetRange(lineStart, lastPosition), Bundle.PSR12FilesTerminatedWithSingleLFHint());
             }

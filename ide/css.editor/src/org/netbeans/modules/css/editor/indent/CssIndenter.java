@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Stack;
 import javax.swing.text.BadLocationException;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.editor.Utilities;
@@ -323,7 +324,7 @@ public class CssIndenter extends AbstractIndenter<CssTokenId> {
                         if (end < commentEndOffset) {
                             // if comment ends on next line put formatter to IN_COMMENT state
                             inComment = true;
-                            int lineStart = Utilities.getRowStart(getDocument(), ts.offset());
+                            int lineStart = LineDocumentUtils.getLineStart2(getDocument(), ts.offset());
                             preservedLineIndentation = start - lineStart;
                         }
                     } else if (end == commentEndOffset) {

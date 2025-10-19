@@ -261,7 +261,7 @@ public class HtmlExternalDropHandler extends ExternalDropHandler {
                 public void run() {
                     try {
                         int ofs = offset;
-                        if (!Utilities.isRowWhite(document, ofs)) {
+                        if (!LineDocumentUtils.isLineEmpty(document, ofs)) {
                             document.insertString(ofs, "\n", null);
                             ofs++;
                         }

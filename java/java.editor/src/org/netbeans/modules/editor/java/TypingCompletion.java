@@ -267,7 +267,7 @@ class TypingCompletion {
                 || id == JavaTokenId.CHAR_LITERAL
                 || id == JavaTokenId.MULTILINE_STRING_LITERAL);
 
-        int lastNonWhite = org.netbeans.editor.Utilities.getRowLastNonWhite((BaseDocument) context.getDocument(), context.getOffset());
+        int lastNonWhite = LineDocumentUtils.getLineLastNonWhitespace((BaseDocument) context.getDocument(), context.getOffset());
         // eol - true if the caret is at the end of line (ignoring whitespaces)
         boolean eol = lastNonWhite < context.getOffset();
         if (insideString) {
@@ -421,7 +421,7 @@ class TypingCompletion {
      * character on the caret row is returned.
      */
     static int getRowOrBlockEnd(BaseDocument doc, int caretOffset, boolean[] insert) throws BadLocationException {
-        int rowEnd = org.netbeans.editor.Utilities.getRowLastNonWhite(doc, caretOffset);
+        int rowEnd = LineDocumentUtils.getLineLastNonWhitespace(doc, caretOffset);
         if (rowEnd == -1 || caretOffset >= rowEnd) {
             return caretOffset;
         }

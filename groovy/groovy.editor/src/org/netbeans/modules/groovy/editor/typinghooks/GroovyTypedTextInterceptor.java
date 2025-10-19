@@ -315,7 +315,7 @@ public class GroovyTypedTextInterceptor implements TypedTextInterceptor {
             Token<GroovyTokenId> token = ts.token();
 
             if ((token.id() == id)) {
-                final int rowFirstNonWhite = Utilities.getRowFirstNonWhite(doc, offset);
+                final int rowFirstNonWhite = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
                 // Ensure that this token is at the beginning of the line
                 if (ts.offset() > rowFirstNonWhite) {
                     return;
@@ -396,7 +396,7 @@ public class GroovyTypedTextInterceptor implements TypedTextInterceptor {
             previousToken = ts.token();
         }
 
-        int lastNonWhite = Utilities.getRowLastNonWhite(doc, dotPos);
+        int lastNonWhite = LineDocumentUtils.getLineLastNonWhitespace(doc, dotPos);
 
         // eol - true if the caret is at the end of line (ignoring whitespaces)
         boolean eol = lastNonWhite < dotPos;

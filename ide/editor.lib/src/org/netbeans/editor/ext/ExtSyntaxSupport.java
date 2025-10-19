@@ -280,7 +280,7 @@ public class ExtSyntaxSupport extends SyntaxSupport {
     */
     public int getRowLastValidChar(int offset)
     throws BadLocationException {
-        return Utilities.getRowLastNonWhite(getDocument(), offset);
+        return LineDocumentUtils.getLineLastNonWhitespace(getDocument(), offset);
     }
 
     /** Does the line contain some valid code besides of possible white space

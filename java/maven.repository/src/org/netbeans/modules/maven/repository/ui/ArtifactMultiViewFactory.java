@@ -23,10 +23,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.JButton;
 import org.apache.maven.DefaultMaven;
 import org.apache.maven.Maven;
+import org.apache.maven.MavenExecutionException;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.execution.MavenExecutionRequest;
@@ -68,7 +71,6 @@ import org.netbeans.modules.xml.xam.ModelSource;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
@@ -169,12 +171,11 @@ public final class ArtifactMultiViewFactory implements ArtifactViewerFactory {
                             MavenProject mvnprj = readMavenProject(embedder, fArt, repos);
 
                         if(mvnprj != null){
-                            DependencyNode root = DependencyTreeFactory.createDependencyTree(mvnprj, embedder, Artifact.SCOPE_TEST);
+                            DependencyNode root = DependencyTreeFactory.createDependencyTree(mvnprj, embedder, List.of(Artifact.SCOPE_TEST));
                             ic.add(root);
                             ic.add(mvnprj);
                         }
-
-                    } catch (ProjectBuildingException ex) {
+                    } catch (ProjectBuildingException | MavenExecutionException ex) {
                         ErrorPanel pnl = new ErrorPanel(ex);
                         DialogDescriptor dd = new DialogDescriptor(pnl, TIT_Error());
                         JButton close = new JButton();
@@ -183,11 +184,8 @@ public final class ArtifactMultiViewFactory implements ArtifactViewerFactory {
                         dd.setClosingOptions(new Object[] { close });
                         DialogDisplayer.getDefault().notify(dd);
                         ic.add(new MavenProject()); // XXX is this useful for anything?
-                    } catch (ThreadDeath d) { // download interrupted
                     } catch (IllegalStateException ise) { //download interrupted in dependent thread. #213812
-                        if (!(ise.getCause() instanceof ThreadDeath)) {
-                            throw ise;
-                        }
+                        throw ise;
                     } finally {
                         hndl.finish();
                         ProgressTransferListener.clearAggregateHandle();
@@ -253,7 +251,13 @@ public final class ArtifactMultiViewFactory implements ArtifactViewerFactory {
                 public void run() {
                     NbMavenProject im = prj.getLookup().lookup(NbMavenProject.class);
                     MavenProject mvnprj = im.getMavenProject();
-                    DependencyNode tree = DependencyTreeFactory.createDependencyTree(mvnprj, EmbedderFactory.getProjectEmbedder(), Artifact.SCOPE_TEST);
+                    DependencyNode tree;
+                    try {
+                        tree = DependencyTreeFactory.createDependencyTree(mvnprj, EmbedderFactory.getProjectEmbedder(), List.of(Artifact.SCOPE_TEST));
+                    } catch (MavenExecutionException ex) {
+                        Logger.getLogger(ArtifactMultiViewFactory.class.getName()).log(Level.WARNING, "Dependency tree scan failed", ex);
+                        return;
+                    }
                     FileObject fo = prj.getLookup().lookup(FileObject.class);
                     POMModel pommodel = null;
                     if (fo != null) {

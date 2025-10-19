@@ -199,7 +199,7 @@ public class IndentCasesTest extends J2eeTestCase {
         op.pressKey(KeyEvent.VK_ENTER);
         op.waitModified(true);
         int newPossition = op.txtEditorPane().getCaretPosition();
-        int newLine = Utilities.getLineOffset(doc, newPossition) + 1;
+        int newLine = LineDocumentUtils.getLineIndex(doc, newPossition) + 1;
         int newOffset = newPossition - LineDocumentUtils.getLineStart2(doc, newPossition);
         if (debug) {
             Thread.sleep(3000); // to be visible ;-)

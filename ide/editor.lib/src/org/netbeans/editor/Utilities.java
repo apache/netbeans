@@ -1113,7 +1113,7 @@ public class Utilities {
 
         if (offset >= 0) {
             try {
-                int line = getLineOffset(doc, offset) + 1;
+                int line = LineDocumentUtils.getLineIndex(doc, offset) + 1;
                 int col = getVisualColumn(doc, offset) + 1;
                 ret = String.valueOf(line) + separator + String.valueOf(col); // NOI18N
             } catch (BadLocationException e) {

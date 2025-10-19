@@ -28,6 +28,7 @@ import java.util.TimerTask;
 import java.util.prefs.Preferences;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.fold.Fold;
 import org.netbeans.api.editor.fold.FoldHierarchy;
 import org.netbeans.api.editor.fold.FoldType;
@@ -406,8 +407,8 @@ public class XmlFoldManager implements FoldManager {
     public boolean isOneLiner(int start, int end) {
         try {
             BaseDocument doc = getDocument();
-            return Utilities.getLineOffset(doc, start) ==
-                   Utilities.getLineOffset(doc, end);
+            return LineDocumentUtils.getLineIndex(doc, start) ==
+                   LineDocumentUtils.getLineIndex(doc, end);
         } catch (BadLocationException ex) {
             //Exceptions.printStackTrace(ex);
             return false;

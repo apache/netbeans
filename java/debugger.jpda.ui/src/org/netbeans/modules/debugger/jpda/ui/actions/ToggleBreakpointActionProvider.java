@@ -361,7 +361,7 @@ implements PropertyChangeListener {
                     if (execTree == null || !isBreakable(execTreePath)) {
                         if (outerTree != null && isBreakable(outerTreePath)) {
                             long offs = positions.getStartPosition(compUnit, outerTree);
-                            result[0] = Utilities.getLineOffset(doc, (int)offs) + 1;
+                            result[0] = LineDocumentUtils.getLineIndex(doc, (int)offs) + 1;
                         } else {
                             if (outerTree instanceof BlockTree) {
                                 Tree pTree = outerTreePath.getParentPath().getLeaf();

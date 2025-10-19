@@ -1343,8 +1343,8 @@ public final class TextRegionManager {
 
                     int startOffset = masterRegion.startOffset();
                     int endOffset = masterRegion.endOffset();
-                    int startLine = Utilities.getLineOffset((BaseDocument) doc, startOffset);
-                    int endLine = Utilities.getLineOffset((BaseDocument) doc, endOffset);
+                    int startLine = LineDocumentUtils.getLineIndex((BaseDocument) doc, startOffset);
+                    int endLine = LineDocumentUtils.getLineIndex((BaseDocument) doc, endOffset);
 
                     for (int i = startLine; i <= endLine; i++) {
                         int s = Math.max(Utilities.getRowStartFromLineOffset((BaseDocument) doc, i), startOffset);

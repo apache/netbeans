@@ -29,7 +29,6 @@ import org.netbeans.api.editor.document.LineDocumentUtils;
 
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.SyntaxSupport;
-import org.netbeans.editor.Utilities;
 import org.netbeans.modules.spellchecker.spi.language.TokenList;
 import org.openide.ErrorManager;
 

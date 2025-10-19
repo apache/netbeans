@@ -72,7 +72,7 @@ public class ToggleCommentAction extends ExtKit.ToggleCommentAction {
                             if (endPos > 0 && LineDocumentUtils.getLineStartOffset(doc, endPos) == endPos) {
                                 endPos--;
                             }
-                            int lineCnt = Utilities.getRowCount(doc, startPos, endPos);
+                            int lineCnt = LineDocumentUtils.getLineCount(doc, startPos, endPos);
                             List<String> mimeTypes = new ArrayList<>(lineCnt);
                             int pos = startPos;
                             boolean commented = isCommented;

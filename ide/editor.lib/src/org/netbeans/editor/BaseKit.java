@@ -4314,7 +4314,7 @@ public class BaseKit extends DefaultEditorKit {
                         endPos - 1 : endPos;
 
                     int lineStartOffset = LineDocumentUtils.getLineStartOffset(doc, startPos );
-                    int lineCount = Utilities.getRowCount(doc, startPos, end);
+                    int lineCount = LineDocumentUtils.getLineCount(doc, startPos, end);
                     Integer delta = null;
                     for (int i = lineCount - 1; i >= 0; i--) {
                         int indent = Utilities.getRowIndent(doc, lineStartOffset);
@@ -4379,7 +4379,7 @@ public class BaseKit extends DefaultEditorKit {
                         endPos - 1 : endPos;
 
                     int lineStartOffset = LineDocumentUtils.getLineStartOffset(doc, startPos );
-                    int lineCount = Utilities.getRowCount(doc, startPos, end);
+                    int lineCount = LineDocumentUtils.getLineCount(doc, startPos, end);
                     for (int i = lineCount - 1; i >= 0; i--) {
                         int indent = Utilities.getRowIndent(doc, lineStartOffset);
                         int newIndent = (indent == -1) ? 0 : // Zero indent if row is white

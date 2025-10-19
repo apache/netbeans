@@ -499,7 +499,7 @@ public class Formatter {
                             endPos - 1 : endPos;
 
                         int pos = LineDocumentUtils.getLineStartOffset(doc, startPos );
-                        for (int lineCnt = Utilities.getRowCount(doc, startPos, end);
+                        for (int lineCnt = LineDocumentUtils.getLineCount(doc, startPos, end);
                                 lineCnt > 0; lineCnt--
                             ) {
                             int indent = Utilities.getRowIndent(doc, pos);

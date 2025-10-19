@@ -59,7 +59,6 @@ import org.netbeans.api.editor.fold.FoldHierarchyListener;
 
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.BaseTextUI;
-import org.netbeans.editor.Utilities;
 import org.netbeans.lib.editor.util.StringEscapeUtils;
 import org.netbeans.modules.editor.errorstripe.caret.CaretMark;
 import org.netbeans.modules.editor.errorstripe.privatespi.Mark;
@@ -184,7 +183,7 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
             while (position == _modelToView(startLine - 1, componentHeight, usableHeight) && startLine > 0)
                 startLine--;
 
-            while ((endLine + 1) < Utilities.getRowCount(doc) && position == _modelToView(endLine + 1, componentHeight, usableHeight))
+            while ((endLine + 1) < LineDocumentUtils.getLineCount(doc) && position == _modelToView(endLine + 1, componentHeight, usableHeight))
                 endLine++;
 
             return new int[] {startLine, endLine};
@@ -474,7 +473,7 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
     }
     
     private void documentChange() {
-        fullRepaint(lines != Utilities.getRowCount(doc));
+        fullRepaint(lines != LineDocumentUtils.getLineCount(doc));
     }
     
     private double getComponentHeight() {
@@ -550,11 +549,11 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
     }
     
     private synchronized int getModelToViewImpl(int line) throws BadLocationException {
-        int docLines = Utilities.getRowCount(doc);
+        int docLines = LineDocumentUtils.getLineCount(doc);
         
         if (modelToViewCache == null || height != pane.getHeight() || lines != docLines) {
-            modelToViewCache = new int[Utilities.getRowCount(doc) + 2];
-            lines = Utilities.getRowCount(doc);
+            modelToViewCache = new int[LineDocumentUtils.getLineCount(doc) + 2];
+            lines = LineDocumentUtils.getLineCount(doc);
             height = pane.getHeight();
         }
         

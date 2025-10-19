@@ -72,7 +72,7 @@ public class CodeCommentAction extends CommentAction {
                             try {
                                 int end = (endPos > 0 && LineDocumentUtils.getLineStartOffset(doc, endPos) == endPos) ?
                                     endPos-1 : endPos;
-                                int lineCnt = Utilities.getRowCount(doc, startPos, end);
+                                int lineCnt = LineDocumentUtils.getLineCount(doc, startPos, end);
                                 List<String> mimeTypes = new ArrayList<>(lineCnt);
                                 int pos = startPos;
                                 for (int x = lineCnt ; x > 0; x--) {

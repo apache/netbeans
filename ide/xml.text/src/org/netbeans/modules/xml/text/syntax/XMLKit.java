@@ -207,7 +207,7 @@ public class XMLKit extends NbEditorKit implements org.openide.util.HelpCtx.Prov
                         }
 
                         int pos = startPos;
-                        int lineCnt = Utilities.getRowCount(doc, startPos, endPos);                            
+                        int lineCnt = LineDocumentUtils.getLineCount(doc, startPos, endPos);                            
 
                         for (;lineCnt > 0; lineCnt--) {
                             doc.insertString(pos, commentStartString, null); 
@@ -267,7 +267,7 @@ public class XMLKit extends NbEditorKit implements org.openide.util.HelpCtx.Prov
                         }
 
                         int pos = startPos;
-                        int lineCnt = Utilities.getRowCount(doc, startPos, endPos);
+                        int lineCnt = LineDocumentUtils.getLineCount(doc, startPos, endPos);
                         char[] startChars, endChars;
 
                         for (; lineCnt > 0; lineCnt-- ) {

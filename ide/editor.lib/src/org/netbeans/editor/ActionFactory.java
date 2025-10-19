@@ -156,7 +156,7 @@ public class ActionFactory {
                                                 try {
                                                     int dot = caretInfo.getDot();
                                                     int lineStartOffset = LineDocumentUtils.getLineStartOffset(doc, dot);
-                                                    int firstNW = Utilities.getRowFirstNonWhite(doc, dot);
+                                                    int firstNW = LineDocumentUtils.getLineFirstNonWhitespace(doc, dot);
                                                     if (firstNW != -1 && dot <= firstNW) {
                                                         // Non-white row and caret inside initial whitespace => decrease text indent
                                                         int lineEndOffset = LineDocumentUtils.getLineEndOffset(doc, dot);
@@ -164,7 +164,7 @@ public class ActionFactory {
                                                     } else {
                                                         int endNW = (firstNW == -1)
                                                                 ? lineStartOffset
-                                                                : (Utilities.getRowLastNonWhite(doc, dot) + 1);
+                                                                : (LineDocumentUtils.getLineLastNonWhitespace(doc, dot) + 1);
                                                         if (dot > endNW) {
                                                             int shiftWidth = doc.getShiftWidth();
                                                             if (shiftWidth > 0) {
@@ -213,7 +213,7 @@ public class ActionFactory {
                                     try {
                                         int dot = caret.getDot();
                                         int lineStartOffset = LineDocumentUtils.getLineStartOffset(doc, dot);
-                                        int firstNW = Utilities.getRowFirstNonWhite(doc, dot);
+                                        int firstNW = LineDocumentUtils.getLineFirstNonWhitespace(doc, dot);
                                         if (firstNW != -1 && dot <= firstNW) {
                                             // Non-white row and caret inside initial whitespace => decrease text indent
                                             int lineEndOffset = LineDocumentUtils.getLineEndOffset(doc, dot);
@@ -221,7 +221,7 @@ public class ActionFactory {
                                         } else {
                                             int endNW = (firstNW == -1)
                                                     ? lineStartOffset
-                                                    : (Utilities.getRowLastNonWhite(doc, dot) + 1);
+                                                    : (LineDocumentUtils.getLineLastNonWhitespace(doc, dot) + 1);
                                             if (dot > endNW) {
                                                 int shiftWidth = doc.getShiftWidth();
                                                 if (shiftWidth > 0) {
@@ -376,7 +376,7 @@ public class ActionFactory {
                                 if (Analyzer.isWhitespace(chars, 0, chars.length)) {
                                     doc.remove(bolPos, dotPos - bolPos); // remove whitespace
                                 } else {
-                                    int firstNW = Utilities.getRowFirstNonWhite(doc, bolPos);
+                                    int firstNW = LineDocumentUtils.getLineFirstNonWhitespace(doc, bolPos);
                                     if (firstNW >= 0 && firstNW < dotPos) {
                                         doc.remove(firstNW, dotPos - firstNW);
                                     }
@@ -1947,7 +1947,7 @@ public class ActionFactory {
             if (target != null) {
                 Caret caret = target.getCaret();
                 try {
-                    int pos = Utilities.getRowFirstNonWhite((BaseDocument)target.getDocument(),
+                    int pos = LineDocumentUtils.getLineFirstNonWhitespace((BaseDocument)target.getDocument(),
                                                             caret.getDot());
                     if (pos >= 0) {
                         boolean select = BaseKit.selectionFirstNonWhiteAction.equals(getValue(Action.NAME));
@@ -1980,7 +1980,7 @@ public class ActionFactory {
             if (target != null) {
                 Caret caret = target.getCaret();
                 try {
-                    int pos = Utilities.getRowLastNonWhite((BaseDocument)target.getDocument(),
+                    int pos = LineDocumentUtils.getLineLastNonWhitespace((BaseDocument)target.getDocument(),
                                                            caret.getDot());
                     if (pos >= 0) {
                         boolean select = BaseKit.selectionLastNonWhiteAction.equals(getValue(Action.NAME));

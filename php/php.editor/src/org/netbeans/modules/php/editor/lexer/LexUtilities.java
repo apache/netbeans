@@ -423,7 +423,7 @@ public final class LexUtilities {
      */
     public static boolean isCommentOnlyLine(BaseDocument doc, int offset)
         throws BadLocationException {
-        int begin = Utilities.getRowFirstNonWhite(doc, offset);
+        int begin = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
 
         if (begin == -1) {
             return false; // whitespace only

@@ -238,7 +238,9 @@ public class Utilities {
     * @param offset position in document anywhere on the line
     * @return position of the first non-white char on the line or -1
     *   if there's no non-white character on that line.
+    * @deprecated use {@link LineDocumentUtils#getLineFirstNonWhitespace}
     */
+    @Deprecated
     public static int getRowFirstNonWhite(BaseDocument doc, int offset)
     throws BadLocationException {
         return LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
@@ -267,7 +269,7 @@ public class Utilities {
     */
     public static int getRowIndent(BaseDocument doc, int offset)
     throws BadLocationException {
-        offset = getRowFirstNonWhite(doc, offset);
+        offset = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
         if (offset == -1) {
             return -1;
         }
@@ -287,13 +289,13 @@ public class Utilities {
     */
     public static int getRowIndent(BaseDocument doc, int offset, boolean downDir)
     throws BadLocationException {
-        int p = getRowFirstNonWhite(doc, offset);
+        int p = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
         if (p == -1) {
             p = getFirstNonWhiteRow(doc, offset, downDir);
             if (p == -1) {
                 return -1; // non-white line not found
             }
-            p = getRowFirstNonWhite(doc, p);
+            p = LineDocumentUtils.getLineFirstNonWhitespace(doc, p);
             if (p == -1) {
                 return -1; // non-white line not found
             }

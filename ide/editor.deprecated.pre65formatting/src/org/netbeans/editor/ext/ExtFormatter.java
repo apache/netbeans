@@ -332,7 +332,7 @@ public class ExtFormatter extends Formatter implements FormatLayer {
         BaseDocument doc = Utilities.getDocument(target);
         int dotPos = target.getCaret().getDot();
         try {
-            int fnw = Utilities.getRowFirstNonWhite(doc, dotPos);
+            int fnw = LineDocumentUtils.getLineFirstNonWhitespace(doc, dotPos);
             return dotPos != fnw+typedText.length();
         } catch (BadLocationException e) {
             return false;
@@ -410,7 +410,7 @@ public class ExtFormatter extends Formatter implements FormatLayer {
                         Writer w = reformat(bdoc, result [0], eolOffset, true);
 
                         // Find the caret position
-                        eolOffset = Utilities.getRowFirstNonWhite(bdoc, result [0]);
+                        eolOffset = LineDocumentUtils.getLineFirstNonWhitespace(bdoc, result [0]);
                         if (eolOffset < 0) { // white line
                             eolOffset = getEOLOffset(bdoc, result [0]);
                         }

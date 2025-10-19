@@ -83,7 +83,7 @@ public class InsertTabAction extends BaseAction {
         }
 
         private void tryReplaceTab() throws BadLocationException {
-            int rowFirstNonWhite = Utilities.getRowFirstNonWhite(baseDocument, caretOffset);
+            int rowFirstNonWhite = LineDocumentUtils.getLineFirstNonWhitespace(baseDocument, caretOffset);
             if (shouldBeReplaced(rowFirstNonWhite, caretOffset)) {
                 replaceTab();
             }

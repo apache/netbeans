@@ -3413,7 +3413,7 @@ public class BaseKit extends DefaultEditorKit {
                                                     dot = lineStartPos;
                                                 } else { // either to line start or text start
                                                     BaseDocument doc = (BaseDocument) target.getDocument();
-                                                    int textStartPos = Utilities.getRowFirstNonWhite(doc, lineStartPos);
+                                                    int textStartPos = LineDocumentUtils.getLineFirstNonWhitespace(doc, lineStartPos);
                                                     if (textStartPos < 0) { // no text on the line
                                                         textStartPos = Utilities.getRowEnd(target, lineStartPos);
                                                     } else if (textStartPos < lineStartPos) {
@@ -3484,7 +3484,7 @@ public class BaseKit extends DefaultEditorKit {
                             if (homeKeyColumnOne) { // to first column
                                 dot = lineStartPos;
                             } else { // either to line start or text start
-                                int textStartPos = Utilities.getRowFirstNonWhite(((BaseDocument)doc), lineStartPos);
+                                int textStartPos = LineDocumentUtils.getLineFirstNonWhitespace(((BaseDocument)doc), lineStartPos);
                                 if (textStartPos < 0) { // no text on the line
                                     textStartPos = Utilities.getRowEnd(target, lineStartPos);
                                 } else if (textStartPos < lineStartPos) {
@@ -4228,7 +4228,7 @@ public class BaseKit extends DefaultEditorKit {
             public void run () {
                 try {
                     int indent = newIndent < 0 ? 0 : newIndent;
-                    int firstNW = Utilities.getRowFirstNonWhite(doc, pos);
+                    int firstNW = LineDocumentUtils.getLineFirstNonWhitespace(doc, pos);
                     if (firstNW == -1) { // valid first non-blank
                         firstNW = LineDocumentUtils.getLineEndOffset(doc, pos);
                     }

@@ -93,7 +93,7 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
         if (id != GroovyTokenId.ERROR && id != GroovyTokenId.BLOCK_COMMENT && insertMatching && insertRightBrace) {
             int indent = GsfUtilities.getLineIndent(doc, offset);
 
-            int afterLastNonWhite = Utilities.getRowLastNonWhite(doc, offset);
+            int afterLastNonWhite = LineDocumentUtils.getLineLastNonWhitespace(doc, offset);
 
             // We've either encountered a further indented line, or a line that doesn't
             // look like the end we're after, so insert a matching end.
@@ -147,7 +147,7 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
         if (id == GroovyTokenId.ERROR) {
             // See if it's a block comment opener
             String text = token.text().toString();
-            if (text.startsWith("/*") && ts.offset() == Utilities.getRowFirstNonWhite(doc, offset)) {
+            if (text.startsWith("/*") && ts.offset() == LineDocumentUtils.getLineFirstNonWhitespace(doc, offset)) {
                 int indent = GsfUtilities.getLineIndent(doc, offset);
                 StringBuilder sb = new StringBuilder();
                 sb.append("\n"); // NOI18N
@@ -226,7 +226,7 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
             // Pressing newline in the whitespace before a comment
             // should be identical to pressing newline with the caret
             // at the beginning of the comment
-            int begin = Utilities.getRowFirstNonWhite(doc, offset);
+            int begin = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
             if (begin != -1 && offset < begin) {
                 ts.move(begin);
                 if (ts.moveNext()) {
@@ -241,7 +241,7 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
         if ((id == GroovyTokenId.BLOCK_COMMENT)
                 && offset > ts.offset() && offset < ts.offset()+ts.token().length()) {
             // Continue *'s
-            int begin = Utilities.getRowFirstNonWhite(doc, offset);
+            int begin = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
             int end = LineDocumentUtils.getLineEndOffset(doc, offset)+1;
             if (begin == -1) {
                 begin = end;
@@ -298,7 +298,7 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
             // or if the next line is a comment!
 
             boolean continueComment = false;
-            int begin = Utilities.getRowFirstNonWhite(doc, offset);
+            int begin = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
 
             // We should only continue comments if the previous line had a comment
             // (and a comment from the beginning, not a trailing comment)
@@ -306,7 +306,7 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
             boolean nextLineIsComment = false;
             int rowStart = LineDocumentUtils.getLineStartOffset(doc, offset);
             if (rowStart > 0) {
-                int prevBegin = Utilities.getRowFirstNonWhite(doc, rowStart - 1);
+                int prevBegin = LineDocumentUtils.getLineFirstNonWhitespace(doc, rowStart - 1);
                 if (prevBegin != -1) {
                     Token<GroovyTokenId> firstToken = LexUtilities.getToken(doc, prevBegin);
                     if (firstToken != null && firstToken.id() == GroovyTokenId.LINE_COMMENT) {
@@ -316,7 +316,7 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
             }
             int rowEnd = LineDocumentUtils.getLineEndOffset(doc, offset);
             if (rowEnd < doc.getLength()) {
-                int nextBegin = Utilities.getRowFirstNonWhite(doc, rowEnd + 1);
+                int nextBegin = LineDocumentUtils.getLineFirstNonWhitespace(doc, rowEnd + 1);
                 if (nextBegin != -1) {
                     Token<GroovyTokenId> firstToken = LexUtilities.getToken(doc, nextBegin);
                     if (firstToken != null && firstToken.id() == GroovyTokenId.LINE_COMMENT) {
@@ -349,7 +349,7 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
                     // comments editing the middle of the comment
                     int nextLine = LineDocumentUtils.getLineEndOffset(doc, offset) + 1;
                     if (nextLine < doc.getLength()) {
-                        int nextLineFirst = Utilities.getRowFirstNonWhite(doc, nextLine);
+                        int nextLineFirst = LineDocumentUtils.getLineFirstNonWhitespace(doc, nextLine);
                         if (nextLineFirst != -1) {
                             Token<GroovyTokenId> firstToken = LexUtilities.getToken(doc, nextLineFirst);
                             if (firstToken != null && firstToken.id() == GroovyTokenId.LINE_COMMENT) {
@@ -506,7 +506,7 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
      * character on the caret row is returned.
      */
     private int getRowOrBlockEnd(BaseDocument doc, int caretOffset, boolean[] insert) throws BadLocationException {
-        int rowEnd = org.netbeans.editor.Utilities.getRowLastNonWhite(doc, caretOffset);
+        int rowEnd = LineDocumentUtils.getLineLastNonWhitespace(doc, caretOffset);
         if (rowEnd == -1 || caretOffset >= rowEnd) {
             return caretOffset;
         }

@@ -120,13 +120,13 @@ public class WhereUsedElement extends SimpleRefactoringElementImplementation {
             // for for example find subclasses (using a singly dummy FileInfo) I need
             // to read it here instead
             content = bdoc.getText(0, bdoc.getLength());
-            sta = Utilities.getRowFirstNonWhite(bdoc, start);
+            sta = LineDocumentUtils.getLineFirstNonWhitespace(bdoc, start);
 
             if (sta == -1) {
                 sta = LineDocumentUtils.getLineStartOffset(bdoc, start);
             }
 
-            en = Utilities.getRowLastNonWhite(bdoc, start);
+            en = LineDocumentUtils.getLineLastNonWhitespace(bdoc, start);
 
             if (en == -1) {
                 en = LineDocumentUtils.getLineEndOffset(bdoc, start);

@@ -1100,7 +1100,7 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
                 }
 
                 // find first non-white character
-                int firstNonWhite = Utilities.getRowFirstNonWhite(doc, rowStartOffset);
+                int firstNonWhite = LineDocumentUtils.getLineFirstNonWhitespace(doc, rowStartOffset);
 
                 // find line ending offset
                 int rowEndOffset = LineDocumentUtils.getLineEndOffset(doc, rowStartOffset);
@@ -1231,7 +1231,7 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
     private boolean doesLineStartWithOurLanguage(BaseDocument doc, int lineIndex, JoinedTokenSequence<T1> joinedTS) throws BadLocationException {
         int rowStartOffset = LineDocumentUtils.getLineStartFromIndex(doc, lineIndex);
         int rowEndOffset = LineDocumentUtils.getLineEndOffset(doc, rowStartOffset);
-        int firstNonWhite = Utilities.getRowFirstNonWhite(doc, rowStartOffset);
+        int firstNonWhite = LineDocumentUtils.getLineFirstNonWhitespace(doc, rowStartOffset);
         if (firstNonWhite != -1) {
             // there is something on the line:
             int newRowStartOffset = findLanguageOffset(joinedTS, rowStartOffset, rowEndOffset, true);
@@ -1776,7 +1776,7 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
         line.index = index;
         line.offset = LineDocumentUtils.getLineStartFromIndex(getDocument(), index);
         line.existingLineIndent = IndentUtils.lineIndent(getDocument(), line.offset);
-        int nonWS = Utilities.getRowFirstNonWhite(getDocument(), line.offset);
+        int nonWS = LineDocumentUtils.getLineFirstNonWhitespace(getDocument(), line.offset);
         line.emptyLine = nonWS == -1;
         // if (first-non-whitespace-offset - line-start-offset) is different from 
         // existingLineIndent then line starts with tab characters which will need

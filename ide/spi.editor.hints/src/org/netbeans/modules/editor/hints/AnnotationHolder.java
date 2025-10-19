@@ -68,7 +68,6 @@ import org.netbeans.api.editor.settings.AttributesUtilities;
 import org.netbeans.api.editor.settings.EditorStyleConstants;
 import org.netbeans.api.editor.settings.FontColorSettings;
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
 import org.netbeans.lib.editor.util.swing.DocumentListenerPriority;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.spi.editor.highlighting.HighlightAttributeValue;
@@ -852,8 +851,8 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
         try {
             int rowStart = line.getOffset();
             int rowEnd = LineDocumentUtils.getLineEndOffset(doc, rowStart);
-            int rowHighlightStart = Utilities.getRowFirstNonWhite(doc, rowStart);
-            int rowHighlightEnd = Utilities.getRowLastNonWhite(doc, rowStart) + 1;
+            int rowHighlightStart = LineDocumentUtils.getLineFirstNonWhitespace(doc, rowStart);
+            int rowHighlightEnd = LineDocumentUtils.getLineLastNonWhitespace(doc, rowStart) + 1;
 
             if (rowStart <= rowEnd) {
                 bag.removeHighlights(rowStart, rowEnd, false);

@@ -1231,7 +1231,7 @@ public abstract class CslTestBase extends NbTestCase {
             if (LineDocumentUtils.isLineWhitespace(doc, start)) {
                 end = LineDocumentUtils.getLineEndOffset(doc, offset);
             } else {
-                end = Utilities.getRowFirstNonWhite(doc, start);
+                end = LineDocumentUtils.getLineFirstNonWhitespace(doc, start);
             }
 
             int indent = Utilities.getVisualColumn(doc, end);
@@ -3414,7 +3414,7 @@ public abstract class CslTestBase extends NbTestCase {
                     if (lineEnd == -1) {
                         break;
                     }
-                    if (Utilities.getRowFirstNonWhite(doc, index) != -1) {
+                    if (LineDocumentUtils.getLineFirstNonWhitespace(doc, index) != -1) {
                         String line = doc.getText(lineStart, lineEnd-lineStart);
                         for (int i = lineStart; i <= lineEnd; i++) {
                             String prefix = completer.getPrefix(pr, i, true); // line.charAt(i)

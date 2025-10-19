@@ -1228,7 +1228,7 @@ public abstract class CslTestBase extends NbTestCase {
             int start = LineDocumentUtils.getLineStart2(doc, offset);
             int end;
 
-            if (Utilities.isRowWhite(doc, start)) {
+            if (LineDocumentUtils.isLineEmpty(doc, start)) {
                 end = LineDocumentUtils.getLineEnd(doc, offset);
             } else {
                 end = Utilities.getRowFirstNonWhite(doc, start);

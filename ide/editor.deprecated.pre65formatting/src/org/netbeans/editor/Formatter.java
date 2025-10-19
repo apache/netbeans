@@ -431,7 +431,7 @@ public class Formatter {
                 public void run () {
                     try {
                         int indent = newIndent < 0 ? 0 : newIndent;
-                        int firstNW = Utilities.getRowFirstNonWhite(doc, pos);
+                        int firstNW = LineDocumentUtils.getLineFirstNonWhitespace(doc, pos);
                         if (firstNW == -1) { // valid first non-blank
                             firstNW = LineDocumentUtils.getLineEndOffset(doc, pos);
                         }

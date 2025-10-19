@@ -486,7 +486,7 @@ public final class LexUtilities {
 
         // Look at the first token of the current line
         try {
-            int first = Utilities.getRowFirstNonWhite(doc, offset);
+            int first = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
             if (first != -1) {
                 Token<GroovyTokenId> token = getToken(doc, first);
                 if (token != null) {
@@ -670,7 +670,7 @@ public final class LexUtilities {
      */
     public static boolean isCommentOnlyLine(BaseDocument doc, int offset)
         throws BadLocationException {
-        int begin = Utilities.getRowFirstNonWhite(doc, offset);
+        int begin = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
 
         if (begin == -1) {
             return false; // whitespace only
@@ -752,7 +752,7 @@ public final class LexUtilities {
                         int newBegin = LineDocumentUtils.getLineStartOffset(doc, begin - 1);
 
                         if ((newBegin < 0) || !LexUtilities.isCommentOnlyLine(doc, newBegin)) {
-                            begin = Utilities.getRowFirstNonWhite(doc, begin);
+                            begin = LineDocumentUtils.getLineFirstNonWhitespace(doc, begin);
                             break;
                         }
 
@@ -765,7 +765,7 @@ public final class LexUtilities {
                         int newEnd = LineDocumentUtils.getLineEndOffset(doc, end + 1);
 
                         if ((newEnd >= length) || !LexUtilities.isCommentOnlyLine(doc, newEnd)) {
-                            end = Utilities.getRowLastNonWhite(doc, end) + 1;
+                            end = LineDocumentUtils.getLineLastNonWhitespace(doc, end) + 1;
                             break;
                         }
 
@@ -805,7 +805,7 @@ public final class LexUtilities {
             lineStart = LineDocumentUtils.getLineStartOffset(doc, Math.min(lexOffset, doc.getLength()));
             int prevLast = lineStart - 1;
             if (lineStart > 0) {
-                prevLast = Utilities.getRowLastNonWhite(doc, lineStart - 1);
+                prevLast = LineDocumentUtils.getLineLastNonWhitespace(doc, lineStart - 1);
                 if (prevLast != -1) {
                     char c = doc.getText(prevLast, 1).charAt(0);
                     if (c == ',') {
@@ -815,13 +815,13 @@ public final class LexUtilities {
                 }
             }
             if (!allowPrevLine) {
-                int firstNonWhite = Utilities.getRowFirstNonWhite(doc, lineStart);
+                int firstNonWhite = LineDocumentUtils.getLineFirstNonWhitespace(doc, lineStart);
                 if (lexOffset <= firstNonWhite || firstNonWhite == -1) {
                     return lexOffset;
                 }
             } else {
                 // Make lineStart so small that Math.max won't cause any problems
-                int firstNonWhite = Utilities.getRowFirstNonWhite(doc, lineStart);
+                int firstNonWhite = LineDocumentUtils.getLineFirstNonWhitespace(doc, lineStart);
                 if (prevLast >= 0 && (lexOffset <= firstNonWhite || firstNonWhite == -1)) {
                     return prevLast + 1;
                 }

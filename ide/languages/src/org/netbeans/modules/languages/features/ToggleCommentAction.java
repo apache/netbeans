@@ -157,7 +157,7 @@ public class ToggleCommentAction extends ExtKit.ToggleCommentAction {
             }
             String suffix = (String) feature.getValue("suffix"); // NOI18N
             if (suffix != null) {
-                int lastNonWhitePos = Utilities.getRowLastNonWhite(doc, offset);
+                int lastNonWhitePos = LineDocumentUtils.getLineLastNonWhitespace(doc, offset);
                 if (lastNonWhitePos != -1) {
                     int commentLen = suffix.length();
                     if (lastNonWhitePos - LineDocumentUtils.getLineStartOffset(doc, offset) >= commentLen) {
@@ -168,7 +168,7 @@ public class ToggleCommentAction extends ExtKit.ToggleCommentAction {
                     }
                 }
             }
-            int firstNonWhitePos = Utilities.getRowFirstNonWhite(doc, offset);
+            int firstNonWhitePos = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
             if (firstNonWhitePos != -1) {
                 int commentLen = prefix.length();
                 if (LineDocumentUtils.getLineEndOffset(doc, firstNonWhitePos) - firstNonWhitePos >= prefix.length()) {
@@ -197,7 +197,7 @@ public class ToggleCommentAction extends ExtKit.ToggleCommentAction {
             }
             String suffix = (String) feature.getValue("suffix"); // NOI18N
             if (suffix != null) {
-                int lastNonWhitePos = Utilities.getRowLastNonWhite(doc, offset);
+                int lastNonWhitePos = LineDocumentUtils.getLineLastNonWhitespace(doc, offset);
                 if (lastNonWhitePos != -1) {
                     int commentLen = suffix.length();
                     if (lastNonWhitePos - LineDocumentUtils.getLineStartOffset(doc, offset) >= commentLen) {
@@ -210,7 +210,7 @@ public class ToggleCommentAction extends ExtKit.ToggleCommentAction {
             } else {
                 suffixCommentOk = true;
             }
-            int firstNonWhitePos = Utilities.getRowFirstNonWhite(doc, offset);
+            int firstNonWhitePos = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
             if (firstNonWhitePos != -1) {
                 int commentLen = prefix.length();
                 if (LineDocumentUtils.getLineEndOffset(doc, firstNonWhitePos) - firstNonWhitePos >= prefix.length()) {

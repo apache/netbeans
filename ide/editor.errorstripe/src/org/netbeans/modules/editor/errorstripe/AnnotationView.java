@@ -564,7 +564,7 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
         int result = modelToViewCache[line + 1];
         
         if (result == 0) {
-            int lineOffset = Utilities.getRowStartFromLineOffset((BaseDocument) pane.getDocument(), line);
+            int lineOffset = LineDocumentUtils.getLineStartFromIndex((BaseDocument) pane.getDocument(), line);
             
             modelToViewCache[line + 1] = result = getYFromPos(lineOffset);
         }
@@ -778,7 +778,7 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
         Mark mark = getMarkForPoint(e.getPoint().getY());
         
         if (mark!= null) {
-            pane.setCaretPosition(Utilities.getRowStartFromLineOffset(doc, mark.getAssignedLines()[0]));
+            pane.setCaretPosition(LineDocumentUtils.getLineStartFromIndex(doc, mark.getAssignedLines()[0]));
         }
     }
     

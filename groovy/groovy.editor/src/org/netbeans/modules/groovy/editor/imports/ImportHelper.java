@@ -330,7 +330,7 @@ public final class ImportHelper {
                 try {
                     int packageLine = getPackageLineIndex(doc);
                     int afterPackageLine = packageLine + 1;
-                    int afterPackageOffset = Utilities.getRowStartFromLineOffset(doc, afterPackageLine);
+                    int afterPackageOffset = LineDocumentUtils.getLineStartFromIndex(doc, afterPackageLine);
                     int importLine = getAppropriateLine(doc, fqName);
                     if (importLine >= 0) {
                         // If the line after the package statement isn't empty, put one empty line there
@@ -343,12 +343,12 @@ public final class ImportHelper {
                         }
 
                         // Find appropriate place to import and put it there
-                        int importOffset = Utilities.getRowStartFromLineOffset(doc, importLine);
+                        int importOffset = LineDocumentUtils.getLineStartFromIndex(doc, importLine);
                         edits.replace(importOffset, 0, "import " + fqName + "\n", false, 0);
 
                         // If it's the last import and if the line after the last import
                         // statement isn't empty, put one empty line there
-                        int afterImportsOffset = Utilities.getRowStartFromLineOffset(doc, importLine);
+                        int afterImportsOffset = LineDocumentUtils.getLineStartFromIndex(doc, importLine);
 
                         if (!LineDocumentUtils.isLineEmpty(doc, afterImportsOffset) && isLastImport(doc, fqName)) {
                             edits.replace(afterImportsOffset, 0, "\n", false, 0);

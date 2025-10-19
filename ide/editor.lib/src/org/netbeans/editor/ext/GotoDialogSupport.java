@@ -33,6 +33,7 @@ import javax.swing.Action;
 import javax.swing.text.Caret;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.EditorRegistry;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.BaseKit;
 import org.netbeans.editor.Utilities;
@@ -211,7 +212,7 @@ public class GotoDialogSupport implements ActionListener {
                         line = rowCount;
                     
                     // Obtain the offset where to jump
-                    int pos = Utilities.getRowStartFromLineOffset(doc, line - 1);
+                    int pos = LineDocumentUtils.getLineStartFromIndex(doc, line - 1);
                     
                     BaseKit kit = Utilities.getKit(c);
                     if (kit != null) {

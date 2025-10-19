@@ -25,6 +25,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 
 import org.netbeans.editor.AnnotationDesc;
 import org.netbeans.editor.Annotations;
@@ -270,7 +271,7 @@ public class CdiGlyphAction extends AbstractAction {
         @Override
         public void run() {
             Line line = myPart.getLine();
-            int startOffset = Utilities.getRowStartFromLineOffset(myDocument, 
+            int startOffset = LineDocumentUtils.getLineStartFromIndex(myDocument, 
                     line.getLineNumber());
             myOffset = startOffset+myPart.getColumn();
         }

@@ -667,7 +667,7 @@ public final class HintsUI implements MouseListener, MouseMotionListener, KeyLis
                     description = annotation.getDescription();
                 }
 
-                Point p = comp.modelToView(Utilities.getRowStartFromLineOffset((BaseDocument) doc, line)).getLocation();
+                Point p = comp.modelToView(LineDocumentUtils.getLineStartFromIndex((BaseDocument) doc, line)).getLocation();
                 p.y += carretRectangle.height;
                 if(comp.getParent() instanceof JViewport) {
                     p.x += ((JViewport)comp.getParent()).getViewPosition().x;

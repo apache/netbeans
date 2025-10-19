@@ -476,7 +476,7 @@ public class ExtKit extends BaseKit {
         *  of the line with the line-number equal to (lineOffset + 1).
         */
         protected int getOffsetFromLine(BaseDocument doc, int lineOffset) {
-            return Utilities.getRowStartFromLineOffset(doc, lineOffset);
+            return LineDocumentUtils.getLineStartFromIndex(doc, lineOffset);
         }
 
         public void actionPerformed(ActionEvent evt, JTextComponent target) {

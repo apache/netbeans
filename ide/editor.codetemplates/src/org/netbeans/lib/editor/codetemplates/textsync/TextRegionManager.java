@@ -1347,7 +1347,7 @@ public final class TextRegionManager {
                     int endLine = LineDocumentUtils.getLineIndex((BaseDocument) doc, endOffset);
 
                     for (int i = startLine; i <= endLine; i++) {
-                        int s = Math.max(Utilities.getRowStartFromLineOffset((BaseDocument) doc, i), startOffset);
+                        int s = Math.max(LineDocumentUtils.getLineStartFromIndex((BaseDocument) doc, i), startOffset);
                         int e = Math.min(LineDocumentUtils.getLineEndOffset((BaseDocument) doc, s), endOffset);
                         int size = e - s;
 

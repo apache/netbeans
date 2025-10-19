@@ -193,7 +193,7 @@ public class AnnotationViewDataImplTest extends NbTestCase {
         
         bd.insertString(0, "\n\n\n\n\n\n\n\n\n\n", null);
         
-        Position start = bd.createPosition(Utilities.getRowStartFromLineOffset(bd, 2));
+        Position start = bd.createPosition(LineDocumentUtils.getLineStartFromIndex(bd, 2));
         
         AnnotationDesc a1 = new AnnotationTestUtilities.TestAnnotationDesc1(bd, start);
         AnnotationDesc a2 = new AnnotationTestUtilities.TestAnnotationDesc2(bd, start);

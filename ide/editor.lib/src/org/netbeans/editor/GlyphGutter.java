@@ -944,7 +944,7 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
                             return;
                         }
                         if (line != currentLine) {
-                            int offset = Utilities.getRowStartFromLineOffset(document, line);
+                            int offset = LineDocumentUtils.getLineStartFromIndex(document, line);
                             JumpList.checkAddEntry();
                             eui.getComponent().getCaret().setDot(offset);
                         }
@@ -991,7 +991,7 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
                     offset = annos.getActiveAnnotation(line).getOffset();
                 } else {
                     BaseDocument document = eui.getDocument();
-                    offset = Utilities.getRowStartFromLineOffset(document, line);
+                    offset = LineDocumentUtils.getLineStartFromIndex(document, line);
                 }
                 if (eui.getComponent().getCaret().getDot() != offset)
                     JumpList.checkAddEntry();

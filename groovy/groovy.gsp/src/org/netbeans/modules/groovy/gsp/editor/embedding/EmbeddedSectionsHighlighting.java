@@ -180,7 +180,7 @@ public class EmbeddedSectionsHighlighting extends AbstractHighlightsContainer im
                                 if (startLine != endLine) {
                                     // multiline scriplet section
                                     // adjust the sections start to the beginning of the firts line
-                                    int firstLineStartOffset = Utilities.getRowStartFromLineOffset((BaseDocument) document, startLine);
+                                    int firstLineStartOffset = LineDocumentUtils.getLineStartFromIndex((BaseDocument) document, startLine);
                                     if (firstLineStartOffset < sectionStart - delimiterSize && 
                                         isWhitespace(document, firstLineStartOffset, sectionStart - delimiterSize)) // always preceeded by the delimiter
                                     {
@@ -191,7 +191,7 @@ public class EmbeddedSectionsHighlighting extends AbstractHighlightsContainer im
                                     int lines = Utilities.getRowCount((BaseDocument) document);
                                     int lastLineEndOffset;
                                     if (endLine + 1 < lines) {
-                                        lastLineEndOffset = Utilities.getRowStartFromLineOffset((BaseDocument) document, endLine + 1);
+                                        lastLineEndOffset = LineDocumentUtils.getLineStartFromIndex((BaseDocument) document, endLine + 1);
                                     } else {
                                         lastLineEndOffset = document.getLength() + 1;
                                     }

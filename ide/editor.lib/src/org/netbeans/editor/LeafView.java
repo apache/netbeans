@@ -219,7 +219,7 @@ public class LeafView extends BaseView {
 
         int startOffset = getStartOffset();
         int pos;
-        pos = Utilities.getRowStartFromLineOffset(((BaseDocument)getDocument()), line);
+        pos = LineDocumentUtils.getLineStartFromIndex(((BaseDocument)getDocument()), line);
         if (pos == -1) {
             pos = startOffset;
         }

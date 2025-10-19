@@ -339,7 +339,7 @@ public abstract class TagBasedLexerFormatter {
         int initialIndent = 0;
 
         if (line > 0) {
-            int lineStart = Utilities.getRowStartFromLineOffset(doc, line);
+            int lineStart = LineDocumentUtils.getLineStartFromIndex(doc, line);
             int previousNonWhiteLineEnd = LineDocumentUtils.getPreviousNonWhitespace(doc, lineStart);
 
             if (previousNonWhiteLineEnd > 0) {
@@ -447,7 +447,7 @@ public abstract class TagBasedLexerFormatter {
         
         int firstLineOfTheLanguageBlock = languageBounds.getStartLine();
 
-        int lineStart = Utilities.getRowStartFromLineOffset(doc, firstLineOfTheLanguageBlock);
+        int lineStart = LineDocumentUtils.getLineStartFromIndex(doc, firstLineOfTheLanguageBlock);
 
         if (LineDocumentUtils.getNextNonWhitespace(doc, lineStart) < languageBounds.getStartPos()) {
             firstLineOfTheLanguageBlock++;
@@ -463,7 +463,7 @@ public abstract class TagBasedLexerFormatter {
     }
     
     protected static int getExistingIndent(BaseDocument doc, int line) throws BadLocationException{
-        int lineStart = Utilities.getRowStartFromLineOffset(doc, line);
+        int lineStart = LineDocumentUtils.getLineStartFromIndex(doc, line);
         return IndentUtils.lineIndent(doc, lineStart);
     }
 
@@ -582,8 +582,8 @@ public abstract class TagBasedLexerFormatter {
             int baseIndent = getExistingIndent(doc, line - 1);
             doc.insertString(dotPos, "\n", null); //NOI18N
             Position position = doc.createPosition(dotPos);
-            context.modifyIndent(Utilities.getRowStartFromLineOffset(doc, line), baseIndent + doc.getShiftWidth());
-            context.modifyIndent(Utilities.getRowStartFromLineOffset(doc, line + 1), baseIndent);
+            context.modifyIndent(LineDocumentUtils.getLineStartFromIndex(doc, line), baseIndent + doc.getShiftWidth());
+            context.modifyIndent(LineDocumentUtils.getLineStartFromIndex(doc, line + 1), baseIndent);
             context.setCaretOffset(position.getOffset());
         }
 
@@ -758,7 +758,7 @@ public abstract class TagBasedLexerFormatter {
                         int lastLineOfEmbeddedBlock = LineDocumentUtils.getLineIndex(doc,
                                 tokenSequence.offset() + getTxtLengthWithoutWhitespaceSuffix(tokenSequence.token().text()));
 
-                        if (LineDocumentUtils.getNextNonWhitespace(doc, Utilities.getRowStartFromLineOffset(doc,
+                        if (LineDocumentUtils.getNextNonWhitespace(doc, LineDocumentUtils.getLineStartFromIndex(doc,
                                 firstLineOfEmbeddedBlock)) < LineDocumentUtils.getNextNonWhitespace(doc, tokenSequence.offset())) {
 
                             firstLineOfEmbeddedBlock++;
@@ -857,7 +857,7 @@ public abstract class TagBasedLexerFormatter {
             // PASS 4: apply line indents
             
             for (int line = firstRefBlockLine; line <= lastRefBlockLine; line++) {
-                int lineStart = Utilities.getRowStartFromLineOffset(doc, line);
+                int lineStart = LineDocumentUtils.getLineStartFromIndex(doc, line);
                 int newIndent = newIndents[line] + lineBeforeSelectionBias;
                 context.modifyIndent(lineStart, newIndent > 0 ? newIndent : 0);
             }
@@ -868,7 +868,7 @@ public abstract class TagBasedLexerFormatter {
                 StringBuilder buff = new StringBuilder();
 
                 for (int i = 0; i < transferData.getNumberOfLines(); i++) {
-                    int lineStart = Utilities.getRowStartFromLineOffset(doc, i);
+                    int lineStart = LineDocumentUtils.getLineStartFromIndex(doc, i);
 
                     char formattingTypeSymbol = 0;
                     

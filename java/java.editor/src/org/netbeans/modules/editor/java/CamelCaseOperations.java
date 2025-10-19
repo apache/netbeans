@@ -22,7 +22,7 @@ package org.netbeans.modules.editor.java;
 import java.util.List;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import javax.swing.text.JTextComponent;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.editor.mimelookup.MimeRegistrations;
@@ -31,10 +31,10 @@ import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
-import static org.netbeans.modules.editor.java.JavaKit.JAVA_MIME_TYPE;
 import org.netbeans.spi.editor.typinghooks.CamelCaseInterceptor;
 import org.openide.util.NbPreferences;
+
+import static org.netbeans.modules.editor.java.JavaKit.JAVA_MIME_TYPE;
 
 /**
  *
@@ -105,7 +105,7 @@ import org.openide.util.NbPreferences;
         }
 
         // not an identifier - simply return next word offset
-        return Utilities.getNextWord((BaseDocument)doc, offset);
+        return LineDocumentUtils.getNextWordStart((BaseDocument)doc, offset);
     }
 
     static int previousCamelCasePosition(CamelCaseInterceptor.MutableContext context) throws BadLocationException {
@@ -193,7 +193,7 @@ import org.openide.util.NbPreferences;
         }
 
         // not an identifier - simply return previous word offset
-        return Utilities.getPreviousWord((BaseDocument)doc, offset);
+        return LineDocumentUtils.getPreviousWordStart((BaseDocument)doc, offset);
     }
 
     public static class JavaCamelCaseInterceptor implements CamelCaseInterceptor {

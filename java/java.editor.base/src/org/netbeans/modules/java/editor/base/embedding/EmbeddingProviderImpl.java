@@ -74,6 +74,7 @@ public class EmbeddingProviderImpl extends ParserBasedEmbeddingProvider<Parser.R
 
     @Override
     public List<Embedding> getEmbeddings(Parser.Result result) {
+        //TODO: locking; maybe go through the snapshot's tokens, and the lock&apply
         CompilationController info = CompilationController.get(result);
         if (info == null) {
             return Collections.emptyList();
@@ -220,9 +221,10 @@ public class EmbeddingProviderImpl extends ParserBasedEmbeddingProvider<Parser.R
 
         List<Embedding> result = new ArrayList<>();
         String text = ts.token().text().toString();
-        text = text.substring(4, text.length() - 3); /*whitespace!*/
+        text = text.substring(4, text.length() - 3); /*TODO: whitespace!*/
         String[] lines = text.split("\n", -1);
         int indent = Arrays.stream(lines)
+                           .filter(l -> !l.isBlank())
                            .mapToInt(this::leadingIndent)
                            .min()
                            .orElse(0);
@@ -241,7 +243,12 @@ public class EmbeddingProviderImpl extends ParserBasedEmbeddingProvider<Parser.R
                 embeddingStart = escapeStart + 1;
             }
 
-            result.add(snapshot.create(embeddingStart, embeddingEnd - embeddingStart, mimeType));
+            if (embeddingStart < embeddingEnd) {
+                result.add(snapshot.create(embeddingStart, embeddingEnd - embeddingStart, mimeType));
+            } else {
+                result.add(snapshot.create("\n", mimeType));
+            }
+
             nestedOffset += line.length() + 1;
         }
         return result;

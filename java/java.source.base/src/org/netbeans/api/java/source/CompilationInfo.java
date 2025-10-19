@@ -445,6 +445,20 @@ public class CompilationInfo {
     }
 
     /**
+     *
+     * @since 9.99
+     */
+    public JavaSourcePath getJavaSourcePath() {
+        int originalPos = getSnapshot().getOriginalOffset(0);
+
+        if (originalPos != 0) {
+            //poor way to detect embedding
+            return new JavaSourcePath(getFileObject(), originalPos);
+        }
+
+        return new JavaSourcePath(getFileObject(), -1);
+    }
+    /**
      * Marks this {@link CompilationInfo} as invalid, may be used to
      * verify confinement.
      */

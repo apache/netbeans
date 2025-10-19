@@ -31,6 +31,7 @@ import org.netbeans.api.java.source.PositionConverter;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
 import org.netbeans.modules.java.source.PositionRefProvider;
 import org.netbeans.modules.java.source.save.CasualDiff.Diff;
+import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Source;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -42,8 +43,8 @@ import org.openide.filesystems.FileUtil;
 public class DiffUtilities {
     private static final Logger LOG = Logger.getLogger(DiffUtilities.class.getName());
     
-    public static List<ModificationResult.Difference> diff2ModificationResultDifference(FileObject fo, PositionConverter converter, Map<Integer, String> userInfo, String originalCode, String newCode, Source src) throws IOException, BadLocationException {
-        return diff2ModificationResultDifference(fo, converter, userInfo, originalCode, diff(originalCode, newCode, 0), src);
+    public static List<ModificationResult.Difference> diff2ModificationResultDifference(FileObject fo, PositionConverter converter, Map<Integer, String> userInfo, String originalCode, String newCode, Source src, Snapshot embeddedSnapshot, Snapshot topLevelSnapshot) throws IOException, BadLocationException {
+        return diff2ModificationResultDifference(fo, converter, userInfo, originalCode, diff(originalCode, newCode, 0), src, embeddedSnapshot, topLevelSnapshot);
     }
 
     public static List<Diff> diff(String origContent, String newContent, int offset) {
@@ -56,10 +57,10 @@ public class DiffUtilities {
         return diffs;
     }
     
-    public static List<ModificationResult.Difference> diff2ModificationResultDifference(FileObject fo, PositionConverter converter, Map<Integer, String> userInfo, String content, List<Diff> diffs, Source src) throws IOException, BadLocationException {
+    public static List<ModificationResult.Difference> diff2ModificationResultDifference(FileObject fo, PositionConverter converter, Map<Integer, String> userInfo, String content, List<Diff> diffs, Source src, Snapshot embeddedSnapshot, Snapshot topLevelSnapshot) throws IOException, BadLocationException {
         diffs.sort((Diff o1, Diff o2) -> o1.getPos() - o2.getPos());
 
-        Rewriter out = new Rewriter(fo, converter, userInfo, src);
+        Rewriter out = new Rewriter(fo, converter, userInfo, src, embeddedSnapshot, topLevelSnapshot);
         char[] buf = content.toCharArray();
 
         // Copy any leading comments.
@@ -91,8 +92,10 @@ public class DiffUtilities {
         public List<ModificationResult.Difference> diffs = new LinkedList<ModificationResult.Difference>();
         private Map<Integer, String> userInfo;
         private final Source src;
+        private final Snapshot embeddedSnapshot;
+        private final Snapshot topLevelSnapshot;
         
-        public Rewriter(FileObject fo, PositionConverter converter, Map<Integer, String> userInfo, Source src) throws IOException {
+        public Rewriter(FileObject fo, PositionConverter converter, Map<Integer, String> userInfo, Source src, Snapshot embeddedSnapshot, Snapshot topLevelSnapshot) throws IOException {
             this.src = src;
             this.converter = converter;
             this.userInfo = userInfo;
@@ -101,6 +104,8 @@ public class DiffUtilities {
             }
             if (prp == null)
                 throw new IOException("Could not find CloneableEditorSupport for " + FileUtil.getFileDisplayName (fo)); //NOI18N
+            this.embeddedSnapshot = embeddedSnapshot;
+            this.topLevelSnapshot = topLevelSnapshot;
         }
 
         public void writeTo(String s) throws IOException, BadLocationException {
@@ -109,11 +114,50 @@ public class DiffUtilities {
                 diffs.remove(diffs.size() - 1);
                 diffs.add(JavaSourceAccessor.getINSTANCE().createDifference(ModificationResult.Difference.Kind.CHANGE, diff.getStartPosition(), diff.getEndPosition(), diff.getOldText(), s, diff.getDescription(), src));
             } else {
+                int embeddedOffset = offset;
                 int off = converter != null ? converter.getOriginalPosition(offset) : offset;
                 if (off >= 0) {
+                    if (embeddedSnapshot != topLevelSnapshot && s.contains("\n")) {
+                        int embeddedLineStart = embeddedOffset;
+
+                        while (embeddedLineStart > 0 && embeddedSnapshot.getText().charAt(embeddedLineStart - 1) != '\n') {
+                            embeddedLineStart--;
+                        }
+
+                        int realOffsetOfEmbeddedLineStart = converter.getOriginalPosition(embeddedLineStart);
+                        int realLineStart = realOffsetOfEmbeddedLineStart;
+
+                        while (realLineStart > 0 && topLevelSnapshot.getText().charAt(realLineStart - 1) != '\n') {
+                            realLineStart--;
+                        }
+
+                        String prefix = topLevelSnapshot.getText().subSequence(realLineStart, realOffsetOfEmbeddedLineStart).toString();
+
+                        s = augmentNewlines(s, prefix);
+                    }
                     diffs.add(JavaSourceAccessor.getINSTANCE().createDifference(ModificationResult.Difference.Kind.INSERT, prp.createPosition(off, Bias.Forward), prp.createPosition(off, Bias.Backward), null, s, userInfo.get(offset), src));
                 }
             }
+        }
+
+        private static String augmentNewlines(String text, String embeddingPrefix) {
+            if (embeddingPrefix.isEmpty()) {
+                return text;
+            }
+
+            StringBuilder result = new StringBuilder();
+
+            for (int i = 0; i < text.length(); i++) {
+                result.append(text.charAt(i));
+
+                if (text.charAt(i) == '\n' &&
+                    !(i + 1 < text.length() &&
+                      text.charAt(i + 1) == '\n')) {
+                    result.append(embeddingPrefix);
+                }
+            }
+
+            return result.toString();
         }
 
         public void skipThrough(char[] in, int pos) throws IOException, BadLocationException {

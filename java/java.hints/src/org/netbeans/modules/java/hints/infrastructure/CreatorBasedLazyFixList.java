@@ -31,6 +31,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.spi.ErrorRule;
 import org.netbeans.modules.java.hints.spi.ErrorRule.Data;
+import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.editor.hints.LazyFixList;
 import org.openide.filesystems.FileObject;
@@ -46,7 +47,7 @@ public class CreatorBasedLazyFixList implements LazyFixList {
     private boolean computing;
     private List<Fix> fixes;
     
-    private FileObject file;
+    private Snapshot snapshot;
     private String diagnosticKey;
     private String diagnosticMessage;
     private int offset;
@@ -54,9 +55,9 @@ public class CreatorBasedLazyFixList implements LazyFixList {
     private final Map<Class, Data> class2Data;
     
     /** Creates a new instance of CreatorBasedLazyFixList */
-    public CreatorBasedLazyFixList(FileObject file, String diagnosticKey, String diagnosticMessage, int offset, Collection<ErrorRule> c, Map<Class, Data> class2Data) {
+    public CreatorBasedLazyFixList(Snapshot snapshot, String diagnosticKey, String diagnosticMessage, int offset, Collection<ErrorRule> c, Map<Class, Data> class2Data) {
         this.pcs = new PropertyChangeSupport(this);
-        this.file = file;
+        this.snapshot = snapshot;
         this.diagnosticKey = diagnosticKey;
         this.diagnosticMessage = diagnosticMessage;
         this.offset = offset;
@@ -79,7 +80,7 @@ public class CreatorBasedLazyFixList implements LazyFixList {
     
     public synchronized List<Fix> getFixes() {
         if (!computed && !computing) {
-            LazyHintComputationFactory.addToCompute(file, this);
+            LazyHintComputationFactory.addToCompute(snapshot, this);
             computing = true;
         }
         return fixes;

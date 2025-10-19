@@ -439,7 +439,7 @@ public class Utilities {
     @Deprecated
     public static int getNextWord(JTextComponent c, int offset)
     throws BadLocationException {
-        int nextWordOffset = getNextWord((BaseDocument)c.getDocument(), offset);
+        int nextWordOffset = LineDocumentUtils.getNextWordStart((BaseDocument)c.getDocument(), offset);
         int nextVisualPosition = -1;
         if (nextWordOffset > 0){
             nextVisualPosition = c.getUI().getNextVisualPositionFrom(c,
@@ -457,7 +457,7 @@ public class Utilities {
     @Deprecated
     public static int getPreviousWord(JTextComponent c, int offset)
     throws BadLocationException {
-        int prevWordOffset = getPreviousWord((BaseDocument)c.getDocument(), offset);
+        int prevWordOffset = LineDocumentUtils.getPreviousWordStart((BaseDocument)c.getDocument(), offset);
         int nextVisualPosition = c.getUI().getNextVisualPositionFrom(c,
                               prevWordOffset, Position.Bias.Forward, javax.swing.SwingConstants.WEST, null);
         if (nextVisualPosition == 0 && prevWordOffset == 0){

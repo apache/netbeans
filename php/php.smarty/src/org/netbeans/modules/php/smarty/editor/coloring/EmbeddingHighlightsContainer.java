@@ -181,8 +181,8 @@ public class EmbeddingHighlightsContainer extends AbstractHighlightsContainer im
                                 } while (eTokenSequence.moveNext());
 
                                 realEndOffset = endOffset > realEndOffset ? endOffset : realEndOffset + 1;
-                                int startLO = Utilities.getLineOffset((BaseDocument) document, startOffset);
-                                int endLO = Utilities.getLineOffset((BaseDocument) document, endOffset);
+                                int startLO = LineDocumentUtils.getLineIndex((BaseDocument) document, startOffset);
+                                int endLO = LineDocumentUtils.getLineIndex((BaseDocument) document, endOffset);
                                 if (startLO != endLO) {
                                     //not just one line block - test boundaries
                                     if ((LineDocumentUtils.getPreviousNonWhitespace((BaseDocument) document, LineDocumentUtils.getLineEndOffset((BaseDocument) document, startOffset)) + 1) == startOffset) {

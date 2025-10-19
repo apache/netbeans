@@ -76,6 +76,7 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
 import org.netbeans.api.editor.EditorRegistry;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.EditorStyleConstants;
 import org.netbeans.editor.AnnotationDesc;
@@ -625,7 +626,7 @@ public final class HintsUI implements MouseListener, MouseMotionListener, KeyLis
         if (doc instanceof BaseDocument) {
             try {
                 Rectangle carretRectangle = comp.modelToView(comp.getCaretPosition());
-                int line = Utilities.getLineOffset((BaseDocument) doc, comp.getCaretPosition());
+                int line = LineDocumentUtils.getLineIndex((BaseDocument) doc, comp.getCaretPosition());
                 FixData fixes;
                 String description;
 

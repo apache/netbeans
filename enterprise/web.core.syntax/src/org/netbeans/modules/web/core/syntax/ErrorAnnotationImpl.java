@@ -161,7 +161,7 @@ public class ErrorAnnotationImpl implements ErrorAnnotation {
                 // place error annotation on the 1st non-empty line
                 try {
                     int firstNonWS = LineDocumentUtils.getNextNonWhitespace(doc, 0);
-                    line = Utilities.getLineOffset(doc, firstNonWS) + 1;
+                    line = LineDocumentUtils.getLineIndex(doc, firstNonWS) + 1;
                 } catch (BadLocationException ex) {
                     Exceptions.printStackTrace(ex);
                 }

@@ -25,7 +25,6 @@ import javax.swing.JSpinner;
 import junit.framework.Test;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
 import org.netbeans.jellytools.EditorOperator;
 import org.netbeans.jellytools.OptionsOperator;
 import org.netbeans.jellytools.modules.j2ee.J2eeTestCase;
@@ -199,7 +198,7 @@ public class IndentCasesTest extends J2eeTestCase {
         op.pressKey(KeyEvent.VK_ENTER);
         op.waitModified(true);
         int newPossition = op.txtEditorPane().getCaretPosition();
-        int newLine = Utilities.getLineOffset(doc, newPossition) + 1;
+        int newLine = LineDocumentUtils.getLineIndex(doc, newPossition) + 1;
         int newOffset = newPossition - LineDocumentUtils.getLineStartOffset(doc, newPossition);
         if (debug) {
             Thread.sleep(3000); // to be visible ;-)

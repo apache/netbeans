@@ -45,6 +45,7 @@ import org.openide.ErrorManager;
 import org.openide.util.NbBundle;
 import java.util.MissingResourceException;
 import java.awt.Toolkit;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.openide.filesystems.FileObject;
 
@@ -135,7 +136,7 @@ public class NbEditorUtilities {
                 Line.Set lineSet = lc.getLineSet();
                 if (lineSet != null) {
                     try {
-                        int lineOffset = Utilities.getLineOffset(doc, offset);
+                        int lineOffset = LineDocumentUtils.getLineIndex(doc, offset);
                         return original
                                ? lineSet.getOriginal(lineOffset)
                                : lineSet.getCurrent(lineOffset);

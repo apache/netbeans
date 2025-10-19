@@ -21,9 +21,9 @@ package org.netbeans.modules.spellchecker.completion;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
 import org.netbeans.modules.spellchecker.ComponentPeer;
 import org.netbeans.modules.spellchecker.spi.dictionary.Dictionary;
 import org.netbeans.modules.spellchecker.spi.dictionary.ValidityType;
@@ -70,8 +70,9 @@ public class WordCompletion implements CompletionProvider {
                 
                 document.render(new Runnable() {
                     public void run() {
+
                         try {
-                            int lineStart = Utilities.getRowStart(bdoc, caretOffset);
+                            int lineStart = LineDocumentUtils.getLineStartOffset(bdoc, caretOffset);
                             
                             l.setStartOffset(lineStart);
                             

@@ -77,6 +77,7 @@ import org.netbeans.modules.editor.indent.api.Reformat;
 import org.netbeans.api.editor.NavigationHistory;
 import org.netbeans.api.editor.caret.CaretMoveContext;
 import org.netbeans.api.progress.BaseProgressUtils;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.spi.editor.caret.CaretMoveHandler;
 import org.netbeans.modules.editor.lib2.RectangularSelectionUtils;
 import org.netbeans.modules.editor.lib2.view.DocumentView;
@@ -154,11 +155,11 @@ public class ActionFactory {
                                             } else { // no selected text
                                                 try {
                                                     int dot = caretInfo.getDot();
-                                                    int lineStartOffset = Utilities.getRowStart(doc, dot);
+                                                    int lineStartOffset = LineDocumentUtils.getLineStartOffset(doc, dot);
                                                     int firstNW = Utilities.getRowFirstNonWhite(doc, dot);
                                                     if (firstNW != -1 && dot <= firstNW) {
                                                         // Non-white row and caret inside initial whitespace => decrease text indent
-                                                        int lineEndOffset = Utilities.getRowEnd(doc, dot);
+                                                        int lineEndOffset = LineDocumentUtils.getLineEndOffset(doc, dot);
                                                         BaseKit.changeBlockIndent(doc, lineStartOffset, lineEndOffset, -1);
                                                     } else {
                                                         int endNW = (firstNW == -1)
@@ -211,11 +212,11 @@ public class ActionFactory {
                                 } else { // no selected text
                                     try {
                                         int dot = caret.getDot();
-                                        int lineStartOffset = Utilities.getRowStart(doc, dot);
+                                        int lineStartOffset = LineDocumentUtils.getLineStartOffset(doc, dot);
                                         int firstNW = Utilities.getRowFirstNonWhite(doc, dot);
                                         if (firstNW != -1 && dot <= firstNW) {
                                             // Non-white row and caret inside initial whitespace => decrease text indent
-                                            int lineEndOffset = Utilities.getRowEnd(doc, dot);
+                                            int lineEndOffset = LineDocumentUtils.getLineEndOffset(doc, dot);
                                             BaseKit.changeBlockIndent(doc, lineStartOffset, lineEndOffset, -1);
                                         } else {
                                             int endNW = (firstNW == -1)
@@ -286,7 +287,7 @@ public class ActionFactory {
                         DocumentUtilities.setTypingModification(doc, true);
                         try {
                             int dotPos = caret.getDot();
-                            int bolPos = Utilities.getRowStart(doc, dotPos);
+                            int bolPos = LineDocumentUtils.getLineStartOffset(doc, dotPos);
                             int wsPos = Utilities.getPreviousWord(target, dotPos);
                             wsPos = (dotPos == bolPos) ? wsPos : Math.max(bolPos, wsPos);
                             doc.remove(wsPos, dotPos - wsPos);
@@ -326,7 +327,7 @@ public class ActionFactory {
                         DocumentUtilities.setTypingModification(doc, true);
                         try {
                             int dotPos = caret.getDot();
-                            int eolPos = Utilities.getRowEnd(doc, dotPos);
+                            int eolPos = LineDocumentUtils.getLineEndOffset(doc, dotPos);
                             int wsPos = Utilities.getNextWord(target, dotPos);
                             wsPos = (dotPos == eolPos) ? wsPos : Math.min(eolPos, wsPos);
                             doc.remove(dotPos , wsPos - dotPos);
@@ -365,7 +366,7 @@ public class ActionFactory {
                         DocumentUtilities.setTypingModification(doc, true);
                         try {
                             int dotPos = caret.getDot();
-                            int bolPos = Utilities.getRowStart(doc, dotPos);
+                            int bolPos = LineDocumentUtils.getLineStartOffset(doc, dotPos);
                             if (dotPos == bolPos) { // at begining of the line
                                 if (dotPos > 0) {
                                     doc.remove(dotPos - 1, 1); // remove previous new-line
@@ -425,8 +426,8 @@ public class ActionFactory {
                                             try {
                                                 int start = Math.min(caretInfo.getDot(), caretInfo.getMark());
                                                 int end = Math.max(caretInfo.getDot(), caretInfo.getMark());
-                                                int bolPos = Utilities.getRowStart(doc, start);
-                                                int eolPos = Utilities.getRowEnd(doc, end);
+                                                int bolPos = LineDocumentUtils.getLineStartOffset(doc, start);
+                                                int eolPos = LineDocumentUtils.getLineEndOffset(doc, end);
                                                 if (eolPos == doc.getLength()) {
                                                     // Ending newline can't be removed so instead remove starting newline if it exist
                                                     if (bolPos > 0) {
@@ -1675,8 +1676,8 @@ public class ActionFactory {
                                     startPos = target.getSelectionStart();
                                     endPosition = doc.createPosition(target.getSelectionEnd());
                                 } else {
-                                    startPos = Utilities.getRowStart(doc, caret.getDot());
-                                    endPosition = doc.createPosition(Utilities.getRowEnd(doc, caret.getDot()));
+                                    startPos = LineDocumentUtils.getLineStartOffset(doc, caret.getDot());
+                                    endPosition = doc.createPosition(LineDocumentUtils.getLineEndOffset(doc, caret.getDot()));
                                 }
 
                                 int pos = startPos;
@@ -2536,7 +2537,7 @@ public class ActionFactory {
                                         try {
                                             BaseDocument doc = (BaseDocument) context.getDocument();
                                             // insert new line, caret moves to the new line
-                                            int eolDot = Utilities.getRowEnd(doc, caretInfo.getDot());
+                                            int eolDot = LineDocumentUtils.getLineEndOffset(doc, caretInfo.getDot());
                                             doc.insertString(eolDot, "\n", null); //NOI18N
 
                                             // reindent the new line

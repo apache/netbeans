@@ -120,7 +120,7 @@ public final class AntlrTypedTextInterceptor implements TypedTextInterceptor {
     private static int quotesInLine(Context context, char quote) throws BadLocationException {
         LineDocument doc = (LineDocument) context.getDocument();
         int lineStart = LineDocumentUtils.getLineStart(doc, context.getOffset());
-        int lineEnd = LineDocumentUtils.getLineEnd(doc, context.getOffset());
+        int lineEnd = LineDocumentUtils.getLineEndOffset(doc, context.getOffset());
         char[] line = doc.getText(lineStart, lineEnd - lineStart).toCharArray();
 
         int quotes = 0;

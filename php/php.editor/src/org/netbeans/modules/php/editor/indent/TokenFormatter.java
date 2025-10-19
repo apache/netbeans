@@ -1838,7 +1838,7 @@ public class TokenFormatter {
                                                             : Integer.valueOf(0);
                                                 }
 
-                                                int lineOffset = LineDocumentUtils.getLineStart(doc, phpOpenTagOffset);
+                                                int lineOffset = LineDocumentUtils.getLineStartOffset(doc, phpOpenTagOffset);
                                                 int firstNonWhiteCharacterOffset = LineDocumentUtils.getNextNonWhitespace(doc, lineOffset);
                                                 if (firstNonWhiteCharacterOffset == phpOpenTagOffset) {
                                                     indentRule = true;
@@ -1948,7 +1948,7 @@ public class TokenFormatter {
                                                 int lineNumber = LineDocumentUtils.getLineIndex(doc, offset);
                                                 Integer suggestedIndent = suggestedLineIndents.get(lineNumber);
                                                 if (suggestedIndent != null) {
-                                                    int lineOffset = LineDocumentUtils.getLineStart(doc, offset);
+                                                    int lineOffset = LineDocumentUtils.getLineStartOffset(doc, offset);
                                                     int firstNW = LineDocumentUtils.getNextNonWhitespace(doc, lineOffset);
                                                     if (firstNW == offset) {
                                                         countSpaces = lastPHPIndent == 0 ? htmlIndent : lastPHPIndent + htmlIndent + docOptions.initialIndent;

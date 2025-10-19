@@ -26,6 +26,7 @@ import javax.lang.model.SourceVersion;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.SimpleValueNames;
 import org.netbeans.api.java.lexer.JavaTokenId;
@@ -385,7 +386,7 @@ class TypingCompletion {
         if (tokenBalance(doc, JavaTokenId.LBRACE) <= 0) {
             return false;
         }
-        int caretRowStartOffset = org.netbeans.editor.Utilities.getRowStart(doc, caretOffset);
+        int caretRowStartOffset = LineDocumentUtils.getLineStartOffset(doc, caretOffset);
         TokenSequence<JavaTokenId> ts = javaTokenSequence(doc, caretOffset, true);
         if (ts == null) {
             return false;

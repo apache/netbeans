@@ -86,7 +86,7 @@ public class IndentationCounter {
         try {
             boolean insideString = false;
             TokenSequence<? extends PHPTokenId> ts = LexUtilities.getPHPTokenSequence(doc, caretOffset);
-            int caretLineStart = LineDocumentUtils.getLineStart(doc, LineDocumentUtils.getLineStart(doc, caretOffset) - 1);
+            int caretLineStart = LineDocumentUtils.getLineStartOffset(doc, LineDocumentUtils.getLineStartOffset(doc, caretOffset) - 1);
             if (ts != null) {
                 ts.move(caretOffset);
                 ts.moveNext();
@@ -123,7 +123,7 @@ public class IndentationCounter {
                     newIndent = Utilities.getRowIndent(doc, caretLineStart);
                     if (newIndent < 0) {
                         int caretStart = caretOffset - 1;
-                        int caretLineEnd = LineDocumentUtils.getLineEnd(doc, LineDocumentUtils.getLineEnd(doc, caretOffset) - 1);
+                        int caretLineEnd = LineDocumentUtils.getLineEndOffset(doc, LineDocumentUtils.getLineEndOffset(doc, caretOffset) - 1);
                         int curlyOffset = ts.offset() - 1;
                         if (caretLineEnd == caretStart) {
                             newIndent = caretStart - caretLineStart;
@@ -177,7 +177,7 @@ public class IndentationCounter {
                 }
                 if ((ts.token().id() == PHPTokenId.PHP_ENCAPSED_AND_WHITESPACE || ts.token().id() == PHPTokenId.PHP_CONSTANT_ENCAPSED_STRING) && caretOffset > ts.offset()) {
 
-                    int stringLineStart = LineDocumentUtils.getLineStart(doc, ts.offset());
+                    int stringLineStart = LineDocumentUtils.getLineStartOffset(doc, ts.offset());
 
                     if (stringLineStart >= caretLineStart) {
                         // string starts on the same line:
@@ -206,7 +206,7 @@ public class IndentationCounter {
                             int casePosition = breakProceededByCase(ts); // is after break in case statement?
                             if (casePosition > -1) {
                                 newIndent = Utilities.getRowIndent(doc, anchor);
-                                if (LineDocumentUtils.getLineStart(doc, casePosition) != caretLineStart) {
+                                if (LineDocumentUtils.getLineStartOffset(doc, casePosition) != caretLineStart) {
                                     // check that case is not on the same line, where enter was pressed
                                     newIndent -= indentSize;
                                 }
@@ -882,7 +882,7 @@ public class IndentationCounter {
 
         private void modifyUnderWriteLock(Context context) {
             try {
-                context.modifyIndent(LineDocumentUtils.getLineStart((BaseDocument) context.document(), context.caretOffset()), indentation);
+                context.modifyIndent(LineDocumentUtils.getLineStartOffset((BaseDocument) context.document(), context.caretOffset()), indentation);
             } catch (BadLocationException ex) {
                 Exceptions.printStackTrace(ex);
             }

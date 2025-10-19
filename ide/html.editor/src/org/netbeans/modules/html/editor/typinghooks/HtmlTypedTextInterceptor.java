@@ -26,6 +26,7 @@ import javax.swing.text.Caret;
 import javax.swing.text.Document;
 import javax.swing.text.Position;
 import org.netbeans.api.editor.completion.Completion;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.editor.mimelookup.MimeRegistrations;
@@ -152,8 +153,8 @@ public class HtmlTypedTextInterceptor implements TypedTextInterceptor {
                 //since the code runs under document atomic lock, we cannot lock the
                 //indentation infrastructure directly. Instead of that create a new
                 //AWT task and post it for later execution.
-                final Position from = doc.createPosition(Utilities.getRowStart(doc, offset));
-                final Position to = doc.createPosition(Utilities.getRowEnd(doc, offset));
+                final Position from = doc.createPosition(LineDocumentUtils.getLineStartOffset(doc, offset));
+                final Position to = doc.createPosition(LineDocumentUtils.getLineEndOffset(doc, offset));
 
                 Runnable r = new Runnable() {
                     @Override

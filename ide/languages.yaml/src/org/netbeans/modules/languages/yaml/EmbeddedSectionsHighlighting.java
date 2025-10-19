@@ -177,7 +177,7 @@ public class EmbeddedSectionsHighlighting extends AbstractHighlightsContainer im
                                 if (startLine != endLine) {
                                     // multiline scriplet section
                                     // adjust the sections start to the beginning of the firts line
-                                    int firstLineStartOffset = LineDocumentUtils.getLineStart((BaseDocument)document, startLine);
+                                    int firstLineStartOffset = LineDocumentUtils.getLineStartOffset((BaseDocument)document, startLine);
                                     if (firstLineStartOffset < sectionStart - delimiterSize
                                             && isWhitespace(document, firstLineStartOffset, sectionStart - delimiterSize)) // always preceeded by the delimiter
                                     {

@@ -28,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Position;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.LanguagePath;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
@@ -261,7 +262,7 @@ public abstract class TagBasedLexerFormatter {
                 if (!isWSToken && tagStartLine == Utilities.getLineOffset(doc, tokenOffset)) {
                     
                     shift = tokenOffset - Utilities.getRowIndent(doc, tokenOffset)
-                            - Utilities.getRowStart(doc, tokenOffset);
+                            - LineDocumentUtils.getLineStartOffset(doc, tokenOffset);
                 }
                 break;
             } else if (isWSToken){
@@ -504,7 +505,7 @@ public abstract class TagBasedLexerFormatter {
                     int lineNumber = Utilities.getLineOffset(doc, dotPos);
                     boolean firstRow = false;
                     
-                    if (Utilities.getRowStart(doc, origDotPos) == origDotPos){
+                    if (LineDocumentUtils.getLineStartOffset(doc, origDotPos) == origDotPos){
                         newIndent = getExistingIndent(doc, lineNumber);
                         firstRow = true;
                     } else if (lineNumber > 0){
@@ -884,7 +885,7 @@ public abstract class TagBasedLexerFormatter {
                     char formattingRange = (i >= firstRefBlockLine && i <= lastRefBlockLine) 
                             ? '*' : ' ';
 
-                    buff.append(i + ":" + formattingRange + ":" + indentLevels[i] + ":" + formattingTypeSymbol + ":" + doc.getText(lineStart, Utilities.getRowEnd(doc, lineStart) - lineStart) + ".\n"); //NOI18N
+                    buff.append(i + ":" + formattingRange + ":" + indentLevels[i] + ":" + formattingTypeSymbol + ":" + doc.getText(lineStart, LineDocumentUtils.getLineEndOffset(doc, lineStart) - lineStart) + ".\n"); //NOI18N
                 }
 
                 buff.append("\n-------------\n"); //NOI18N

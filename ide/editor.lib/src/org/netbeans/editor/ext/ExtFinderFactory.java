@@ -20,10 +20,10 @@
 package org.netbeans.editor.ext;
 
 import javax.swing.text.BadLocationException;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.Analyzer;
 import org.netbeans.editor.FinderFactory;
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
 
 /**
 * Various finders are located here.
@@ -50,7 +50,7 @@ public class ExtFinderFactory {
         public int adjustStartPos(BaseDocument doc, int startPos) {
             origStartPos = startPos;
             try {
-                return Utilities.getRowStart(doc, startPos);
+                return LineDocumentUtils.getLineStartOffset(doc, startPos);
             } catch (BadLocationException e) {
                 return startPos;
             }
@@ -59,7 +59,7 @@ public class ExtFinderFactory {
         public int adjustLimitPos(BaseDocument doc, int limitPos) {
             origLimitPos = limitPos;
             try {
-                return Utilities.getRowEnd(doc, limitPos);
+                return LineDocumentUtils.getLineEndOffset(doc, limitPos);
             } catch (BadLocationException e) {
                 return limitPos;
             }
@@ -123,7 +123,7 @@ public class ExtFinderFactory {
         public int adjustStartPos(BaseDocument doc, int startPos) {
             origStartPos = startPos;
             try {
-                return Utilities.getRowEnd(doc, startPos);
+                return LineDocumentUtils.getLineEndOffset(doc, startPos);
             } catch (BadLocationException e) {
                 return startPos;
             }
@@ -132,7 +132,7 @@ public class ExtFinderFactory {
         public int adjustLimitPos(BaseDocument doc, int limitPos) {
             origLimitPos = limitPos;
             try {
-                return Utilities.getRowStart(doc, limitPos);
+                return LineDocumentUtils.getLineStartOffset(doc, limitPos);
             } catch (BadLocationException e) {
                 return limitPos;
             }
@@ -203,7 +203,7 @@ public class ExtFinderFactory {
         public int adjustStartPos(BaseDocument doc, int startPos) {
             origStartPos = startPos;
             try {
-                return Utilities.getRowStart(doc, startPos);
+                return LineDocumentUtils.getLineStartOffset(doc, startPos);
             } catch (BadLocationException e) {
                 return startPos;
             }
@@ -212,7 +212,7 @@ public class ExtFinderFactory {
         public int adjustLimitPos(BaseDocument doc, int limitPos) {
             origLimitPos = limitPos;
             try {
-                return Utilities.getRowEnd(doc, limitPos);
+                return LineDocumentUtils.getLineEndOffset(doc, limitPos);
             } catch (BadLocationException e) {
                 return limitPos;
             }

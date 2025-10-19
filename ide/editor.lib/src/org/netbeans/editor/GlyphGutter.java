@@ -64,6 +64,7 @@ import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.View;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.EditorStyleConstants;
 import org.netbeans.api.editor.settings.FontColorNames;
@@ -1060,11 +1061,11 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
                         }
                         // Check if the sele
                         // Extend to next line's begining
-                        dragEndOffset = Math.min(Utilities.getRowEnd((BaseDocument) aDoc, lineStartOffset) + 1, aDoc.getLength());
+                        dragEndOffset = Math.min(LineDocumentUtils.getLineEndOffset((BaseDocument) aDoc, lineStartOffset) + 1, aDoc.getLength());
                     } else { // Backward selection
                         // Check if the selection is already reverted i.e. it starts at dragStartOffset's line end
                         if (caret.getMark() == dragStartOffset) {
-                            caret.setDot(Utilities.getRowEnd((BaseDocument)aDoc, dragStartOffset) + 1);
+                            caret.setDot(LineDocumentUtils.getLineEndOffset((BaseDocument)aDoc, dragStartOffset) + 1);
                         }
                         dragEndOffset = lineStartOffset;
                     }

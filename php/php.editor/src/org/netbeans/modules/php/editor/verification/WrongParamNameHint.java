@@ -158,7 +158,7 @@ public class WrongParamNameHint extends HintRule {
         private int getLineEnd(PHPDocNode paramVariable) {
             int result = paramVariable.getEndOffset();
             try {
-                result = LineDocumentUtils.getLineEnd(doc, paramVariable.getStartOffset());
+                result = LineDocumentUtils.getLineEndOffset(doc, paramVariable.getStartOffset());
             } catch (BadLocationException ex) {
                 LOGGER.log(Level.FINE, null, ex);
             }

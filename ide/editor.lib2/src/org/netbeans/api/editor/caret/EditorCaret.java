@@ -3164,7 +3164,7 @@ public final class EditorCaret implements Caret {
 
                         case LINE_SELECTION:
                             if (offset >= mark) { // Selection extends forward
-                                offset = Math.min(LineDocumentUtils.getLineEnd(lineDoc, offset) + 1, c.getDocument().getLength());
+                                offset = Math.min(LineDocumentUtils.getLineEndOffset(lineDoc, offset) + 1, c.getDocument().getLength());
                             } else { // Selection extends backward
                                 offset = LineDocumentUtils.getLineStart(lineDoc, offset);
                             }

@@ -99,7 +99,7 @@ public class Utils {
     public static int getEndCharacter(Document doc, int line) {
         int start = LineDocumentUtils.getLineStartFromIndex((LineDocument) doc, line);
         try {
-            return LineDocumentUtils.getLineEnd((LineDocument) doc, start) - start;
+            return LineDocumentUtils.getLineEndOffset((LineDocument) doc, start) - start;
         } catch (BadLocationException ex) {
             Exceptions.printStackTrace(ex);
         }

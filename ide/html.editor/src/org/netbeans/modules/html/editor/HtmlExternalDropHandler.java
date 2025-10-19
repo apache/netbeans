@@ -40,6 +40,7 @@ import java.util.logging.Logger;
 import javax.swing.JEditorPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.html.lexer.HTMLTokenId;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
@@ -100,7 +101,7 @@ public class HtmlExternalDropHandler extends ExternalDropHandler {
     private int getLineEndOffset(JEditorPane pane, Point location) {
         int offset = pane.getUI().viewToModel(pane, location);
         try {
-            return Utilities.getRowEnd((BaseDocument) pane.getDocument(), offset);
+            return LineDocumentUtils.getLineEndOffset((BaseDocument) pane.getDocument(), offset);
         } catch (BadLocationException ex) {
             //highly unlikely to happen
             Exceptions.printStackTrace(ex);
@@ -267,8 +268,8 @@ public class HtmlExternalDropHandler extends ExternalDropHandler {
                         document.insertString(ofs, sb.toString(), null);
 
                         //reformat the line
-                        final int from = Utilities.getRowStart(document, ofs);
-                        final int to = Utilities.getRowEnd(document, ofs + sb.length());
+                        final int from = LineDocumentUtils.getLineStartOffset(document, ofs);
+                        final int to = LineDocumentUtils.getLineEndOffset(document, ofs + sb.length());
 
                         indent.reindent(from, to);
 

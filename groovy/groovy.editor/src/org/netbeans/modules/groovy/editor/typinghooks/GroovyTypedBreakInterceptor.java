@@ -426,7 +426,7 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
         int indent = GsfUtilities.getLineIndent(doc, offset);
         int currentOffset = offset;
         while (currentOffset > 0) {
-            if (!Utilities.isRowEmpty(doc, currentOffset) && !Utilities.isRowWhite(doc, currentOffset)
+            if (!LineDocumentUtils.isLineEmpty(doc, currentOffset) && !LineDocumentUtils.isLineWhitespace(doc, currentOffset)
                     && !LexUtilities.isCommentOnlyLine(doc, currentOffset)) {
                 indent = GsfUtilities.getLineIndent(doc, currentOffset);
                 int parenBalance = LexUtilities.getLineBalance(doc, currentOffset,

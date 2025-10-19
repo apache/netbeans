@@ -45,7 +45,6 @@ import org.netbeans.api.html.lexer.HTMLTokenId;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.DataLoadersBridge;
 import org.netbeans.modules.editor.indent.api.Indent;
 import org.netbeans.modules.web.common.api.WebUtils;
@@ -261,7 +260,7 @@ public class HtmlExternalDropHandler extends ExternalDropHandler {
                 public void run() {
                     try {
                         int ofs = offset;
-                        if (!Utilities.isRowWhite(document, ofs)) {
+                        if (!LineDocumentUtils.isLineWhitespace(document, ofs)) {
                             document.insertString(ofs, "\n", null);
                             ofs++;
                         }

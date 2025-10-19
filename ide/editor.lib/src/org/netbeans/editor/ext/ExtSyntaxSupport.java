@@ -25,6 +25,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.SyntaxSupport;
 import org.netbeans.editor.Utilities;
@@ -287,7 +288,7 @@ public class ExtSyntaxSupport extends SyntaxSupport {
     */
     public boolean isRowValid(int offset)
     throws BadLocationException {
-        return Utilities.isRowWhite(getDocument(), offset);
+        return LineDocumentUtils.isLineWhitespace(getDocument(), offset);
     }
 
     /** Get the array of token IDs that denote the comments.

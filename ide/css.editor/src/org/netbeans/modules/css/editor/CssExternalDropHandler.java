@@ -43,7 +43,6 @@ import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.DataLoadersBridge;
 import org.netbeans.modules.css.lib.api.CssTokenId;
 import org.netbeans.modules.editor.indent.api.Indent;
@@ -213,7 +212,7 @@ public class CssExternalDropHandler extends ExternalDropHandler {
                 public void run() {
                     try {
                         int ofs = offset;
-                        if (!Utilities.isRowWhite(document, ofs)) {
+                        if (!LineDocumentUtils.isLineWhitespace(document, ofs)) {
                             document.insertString(ofs, "\n", null);
                             ofs++;
                         }

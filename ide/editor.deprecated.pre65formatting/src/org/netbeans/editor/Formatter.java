@@ -503,7 +503,7 @@ public class Formatter {
                                 lineCnt > 0; lineCnt--
                             ) {
                             int indent = Utilities.getRowIndent(doc, pos);
-                            if (Utilities.isRowWhite(doc, pos)) {
+                            if (LineDocumentUtils.isLineWhitespace(doc, pos)) {
                                 indent = -indentDelta; // zero indentation for white line
                             }
                             changeRowIndent(doc, pos, Math.max(indent + indentDelta, 0));
@@ -531,7 +531,7 @@ public class Formatter {
                 ind = -ind;
             }
 
-            if (Utilities.isRowWhite(doc, dotPos)) {
+            if (LineDocumentUtils.isLineWhitespace(doc, dotPos)) {
                 ind += Utilities.getVisualColumn(doc, dotPos);
             } else {
                 ind += Utilities.getRowIndent(doc, dotPos);

@@ -2374,7 +2374,7 @@ public class BaseKit extends DefaultEditorKit {
                         if (emptySelection && !disableNoSelectionCopy) {
                             Element elem = ((AbstractDocument) target.getDocument()).getParagraphElement(
                                     caretPosition);
-                            if (!Utilities.isRowWhite((BaseDocument) target.getDocument(), elem.getStartOffset())) {
+                            if (!LineDocumentUtils.isLineWhitespace((BaseDocument) target.getDocument(), elem.getStartOffset())) {
                                 target.select(elem.getStartOffset(), elem.getEndOffset());
                             }
                         }
@@ -4343,7 +4343,7 @@ public class BaseKit extends DefaultEditorKit {
             ind = -ind;
         }
 
-        if (Utilities.isRowWhite(doc, dotPos)) {
+        if (LineDocumentUtils.isLineWhitespace(doc, dotPos)) {
             ind += Utilities.getVisualColumn(doc, dotPos);
         } else {
             ind += Utilities.getRowIndent(doc, dotPos);

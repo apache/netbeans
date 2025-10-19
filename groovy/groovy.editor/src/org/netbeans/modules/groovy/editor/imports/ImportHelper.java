@@ -35,6 +35,8 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.swing.Icon;
 import javax.swing.text.BadLocationException;
+import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClassIndex.NameKind;
@@ -332,7 +334,7 @@ public final class ImportHelper {
                     int importLine = getAppropriateLine(doc, fqName);
                     if (importLine >= 0) {
                         // If the line after the package statement isn't empty, put one empty line there
-                        if (!Utilities.isRowWhite(doc, afterPackageOffset)) {
+                        if (!LineDocumentUtils.isLineWhitespace(doc, afterPackageOffset)) {
                             edits.replace(afterPackageOffset, 0, "\n", false, 0);
                         } else {
                             if (collectImports(doc).isEmpty()) {
@@ -348,7 +350,7 @@ public final class ImportHelper {
                         // statement isn't empty, put one empty line there
                         int afterImportsOffset = Utilities.getRowStartFromLineOffset(doc, importLine);
 
-                        if (!Utilities.isRowWhite(doc, afterImportsOffset) && isLastImport(doc, fqName)) {
+                        if (!LineDocumentUtils.isLineWhitespace(doc, afterImportsOffset) && isLastImport(doc, fqName)) {
                             edits.replace(afterImportsOffset, 0, "\n", false, 0);
                         }
                     }

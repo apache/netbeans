@@ -293,7 +293,7 @@ class DiffSidebar extends JPanel implements DocumentListener, ComponentListener,
     }
 
     private int computeDocumentOffset(int lineOffset) {
-        int end = Utilities.getRowStartFromLineOffset(document, lineOffset);
+        int end = LineDocumentUtils.getLineStartFromIndex(document, lineOffset);
         if (end == -1) {
             Element lineRoot = document.getParagraphElement(0).getParentElement();
             for (end = lineRoot.getElement(lineOffset - 1).getEndOffset(); end > document.getLength(); end--) {
@@ -305,16 +305,16 @@ class DiffSidebar extends JPanel implements DocumentListener, ComponentListener,
     void onRollback(Difference diff) {
         try {
             if (diff.getType() == Difference.ADD) {
-                int start = Utilities.getRowStartFromLineOffset(document, diff.getSecondStart() - 1);
+                int start = LineDocumentUtils.getLineStartFromIndex(document, diff.getSecondStart() - 1);
                 int end = computeDocumentOffset(diff.getSecondEnd());
                 document.remove(start, end - start);
             } else if (diff.getType() == Difference.CHANGE) {
-                int start = Utilities.getRowStartFromLineOffset(document, diff.getSecondStart() - 1);
+                int start = LineDocumentUtils.getLineStartFromIndex(document, diff.getSecondStart() - 1);
                 int end = computeDocumentOffset(diff.getSecondEnd());
                 document.replace(start, end - start, diff.getFirstText(), null);
             } else {
                 int start = computeDocumentOffset(diff.getSecondStart());
-                String newline = Utilities.getRowStartFromLineOffset(document, diff.getSecondStart()) == -1 ? "\n" : "";
+                String newline = LineDocumentUtils.getLineStartFromIndex(document, diff.getSecondStart()) == -1 ? "\n" : "";
                 document.insertString(start, newline + diff.getFirstText(), null);
             }
             LOG.finer("refreshing diff in onRollback");
@@ -336,10 +336,10 @@ class DiffSidebar extends JPanel implements DocumentListener, ComponentListener,
                 if (canModify) {
                     int start, end;
                     if (diff.getType() == Difference.DELETE) {
-                        start = end = Utilities.getRowStartFromLineOffset(document, diff.getSecondStart());
+                        start = end = LineDocumentUtils.getLineStartFromIndex(document, diff.getSecondStart());
                     } else {
-                        start = Utilities.getRowStartFromLineOffset(document, diff.getSecondStart() - 1);
-                        end = Utilities.getRowStartFromLineOffset(document, diff.getSecondEnd());
+                        start = LineDocumentUtils.getLineStartFromIndex(document, diff.getSecondStart() - 1);
+                        end = LineDocumentUtils.getLineStartFromIndex(document, diff.getSecondEnd());
                     }
                     MarkBlockChain mbc = ((GuardedDocument) document).getGuardedBlockChain();
                     canModify = (mbc.compareBlock(start, end) & MarkBlock.OVERLAP) == 0;
@@ -386,8 +386,8 @@ class DiffSidebar extends JPanel implements DocumentListener, ComponentListener,
         try {
             EditorUI editorUI = Utilities.getEditorUI(textComponent);
             int visibleBorder = editorUI.getLineHeight() * 5;
-            int startOffset = Utilities.getRowStartFromLineOffset((BaseDocument) textComponent.getDocument(), lineStart);
-            int endOffset = Utilities.getRowStartFromLineOffset((BaseDocument) textComponent.getDocument(), lineEnd);
+            int startOffset = LineDocumentUtils.getLineStartFromIndex((BaseDocument) textComponent.getDocument(), lineStart);
+            int endOffset = LineDocumentUtils.getLineStartFromIndex((BaseDocument) textComponent.getDocument(), lineEnd);
             Rectangle startRect = textComponent.getUI().modelToView(textComponent, startOffset);
             Rectangle endRect = textComponent.getUI().modelToView(textComponent, endOffset);
             Rectangle visibleRect = new Rectangle(startRect.x - visibleBorder, startRect.y - visibleBorder, 

@@ -344,7 +344,7 @@ public class ASTUtils {
         assert lineNumber > 0 : "Line number must be at least 1 and was: " + lineNumber;
         assert columnNumber > 0 : "Column number must be at least 1 ans was: " + columnNumber;
 
-        int offset = Utilities.getRowStartFromLineOffset(doc, lineNumber - 1);
+        int offset = LineDocumentUtils.getLineStartFromIndex(doc, lineNumber - 1);
         offset += (columnNumber - 1);
 
         // some sanity checks

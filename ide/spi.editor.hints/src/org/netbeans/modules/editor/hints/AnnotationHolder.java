@@ -1201,7 +1201,7 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
     private synchronized Position getPosition(int lineNumber, boolean create) throws BadLocationException {
         try {
             while (true) {
-                int lineStart = Utilities.getRowStartFromLineOffset(doc, lineNumber);
+                int lineStart = LineDocumentUtils.getLineStartFromIndex(doc, lineNumber);
                 if (lineStart < 0) {
                     Element lineRoot = doc.getDefaultRootElement();
                     int lineElementCount = lineRoot.getElementCount();

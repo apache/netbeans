@@ -1295,7 +1295,7 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
                         return ;
                     }
 
-                    Position pos = getPosition(Utilities.getLineOffset(doc, offset), true);
+                    Position pos = getPosition(LineDocumentUtils.getLineIndex(doc, offset), true);
 
                     List<ErrorDescription> errsForCurrentLine = getErrorsForLine(pos, true);
 
@@ -1385,7 +1385,7 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
         doc.render(new Runnable() {
             public void run() {
                 try {
-                    result[0] = Utilities.getLineOffset(doc, offset.getOffset());
+                    result[0] = LineDocumentUtils.getLineIndex(doc, offset.getOffset());
                 } catch (BadLocationException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -1468,7 +1468,7 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
                             return ;
                         }
                         
-                        int lineNumber = Utilities.getLineOffset((BaseDocument) document, startOffset);
+                        int lineNumber = LineDocumentUtils.getLineIndex((BaseDocument) document, startOffset);
 
                         if (lineNumber < 0) {
                             return;

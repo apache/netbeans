@@ -442,7 +442,7 @@ public final class ImportHelper {
                             break IMPORT_COUNTER;
                     }
                 }
-                result.put(sb.toString(), Utilities.getLineOffset(doc, ts.offset()));
+                result.put(sb.toString(), LineDocumentUtils.getLineIndex(doc, ts.offset()));
             }
         }
         return result;
@@ -460,7 +460,7 @@ public final class ImportHelper {
         try {
             int lastPackageOffset = getLastPackageStatementOffset(doc);
             if (lastPackageOffset != -1) {
-                return Utilities.getLineOffset(doc, lastPackageOffset);
+                return LineDocumentUtils.getLineIndex(doc, lastPackageOffset);
             }
         } catch (BadLocationException ex) {
             Exceptions.printStackTrace(ex);
@@ -501,7 +501,7 @@ public final class ImportHelper {
         try {
             int lastImportOffset = getLastImportStatementOffset(doc);
             if (lastImportOffset != -1) {
-                return Utilities.getLineOffset(doc, lastImportOffset);
+                return LineDocumentUtils.getLineIndex(doc, lastImportOffset);
             }
         } catch (BadLocationException ex) {
             Exceptions.printStackTrace(ex);

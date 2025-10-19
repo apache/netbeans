@@ -228,7 +228,7 @@ public class NbToolTip extends FileChangeAdapter {
 
                                 if (annos != null) {
                                     // Get the annotations stuff
-                                    int line = Utilities.getLineOffset(doc, offset);
+                                    int line = LineDocumentUtils.getLineIndex(doc, offset);
                                     int col = offset - Utilities.getRowStartFromLineOffset(doc, line);
                                     Line.Set ls = ec.getLineSet();
                                     if (ls != null) {

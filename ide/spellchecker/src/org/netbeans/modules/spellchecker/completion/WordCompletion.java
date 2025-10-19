@@ -70,7 +70,6 @@ public class WordCompletion implements CompletionProvider {
                 
                 document.render(new Runnable() {
                     public void run() {
-
                         try {
                             int lineStart = LineDocumentUtils.getLineStart2(bdoc, caretOffset);
                             

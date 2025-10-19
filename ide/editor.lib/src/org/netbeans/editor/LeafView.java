@@ -285,7 +285,7 @@ public class LeafView extends BaseView {
     protected int getYFromPos(int pos) throws BadLocationException {
         int relLine = 0;
         try {
-            relLine = Utilities.getLineOffset(((BaseDocument)getDocument()), pos)
+            relLine = LineDocumentUtils.getLineIndex(((BaseDocument)getDocument()), pos)
                       - ((BaseElement)getElement()).getStartMark().getLine();
         } catch (InvalidMarkException e) {
             Utilities.annotateLoggable(e);

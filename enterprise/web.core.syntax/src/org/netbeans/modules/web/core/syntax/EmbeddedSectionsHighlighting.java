@@ -37,7 +37,6 @@ import org.netbeans.api.lexer.TokenHierarchyEvent;
 import org.netbeans.api.lexer.TokenHierarchyListener;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.spi.editor.highlighting.HighlightsLayer;
 import org.netbeans.spi.editor.highlighting.HighlightsLayerFactory;
@@ -200,7 +199,7 @@ public class EmbeddedSectionsHighlighting extends AbstractHighlightsContainer im
                                     }
 
                                     // adjust the sections end to the end of the last line
-                                    int lines = Utilities.getRowCount((BaseDocument) document);
+                                    int lines = LineDocumentUtils.getLineCount((BaseDocument) document);
                                     int lastLineEndOffset;
                                     if (endLine + 1 < lines) {
                                         lastLineEndOffset = LineDocumentUtils.getLineStartFromIndex((BaseDocument) document, endLine + 1);

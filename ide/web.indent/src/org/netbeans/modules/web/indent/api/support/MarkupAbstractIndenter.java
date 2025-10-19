@@ -146,7 +146,7 @@ public abstract class MarkupAbstractIndenter<T1 extends TokenId> extends Abstrac
             }
 
             if (isStartTagSymbol(tk) || isStableFormattingStartToken(tk, ts)) {
-                    int firstNonWhite = Utilities.getRowFirstNonWhite(getDocument(), ts.offset());
+                    int firstNonWhite = LineDocumentUtils.getLineFirstNonWhitespace(getDocument(), ts.offset());
                     if (firstNonWhite != -1 && firstNonWhite == ts.offset()) {
                         foundOffset = ts.offset();
                         break;

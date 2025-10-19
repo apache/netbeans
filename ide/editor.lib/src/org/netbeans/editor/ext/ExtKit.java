@@ -971,7 +971,7 @@ public class ExtKit extends BaseKit {
         
         private boolean allComments(BaseDocument doc, int startOffset, int lineCount) throws BadLocationException {
             for (int offset = startOffset; lineCount > 0; lineCount--) {
-                int firstNonWhitePos = Utilities.getRowFirstNonWhite(doc, offset);
+                int firstNonWhitePos = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
                 if (firstNonWhitePos == -1) {
                     return false;
                 }
@@ -1000,7 +1000,7 @@ public class ExtKit extends BaseKit {
         private void uncomment(BaseDocument doc, int startOffset, int lineCount) throws BadLocationException {
             for (int offset = startOffset; lineCount > 0; lineCount--) {
                 // Get the first non-whitespace char on the current line
-                int firstNonWhitePos = Utilities.getRowFirstNonWhite(doc, offset);
+                int firstNonWhitePos = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
 
                 // If there is any, check wheter it's the line-comment-chars and remove them
                 if (firstNonWhitePos != -1) {

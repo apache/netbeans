@@ -137,7 +137,7 @@ public class OverrideEditorActions {
                         if (homeKeyColumnOne) { // to first column
                             dot = lineStartPos;
                         } else { // either to line start or text start
-                            int textStartPos = Utilities.getRowFirstNonWhite(doc, lineStartPos);
+                            int textStartPos = LineDocumentUtils.getLineFirstNonWhitespace(doc, lineStartPos);
                             if (textStartPos < 0) { // no text on the line
                                 textStartPos = Utilities.getRowEnd(target, lineStartPos);
                             }

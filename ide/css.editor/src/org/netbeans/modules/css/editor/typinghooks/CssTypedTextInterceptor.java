@@ -244,7 +244,7 @@ public class CssTypedTextInterceptor implements TypedTextInterceptor {
     public void afterInsert(Context context) throws BadLocationException {
         char ch = context.getText().charAt(0);
         if ('}' == ch) {
-            final int lineStart = Utilities.getRowFirstNonWhite((BaseDocument) context.getDocument(), context.getOffset());
+            final int lineStart = LineDocumentUtils.getLineFirstNonWhitespace((BaseDocument) context.getDocument(), context.getOffset());
             if (lineStart == context.getOffset()) {
                 reindentLater((BaseDocument) context.getDocument(), context.getOffset(), context.getOffset());
             }

@@ -852,8 +852,8 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
         try {
             int rowStart = line.getOffset();
             int rowEnd = LineDocumentUtils.getLineEnd(doc, rowStart);
-            int rowHighlightStart = Utilities.getRowFirstNonWhite(doc, rowStart);
-            int rowHighlightEnd = Utilities.getRowLastNonWhite(doc, rowStart) + 1;
+            int rowHighlightStart = LineDocumentUtils.getLineFirstNonWhitespace(doc, rowStart);
+            int rowHighlightEnd = LineDocumentUtils.getLineLastNonWhitespace(doc, rowStart) + 1;
 
             if (rowStart <= rowEnd) {
                 bag.removeHighlights(rowStart, rowEnd, false);

@@ -178,7 +178,7 @@ public final class IsOverriddenAnnotationAction extends AbstractAction {
                 public void run() {
                     try {
                         int line = LineDocumentUtils.getLineIndex((BaseDocument) doc, currentPosition);
-                        int startOffset = Utilities.getRowStartFromLineOffset((BaseDocument) doc, line);
+                        int startOffset = LineDocumentUtils.getLineStartFromIndex((BaseDocument) doc, line);
                         p[0] = comp.modelToView(startOffset).getLocation();
                         AnnotationDesc desc = annotations.getActiveAnnotation(line);
 

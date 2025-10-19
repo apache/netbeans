@@ -678,7 +678,7 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
             return;
         }
         int lineIndex = lastLine.index+1;
-        int offset = Utilities.getRowStartFromLineOffset(getDocument(), lineIndex);
+        int offset = LineDocumentUtils.getLineStartFromIndex(getDocument(), lineIndex);
         if (offset == -1) {
             return;
         }
@@ -822,7 +822,7 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
                 // put all commands on the last line;
                 // that should do the trick
                 if (lastLine == null) {
-                    int offset = Utilities.getRowStartFromLineOffset(getDocument(), pair.line);
+                    int offset = LineDocumentUtils.getLineStartFromIndex(getDocument(), pair.line);
                     if (offset == -1) {
                         // lines does not exist so ignore:
                         break;
@@ -1094,7 +1094,7 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
             for (int line = lp.startingLine; line <= lp.endingLine; line++) {
 
                 // find line starting offset
-                int rowStartOffset = Utilities.getRowStartFromLineOffset(doc, line);
+                int rowStartOffset = LineDocumentUtils.getLineStartFromIndex(doc, line);
                 if (rowStartOffset < overallStartOffset) {
                     rowStartOffset = overallStartOffset;
                 }
@@ -1229,7 +1229,7 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
     }
 
     private boolean doesLineStartWithOurLanguage(BaseDocument doc, int lineIndex, JoinedTokenSequence<T1> joinedTS) throws BadLocationException {
-        int rowStartOffset = Utilities.getRowStartFromLineOffset(doc, lineIndex);
+        int rowStartOffset = LineDocumentUtils.getLineStartFromIndex(doc, lineIndex);
         int rowEndOffset = LineDocumentUtils.getLineEndOffset(doc, rowStartOffset);
         int firstNonWhite = Utilities.getRowFirstNonWhite(doc, rowStartOffset);
         if (firstNonWhite != -1) {
@@ -1774,7 +1774,7 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
     private Line generateBasicLine(int index) throws BadLocationException {
         Line line = new Line();
         line.index = index;
-        line.offset = Utilities.getRowStartFromLineOffset(getDocument(), index);
+        line.offset = LineDocumentUtils.getLineStartFromIndex(getDocument(), index);
         line.existingLineIndent = IndentUtils.lineIndent(getDocument(), line.offset);
         int nonWS = Utilities.getRowFirstNonWhite(getDocument(), line.offset);
         line.emptyLine = nonWS == -1;

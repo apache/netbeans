@@ -243,7 +243,7 @@ public abstract class TagBasedFormatter extends ExtFormatter  {
             
             // apply line indents
             for (int line = firstRefBlockLine; line <= lastRefBlockLine; line ++){
-                int lineStart = Utilities.getRowStartFromLineOffset(doc, line);
+                int lineStart = LineDocumentUtils.getLineStartFromIndex(doc, line);
                 
                 if (!unformattableLines[line] && initialIndentData.isEligibleToIndent(line)){
                     changeRowIndent(doc, lineStart, initialIndentData.getIndent(line));
@@ -400,7 +400,7 @@ public abstract class TagBasedFormatter extends ExtFormatter  {
         int initialIndent = 0;
         
         if (line > 0){
-            int lineStart = Utilities.getRowStartFromLineOffset(doc, line);
+            int lineStart = LineDocumentUtils.getLineStartFromIndex(doc, line);
             int previousNonWhiteLineEnd = LineDocumentUtils.getPreviousNonWhitespace(doc, lineStart);
             
             if (previousNonWhiteLineEnd > 0){
@@ -416,7 +416,7 @@ public abstract class TagBasedFormatter extends ExtFormatter  {
         // get initial indent from the next line
         int initialIndent = 0;
         
-        int lineStart = Utilities.getRowStartFromLineOffset(doc, line);
+        int lineStart = LineDocumentUtils.getLineStartFromIndex(doc, line);
         int lineEnd = LineDocumentUtils.getLineEndOffset(doc, lineStart);
         int nextNonWhiteLineStart = LineDocumentUtils.getNextNonWhitespace(doc, lineEnd);
         

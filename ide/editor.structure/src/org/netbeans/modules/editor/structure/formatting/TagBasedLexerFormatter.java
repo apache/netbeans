@@ -340,7 +340,7 @@ public abstract class TagBasedLexerFormatter {
 
         if (line > 0) {
             int lineStart = Utilities.getRowStartFromLineOffset(doc, line);
-            int previousNonWhiteLineEnd = Utilities.getFirstNonWhiteBwd(doc, lineStart);
+            int previousNonWhiteLineEnd = LineDocumentUtils.getPreviousNonWhitespace(doc, lineStart);
 
             if (previousNonWhiteLineEnd > 0) {
                 initialIndent = Utilities.getRowIndent(doc, previousNonWhiteLineEnd);
@@ -449,7 +449,7 @@ public abstract class TagBasedLexerFormatter {
 
         int lineStart = Utilities.getRowStartFromLineOffset(doc, firstLineOfTheLanguageBlock);
 
-        if (Utilities.getFirstNonWhiteFwd(doc, lineStart) < languageBounds.getStartPos()) {
+        if (LineDocumentUtils.getNextNonWhitespace(doc, lineStart) < languageBounds.getStartPos()) {
             firstLineOfTheLanguageBlock++;
         }
 
@@ -758,8 +758,8 @@ public abstract class TagBasedLexerFormatter {
                         int lastLineOfEmbeddedBlock = Utilities.getLineOffset(doc,
                                 tokenSequence.offset() + getTxtLengthWithoutWhitespaceSuffix(tokenSequence.token().text()));
 
-                        if (Utilities.getFirstNonWhiteFwd(doc, Utilities.getRowStartFromLineOffset(doc,
-                                firstLineOfEmbeddedBlock)) < Utilities.getFirstNonWhiteFwd(doc, tokenSequence.offset())) {
+                        if (LineDocumentUtils.getNextNonWhitespace(doc, Utilities.getRowStartFromLineOffset(doc,
+                                firstLineOfEmbeddedBlock)) < LineDocumentUtils.getNextNonWhitespace(doc, tokenSequence.offset())) {
 
                             firstLineOfEmbeddedBlock++;
                         }

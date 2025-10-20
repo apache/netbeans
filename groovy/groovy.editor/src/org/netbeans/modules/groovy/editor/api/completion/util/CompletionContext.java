@@ -909,7 +909,7 @@ public final class CompletionContext {
 
         try {
             rowStart = LineDocumentUtils.getLineStartOffset(doc, lexOffset);
-            nonWhite = Utilities.getFirstNonWhiteFwd(doc, rowStart);
+            nonWhite = LineDocumentUtils.getNextNonWhitespace(doc, rowStart);
 
         } catch (BadLocationException ex) {
         }

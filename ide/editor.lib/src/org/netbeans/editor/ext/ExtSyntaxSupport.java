@@ -252,7 +252,7 @@ public class ExtSyntaxSupport extends SyntaxSupport {
     */
     public int[] getFunctionBlock(int[] identifierBlock) throws BadLocationException {
         if (identifierBlock != null) {
-            int nwPos = Utilities.getFirstNonWhiteFwd(getDocument(), identifierBlock[1]);
+            int nwPos = LineDocumentUtils.getNextNonWhitespace(getDocument(), identifierBlock[1]);
             if ((nwPos >= 0) && (getDocument().getChars(nwPos, 1)[0] == '(')) {
                 return new int[] { identifierBlock[0], nwPos + 1 };
             }

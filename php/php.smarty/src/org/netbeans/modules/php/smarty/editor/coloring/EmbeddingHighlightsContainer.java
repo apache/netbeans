@@ -185,11 +185,11 @@ public class EmbeddingHighlightsContainer extends AbstractHighlightsContainer im
                                 int endLO = Utilities.getLineOffset((BaseDocument) document, endOffset);
                                 if (startLO != endLO) {
                                     //not just one line block - test boundaries
-                                    if ((Utilities.getFirstNonWhiteBwd((BaseDocument) document, LineDocumentUtils.getLineEndOffset((BaseDocument) document, startOffset)) + 1) == startOffset) {
+                                    if ((LineDocumentUtils.getPreviousNonWhitespace((BaseDocument) document, LineDocumentUtils.getLineEndOffset((BaseDocument) document, startOffset)) + 1) == startOffset) {
                                         //just <script-style> tag on the first line -> move start to next line
                                         startOffset = Utilities.getRowStartFromLineOffset((BaseDocument) document, startLO + 1);
                                     }
-                                    if (Utilities.getFirstNonWhiteFwd((BaseDocument) document, Utilities.getRowStartFromLineOffset((BaseDocument) document, endLO)) == endOffset) {
+                                    if (LineDocumentUtils.getNextNonWhitespace((BaseDocument) document, Utilities.getRowStartFromLineOffset((BaseDocument) document, endLO)) == endOffset) {
                                         //just </script-style> tag on the last line -> move block end to previous line end
                                         endOffset = Utilities.getRowStartFromLineOffset((BaseDocument) document, endLO);
                                     }

@@ -151,10 +151,10 @@ public class LineBreakHook implements TypedBreakInterceptor {
         seq.move(context.getCaretOffset());
         int openOffset = followsOpeningTag(seq);
         
-        int nonWhiteBefore = Utilities.getFirstNonWhiteBwd(doc, insertPos, lineStartPos);
+        int nonWhiteBefore = LineDocumentUtils.getPreviousNonWhitespace(doc, insertPos, lineStartPos);
 
         int lineEndPos = LineDocumentUtils.getLineEndOffset(doc, caretPos);
-        int nonWhiteAfter = Utilities.getFirstNonWhiteFwd(doc, caretPos, lineEndPos);
+        int nonWhiteAfter = LineDocumentUtils.getNextNonWhitespace(doc, caretPos, lineEndPos);
 
         // there is a opening tag preceding on the line && something following the insertion point
         if (nonWhiteBefore != -1 && nonWhiteAfter != -1 && openOffset >= 0) {

@@ -487,7 +487,7 @@ public class LibraryDeclarationChecker extends HintsProvider {
                             int to = range.getTo();
                             //check if the line before the area is white
                             int lineBeginning = LineDocumentUtils.getLineStartOffset(document, from);
-                            int firstNonWhite = Utilities.getFirstNonWhiteBwd(document, from);
+                            int firstNonWhite = LineDocumentUtils.getPreviousNonWhitespace(document, from);
                             if (lineBeginning > firstNonWhite) {
                                 //delete the white content before the area inclusing the newline
                                 from = lineBeginning - 1; // (-1 => includes the line end)

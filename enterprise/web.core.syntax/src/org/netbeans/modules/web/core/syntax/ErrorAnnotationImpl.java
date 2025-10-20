@@ -34,6 +34,7 @@ import java.util.Map;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyledDocument;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.editor.NbEditorDocument;
@@ -159,7 +160,7 @@ public class ErrorAnnotationImpl implements ErrorAnnotation {
             if (line<0){
                 // place error annotation on the 1st non-empty line
                 try {
-                    int firstNonWS = Utilities.getFirstNonWhiteFwd(doc, 0);
+                    int firstNonWS = LineDocumentUtils.getNextNonWhitespace(doc, 0);
                     line = Utilities.getLineOffset(doc, firstNonWS) + 1;
                 } catch (BadLocationException ex) {
                     Exceptions.printStackTrace(ex);

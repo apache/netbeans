@@ -528,7 +528,7 @@ public class GroovyTypedTextInterceptor implements TypedTextInterceptor {
                 return false;
             }
 
-            int firstNonWhiteFwd = Utilities.getFirstNonWhiteFwd(doc, dotPos, eol);
+            int firstNonWhiteFwd = LineDocumentUtils.getNextNonWhitespace(doc, dotPos, eol);
 
             if (firstNonWhiteFwd == -1) {
                 return false;

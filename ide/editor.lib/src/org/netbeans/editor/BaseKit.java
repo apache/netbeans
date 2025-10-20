@@ -4189,7 +4189,7 @@ public class BaseKit extends DefaultEditorKit {
                 try {
                     // Determine first white char before dotPos
                     int rsPos = LineDocumentUtils.getLineStartOffset(doc, dotPos);
-                    int startPos = Utilities.getFirstNonWhiteBwd(doc, dotPos, rsPos);
+                    int startPos = LineDocumentUtils.getPreviousNonWhitespace(doc, dotPos, rsPos);
                     startPos = (startPos >= 0) ? (startPos + 1) : rsPos;
 
                     int startCol = Utilities.getVisualColumn(doc, startPos);

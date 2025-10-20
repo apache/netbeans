@@ -260,7 +260,7 @@ public abstract class TagBasedFormatter extends ExtFormatter  {
         BaseDocument doc = Utilities.getDocument(txtComponent);
         int lineNumber = Utilities.getLineOffset(doc, dotPos);
         int initialIndent = getInitialIndentFromPreviousLine(doc, lineNumber);
-        int endOfPreviousLine = Utilities.getFirstNonWhiteBwd(doc, dotPos);
+        int endOfPreviousLine = LineDocumentUtils.getPreviousNonWhitespace(doc, dotPos);
         endOfPreviousLine = endOfPreviousLine == -1 ? 0 : endOfPreviousLine;
         
         // workaround for \n passed from code completion to reformatter
@@ -401,7 +401,7 @@ public abstract class TagBasedFormatter extends ExtFormatter  {
         
         if (line > 0){
             int lineStart = Utilities.getRowStartFromLineOffset(doc, line);
-            int previousNonWhiteLineEnd = Utilities.getFirstNonWhiteBwd(doc, lineStart);
+            int previousNonWhiteLineEnd = LineDocumentUtils.getPreviousNonWhitespace(doc, lineStart);
             
             if (previousNonWhiteLineEnd > 0){
                 initialIndent = Utilities.getRowIndent(doc, previousNonWhiteLineEnd);
@@ -418,7 +418,7 @@ public abstract class TagBasedFormatter extends ExtFormatter  {
         
         int lineStart = Utilities.getRowStartFromLineOffset(doc, line);
         int lineEnd = LineDocumentUtils.getLineEndOffset(doc, lineStart);
-        int nextNonWhiteLineStart = Utilities.getFirstNonWhiteFwd(doc, lineEnd);
+        int nextNonWhiteLineStart = LineDocumentUtils.getNextNonWhitespace(doc, lineEnd);
         
         if (nextNonWhiteLineStart > 0){
             initialIndent = Utilities.getRowIndent(doc, nextNonWhiteLineStart, true);

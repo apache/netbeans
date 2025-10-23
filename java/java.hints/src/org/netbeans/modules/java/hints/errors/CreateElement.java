@@ -105,8 +105,7 @@ public final class CreateElement implements ErrorRule<Void> {
     /**
      * Helps to prevent github issue 8594, trying to create a method when return
      * type can't be determined because var is used as placeholder for the type
-     * at the call
-     * site.
+     * at the call site.
      * @param type the TypeMirror that specifies the type info
      * @return true if fit for create method, false otherwise
      */

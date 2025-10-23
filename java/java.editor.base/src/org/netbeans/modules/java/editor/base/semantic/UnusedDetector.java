@@ -338,7 +338,7 @@ public class UnusedDetector {
                 typeElement = info.getElementUtilities().enclosingTypeElement(el);
                 searchKinds = EnumSet.of(ClassIndex.SearchKind.METHOD_REFERENCES);
             }
-            case ANNOTATION_TYPE, CLASS, ENUM, INTERFACE -> {
+            case ANNOTATION_TYPE, CLASS, ENUM, RECORD, INTERFACE -> {
                 List<? extends TypeElement> topLevelElements = info.getTopLevelElements();
                 if (topLevelElements.size() == 1 && topLevelElements.get(0) == el) {
                     return false;

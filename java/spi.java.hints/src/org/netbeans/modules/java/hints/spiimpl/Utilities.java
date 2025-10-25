@@ -94,6 +94,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.net.URI;
 import java.nio.CharBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -163,8 +164,6 @@ import org.openide.util.Lookup;
 import org.openide.util.NbCollections;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.ServiceProvider;
-
-import static com.sun.source.tree.CaseTree.CaseKind.STATEMENT;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.java.hints.providers.spi.HintMetadata;
 import org.netbeans.modules.refactoring.spi.ui.RefactoringUI;
@@ -174,6 +173,8 @@ import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
 import org.openide.util.Parameters;
 import org.openide.windows.TopComponent;
+
+import static com.sun.source.tree.CaseTree.CaseKind.STATEMENT;
 
 /**
  *
@@ -288,32 +289,36 @@ public class Utilities {
     }
 
     public static List<HintDescription> listClassPathHints(Set<ClassPath> sourceCPs, Set<ClassPath> binaryCPs) {
-        List<HintDescription> result = new LinkedList<>();
+
+        // deduplicate before running queries
+        Set<FileObject> unique = new HashSet<>(128);
+        for (ClassPath cp : binaryCPs) {
+            unique.addAll(Arrays.asList(cp.getRoots()));
+        }
+
         Set<FileObject> roots = new HashSet<>();
 
-        for (ClassPath cp : binaryCPs) {
-            for (FileObject r : cp.getRoots()) {
-                Result2 src = SourceForBinaryQuery.findSourceRoots2(r.toURL());
-
-                if (src != null && src.preferSources()) {
-                    roots.addAll(Arrays.asList(src.getRoots()));
-                } else {
-                    roots.add(r);
-                }
+        for (FileObject fo : unique) {
+            Result2 src = SourceForBinaryQuery.findSourceRoots2(fo.toURL());
+            if (src != null && src.preferSources()) {
+                roots.addAll(Arrays.asList(src.getRoots()));
+            } else {
+                roots.add(fo);
             }
         }
 
         Set<ClassPath> cps = new HashSet<>(sourceCPs);
-
         cps.add(ClassPathSupport.createClassPath(roots.toArray(FileObject[]::new)));
 
         ClassPath cp = ClassPathSupport.createProxyClassPath(cps.toArray(ClassPath[]::new));
 
-        for (ClassPathBasedHintProvider p : Lookup.getDefault().lookupAll(ClassPathBasedHintProvider.class)) {
-            result.addAll(p.computeHints(cp, new AtomicBoolean()));
+        List<HintDescription> descriptions = new ArrayList<>();
+
+        for (ClassPathBasedHintProvider prov : Lookup.getDefault().lookupAll(ClassPathBasedHintProvider.class)) {
+            descriptions.addAll(prov.computeHints(cp, new AtomicBoolean()));
         }
 
-        return result;
+        return descriptions;
     }
     
     public static Tree parseAndAttribute(CompilationInfo info, String pattern, Scope scope) {

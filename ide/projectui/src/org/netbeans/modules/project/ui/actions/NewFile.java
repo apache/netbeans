@@ -61,7 +61,6 @@ import org.openide.util.Mutex;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakListeners;
 import org.openide.util.actions.Presenter.Popup;
 
 /** Action for invoking the project sensitive NewFile Wizard
@@ -88,7 +87,6 @@ public class NewFile extends ProjectAction implements PropertyChangeListener, Po
         super((String) null, LBL_NewFileAction_Name(), null, context);
         putValue("iconBase","org/netbeans/modules/project/ui/resources/newFile.png"); //NOI18N
         putValue(SHORT_DESCRIPTION, LBL_NewFileAction_Tooltip());
-        OpenProjectList.getDefault().addPropertyChangeListener( WeakListeners.propertyChange( this, OpenProjectList.getDefault() ) );
         refresh(getLookup(), true);
     }
 
@@ -112,13 +110,6 @@ public class NewFile extends ProjectAction implements PropertyChangeListener, Po
         Mnemonics.setLocalizedText(menu, (String) getValue(Action.NAME));
         // XXX accelerator not displayed here for some reason...why???
         return menu;
-    }
-
-    //private NewFileWizard wizardIterator;
-
-    @Override
-    protected void actionPerformed( Lookup context ) {
-        doPerform( context, null, true );
     }
 
     private void doPerform( Lookup context, final DataObject template, boolean includeTemplatesWithProjects ) {

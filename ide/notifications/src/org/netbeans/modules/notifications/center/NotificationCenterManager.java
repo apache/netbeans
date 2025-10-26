@@ -72,9 +72,11 @@ public class NotificationCenterManager {
                 notifications.remove(0).clear();
             }
             notifications.add(notification);
-        }
             if (isEnabled(notification)) {
                 filteredNotifications.add(notification);
+            }
+        }
+        if (isEnabled(notification)) {
             firePropertyChange(PROP_NOTIFICATION_ADDED, notification);
         }
         updateTable(capacityFull);
@@ -85,12 +87,12 @@ public class NotificationCenterManager {
             if (!notifications.remove(notification)) {
                 return;
             }
-        }
             if (isEnabled(notification)) {
                 filteredNotifications.remove(notification);
-            if (!notification.isRead()) {
-                firePropertyChange(PROP_NOTIFICATION_READ, notification);
             }
+        }
+        if (isEnabled(notification) && !notification.isRead()) {
+            firePropertyChange(PROP_NOTIFICATION_READ, notification);
         }
         updateTable(false);
     }

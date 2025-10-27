@@ -40,7 +40,15 @@ public interface FileNaming {
     boolean isFile();
     boolean isDirectory();
 
-    Integer getId();
+    ID getId();
 
     FileNaming rename(String name, ProvidedExtensions.IOHandler handler) throws IOException;
+    
+    
+    /// FileObject ID as identity object.
+    /// FileName and FileInfo objects may hold a strong reference to it, but
+    /// don't let it escape, since FileObjectFactory uses it in a WeakHashMap to track
+    /// the BaseFileObj lifecycle.
+    public record ID(int value) {}
+    
 }

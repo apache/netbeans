@@ -30,7 +30,7 @@ class DumpVisitor extends Node.Visitor {
 
     private int indent = 0;
 
-    private StringBuilder buf;
+    private final StringBuilder buf;
 
     private DumpVisitor() {
         super();
@@ -266,7 +266,7 @@ class DumpVisitor extends Node.Visitor {
     @Override
     public void visit(Node.TemplateText n) throws JspException {
         visitCommon(n);
-        printString(new String(n.getText()));
+        printString(n.getText());
     }
 
     private void printIndent() {

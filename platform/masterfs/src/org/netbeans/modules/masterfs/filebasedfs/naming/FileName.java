@@ -34,10 +34,10 @@ import org.openide.util.CharSequences;
 public class FileName implements FileNaming {
     private final CharSequence name;
     private final FileNaming parent;
-    private final Integer id;
+    private final ID id;
     private CharSequence currentName;
 
-    protected FileName(final FileNaming parent, final File file, Integer theKey) {
+    protected FileName(final FileNaming parent, final File file, ID theKey) {
         this.parent = parent;
         this.name = CharSequences.create(parseName(parent, file));
         this.id = theKey == null ? NamingFactory.createID(file) : theKey;
@@ -93,7 +93,7 @@ public class FileName implements FileNaming {
         return parent;
     }
 
-    public final @Override Integer getId() {
+    public final @Override ID getId() {
         return id;
     }
 
@@ -120,7 +120,7 @@ public class FileName implements FileNaming {
     }
 
     public final @Override int hashCode() {
-        return id.intValue();
+        return id.value();
     }
 
     public @Override boolean isFile() {

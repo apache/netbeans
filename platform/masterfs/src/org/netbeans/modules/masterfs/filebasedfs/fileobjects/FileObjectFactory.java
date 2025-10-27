@@ -56,10 +56,15 @@ import org.openide.util.BaseUtilities;
  * @author Radek Matous
  */
 public final class FileObjectFactory {
-    public static final Map<File, FileObjectFactory> AllFactories = new HashMap<File, FileObjectFactory>();
+    public static final Map<File, FileObjectFactory> AllFactories = new HashMap<>();
     public static boolean WARNINGS = true;
+
+    // values are Reference<BaseFileObj> or List<Reference<BaseFileObj>>
+    // if a BaseFileObj is no longer strongly reachable it shall dissappear from this Map
+
     //@GuardedBy("allIBaseLock")
-    final Map<Integer, Object> allIBaseFileObjects = new WeakHashMap<Integer, Object>();
+    final Map<FileNaming.ID, Object> allIBaseFileObjects = new WeakHashMap<>();
+
     final ReadWriteLock allIBaseLock = new ReentrantReadWriteLock();
     private BaseFileObj root;
     private static final Logger LOG_REFRESH = Logger.getLogger("org.netbeans.modules.masterfs.REFRESH"); // NOI18N
@@ -604,14 +609,14 @@ public final class FileObjectFactory {
     }
 
     public final void rename(Set<BaseFileObj> changeId) {
-        final Map<Integer, Object> toRename = new HashMap<Integer, Object>();
+        final Map<FileNaming.ID, Object> toRename = new HashMap<>();
         allIBaseLock.writeLock().lock();
         try {
-            final Iterator<Map.Entry<Integer, Object>> it = allIBaseFileObjects.entrySet().iterator();
+            final Iterator<Map.Entry<FileNaming.ID, Object>> it = allIBaseFileObjects.entrySet().iterator();
             while (it.hasNext()) {
-                Map.Entry<Integer, Object> entry = it.next();
+                Map.Entry<FileNaming.ID, Object> entry = it.next();
                 final Object obj = entry.getValue();
-                final Integer key = entry.getKey();
+                final FileNaming.ID key = entry.getKey();
                 if (!(obj instanceof List<?>)) {
                     @SuppressWarnings("unchecked")
                     final WeakReference<BaseFileObj> ref = (WeakReference<BaseFileObj>) obj;
@@ -633,8 +638,8 @@ public final class FileObjectFactory {
                 }
             }
 
-            for (Map.Entry<Integer, Object> entry : toRename.entrySet()) {
-                Integer key = entry.getKey();
+            for (Map.Entry<FileNaming.ID, Object> entry : toRename.entrySet()) {
+                FileNaming.ID key = entry.getKey();
                 Object previous = allIBaseFileObjects.remove(key);
                 if (previous instanceof List<?>) {
                     List<?> list = (List<?>) previous;
@@ -655,7 +660,7 @@ public final class FileObjectFactory {
     }
     public final BaseFileObj getCachedOnly(final File file, boolean checkExtension) {
         BaseFileObj retval;
-        final Integer id = NamingFactory.createID(file);
+        final FileNaming.ID id = NamingFactory.createID(file);
         allIBaseLock.readLock().lock();
         try {
             final Object value = allIBaseFileObjects.get(id);
@@ -698,7 +703,7 @@ public final class FileObjectFactory {
         return retVal;
     }
 
-    private BaseFileObj putInCache(final BaseFileObj newValue, final Integer id) {
+    private BaseFileObj putInCache(final BaseFileObj newValue, final FileNaming.ID id) {
         allIBaseLock.writeLock().lock();
         try {
             final WeakReference<BaseFileObj> newRef = new WeakReference<BaseFileObj>(newValue);

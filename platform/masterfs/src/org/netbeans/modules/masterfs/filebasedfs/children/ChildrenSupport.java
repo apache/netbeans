@@ -305,7 +305,7 @@ public class ChildrenSupport {
 
     private FileNaming lookupChildInCache(final FileNaming folder, final String childName, boolean lookupExisting) {
         final File f = new File(folder.getFile(), childName);
-        final Integer id = NamingFactory.createID(f);
+        final FileNaming.ID id = NamingFactory.createID(f);
 
         class FakeNaming implements FileNaming {
             public FileNaming lastEqual;
@@ -324,7 +324,7 @@ public class ChildrenSupport {
                 return f;
             }
 
-            public Integer getId() {
+            public FileNaming.ID getId() {
                 return id;
             }
             public FileNaming rename(String name, ProvidedExtensions.IOHandler h) {
@@ -346,7 +346,7 @@ public class ChildrenSupport {
 
             @Override
             public int hashCode() {
-                return id.intValue();
+                return id.value();
             }
 
             public boolean isFile() {

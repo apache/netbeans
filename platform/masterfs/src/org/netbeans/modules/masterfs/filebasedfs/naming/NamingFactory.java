@@ -193,8 +193,8 @@ public final class NamingFactory {
         }
     }
     
-    public static Integer createID(final File file) {
-        return Utils.hashCode(file);
+    public static FileNaming.ID createID(final File file) {
+        return new FileNaming.ID(Utils.hashCode(file));
     }
     private static FileNaming registerInstanceOfFileNaming(
         FileNaming parentName, FileInfo file, FileType type,
@@ -218,8 +218,8 @@ public final class NamingFactory {
                 if (fn == null) {
                     continue;
                 }
-                Integer id = createID(fn.getFile());
-                int index = Math.abs(id) % arr.length;
+                FileNaming.ID id = createID(fn.getFile());
+                int index = Math.abs(id.value()) % arr.length;
                 NameRef prev = arr[index];
                 arr[index] = nr;
                 if (prev == null) {
@@ -246,8 +246,8 @@ public final class NamingFactory {
         cleanQueue();
         
         FileNaming retVal;
-        Integer key = createID(file.getFile());
-        int index = Math.abs(key) % names.length;
+        FileNaming.ID key = createID(file.getFile());
+        int index = Math.abs(key.value()) % names.length;
         NameRef ref = getReference(names[index], file.getFile());
 
         FileNaming cachedElement = (ref != null) ? ref.get() : null;
@@ -347,7 +347,7 @@ public final class NamingFactory {
     static enum FileType {file, directory, unknown}
     
     private static FileNaming createFileNaming(
-        final FileInfo f, Integer theKey, final FileNaming parentName, FileType type
+        final FileInfo f, FileNaming.ID theKey, final FileNaming parentName, FileType type
     ) {
         FileName retVal = null;
         //TODO: check all tests for isFile & isDirectory
@@ -370,12 +370,12 @@ public final class NamingFactory {
         return retVal;
     }
     
-    public static String dumpId(Integer id) {
-        return dump(id, null);
+    public static String dumpId(FileNaming.ID id) {
+        return dump(id.value(), null);
     }
     
     public static synchronized boolean isValid(FileNaming fn) {
-        int index = Math.abs(fn.getId()) % names.length;
+        int index = Math.abs(fn.getId().value()) % names.length;
         NameRef value = names[index];
         while (value != null) {
             if (value.get() == fn) {

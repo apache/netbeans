@@ -42,6 +42,7 @@ import org.netbeans.modules.web.jsps.parserapi.JspParserAPI;
 import org.openide.filesystems.FileObject;
 import org.openide.modules.InstalledFileLocator;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
 
 // PENDING - need to call reinitOptions when something changes (taglib, jar, web.xml)
 // PENDING - separate to two classes, have a per-application instance of one of them
@@ -52,7 +53,7 @@ import org.openide.util.NbBundle;
 public class JspParserImpl implements JspParserAPI {
 
     // @GuardedBy(this)
-    final Map<WebModule, WebAppParseProxy> parseSupports = new WeakHashMap<WebModule, WebAppParseProxy>();
+    final Map<WebModule, WebAppParseProxy> parseSupports = new WeakHashMap<>();
     private final TldChangeSupport tldChangeSupport;
 
     private static final Logger LOGGER = Logger.getLogger(JspParserImpl.class.getName());
@@ -74,7 +75,6 @@ public class JspParserImpl implements JspParserAPI {
     private static final String[] JAR_FILE_NAMES = new String[]{
         "ant/lib/ant.jar",  //NOI18N
         "modules/ext/glassfish-jspparser-5.1.0.jar", //NOI18N
-//        "modules/ext/glassfish-logging.jar" //NOI18N
         "modules/ext/jsp-parser-ext.jar", //NOI18N
         "modules/ext/jstl-api.jar", //NOI18N
         "modules/ext/jstl-impl.jar", //NOI18N
@@ -85,7 +85,7 @@ public class JspParserImpl implements JspParserAPI {
     private static void initURLs() throws MalformedURLException, IOException {
         if (urls == null) {
             File[] files = new File[JAR_FILE_NAMES.length];
-            List<String> missing = new ArrayList<String>();
+            List<String> missing = new ArrayList<>();
             for(int i = 0; i < JAR_FILE_NAMES.length; i++) {
                 files[i] = InstalledFileLocator.getDefault().locate(JAR_FILE_NAMES[i], null, false);
                 if(files[i] == null) {
@@ -95,7 +95,7 @@ public class JspParserImpl implements JspParserAPI {
 
             if(!missing.isEmpty()) {
                 //something wasn't found, report error and cancel the initialization
-                StringBuffer msg = new StringBuffer();
+                StringBuilder msg = new StringBuilder();
                 msg.append("Cannot initialize JSP parser, following JAR files couldn't be localted: "); //NOI18N
                 for(String fname : missing) {
                     msg.append(fname);
@@ -108,7 +108,7 @@ public class JspParserImpl implements JspParserAPI {
 
             URL[] urls2 = new URL[files.length];
             for (int i = 0; i < files.length; i++) {
-                urls2[i] = files[i].toURI().toURL();
+                urls2[i] = Utilities.toURI(files[i]).toURL();
             }
             urls = urls2;
         }
@@ -118,6 +118,7 @@ public class JspParserImpl implements JspParserAPI {
      * This method is designed to be called only from unit tests to initialize
      * parser JARs.
      */
+    @SuppressWarnings("AssignmentToCollectionOrArrayFieldFromParameter")
     public static void setParserJARs(URL[] urls) {
         JspParserImpl.urls = urls;
     }
@@ -129,16 +130,13 @@ public class JspParserImpl implements JspParserAPI {
                 ExtClassLoader urlCL = new ExtClassLoader(urls, JspParserImpl.class.getClassLoader());
                 Class<?> cl = urlCL.loadClass("org.netbeans.modules.web.jspparser_ext.WebAppParseSupport"); // NOI18N
                 webAppParserImplFactoryMethod = cl.getDeclaredMethod("create", JspParserImpl.class, WebModule.class); // NOI18N
-            } catch (NoSuchMethodException e) {
-                LOGGER.log(Level.INFO, null, e);
-            } catch (MalformedURLException e) {
-                LOGGER.log(Level.INFO, null, e);
-            } catch (ClassNotFoundException e) {
+            } catch (NoSuchMethodException | MalformedURLException | ClassNotFoundException e) {
                 LOGGER.log(Level.INFO, null, e);
             }
         }
     }
 
+    @Override
     public JspParserAPI.JspOpenInfo getJspOpenInfo(FileObject jspFile, WebModule wm, boolean useEditor) {
         //try to fast create openinfo
 
@@ -164,6 +162,7 @@ public class JspParserImpl implements JspParserAPI {
         return DEFAULT_OPENINFO;
     }
 
+    @Override
     public JspParserAPI.ParseResult analyzePage(FileObject jspFile, WebModule wm, int errorReportingMode) {
         if (wm == null) {
             return getNoWebModuleResult(jspFile, null);
@@ -189,6 +188,7 @@ public class JspParserImpl implements JspParserAPI {
      *    [0] The location
      *    [1] If the location is a jar file, this is the location of the tld.
      */
+    @Override
     public Map<String, String[]> getTaglibMap(WebModule wm) throws IOException {
         FileObject wmRoot = wm.getDocumentBase();
         if (wmRoot == null) {
@@ -214,29 +214,30 @@ public class JspParserImpl implements JspParserAPI {
             return (WebAppParseProxy) webAppParserImplFactoryMethod.invoke(null, this, wm);
         } catch (IOException ise) {
             LOGGER.log(Level.WARNING, null, ise);
-        } catch (IllegalAccessException e) {
-            LOGGER.log(Level.INFO, null, e);
-        } catch (InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             LOGGER.log(Level.INFO, null, e);
         }
         return null;
     }
 
+    @Override
     public URLClassLoader getModuleClassLoader(WebModule wm) {
         WebAppParseProxy pp = getParseProxy(wm);
         return pp.getWAClassLoader();
     }
 
-    private JspParserAPI.ParseResult getNoWebModuleResult(FileObject jspFile, WebModule wm) {
+    private JspParserAPI.ParseResult getNoWebModuleResult(FileObject jspFile, @SuppressWarnings("unused") WebModule wm) {
         JspParserAPI.ErrorDescriptor error = new JspParserAPI.ErrorDescriptor(null, jspFile, -1, -1,
                 NbBundle.getMessage(JspParserImpl.class, "MSG_webModuleNotFound", jspFile.getNameExt()), ""); // NOI18N
         return new JspParserAPI.ParseResult(new JspParserAPI.ErrorDescriptor[] {error});
     }
 
+    @Override
     public void addTldChangeListener(TldChangeListener listener) {
         tldChangeSupport.addTldChangeListener(listener);
     }
 
+    @Override
     public void removeTldChangeListener(TldChangeListener listener) {
         tldChangeSupport.removeTldChangeListener(listener);
     }

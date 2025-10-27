@@ -37,7 +37,7 @@ import org.xml.sax.Attributes;
  * @author Shawn Bayern
  * @author Mark Roth
  */
-
+@SuppressWarnings("ProtectedField")
 public abstract class Node {
     
     // BEGIN copied over from TagConstants
@@ -166,6 +166,7 @@ public abstract class Node {
     /**
      * Zero-arg Constructor.
      */
+    @SuppressWarnings("unused")
     Node() {
 	this.isDummy = true;
     }
@@ -190,6 +191,7 @@ public abstract class Node {
      * @param start The location of the jsp page
      * @param parent The enclosing node
      */
+    @SuppressWarnings("unused")
     Node(String qName, String localName, Mark start, Node parent) {
 	this.qName = qName;
 	this.localName = localName;
@@ -306,7 +308,10 @@ public abstract class Node {
 
     /**
      * Get the attribute that is non request time expression, either
-     * from the attribute of the node, or from a jsp:attrbute 
+     * from the attribute of the node, or from a jsp:attrbute
+     *
+     * @param name
+     * @return
      */
     public String getTextAttribute(String name) {
 
@@ -330,6 +335,9 @@ public abstract class Node {
      * <p>
      * This should always be called and only be called for nodes that
      * accept dynamic runtime attribute expressions.
+     *
+     * @param name
+     * @return
      */
     public NamedAttribute getNamedAttributeNode( String name ) {
         NamedAttribute result = null;
@@ -339,7 +347,7 @@ public abstract class Node {
         int numChildNodes = nodes.size();
         for( int i = 0; i < numChildNodes; i++ ) {
             NamedAttribute na = (NamedAttribute)nodes.getNode( i );
-	    boolean found = false;
+	    boolean found;
 	    int index = name.indexOf(':');
 	    if (index != -1) {
 		// qualified name
@@ -434,7 +442,7 @@ public abstract class Node {
 
     public Node.Root getRoot() {
 	Node n = this;
-	while (!(n instanceof Node.Root)) {
+        while ((!(n instanceof Node.Root)) && n != null) {
 	    n = n.getParent();
 	}
 	return (Node.Root) n;
@@ -508,6 +516,7 @@ public abstract class Node {
 	/*
 	 * Constructor.
 	 */
+        @SuppressWarnings("unused")
 	Root(Mark start, Node parent, boolean isXmlSyntax) {
 	    super(start, parent);
 	    this.isXmlSyntax = isXmlSyntax;
@@ -516,11 +525,13 @@ public abstract class Node {
 
 	    // Figure out and set the parent root
 	    Node r = parent;
-	    while ((r != null) && !(r instanceof Node.Root))
-		r = r.getParent();
+	    while ((r != null) && !(r instanceof Node.Root)) {
+                r = r.getParent();
+            }
 	    parentRoot = (Node.Root) r;
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -590,6 +601,7 @@ public abstract class Node {
 		  start, parent);
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -598,6 +610,7 @@ public abstract class Node {
     /**
      * Represents a page directive
      */
+    @SuppressWarnings("UseOfObsoleteCollectionType")
     public static class PageDirective extends Node {
 
 	private Vector<String> imports;
@@ -611,9 +624,10 @@ public abstract class Node {
 			     Attributes taglibAttrs, Mark start, Node parent) {
 	    super(qName, PAGE_DIRECTIVE_ACTION, attrs, nonTaglibXmlnsAttrs,
 		  taglibAttrs, start, parent);
-	    imports = new Vector<String>();
+	    imports = new Vector<>();
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -624,6 +638,7 @@ public abstract class Node {
 	 * PageDirective's vector of imported classes and packages.
 	 * @param value A comma-separated string of imports.
 	 */
+        @SuppressWarnings("NestedAssignment")
 	public void addImport(String value) {
 	    int start = 0;
 	    int index;
@@ -639,6 +654,7 @@ public abstract class Node {
 	    }
 	}
 
+        @SuppressWarnings("ReturnOfCollectionOrArrayField")
 	public List<String> getImports() {
 	    return imports;
 	}
@@ -662,6 +678,7 @@ public abstract class Node {
 		  taglibAttrs, start, parent);
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -677,6 +694,7 @@ public abstract class Node {
 		  start, parent);
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -685,6 +703,7 @@ public abstract class Node {
     /**
      * Represents a tag directive
      */
+    @SuppressWarnings("UseOfObsoleteCollectionType")
     public static class TagDirective extends Node {
         private Vector<String> imports;
 
@@ -697,9 +716,10 @@ public abstract class Node {
 			    Attributes taglibAttrs, Mark start, Node parent) {
 	    super(qName, TAG_DIRECTIVE_ACTION, attrs, nonTaglibXmlnsAttrs,
 		  taglibAttrs, start, parent);
-            imports = new Vector<String>();
+            imports = new Vector<>();
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
         }
@@ -710,6 +730,7 @@ public abstract class Node {
          * PageDirective's vector of imported classes and packages.
          * @param value A comma-separated string of imports.
          */
+        @SuppressWarnings("NestedAssignment")
         public void addImport(String value) {
             int start = 0;
             int index;
@@ -725,6 +746,7 @@ public abstract class Node {
             }
         }
  
+        @SuppressWarnings("ReturnOfCollectionOrArrayField")
         public List<String> getImports() {
             return imports;
 	}
@@ -748,6 +770,7 @@ public abstract class Node {
 		  nonTaglibXmlnsAttrs, taglibAttrs, start, parent);
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -771,6 +794,7 @@ public abstract class Node {
 		  taglibAttrs, start, parent);
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -792,6 +816,7 @@ public abstract class Node {
 		  taglibAttrs, start, parent);
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -813,6 +838,7 @@ public abstract class Node {
 		  taglibAttrs, start, parent);
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -828,6 +854,7 @@ public abstract class Node {
 	    super(null, null, text, start, parent);
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -858,6 +885,7 @@ public abstract class Node {
 	 * TemplateText nodes in its body. This method handles either case.
 	 * @return The text string
 	 */
+        @Override
 	public String getText() {
 	    String ret = text;
 	    if ((ret == null) && (body != null)) {
@@ -888,6 +916,7 @@ public abstract class Node {
 		  taglibAttrs, start, parent);
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -911,6 +940,7 @@ public abstract class Node {
 		  start, parent);
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -932,6 +962,7 @@ public abstract class Node {
 		  start, parent);
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -949,6 +980,7 @@ public abstract class Node {
             super(null, null, text, start, parent);
         }
 
+        @Override
         public void accept(Visitor v) throws JspException {
             v.visit(this);
         }
@@ -967,7 +999,7 @@ public abstract class Node {
      */
     public static class ParamAction extends Node {
 
-	JspAttribute value;
+	private JspAttribute value;
 
 	public ParamAction(Attributes attrs, Mark start, Node parent) {
 	    this(JSP_PARAM_ACTION, attrs, null, null, start, parent);
@@ -980,6 +1012,7 @@ public abstract class Node {
 		  taglibAttrs, start, parent);
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -1010,6 +1043,7 @@ public abstract class Node {
 		  start, parent);
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -1032,6 +1066,7 @@ public abstract class Node {
 		  taglibAttrs, start, parent);
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -1055,6 +1090,7 @@ public abstract class Node {
 		  taglibAttrs, start, parent);
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -1086,6 +1122,7 @@ public abstract class Node {
 		  taglibAttrs, start, parent);
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -1115,6 +1152,7 @@ public abstract class Node {
 		  taglibAttrs, start,  parent);
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -1138,6 +1176,7 @@ public abstract class Node {
 		  taglibAttrs, start, parent);
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -1156,7 +1195,7 @@ public abstract class Node {
      */
     public static class UseBean extends Node {
 
-	JspAttribute beanName;
+	private JspAttribute beanName;
 
 	public UseBean(Attributes attrs, Mark start, Node parent) {
 	    this(JSP_USE_BEAN_ACTION, attrs, null, null, start, parent);
@@ -1169,6 +1208,7 @@ public abstract class Node {
 		  taglibAttrs, start, parent);
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -1201,6 +1241,7 @@ public abstract class Node {
 		  taglibAttrs, start, parent);
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -1238,14 +1279,17 @@ public abstract class Node {
 		  start, parent);
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
 
+        @SuppressWarnings("AssignmentToCollectionOrArrayFieldFromParameter")
 	public void setJspAttributes(JspAttribute[] jspAttrs) {
 	    this.jspAttrs = jspAttrs;
 	}
 
+        @SuppressWarnings("ReturnOfCollectionOrArrayField")
 	public JspAttribute[] getJspAttributes() {
 	    return jspAttrs;
 	}
@@ -1270,14 +1314,17 @@ public abstract class Node {
 		  taglibAttrs, start, parent);
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
 
+        @SuppressWarnings("AssignmentToCollectionOrArrayFieldFromParameter")
 	public void setJspAttributes(JspAttribute[] jspAttrs) {
 	    this.jspAttrs = jspAttrs;
 	}
 
+        @SuppressWarnings("ReturnOfCollectionOrArrayField")
 	public JspAttribute[] getJspAttributes() {
 	    return jspAttrs;
 	}
@@ -1310,6 +1357,7 @@ public abstract class Node {
 		  taglibAttrs, start, parent);
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -1381,6 +1429,7 @@ public abstract class Node {
     /**
      * Represents a custom tag
      */
+    @SuppressWarnings("UseOfObsoleteCollectionType")
     public static class CustomTag extends Node {
 
 	private String uri;
@@ -1407,7 +1456,7 @@ public abstract class Node {
 	//private boolean useTagPlugin;
 	//private TagPluginContext tagPluginContext;
 
-	/**
+	/*
 	 * The following two fields are used for holding the Java
 	 * scriptlets that the tag plugins may generate.  Meaningful
 	 * only if useTagPlugin is true;
@@ -1494,6 +1543,7 @@ public abstract class Node {
 	    this.implementsDynamicAttributes = tagInfo.hasDynamicAttributes();
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -1512,10 +1562,12 @@ public abstract class Node {
 	    return prefix;
 	}
 
+        @SuppressWarnings("AssignmentToCollectionOrArrayFieldFromParameter")
 	public void setJspAttributes(JspAttribute[] jspAttrs) {
 	    this.jspAttrs = jspAttrs;
 	}
 
+        @SuppressWarnings("ReturnOfCollectionOrArrayField")
 	public JspAttribute[] getJspAttributes() {
 	    return jspAttrs;
 	}
@@ -1592,6 +1644,7 @@ public abstract class Node {
 	    return tagInfo.getTagVariableInfos();
  	}
  
+        @SuppressWarnings("ReturnOfCollectionOrArrayField")
 	public VariableInfo[] getVariableInfos() {
 	    return varInfos;
 	}
@@ -1612,6 +1665,7 @@ public abstract class Node {
 	    return this.numCount;
 	}
 
+        @SuppressWarnings("AssignmentToCollectionOrArrayFieldFromParameter")
 	public void setScriptingVars(Vector vec, int scope) {
 	    switch (scope) {
 	    case VariableInfo.AT_BEGIN:
@@ -1659,6 +1713,9 @@ public abstract class Node {
         /**
          * Checks to see if the attribute of the given name is of type
 	 * JspFragment.
+         *
+         * @param name
+         * @return
          */
         public boolean checkIfAttributeIsJspFragment( String name ) {
             boolean result = false;
@@ -1752,6 +1809,8 @@ public abstract class Node {
 	 * - getBody() returns null, or
 	 * - all immediate children are jsp:attribute actions, or
 	 * - the action's jsp:body is empty.
+         *
+         * @return
 	 */
 	 public boolean hasEmptyBody() {
 	     boolean hasEmptyBody = true;
@@ -1780,8 +1839,8 @@ public abstract class Node {
      * attribute (used by the tag plugin machinery only).
      */
     public static class AttributeGenerator extends Node {
-	String name;	// name of the attribute
-	CustomTag tag;	// The tag this attribute belongs to
+	private String name;	// name of the attribute
+	private CustomTag tag;	// The tag this attribute belongs to
 
 	public AttributeGenerator(Mark start, String name, CustomTag tag) {
 	    super(start, null);
@@ -1789,6 +1848,7 @@ public abstract class Node {
 	    this.tag = tag;
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -1813,6 +1873,7 @@ public abstract class Node {
 		  start, parent);
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -1828,16 +1889,16 @@ public abstract class Node {
 
         // True if this node is to be trimmed, or false otherwise
         private boolean trim = true;
-        
+
         private ChildInfo childInfo;
 	private String name;
-	private String localName;
 	private String prefix;
 
         public NamedAttribute(Attributes attrs, Mark start, Node parent) {
 	    this(JSP_ATTRIBUTE_ACTION, attrs, null, null, start, parent);
 	}
 
+        @SuppressWarnings("OverridableMethodCallInConstructor")
         public NamedAttribute(String qName, Attributes attrs,
 			      Attributes nonTaglibXmlnsAttrs,
 			      Attributes taglibAttrs,
@@ -1863,16 +1924,13 @@ public abstract class Node {
 	    }
         }
 
+        @Override
         public void accept(Visitor v) throws JspException {
             v.visit(this);
         }
 
         public String getName() {
             return this.name;
-        }
-
-        public String getLocalName() {
-            return this.localName;
         }
 
         public String getPrefix() {
@@ -1900,14 +1958,17 @@ public abstract class Node {
 	 * Since this method is only for attributes that are not rtexpr,
 	 * we can assume the body of the jsp:attribute is a template text.
 	 */
+        @Override
 	public String getText() {
 
 	    class AttributeVisitor extends Visitor {
-		String attrValue = null;
+		private String attrValue = null;
+
+                @Override
 		public void visit(TemplateText txt) {
-		    attrValue = new String(txt.getText());
+		    attrValue = txt.getText();
 		}
-		
+
 		public String getAttrValue() {
 		    return attrValue;
 		}
@@ -1916,17 +1977,17 @@ public abstract class Node {
 	    // According to JSP 2.0, if the body of the <jsp:attribute>
 	    // action is empty, it is equivalent of specifying "" as the value
 	    // of the attribute.
-	    String text = "";
+	    String resultText = "";
 	    if (getBody() != null) {
 		AttributeVisitor attributeVisitor = new AttributeVisitor();
 		try {
 		    getBody().visit(attributeVisitor);
 		} catch (JspException e) {
 		}
-		text = attributeVisitor.getAttrValue();
+		resultText = attributeVisitor.getAttrValue();
 	    }
-	    
-	    return text;
+
+	    return resultText;
 	}
     }
 
@@ -1948,6 +2009,7 @@ public abstract class Node {
             this.childInfo = new ChildInfo();
         }
 
+        @Override
         public void accept(Visitor v) throws JspException {
             v.visit(this);
         }
@@ -1966,6 +2028,7 @@ public abstract class Node {
 	    super(null, null, text, start, parent);
 	}
 
+        @Override
 	public void accept(Visitor v) throws JspException {
 	    v.visit(this);
 	}
@@ -1994,6 +2057,8 @@ public abstract class Node {
 
 	/**
 	 * Returns true if this template text contains whitespace only.
+         *
+         * @return
 	 */
 	public boolean isAllSpace() {
 	    boolean isAllSpace = true;
@@ -2034,6 +2099,7 @@ public abstract class Node {
         // The node in the parse tree for the NamedAttribute
         private NamedAttribute namedAttributeNode;
 
+        @SuppressWarnings("unused")
         JspAttribute(String qName, String uri, String localName, String value,
 		     boolean expr, ELNode.Nodes el, boolean dyn ) {
 	    this.qName = qName;
@@ -2052,6 +2118,7 @@ public abstract class Node {
          * named attribute.  In this case, we have to store the nodes of
          * the body of the attribute.
          */
+        @SuppressWarnings("unused")
         JspAttribute(NamedAttribute na, boolean dyn) {
             this.qName = na.getName();
 	    this.localName = na.getLocalName();
@@ -2120,10 +2187,10 @@ public abstract class Node {
         }
 
         /**
-         * @return true if the value represents an expression that should
-         * be fed to the expression interpreter
-         * @return false for string literals or rtexprvalues that should
-         * not be interpreted or reevaluated
+         * @return {@code true} if the value represents an expression that
+         * should be fed to the expression interpreter, {@code false} for string
+         * literals or rtexprvalues that should not be interpreted or
+         * reevaluated
          */
         public boolean isELInterpreterInput() {
             return el != null;
@@ -2139,6 +2206,8 @@ public abstract class Node {
 
 	/**
 	 * XXX
+         *
+         * @return
 	 */
 	public boolean isDynamic() {
 	    return dynamic;
@@ -2153,13 +2222,14 @@ public abstract class Node {
      * An ordered list of Node, used to represent the body of an element, or
      * a jsp page of jsp document.
      */
+    @SuppressWarnings("UseOfObsoleteCollectionType")
     public static class Nodes {
 
-	private List<Node> list;
+	private final List<Node> list;
 	private Node.Root root;		// null if this is not a page
 
 	public Nodes() {
-	    list = new Vector<Node>();
+	    list = new Vector<>();
 	}
 
 	public Nodes(List<Node> l) {
@@ -2168,7 +2238,7 @@ public abstract class Node {
 
 	public Nodes(Node.Root root) {
 	    this.root = root;
-	    list = new Vector<Node>();
+	    list = new Vector<>();
 	    list.add(root);
 	}
 
@@ -2192,6 +2262,7 @@ public abstract class Node {
 	/**
 	 * Visit the nodes in the list with the supplied visitor
 	 * @param v The visitor used
+         * @throws jakarta.servlet.jsp.JspException
 	 */
 	public void visit(Visitor v) throws JspException {
             for (Node n : list) {
@@ -2211,11 +2282,12 @@ public abstract class Node {
 	    }
 	    return n;
 	}
-	
+
 	public Node.Root getRoot() {
 	    return root;
 	}
-        
+
+        @Override
         public String toString() {
             return DumpVisitor.dump(this);
         }
@@ -2232,12 +2304,18 @@ public abstract class Node {
 	/**
 	 * This method provides a place to put actions that are common to
 	 * all nodes. Override this in the child visitor class if need to.
+         *
+         * @param n
+         * @throws jakarta.servlet.jsp.JspException
 	 */
 	protected void doVisit(Node n) throws JspException {
 	}
 
 	/**
 	 * Visit the body of a node, using the current visitor
+         *
+         * @param n
+         * @throws jakarta.servlet.jsp.JspException
 	 */
 	protected void visitBody(Node n) throws JspException {
 	    if (n.getBody() != null) {

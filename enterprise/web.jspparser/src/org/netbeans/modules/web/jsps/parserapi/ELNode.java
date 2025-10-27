@@ -46,12 +46,13 @@ public abstract class ELNode {
      */
     public static class Root extends ELNode {
 
-        private ELNode.Nodes expr;
+        private final ELNode.Nodes expr;
 
         public Root(ELNode.Nodes expr) {
             this.expr = expr;
         }
 
+        @Override
         public void accept(Visitor v) throws JspException {
             v.visit(this);
         }
@@ -72,6 +73,7 @@ public abstract class ELNode {
             this.text = text;
         }
 
+        @Override
 	public void accept(Visitor v) throws JspException {
             v.visit(this);
 	}
@@ -92,6 +94,7 @@ public abstract class ELNode {
             this.text = text;
         }
 
+        @Override
 	public void accept(Visitor v) throws JspException {
             v.visit(this);
 	}
@@ -114,11 +117,13 @@ public abstract class ELNode {
         private String methodName;
         private String[] parameters;
 
+        @SuppressWarnings("unused")
         Function(String prefix, String name) {
             this.prefix = prefix;
             this.name = name;
         }
 
+        @Override
         public void accept(Visitor v) throws JspException {
             v.visit(this);
         }
@@ -155,10 +160,12 @@ public abstract class ELNode {
             return methodName;
         }
 
+        @SuppressWarnings("AssignmentToCollectionOrArrayFieldFromParameter")
         public void setParameters(String[] parameters) {
             this.parameters = parameters;
         }
 
+        @SuppressWarnings("ReturnOfCollectionOrArrayField")
         public String[] getParameters() {
             return parameters;
         }
@@ -172,11 +179,12 @@ public abstract class ELNode {
         /* Name used for creating a map for the functions in this
         EL expression, for communication to Generator.
         */
-        String mapName = null;
+        private String mapName = null;
+
         private final List<ELNode> list;
 
         public Nodes() {
-            list = new ArrayList<ELNode>();
+            list = new ArrayList<>();
         }
 
         public void add(ELNode en) {
@@ -186,6 +194,7 @@ public abstract class ELNode {
         /**
         * Visit the nodes in the list with the supplied visitor
         * @param v The visitor used
+        * @throws jakarta.servlet.jsp.JspException
         */
         public void visit(Visitor v) throws JspException {
             for (ELNode n: list) {
@@ -198,7 +207,7 @@ public abstract class ELNode {
         }
 
         public boolean isEmpty() {
-            return list.size() == 0;
+            return list.isEmpty();
         }
 
         /**

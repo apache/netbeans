@@ -45,27 +45,22 @@ public abstract class PageInfo {
 
     public static final String JSP_SERVLET_BASE = "javax.servlet.http.HttpServlet";
 
-    private static Comparator<TagFileInfo> TAG_FILE_INFO_COMPARATOR = new Comparator<TagFileInfo>() {
+    private static final Comparator<TagFileInfo> TAG_FILE_INFO_COMPARATOR
+            = (TagFileInfo o1, TagFileInfo o2) -> o1.getPath().compareTo(o2.getPath());
 
-        @Override
-        public int compare(TagFileInfo o1, TagFileInfo o2) {
-            return o1.getPath().compareTo(o2.getPath());
-        }
-    };
-    
-    private List<String> imports;
-    private List<String> dependants;
+    private final List<String> imports;
+    private final List<String> dependants;
 
 //    private BeanRepository beanRepository;
     private BeanData[] beans;
-    private Map<String, TagLibraryInfo> taglibsMap;
-    private Map<String, String> jspPrefixMapper;
-    private Map<String, LinkedList<String>> xmlPrefixMapper;
+    private final Map<String, TagLibraryInfo> taglibsMap;
+    private final Map<String, String> jspPrefixMapper;
+    private final Map<String, LinkedList<String>> xmlPrefixMapper;
     /** Approximate XML prefix mapper. Same as xmlPrefixMapper, but does not "forget" mappings (by popping them). */
-    private Map approxXmlPrefixMapper;
-    private String defaultLanguage = "java";
+    private final Map<String,String> approxXmlPrefixMapper;
+    private final String defaultLanguage = "java";
     private String language;
-    private String defaultExtends = JSP_SERVLET_BASE;
+    private final String defaultExtends = JSP_SERVLET_BASE;
     private String xtends;
     private String contentType = null;
     private String session;
@@ -90,17 +85,17 @@ public abstract class PageInfo {
     private String doctypeName = null;
     private String doctypePublic = null;
     private String doctypeSystem = null;
- 
+
     private boolean isJspPrefixHijacked;
 
     // Set of all element and attribute prefixes used in this translation unit
-    private Set<String> prefixes;
+    private final Set<String> prefixes;
 
     private boolean hasJspRoot = false;
     private List includePrelude;
     private List includeCoda;
-    private List<String> pluginDcls;		// Id's for tagplugin declarations
-    
+    private final List<String> pluginDcls;		// Id's for tagplugin declarations
+
     // Adding for obtaining informations about the parsed tag file
     private boolean isTagFile;
     private TagInfo tagInfo;
@@ -110,7 +105,7 @@ public abstract class PageInfo {
             Map<String, TagLibraryInfo> taglibsMap,
             Map<String, String> jspPrefixMapper,
             Map<String, LinkedList<String>> xmlPrefixMapper,
-            Map approxXmlPrefixMapper,
+            Map<String, String> approxXmlPrefixMapper,
             List<String> imports,
             List<String> dependants,
             List includePrelude,
@@ -135,6 +130,8 @@ public abstract class PageInfo {
     /**
      * Check if the plugin ID has been previously declared.  Make a not
      * that this Id is now declared.
+     *
+     * @param id
      * @return true if Id has been declared.
      */
     public boolean isPluginDeclared(String id) {
@@ -152,6 +149,7 @@ public abstract class PageInfo {
 	this.imports.add(imp);
     }
 
+    @SuppressWarnings("ReturnOfCollectionOrArrayField")
     public List<String> getImports() {
 	return imports;
     }
@@ -160,7 +158,8 @@ public abstract class PageInfo {
 	if (!dependants.contains(d))
             dependants.add(d);
     }
-     
+
+    @SuppressWarnings("ReturnOfCollectionOrArrayField")
     public List<String> getDependants() {
         return dependants;
     }
@@ -181,18 +180,22 @@ public abstract class PageInfo {
 	return scriptingInvalid;
     }
 
+    @SuppressWarnings("ReturnOfCollectionOrArrayField")
     public List getIncludePrelude() {
 	return includePrelude;
     }
 
-    public void setIncludePrelude(Vector prelude) {
+    @SuppressWarnings({"AssignmentToCollectionOrArrayFieldFromParameter", "UseOfObsoleteCollectionType"})
+    public void setIncludePrelude( Vector prelude) {
 	includePrelude = prelude;
     }
 
+    @SuppressWarnings("ReturnOfCollectionOrArrayField")
     public List getIncludeCoda() {
 	return includeCoda;
     }
 
+    @SuppressWarnings({"AssignmentToCollectionOrArrayFieldFromParameter", "UseOfObsoleteCollectionType"})
     public void setIncludeCoda(Vector coda) {
 	includeCoda = coda;
     }
@@ -249,7 +252,7 @@ public abstract class PageInfo {
 
     /*
      * Adds the given prefix to the set of prefixes of this translation unit.
-     * 
+     *
      * @param prefix The prefix to add
      */
     public void addPrefix(String prefix) {
@@ -328,21 +331,22 @@ public abstract class PageInfo {
     public void pushPrefixMapping(String prefix, String uri) {
 	LinkedList<String> stack = xmlPrefixMapper.get(prefix);
 	if (stack == null) {
-	    stack = new LinkedList<String>();
-        xmlPrefixMapper.put(prefix, stack);
+	    stack = new LinkedList<>();
+            xmlPrefixMapper.put(prefix, stack);
 	}
 	stack.addFirst(uri);
     }
 
     /*
-     * Removes the URI at the top of the stack of URIs to which the given 
-     * prefix is mapped. 
+     * Removes the URI at the top of the stack of URIs to which the given
+     * prefix is mapped.
      *
      * @param prefix The prefix whose stack of URIs is to be popped
      */
+    @SuppressWarnings("null")
     public void popPrefixMapping(String prefix) {
 	LinkedList<String> stack = xmlPrefixMapper.get(prefix);
-	if (stack == null || stack.size() == 0) {
+	if (stack == null || stack.isEmpty()) {
 	    // XXX throw new Exception("XXX");
 	}
 	stack.removeFirst();
@@ -357,10 +361,10 @@ public abstract class PageInfo {
      */
     public String getURI(String prefix) {
 
-	String uri = null;
+	String uri;
 
 	LinkedList<String> stack = xmlPrefixMapper.get(prefix);
-	if (stack == null || stack.size() == 0) {
+	if (stack == null || stack.isEmpty()) {
 	    uri = jspPrefixMapper.get(prefix);
 	} else {
 	    uri = stack.getFirst();
@@ -447,13 +451,13 @@ public abstract class PageInfo {
      * buffer
      */
     public void setBufferValue(String value) throws JspException {
-        if (value == null) 
+        if (value == null)
             return;
 
 	if ("none".equalsIgnoreCase(value))
 	    buffer = 0;
 	else {
-	    if (value == null || !value.endsWith("kb"))
+	    if (!value.endsWith("kb"))
 		throw new JspException(value);
 	    try {
 		Integer k = Integer.valueOf(value.substring(0, value.length()-2));
@@ -479,7 +483,7 @@ public abstract class PageInfo {
      * session
      */
     public void setSession(String value) throws JspException {
-        if (value == null) 
+        if (value == null)
             return;
 
 	if ("true".equalsIgnoreCase(value))
@@ -505,7 +509,7 @@ public abstract class PageInfo {
      * autoFlush
      */
     public void setAutoFlush(String value) throws JspException {
-        if (value == null) 
+        if (value == null)
             return;
 
 	if ("true".equalsIgnoreCase(value))
@@ -531,7 +535,7 @@ public abstract class PageInfo {
      * isThreadSafe
      */
     public void setIsThreadSafe(String value) throws JspException {
-        if (value == null) 
+        if (value == null)
             return;
 
 	if ("true".equalsIgnoreCase(value))
@@ -564,7 +568,7 @@ public abstract class PageInfo {
 	return info;
     }
 
-    
+
     /*
      * errorPage
      */
@@ -581,7 +585,7 @@ public abstract class PageInfo {
      * isErrorPage
      */
     public void setIsErrorPage(String value) throws JspException {
-        if (value == null) 
+        if (value == null)
             return;
 
 	if ("true".equalsIgnoreCase(value))
@@ -607,7 +611,7 @@ public abstract class PageInfo {
      * isELIgnored
      */
     public void setIsELIgnored(String value) throws JspException {
-        if (value == null) 
+        if (value == null)
             return;
 
 	if ("true".equalsIgnoreCase(value))
@@ -632,29 +636,35 @@ public abstract class PageInfo {
     public boolean isELIgnored() {
 	return isELIgnored;
     }
-    
+
     // added in NetBeans
-    
+
+    @SuppressWarnings("ReturnOfCollectionOrArrayField")
     public Map<String, TagLibraryInfo> getTagLibraries() {
         return taglibsMap;
     }
-    
+
+    @SuppressWarnings("ReturnOfCollectionOrArrayField")
     public Map<String, String> getJspPrefixMapper() {
         return jspPrefixMapper;
     }
-    
+
+    @SuppressWarnings("ReturnOfCollectionOrArrayField")
     public Map getXMLPrefixMapper() {
         return xmlPrefixMapper;
     }
-    
+
+    @SuppressWarnings("ReturnOfCollectionOrArrayField")
     public Map getApproxXmlPrefixMapper() {
         return approxXmlPrefixMapper;
     }
-    
+
+    @SuppressWarnings("ReturnOfCollectionOrArrayField")
     public BeanData[] getBeans() {
         return beans;
     }
 
+    @SuppressWarnings("AssignmentToCollectionOrArrayFieldFromParameter")
     public void setBeans(BeanData beans[]) {
         this.beans = beans;
     }
@@ -662,34 +672,33 @@ public abstract class PageInfo {
     public boolean isTagFile() {
         return this.isTagFile;
     }
-    
+
     public void setTagFile(boolean isTagFile) {
         this.isTagFile = isTagFile;
     }
-    
+
     public TagInfo getTagInfo() {
         return this.tagInfo;
     }
-    
+
     public void setTagInfo(TagInfo tagInfo) {
         this.tagInfo = tagInfo;
     }
-    
-    /** Returns the FunctionMapper for a particular prefix. 
+
+    /** Returns the FunctionMapper for a particular prefix.
      * @param currentPrefix relevant tag library prefix. If the expression to evaluate is
-     * inside an attribute value of a custom tag, then the prefix with which the tag's 
+     * inside an attribute value of a custom tag, then the prefix with which the tag's
      * tag library is declared, should be passed in. If the expression is plain
      * JSP text, null should be passed in.
      * @return FunctionMapper relevant to the given prefix.
      */
     //public abstract FunctionMapper getFunctionMapper(String currentPrefix);
-        
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        String nl = "\n"; // NOI18N
         String indent = "      ";  // NOI18N
-        String nlIndent = nl + indent;
-        
+
         sb.append("----- PageInfo -----\n");  // NOI18N
         sb.append(indent).append("imports:\n").append(collectionToString(imports, indent + "  "));  // NOI18N
         sb.append(indent).append("dependants:\n").append(collectionToString(dependants, indent + "  "));  // NOI18N
@@ -726,7 +735,7 @@ public abstract class PageInfo {
         }
         return sb.toString();
     }
-    
+
     private String collectionToString(Collection c, String indent) { // XXX Arrays.toString() can be sufficient
         StringBuilder sb = new StringBuilder();
         Iterator it = c.iterator();
@@ -735,7 +744,7 @@ public abstract class PageInfo {
         }
         return sb.toString();
     }
-    
+
     private String taglibsMapToString(Map<String, TagLibraryInfo> m, String indent) {
         StringBuilder sb = new StringBuilder();
         Iterator<String> it = new TreeSet<>(m.keySet()).iterator();
@@ -746,7 +755,7 @@ public abstract class PageInfo {
         }
         return sb.toString();
     }
-    
+
     public String tagLibraryInfoToString(TagLibraryInfo info, String indent) {
         StringBuilder sb = new StringBuilder();
         sb.append(indent).append("tlibversion : ").append(getFieldByReflection("tlibversion", info)).append('\n');  // NOI18N
@@ -755,29 +764,29 @@ public abstract class PageInfo {
         sb.append(indent).append("urn         : ").append(info.getReliableURN()).append('\n');  // NOI18N
         sb.append(indent).append("info        : ").append(info.getInfoString()).append('\n');  // NOI18N
         sb.append(indent).append("uri         : ").append(info.getURI()).append('\n');  // NOI18N
-        
+
         TagInfo tags[] = info.getTags();
         if (tags != null) {
             for (int i = 0; i < tags.length; i++)
                 sb.append(tagInfoToString(tags[i], indent + "  "));  // NOI18N
         }
-        
+
         TagFileInfo tagFiles[] = info.getTagFiles().clone();
         Arrays.sort(tagFiles, TAG_FILE_INFO_COMPARATOR);
         if (tagFiles != null) {
             for (int i = 0; i < tagFiles.length; i++)
                 sb.append(tagFileToString(tagFiles[i], indent + "  "));  // NOI18N
         }
-        
+
         FunctionInfo functions[] = info.getFunctions();
         if (functions != null) {
             for (int i = 0; i < functions.length; i++)
                 sb.append(functionInfoToString(functions[i], indent + "  "));  // NOI18N
         }
-        
+
         return sb.toString();
     }
-    
+
     public String tagInfoToString(TagInfo tag, String indent) {
         StringBuilder sb = new StringBuilder();
         if (tag != null) {
@@ -798,7 +807,7 @@ public abstract class PageInfo {
         }
         return sb.toString();
     }
-    
+
     public String functionInfoToString(FunctionInfo function, String indent) {
         StringBuilder sb = new StringBuilder();
         if (function != null) {
@@ -811,29 +820,26 @@ public abstract class PageInfo {
         }
         return sb.toString();
     }
-    
+
     public String tagFileToString(TagFileInfo tagFile, String indent) {
         StringBuilder sb = new StringBuilder();
         sb.append(indent).append("tagfile path : ").append(tagFile.getPath()).append('\n');  // NOI18N
         sb.append(tagInfoToString(tagFile.getTagInfo(), indent));
         return sb.toString();
     }
-    
+
     private Object getFieldByReflection(String fieldName, TagLibraryInfo info) {
         try {
             java.lang.reflect.Field f = TagLibraryInfo.class.getDeclaredField(fieldName);
             f.setAccessible(true);
             return f.get(info);
         }
-        catch (NoSuchFieldException e) {
-            Logger.getLogger("global").log(Level.INFO, null, e);
-        }
-        catch (IllegalAccessException e) {
+        catch (NoSuchFieldException | IllegalAccessException e) {
             Logger.getLogger("global").log(Level.INFO, null, e);
         }
         return null;
     }
-    
+
     private String beansToString(BeanData beans[], String indent) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < beans.length; i++) {
@@ -843,7 +849,7 @@ public abstract class PageInfo {
         }
         return sb.toString();
     }
-    
+
 //    private String scopeToString(int scope) {
 //        switch (scope) {
 //            case PageContext.PAGE_SCOPE        : return "PAGE";  // NOI18N
@@ -857,15 +863,21 @@ public abstract class PageInfo {
     /** Interface which describes data for beans used by this page. */
     public interface BeanData {
 
-        /** Identifier of the bean in the page (variable name). */
+        /**
+         * Identifier of the bean in the page (variable name).
+         * @return
+         */
         public String getId();
 
-        /** Returns the class name for this bean. */
+        /**
+         * Returns the class name for this bean.
+         * @return
+         */
         public String getClassName();
 
     } // interface BeanData
 
-    // helper methods for help implement toString() 
+    // helper methods for help implement toString()
     private static String mapToString(Map<String, String> m, String indent) {
         StringBuilder sb = new StringBuilder();
         Iterator<String> it = new TreeSet<>(m.keySet()).iterator();
@@ -875,5 +887,5 @@ public abstract class PageInfo {
         }
         return sb.toString();
     }
-    
+
 }

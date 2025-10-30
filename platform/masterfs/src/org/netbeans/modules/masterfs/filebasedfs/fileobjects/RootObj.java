@@ -19,8 +19,6 @@
 
 package org.netbeans.modules.masterfs.filebasedfs.fileobjects;
 
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
 import java.io.File;
 import org.netbeans.modules.masterfs.filebasedfs.utils.FSException;
 import org.openide.filesystems.*;
@@ -46,34 +44,42 @@ public final class RootObj<T extends FileObject> extends FileObject {
         this.realRoot = realRoot;
     }
 
+    @Override
     public final String getName() {
         return getRealRoot().getName();//NOI18N
     }
 
+    @Override
     public final String getExt() {
         return getRealRoot().getExt();//NOI18N
     }
 
+    @Override
     public final FileSystem getFileSystem() throws FileStateInvalidException {
         return getRealRoot().getFileSystem();
     }
 
+    @Override
     public final FileObject getParent() {
         return null;
     }
 
+    @Override
     public final boolean isFolder() {
         return true;
     }
 
+    @Override
     public final boolean isData() {
         return !isFolder();
     }
 
+    @Override
     public final Date lastModified() {
         return new Date(0);
     }
 
+    @Override
     public final boolean isRoot() {
         return true;
     }
@@ -84,20 +90,24 @@ public final class RootObj<T extends FileObject> extends FileObject {
     *
     * @return true if the file object is valid
     */
+    @Override
     public final boolean isValid() {
         return true;
     }
 
+    @Override
     public final void rename(final FileLock lock, final String name, final String ext) throws IOException {
         //throw new IOException(getPath());
         FSException.io("EXC_CannotRenameRoot", getFileSystem().getDisplayName()); // NOI18N        
     }
 
+    @Override
     public final void delete(final FileLock lock) throws IOException {
         //throw new IOException(getPath());
         FSException.io("EXC_CannotDeleteRoot", getFileSystem().getDisplayName()); // NOI18N        
     }
 
+    @Override
     public final Object getAttribute(final String attrName) {        
         if (attrName.equals("SupportsRefreshForNoPublicAPI")) {
             return true;
@@ -108,6 +118,7 @@ public final class RootObj<T extends FileObject> extends FileObject {
         return getRealRoot().getAttribute(attrName);
     }
 
+    @Override
     public final void setAttribute(final String attrName, final Object value) throws IOException {
         if ("request_for_refreshing_files_be_aware_this_is_not_public_api".equals(attrName) && (value instanceof File[])) {//NOI18N
             invokeRefreshFor(null, (File[])value);
@@ -125,7 +136,7 @@ public final class RootObj<T extends FileObject> extends FileObject {
             File file = files[i];
             files[i] = FileUtil.normalizeFile(file);
         }
-        Map<FileObjectFactory, List<File>> files2Factory = new HashMap<FileObjectFactory, List<File>>();
+        Map<FileObjectFactory, List<File>> files2Factory = new HashMap<>();
         Map<File, ? extends FileObjectFactory> roots2Factory = FileBasedFileSystem.factories();
         Arrays.sort(files);
         for (File file : files) {
@@ -137,7 +148,7 @@ public final class RootObj<T extends FileObject> extends FileObject {
             if (factory != null) {
                 List<File> lf = files2Factory.get(factory);
                 if (lf == null) {
-                    lf = new ArrayList<File>();
+                    lf = new ArrayList<>();
                     files2Factory.put(factory, lf);
                 } else {
                     File tmp = file;
@@ -175,7 +186,7 @@ public final class RootObj<T extends FileObject> extends FileObject {
                     }
                 }
             } else if (lf.size() > 1) {
-                final File[] arr = lf.toArray(new File[0]);
+                final File[] arr = lf.toArray(File[]::new);
                 Arrays.sort(arr);
                 factory.refreshFor(slow, ignoreRecursiveListeners, arr);
             }
@@ -183,43 +194,53 @@ public final class RootObj<T extends FileObject> extends FileObject {
     }
     
 
+    @Override
     public final Enumeration<String> getAttributes() {
         return getRealRoot().getAttributes();
     }
 
+    @Override
     public final void addFileChangeListener(final FileChangeListener fcl) {
         getRealRoot().addFileChangeListener(fcl);
     }
 
+    @Override
     public final void removeFileChangeListener(final FileChangeListener fcl) {
         getRealRoot().removeFileChangeListener(fcl);
     }
 
+    @Override
     public final long getSize() {
         return 0;
     }
 
+    @Override
     public final InputStream getInputStream() throws FileNotFoundException {
         return getRealRoot().getInputStream();
     }
 
+    @Override
     public final OutputStream getOutputStream(final FileLock lock) throws IOException {
         return getRealRoot().getOutputStream(lock);
     }
 
+    @Override
     public final FileLock lock() throws IOException {
         return getRealRoot().lock();
     }
 
     @Deprecated
+    @Override
     public final void setImportant(final boolean b) {
         getRealRoot().setImportant(b); 
     }
 
+    @Override
     public final FileObject[] getChildren() {
         return getRealRoot().getChildren();
     }
 
+    @Override
     public final FileObject getFileObject(final String name, final String ext) {
         return getRealRoot().getFileObject(name, ext);
     }
@@ -229,15 +250,18 @@ public final class RootObj<T extends FileObject> extends FileObject {
         return getRealRoot().getFileObject(relativePath);
     }
 
+    @Override
     public final FileObject createFolder(final String name) throws IOException {
         return getRealRoot().createFolder(name);
     }
 
+    @Override
     public final FileObject createData(final String name, final String ext) throws IOException {
         return getRealRoot().createData(name, ext);
     }
 
     @Deprecated
+    @Override
     public final boolean isReadOnly() {
         return getRealRoot().isReadOnly();
     }

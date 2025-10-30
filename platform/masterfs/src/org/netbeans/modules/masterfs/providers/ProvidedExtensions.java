@@ -163,11 +163,17 @@ public class ProvidedExtensions implements InterceptionListener {
     }
     
         
+    @Override
     public void createSuccess(FileObject fo) {}    
+    @Override
     public void createFailure(FileObject parent, String name, boolean isFolder) {}   
+    @Override
     public void beforeCreate(FileObject parent, String name, boolean isFolder) {}    
+    @Override
     public void deleteSuccess(FileObject fo) {}    
+    @Override
     public void deleteFailure(FileObject fo) {}
+    @Override
     public void beforeDelete(FileObject fo) {}
 
     /**

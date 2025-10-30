@@ -28,7 +28,7 @@ import java.util.WeakHashMap;
  * @author Radek Matous
  */
 public class FolderName extends FileName {
-    private static Map<FolderName,File> fileCache = new WeakHashMap<FolderName,File>();
+    private static Map<FolderName,File> fileCache = new WeakHashMap<>();
 
 
     @SuppressWarnings("LeakingThisInConstructor")
@@ -64,9 +64,8 @@ public class FolderName extends FileName {
 
     static void freeCaches() {
         synchronized (FolderName.class) {
-            FolderName.fileCache = new WeakHashMap<FolderName,File>();
+            FolderName.fileCache = new WeakHashMap<>();
         }
-
     }
 
     public @Override boolean isFile() {

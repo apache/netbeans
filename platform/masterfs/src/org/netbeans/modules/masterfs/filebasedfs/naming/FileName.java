@@ -55,7 +55,7 @@ public class FileName implements FileNaming {
 
     @Override
     public FileNaming rename(String name, ProvidedExtensions.IOHandler handler) throws IOException {
-        boolean success = false;
+        boolean success;
         final File f = getFile();
 
         if (FileChangedManager.getInstance().exists(f)) {
@@ -98,8 +98,7 @@ public class FileName implements FileNaming {
     }
 
     public final @Override boolean equals(final Object obj) {
-        if (obj instanceof FileName ) {
-            FileName fn = (FileName)obj;
+        if (obj instanceof FileName fn) {
             if (obj.hashCode() != hashCode()) {
                 return false;
             }
@@ -134,27 +133,27 @@ public class FileName implements FileNaming {
     void updateCase(String name) {
         assert String.CASE_INSENSITIVE_ORDER.compare(name, this.name.toString()) == 0: "Only case can be changed. Was: " + this.name + " name: " + name;
         final CharSequence value = CharSequences.create(name);
-        if (this.currentName instanceof Creation) {
-            ((Creation)this.currentName).delegate = value;
+        if (this.currentName instanceof Creation creation) {
+            creation.delegate = value;
         } else {
             this.currentName = value;
         }
     }
 
     public void dumpCreation(StringBuilder sb) {
-        if (this.currentName instanceof Creation) {
+        if (this.currentName instanceof Creation creation) {
             StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            ((Creation)this.currentName).printStackTrace(pw);
-            pw.close();
+            try (PrintWriter pw = new PrintWriter(sw)) {
+                creation.printStackTrace(pw);
+            }
             sb.append(sw.toString());
         }
     }
 
     final void recordCleanup(String msg) {
         Throwable ex = null;
-        if (this.currentName instanceof Creation) {
-            ex = ((Creation)this.currentName);
+        if (this.currentName instanceof Creation creation) {
+            ex = creation;
         }
         if (ex != null) {
             while (ex.getCause() != null) {

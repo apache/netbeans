@@ -38,14 +38,14 @@ public final class NamingFactory {
         if (BaseUtilities.isWindows() && file.getPath().length() == 2 && file.getPath().charAt(1) == ':') {
             file = new File(file.getPath() + File.separator);
         }
-        final Deque<FileInfo> queue = new ArrayDeque<FileInfo>();
+        final Deque<FileInfo> queue = new ArrayDeque<>();
         File current = file;
         while (current != null) {
             queue.addFirst(new FileInfo(current));
             current = current.getParentFile();
         }
 
-        List<FileInfo> checkDirs = new ArrayList<FileInfo>();
+        List<FileInfo> checkDirs = new ArrayList<>();
         FileNaming fileName = null;
         final List<FileInfo> list = new ArrayList<>(queue);
         for (int i = 0; i < list.size(); ) {
@@ -97,7 +97,7 @@ public final class NamingFactory {
             boolean ignoreCache, boolean canonicalName) {
 
         FileInfo info = new FileInfo(file);
-        List<FileInfo> checkDirs = new ArrayList<FileInfo>();
+        List<FileInfo> checkDirs = new ArrayList<>();
         for (;;) {
             for (FileInfo fileInfo : checkDirs) {
                 fileInfo.isDirectory();
@@ -134,7 +134,7 @@ public final class NamingFactory {
      * {@code fNaming} (before renaming).
      */
     public static FileNaming[] rename (FileNaming fNaming, String newName, ProvidedExtensions.IOHandler handler) throws IOException {
-        final Collection<FileNaming> all = new LinkedHashSet<FileNaming>();
+        final Collection<FileNaming> all = new LinkedHashSet<>();
         
         FileNaming newNaming = fNaming.rename(newName, handler);
         boolean retVal = newNaming != fNaming;
@@ -161,7 +161,7 @@ public final class NamingFactory {
     }
 
     public static Collection<FileNaming> findSubTree(FileNaming root) {
-        final Collection<FileNaming> all = new LinkedHashSet<FileNaming>();
+        final Collection<FileNaming> all = new LinkedHashSet<>();
         synchronized (NamingFactory.class) {
             collectSubnames(root, all);
         }
@@ -170,12 +170,12 @@ public final class NamingFactory {
     
     private static void collectSubnames(FileNaming root, Collection<FileNaming> all) {
         assert Thread.holdsLock(NamingFactory.class);
-        Collection<FileNaming> not = new HashSet<FileNaming>(names.length);
+        Collection<FileNaming> not = new HashSet<>((int) Math.ceil(names.length / 0.75));
         for (int i = 0; i < names.length; i++) {
             NameRef value = names[i];
             while (value != null) {
                 FileNaming fN = value.get();
-                Deque<FileNaming> above = new ArrayDeque<FileNaming>();
+                Deque<FileNaming> above = new ArrayDeque<>();
                 for (FileNaming up = fN;;) {
                     if (up == null || not.contains(up)) {
                         not.addAll(above);
@@ -305,8 +305,8 @@ public final class NamingFactory {
                 for (;;) {
                     if (nr.next() == ref) {
                         FileNaming orig = ref.get();
-                        if (orig instanceof FileName) {
-                            ((FileName)orig).recordCleanup(
+                        if (orig instanceof FileName fileName) {
+                            fileName.recordCleanup(
                                 "cachedElement: " + cachedElement + // NOI18N 
                                 " ref: " + orig + // NOI18N
                                 " file: " + file + // NOI18N
@@ -349,25 +349,20 @@ public final class NamingFactory {
     private static FileNaming createFileNaming(
         final FileInfo f, FileNaming.ID theKey, final FileNaming parentName, FileType type
     ) {
-        FileName retVal = null;
         //TODO: check all tests for isFile & isDirectory
         if (type == FileType.unknown) {
             if (f.isDirectory()) {
                 type = FileType.directory;
             } else {
                 //important for resolving  named pipes
-                 type = FileType.file;
+                type = FileType.file;
             }            
         }
-        switch(type) {
-            case file:
-                retVal = new FileName(parentName, f.getFile(), theKey);
-                break;
-            case directory:
-                retVal = new FolderName(parentName, f.getFile(), theKey);
-                break;
-        }
-        return retVal;
+        return switch(type) {
+            case file -> new FileName(parentName, f.getFile(), theKey);
+            case directory -> new FolderName(parentName, f.getFile(), theKey);
+            default -> null;
+        };
     }
     
     public static String dumpId(FileNaming.ID id) {
@@ -419,8 +414,8 @@ public final class NamingFactory {
            .append(Integer.toHexString(fn.hashCode())).append("@")
            .append(Integer.toHexString(System.identityHashCode(fn)))
            .append("\n");
-        if (fn instanceof FileName) {
-            ((FileName)fn).dumpCreation(sb);
+        if (fn instanceof FileName fileName) {
+            fileName.dumpCreation(sb);
         }
     }
     

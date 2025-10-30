@@ -46,9 +46,9 @@ public interface FileNaming {
     
     
     /// FileObject ID as identity object.
-    /// FileName and FileInfo objects may hold a strong reference to it, but
-    /// don't let it escape, since FileObjectFactory uses it in a WeakHashMap to track
-    /// the BaseFileObj lifecycle.
+    /// FileName and FileInfo objects may hold a strong reference to it.
+    /// Don't let it escape, since FileObjectFactory uses it as WeakHashMap key to track
+    /// the lifecycle of BaseFileObj instances.
     public record ID(int value) {}
     
 }

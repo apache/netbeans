@@ -56,7 +56,7 @@ public class ChildrenSupport {
     }
 
     public synchronized Set<FileNaming> getCachedChildren() {
-        return new HashSet<FileNaming>(getExisting(false));
+        return new HashSet<>(getExisting(false));
     }
 
     public synchronized Set<FileNaming> getChildren(final FileNaming folderName, final boolean rescan, Runnable[] task) {
@@ -119,12 +119,12 @@ public class ChildrenSupport {
 
 
     public synchronized Map<FileNaming, Integer> refresh(final FileNaming folderName, Runnable[] task) {
-        Map<FileNaming, Integer> retVal = new HashMap<FileNaming, Integer>();
-        Set<FileNaming> e = new HashSet<FileNaming>(getExisting(false));
-        Set<FileNaming> nE = new HashSet<FileNaming>(getNotExisting(false));
+        Map<FileNaming, Integer> retVal = new HashMap<>();
+        Set<FileNaming> e = new HashSet<>(getExisting(false));
+        Set<FileNaming> nE = new HashSet<>(getNotExisting(false));
 
         if (isStatus(ChildrenSupport.SOME_CHILDREN_CACHED)) {
-            Set<FileNaming> existingToCheck = new HashSet<FileNaming>(e);
+            Set<FileNaming> existingToCheck = new HashSet<>(e);
             for (FileNaming fnToCheck : existingToCheck) {
                 FileNaming fnRescanned = rescanChild(folderName, fnToCheck.getName(), true, true);
                 if (fnRescanned == null) {
@@ -132,7 +132,7 @@ public class ChildrenSupport {
                 }
             }
 
-            Set<FileNaming> notExistingToCheck = new HashSet<FileNaming>(nE);
+            Set<FileNaming> notExistingToCheck = new HashSet<>(nE);
             for (FileNaming fnToCheck : notExistingToCheck) {
                 assert fnToCheck != null;
                 FileNaming fnRescanned = rescanChild(folderName, fnToCheck.getName(), true, false);
@@ -230,7 +230,7 @@ public class ChildrenSupport {
     }
 
     private Map<FileNaming, Integer> rescanChildren(final FileNaming folderName, final boolean ignoreCache, Runnable[] task) {
-        final Map<FileNaming, Integer> retval = new IdentityHashMap<FileNaming, Integer>();
+        final Map<FileNaming, Integer> retval = new IdentityHashMap<>();
 
         final File folder = folderName.getFile();
         assert folderName.getFile().getAbsolutePath().equals(folderName.toString());
@@ -242,7 +242,7 @@ public class ChildrenSupport {
             public void run() {
                 final File[] children = folder.listFiles();
                 if (children != null) {
-                    newChildren = new LinkedHashSet<FileNaming>();
+                    newChildren = new LinkedHashSet<>();
                     for (int i = 0; i < children.length; i++) {
                         final FileInfo fInfo = new FileInfo(children[i], 1);
                         if (fInfo.isConvertibleToFileObject()) {
@@ -258,8 +258,8 @@ public class ChildrenSupport {
             }
         }
         IOJob job;
-        if (task[0] instanceof IOJob) {
-            job = (IOJob)task[0];
+        if (task[0] instanceof IOJob iOJob) {
+            job = iOJob;
         } else {
             task[0] = new IOJob();
             return null;
@@ -270,7 +270,7 @@ public class ChildrenSupport {
                 // folder.listFiles() failed with I/O exception - do not remove children
                 return retval;
             }
-            job.newChildren = new LinkedHashSet<FileNaming>();
+            job.newChildren = new LinkedHashSet<>();
         }
 
         Set<FileNaming> deleted = deepMinus(getExisting(false), job.newChildren);
@@ -289,7 +289,7 @@ public class ChildrenSupport {
     }
 
     private static Set<FileNaming> deepMinus(Set<FileNaming> base, Set<FileNaming> minus) {
-        HashMap<FileNaming, FileNaming> detract = new HashMap<FileNaming, FileNaming>(base.size() * 2);
+        HashMap<FileNaming, FileNaming> detract = new HashMap<>(base.size() * 2);
         for (FileNaming fn : base) {
             detract.put(fn, fn);
         }
@@ -310,23 +310,29 @@ public class ChildrenSupport {
         class FakeNaming implements FileNaming {
             public FileNaming lastEqual;
 
+            @Override
             public  String getName() {
                 return childName;
             }
+            @Override
             public FileNaming getParent() {
                 return folder;
             }
+            @Override
             public boolean isRoot() {
                 return false;
             }
 
+            @Override
             public File getFile() {
                 return f;
             }
 
+            @Override
             public FileNaming.ID getId() {
                 return id;
             }
+            @Override
             public FileNaming rename(String name, ProvidedExtensions.IOHandler h) {
                 // not implemented, as it will not be called
                 throw new IllegalStateException();
@@ -336,8 +342,8 @@ public class ChildrenSupport {
             public boolean equals(Object obj) {
                 if (hashCode() == obj.hashCode() && getName().equals(((FileNaming)obj).getName())) {
                     assert lastEqual == null : "Just one can be there"; // NOI18N
-                    if (obj instanceof FileNaming) {
-                        lastEqual = (FileNaming)obj;
+                    if (obj instanceof FileNaming fileNaming) {
+                        lastEqual = fileNaming;
                     }
                     return true;
                 }
@@ -349,10 +355,12 @@ public class ChildrenSupport {
                 return id.value();
             }
 
+            @Override
             public boolean isFile() {
                 return this.getFile().isFile();
             }
 
+            @Override
             public boolean isDirectory() {
                 return !isFile();
             }
@@ -375,7 +383,7 @@ public class ChildrenSupport {
 
     private synchronized Set<FileNaming> getExisting(boolean init) {
         if (init && existingChildren == null) {
-            existingChildren = new HashSet<FileNaming>();
+            existingChildren = new HashSet<>();
         }
         return existingChildren != null ? existingChildren : Collections.<FileNaming>emptySet();
     }
@@ -386,7 +394,7 @@ public class ChildrenSupport {
 
     private synchronized Set<FileNaming> getNotExisting(boolean init) {
         if (init && notExistingChildren == null) {
-            notExistingChildren = new HashSet<FileNaming>();
+            notExistingChildren = new HashSet<>();
         }
         return notExistingChildren != null ? notExistingChildren : Collections.<FileNaming>emptySet();
     }

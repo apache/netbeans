@@ -201,6 +201,10 @@ jobs:
 
       #   Build the native binary from C source code
       #
+      #   Use Windows 10 SDK 10.0.20348.0 since build fails with Windows 11 SDK 10.0.22000.0
+      #   https://docs.microsoft.com/en-us/cpp/build/building-on-the-command-line?view=msvc-170#vcvarsall-syntax
+      #   https://bugs.python.org/issue45220
+      #
       - name: Build native lib (64-bit)
         run: |
            echo on
@@ -209,7 +213,7 @@ jobs:
            set OUTPUTDIR=../../release/lib/deployed/jdk16/windows-amd64
            del /q /s "%OUTPUTDIR%"
            rem  set up a Visual Studio command prompt for 64-bit development
-           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" 10.0.20348.0
            rem
            rem
            call buildnative-windows64-16.bat
@@ -227,7 +231,7 @@ jobs:
            set OUTPUTDIR=../../release/lib/deployed/jdk16/windows
            del /q /s "%OUTPUTDIR%"
            rem   set up a Visual Studio command prompt for 32-bit development
-           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars32.bat"
+           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars32.bat" 10.0.20348.0
            rem
            rem
            call buildnative-windows-16.bat

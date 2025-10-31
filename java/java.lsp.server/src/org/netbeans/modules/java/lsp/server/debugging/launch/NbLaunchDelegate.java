@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -60,6 +61,8 @@ import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.queries.UnitTestForSourceQuery;
+import org.netbeans.api.java.source.ClasspathInfo;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -84,6 +87,7 @@ import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.netbeans.spi.project.SingleMethod;
 
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.BaseUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -114,6 +118,7 @@ public abstract class NbLaunchDelegate {
 
     private final RequestProcessor requestProcessor = new RequestProcessor(NbLaunchDelegate.class);
     private final Map<DebugAdapterContext, DebuggerManagerListener> debuggerListeners = new ConcurrentHashMap<>();
+    private final static String JAVA_FILE_EXT = ".java";
 
     public abstract void preLaunch(Map<String, Object> launchArguments, DebugAdapterContext context);
 
@@ -570,8 +575,20 @@ public abstract class NbLaunchDelegate {
         } else if (launchType == LaunchType.RUN_TEST) {
             mainSource = false;
         } else {
-            FileObject fileRoot = sourceCP != null ? sourceCP.findOwnerRoot(toRun) : null;
-            mainSource = fileRoot == null || UnitTestForSourceQuery.findSources(fileRoot).length == 0;
+            mainSource = true;
+            if (sourceCP != null) {
+                FileObject root = sourceCP.findOwnerRoot(toRun);
+                if (root != null) {
+                    if (UnitTestForSourceQuery.findSources(root).length > 0) {
+                        String relativePath = FileUtil.getRelativePath(root, toRun);
+                        if (relativePath != null && relativePath.toLowerCase(Locale.ENGLISH).endsWith(JAVA_FILE_EXT)) {
+                            String className = relativePath.substring(0, relativePath.length() - JAVA_FILE_EXT.length()).replace('/', '.');
+                            ClasspathInfo cpi = ClasspathInfo.create(toRun);
+                            mainSource = SourceUtils.isMainClass(className, cpi, true);
+                        }
+                    }
+                }
+            }
         }
         ActionProvider provider = null;
         String command = null;

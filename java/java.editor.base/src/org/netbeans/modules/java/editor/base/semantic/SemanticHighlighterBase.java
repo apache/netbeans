@@ -25,6 +25,7 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExportsTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -1050,6 +1051,21 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
 
             addParameterInlineHint(node);
             return super.visitLiteral(node, p);
+        }
+
+        @Override
+        public Void visitImport(ImportTree node, Void p) {
+            if (node.isModule()) {
+                int startPos =
+                        (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), node);
+
+                tl.moveToOffset(startPos);
+                Token t = firstIdentifierToken("module");// NOI18N
+                if (tl != null) {
+                    contextKeywords.add(t);
+                }
+            }
+            return super.visitImport(node, p);
         }
 
         @Override

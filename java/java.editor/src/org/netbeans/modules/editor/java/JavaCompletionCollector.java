@@ -373,6 +373,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                     .kind(Completion.Kind.Folder)
                     .sortText(String.format("%04d%s", 1950, moduleName))
                     .insertTextFormat(Completion.TextFormat.PlainText)
+                    .textEdit(new TextEdit(substitutionOffset, offset, moduleName))
                     .build();
         }
 

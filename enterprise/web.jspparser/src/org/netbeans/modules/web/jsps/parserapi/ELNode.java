@@ -22,8 +22,6 @@ package org.netbeans.modules.web.jsps.parserapi;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import javax.servlet.jsp.tagext.FunctionInfo;
-import javax.servlet.jsp.JspException;
 
 /**
  * This class defines internal representation for an EL Expression
@@ -34,7 +32,7 @@ import javax.servlet.jsp.JspException;
 
 public abstract class ELNode {
 
-    public abstract void accept(Visitor v) throws JspException;
+    public abstract void accept(Visitor v);
 
     /**
      * Child classes
@@ -53,7 +51,7 @@ public abstract class ELNode {
         }
 
         @Override
-        public void accept(Visitor v) throws JspException {
+        public void accept(Visitor v) {
             v.visit(this);
         }
 
@@ -74,7 +72,7 @@ public abstract class ELNode {
         }
 
         @Override
-	public void accept(Visitor v) throws JspException {
+	public void accept(Visitor v) {
             v.visit(this);
 	}
 
@@ -95,7 +93,7 @@ public abstract class ELNode {
         }
 
         @Override
-	public void accept(Visitor v) throws JspException {
+	public void accept(Visitor v) {
             v.visit(this);
 	}
 
@@ -113,7 +111,6 @@ public abstract class ELNode {
         private final String prefix;
         private final String name;
         private String uri;
-        private FunctionInfo functionInfo;
         private String methodName;
         private String[] parameters;
 
@@ -124,7 +121,7 @@ public abstract class ELNode {
         }
 
         @Override
-        public void accept(Visitor v) throws JspException {
+        public void accept(Visitor v) {
             v.visit(this);
         }
 
@@ -142,14 +139,6 @@ public abstract class ELNode {
 
         public String getUri() {
             return uri;
-        }
-
-        public void setFunctionInfo(FunctionInfo f) {
-            this.functionInfo = f;
-        }
-
-        public FunctionInfo getFunctionInfo() {
-            return functionInfo;
         }
 
         public void setMethodName(String methodName) {
@@ -194,9 +183,8 @@ public abstract class ELNode {
         /**
         * Visit the nodes in the list with the supplied visitor
         * @param v The visitor used
-        * @throws jakarta.servlet.jsp.JspException
         */
-        public void visit(Visitor v) throws JspException {
+        public void visit(Visitor v) {
             for (ELNode n: list) {
                 n.accept(v);
             }
@@ -235,17 +223,17 @@ public abstract class ELNode {
 
     public static class Visitor {
 
-        public void visit(Root n) throws JspException {
+        public void visit(Root n) {
             n.getExpression().visit(this);
         }
 
-        public void visit(Function n) throws JspException {
+        public void visit(Function n) {
         }
 
-        public void visit(Text n) throws JspException {
+        public void visit(Text n) {
         }
 
-        public void visit(ELText n) throws JspException {
+        public void visit(ELText n) {
         }
     }
 }

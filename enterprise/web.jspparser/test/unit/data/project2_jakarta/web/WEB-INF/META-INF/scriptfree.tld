@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE taglib
+        PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+        "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_2.dtd">
+<taglib>
+  <tlib-version>1.0</tlib-version>
+  <jsp-version>1.2</jsp-version>
+  <short-name>scriptfree</short-name>
+  <uri>http://jakarta.apache.org/taglibs/standard/scriptfree</uri>
+  <description>
+    Validates JSP pages to prohibit use of scripting elements.
+  </description>
+
+  <validator>
+    <validator-class>
+	javax.servlet.jsp.jstl.tlv.ScriptFreeTLV
+    </validator-class>
+    <init-param>
+      <param-name>allowDeclarations</param-name>
+      <param-value>false</param-value>
+      <description>
+        Controls whether or not declarations are considered valid.
+      </description>
+    </init-param>
+    <init-param>
+      <param-name>allowScriptlets</param-name>
+      <param-value>false</param-value>
+      <description>
+        Controls whether or not scriptlets are considered valid.
+      </description>
+    </init-param>
+    <init-param>
+      <param-name>allowExpressions</param-name>
+      <param-value>false</param-value>
+      <description>
+        Controls whether or not top-level expressions are considered valid.
+      </description>
+    </init-param>
+    <init-param>
+      <param-name>allowRTExpressions</param-name>
+      <param-value>false</param-value>
+      <description>
+        Controls whether or not expressions used to supply request-time
+        attribute values are considered valid.
+      </description>
+    </init-param>
+    <description>
+      Validates prohibitions against scripting elements.
+    </description>
+  </validator>
+
+  <!-- Every TLD needs at least one 'tag' element.  We happily oblige. -->
+
+  <tag>
+    <name>noop</name>
+    <tag-class>javax.servlet.jsp.tagext.TagSupport</tag-class>
+    <body-content>empty</body-content>
+    <description>Does nothing.</description>
+  </tag>
+</taglib>

@@ -24,7 +24,7 @@ import java.beans.PropertyChangeSupport;
 import java.util.Map;
 import java.util.Iterator;
 
-import javax.servlet.jsp.tagext.TagLibraryInfo;
+import org.netbeans.modules.web.jsps.parserapi.TagLibraryInfo;
 
 /** Holds data relevant to the JSP coloring for one JSP page. The main purposes
  * of this class are

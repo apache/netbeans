@@ -25,7 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.jsp.tagext.PageData;
+import jakarta.servlet.jsp.tagext.PageData;
 
 import org.apache.jasper.JasperException;
 

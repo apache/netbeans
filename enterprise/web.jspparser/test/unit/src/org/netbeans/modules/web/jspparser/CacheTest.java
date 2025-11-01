@@ -26,14 +26,13 @@ import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import javax.servlet.jsp.tagext.TagLibraryInfo;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.jsps.parserapi.JspParserAPI;
 import org.netbeans.modules.web.jsps.parserapi.JspParserAPI.ParseResult;
 import org.netbeans.modules.web.jsps.parserapi.JspParserFactory;
+import org.netbeans.modules.web.jsps.parserapi.TagLibraryInfo;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
@@ -85,10 +84,10 @@ public class CacheTest extends NbTestCase {
         WebModule webModule = TestUtil.createWebModule(jspFo.getParent());
         jspParser.analyzePage(jspFo, webModule, JspParserAPI.ERROR_IGNORE);
 
-        Reference<WebAppParseProxy> proxy = new WeakReference<WebAppParseProxy>(jspParser.parseSupports.get(webModule));
+        Reference<WebAppParseProxy> proxy = new WeakReference<>(jspParser.parseSupports.get(webModule));
         assertNotNull("WebModule should be cached", proxy.get());
 
-        Reference<WebModule> wmRef = new WeakReference<WebModule>(webModule);
+        Reference<WebModule> wmRef = new WeakReference<>(webModule);
         webModule = null;
         assertGC("web module should be garbage collected", wmRef);
         jspParser.parseSupports.size();
@@ -119,14 +118,14 @@ public class CacheTest extends NbTestCase {
         WebModule webModule = TestUtil.getWebModule(jspFo);
 
         ParseResult result = jspParser.analyzePage(jspFo, webModule, JspParserAPI.ERROR_IGNORE);
-        Collection<TagLibraryInfo> tagLibs1 = result.getPageInfo().getTaglibs();
+        Collection<TagLibraryInfo> tagLibs1 = result.getPageInfo().getTagLibraries().values();
 
         jspFo = TestUtil.getProjectFile(this, "project2", "/web/basic.jspx");
         result = jspParser.analyzePage(jspFo, webModule, JspParserAPI.ERROR_IGNORE);
-        Collection<TagLibraryInfo> tagLibs2 = result.getPageInfo().getTaglibs();
+        Collection<TagLibraryInfo> tagLibs2 = result.getPageInfo().getTagLibraries().values();
 
-        assertTrue(tagLibs1.size() > 0);
-        assertTrue(tagLibs2.size() > 0);
+        assertTrue(!tagLibs1.isEmpty());
+        assertTrue(!tagLibs2.isEmpty());
         assertTrue(tagLibs1.size() == tagLibs2.size());
 
         Iterator<TagLibraryInfo> iter1 = tagLibs1.iterator();

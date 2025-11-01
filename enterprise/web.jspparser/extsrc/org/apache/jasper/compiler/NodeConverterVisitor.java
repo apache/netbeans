@@ -23,6 +23,7 @@ import org.apache.jasper.JasperException;
 
 import org.xml.sax.Attributes;
 import java.util.*;
+import jakarta.servlet.jsp.tagext.TagAttributeInfo;
 
 
 // Note: this needs to live in the org.apache.jasper.compiler package.
@@ -288,34 +289,40 @@ class NodeConverterVisitor extends Node.Visitor {
 
     @Override
     public void visit(Node.CustomTag n) throws JasperException {
-	org.netbeans.modules.web.jsps.parserapi.Node.CustomTag cn;
+        org.netbeans.modules.web.jsps.parserapi.Node.CustomTag cn;
         if (n.getTagFileInfo() == null) {
             // no tag file
             cn = new org.netbeans.modules.web.jsps.parserapi.Node.CustomTag(n.getQName(),
-                                                                            n.getPrefix(),
-                                                                            n.getLocalName(),
-                                                                            n.getURI(),
-                                                                            n.getAttributes(),
-                                                                            convertMark(n.getStart()),
-                                                                            parentNode,
-                                                                            n.getTagInfo(),
-                                                                            n.getTagHandlerClass()
+                    n.getPrefix(),
+                    n.getLocalName(),
+                    n.getURI(),
+                    n.getAttributes(),
+                    convertMark(n.getStart()),
+                    parentNode,
+                    n.getTagHandlerClass()
             );
-        }
-        else {
+        } else {
             // we do have a tag file
+            Set<String> fragmentAttributes = new HashSet<>();
+            for (TagAttributeInfo tai : n.getTagFileInfo().getTagInfo().getAttributes()) {
+                if (tai.isFragment()) {
+                    fragmentAttributes.add(tai.getName());
+                }
+            }
             cn = new org.netbeans.modules.web.jsps.parserapi.Node.CustomTag(n.getQName(),
-                                                                            n.getPrefix(),
-                                                                            n.getLocalName(),
-                                                                            n.getURI(),
-                                                                            n.getAttributes(),
-                                                                            convertMark(n.getStart()),
-                                                                            parentNode,
-                                                                            n.getTagFileInfo()
+                    n.getPrefix(),
+                    n.getLocalName(),
+                    n.getURI(),
+                    n.getAttributes(),
+                    convertMark(n.getStart()),
+                    parentNode,
+                    true,
+                    n.getTagFileInfo().getTagInfo().hasDynamicAttributes(),
+                    fragmentAttributes
             );
         }
-	convertBody(n, cn);
-	convertedNodeList.add(cn);
+        convertBody(n, cn);
+        convertedNodeList.add(cn);
     }
 
     @Override

@@ -1,16 +1,19 @@
 #Signature file v4.1
-#Version 3.59
+#Version 3.60
 
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -54,7 +57,7 @@ intf java.util.EventListener
 meth public abstract void stateChanged(javax.swing.event.ChangeEvent)
 
 CLSS public junit.framework.Assert
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons protected init()
 meth public static java.lang.String format(java.lang.String,java.lang.Object,java.lang.Object)
 meth public static void assertEquals(boolean,boolean)
@@ -322,7 +325,7 @@ supr java.lang.Object
 
 CLSS public org.netbeans.jellytools.EditorWindowOperator
 cons public init()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static boolean jumpLeft()
 meth public static org.netbeans.jellytools.EditorOperator getEditor()
 meth public static org.netbeans.jellytools.EditorOperator getEditor(int)
@@ -963,15 +966,15 @@ cons public init(java.lang.String,java.lang.String,java.lang.String)
 cons public init(java.lang.String,java.lang.String,java.lang.String,javax.swing.KeyStroke)
 cons public init(java.lang.String,java.lang.String,java.lang.String,javax.swing.KeyStroke[])
 cons public init(java.lang.String,java.lang.String,java.lang.String,org.netbeans.jellytools.actions.Action$Shortcut)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String,java.lang.String,java.lang.String,org.netbeans.jellytools.actions.Action$Shortcut[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String,java.lang.String,javax.swing.KeyStroke)
 cons public init(java.lang.String,java.lang.String,javax.swing.KeyStroke[])
 cons public init(java.lang.String,java.lang.String,org.netbeans.jellytools.actions.Action$Shortcut)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String,java.lang.String,org.netbeans.jellytools.actions.Action$Shortcut[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld protected final static long AFTER_ACTION_WAIT_TIME = 0
 fld protected final static long SELECTION_WAIT_TIME = 300
 fld protected final static long WAIT_AFTER_SHORTCUT_TIMEOUT = 0
@@ -1028,7 +1031,7 @@ hfds comparator,defaultComparator,sequence
 
 CLSS public static org.netbeans.jellytools.actions.Action$Shortcut
  outer org.netbeans.jellytools.actions.Action
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(int)
 cons public init(int,int)
 fld protected int keyCode
@@ -1044,15 +1047,15 @@ cons public init(java.lang.String,java.lang.String,java.lang.String)
 cons public init(java.lang.String,java.lang.String,java.lang.String,javax.swing.KeyStroke)
 cons public init(java.lang.String,java.lang.String,java.lang.String,javax.swing.KeyStroke[])
 cons public init(java.lang.String,java.lang.String,java.lang.String,org.netbeans.jellytools.actions.Action$Shortcut)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String,java.lang.String,java.lang.String,org.netbeans.jellytools.actions.Action$Shortcut[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String,java.lang.String,javax.swing.KeyStroke)
 cons public init(java.lang.String,java.lang.String,javax.swing.KeyStroke[])
 cons public init(java.lang.String,java.lang.String,org.netbeans.jellytools.actions.Action$Shortcut)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String,java.lang.String,org.netbeans.jellytools.actions.Action$Shortcut[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void performAPI()
 meth public void performMenu()
 meth public void performPopup(org.netbeans.jellytools.nodes.Node[])
@@ -1320,11 +1323,11 @@ hfds runtimeMenu
 CLSS public org.netbeans.jellytools.actions.SaveAction
 cons public init()
 meth public void performPopup(org.netbeans.jellytools.TopComponentOperator)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void performPopup(org.netbeans.jellytools.nodes.Node)
 meth public void performPopup(org.netbeans.jellytools.nodes.Node[])
 meth public void performPopup(org.netbeans.jemmy.operators.ComponentOperator)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr org.netbeans.jellytools.actions.Action
 hfds keystroke,saveMenu,savePopup
 
@@ -1627,7 +1630,7 @@ meth public java.lang.String getDescription()
 supr java.lang.Object
 
 CLSS public org.netbeans.jellytools.modules.form.actions.InspectorAction
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 supr org.netbeans.jellytools.actions.Action
 hfds inspectorMenu
@@ -3094,7 +3097,7 @@ meth public java.lang.String getExpectedFail()
 meth public java.lang.String getWorkDirPath()
 meth public static int assertSize(java.lang.String,java.util.Collection<?>,int,org.netbeans.junit.MemoryFilter)
 meth public static java.lang.String convertNBFSURL(java.net.URL)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void assertFile(java.io.File,java.io.File)
 meth public static void assertFile(java.io.File,java.io.File,java.io.File)
 meth public static void assertFile(java.io.File,java.io.File,java.io.File,org.netbeans.junit.diff.Diff)

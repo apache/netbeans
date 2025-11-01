@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.87.0
+#Version 2.88.0
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -1232,6 +1232,8 @@ cons public init()
 meth public abstract java.util.Map<org.netbeans.modules.csl.api.OffsetRange,org.netbeans.modules.csl.api.ColoringAttributes> getOccurrences()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public abstract void setCaretPosition(int)
+meth public boolean isKeepMarks()
+meth public boolean isMarkOccurrencesEnabled()
 supr org.netbeans.modules.parsing.spi.ParserResultTask<{org.netbeans.modules.csl.api.OccurrencesFinder%0}>
 
 CLSS public final org.netbeans.modules.csl.api.OffsetRange

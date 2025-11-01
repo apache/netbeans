@@ -30,6 +30,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.progress.aggregate.AggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.AggregateProgressHandle;
+import org.netbeans.api.progress.aggregate.BasicAggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.ProgressContributor;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.j2ee.core.api.support.java.GenerationUtils;
@@ -87,9 +88,9 @@ public class JpaControllerIterator implements TemplateWizard.Iterator {
         }
 
         final String title = NbBundle.getMessage(JpaControllerIterator.class, "TITLE_Progress_Jpa_Controller"); //NOI18N
-        final ProgressContributor progressContributor = AggregateProgressFactory.createProgressContributor(title);
+        final ProgressContributor progressContributor = BasicAggregateProgressFactory.createProgressContributor(title);
         final AggregateProgressHandle handle =
-                AggregateProgressFactory.createHandle(title, new ProgressContributor[]{progressContributor}, null, null);
+                BasicAggregateProgressFactory.createHandle(title, new ProgressContributor[]{progressContributor}, null, null);
         final ProgressPanel progressPanel = new ProgressPanel();
         final JComponent progressComponent = AggregateProgressFactory.
             createProgressComponent(handle);

@@ -36,7 +36,6 @@ import org.netbeans.api.extexecution.input.InputProcessor;
 import org.netbeans.api.extexecution.input.InputProcessors;
 import org.netbeans.api.extexecution.input.LineProcessor;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
@@ -273,7 +272,7 @@ public class GrailsPluginSupport {
                         uninstall ? "Uninstallation" : "Installation");
                 String message = NbBundle.getMessage(GrailsPluginSupport.class,
                         uninstall ? "PluginUninstallPleaseWait" : "PluginInstallPleaseWait", plugin.getName());
-                ProgressHandle handle = ProgressHandleFactory.createHandle(message);
+                ProgressHandle handle = ProgressHandle.createHandle(message);
 
                 ProgressDialogDescriptor descriptor = ProgressSupport.createProgressDialog(title, handle, null);
                 final Dialog dlg = DialogDisplayer.getDefault().createDialog(descriptor);

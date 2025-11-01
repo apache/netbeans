@@ -148,7 +148,7 @@ public class CustomHandleStep implements WizardDescriptor.FinishablePanel<Wizard
         Runnable performOperation = new Runnable () {
             public void run () {
                 try {                    
-                    final ProgressHandle handle = ProgressHandleFactory.createHandle (isInstall ? getBundle ("CustomHandleStep_Install_InstallingPlugins") :
+                    final ProgressHandle handle = ProgressHandle.createHandle (isInstall ? getBundle ("CustomHandleStep_Install_InstallingPlugins") :
                                                     getBundle ("CustomHandleStep_Uninstall_UninstallingPlugins"));
                     JComponent progressComponent = ProgressHandleFactory.createProgressComponent (handle);
                     JLabel mainLabel = ProgressHandleFactory.createMainLabelComponent (handle);

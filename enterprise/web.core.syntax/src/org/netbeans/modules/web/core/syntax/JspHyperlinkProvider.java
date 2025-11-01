@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Logger;
 import javax.lang.model.element.TypeElement;
 import javax.servlet.jsp.tagext.TagFileInfo;
 import javax.servlet.jsp.tagext.TagInfo;
@@ -44,7 +43,7 @@ import org.netbeans.api.jsp.lexer.JspTokenId;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProvider;
@@ -422,7 +421,7 @@ public class JspHyperlinkProvider implements HyperlinkProvider {
                                 }
                             });
 
-                    ProgressUtils.runOffEventDispatchThread(compute,
+                    BaseProgressUtils.runOffEventDispatchThread(compute,
                             NbBundle.getMessage(JspHyperlinkProvider.class, "MSG_goto-source"),
                             cancel,
                             false);

@@ -61,7 +61,7 @@ import org.netbeans.api.java.source.support.ReferencesCount;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.options.OptionsDisplayer;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.api.whitelist.WhiteListQuery;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.lib.editor.codetemplates.api.CodeTemplateManager;
@@ -1073,7 +1073,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         protected CharSequence substituteText(final JTextComponent c, final int offset, final int length, final CharSequence text, final CharSequence toAdd) {
             final StringBuilder template = new StringBuilder();
             final AtomicBoolean cancel = new AtomicBoolean();
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -1727,7 +1727,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             final String[] prefix = {""}; //NOI18N
             if (findPrefix.get()) {
                 final AtomicBoolean cancel = new AtomicBoolean();
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -1758,7 +1758,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             CharSequence cs = super.substituteText(c, offset, length, prefix[0] + text, toAdd);
             if (autoImportEnclosingType) {
                 final AtomicBoolean cancel = new AtomicBoolean();
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -2104,7 +2104,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             }
             if (autoImportEnclosingType) {
                 final AtomicBoolean cancel = new AtomicBoolean();
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -3043,7 +3043,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             final BaseDocument doc = (BaseDocument)c.getDocument();
             final StringBuilder sb = new StringBuilder();
             final AtomicBoolean cancel = new AtomicBoolean();
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -3539,7 +3539,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             final StringBuilder template = new StringBuilder();
             final AtomicBoolean cancel = new AtomicBoolean();
             final CharSequence finalToAdd = toAdd;
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -4530,7 +4530,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         final int offset = c.getSelectionEnd();
         final Source s = Source.create(c.getDocument());
         final AtomicBoolean cancel = new AtomicBoolean();
-        ProgressUtils.runOffEventDispatchThread(new Runnable() {
+        BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
             @Override
             public void run() {
                 try {

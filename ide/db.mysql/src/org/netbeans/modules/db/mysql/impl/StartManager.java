@@ -28,7 +28,6 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import org.netbeans.api.db.explorer.DatabaseException;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.db.mysql.DatabaseServer;
 import org.netbeans.modules.db.mysql.ui.PropertiesDialog;
 import org.netbeans.modules.db.mysql.util.DatabaseUtils;
@@ -111,7 +110,7 @@ public final class StartManager {
         RequestProcessor.getDefault().post(new Runnable() {
             @Override
             public void run() {
-                ProgressHandle handle = ProgressHandleFactory.createHandle(
+                ProgressHandle handle = ProgressHandle.createHandle(
                         NbBundle.getMessage(StartManager.class, "MSG_WaitingForServerToStart"));
                 handle.start();
                 handle.switchToIndeterminate();

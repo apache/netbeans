@@ -19,6 +19,11 @@
 
 package org.netbeans.modules.db.util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -376,17 +381,42 @@ public class DriverListUtil {
         
         add("Sybase Driver",
         "com.sun.sql.jdbc.sybase.SybaseDriver",
-        "jdbc:sun:sybase://<HOST>[:<PORT]");          
+        "jdbc:sun:sybase://<HOST>[:<PORT>]");
 
-        add("SQLite",
-            "org.sqlite.JDBC",
-            "jdbc:sqlite:<FILE>");
-        
-        add("H2 Database Engine",
+        url = add("SQLite", null, "org.sqlite.JDBC", "jdbc:sqlite:<FILE>", true);
+        url.setSampleUrl("jdbc:sqlite:");
+        url.setUsernamePasswordDisplayed(false);
+        url.setDatabaseFileValidator(new SQLiteDatabaseFileValidator());
+
+        // The FILE field is optional for DuckDB. If omitted, an in-memory database will be opened.
+        url = add("DuckDB", null, "org.duckdb.DuckDBDriver", "jdbc:duckdb:[<FILE>]", true);
+        url.setSampleUrl("jdbc:duckdb:");
+        url.setUsernamePasswordDisplayed(false);
+        url.setDatabaseFileValidator(new DuckDBDatabaseFileValidator());
+
+        url = add("H2 Database Engine",
             "org.h2.Driver",
             "jdbc:h2:<FILE>");
+        /* I think H2 can sometimes use a password with the database, even though it's a file-based
+        database. So keep the username/password displayed in this case.  */
+        // url.setUsernamePasswordDisplayed(false);
+
+        /* There is also a driver class com.snowflake.client.jdbc.SnowflakeDriver, which is
+        deprecated. The one below (starting "net") is the currently recommended one. See
+        https://docs.snowflake.com/en/developer-guide/jdbc/jdbc-configure */
+        url = add("Snowflake", null, "net.snowflake.client.jdbc.SnowflakeDriver", "jdbc:snowflake://<HOST>/[?<ADDITIONAL>]", true);
+        url.setSampleUrl("jdbc:snowflake://my-account-id.snowflakecomputing.com/?warehouse=COMPUTE_WH");
+
+        // See https://cloud.google.com/bigquery/docs/reference/odbc-jdbc-drivers#jdbc_release_1621003
+        url = add("Google BigQuery", null, "com.simba.googlebigquery.jdbc.Driver",
+                "jdbc:bigquery://https://<HOST>/bigquery/v2:<PORT>;ProjectId=<INSTANCE>;<ADDITIONAL>", true);
+        /* None of the available authentication methods use a JDBC-level username/password prompt.
+        (Instead, an external browser may be opened to prompt for credentials when the user attempts
+        to connect.) */
+        url.setUsernamePasswordDisplayed(false);
+        url.setSampleUrl("jdbc:bigquery://https://www.googleapis.com/bigquery/v2:443;ProjectId=ProjectIdGoesHere;OAuthType=1;");
     }
-    
+
     public static Set<String> getDrivers() {
         TreeSet<String> drivers = new TreeSet<>();
         for (JdbcUrl url : templateUrls) {
@@ -403,8 +433,7 @@ public class DriverListUtil {
         
         for (JdbcUrl url : templateUrls) {
             if (url.getClassName().equals(driver.getClassName())) {
-                JdbcUrl newurl = new JdbcUrl(url, driver);
-                driverUrls.add(newurl);
+                driverUrls.add(new JdbcUrl(url, driver));
             }
         }
 
@@ -447,6 +476,80 @@ public class DriverListUtil {
             }
         } else {
             return name;
+        }
+    }
+
+    private static class SQLiteDatabaseFileValidator implements JdbcUrl.DatabaseFileValidator {
+        /* From zMagicHeader in src/btree.c in
+        https://github.com/sqlite/sqlite/blob/cc83b6e071ba69943f175a038d2625ae3d6abf47/src/btree.c */
+        private static final byte[] SQLITE2_MAGIC_HEADER =
+            "** This file contains an SQLite ".getBytes(StandardCharsets.US_ASCII);
+        // From https://www.sqlite.org/fileformat.html
+        private static final byte[] SQLITE3_MAGIC_HEADER =
+            "SQLite format 3\u0000".getBytes(StandardCharsets.US_ASCII);
+
+        private static Integer getSQLiteVersion(File file) throws IOException {
+            final byte[] actual;
+            try (InputStream is = new FileInputStream(file)) {
+                actual = is.readNBytes(Math.max(SQLITE2_MAGIC_HEADER.length, SQLITE3_MAGIC_HEADER.length));
+            }
+            if (startsWith(actual, SQLITE3_MAGIC_HEADER)) {
+                return 3;
+            } else if (startsWith(actual, SQLITE2_MAGIC_HEADER)) {
+                return 2;
+            } else {
+                return null;
+            }
+        }
+
+        private static boolean startsWith(byte[] arr, byte[] prefix) {
+          if (arr.length < prefix.length) {
+                return false;
+          }
+          for (int i = 0; i < prefix.length; i++) {
+                if (arr[i] != prefix[i]) {
+                    return false;
+                }
+          }
+          return true;
+        }
+
+        @Override
+        public String getValidationErrorMessage(File file) throws IOException {
+            Integer ret = getSQLiteVersion(file);
+            if (ret == null) {
+                return "This file is not a SQLite 3 database.";
+            } else if (ret == 2) {
+                return "This file may be an older SQLite 2 database, which is not supported.";
+            } else {
+                return null;
+            }
+        }
+    }
+
+    private static class DuckDBDatabaseFileValidator implements JdbcUrl.DatabaseFileValidator {
+        // From https://duckdb.org/docs/internals/storage.html
+        private static final byte[] DUCKDB_MAGIC_HEADER =
+            "DUCK".getBytes(StandardCharsets.US_ASCII);
+
+        @Override
+        public String getValidationErrorMessage(File file) throws IOException {
+            final byte[] actual;
+            /* "DuckDB files start with a uint64_t which contains a checksum for the main header,
+            followed by four magic bytes (DUCK)"
+            https://duckdb.org/docs/internals/storage.html */
+            try (InputStream is = new FileInputStream(file)) {
+                actual = is.readNBytes(8 + 4);
+            }
+            if (actual[8]  == (byte) 'D' &&
+                actual[9]  == (byte) 'U' &&
+                actual[10] == (byte) 'C' &&
+                actual[11] == (byte) 'K')
+            {
+                return null;
+            } else {
+                return "This file is not a valid DuckDB database.";
+            }
         }
     }
 }

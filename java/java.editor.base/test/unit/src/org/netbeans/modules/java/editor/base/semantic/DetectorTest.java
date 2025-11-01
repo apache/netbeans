@@ -1090,6 +1090,17 @@ public class DetectorTest extends TestBase {
                 "[PARAMETER], 4:16-4:17");
     }
 
+    public void testImportModule() throws Exception {
+        performTest("ImportModuleTest",
+                """
+                import module java.base
+                public class ImportModuleTest {
+                }
+                """,
+                "[KEYWORD], 0:7-0:13",
+                "[PUBLIC, CLASS, DECLARATION], 1:13-1:29");
+    }
+
     private void performTest(String fileName) throws Exception {
         performTest(fileName, new Performer() {
             public void compute(CompilationController parameter, Document doc, final ErrorDescriptionSetter setter) {

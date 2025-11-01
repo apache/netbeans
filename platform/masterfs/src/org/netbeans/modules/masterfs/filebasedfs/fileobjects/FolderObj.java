@@ -75,6 +75,7 @@ public final class FolderObj extends BaseFileObj {
         //valid = true;
     }
 
+    @Override
     public final boolean isFolder() {
         return true;
     }
@@ -105,6 +106,7 @@ public final class FolderObj extends BaseFileObj {
     }
 
 
+    @Override
     public final FileObject getFileObject(final String name, final String ext) {
         File file = BaseFileObj.getFile(getFileName().getFile(), name, ext);
         FileObjectFactory factory = getFactory();
@@ -115,8 +117,7 @@ public final class FolderObj extends BaseFileObj {
     protected boolean noFolderListeners() {
         if (noListeners()) {
             for (FileObject f : computeChildren(true)) {
-                if (f instanceof BaseFileObj) {
-                    BaseFileObj bfo = (BaseFileObj)f;
+                if (f instanceof BaseFileObj bfo) {
                     if (!bfo.noListeners()) {
                         return false;
                     }
@@ -134,7 +135,7 @@ public final class FolderObj extends BaseFileObj {
     
     private FileObject[] computeChildren(boolean onlyExisting) {
         LOOP: for (int counter = 0; ; counter++) {
-            final Map<FileNaming,FileObject> results = new LinkedHashMap<FileNaming,FileObject>();
+            final Map<FileNaming,FileObject> results = new LinkedHashMap<>();
 
             final ChildrenCache childrenCache = getChildrenCache();
             final Mutex.Privileged mutexPrivileged = childrenCache.getMutexPrivileged();
@@ -149,7 +150,7 @@ public final class FolderObj extends BaseFileObj {
                 try {
                     Set<FileNaming> res = childrenCache.getChildren(counter >= 10, task);
                     if (res != null) {
-                        fileNames = new HashSet<FileNaming>(res);
+                        fileNames = new HashSet<>(res);
                     }   
                 } finally {
                     mutexPrivileged.exitWriteAccess();
@@ -190,7 +191,7 @@ public final class FolderObj extends BaseFileObj {
                     results.put(fileName, fo);
                 }
             }
-            return results.values().toArray(new FileObject[0]);
+            return results.values().toArray(FileObject[]::new);
         }
     }
     
@@ -204,8 +205,8 @@ public final class FolderObj extends BaseFileObj {
            append(Integer.toHexString(System.identityHashCode(fn)))
            .append("\n");
         
-        if (fn instanceof FileName) {
-            ((FileName)fn).dumpCreation(sb);
+        if (fn instanceof FileName fileName) {
+            fileName.dumpCreation(sb);
         }
         return sb.toString();
     }
@@ -247,8 +248,8 @@ public final class FolderObj extends BaseFileObj {
         final FileObjectFactory factory = getFactory();
         if (factory != null) {
             BaseFileObj exists = factory.getValidFileObject(folder2Create, FileObjectFactory.Caller.Others, true);
-            if (exists instanceof FolderObj) {
-                retVal = (FolderObj)exists;
+            if (exists instanceof FolderObj folderObj) {
+                retVal = folderObj;
             } else {
                 FSException.io("EXC_CannotCreateFolder", folder2Create.getName(), getPath());// NOI18N                           
             }
@@ -284,22 +285,14 @@ public final class FolderObj extends BaseFileObj {
         Logger.getLogger("org.netbeans.modules.masterfs.filebasedfs.fileobjects.FolderObj").log(r);
     }
 
+    @Override
     public final FileObject createData(final String name, final String ext) throws java.io.IOException {
-        FSCallable<FileObject> c = new FSCallable<FileObject>() {
-            public FileObject call() throws IOException {
-                return createDataImpl(name, ext);
-            }
-        };
-        return FileBasedFileSystem.runAsInconsistent(c);
+        return FileBasedFileSystem.runAsInconsistent(() -> createDataImpl(name, ext));
     }
     
+    @Override
     public final FileObject createFolder(final String name) throws java.io.IOException {
-        FSCallable<FileObject> c = new FSCallable<FileObject>() {
-            public FileObject call() throws IOException {
-                return createFolderImpl(name);
-            }
-        };
-        return FileBasedFileSystem.runAsInconsistent(c);        
+        return FileBasedFileSystem.runAsInconsistent(() -> createFolderImpl(name));        
     }
     
     
@@ -389,7 +382,7 @@ public final class FolderObj extends BaseFileObj {
 
     @Override
     public void delete(final FileLock lock, ProvidedExtensions.DeleteHandler deleteHandler) throws IOException {
-        final Deque<FileObject> all = new ArrayDeque<FileObject>();
+        final Deque<FileObject> all = new ArrayDeque<>();
 
         final File file = getFileName().getFile();
         if (!deleteFile(file, all, getFactory(), deleteHandler)) {
@@ -487,9 +480,9 @@ public final class FolderObj extends BaseFileObj {
             } else if (ChildrenCache.REMOVED_CHILD.equals(operationId)) {
                 if (newChild != null) {
                     if (newChild.isValid()) {
-                        if (newChild instanceof FolderObj) {
+                        if (newChild instanceof FolderObj folderObj) {
                             getProvidedExtensions().deletedExternally(newChild);
-                            ((FolderObj)newChild).refreshImpl(expected, fire);
+                            folderObj.refreshImpl(expected, fire);
                             newChild.setValid(false);
                         } else {
                             newChild.setValid(false);
@@ -582,6 +575,7 @@ public final class FolderObj extends BaseFileObj {
         return true;
     }
 
+    @Override
     protected void setValid(final boolean valid) {
         if (valid) {
             //I can't make valid fileobject when it was one invalidated
@@ -598,19 +592,23 @@ public final class FolderObj extends BaseFileObj {
         return valid && super.isValid();
     }
 
+    @Override
     public final InputStream getInputStream() throws FileNotFoundException {
         throw new FileNotFoundException(getPath());
     }
 
+    @Override
     public final OutputStream getOutputStream(final FileLock lock) throws IOException {
         throw new IOException(getPath());
     }
 
 
+    @Override
     public final FileLock lock() throws IOException {
         return new FileLock();
     }
 
+    @Override
     final boolean checkLock(final FileLock lock) throws IOException {
         return true;
     }

@@ -27,7 +27,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import org.apache.maven.artifact.Artifact;
@@ -550,6 +549,7 @@ public class PluginPropertyUtils {
      * the variant with <code>Project</code> as parameter is preferable. Faster and less prone to deadlock.     
      * @since 2.32
      */
+    @SuppressWarnings("deprecation")
     public static @NonNull ExpressionEvaluator createEvaluator(@NonNull MavenProject prj) {
         ExpressionEvaluator eval = (ExpressionEvaluator) prj.getContextValue(CONTEXT_EXPRESSION_EVALUATOR);
         if (eval != null) {

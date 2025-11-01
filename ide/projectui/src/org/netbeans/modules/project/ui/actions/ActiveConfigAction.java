@@ -206,28 +206,27 @@ public class ActiveConfigAction extends CallableSystemAction implements LookupLi
     public ActiveConfigAction() {
         super();
         putValue("noIconInMenu", true); // NOI18N
-        EventQueue.invokeLater(new Runnable() {
-            public @Override void run() {
-                initConfigListCombo();
-            }
-        });
-        lst = new PropertyChangeListener() {
-            public @Override void propertyChange(PropertyChangeEvent evt) {
-                ProjectConfigurationProvider<?> _pcp;
-                synchronized (ActiveConfigAction.this) {
-                    _pcp = pcp;
-                }
-                if (ProjectConfigurationProvider.PROP_CONFIGURATIONS.equals(evt.getPropertyName())) {
+        EventQueue.invokeLater(this::initConfigListCombo);
+        lst = (PropertyChangeEvent evt) -> {
+            switch (evt.getPropertyName()) {
+                case ProjectConfigurationProvider.PROP_CONFIGURATIONS -> {
+                    ProjectConfigurationProvider<?> _pcp;
+                    synchronized (ActiveConfigAction.this) {
+                        _pcp = pcp;
+                    }       
                     configurationsListChanged(_pcp != null ? getConfigurations(_pcp) : null);
-                } else if (ProjectConfigurationProvider.PROP_CONFIGURATION_ACTIVE.equals(evt.getPropertyName())) {
+                }
+                case ProjectConfigurationProvider.PROP_CONFIGURATION_ACTIVE -> {
+                    ProjectConfigurationProvider<?> _pcp;
+                    synchronized (ActiveConfigAction.this) {
+                        _pcp = pcp;
+                    }       
                     activeConfigurationChanged(_pcp != null ? getActiveConfiguration(_pcp) : null);
                 }
             }
         };
-        looklst = new LookupListener() {
-            public @Override void resultChanged(LookupEvent ev) {
-                activeProjectProviderChanged();
-            }
+        looklst = (LookupEvent ev) -> {
+            activeProjectProviderChanged();
         };
 
         OpenProjectList.getDefault().addPropertyChangeListener(WeakListeners.propertyChange(this, OpenProjectList.getDefault()));

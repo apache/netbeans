@@ -284,40 +284,26 @@ public class SetMainProject extends ProjectAction implements PropertyChangeListe
     // Implementation of change listener ---------------------------------------
     
     
-    @Override public void propertyChange(PropertyChangeEvent e) {
-        
-        if ( OpenProjectList.PROPERTY_OPEN_PROJECTS.equals( e.getPropertyName() )) {
-            final Project projects[] = OpenProjectList.getDefault().getOpenProjects();
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                   createSubMenu(projects);
+    @Override
+    public void propertyChange(PropertyChangeEvent e) {
+        switch (e.getPropertyName()) {
+            case OpenProjectList.PROPERTY_OPEN_PROJECTS -> {
+                Project[] projects = OpenProjectList.getDefault().getOpenProjects();
+                SwingUtilities.invokeLater(() -> {
+                    createSubMenu(projects);
+                });
+            }
+            case ProjectInformation.PROP_DISPLAY_NAME -> SwingUtilities.invokeLater(() -> {
+                if (subMenu != null) {
+                    checkProjectNames();
                 }
             });
-            
-        } else if ( ProjectInformation.PROP_DISPLAY_NAME.equals( e.getPropertyName() )) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    if (subMenu != null) {
-                        checkProjectNames();
-                    }
+            case OpenProjectList.PROPERTY_MAIN_PROJECT -> SwingUtilities.invokeLater(() -> {
+                if (subMenu != null) {
+                    selectMainProject();
                 }
             });
-            
-        } else if ( OpenProjectList.PROPERTY_MAIN_PROJECT.equals( e.getPropertyName() )) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    if (subMenu != null) {
-                        selectMainProject();
-                    }
-                }
-            });            
-            
         }
-        
-        
     }
     
     /**

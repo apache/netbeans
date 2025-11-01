@@ -256,4 +256,8 @@ public class NavigatorTest extends PhpNavigatorTestBase {
     public void testFinalFieldsAnonClass() throws Exception {
         performTest("structure/php84/finalFieldsAnonClass");
     }
+
+    public void testGH8527() throws Exception {
+        performTest("structure/gh8527");
+    }
 }

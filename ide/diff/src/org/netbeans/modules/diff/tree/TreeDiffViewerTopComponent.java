@@ -92,6 +92,14 @@ public final class TreeDiffViewerTopComponent extends TopComponent {
         this(new RecursiveDiffer(null, null));
     }
 
+    /**
+     * @deprecated only for use by NetBeans internals
+     */
+    @Deprecated
+    public TreeDiffViewerTopComponent() {
+        this(new RecursiveDiffer(null, null));
+    }
+
     public TreeDiffViewerTopComponent(RecursiveDiffer recursiveDiffer) {
         this.contextMenu = new JPopupMenu();
         JMenuItem deleteSource = new JMenuItem("Delete Source");

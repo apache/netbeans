@@ -181,7 +181,7 @@ public class VarDocSuggestion extends SuggestionRule {
         }
 
         private int getOffset(BaseDocument doc) throws BadLocationException {
-            final int caretOffset = LineDocumentUtils.getLineStart(doc, context.caretOffset);
+            final int caretOffset = LineDocumentUtils.getLineStart2(doc, context.caretOffset);
             return LineDocumentUtils.getLineEnd(doc, caretOffset - 1);
         }
 

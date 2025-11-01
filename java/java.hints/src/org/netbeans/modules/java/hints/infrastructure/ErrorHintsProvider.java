@@ -51,6 +51,7 @@ import javax.swing.text.Position.Bias;
 import javax.swing.text.StyledDocument;
 import javax.tools.Diagnostic;
 import org.netbeans.api.editor.document.EditorDocumentUtils;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaParserResultTask;
@@ -190,7 +191,7 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
         if (forPosition != null) {
             try {
                 int posRowStart = org.netbeans.editor.Utilities.getRowStart((NbEditorDocument) doc, forPosition);
-                int errRowStart = org.netbeans.editor.Utilities.getRowStart((NbEditorDocument) doc, range[0].getOffset());
+                int errRowStart = LineDocumentUtils.getLineStart2((NbEditorDocument) doc, range[0].getOffset());
                 if (posRowStart != errRowStart) {
                     return null;
                 }

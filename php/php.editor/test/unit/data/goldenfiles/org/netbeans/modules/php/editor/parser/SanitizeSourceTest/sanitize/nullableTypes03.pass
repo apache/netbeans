@@ -22,6 +22,8 @@
                                 <Identifier start='81' end='87' name='create'/>
                                 <FormalParameters>
                                 </FormalParameters>
+                                <Block start='92' end='93' isCurly='flase'>
+                                </Block>
                             </FunctionDeclaration>
                         </MethodDeclaration>
                     </Block>

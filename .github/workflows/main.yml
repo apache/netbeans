@@ -2085,9 +2085,11 @@ jobs:
       - name: web.beans
         run: ant $OPTS -f enterprise/web.beans test
 
-# Fails + Slow
-#      - name: web.core.syntax
-#        run: ant $OPTS -f enterprise/web.core.syntax test
+      - name: web.core
+        run: ant $OPTS -f enterprise/web.core test-unit
+
+      - name: web.core.syntax
+        run: ant $OPTS -f enterprise/web.core.syntax test-unit
 
 # Fails + Slow
 #      - name: web.debug

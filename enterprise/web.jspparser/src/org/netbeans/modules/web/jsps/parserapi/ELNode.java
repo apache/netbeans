@@ -22,8 +22,6 @@ package org.netbeans.modules.web.jsps.parserapi;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import javax.servlet.jsp.tagext.FunctionInfo;
-import javax.servlet.jsp.JspException;
 
 /**
  * This class defines internal representation for an EL Expression
@@ -34,7 +32,7 @@ import javax.servlet.jsp.JspException;
 
 public abstract class ELNode {
 
-    public abstract void accept(Visitor v) throws JspException;
+    public abstract void accept(Visitor v);
 
     /**
      * Child classes
@@ -46,13 +44,14 @@ public abstract class ELNode {
      */
     public static class Root extends ELNode {
 
-        private ELNode.Nodes expr;
+        private final ELNode.Nodes expr;
 
         public Root(ELNode.Nodes expr) {
             this.expr = expr;
         }
 
-        public void accept(Visitor v) throws JspException {
+        @Override
+        public void accept(Visitor v) {
             v.visit(this);
         }
 
@@ -72,7 +71,8 @@ public abstract class ELNode {
             this.text = text;
         }
 
-	public void accept(Visitor v) throws JspException {
+        @Override
+	public void accept(Visitor v) {
             v.visit(this);
 	}
 
@@ -92,7 +92,8 @@ public abstract class ELNode {
             this.text = text;
         }
 
-	public void accept(Visitor v) throws JspException {
+        @Override
+	public void accept(Visitor v) {
             v.visit(this);
 	}
 
@@ -110,16 +111,17 @@ public abstract class ELNode {
         private final String prefix;
         private final String name;
         private String uri;
-        private FunctionInfo functionInfo;
         private String methodName;
         private String[] parameters;
 
+        @SuppressWarnings("unused")
         Function(String prefix, String name) {
             this.prefix = prefix;
             this.name = name;
         }
 
-        public void accept(Visitor v) throws JspException {
+        @Override
+        public void accept(Visitor v) {
             v.visit(this);
         }
 
@@ -139,14 +141,6 @@ public abstract class ELNode {
             return uri;
         }
 
-        public void setFunctionInfo(FunctionInfo f) {
-            this.functionInfo = f;
-        }
-
-        public FunctionInfo getFunctionInfo() {
-            return functionInfo;
-        }
-
         public void setMethodName(String methodName) {
             this.methodName = methodName;
         }
@@ -155,10 +149,12 @@ public abstract class ELNode {
             return methodName;
         }
 
+        @SuppressWarnings("AssignmentToCollectionOrArrayFieldFromParameter")
         public void setParameters(String[] parameters) {
             this.parameters = parameters;
         }
 
+        @SuppressWarnings("ReturnOfCollectionOrArrayField")
         public String[] getParameters() {
             return parameters;
         }
@@ -172,11 +168,12 @@ public abstract class ELNode {
         /* Name used for creating a map for the functions in this
         EL expression, for communication to Generator.
         */
-        String mapName = null;
+        private String mapName = null;
+
         private final List<ELNode> list;
 
         public Nodes() {
-            list = new ArrayList<ELNode>();
+            list = new ArrayList<>();
         }
 
         public void add(ELNode en) {
@@ -187,7 +184,7 @@ public abstract class ELNode {
         * Visit the nodes in the list with the supplied visitor
         * @param v The visitor used
         */
-        public void visit(Visitor v) throws JspException {
+        public void visit(Visitor v) {
             for (ELNode n: list) {
                 n.accept(v);
             }
@@ -198,7 +195,7 @@ public abstract class ELNode {
         }
 
         public boolean isEmpty() {
-            return list.size() == 0;
+            return list.isEmpty();
         }
 
         /**
@@ -226,17 +223,17 @@ public abstract class ELNode {
 
     public static class Visitor {
 
-        public void visit(Root n) throws JspException {
+        public void visit(Root n) {
             n.getExpression().visit(this);
         }
 
-        public void visit(Function n) throws JspException {
+        public void visit(Function n) {
         }
 
-        public void visit(Text n) throws JspException {
+        public void visit(Text n) {
         }
 
-        public void visit(ELText n) throws JspException {
+        public void visit(ELText n) {
         }
     }
 }

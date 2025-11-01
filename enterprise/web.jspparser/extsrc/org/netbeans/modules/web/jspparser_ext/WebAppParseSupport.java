@@ -49,8 +49,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.*;
 import java.util.zip.ZipException;
-import javax.servlet.ServletContext;
-import javax.servlet.jsp.tagext.TagLibraryInfo;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.jsp.tagext.TagLibraryInfo;
 import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
@@ -70,17 +70,18 @@ import org.apache.jasper.compiler.GetParseData;
 import org.apache.jasper.compiler.JspRuntimeContext;
 import org.apache.jasper.runtime.TldScanner;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.modules.web.jspparser.ContextUtil;
 import org.netbeans.modules.web.jspparser.JspParserImpl;
 import org.netbeans.modules.web.jspparser.ParserServletContext;
 import org.netbeans.modules.web.jspparser.WebAppParseProxy;
+import org.netbeans.modules.web.jspparser.WebModuleProvider;
 import org.openide.ErrorManager;
 import org.openide.filesystems.FileChangeAdapter;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
-import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
@@ -109,7 +110,7 @@ import org.openide.util.WeakListeners;
  * the whole cache).
  * @author Petr Jiricka, Tomas Mysik
  */
-public class WebAppParseSupport implements WebAppParseProxy, PropertyChangeListener, ParserServletContext.WebModuleProvider {
+public class WebAppParseSupport implements WebAppParseProxy, PropertyChangeListener, WebModuleProvider {
 
     static final Logger LOG = Logger.getLogger(WebAppParseSupport.class.getName());
     private static final JspParserAPI.JspOpenInfo DEFAULT_JSP_OPEN_INFO = new JspParserAPI.JspOpenInfo(false, "8859_1"); // NOI18N
@@ -284,6 +285,18 @@ public class WebAppParseSupport implements WebAppParseProxy, PropertyChangeListe
             }
             // libraries and built classes are on the execution classpath
             cp = ClassPath.getClassPath(wmRoot, ClassPath.EXECUTE);
+            if (cp != null) {
+                for (FileObject root : cp.getRoots()) {
+                    helpurl = findInternalURL(root);
+                    if (loadingTable.get(helpurl) == null) {
+                        loadingTable.put(helpurl, helpurl);
+                        tomcatTable.put(helpurl, findExternalURL(root));
+                    }
+                }
+            }
+
+            // For JDK 9+ we also need to query for the modular variants
+            cp = ClassPath.getClassPath(wmRoot, JavaClassPathConstants.MODULE_EXECUTE_CLASS_PATH);
             if (cp != null) {
                 for (FileObject root : cp.getRoots()) {
                     helpurl = findInternalURL(root);
@@ -494,7 +507,7 @@ public class WebAppParseSupport implements WebAppParseProxy, PropertyChangeListe
                     // ArrayIndexOutOfBoundsException - see issue 20919
                     // Throwable - see issue 21169, related to Tomcat bug 7124
                     // XXX has to be returned back to track all errors
-                    e = Exceptions.attachLocalizedMessage(e, NbBundle.getMessage(WebAppParseSupport.class, "MSG_errorDuringJspParsing")); // NOI18N
+                    e = Exceptions.attachLocalizedMessage(e, "JSP cannot be parsed now."); // NOI18N
                     LOG.fine(e.getMessage());
                     LOG.log(Level.FINE, null, e);
                     JspParserAPI.ErrorDescriptor error = constructErrorDescriptor(e, wmRoot, jspFile);

@@ -18,9 +18,21 @@
  */
 package org.netbeans.modules.markdown.ui.preview;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.modules.markdown.ui.preview.views.MarkdownViewFactory;
 import javax.swing.text.ViewFactory;
 import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.StyleSheet;
+import org.netbeans.modules.editor.settings.storage.api.EditorSettings;
+import org.netbeans.modules.markdown.MarkdownDataObject;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.util.WeakListeners;
 
 /**
  *
@@ -29,14 +41,46 @@ import javax.swing.text.html.HTMLEditorKit;
 public class MarkdownEditorKit extends HTMLEditorKit {
 
     private final transient ViewFactory viewFactory;
-
+    private transient StyleSheet markdownStyles;
+    private final PropertyChangeListener pcl = this::colorProfileChange;
+    
     public MarkdownEditorKit() {
         super();
         this.viewFactory = new MarkdownViewFactory();
+        EditorSettings.getDefault().addPropertyChangeListener(WeakListeners.propertyChange(pcl, this));
+    }
+
+    @Override
+    public StyleSheet getStyleSheet() {
+        if (markdownStyles == null) {
+            StyleSheet defaultStyles = super.getStyleSheet();
+            StyleSheet ss = new StyleSheet();
+            ss.addStyleSheet(defaultStyles);
+            
+            String profile = EditorSettings.getDefault().getCurrentFontColorProfile();
+            String configPath = "Editors/" + MarkdownDataObject.MIME_TYPE +"/FontsColors/" + profile + "/Defaults/viewer.css";
+            FileObject config = FileUtil.getSystemConfigFile(configPath);
+      
+            if (config != null) {
+                try (Reader rd = new InputStreamReader(config.getInputStream(), StandardCharsets.ISO_8859_1)){
+                    ss.loadRules(rd, null);
+                } catch (IOException ex) {}
+            } else {
+                
+            }
+            markdownStyles = ss;
+        }
+        return markdownStyles;
     }
 
     @Override
     public ViewFactory getViewFactory() {
         return viewFactory;
+    }
+    
+    public void colorProfileChange(PropertyChangeEvent evt) {
+        if (EditorSettings.PROP_CURRENT_FONT_COLOR_PROFILE.equals(evt.getPropertyName())) {
+            markdownStyles = null;
+        }
     }
 }

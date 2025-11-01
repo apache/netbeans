@@ -76,6 +76,8 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
 import org.netbeans.api.editor.EditorRegistry;
+import org.netbeans.api.editor.document.LineDocument;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.EditorStyleConstants;
 import org.netbeans.editor.AnnotationDesc;
@@ -350,7 +352,7 @@ public final class HintsUI implements MouseListener, MouseMotionListener, KeyLis
         }
     }
     
-    public void showPopup(FixData fixes, String description, JTextComponent component, Point position) {
+   public void showPopup(FixData fixes, String description, JTextComponent component, Point position) {
         removeHints();
         setComponent(component);
         JTextComponent comp = getComponent(); 
@@ -630,7 +632,6 @@ public final class HintsUI implements MouseListener, MouseMotionListener, KeyLis
                 String description;
 
                 if (!onlyActive) {
-                    refresh(doc, comp.getCaretPosition());
                     AnnotationHolder holder = getAnnotationHolder(doc);
                     Pair<FixData, String> fixData = holder != null ? holder.buildUpFixDataForLine(line) : null;
 
@@ -807,6 +808,9 @@ public final class HintsUI implements MouseListener, MouseMotionListener, KeyLis
             t = RequestProcessor.getDefault().post(new Runnable() {
                 public void run() {
                     try {
+                        int line = LineDocumentUtils.getLineIndex((LineDocument) component.getDocument(), component.getCaretPosition());
+                        AnnotationHolder holder = getAnnotationHolder(component.getDocument());
+                        holder.removeErrorForFixOnLine(f, line);
                         changes = f.implement();
                     } catch (GuardedException ge) {
                             reportGuardedException(component, ge);

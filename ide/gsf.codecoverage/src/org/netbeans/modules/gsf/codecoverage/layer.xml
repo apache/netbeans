@@ -36,7 +36,9 @@
     <folder name="Windows2">
         <folder name="Modes">
             <folder name="editor">
-                <file name="CoverageReportTopComponent.wstcref" url="CoverageReportTopComponentWstcref.xml"/>
+                <file name="CoverageReportTopComponent.wstcref" url="CoverageReportTopComponentWstcref.xml">
+                    <attr name="position" intvalue="0"/>
+                </file>
             </folder>
         </folder>
     </folder>

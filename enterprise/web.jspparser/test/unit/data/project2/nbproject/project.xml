@@ -6,15 +6,19 @@
             <name>JspParserTestProject2</name>
             <minimum-ant-version>1.6</minimum-ant-version>
             <web-module-libraries>
-                <library files="1">
+                <library dirs="200">
                     <file>${file.reference.standard.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
-                <library files="1">
+                <library dirs="200">
+                    <file>${file.reference.jstl.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library dirs="200">
                     <file>${file.reference.tags.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
-                <library files="1">
+                <library dirs="200">
                     <file>${file.reference.commons-logging-api.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>

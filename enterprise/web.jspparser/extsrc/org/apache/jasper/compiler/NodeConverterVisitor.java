@@ -23,6 +23,7 @@ import org.apache.jasper.JasperException;
 
 import org.xml.sax.Attributes;
 import java.util.*;
+import jakarta.servlet.jsp.tagext.TagAttributeInfo;
 
 
 // Note: this needs to live in the org.apache.jasper.compiler package.
@@ -298,12 +299,17 @@ class NodeConverterVisitor extends Node.Visitor {
                                                                             n.getAttributes(),
                                                                             convertMark(n.getStart()),
                                                                             parentNode,
-                                                                            n.getTagInfo(),
                                                                             n.getTagHandlerClass()
             );
         }
         else {
             // we do have a tag file
+            Set<String> fragmentAttributes = new HashSet<>();
+            for(TagAttributeInfo tai: n.getTagFileInfo().getTagInfo().getAttributes()) {
+                if (tai.isFragment()) {
+		    fragmentAttributes.add(tai.getName());
+		}
+            }
             cn = new org.netbeans.modules.web.jsps.parserapi.Node.CustomTag(n.getQName(),
                                                                             n.getPrefix(),
                                                                             n.getLocalName(),
@@ -311,7 +317,9 @@ class NodeConverterVisitor extends Node.Visitor {
                                                                             n.getAttributes(),
                                                                             convertMark(n.getStart()),
                                                                             parentNode,
-                                                                            n.getTagFileInfo()
+                                                                            true,
+                                                                            n.getTagFileInfo().getTagInfo().hasDynamicAttributes(),
+                                                                            fragmentAttributes
             );
         }
 	convertBody(n, cn);

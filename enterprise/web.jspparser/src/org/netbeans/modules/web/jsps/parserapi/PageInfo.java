@@ -20,20 +20,8 @@
 package org.netbeans.modules.web.jsps.parserapi;
 
 import java.util.*;
-
 import java.util.logging.Level;
-
-//import org.apache.jasper.Constants;
 import java.util.logging.Logger;
-
-//import org.apache.jasper.Constants;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.tagext.TagInfo;
-import javax.servlet.jsp.tagext.TagFileInfo;
-import javax.servlet.jsp.tagext.FunctionInfo;
-import javax.servlet.jsp.tagext.TagAttributeInfo;
-import javax.servlet.jsp.tagext.TagLibraryInfo;
 
 /**
  * A repository for various info about the translation unit under compilation.
@@ -43,7 +31,7 @@ import javax.servlet.jsp.tagext.TagLibraryInfo;
 
 public abstract class PageInfo {
 
-    public static final String JSP_SERVLET_BASE = "javax.servlet.http.HttpServlet";
+    public static final String JSP_SERVLET_BASE = "jakarta.servlet.http.HttpServlet";
 
     private static final Comparator<TagFileInfo> TAG_FILE_INFO_COMPARATOR
             = (TagFileInfo o1, TagFileInfo o2) -> o1.getPath().compareTo(o2.getPath());
@@ -291,15 +279,6 @@ public abstract class PageInfo {
     }
 
     /*
-     * Gets the collection of tag libraries that are associated with a URI
-     *
-     * @return Collection of tag libraries that are associated with a URI
-     */
-    public Collection<TagLibraryInfo> getTaglibs() {
-	return taglibsMap.values();
-    }
-
-    /*
      * Checks to see if the given URI is mapped to a tag library.
      *
      * @param uri The URI to map
@@ -450,7 +429,7 @@ public abstract class PageInfo {
     /*
      * buffer
      */
-    public void setBufferValue(String value) throws JspException {
+    public void setBufferValue(String value) {
         if (value == null)
             return;
 
@@ -458,12 +437,12 @@ public abstract class PageInfo {
 	    buffer = 0;
 	else {
 	    if (!value.endsWith("kb"))
-		throw new JspException(value);
+		throw new RuntimeException("Invalid value for bufferValue: " + value);
 	    try {
 		Integer k = Integer.valueOf(value.substring(0, value.length()-2));
 		buffer = k * 1024;
 	    } catch (NumberFormatException e) {
-                throw new JspException(value);
+		throw new RuntimeException("Invalid value for bufferValue: " + value, e);
 	    }
 	}
 
@@ -482,7 +461,7 @@ public abstract class PageInfo {
     /*
      * session
      */
-    public void setSession(String value) throws JspException {
+    public void setSession(String value) {
         if (value == null)
             return;
 
@@ -491,7 +470,7 @@ public abstract class PageInfo {
 	else if ("false".equalsIgnoreCase(value))
 	    isSession = false;
 	else
-	    throw new JspException(value);
+            throw new RuntimeException("Invalid value for session: " + value);
 
 	session = value;
     }
@@ -508,7 +487,7 @@ public abstract class PageInfo {
     /*
      * autoFlush
      */
-    public void setAutoFlush(String value) throws JspException {
+    public void setAutoFlush(String value) {
         if (value == null)
             return;
 
@@ -517,7 +496,7 @@ public abstract class PageInfo {
 	else if ("false".equalsIgnoreCase(value))
 	    isAutoFlush = false;
 	else
-	    throw new JspException(value);
+	    throw new RuntimeException("Invalid value for autoFlush: " + value);
 
 	autoFlush = value;
     }
@@ -534,7 +513,7 @@ public abstract class PageInfo {
     /*
      * isThreadSafe
      */
-    public void setIsThreadSafe(String value) throws JspException {
+    public void setIsThreadSafe(String value) {
         if (value == null)
             return;
 
@@ -543,7 +522,7 @@ public abstract class PageInfo {
 	else if ("false".equalsIgnoreCase(value))
 	    isThreadSafe = false;
 	else
-	    throw new JspException(value);
+	    throw new RuntimeException("Invalid value for threadSafe: " + value);
 
 	isThreadSafeValue = value;
     }
@@ -584,7 +563,7 @@ public abstract class PageInfo {
     /*
      * isErrorPage
      */
-    public void setIsErrorPage(String value) throws JspException {
+    public void setIsErrorPage(String value) {
         if (value == null)
             return;
 
@@ -593,7 +572,7 @@ public abstract class PageInfo {
 	else if ("false".equalsIgnoreCase(value))
 	    isErrorPage = false;
 	else
-	    throw new JspException(value);
+	    throw new RuntimeException("Invalid value for errorPage: " + value);
 
 	isErrorPageValue = value;
     }
@@ -610,7 +589,7 @@ public abstract class PageInfo {
     /*
      * isELIgnored
      */
-    public void setIsELIgnored(String value) throws JspException {
+    public void setIsELIgnored(String value) {
         if (value == null)
             return;
 
@@ -619,7 +598,7 @@ public abstract class PageInfo {
 	else if ("false".equalsIgnoreCase(value))
 	    isELIgnored = false;
 	else {
-            throw new JspException(value);
+            throw new RuntimeException("Invalid value for elIgnored: " + value);
 	}
 
 	isELIgnoredValue = value;
@@ -758,30 +737,21 @@ public abstract class PageInfo {
 
     public String tagLibraryInfoToString(TagLibraryInfo info, String indent) {
         StringBuilder sb = new StringBuilder();
-        sb.append(indent).append("tlibversion : ").append(getFieldByReflection("tlibversion", info)).append('\n');  // NOI18N
+        sb.append(indent).append("tlibversion : ").append(info.getTlibversion()).append('\n');  // NOI18N
         sb.append(indent).append("jspversion  : ").append(info.getRequiredVersion()).append('\n');  // NOI18N
         sb.append(indent).append("shortname   : ").append(info.getShortName()).append('\n');  // NOI18N
         sb.append(indent).append("urn         : ").append(info.getReliableURN()).append('\n');  // NOI18N
         sb.append(indent).append("info        : ").append(info.getInfoString()).append('\n');  // NOI18N
         sb.append(indent).append("uri         : ").append(info.getURI()).append('\n');  // NOI18N
 
-        TagInfo tags[] = info.getTags();
-        if (tags != null) {
-            for (int i = 0; i < tags.length; i++)
-                sb.append(tagInfoToString(tags[i], indent + "  "));  // NOI18N
+        for(TagInfo ti: info.getTags()) {
+            sb.append(tagInfoToString(ti, indent + "  "));  // NOI18N
         }
 
-        TagFileInfo tagFiles[] = info.getTagFiles().clone();
-        Arrays.sort(tagFiles, TAG_FILE_INFO_COMPARATOR);
-        if (tagFiles != null) {
-            for (int i = 0; i < tagFiles.length; i++)
-                sb.append(tagFileToString(tagFiles[i], indent + "  "));  // NOI18N
-        }
-
-        FunctionInfo functions[] = info.getFunctions();
-        if (functions != null) {
-            for (int i = 0; i < functions.length; i++)
-                sb.append(functionInfoToString(functions[i], indent + "  "));  // NOI18N
+        List<TagFileInfo> tagFiles = new ArrayList<>(info.getTagFiles());
+        tagFiles.sort(TAG_FILE_INFO_COMPARATOR);
+        for (TagFileInfo tfi: tagFiles) {
+            sb.append(tagFileToString(tfi, indent + "  "));  // NOI18N
         }
 
         return sb.toString();
@@ -793,10 +763,10 @@ public abstract class PageInfo {
             sb.append(indent).append("tag name     : ").append(tag.getTagName()).append('\n');  // NOI18N
             sb.append(indent).append("    class    : ").append(tag.getTagClassName()).append('\n');  // NOI18N
             sb.append(indent).append("    attribs  : [");  // NOI18N
-            TagAttributeInfo attrs[] = tag.getAttributes();
-            for (int i = 0; i < attrs.length; i++) {
-                sb.append(attrs[i].getName());
-                if (i < attrs.length - 1) {
+            List<TagAttributeInfo> attrs = tag.getAttributes();
+            for (int i = 0; i < attrs.size(); i++) {
+                sb.append(attrs.get(i).getName());
+                if (i < attrs.size() - 1) {
                     sb.append(", ");  // NOI18N
                 }
             }
@@ -808,19 +778,6 @@ public abstract class PageInfo {
         return sb.toString();
     }
 
-    public String functionInfoToString(FunctionInfo function, String indent) {
-        StringBuilder sb = new StringBuilder();
-        if (function != null) {
-            sb.append(indent).append("function name     : ").append(function.getName()).append('\n');  // NOI18N
-            sb.append(indent).append("         class    : ").append(function.getFunctionClass()).append('\n');  // NOI18N
-            sb.append(indent).append("         signature: ").append(function.getFunctionSignature()).append('\n');  // NOI18N
-        }
-        else {
-            sb.append(indent).append("functioninfo is null\n");  // NOI18N
-        }
-        return sb.toString();
-    }
-
     public String tagFileToString(TagFileInfo tagFile, String indent) {
         StringBuilder sb = new StringBuilder();
         sb.append(indent).append("tagfile path : ").append(tagFile.getPath()).append('\n');  // NOI18N
@@ -828,37 +785,15 @@ public abstract class PageInfo {
         return sb.toString();
     }
 
-    private Object getFieldByReflection(String fieldName, TagLibraryInfo info) {
-        try {
-            java.lang.reflect.Field f = TagLibraryInfo.class.getDeclaredField(fieldName);
-            f.setAccessible(true);
-            return f.get(info);
-        }
-        catch (NoSuchFieldException | IllegalAccessException e) {
-            Logger.getLogger("global").log(Level.INFO, null, e);
-        }
-        return null;
-    }
-
     private String beansToString(BeanData beans[], String indent) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < beans.length; i++) {
             sb.append(indent).append("bean : ").append(beans[i].getId()).append(",    ").  // NOI18N
-//                append(scopeToString(beans[i].getScope())).append(",    ").  // NOI18N
                 append(beans[i].getClassName()).append('\n');  // NOI18N
         }
         return sb.toString();
     }
 
-//    private String scopeToString(int scope) {
-//        switch (scope) {
-//            case PageContext.PAGE_SCOPE        : return "PAGE";  // NOI18N
-//            case PageContext.SESSION_SCOPE     : return "SESSION";  // NOI18N
-//            case PageContext.APPLICATION_SCOPE : return "APPLICATION";  // NOI18N
-//            case PageContext.REQUEST_SCOPE     : return "REQUEST";  // NOI18N
-//        }
-//        return " !!! ";
-//    }
 
     /** Interface which describes data for beans used by this page. */
     public interface BeanData {

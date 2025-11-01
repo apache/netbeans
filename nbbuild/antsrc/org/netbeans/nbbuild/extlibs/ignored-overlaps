@@ -122,4 +122,6 @@ ide/libs.graalsdk/external/word-24.0.0.jar ide/libs.graalsdk.system/external/wor
 # Intentionally duplicated (in web.jspparser only as unittest dependency and copied to make license handling easier)
 enterprise/web.jspparser/external/jakarta.servlet.jsp.jstl-api-1.2.7.jar enterprise/libs.jstl/external/jakarta.servlet.jsp.jstl-api-1.2.7.jar
 enterprise/web.jspparser/external/jakarta.servlet.jsp.jstl-1.2.6.jar enterprise/libs.jstl/external/jakarta.servlet.jsp.jstl-1.2.6.jar
+enterprise/web.jspparser/external/jakarta.servlet.jsp.jstl-api-3.0.2.jar enterprise/libs.jstl/external/jakarta.servlet.jsp.jstl-api-3.0.2.jar
+enterprise/web.jspparser/external/jakarta.servlet.jsp.jstl-3.0.1.jar enterprise/libs.jstl/external/jakarta.servlet.jsp.jstl-3.0.1.jar
 enterprise/web.jspparser/external/commons-logging-1.3.1.jar platform/o.apache.commons.logging/external/commons-logging-1.3.1.jar

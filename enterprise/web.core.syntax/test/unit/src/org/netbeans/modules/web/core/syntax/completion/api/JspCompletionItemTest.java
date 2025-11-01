@@ -18,12 +18,23 @@
  */
 package org.netbeans.modules.web.core.syntax.completion.api;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import org.netbeans.test.web.core.syntax.TestBase;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  *
@@ -35,13 +46,38 @@ public class JspCompletionItemTest extends TestBase {
         super(name);
     }
 
-    public void testGetStreamForUrl() throws Exception {
-        /* What is this for?
-        URL url = new URL("http://java.sun.com/jsp/jstl/core");
-        InputStream inputStreamForUrl = JspCompletionItem.getInputStreamForUrl(url);
-        assertNotNull(inputStreamForUrl);
-        */
+    private static void createTestZip(File zipFile, String filePath, String content) throws IOException {
+        Path zipPath = zipFile.toPath();
+        Files.createDirectories(zipPath.getParent());
+        try(OutputStream os = Files.newOutputStream(zipPath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+                ZipOutputStream zos = new ZipOutputStream(os, UTF_8)) {
+            zos.putNextEntry(new ZipEntry(filePath));
+            zos.write(content.getBytes(UTF_8));
+            zos.closeEntry();
+        }
+    }
 
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        createTestZip(
+                new File(getDataDir(), "testJarLibrary/file.zip"),
+                "file.txt",
+                "testFile"
+        );
+        createTestZip(
+                new File(getDataDir(), "testJarLibrary/file space.zip"),
+                "file.txt",
+                "test file with spaces"
+        );
+        createTestZip(
+                new File(getDataDir(), "testJarLibrary/file_space.zip"),
+                "file space.txt",
+                "test file with spaces"
+        );
+    }
+
+    public void testGetStreamForUrl() throws Exception {
         URL url = new URL("jar:file:" + getTestFile("testJarLibrary/file.zip").getPath() + "!/file.txt");
         InputStream inputStreamForUrl = JspCompletionItem.getInputStreamForUrl(url);
         assertNotNull(inputStreamForUrl);

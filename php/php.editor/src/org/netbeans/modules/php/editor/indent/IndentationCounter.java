@@ -29,6 +29,7 @@ import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.editor.indent.spi.Context;
+import static org.netbeans.modules.php.editor.CodeUtils.PIPE_OPERATOR;
 import org.netbeans.modules.php.editor.lexer.LexUtilities;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.openide.util.Exceptions;
@@ -341,6 +342,13 @@ public class IndentationCounter {
                             int startExpression = LexUtilities.findStartTokenOfExpression(ts);
                             if (startExpression != -1) {
                                 newIndent = Utilities.getRowIndent(doc, startExpression) + continuationSize;
+                                break;
+                            }
+                        } else if (ts.token().id() == PHPTokenId.PHP_OPERATOR && TokenUtilities.textEquals(PIPE_OPERATOR, ts.token().text())) { // NOI18N
+                            //PHP 8.5 align pipe operator chain expressions
+                            int startExpression = LexUtilities.findStartTokenOfExpression(ts);
+                            if (startExpression != -1) {
+                                newIndent = Utilities.getRowIndent(doc, startExpression);
                                 break;
                             }
                         }

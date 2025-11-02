@@ -1,0 +1,9 @@
+$y['Example'] |> 2;
+                 -
+HINT:Pipe operator right-handle requires to be a callable
+        |> null;
+           ----
+HINT:Pipe operator right-handle requires to be a callable
+        |> true
+           ----
+HINT:Pipe operator right-handle requires to be a callable

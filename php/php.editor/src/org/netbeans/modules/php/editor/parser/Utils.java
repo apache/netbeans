@@ -375,6 +375,9 @@ public final class Utils {
             case ASTPHP5Symbols.T_OPEN_RECT:
                 name = "T_OPEN_RECT"; //NOI18N
                 break;
+            case ASTPHP5Symbols.T_PIPE:
+                name = "T_PIPE"; //NOI18N
+                break;
             case ASTPHP5Symbols.T_OR:
                 name = "T_OR"; //NOI18N
                 break;

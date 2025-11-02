@@ -397,6 +397,7 @@ public class PHP5ErrorHandlerImpl implements PHP5ErrorHandler {
                 case ASTPHP5Symbols.T_YIELD : text = "yield"; break; //NOI18N
                 case ASTPHP5Symbols.T_YIELD_FROM : text = "yield from"; break; //NOI18N
                 case ASTPHP5Symbols.T_READONLY : text = "readonly"; break; //NOI18N PHP 8.1
+                //skiping T_PIPE = "|>" PHP 8.5 as it doesn't bring much to the expected tokens error message
                 default:
                     //no-op
             }

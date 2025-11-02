@@ -1,0 +1,811 @@
+<testresult testFile='pipeOperator_02.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='836' end='843'>
+            <text>$result</text>
+        </token>
+        <token id='T_EQUAL' start='844' end='845'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='846' end='855'>
+            <text>"Example"</text>
+        </token>
+        <token id='T_PIPE' start='860' end='862'>
+            <text>|&gt;</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='863' end='875'>
+            <text>&apos;strtoupper&apos;</text>
+        </token>
+        <token id='T_PIPE' start='880' end='882'>
+            <text>|&gt;</text>
+        </token>
+        <token id='T_STRING' start='883' end='894'>
+            <text>str_shuffle</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='894' end='895'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='895' end='898'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='898' end='899'>
+            <text>)</text>
+        </token>
+        <token id='T_PIPE' start='904' end='906'>
+            <text>|&gt;</text>
+        </token>
+        <token id='T_FN' start='907' end='909'>
+            <text>fn</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='909' end='910'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='910' end='912'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='912' end='913'>
+            <text>)</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='914' end='916'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_STRING' start='917' end='921'>
+            <text>trim</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='921' end='922'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='922' end='924'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='924' end='925'>
+            <text>)</text>
+        </token>
+        <token id='T_PIPE' start='930' end='932'>
+            <text>|&gt;</text>
+        </token>
+        <token id='T_FUNCTION' start='933' end='941'>
+            <text>function</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='941' end='942'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='942' end='948'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='949' end='951'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='951' end='952'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='952' end='953'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='954' end='960'>
+            <text>string</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='961' end='962'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='962' end='968'>
+            <text>return</text>
+        </token>
+        <token id='T_STRING' start='969' end='979'>
+            <text>strtolower</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='979' end='980'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='980' end='982'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='982' end='983'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='983' end='984'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='984' end='985'>
+            <text>}</text>
+        </token>
+        <token id='T_PIPE' start='990' end='992'>
+            <text>|&gt;</text>
+        </token>
+        <token id='T_NEW' start='993' end='996'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='997' end='1009'>
+            <text>ExampleClass</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1009' end='1010'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1010' end='1011'>
+            <text>)</text>
+        </token>
+        <token id='T_PIPE' start='1016' end='1018'>
+            <text>|&gt;</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1019' end='1020'>
+            <text>[</text>
+        </token>
+        <token id='T_STRING' start='1020' end='1032'>
+            <text>ExampleClass</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1032' end='1034'>
+            <text>::</text>
+        </token>
+        <token id='T_CLASS' start='1034' end='1039'>
+            <text>class</text>
+        </token>
+        <token id='T_COMMA' start='1039' end='1040'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1041' end='1055'>
+            <text>&apos;staticMethod&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1055' end='1056'>
+            <text>]</text>
+        </token>
+        <token id='T_PIPE' start='1061' end='1063'>
+            <text>|&gt;</text>
+        </token>
+        <token id='T_NEW' start='1064' end='1067'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='1068' end='1080'>
+            <text>ExampleClass</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1080' end='1081'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1081' end='1082'>
+            <text>)</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1082' end='1084'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1084' end='1088'>
+            <text>hash</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1088' end='1089'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='1089' end='1092'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1092' end='1093'>
+            <text>)</text>
+        </token>
+        <token id='T_PIPE' start='1098' end='1100'>
+            <text>|&gt;</text>
+        </token>
+        <token id='T_STRING' start='1101' end='1112'>
+            <text>my_function</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1112' end='1113'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='1113' end='1116'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1116' end='1117'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1117' end='1118'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='1120' end='1124'>
+            <text>echo</text>
+        </token>
+        <token id='T_VARIABLE' start='1125' end='1132'>
+            <text>$result</text>
+        </token>
+        <token id='T_SEMICOLON' start='1132' end='1133'>
+            <text>;</text>
+        </token>
+        <token id='T_FUNCTION' start='1135' end='1143'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1144' end='1155'>
+            <text>my_function</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1155' end='1156'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1156' end='1162'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1163' end='1165'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1165' end='1166'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1166' end='1167'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1168' end='1174'>
+            <text>string</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1175' end='1176'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1181' end='1187'>
+            <text>return</text>
+        </token>
+        <token id='T_STRING' start='1188' end='1199'>
+            <text>str_replace</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1199' end='1200'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1200' end='1204'>
+            <text>"le"</text>
+        </token>
+        <token id='T_COMMA' start='1204' end='1205'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1206' end='1211'>
+            <text>"les"</text>
+        </token>
+        <token id='T_COMMA' start='1211' end='1212'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='1213' end='1215'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1215' end='1216'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1216' end='1217'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1218' end='1219'>
+            <text>}</text>
+        </token>
+        <token id='T_CLASS' start='1221' end='1226'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='1227' end='1239'>
+            <text>ExampleClass</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1240' end='1241'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='1246' end='1252'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1253' end='1261'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1262' end='1270'>
+            <text>__invoke</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1270' end='1271'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1271' end='1277'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1278' end='1280'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1280' end='1281'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1281' end='1282'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1283' end='1289'>
+            <text>string</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1290' end='1291'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1300' end='1306'>
+            <text>return</text>
+        </token>
+        <token id='T_STRING' start='1307' end='1317'>
+            <text>strtoupper</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1317' end='1318'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1318' end='1320'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1320' end='1321'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1321' end='1322'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1327' end='1328'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1334' end='1340'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1341' end='1349'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1350' end='1354'>
+            <text>hash</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1354' end='1355'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1355' end='1361'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1362' end='1364'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1364' end='1365'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1365' end='1366'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1367' end='1373'>
+            <text>string</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1374' end='1375'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1384' end='1390'>
+            <text>return</text>
+        </token>
+        <token id='T_STRING' start='1391' end='1395'>
+            <text>hash</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1395' end='1396'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1396' end='1404'>
+            <text>&apos;sha256&apos;</text>
+        </token>
+        <token id='T_COMMA' start='1404' end='1405'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='1406' end='1408'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1408' end='1409'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1409' end='1410'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1415' end='1416'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1422' end='1428'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1429' end='1435'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1436' end='1444'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1445' end='1457'>
+            <text>staticMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1457' end='1458'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1458' end='1464'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1465' end='1467'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1467' end='1468'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1468' end='1469'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1470' end='1476'>
+            <text>string</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1477' end='1478'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1487' end='1493'>
+            <text>return</text>
+        </token>
+        <token id='T_STRING' start='1494' end='1505'>
+            <text>str_replace</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1505' end='1506'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1506' end='1509'>
+            <text>&apos;E&apos;</text>
+        </token>
+        <token id='T_COMMA' start='1509' end='1510'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1511' end='1514'>
+            <text>&apos;O&apos;</text>
+        </token>
+        <token id='T_COMMA' start='1514' end='1515'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='1516' end='1518'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1518' end='1519'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1519' end='1520'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1525' end='1526'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1527' end='1528'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='1529' end='1529'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1528'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='815' end='836' commentType='singleLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='815' end='836' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='836' end='1118'>
+                <Assignment start='836' end='1117' operator='EQUAL'>
+                    <Variable start='836' end='843' isDollared='true'>
+                        <Identifier start='837' end='843' name='result'/>
+                    </Variable>
+                    <CompositionExpression start='846' end='1117' operator='PIPE'>
+                        <CompositionExpression start='846' end='899' operator='PIPE'>
+                            <CompositionExpression start='846' end='875' operator='PIPE'>
+                                <Scalar start='846' end='855' type='STRING' value='"Example"'/>
+                                <Scalar start='863' end='875' type='STRING' value='&apos;strtoupper&apos;'/>
+                            </CompositionExpression>
+                            <FunctionInvocation start='883' end='899'>
+                                <FucntionName start='883' end='894'>
+                                    <NamespaceName start='883' end='894' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='883' end='894' name='str_shuffle'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                    <FirstClassCallableArg start='895' end='898'/>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </CompositionExpression>
+                        <ArrowFunctionDeclaration start='907' end='1117' isReference='false' isStatic='false'>
+                            <FormalParameter start='910' end='912' isMandatory='true' isVariadic='false'>
+                                <ParametrType>
+                                </ParametrType>
+                                <ParametrName>
+                                    <Variable start='910' end='912' isDollared='true'>
+                                        <Identifier start='911' end='912' name='x'/>
+                                    </Variable>
+                                </ParametrName>
+                                <DefaultValue>
+                                </DefaultValue>
+                            </FormalParameter>
+                            <CompositionExpression start='917' end='1117' operator='PIPE'>
+                                <CompositionExpression start='917' end='1093' operator='PIPE'>
+                                    <CompositionExpression start='917' end='1056' operator='PIPE'>
+                                        <CompositionExpression start='917' end='1011' operator='PIPE'>
+                                            <CompositionExpression start='917' end='985' operator='PIPE'>
+                                                <FunctionInvocation start='917' end='925'>
+                                                    <FucntionName start='917' end='921'>
+                                                        <NamespaceName start='917' end='921' isCurrent='false' isGlobal='false'>
+                                                            <Identifier start='917' end='921' name='trim'/>
+                                                        </NamespaceName>
+                                                    </FucntionName>
+                                                    <Parameters>
+                                                        <Variable start='922' end='924' isDollared='true'>
+                                                            <Identifier start='923' end='924' name='x'/>
+                                                        </Variable>
+                                                    </Parameters>
+                                                </FunctionInvocation>
+                                                <LambdaFunctionDeclaration start='933' end='985' isReference='false'>
+                                                    <FormalParameter start='942' end='951' isMandatory='true' isVariadic='false'>
+                                                        <ParametrType>
+                                                            <NamespaceName start='942' end='948' isCurrent='false' isGlobal='false'>
+                                                                <Identifier start='942' end='948' name='string'/>
+                                                            </NamespaceName>
+                                                        </ParametrType>
+                                                        <ParametrName>
+                                                            <Variable start='949' end='951' isDollared='true'>
+                                                                <Identifier start='950' end='951' name='x'/>
+                                                            </Variable>
+                                                        </ParametrName>
+                                                        <DefaultValue>
+                                                        </DefaultValue>
+                                                    </FormalParameter>
+                                                    <NamespaceName start='954' end='960' isCurrent='false' isGlobal='false'>
+                                                        <Identifier start='954' end='960' name='string'/>
+                                                    </NamespaceName>
+                                                    <Block start='961' end='985' isCurly='true'>
+                                                        <ReturnStatement start='962' end='984'>
+                                                            <FunctionInvocation start='969' end='983'>
+                                                                <FucntionName start='969' end='979'>
+                                                                    <NamespaceName start='969' end='979' isCurrent='false' isGlobal='false'>
+                                                                        <Identifier start='969' end='979' name='strtolower'/>
+                                                                    </NamespaceName>
+                                                                </FucntionName>
+                                                                <Parameters>
+                                                                    <Variable start='980' end='982' isDollared='true'>
+                                                                        <Identifier start='981' end='982' name='x'/>
+                                                                    </Variable>
+                                                                </Parameters>
+                                                            </FunctionInvocation>
+                                                        </ReturnStatement>
+                                                    </Block>
+                                                </LambdaFunctionDeclaration>
+                                            </CompositionExpression>
+                                            <ClassInstanceCreation start='993' end='1011' anonymous='false'>
+                                                <ClassName start='997' end='1009'>
+                                                    <NamespaceName start='997' end='1009' isCurrent='false' isGlobal='false'>
+                                                        <Identifier start='997' end='1009' name='ExampleClass'/>
+                                                    </NamespaceName>
+                                                </ClassName>
+                                                <Parameters>
+                                                </Parameters>
+                                            </ClassInstanceCreation>
+                                        </CompositionExpression>
+                                        <ArrayCreation start='1019' end='1056' type='NEW'>
+                                            <ArrayElement start='1020' end='1039'>
+                                                <Key>
+                                                </Key>
+                                                <Value>
+                                                    <StaticConstantAccess start='1020' end='1039' isDynamicName='false'>
+                                                        <NamespaceName start='1020' end='1032' isCurrent='false' isGlobal='false'>
+                                                            <Identifier start='1020' end='1032' name='ExampleClass'/>
+                                                        </NamespaceName>
+                                                        <Constant>
+                                                            <Identifier start='1034' end='1039' name='class'/>
+                                                        </Constant>
+                                                        <Member>
+                                                            <Identifier start='1034' end='1039' name='class'/>
+                                                        </Member>
+                                                    </StaticConstantAccess>
+                                                </Value>
+                                            </ArrayElement>
+                                            <ArrayElement start='1041' end='1055'>
+                                                <Key>
+                                                </Key>
+                                                <Value>
+                                                    <Scalar start='1041' end='1055' type='STRING' value='&apos;staticMethod&apos;'/>
+                                                </Value>
+                                            </ArrayElement>
+                                        </ArrayCreation>
+                                    </CompositionExpression>
+                                    <MethodInvocation start='1064' end='1093' isNullsafe='false'>
+                                        <ClassInstanceCreationVariable start='1064' end='1082'>
+                                            <ClassInstanceCreation start='1064' end='1082' anonymous='false'>
+                                                <ClassName start='1068' end='1080'>
+                                                    <NamespaceName start='1068' end='1080' isCurrent='false' isGlobal='false'>
+                                                        <Identifier start='1068' end='1080' name='ExampleClass'/>
+                                                    </NamespaceName>
+                                                </ClassName>
+                                                <Parameters>
+                                                </Parameters>
+                                            </ClassInstanceCreation>
+                                        </ClassInstanceCreationVariable>
+                                        <Method>
+                                            <FunctionInvocation start='1084' end='1093'>
+                                                <FucntionName start='1084' end='1088'>
+                                                    <Variable start='1084' end='1088' isDollared='false'>
+                                                        <Identifier start='1084' end='1088' name='hash'/>
+                                                    </Variable>
+                                                </FucntionName>
+                                                <Parameters>
+                                                    <FirstClassCallableArg start='1089' end='1092'/>
+                                                </Parameters>
+                                            </FunctionInvocation>
+                                        </Method>
+                                    </MethodInvocation>
+                                </CompositionExpression>
+                                <FunctionInvocation start='1101' end='1117'>
+                                    <FucntionName start='1101' end='1112'>
+                                        <NamespaceName start='1101' end='1112' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1101' end='1112' name='my_function'/>
+                                        </NamespaceName>
+                                    </FucntionName>
+                                    <Parameters>
+                                        <FirstClassCallableArg start='1113' end='1116'/>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </CompositionExpression>
+                        </ArrowFunctionDeclaration>
+                    </CompositionExpression>
+                </Assignment>
+            </ExpressionStatement>
+            <EchoStatement start='1120' end='1133'>
+                <Variable start='1125' end='1132' isDollared='true'>
+                    <Identifier start='1126' end='1132' name='result'/>
+                </Variable>
+            </EchoStatement>
+            <FunctionDeclaration start='1135' end='1219' isReference='false'>
+                <Identifier start='1144' end='1155' name='my_function'/>
+                <FormalParameters>
+                    <FormalParameter start='1156' end='1165' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                            <NamespaceName start='1156' end='1162' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1156' end='1162' name='string'/>
+                            </NamespaceName>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='1163' end='1165' isDollared='true'>
+                                <Identifier start='1164' end='1165' name='x'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                </FormalParameters>
+                <NamespaceName start='1168' end='1174' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1168' end='1174' name='string'/>
+                </NamespaceName>
+                <Block start='1175' end='1219' isCurly='true'>
+                    <ReturnStatement start='1181' end='1217'>
+                        <FunctionInvocation start='1188' end='1216'>
+                            <FucntionName start='1188' end='1199'>
+                                <NamespaceName start='1188' end='1199' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1188' end='1199' name='str_replace'/>
+                                </NamespaceName>
+                            </FucntionName>
+                            <Parameters>
+                                <Scalar start='1200' end='1204' type='STRING' value='"le"'/>
+                                <Scalar start='1206' end='1211' type='STRING' value='"les"'/>
+                                <Variable start='1213' end='1215' isDollared='true'>
+                                    <Identifier start='1214' end='1215' name='x'/>
+                                </Variable>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </ReturnStatement>
+                </Block>
+            </FunctionDeclaration>
+            <ClassDeclaration start='1221' end='1528' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='1227' end='1239' name='ExampleClass'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='1240' end='1528' isCurly='true'>
+                    <MethodDeclaration start='1246' end='1328' modifiers='public'>
+                        <FunctionDeclaration start='1253' end='1328' isReference='false'>
+                            <Identifier start='1262' end='1270' name='__invoke'/>
+                            <FormalParameters>
+                                <FormalParameter start='1271' end='1280' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1271' end='1277' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1271' end='1277' name='string'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1278' end='1280' isDollared='true'>
+                                            <Identifier start='1279' end='1280' name='x'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='1283' end='1289' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1283' end='1289' name='string'/>
+                            </NamespaceName>
+                            <Block start='1290' end='1328' isCurly='true'>
+                                <ReturnStatement start='1300' end='1322'>
+                                    <FunctionInvocation start='1307' end='1321'>
+                                        <FucntionName start='1307' end='1317'>
+                                            <NamespaceName start='1307' end='1317' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1307' end='1317' name='strtoupper'/>
+                                            </NamespaceName>
+                                        </FucntionName>
+                                        <Parameters>
+                                            <Variable start='1318' end='1320' isDollared='true'>
+                                                <Identifier start='1319' end='1320' name='x'/>
+                                            </Variable>
+                                        </Parameters>
+                                    </FunctionInvocation>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1334' end='1416' modifiers='public'>
+                        <FunctionDeclaration start='1341' end='1416' isReference='false'>
+                            <Identifier start='1350' end='1354' name='hash'/>
+                            <FormalParameters>
+                                <FormalParameter start='1355' end='1364' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1355' end='1361' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1355' end='1361' name='string'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1362' end='1364' isDollared='true'>
+                                            <Identifier start='1363' end='1364' name='x'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='1367' end='1373' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1367' end='1373' name='string'/>
+                            </NamespaceName>
+                            <Block start='1374' end='1416' isCurly='true'>
+                                <ReturnStatement start='1384' end='1410'>
+                                    <FunctionInvocation start='1391' end='1409'>
+                                        <FucntionName start='1391' end='1395'>
+                                            <NamespaceName start='1391' end='1395' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1391' end='1395' name='hash'/>
+                                            </NamespaceName>
+                                        </FucntionName>
+                                        <Parameters>
+                                            <Scalar start='1396' end='1404' type='STRING' value='&apos;sha256&apos;'/>
+                                            <Variable start='1406' end='1408' isDollared='true'>
+                                                <Identifier start='1407' end='1408' name='x'/>
+                                            </Variable>
+                                        </Parameters>
+                                    </FunctionInvocation>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1422' end='1526' modifiers='public static'>
+                        <FunctionDeclaration start='1436' end='1526' isReference='false'>
+                            <Identifier start='1445' end='1457' name='staticMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='1458' end='1467' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1458' end='1464' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1458' end='1464' name='string'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1465' end='1467' isDollared='true'>
+                                            <Identifier start='1466' end='1467' name='x'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='1470' end='1476' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1470' end='1476' name='string'/>
+                            </NamespaceName>
+                            <Block start='1477' end='1526' isCurly='true'>
+                                <ReturnStatement start='1487' end='1520'>
+                                    <FunctionInvocation start='1494' end='1519'>
+                                        <FucntionName start='1494' end='1505'>
+                                            <NamespaceName start='1494' end='1505' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1494' end='1505' name='str_replace'/>
+                                            </NamespaceName>
+                                        </FucntionName>
+                                        <Parameters>
+                                            <Scalar start='1506' end='1509' type='STRING' value='&apos;E&apos;'/>
+                                            <Scalar start='1511' end='1514' type='STRING' value='&apos;O&apos;'/>
+                                            <Variable start='1516' end='1518' isDollared='true'>
+                                                <Identifier start='1517' end='1518' name='x'/>
+                                            </Variable>
+                                        </Parameters>
+                                    </FunctionInvocation>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+        </Statements>
+    </Program>
+</testresult>

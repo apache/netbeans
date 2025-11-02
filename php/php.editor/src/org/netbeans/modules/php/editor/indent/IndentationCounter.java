@@ -343,6 +343,13 @@ public class IndentationCounter {
                                 newIndent = Utilities.getRowIndent(doc, startExpression) + continuationSize;
                                 break;
                             }
+                        } else if (ts.token().id() == PHPTokenId.PHP_OPERATOR && TokenUtilities.textEquals("|>", ts.token().text())) { // NOI18N
+                            //PHP 8.5 align pipe operator chain expressions
+                            int startExpression = LexUtilities.findStartTokenOfExpression(ts);
+                            if (startExpression != -1) {
+                                newIndent = Utilities.getRowIndent(doc, startExpression);
+                                break;
+                            }
                         }
                     }
                     previousTokenId = ts.token().id();

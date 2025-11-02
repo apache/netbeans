@@ -31,6 +31,7 @@ import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration.Modifier;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreationVariable;
+import org.netbeans.modules.php.editor.parser.astnodes.CompositionExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
@@ -145,6 +146,14 @@ public final class PHP84UnhandledError extends UnhandledErrorRule {
             super.visit(node);
         }
 
+        @Override
+        public void visit(CompositionExpression node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            createError(node);
+        }
+
         private void checkSetVisibility(MethodDeclaration node) {
             if (CodeUtils.isConstructor(node)) {
                 FunctionDeclaration function = node.getFunction();
@@ -183,7 +192,7 @@ public final class PHP84UnhandledError extends UnhandledErrorRule {
         @NbBundle.Messages("PHP84VersionError.displayName=Language feature not compatible with PHP version indicated in project settings")
         @Override
         public String getDisplayName() {
-            return Bundle.PHP83VersionError_displayName();
+            return Bundle.PHP84VersionError_displayName();
         }
 
         @NbBundle.Messages("PHP84VersionError.description=Detected language features not compatible with PHP version indicated in project settings")

@@ -41,6 +41,7 @@ import org.openide.util.NbBundle;
     "PhpVersion.PHP_82=PHP 8.2",
     "PhpVersion.PHP_83=PHP 8.3",
     "PhpVersion.PHP_84=PHP 8.4",
+    "PhpVersion.PHP_85=PHP 8.5",
 })
 public enum PhpVersion {
 
@@ -115,6 +116,11 @@ public enum PhpVersion {
      * @since 2.100
      */
     PHP_84(Bundle.PhpVersion_PHP_84()),
+    /**
+     * PHP 8.4.
+     * @since 2.x
+     */
+    PHP_85(Bundle.PhpVersion_PHP_85()),
     ;
 
     private final String displayName;
@@ -373,6 +379,7 @@ public enum PhpVersion {
         PHP_82(LocalDate.of(2022, 12, 8), LocalDate.of(2024, 12, 31), LocalDate.of(2026, 12, 31)),
         PHP_83(LocalDate.of(2023, 11, 23), LocalDate.of(2025, 12, 31), LocalDate.of(2027, 12, 31)),
         PHP_84(LocalDate.of(2024, 11, 21), LocalDate.of(2026, 12, 31), LocalDate.of(2028, 12, 31)),
+        PHP_85(LocalDate.of(2025, 11, 20), LocalDate.of(2027, 12, 31), LocalDate.of(2029, 12, 31)),
         ;
 
         private final LocalDate initialRelease;

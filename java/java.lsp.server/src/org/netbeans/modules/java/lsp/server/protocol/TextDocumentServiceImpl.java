@@ -307,6 +307,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     private static final String NETBEANS_COMPLETION_WARNING_TIME = "completion.warning.time";// NOI18N
     private static final String NETBEANS_JAVA_ON_SAVE_ORGANIZE_IMPORTS = "java.onSave.organizeImports";// NOI18N
     private static final String NETBEANS_CODE_COMPLETION_COMMIT_CHARS = "java.completion.commit.chars";// NOI18N
+    private static final String CLIENT_JAVA_COMPLETION_DISABLE_INSERT_METHOD_PARAMS = "java.completion.disable.insertMethodParameters";// NOI18N
+    private static final String NETBEANS_JAVA_COMPLETION_INSERT_TEXT_PARAMS = "completion-insert-text-parameters";// NOI18N
     private static final String URL = "url";// NOI18N
     private static final String INDEX = "index";// NOI18N
     
@@ -422,16 +424,20 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 return CompletableFuture.completedFuture(Either.forRight(completionList));
             }
             StyledDocument doc = (StyledDocument)rawDoc;
-            ConfigurationItem conf = new ConfigurationItem();
-            conf.setScopeUri(uri);
-            conf.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_JAVADOC_LOAD_TIMEOUT);
+            String prefix = client.getNbCodeCapabilities().getConfigurationPrefix();
+            ConfigurationItem confTimeout = new ConfigurationItem();
+            confTimeout.setScopeUri(uri);
+            confTimeout.setSection(prefix + NETBEANS_JAVADOC_LOAD_TIMEOUT);
             ConfigurationItem completionWarningLength = new ConfigurationItem();
             completionWarningLength.setScopeUri(uri);
-            completionWarningLength.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_COMPLETION_WARNING_TIME);
+            completionWarningLength.setSection(prefix + NETBEANS_COMPLETION_WARNING_TIME);
             ConfigurationItem commitCharacterConfig = new ConfigurationItem();
             commitCharacterConfig.setScopeUri(uri);
-            commitCharacterConfig.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_CODE_COMPLETION_COMMIT_CHARS);
-            return client.configuration(new ConfigurationParams(Arrays.asList(conf, completionWarningLength, commitCharacterConfig))).thenApply(c -> {
+            commitCharacterConfig.setSection(prefix + NETBEANS_CODE_COMPLETION_COMMIT_CHARS);
+            ConfigurationItem confDisableInsert = new ConfigurationItem();
+            confDisableInsert.setScopeUri(uri);
+            confDisableInsert.setSection(prefix + CLIENT_JAVA_COMPLETION_DISABLE_INSERT_METHOD_PARAMS);
+            return client.configuration(new ConfigurationParams(Arrays.asList(confTimeout, completionWarningLength, commitCharacterConfig, confDisableInsert))).thenApply(c -> {
                 if (c != null && !c.isEmpty()) {
                     if (c.get(0) instanceof JsonPrimitive) {
                         JsonPrimitive javadocTimeSetting = (JsonPrimitive) c.get(0);
@@ -447,6 +453,14 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         JsonArray commitCharsJsonArray = (JsonArray) c.get(2);
                         codeCompletionCommitChars.set(commitCharsJsonArray.asList().stream().map(ch -> ch.toString()).collect(Collectors.toList()));
                     }
+                    if (c.size() >= 4 && c.get(3) instanceof JsonPrimitive) {
+                        boolean extDisabledSetting = ((JsonPrimitive) c.get(3)).getAsBoolean();
+                        Preferences langPreferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
+                        boolean insertTextParams = langPreferences == null || langPreferences.getBoolean(NETBEANS_JAVA_COMPLETION_INSERT_TEXT_PARAMS, true);
+                        if (langPreferences != null && extDisabledSetting == insertTextParams) {
+                            langPreferences.putBoolean(NETBEANS_JAVA_COMPLETION_INSERT_TEXT_PARAMS, !extDisabledSetting);
+                        }
+                    }
                 }
                 final int caret = Utils.getOffset(doc, params.getPosition());
                 List<CompletionItem> items = new ArrayList<>();
@@ -454,7 +468,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         ? new Completion.Context(Completion.TriggerKind.valueOf(params.getContext().getTriggerKind().name()),
                                 params.getContext().getTriggerCharacter() == null || params.getContext().getTriggerCharacter().isEmpty() ? null : params.getContext().getTriggerCharacter().charAt(0))
                         : null;
-                Preferences prefs = CodeStylePreferences.get(doc, "text/x-java").getPreferences();
+                Preferences prefs = CodeStylePreferences.get(doc, JavaTokenId.language().mimeType()).getPreferences();
                 String point = prefs.get("classMemberInsertionPoint", null);
                 try {
                     prefs.put("classMemberInsertionPoint", CodeStyle.InsertionPoint.CARET_LOCATION.name());

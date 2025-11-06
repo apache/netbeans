@@ -101,7 +101,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.11</specification-version>
+                        <specification-version>1.46</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -422,6 +422,10 @@
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.java.lexer</code-name-base>
+                        <compile-dependency/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.java.j2seplatform</code-name-base>
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>

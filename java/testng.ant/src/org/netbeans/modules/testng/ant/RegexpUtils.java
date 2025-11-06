@@ -22,7 +22,6 @@ package org.netbeans.modules.testng.ant;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.regex.Pattern;
-import org.testng.reporters.VerboseReporter;
 
 /**
  * Utility class providing various parsing routines for parsing TestNG output.
@@ -49,7 +48,7 @@ final class RegexpUtils {
     static final String TEST_REGEX = "[^\"]*\"([^\"]+)\" - ([^\\(]+)(\\(([^\\)]*)\\)([^:]+: (.*)\\))?( finished in (\\d+) ms)?)?( \\((\\d+) of (\\d+)\\))?( success: (\\d+)%)?";
     static final String TEST_REGEX_2 = "[^\"]*\"([^\"]+)\" - ([^\\(]+)(\\(([^\\)]*)\\))(.)*";
     static final String TEST_REGEX_3 = "(.)*( \\((\\d+) of (\\d+)\\))$";
-    static final String STATS_REGEX = "\\D+(\\d+)\\D+(\\d+)(\\D+(\\d+))?";
+    static final String STATS_REGEX = "\\D+(\\d+)\\D+(\\d+)(\\D+((?:\\d+)|(?:\\[.*\\])))?";
 
     /** */
     static final String TESTSUITE_PREFIX = "[TestNGAntTask]";//"Testsuite: ";               //NOI18N
@@ -141,7 +140,7 @@ final class RegexpUtils {
                   + XML_SPACE_REGEX + '*' + "\\?>";                     //NOI18N
 
     /** */
-    static final String TEST_LISTENER_PREFIX = VerboseReporter.LISTENER_PREFIX;
+    static final String TEST_LISTENER_PREFIX = "[TestNG] ";             //NOI18N
     /** */
     static final String TESTS_COUNT_PREFIX = "tests to run: ";          //NOI18N
     /** */

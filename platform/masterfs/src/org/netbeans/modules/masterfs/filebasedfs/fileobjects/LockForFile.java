@@ -20,7 +20,6 @@ package org.netbeans.modules.masterfs.filebasedfs.fileobjects;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -29,7 +28,6 @@ import java.lang.ref.WeakReference;
 import java.nio.file.Files;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
 import org.netbeans.modules.masterfs.filebasedfs.utils.FileChangedManager;
 import org.netbeans.modules.masterfs.filebasedfs.utils.Utils;
 import org.openide.filesystems.FileAlreadyLockedException;
@@ -44,11 +42,9 @@ import org.openide.util.Exceptions;
  */
 public class LockForFile extends FileLock {
 
-    private static final ConcurrentHashMap<String, Namesakes> name2Namesakes =
-            new ConcurrentHashMap<String, Namesakes>();
+    private static final ConcurrentHashMap<String, Namesakes> name2Namesakes = new ConcurrentHashMap<>();
     private static final String PREFIX = ".LCK";
     private static final String SUFFIX = "~";
-    private static final Logger LOGGER = Logger.getLogger(LockForFile.class.getName());
     private File file;
     private File lock;
     private boolean valid = false;
@@ -159,12 +155,9 @@ public class LockForFile extends FileLock {
         File hardLock = getLock();
         hardLock.getParentFile().mkdirs();
         hardLock.createNewFile();
-        OutputStream os = Files.newOutputStream(hardLock.toPath());
-        try {
+        try (OutputStream os = Files.newOutputStream(hardLock.toPath())) {
             os.write(getFile().getAbsolutePath().getBytes());
             return true;
-        } finally {
-            os.close();
         }
     }
 
@@ -264,8 +257,8 @@ public class LockForFile extends FileLock {
         super.releaseLock();
         if (notify) {
             FileObject fo = FileUtil.toFileObject(FileUtil.normalizeFile(file));
-            if (fo instanceof BaseFileObj) {
-                ((BaseFileObj) fo).getProvidedExtensions().fileUnlocked(fo);
+            if (fo instanceof BaseFileObj baseFileObj) {
+                baseFileObj.getProvidedExtensions().fileUnlocked(fo);
             }
         }
     }
@@ -282,7 +275,8 @@ public class LockForFile extends FileLock {
                 hardLock();
                 lock.hardLock();
             }
-            Reference<LockForFile> old = putIfAbsent(file, new WeakReference<LockForFile>(lock));
+            // don't change to computeIfAbsent() since it would hold a reference to lock
+            Reference<LockForFile> old = putIfAbsent(file, new WeakReference<>(lock));
             return (old != null) ? null : lock;
         }
 

@@ -36,7 +36,7 @@ import org.openide.util.Lookup;
  */
 public abstract class BaseAnnotationProvider {
     /** listeners */
-    private List<FileStatusListener> fsStatusListener = new ArrayList<FileStatusListener>();
+    private final List<FileStatusListener> fsStatusListener = new ArrayList<>();
     /** lock for modification of listeners */
     private static final Object LOCK = new Object();
     
@@ -120,7 +120,7 @@ public abstract class BaseAnnotationProvider {
     * @param event The event to be fired
     */
     protected final void fireFileStatusChanged(FileStatusEvent event) {
-        List<FileStatusListener> listeners = new ArrayList<FileStatusListener>();
+        List<FileStatusListener> listeners = new ArrayList<>();
         synchronized (LOCK) {
             listeners.addAll(fsStatusListener);
         }

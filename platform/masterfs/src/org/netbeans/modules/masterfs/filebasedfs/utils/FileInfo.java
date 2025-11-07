@@ -22,7 +22,7 @@ package org.netbeans.modules.masterfs.filebasedfs.utils;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.filechooser.FileSystemView;
-import org.netbeans.modules.masterfs.filebasedfs.fileobjects.WriteLockUtils;
+import org.netbeans.modules.masterfs.filebasedfs.fileobjects.LockForFile;
 import org.netbeans.modules.masterfs.filebasedfs.naming.FileNaming;
 import org.netbeans.modules.masterfs.filebasedfs.naming.NamingFactory;
 import org.openide.filesystems.FileObject;
@@ -153,7 +153,7 @@ public final class FileInfo {
 
     public boolean isSupportedFile() {
         return (!getFile().getName().equals(".nbattrs") &&
-                !WriteLockUtils.hasActiveLockFileSigns(getFile().getName()));
+                !LockForFile.hasActiveLockFileSigns(getFile().getName()));
     }
     
     public FileInfo getRoot() {

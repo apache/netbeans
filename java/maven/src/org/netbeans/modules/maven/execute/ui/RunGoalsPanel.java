@@ -19,6 +19,7 @@
 package org.netbeans.modules.maven.execute.ui;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -68,7 +69,7 @@ public class RunGoalsPanel extends javax.swing.JPanel {
         RP.post(() -> {
             GoalsProvider provider = Lookup.getDefault().lookup(GoalsProvider.class);
             if (provider != null) {
-                Set<String> strs = provider.getAvailableGoals();
+                Set<String> strs = new HashSet<>(provider.getAvailableGoals());
                 try {
                     List<String> phases = EmbedderFactory.getProjectEmbedder().getLifecyclePhases();
                     strs.addAll(phases);

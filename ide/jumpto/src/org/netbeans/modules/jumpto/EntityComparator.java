@@ -22,6 +22,7 @@ package org.netbeans.modules.jumpto;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -43,7 +44,7 @@ public abstract class EntityComparator<E> implements Comparator<E> {
         Collection<String> namesOfOpenProjects = getNamesOfOpenProjects();
 
     /**
-     * Comparies its two strings for order.
+     * Compares its two strings for order.
      * @param s1 the first {@code String} to be compared (may be {@code null}).
      * @param s2 the second {@code String} to be compared (may be {@code null}).
      * @return  the value <code>0</code> if the argument string is equal to
@@ -65,8 +66,8 @@ public abstract class EntityComparator<E> implements Comparator<E> {
     }
 
     /**
-     * Comparies its two project names for order.
-     * It establishes the folowing relation between projects:
+     * Compares its two project names for order.
+     * It establishes the following relation between projects:
      * <pre>
      * Main Project &lt; Open Project &lt; Not Open Project
      * </pre>
@@ -168,10 +169,10 @@ public abstract class EntityComparator<E> implements Comparator<E> {
      * @return a collection of the names.
      */
     private static Collection<String> getNamesOfOpenProjects() {
-        ArrayList<String> names = new ArrayList<String>(10);
-        for(Project p: OpenProjects.getDefault().getOpenProjects()) {
-            String pName = ProjectUtils.getInformation(p).getDisplayName();
-            names.add(pName);
+        Project[] projects = OpenProjects.getDefault().getOpenProjects();
+        List<String> names = new ArrayList<>(projects.length);
+        for(Project p : projects) {
+            names.add(ProjectUtils.getInformation(p).getDisplayName());
         }
         return names;
     }

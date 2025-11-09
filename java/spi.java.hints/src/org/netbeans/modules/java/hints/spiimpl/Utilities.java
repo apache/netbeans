@@ -94,6 +94,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.net.URI;
 import java.nio.CharBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -163,8 +164,6 @@ import org.openide.util.Lookup;
 import org.openide.util.NbCollections;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.ServiceProvider;
-
-import static com.sun.source.tree.CaseTree.CaseKind.STATEMENT;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.java.hints.providers.spi.HintMetadata;
 import org.netbeans.modules.refactoring.spi.ui.RefactoringUI;
@@ -174,6 +173,8 @@ import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
 import org.openide.util.Parameters;
 import org.openide.windows.TopComponent;
+
+import static com.sun.source.tree.CaseTree.CaseKind.STATEMENT;
 
 /**
  *
@@ -288,32 +289,36 @@ public class Utilities {
     }
 
     public static List<HintDescription> listClassPathHints(Set<ClassPath> sourceCPs, Set<ClassPath> binaryCPs) {
-        List<HintDescription> result = new LinkedList<>();
+
+        // deduplicate before running queries
+        Set<FileObject> unique = new HashSet<>(128);
+        for (ClassPath cp : binaryCPs) {
+            unique.addAll(Arrays.asList(cp.getRoots()));
+        }
+
         Set<FileObject> roots = new HashSet<>();
 
-        for (ClassPath cp : binaryCPs) {
-            for (FileObject r : cp.getRoots()) {
-                Result2 src = SourceForBinaryQuery.findSourceRoots2(r.toURL());
-
-                if (src != null && src.preferSources()) {
-                    roots.addAll(Arrays.asList(src.getRoots()));
-                } else {
-                    roots.add(r);
-                }
+        for (FileObject fo : unique) {
+            Result2 src = SourceForBinaryQuery.findSourceRoots2(fo.toURL());
+            if (src != null && src.preferSources()) {
+                roots.addAll(Arrays.asList(src.getRoots()));
+            } else {
+                roots.add(fo);
             }
         }
 
         Set<ClassPath> cps = new HashSet<>(sourceCPs);
-
         cps.add(ClassPathSupport.createClassPath(roots.toArray(FileObject[]::new)));
 
         ClassPath cp = ClassPathSupport.createProxyClassPath(cps.toArray(ClassPath[]::new));
 
-        for (ClassPathBasedHintProvider p : Lookup.getDefault().lookupAll(ClassPathBasedHintProvider.class)) {
-            result.addAll(p.computeHints(cp, new AtomicBoolean()));
+        List<HintDescription> descriptions = new ArrayList<>();
+
+        for (ClassPathBasedHintProvider prov : Lookup.getDefault().lookupAll(ClassPathBasedHintProvider.class)) {
+            descriptions.addAll(prov.computeHints(cp, new AtomicBoolean()));
         }
 
-        return result;
+        return descriptions;
     }
     
     public static Tree parseAndAttribute(CompilationInfo info, String pattern, Scope scope) {
@@ -572,7 +577,7 @@ public class Utilities {
             throw new IllegalArgumentException();
         JavaCompiler compiler = JavaCompiler.instance(context);
         JavaFileObject prev = compiler.log.useSource(new DummyJFO());
-        Log.DiagnosticHandler discardHandler = new Log.DiscardDiagnosticHandler(compiler.log) {
+        Log.DiagnosticHandler discardHandler = compiler.log.new DiscardDiagnosticHandler() {
             @Override
             public void report(JCDiagnostic diag) {
                 errors.add(diag);
@@ -599,7 +604,7 @@ public class Utilities {
             throw new IllegalArgumentException();
         JavaCompiler compiler = JavaCompiler.instance(context);
         JavaFileObject prev = compiler.log.useSource(new DummyJFO());
-        Log.DiagnosticHandler discardHandler = new Log.DiscardDiagnosticHandler(compiler.log) {
+        Log.DiagnosticHandler discardHandler = compiler.log.new DiscardDiagnosticHandler() {
             @Override
             public void report(JCDiagnostic diag) {
                 errors.add(diag);
@@ -630,7 +635,7 @@ public class Utilities {
     private static TypeMirror attributeTree(JavacTaskImpl jti, Tree tree, Scope scope, final List<Diagnostic<? extends JavaFileObject>> errors) {
         Log log = Log.instance(jti.getContext());
         JavaFileObject prev = log.useSource(new DummyJFO());
-        Log.DiagnosticHandler discardHandler = new Log.DiscardDiagnosticHandler(log) {
+        Log.DiagnosticHandler discardHandler = log.new DiscardDiagnosticHandler() {
             @Override
             public void report(JCDiagnostic diag) {
                 errors.add(diag);
@@ -743,7 +748,7 @@ public class Utilities {
         Annotate annotate = Annotate.instance(context);
         Names names = Names.instance(context);
         Symtab syms = Symtab.instance(context);
-        Log.DiagnosticHandler discardHandler = new Log.DiscardDiagnosticHandler(compiler.log);
+        Log.DiagnosticHandler discardHandler = log.new DiscardDiagnosticHandler();
 
         JavaFileObject jfo = FileObjects.memoryFileObject("$", "$", new File("/tmp/$$scopeclass$constraints$" + count + ".java").toURI(), System.currentTimeMillis(), clazz.toString());
 
@@ -988,7 +993,8 @@ public class Utilities {
 
         itt.attach(c, new NoImports(c), null);
 
-        return itt.translate(original.getLeaf());
+        return itt.translate(original.getLeaf(),
+                             original.getParentPath() != null ? original.getParentPath().getLeaf() : null);
     }
 
     public static Tree generalizePattern(CompilationInfo info, TreePath original, int firstStatement, int lastStatement) {
@@ -1153,14 +1159,14 @@ public class Utilities {
         }
 
         @Override
-        public Tree translate(Tree tree) {
+        public Tree translate(Tree tree, Object p) {
             Tree var = tree2Variable.remove(tree);
 
             if (var != null) {
-                return super.translate(var);
+                return super.translate(var, p);
             }
 
-            return super.translate(tree);
+            return super.translate(tree, p);
         }
 
     }
@@ -1172,7 +1178,7 @@ public class Utilities {
         }
 
         @Override
-        public void classEntered(ClassTree clazz) {}
+        public void classEntered(ClassTree clazz, boolean isAnonymous) {}
 
         @Override
         public void enterVisibleThroughClasses(ClassTree clazz) {}

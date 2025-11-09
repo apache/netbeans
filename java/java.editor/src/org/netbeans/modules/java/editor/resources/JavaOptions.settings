@@ -26,7 +26,6 @@
     <instanceof class="org.openide.util.SharedClassObject"/>
     <instanceof class="java.beans.beancontext.BeanContextProxy"/>
     <instanceof class="java.io.Serializable"/>
-    <instanceof class="org.openide.options.SystemOption"/>
     <instanceof class="org.netbeans.modules.editor.options.OptionSupport"/>
     <instanceof class="org.netbeans.modules.editor.options.BaseOptions"/>
     <instance class="org.netbeans.modules.java.editor.options.JavaOptions"/>

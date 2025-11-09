@@ -147,7 +147,11 @@ public class MonitorSupport {
             return;
         }
         File libFolder = tm.getTomcatProperties().getMonitorLibFolder();
-        copyFromIDEInstToDir("modules/ext/org-netbeans-modules-web-httpmonitor.jar", new File(libFolder, "org-netbeans-modules-web-httpmonitor.jar"));  // NOI18N
+        if(tm.getTomcatVersion().isAtLeast(TomcatManager.TomcatVersion.TOMCAT_100)) {
+            copyFromIDEInstToDir("modules/ext/org-netbeans-modules-web-httpmonitor-jakarta.jar", new File(libFolder, "org-netbeans-modules-web-httpmonitor.jar"));  // NOI18N
+        } else {
+            copyFromIDEInstToDir("modules/ext/org-netbeans-modules-web-httpmonitor.jar", new File(libFolder, "org-netbeans-modules-web-httpmonitor.jar"));  // NOI18N
+        }
         copyFromIDEInstToDir("modules/org-netbeans-modules-schema2beans.jar", new File(libFolder, "org-netbeans-modules-schema2beans.jar")); // NOI18N
         
         //copyFromIDEInstToDir("modules/ext/monitor-valve.jar", instDir, "server/lib/monitor-valve.jar"); // NOI18N

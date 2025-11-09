@@ -57,7 +57,6 @@ import static javax.lang.model.element.Modifier.*;
 import static javax.lang.model.SourceVersion.RELEASE_10;
 import static javax.lang.model.SourceVersion.RELEASE_11;
 import static javax.lang.model.SourceVersion.RELEASE_16;
-import static javax.lang.model.SourceVersion.RELEASE_19;
 import static javax.lang.model.SourceVersion.RELEASE_21;
 import static javax.lang.model.type.TypeKind.VOID;
 
@@ -763,7 +762,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         String headerText = controller.getText().substring(startPos, offset);
         int idx = headerText.indexOf('{'); //NOI18N
-        if (idx >= 0) {
+        //see JDK-8364015, unclear how reliable this will be:
+        boolean isImplicitlyDeclaredClass = sourcePositions.getEndPosition(root, cls) == (-1);
+        if (idx >= 0 || isImplicitlyDeclaredClass) {
             addKeywordsForClassBody(env);
             addClassTypes(env, null);
             addElementCreators(env);
@@ -2020,25 +2021,23 @@ public final class JavaCompletionTask<T> extends BaseTask {
         TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, let, env.getOffset());
         if (ts != null) {
             switch (ts.token().id()) {
-                case ARROW:
+                case ARROW -> {
                     localResult(env);
                     addValueKeywords(env);
-                    break;
-                case COMMA:
+                }
+                case COMMA -> {
                     if (let.getParameters().isEmpty()
-                            || env.getController().getTrees().getSourcePositions().getStartPosition(path.getCompilationUnit(), let.getParameters().get(0).getType()) >= 0) {
+                            || !env.getController().getTreeUtilities().isSynthetic(new TreePath(path, let.getParameters().get(0).getType()))) {
                         addClassTypes(env, null);
                         addPrimitiveTypeKeywords(env);
                         addKeyword(env, FINAL_KEYWORD, SPACE, false);
-                    }
-                    else {
+                    } else {
                         boolean isFirstParamVarType = isLambdaVarType(env, let);
-
                         if (isFirstParamVarType) {
                             addVarTypeForLambdaParam(env);
                         }
                     }
-                    break;
+                }
             }
         }
     }
@@ -5632,7 +5631,10 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 DeclaredType iterable = iterableTE != null ? types.getDeclaredType(iterableTE) : null;
                 if (iterable != null && types.isSubtype(type, iterable)) {
                     Iterator<? extends TypeMirror> it = ((DeclaredType) type).getTypeArguments().iterator();
-                    type = it.hasNext() ? it.next() : elements.getTypeElement(JAVA_LANG_OBJECT).asType(); //NOI18N
+                    type = it.hasNext() ? it.next() : null;
+                    if (type == null || type.getKind() == TypeKind.ERROR) {
+                        type = elements.getTypeElement(JAVA_LANG_OBJECT).asType();
+                    }
                 } else {
                     return false;
                 }
@@ -5745,6 +5747,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
                                 st.add(types.erasure(te.asType()));
                             }
                         }
+                    }
+                    if (st.isEmpty() && env.getPath().getLeaf().getKind() == Kind.ENHANCED_FOR_LOOP) {
+                        st.add(controller.getElements().getTypeElement("java.lang.Object").asType());
                     }
                     smartTypes = st;
                 }

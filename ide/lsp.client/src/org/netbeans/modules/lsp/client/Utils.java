@@ -28,7 +28,15 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
@@ -45,10 +53,12 @@ import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.RenameFile;
 import org.eclipse.lsp4j.ResourceOperation;
 import org.eclipse.lsp4j.ResourceOperationKind;
+import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
@@ -63,6 +73,7 @@ import org.openide.loaders.DataObject;
 import org.openide.text.Line;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
+import org.openide.util.Pair;
 
 /**
  *
@@ -319,8 +330,109 @@ public class Utils {
     public static boolean isTrue(Boolean b) {
         return b != null && b;
     }
+
+    public static @NonNull ServerCapabilities getCapabilities(LSPBindings server) {
+        if (server.getInitResult() != null && server.getInitResult().getCapabilities() != null) {
+            return server.getInitResult().getCapabilities();
+        } else {
+            return new ServerCapabilities();
+        }
+    }
+
     public static boolean isEnabled(Either<Boolean, ?> settings) {
         return settings != null && (settings.isLeft() ? isTrue(settings.getLeft())
                                                        : settings.getRight() != null);
+    }
+
+    public static <P, V> void handleBindings(List<LSPBindings> servers,
+                                             Predicate<ServerCapabilities> filter,
+                                             CreateParameters<P> createParameter,
+                                             BiFunction<LSPBindings, P, CompletableFuture<V>> runTask,
+                                             BiConsumer<LSPBindings, V> handler) {
+        handleBindings(servers, filter, createParameter, runTask, handler, Environment.NOOP);
+    }
+
+    public static <P, V> void handleBindings(List<LSPBindings> servers,
+                                             Predicate<ServerCapabilities> filter,
+                                             CreateParameters<P> createParameter,
+                                             BiFunction<LSPBindings, P, CompletableFuture<V>> runTask,
+                                             BiConsumer<LSPBindings, V> handler,
+                                             Environment env) {
+        if (servers.isEmpty()) {
+            return ;
+        }
+
+        List<Pair<LSPBindings, CompletableFuture<V>>> pending = new ArrayList<>();
+        P p = null;
+
+        for (LSPBindings server : servers) {
+            if (env.isCanceled()) {
+                return ;
+            }
+
+            if (!filter.test(getCapabilities(server))) {
+                continue;
+            }
+
+            if (p == null) {
+                try {
+                    p = createParameter.createParameters();
+                } catch (BadLocationException ex) {
+                    Exceptions.printStackTrace(ex);
+                    return ;
+                }
+            }
+
+            CompletableFuture<V> cf = runTask.apply(server, p);
+
+            env.registerCancelCallback(() -> cf.cancel(true));
+
+            if (env.isCanceled()) {
+                return ;
+            }
+
+            pending.add(Pair.of(server, cf));
+        }
+
+        for (Pair<LSPBindings, CompletableFuture<V>> current : pending) {
+            if (env.isCanceled()) {
+                return ;
+            }
+
+            try {
+                V value = current.second().get();
+
+                handler.accept(current.first(), value);
+            } catch (CancellationException ex) {
+                env.handleCancellationException(ex);
+            } catch (InterruptedException | ExecutionException ex) {
+                env.handleException(ex);
+            }
+        }
+    }
+
+    public interface CreateParameters<P> {
+        public P createParameters() throws BadLocationException;
+    }
+
+    public interface Environment {
+        public static final Environment NOOP = new Environment() {
+            @Override public boolean isCanceled() {
+                return false;
+            }
+            @Override public void registerCancelCallback(Runnable callback) {
+            }
+            @Override public void handleCancellationException(CancellationException ex) {
+                handleException(ex);
+            }
+            @Override public void handleException(Exception ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        };
+
+        public boolean isCanceled();
+        public void registerCancelCallback(Runnable callback);
+        public void handleCancellationException(CancellationException ex);
+        public void handleException(Exception ex);
     }
 }

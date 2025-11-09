@@ -81,6 +81,7 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
     private static SourceUtilsTestUtil DEFAULT_LOOKUP = null;
     private static final Set<String> NB_JAVAC = Collections.unmodifiableSet(new HashSet<String>(
         Arrays.asList("nb-javac-api.jar","nb-javac-impl.jar", "vanilla-javac-api.jar")));    //NOI18N
+    private static final FileObject[] EMPTY_PATH = new FileObject[0];
     
     public SourceUtilsTestUtil() {
 //        Assert.assertNull(DEFAULT_LOOKUP);
@@ -184,14 +185,22 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
     }
     
     public static void prepareTest(FileObject sourceRoot, FileObject buildRoot, FileObject cache) throws Exception {
-        prepareTest(sourceRoot, buildRoot, cache, new FileObject[0]);
+        prepareTest(sourceRoot, buildRoot, cache, EMPTY_PATH);
     }
     
     public static void prepareTest(FileObject sourceRoot, FileObject buildRoot, FileObject cache, FileObject[] classPathElements) throws Exception {
-        prepareTest(ClassPathSupport.createClassPath(sourceRoot), buildRoot, cache, classPathElements);
+        prepareTest(sourceRoot, buildRoot, cache, classPathElements, EMPTY_PATH);
+    }
+
+    public static void prepareTest(FileObject sourceRoot, FileObject buildRoot, FileObject cache, FileObject[] classPathElements, FileObject[] modulePathElements) throws Exception {
+        prepareTest(ClassPathSupport.createClassPath(sourceRoot), buildRoot, cache, classPathElements, modulePathElements);
     }
 
     public static void prepareTest(ClassPath sourceCP, FileObject buildRoot, FileObject cache, FileObject[] classPathElements) throws Exception {
+        prepareTest(sourceCP, buildRoot, cache, classPathElements, EMPTY_PATH);
+    }
+
+    public static void prepareTest(ClassPath sourceCP, FileObject buildRoot, FileObject cache, FileObject[] classPathElements, FileObject[] modulePathElements) throws Exception {
         if (extraLookupContent == null)
             prepareTest(new String[0], new Object[0]);
         
@@ -199,7 +208,7 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
         
         System.arraycopy(extraLookupContent, 0, lookupContent, 5, extraLookupContent.length);
         
-        lookupContent[0] = new TestProxyClassPathProvider(sourceCP, buildRoot, classPathElements);
+        lookupContent[0] = new TestProxyClassPathProvider(sourceCP, buildRoot, classPathElements, modulePathElements);
         lookupContent[1] = new TestSourceForBinaryQuery(sourceCP, buildRoot);
         lookupContent[2] = new TestSourceLevelQueryImplementation();
         lookupContent[3] = new TestCompilerOptionsQueryImplementation();
@@ -285,11 +294,13 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
         private ClassPath sourcePath;
         private FileObject buildRoot;
         private FileObject[] classPathElements;
+        private FileObject[] modulePathElements;
         
-        public TestProxyClassPathProvider(ClassPath sourcePath, FileObject buildRoot, FileObject[] classPathElements) {
+        public TestProxyClassPathProvider(ClassPath sourcePath, FileObject buildRoot, FileObject[] classPathElements, FileObject[] modulePathElements) {
             this.sourcePath = sourcePath;
             this.buildRoot = buildRoot;
             this.classPathElements = classPathElements;
+            this.modulePathElements = modulePathElements;
         }
         
         public ClassPath findClassPath(FileObject file, String type) {
@@ -310,6 +321,10 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
                 return ClassPathSupport.createClassPath(classPathElements);
             }
             
+            if (JavaClassPathConstants.MODULE_COMPILE_PATH == type) {
+                return ClassPathSupport.createClassPath(modulePathElements);
+            }
+
             if (ClassPath.EXECUTE == type) {
                 return ClassPathSupport.createClassPath(new FileObject[] {
                     buildRoot

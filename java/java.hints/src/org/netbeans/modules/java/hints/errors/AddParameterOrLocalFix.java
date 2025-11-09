@@ -23,6 +23,7 @@ import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
@@ -33,6 +34,7 @@ import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -93,6 +95,7 @@ public class AddParameterOrLocalFix extends JavaFix {
             case LOCAL_VARIABLE: return NbBundle.getMessage(AddParameterOrLocalFix.class, "LBL_FIX_Create_Local_Variable", name); // NOI18N
             case PARAMETER: return NbBundle.getMessage(AddParameterOrLocalFix.class, "LBL_FIX_Create_Parameter", name); // NOI18N
             case RESOURCE_VARIABLE: return NbBundle.getMessage(AddParameterOrLocalFix.class, "LBL_FIX_Create_Resource", name); // NOI18N
+            case OTHER: return NbBundle.getMessage(AddParameterOrLocalFix.class, "LBL_FIX_For_Init_Variable", name); // NOI18N
             default:
                 throw new IllegalStateException(kind.name());
         }
@@ -154,6 +157,9 @@ public class AddParameterOrLocalFix extends JavaFix {
                 break;
             case RESOURCE_VARIABLE:
                 resolveResourceVariable(working, tp, make, proposedType);
+                break;
+            case OTHER:
+                resolveForInitVariable(working, tp, make, proposedType);
                 break;
             default:
                 throw new IllegalStateException(kind.name());
@@ -374,6 +380,26 @@ public class AddParameterOrLocalFix extends JavaFix {
         wc.rewrite(at, vt);
     }
 
+    private void resolveForInitVariable(final WorkingCopy wc, TreePath tp, TreeMaker make, TypeMirror proposedType) {
+        final String name = ((IdentifierTree) tp.getLeaf()).getName().toString();
+
+        final Element el = wc.getTrees().getElement(tp);
+        if (el == null) {
+            return;
+        }
+
+        if (tp.getParentPath().getLeaf().getKind() != Kind.ASSIGNMENT ||
+            tp.getParentPath().getParentPath().getLeaf().getKind() != Kind.EXPRESSION_STATEMENT) {
+            //?
+            return ;
+        }
+
+        AssignmentTree at = (AssignmentTree) tp.getParentPath().getLeaf();
+        VariableTree vt = make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), name, make.Type(proposedType), at.getExpression());
+
+        wc.rewrite(tp.getParentPath().getParentPath().getLeaf(), vt);
+    }
+
     private TreePath findStatement(TreePath tp) {
         TreePath statement = tp;
         
@@ -492,6 +518,7 @@ public class AddParameterOrLocalFix extends JavaFix {
             case PARAMETER: return "Create 7000 " + name;
             case LOCAL_VARIABLE: return "Create 5000 " + name;
             case RESOURCE_VARIABLE: return "Create 3000 " + name;
+            case OTHER: return "Create 3000 " + name;
             default:
                 throw new IllegalStateException();
         }

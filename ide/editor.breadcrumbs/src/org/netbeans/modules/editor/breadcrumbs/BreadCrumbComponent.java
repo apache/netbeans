@@ -145,8 +145,8 @@ public class BreadCrumbComponent<T extends JLabel&Renderer> extends JComponent i
 
     private final T renderer = (T) HtmlRenderer.createLabel();
     private Node[] nodes;
-    private double[] sizes;
-    private double height;
+    private int[] sizes;
+    private int height;
 
     private void measurePrepaint() {
         List<Node> path = computeNodePath();
@@ -154,7 +154,7 @@ public class BreadCrumbComponent<T extends JLabel&Renderer> extends JComponent i
         int i = 0;
         
         nodes = path.toArray(new Node[0]);
-        sizes = new double[path.size()];
+        sizes = new int[path.size()];
         
         int xTotal = 0;
         
@@ -170,7 +170,8 @@ public class BreadCrumbComponent<T extends JLabel&Renderer> extends JComponent i
             i++;
         }
 
-        setPreferredSize(new Dimension((xTotal + (nodes.length - 1) * (LEFT_SEPARATOR_INSET + SEPARATOR.getIconWidth() + RIGHT_SEPARATOR_INSET) + START_INSET), USABLE_HEIGHT/*(int) (height + 2 * INSET_HEIGHT)*/));
+        setPreferredSize(new Dimension((xTotal + (nodes.length - 1) *
+                         (LEFT_SEPARATOR_INSET + SEPARATOR.getIconWidth() + RIGHT_SEPARATOR_INSET) + START_INSET), USABLE_HEIGHT));
     }
     
     @Override

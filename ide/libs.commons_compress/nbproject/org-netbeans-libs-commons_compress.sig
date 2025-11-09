@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.33.0
+#Version 0.35.0
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -318,27 +318,36 @@ meth public int getCount()
 meth public int read() throws java.io.IOException
 meth public java.nio.charset.Charset getCharset()
 meth public long getBytesRead()
+meth public org.apache.commons.io.function.IOIterator<{org.apache.commons.compress.archivers.ArchiveInputStream%0}> iterator()
+meth public void forEach(org.apache.commons.io.function.IOConsumer<? super {org.apache.commons.compress.archivers.ArchiveInputStream%0}>) throws java.io.IOException
 meth public void mark(int)
 meth public void reset() throws java.io.IOException
 supr java.io.FilterInputStream
 hfds BYTE_MASK,bytesRead,charset,single
+hcls ArchiveEntryIOIterator
 
 CLSS public abstract org.apache.commons.compress.archivers.ArchiveOutputStream<%0 extends org.apache.commons.compress.archivers.ArchiveEntry>
 cons public init()
+cons public init(java.io.OutputStream)
+meth protected boolean isClosed()
+meth protected boolean isFinished()
+meth protected void checkFinished() throws java.io.IOException
+meth protected void checkOpen() throws java.io.IOException
 meth protected void count(int)
 meth protected void count(long)
 meth public !varargs {org.apache.commons.compress.archivers.ArchiveOutputStream%0} createArchiveEntry(java.nio.file.Path,java.lang.String,java.nio.file.LinkOption[]) throws java.io.IOException
 meth public abstract void closeArchiveEntry() throws java.io.IOException
-meth public abstract void finish() throws java.io.IOException
 meth public abstract void putArchiveEntry({org.apache.commons.compress.archivers.ArchiveOutputStream%0}) throws java.io.IOException
 meth public abstract {org.apache.commons.compress.archivers.ArchiveOutputStream%0} createArchiveEntry(java.io.File,java.lang.String) throws java.io.IOException
 meth public boolean canWriteEntryData(org.apache.commons.compress.archivers.ArchiveEntry)
 meth public int getCount()
  anno 0 java.lang.Deprecated()
 meth public long getBytesWritten()
+meth public void close() throws java.io.IOException
+meth public void finish() throws java.io.IOException
 meth public void write(int) throws java.io.IOException
-supr java.io.OutputStream
-hfds BYTE_MASK,bytesWritten,oneByte
+supr java.io.FilterOutputStream
+hfds BYTE_MASK,bytesWritten,closed,finished,oneByte
 
 CLSS public org.apache.commons.compress.archivers.ArchiveStreamFactory
 cons public init()
@@ -569,14 +578,13 @@ meth public org.apache.commons.compress.archivers.tar.TarArchiveEntry createArch
 meth public void close() throws java.io.IOException
 meth public void closeArchiveEntry() throws java.io.IOException
 meth public void finish() throws java.io.IOException
-meth public void flush() throws java.io.IOException
 meth public void putArchiveEntry(org.apache.commons.compress.archivers.tar.TarArchiveEntry) throws java.io.IOException
 meth public void setAddPaxHeadersForNonAsciiNames(boolean)
 meth public void setBigNumberMode(int)
 meth public void setLongFileMode(int)
 meth public void write(byte[],int,int) throws java.io.IOException
 supr org.apache.commons.compress.archivers.ArchiveOutputStream<org.apache.commons.compress.archivers.tar.TarArchiveEntry>
-hfds ASCII,BLOCK_SIZE_UNSPECIFIED,RECORD_SIZE,addPaxHeadersForNonAsciiNames,bigNumberMode,charsetName,closed,countingOut,currBytes,currName,currSize,finished,haveUnclosedEntry,longFileMode,out,recordBuf,recordsPerBlock,recordsWritten,zipEncoding
+hfds ASCII,BLOCK_SIZE_UNSPECIFIED,RECORD_SIZE,addPaxHeadersForNonAsciiNames,bigNumberMode,charsetName,countingOut,currBytes,currName,currSize,haveUnclosedEntry,longFileMode,recordBuf,recordsPerBlock,recordsWritten,zipEncoding
 
 CLSS public org.apache.commons.compress.archivers.tar.TarArchiveSparseEntry
 cons public init(byte[]) throws java.io.IOException
@@ -983,7 +991,7 @@ meth public void deflate(java.io.InputStream,int) throws java.io.IOException
 meth public void writeCounted(byte[]) throws java.io.IOException
 meth public void writeCounted(byte[],int,int) throws java.io.IOException
 supr java.lang.Object
-hfds BUFFER_SIZE,DEFLATER_BLOCK_SIZE,crc,def,outputBuffer,readerBuf,sourcePayloadLength,totalWrittenToOutputStream,writtenToOutputStreamForLastEntry
+hfds BUFFER_SIZE,DEFLATER_BLOCK_SIZE,crc,deflater,outputBuffer,readerBuf,sourcePayloadLength,totalWrittenToOutputStream,writtenToOutputStreamForLastEntry
 hcls DataOutputCompressor,OutputStreamCompressor,ScatterGatherBackingStoreCompressor,SeekableByteChannelCompressor
 
 CLSS public org.apache.commons.compress.archivers.zip.UnicodeCommentExtraField
@@ -1435,7 +1443,7 @@ meth public org.apache.commons.compress.archivers.zip.ZipArchiveInputStream setE
 meth public static boolean matches(byte[],int)
 meth public void close() throws java.io.IOException
 supr org.apache.commons.compress.archivers.ArchiveInputStream<org.apache.commons.compress.archivers.zip.ZipArchiveEntry>
-hfds APK_SIGNING_BLOCK_MAGIC,CFH,CFH_LEN,DD,LFH,LFH_LEN,LONG_MAX,TWO_EXP_32,USE_ZIPFILE_INSTEAD_OF_STREAM_DISCLAIMER,allowStoredEntriesWithDataDescriptor,buf,closed,current,entriesRead,extraFieldSupport,hitCentralDirectory,inf,lastStoredEntry,lfhBuf,shortBuf,skipBuf,skipSplitSig,twoDwordBuf,uncompressedCount,useUnicodeExtraFields,wordBuf,zipEncoding
+hfds APK_SIGNING_BLOCK_MAGIC,CFH,CFH_LEN,DD,LFH,LFH_LEN,LONG_MAX,TWO_EXP_32,USE_ZIPFILE_INSTEAD_OF_STREAM_DISCLAIMER,allowStoredEntriesWithDataDescriptor,buf,closed,current,entriesRead,hitCentralDirectory,inf,lastStoredEntry,lfhBuf,shortBuf,skipBuf,skipSplitSig,twoDwordBuf,uncompressedCount,useUnicodeExtraFields,wordBuf,zipEncoding
 hcls BoundCountInputStream,CurrentEntry
 
 CLSS public org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream
@@ -1446,6 +1454,7 @@ cons public init(java.io.OutputStream)
 cons public init(java.nio.channels.SeekableByteChannel)
 cons public init(java.nio.file.Path,long) throws java.io.IOException
 fld protected boolean finished
+ anno 0 java.lang.Deprecated()
 fld protected final java.util.zip.Deflater def
 fld public final static int DEFAULT_COMPRESSION = -1
 fld public final static int DEFLATED = 8
@@ -1485,7 +1494,7 @@ meth public void write(byte[],int,int) throws java.io.IOException
 meth public void writePreamble(byte[]) throws java.io.IOException
 meth public void writePreamble(byte[],int,int) throws java.io.IOException
 supr org.apache.commons.compress.archivers.ArchiveOutputStream<org.apache.commons.compress.archivers.zip.ZipArchiveEntry>
-hfds BUFFER_SIZE,CFH_COMMENT_LENGTH_OFFSET,CFH_COMPRESSED_SIZE_OFFSET,CFH_CRC_OFFSET,CFH_DISK_NUMBER_OFFSET,CFH_EXTERNAL_ATTRIBUTES_OFFSET,CFH_EXTRA_LENGTH_OFFSET,CFH_FILENAME_LENGTH_OFFSET,CFH_FILENAME_OFFSET,CFH_GPB_OFFSET,CFH_INTERNAL_ATTRIBUTES_OFFSET,CFH_LFH_OFFSET,CFH_METHOD_OFFSET,CFH_ORIGINAL_SIZE_OFFSET,CFH_SIG,CFH_SIG_OFFSET,CFH_TIME_OFFSET,CFH_VERSION_MADE_BY_OFFSET,CFH_VERSION_NEEDED_OFFSET,DD_SIG,DEFAULT_CHARSET,EOCD_SIG,LFH_COMPRESSED_SIZE_OFFSET,LFH_CRC_OFFSET,LFH_EXTRA_LENGTH_OFFSET,LFH_FILENAME_LENGTH_OFFSET,LFH_FILENAME_OFFSET,LFH_GPB_OFFSET,LFH_METHOD_OFFSET,LFH_ORIGINAL_SIZE_OFFSET,LFH_SIG,LFH_SIG_OFFSET,LFH_TIME_OFFSET,LFH_VERSION_NEEDED_OFFSET,LZERO,ONE,ZERO,ZIP64_EOCD_LOC_SIG,ZIP64_EOCD_SIG,cdDiskNumberStart,cdLength,cdOffset,charset,comment,copyBuffer,createUnicodeExtraFields,entries,entry,eocdLength,fallbackToUTF8,hasCompressionLevelChanged,hasUsedZip64,isSplitZip,level,metaData,method,numberOfCDInDiskData,outputStream,streamCompressor,useUTF8Flag,zip64Mode,zipEncoding
+hfds BUFFER_SIZE,CFH_COMMENT_LENGTH_OFFSET,CFH_COMPRESSED_SIZE_OFFSET,CFH_CRC_OFFSET,CFH_DISK_NUMBER_OFFSET,CFH_EXTERNAL_ATTRIBUTES_OFFSET,CFH_EXTRA_LENGTH_OFFSET,CFH_FILENAME_LENGTH_OFFSET,CFH_FILENAME_OFFSET,CFH_GPB_OFFSET,CFH_INTERNAL_ATTRIBUTES_OFFSET,CFH_LFH_OFFSET,CFH_METHOD_OFFSET,CFH_ORIGINAL_SIZE_OFFSET,CFH_SIG,CFH_SIG_OFFSET,CFH_TIME_OFFSET,CFH_VERSION_MADE_BY_OFFSET,CFH_VERSION_NEEDED_OFFSET,DD_SIG,DEFAULT_CHARSET,EOCD_SIG,LFH_COMPRESSED_SIZE_OFFSET,LFH_CRC_OFFSET,LFH_EXTRA_LENGTH_OFFSET,LFH_FILENAME_LENGTH_OFFSET,LFH_FILENAME_OFFSET,LFH_GPB_OFFSET,LFH_METHOD_OFFSET,LFH_ORIGINAL_SIZE_OFFSET,LFH_SIG,LFH_SIG_OFFSET,LFH_TIME_OFFSET,LFH_VERSION_NEEDED_OFFSET,LZERO,ONE,ZERO,ZIP64_EOCD_LOC_SIG,ZIP64_EOCD_SIG,cdDiskNumberStart,cdLength,cdOffset,charset,comment,copyBuffer,createUnicodeExtraFields,entries,entry,eocdLength,fallbackToUTF8,hasCompressionLevelChanged,hasUsedZip64,isSplitZip,level,metaData,method,numberOfCDInDiskData,streamCompressor,useUTF8Flag,zip64Mode,zipEncoding
 hcls CurrentEntry,EntryMetaData
 
 CLSS public final static org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream$UnicodeExtraFieldPolicy
@@ -1809,6 +1818,7 @@ supr java.lang.Object
 hfds os
 
 CLSS public org.apache.commons.compress.utils.CRC32VerifyingInputStream
+ anno 0 java.lang.Deprecated()
 cons public init(java.io.InputStream,long,int)
  anno 0 java.lang.Deprecated()
 cons public init(java.io.InputStream,long,long)
@@ -1853,6 +1863,7 @@ meth public long getValue()
 supr java.util.zip.CheckedInputStream
 
 CLSS public org.apache.commons.compress.utils.ChecksumVerifyingInputStream
+ anno 0 java.lang.Deprecated()
 cons public init(java.util.zip.Checksum,java.io.InputStream,long,long)
 meth public int read() throws java.io.IOException
 meth public int read(byte[],int,int) throws java.io.IOException
@@ -2033,13 +2044,16 @@ hfds SKIP_BUFFER,SKIP_BUFFER_SIZE
 
 CLSS public final org.apache.commons.compress.utils.TimeUtils
 meth public static boolean isUnixTime(java.nio.file.attribute.FileTime)
+ anno 0 java.lang.Deprecated()
 meth public static boolean isUnixTime(long)
+ anno 0 java.lang.Deprecated()
 meth public static java.nio.file.attribute.FileTime ntfsTimeToFileTime(long)
  anno 0 java.lang.Deprecated()
 meth public static java.nio.file.attribute.FileTime toFileTime(java.util.Date)
  anno 0 java.lang.Deprecated()
 meth public static java.nio.file.attribute.FileTime truncateToHundredNanos(java.nio.file.attribute.FileTime)
 meth public static java.nio.file.attribute.FileTime unixTimeToFileTime(long)
+ anno 0 java.lang.Deprecated()
 meth public static java.util.Date ntfsTimeToDate(long)
  anno 0 java.lang.Deprecated()
 meth public static java.util.Date toDate(java.nio.file.attribute.FileTime)
@@ -2049,6 +2063,7 @@ meth public static long toNtfsTime(java.nio.file.attribute.FileTime)
 meth public static long toNtfsTime(java.util.Date)
  anno 0 java.lang.Deprecated()
 meth public static long toNtfsTime(long)
+ anno 0 java.lang.Deprecated()
 meth public static long toUnixTime(java.nio.file.attribute.FileTime)
 supr java.lang.Object
 hfds HUNDRED_NANOS_PER_MILLISECOND,WINDOWS_EPOCH_OFFSET
@@ -2064,10 +2079,12 @@ meth protected static org.apache.commons.io.build.AbstractOrigin$ByteArrayOrigin
 meth protected static org.apache.commons.io.build.AbstractOrigin$CharSequenceOrigin newCharSequenceOrigin(java.lang.CharSequence)
 meth protected static org.apache.commons.io.build.AbstractOrigin$FileOrigin newFileOrigin(java.io.File)
 meth protected static org.apache.commons.io.build.AbstractOrigin$FileOrigin newFileOrigin(java.lang.String)
+meth protected static org.apache.commons.io.build.AbstractOrigin$IORandomAccessFileOrigin newRandomAccessFileOrigin(org.apache.commons.io.IORandomAccessFile)
 meth protected static org.apache.commons.io.build.AbstractOrigin$InputStreamOrigin newInputStreamOrigin(java.io.InputStream)
 meth protected static org.apache.commons.io.build.AbstractOrigin$OutputStreamOrigin newOutputStreamOrigin(java.io.OutputStream)
 meth protected static org.apache.commons.io.build.AbstractOrigin$PathOrigin newPathOrigin(java.lang.String)
 meth protected static org.apache.commons.io.build.AbstractOrigin$PathOrigin newPathOrigin(java.nio.file.Path)
+meth protected static org.apache.commons.io.build.AbstractOrigin$RandomAccessFileOrigin newRandomAccessFileOrigin(java.io.RandomAccessFile)
 meth protected static org.apache.commons.io.build.AbstractOrigin$ReaderOrigin newReaderOrigin(java.io.Reader)
 meth protected static org.apache.commons.io.build.AbstractOrigin$URIOrigin newURIOrigin(java.net.URI)
 meth protected static org.apache.commons.io.build.AbstractOrigin$WriterOrigin newWriterOrigin(java.io.Writer)
@@ -2080,6 +2097,8 @@ meth public {org.apache.commons.io.build.AbstractOriginSupplier%1} setInputStrea
 meth public {org.apache.commons.io.build.AbstractOriginSupplier%1} setOutputStream(java.io.OutputStream)
 meth public {org.apache.commons.io.build.AbstractOriginSupplier%1} setPath(java.lang.String)
 meth public {org.apache.commons.io.build.AbstractOriginSupplier%1} setPath(java.nio.file.Path)
+meth public {org.apache.commons.io.build.AbstractOriginSupplier%1} setRandomAccessFile(java.io.RandomAccessFile)
+meth public {org.apache.commons.io.build.AbstractOriginSupplier%1} setRandomAccessFile(org.apache.commons.io.IORandomAccessFile)
 meth public {org.apache.commons.io.build.AbstractOriginSupplier%1} setReader(java.io.Reader)
 meth public {org.apache.commons.io.build.AbstractOriginSupplier%1} setURI(java.net.URI)
 meth public {org.apache.commons.io.build.AbstractOriginSupplier%1} setWriter(java.io.Writer)
@@ -2088,20 +2107,22 @@ hfds origin
 
 CLSS public abstract org.apache.commons.io.build.AbstractStreamBuilder<%0 extends java.lang.Object, %1 extends org.apache.commons.io.build.AbstractStreamBuilder<{org.apache.commons.io.build.AbstractStreamBuilder%0},{org.apache.commons.io.build.AbstractStreamBuilder%1}>>
 cons public init()
-meth protected int getBufferSize()
-meth protected int getBufferSizeDefault()
-meth protected java.io.InputStream getInputStream() throws java.io.IOException
-meth protected java.io.OutputStream getOutputStream() throws java.io.IOException
-meth protected java.io.Reader getReader() throws java.io.IOException
-meth protected java.io.Writer getWriter() throws java.io.IOException
-meth protected java.lang.CharSequence getCharSequence() throws java.io.IOException
-meth protected java.nio.charset.Charset getCharsetDefault()
-meth protected java.nio.file.OpenOption[] getOpenOptions()
-meth protected java.nio.file.Path getPath()
 meth protected {org.apache.commons.io.build.AbstractStreamBuilder%1} setBufferSizeDefault(int)
 meth protected {org.apache.commons.io.build.AbstractStreamBuilder%1} setCharsetDefault(java.nio.charset.Charset)
 meth public !varargs {org.apache.commons.io.build.AbstractStreamBuilder%1} setOpenOptions(java.nio.file.OpenOption[])
+meth public int getBufferSize()
+meth public int getBufferSizeDefault()
+meth public java.io.File getFile()
+meth public java.io.InputStream getInputStream() throws java.io.IOException
+meth public java.io.OutputStream getOutputStream() throws java.io.IOException
+meth public java.io.RandomAccessFile getRandomAccessFile() throws java.io.IOException
+meth public java.io.Reader getReader() throws java.io.IOException
+meth public java.io.Writer getWriter() throws java.io.IOException
+meth public java.lang.CharSequence getCharSequence() throws java.io.IOException
 meth public java.nio.charset.Charset getCharset()
+meth public java.nio.charset.Charset getCharsetDefault()
+meth public java.nio.file.OpenOption[] getOpenOptions()
+meth public java.nio.file.Path getPath()
 meth public {org.apache.commons.io.build.AbstractStreamBuilder%1} setBufferSize(int)
 meth public {org.apache.commons.io.build.AbstractStreamBuilder%1} setBufferSize(java.lang.Integer)
 meth public {org.apache.commons.io.build.AbstractStreamBuilder%1} setBufferSizeChecker(java.util.function.IntUnaryOperator)
@@ -2121,6 +2142,7 @@ CLSS public abstract interface org.apache.commons.io.function.IOSupplier<%0 exte
  anno 0 java.lang.FunctionalInterface()
 meth public abstract {org.apache.commons.io.function.IOSupplier%0} get() throws java.io.IOException
 meth public java.util.function.Supplier<{org.apache.commons.io.function.IOSupplier%0}> asSupplier()
+meth public {org.apache.commons.io.function.IOSupplier%0} getUnchecked()
 
 CLSS public org.apache.commons.io.input.BoundedInputStream
 cons public init(java.io.InputStream)
@@ -2150,11 +2172,14 @@ meth public void reset() throws java.io.IOException
 meth public void setPropagateClose(boolean)
  anno 0 java.lang.Deprecated()
 supr org.apache.commons.io.input.ProxyInputStream
-hfds count,mark,maxCount,propagateClose
+hfds count,mark,maxCount,onMaxCount,propagateClose
 hcls AbstractBuilder
 
 CLSS public abstract org.apache.commons.io.input.ProxyInputStream
+cons protected init(java.io.InputStream,org.apache.commons.io.input.ProxyInputStream$AbstractBuilder<?,?>)
+cons protected init(org.apache.commons.io.input.ProxyInputStream$AbstractBuilder<?,?>) throws java.io.IOException
 cons public init(java.io.InputStream)
+innr protected abstract static AbstractBuilder
 meth protected void afterRead(int) throws java.io.IOException
 meth protected void beforeRead(int) throws java.io.IOException
 meth protected void handleIOException(java.io.IOException) throws java.io.IOException
@@ -2169,4 +2194,5 @@ meth public void close() throws java.io.IOException
 meth public void mark(int)
 meth public void reset() throws java.io.IOException
 supr java.io.FilterInputStream
+hfds afterRead,closed,exceptionHandler
 

@@ -54,7 +54,6 @@ import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
-import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.api.CodeCompletionHandler2;
 import org.netbeans.modules.csl.api.CodeCompletionResult;
 import org.netbeans.modules.csl.api.CompletionProposal;
@@ -72,6 +71,7 @@ import org.netbeans.modules.web.el.ELTypeUtilities;
 import org.netbeans.modules.web.el.ELVariableResolvers;
 import org.netbeans.modules.web.el.NodeUtil;
 import org.netbeans.modules.web.el.ResourceBundles;
+import org.netbeans.modules.web.el.ResourceBundles.Location;
 import org.netbeans.modules.web.el.refactoring.RefactoringUtil;
 import org.netbeans.modules.web.el.spi.ELPlugin;
 import org.netbeans.modules.web.el.spi.ELVariableResolver.VariableInfo;
@@ -539,7 +539,7 @@ public final class ELCodeCompletionHandler implements CodeCompletionHandler2 {
             if (!prefix.matches(property.name)) {
                 continue;
             }
-            ELRawObjectPropertyCompletionItem item = new ELRawObjectPropertyCompletionItem(property.name);
+            ELRawObjectPropertyCompletionItem item = new ELRawObjectPropertyCompletionItem(property.name, property.clazz);
             item.setAnchorOffset(context.getCaretOffset() - prefix.length());
             item.setSmart(true);
             proposals.add(item);
@@ -603,11 +603,16 @@ public final class ELCodeCompletionHandler implements CodeCompletionHandler2 {
         if (!resourceBundles.canHaveBundles()) {
             return;
         }
+        FileObject bundleFile = null;
+        List<Location> bundleLocations = resourceBundles.getLocationsForBundleIdent(bundleKey);
+        if (!bundleLocations.isEmpty()) {
+            bundleFile = bundleLocations.get(0).getFile();
+        }
         for (Map.Entry<String, String> entry : resourceBundles.getEntries(bundleKey).entrySet()) {
             if (!prefix.matches(entry.getKey())) {
                 continue;
             }
-            ELResourceBundleKeyCompletionItem item = new ELResourceBundleKeyCompletionItem(entry.getKey(), entry.getValue(), elElement);
+            ELResourceBundleKeyCompletionItem item = new ELResourceBundleKeyCompletionItem(entry.getKey(), entry.getValue(), elElement, bundleFile);
             item.setSmart(true);
             item.setAnchorOffset(context.getCaretOffset() - prefix.length());
             proposals.add(item);
@@ -626,11 +631,16 @@ public final class ELCodeCompletionHandler implements CodeCompletionHandler2 {
         if (!resourceBundles.canHaveBundles()) {
             return;
         }
+        FileObject bundleFile = null;
+        List<Location> bundleLocations = resourceBundles.getLocationsForBundleIdent(bundleKey);
+        if (!bundleLocations.isEmpty()) {
+            bundleFile = bundleLocations.get(0).getFile();
+        }
         for (Map.Entry<String, String> entry : resourceBundles.getEntries(bundleKey).entrySet()) {
             if (!prefix.matches(entry.getKey())) {
                 continue;
             }
-            ELResourceBundleKeyCompletionItem item = new ELResourceBundleKeyCompletionItem(entry.getKey(), entry.getValue(), elElement);
+            ELResourceBundleKeyCompletionItem item = new ELResourceBundleKeyCompletionItem(entry.getKey(), entry.getValue(), elElement, bundleFile);
             item.setSmart(true);
             item.setAnchorOffset(context.getCaretOffset() - prefix.length());
             proposals.add(item);

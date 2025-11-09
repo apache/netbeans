@@ -42,6 +42,7 @@ import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
+import org.netbeans.modules.java.hints.Feature;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
@@ -72,6 +73,9 @@ public class ConvertToSwitchPatternInstanceOf {
         @TriggerPattern(value = "if ($expr0 instanceof $typeI0) { $statements0$;} else if ($expr1 instanceof $typeI1) { $statements1$;} else $else$;")
     })
     public static ErrorDescription trivial(HintContext ctx) {
+        if (!Feature.SWITCH_PATTERN.isEnabled(ctx.getInfo())) {
+            return null;
+        }
         TreePath parent = ctx.getPath().getParentPath();
         if (parent.getLeaf().getKind() == Tree.Kind.IF) {
             return null;
@@ -173,6 +177,9 @@ public class ConvertToSwitchPatternInstanceOf {
         @TriggerPattern(value = "if ($expr0 instanceof $typeI0 $var0) { $statements0$;} else if ($expr1 instanceof $typeI1 $var1) { $statements1$;} else $else$;")
     })
     public static ErrorDescription patternMatchToSwitch(HintContext ctx) {
+        if (!Feature.SWITCH_PATTERN.isEnabled(ctx.getInfo())) {
+            return null;
+        }
         TreePath parent = ctx.getPath().getParentPath();
         if (parent.getLeaf().getKind() == Tree.Kind.IF) {
             return null;

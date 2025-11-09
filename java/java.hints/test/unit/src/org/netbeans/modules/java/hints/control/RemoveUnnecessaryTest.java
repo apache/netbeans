@@ -528,4 +528,17 @@ public class RemoveUnnecessaryTest extends NbTestCase {
                 .run(RemoveUnnecessary.class)
                 .assertWarnings();
     }
+
+    public void testStandaloneReturn() throws Exception {
+    HintTest.create()
+            .input("""
+                   package test;
+                   public class Test {
+                   }
+                   return;
+                   """,
+                   false)
+            .run(RemoveUnnecessary.class)
+            .assertWarnings();
+    }
 }

@@ -86,7 +86,7 @@ jobs:
     steps:
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           persist-credentials: false
           submodules: false
@@ -118,7 +118,7 @@ jobs:
           cp NOTICE ${SOURCES}/NOTICE
           ls -l -R ${SOURCES}
       - name: Upload native sources 
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: profiler-external-sources-ASF
           path: profiler/lib.profiler/build/sources/
@@ -134,7 +134,7 @@ jobs:
     steps:
 
       - name: Download sources
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: profiler-external-sources-ASF
         
@@ -171,13 +171,13 @@ jobs:
       #   Upload interim build artifacts to GitHub
       #
       - name: Upload artifact Linux 64 bit
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: linux-amd64
           path: profiler/lib.profiler/release/lib/deployed/jdk16/linux-amd64/
           if-no-files-found: error
       - name: Upload artifact Linux 32 bit
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: linux
           path: profiler/lib.profiler/release/lib/deployed/jdk16/linux/
@@ -195,15 +195,11 @@ jobs:
     steps:
 
       - name: Download sources
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: profiler-external-sources-ASF
 
       #   Build the native binary from C source code
-      #
-      #   Use Windows 10 SDK 10.0.20348.0 since build fails with Windows 11 SDK 10.0.22000.0
-      #   https://docs.microsoft.com/en-us/cpp/build/building-on-the-command-line?view=msvc-170#vcvarsall-syntax
-      #   https://bugs.python.org/issue45220
       #
       - name: Build native lib (64-bit)
         run: |
@@ -213,7 +209,7 @@ jobs:
            set OUTPUTDIR=../../release/lib/deployed/jdk16/windows-amd64
            del /q /s "%OUTPUTDIR%"
            rem  set up a Visual Studio command prompt for 64-bit development
-           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" 10.0.20348.0
+           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
            rem
            rem
            call buildnative-windows64-16.bat
@@ -231,7 +227,7 @@ jobs:
            set OUTPUTDIR=../../release/lib/deployed/jdk16/windows
            del /q /s "%OUTPUTDIR%"
            rem   set up a Visual Studio command prompt for 32-bit development
-           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars32.bat" 10.0.20348.0
+           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars32.bat"
            rem
            rem
            call buildnative-windows-16.bat
@@ -246,13 +242,13 @@ jobs:
       #   Upload interim build artifacts to GitHub
       #
       - name: Upload artifact Windows 64 bit
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: windows-amd64
           path: profiler/lib.profiler/release/lib/deployed/jdk16/windows-amd64/
           if-no-files-found: error
       - name: Upload artifact Windows 32 bit
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: windows
           path: profiler/lib.profiler/release/lib/deployed/jdk16/windows/
@@ -268,7 +264,7 @@ jobs:
     steps:
 
       - name: Download sources
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: profiler-external-sources-ASF
 
@@ -292,7 +288,7 @@ jobs:
       #   Upload interim build artifacts to GitHub
       #
       - name: Upload artifact MacOS 64 bit
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: mac
           path: profiler/lib.profiler/release/lib/deployed/jdk16/mac/
@@ -313,7 +309,7 @@ jobs:
       run: mkdir -p myfiles/lib/deployed/jdk16
 
     - name: Download artifacts from predecessor jobs
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v6
       with:
         path: myfiles/lib/deployed/jdk16
         
@@ -343,7 +339,7 @@ jobs:
 
 
     - name: Upload bundle
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: profiler-external-binaries-ASF
         path: myfiles/

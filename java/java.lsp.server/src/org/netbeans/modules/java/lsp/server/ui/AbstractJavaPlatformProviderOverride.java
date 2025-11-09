@@ -39,6 +39,14 @@ public abstract class AbstractJavaPlatformProviderOverride implements JavaPlatfo
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private FileObject defaultPlatformOverride;
 
+    public AbstractJavaPlatformProviderOverride() {
+        this(null);
+    }
+
+    protected AbstractJavaPlatformProviderOverride(String defaultPlatformOverride) {
+        this.defaultPlatformOverride = defaultPlatformOverride == null ? null : FileUtil.toFileObject(new File(defaultPlatformOverride));
+    }
+
     @Override
     @SuppressWarnings("ReturnOfCollectionOrArrayField")
     public JavaPlatform[] getInstalledPlatforms() {

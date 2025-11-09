@@ -29,24 +29,24 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.util.ElementFilter;
-import javax.swing.Action;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.extexecution.print.LineConvertors.FileLocator;
-import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.modules.gsf.testrunner.api.CommonUtils;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodNode;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestsuiteNode;
 import org.netbeans.modules.junit.ui.api.JUnitTestMethodNode;
 import org.netbeans.modules.java.testrunner.ui.api.NodeOpener;
 import org.netbeans.modules.java.testrunner.ui.api.UIJavaUtils;
+import org.netbeans.modules.junit.api.JUnitTestcase;
 import org.netbeans.modules.junit.ui.api.JUnitCallstackFrameNode;
 import org.openide.ErrorManager;
 import org.openide.filesystems.FileObject;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
+
+import static java.util.Arrays.asList;
 
 /**
  *
@@ -57,33 +57,31 @@ public final class MavenJUnitNodeOpener extends NodeOpener {
 
     private static final Logger LOG = Logger.getLogger(MavenJUnitNodeOpener.class.getName());
 
-    static final Action[] NO_ACTIONS = new Action[0];
-
+    @Override
     public void openTestsuite(TestsuiteNode node) {
         Children childrens = node.getChildren();
         if (childrens != null) {
             Node child = childrens.getNodeAt(0);
-            if (child instanceof MavenJUnitTestMethodNode) {
-                final FileObject fo = ((MavenJUnitTestMethodNode) child).getTestcaseFileObject();
+            if (child instanceof MavenJUnitTestMethodNode junitMethodNode) {
+                final FileObject fo = junitMethodNode.getTestcaseFileObject();
+                final MethodInfo mi = MethodInfo.fromTestCase(junitMethodNode.getTestcase());
                 if (fo != null) {
                     final long[] line = new long[]{0};
                     JavaSource javaSource = JavaSource.forFileObject(fo);
                     if (javaSource != null) {
                         try {
-                            javaSource.runUserActionTask(new Task<CompilationController>() {
-                                @Override
-                                public void run(CompilationController compilationController) throws Exception {
-                                    compilationController.toPhase(Phase.ELEMENTS_RESOLVED);
-                                    Trees trees = compilationController.getTrees();
-                                    CompilationUnitTree compilationUnitTree = compilationController.getCompilationUnit();
-                                    List<? extends Tree> typeDecls = compilationUnitTree.getTypeDecls();
-                                    for (Tree tree : typeDecls) {
-                                        Element element = trees.getElement(trees.getPath(compilationUnitTree, tree));
-                                        if (element != null && element.getKind() == ElementKind.CLASS && element.getSimpleName().contentEquals(fo.getName())) {
-                                            long pos = trees.getSourcePositions().getStartPosition(compilationUnitTree, tree);
-                                            line[0] = compilationUnitTree.getLineMap().getLineNumber(pos);
-                                            break;
-                                        }
+                            javaSource.runUserActionTask(compilationController -> {
+                                compilationController.toPhase(Phase.ELEMENTS_RESOLVED);
+                                Trees trees = compilationController.getTrees();
+                                CompilationUnitTree compilationUnitTree = compilationController.getCompilationUnit();
+                                List<? extends Tree> typeDecls = compilationUnitTree.getTypeDecls();
+                                for (Tree tree : typeDecls) {
+                                    Element element = trees.getElement(trees.getPath(compilationUnitTree, tree));
+                                    if (element != null && element.getKind() == ElementKind.CLASS && element.getSimpleName().contentEquals(mi.topLevelClass())) {
+                                        element = resolveNestedClass(mi.nestedClasses(), element);
+                                        long pos = trees.getSourcePositions().getStartPosition(compilationUnitTree, trees.getTree(element));
+                                        line[0] = compilationUnitTree.getLineMap().getLineNumber(pos);
+                                        break;
                                     }
                                 }
                             }, true);
@@ -97,42 +95,43 @@ public final class MavenJUnitNodeOpener extends NodeOpener {
         }
     }
 
+    @Override
     public void openTestMethod(final TestMethodNode node) {
         if (!(node instanceof MavenJUnitTestMethodNode)) {
             return;
         }
-        final FileObject fo = ((MavenJUnitTestMethodNode) node).getTestcaseFileObject();
+        MavenJUnitTestMethodNode mtn = (MavenJUnitTestMethodNode) node;
+        final FileObject fo = mtn.getTestcaseFileObject();
+        final MethodInfo mi = MethodInfo.fromTestCase(mtn.getTestcase());
         if (fo != null) {
             final FileObject[] fo2open = new FileObject[]{fo};
             final long[] line = new long[]{0};
             JavaSource javaSource = JavaSource.forFileObject(fo2open[0]);
             if (javaSource != null) {
                 try {
-                    javaSource.runUserActionTask(new Task<CompilationController>() {
-                        @Override
-                        public void run(CompilationController compilationController) throws Exception {
-                            compilationController.toPhase(Phase.ELEMENTS_RESOLVED);
-                            Trees trees = compilationController.getTrees();
-                            CompilationUnitTree compilationUnitTree = compilationController.getCompilationUnit();
-                            List<? extends Tree> typeDecls = compilationUnitTree.getTypeDecls();
-                            for (Tree tree : typeDecls) {
-                                Element element = trees.getElement(trees.getPath(compilationUnitTree, tree));
-                                if (element != null && element.getKind() == ElementKind.CLASS && element.getSimpleName().contentEquals(fo2open[0].getName())) {
-                                    List<? extends ExecutableElement> methodElements = ElementFilter.methodsIn(element.getEnclosedElements());
-                                    for (Element child : methodElements) {
-                                        String name = node.getTestcase().getName(); // package.name.method.name
-                                        if (child.getSimpleName().contentEquals(name.substring(name.lastIndexOf(".") + 1))) {
-                                            long pos = trees.getSourcePositions().getStartPosition(compilationUnitTree, trees.getTree(child));
-                                            line[0] = compilationUnitTree.getLineMap().getLineNumber(pos);
-                                            break;
-                                        }
+                    javaSource.runUserActionTask(compilationController -> {
+                        compilationController.toPhase(Phase.ELEMENTS_RESOLVED);
+                        Trees trees = compilationController.getTrees();
+                        CompilationUnitTree compilationUnitTree = compilationController.getCompilationUnit();
+                        List<? extends Tree> typeDecls = compilationUnitTree.getTypeDecls();
+                        for (Tree tree : typeDecls) {
+                            Element element = trees.getElement(trees.getPath(compilationUnitTree, tree));
+                            if (element != null && element.getKind() == ElementKind.CLASS && element.getSimpleName().contentEquals(mi.topLevelClass())) {
+                                element = resolveNestedClass(mi.nestedClasses(), element);
+                                List<? extends ExecutableElement> methodElements = ElementFilter.methodsIn(element.getEnclosedElements());
+                                for (Element child : methodElements) {
+                                    String name = node.getTestcase().getName(); // package.name.method.name
+                                    if (child.getSimpleName().contentEquals(name.substring(name.lastIndexOf(".") + 1))) {
+                                        long pos = trees.getSourcePositions().getStartPosition(compilationUnitTree, trees.getTree(child));
+                                        line[0] = compilationUnitTree.getLineMap().getLineNumber(pos);
+                                        break;
                                     }
-                                    // method not found in this FO, so try to find where this method belongs
-                                    if (line[0] == 0) {
-                                        UIJavaUtils.searchAllMethods(node, fo2open, line, compilationController, element);
-                                    }
-                                    break;
                                 }
+                                // method not found in this FO, so try to find where this method belongs
+                                if (line[0] == 0) {
+                                    UIJavaUtils.searchAllMethods(node, fo2open, line, compilationController, element);
+                                }
+                                break;
                             }
                         }
                     }, true);
@@ -145,6 +144,7 @@ public final class MavenJUnitNodeOpener extends NodeOpener {
         }
     }
 
+    @Override
     public void openCallstackFrame(Node node, @NonNull String frameInfo) {
         if(frameInfo.isEmpty()) { // user probably clicked on a failed test method node, find failing line within the testMethod using the stacktrace
             if (!(node instanceof JUnitTestMethodNode)) {
@@ -210,4 +210,35 @@ public final class MavenJUnitNodeOpener extends NodeOpener {
         UIJavaUtils.openFile(file, lineNumStorage[0]);
     }
 
+    private Element resolveNestedClass(List<String> nestedClasses, Element e) {
+        if(nestedClasses.isEmpty()) {
+            return e;
+        } else {
+            String simpleName = nestedClasses.get(0);
+            for(Element childElement: e.getEnclosedElements()) {
+                if(childElement.getSimpleName().contentEquals(simpleName)) {
+                    return resolveNestedClass(nestedClasses.subList(1, nestedClasses.size()), childElement);
+                }
+            }
+            return e;
+        }
+    }
+
+    private record MethodInfo (String packageName, String topLevelClass, List<String> nestedClasses, String method) {
+        public static MethodInfo fromTestCase(JUnitTestcase testcase) {
+            String className = testcase.getClassName();
+            String[] nestedClasses = className.split("\\$");
+            String packageName = null;
+            int lastDotInTopLevelClass = nestedClasses[0].lastIndexOf(".");
+            if (lastDotInTopLevelClass >= 0) {
+                packageName = nestedClasses[0].substring(0, lastDotInTopLevelClass);
+                nestedClasses[0] = nestedClasses[0].substring(lastDotInTopLevelClass + 1);
+            }
+            String method = null;
+            if(testcase.getName().startsWith(className)) {
+                method = testcase.getName().substring(className.length() + 1);
+            }
+            return new MethodInfo(packageName, nestedClasses[0], asList(nestedClasses).subList(1, nestedClasses.length), method);
+        }
+    }
 }

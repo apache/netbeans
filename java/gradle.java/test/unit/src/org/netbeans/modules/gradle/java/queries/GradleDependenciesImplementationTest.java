@@ -19,11 +19,9 @@
 package org.netbeans.modules.gradle.java.queries;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import static junit.framework.TestCase.assertNotNull;
 import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.project.Project;
@@ -76,7 +74,7 @@ public class GradleDependenciesImplementationTest extends NbTestCase {
         // System.out/err to the IOProvider, and its Trivial implementation will redirect
         // it back to System.err - loop is formed. Initialize IOProvider first, it gets
         // the real System.err/out references.
-        IOProvider p = IOProvider.getDefault();
+        assertNotNull(IOProvider.getDefault());
         System.setProperty("test.reload.sync", "true");
         
         destDirF = getTestNBDestDir();
@@ -259,6 +257,7 @@ public class GradleDependenciesImplementationTest extends NbTestCase {
     }
     
     private void assertContainsDependency(List<Dependency> deps, String groupAndArtifact) {
+        assertFalse("dependency list was empty", deps.isEmpty());
         for (Dependency d : deps) {
             ArtifactSpec a = d.getArtifact();
             if (a != null) {
@@ -271,7 +270,7 @@ public class GradleDependenciesImplementationTest extends NbTestCase {
         fail("Artifact not found: " +  groupAndArtifact);
     }
     
-    private static final List<String> ALL_DEPS =   Arrays.asList(
+    private static final List<String> ALL_DEPS = List.of(
             "io.micronaut:micronaut-http-validation",
             "io.micronaut:micronaut-http-client",
             "io.micronaut:micronaut-jackson-databind",

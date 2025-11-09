@@ -65,30 +65,50 @@ $ ant -Dcluster.config=platform build
 ```
 Cleanup:
 ```
-$ ant -q clean
+$ git clean -Xdf
 ```
 
 #### Notes:
 * You can also use `php`, `enterprise`, etc. See the [cluster.properties](https://github.com/apache/netbeans/blob/master/nbbuild/cluster.properties) file.
 * Once built, you can simply open individual modules of interest with NetBeans and run/rebuild/debug them like any other project
+* The `nbbuild` directory should contain the portable NetBeans zip
 
 #### Generating Javadoc
 
 Build javadoc:
 ```
-$ ant build javadoc
+$ ant javadoc
 ```
 
-**Note** Run `javadoc-nb` task in Netbeans to run the javadoc build and display it in a web browser.
+#### Notes:
+* On JDK 24 or later, building javadoc may require to raise the jaxp entity limit by setting `export ANT_OPTS=-Djdk.xml.totalEntitySizeLimit=200000`
+* Run `javadoc-nb` task in Netbeans to run the javadoc build and display it in a web browser.
 
 ### Running NetBeans
 
-Run the build:
+Quick test run:
 ```
 $ ant tryme
 ```
+or run the portable zip distribution:
+1) extract the zip found in `nbbuild` to a directory other than `nbbuild`
+2) run the `netbeans` launcher found in `netbeans/bin`, optionally specifying a custom userdir
 
-**Note:** Look in nbbuild/netbeans for the NetBeans installation created by the build process.
+example:
+```
+$ netbeans --userdir /tmp/nbtestdir1
+```
+
+### Some useful Launcher Options
+
+```
+  --jdkhome <path>      path to JDK used as runtime (and default JDK for projects)
+  --userdir <path>      use specified directory to store user settings
+  --cachedir <path>     use specified directory to store user cache, must be different from userdir
+  --fontsize <size>     set the base font size of the user interface, in points
+  -J<jvm_option>        pass <jvm_option> to JVM
+  --help                list more options
+```
 
 ### Get In Touch
 

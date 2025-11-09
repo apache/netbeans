@@ -579,7 +579,7 @@ public class Utilities {
         JavaFileObject prev = compiler.log.useSource(new DummyJFO());
         Log.DiagnosticHandler discardHandler = compiler.log.new DiscardDiagnosticHandler() {
             @Override
-            public void report(JCDiagnostic diag) {
+            public void reportReady(JCDiagnostic diag) {
                 errors.add(diag);
             }            
         };
@@ -606,7 +606,7 @@ public class Utilities {
         JavaFileObject prev = compiler.log.useSource(new DummyJFO());
         Log.DiagnosticHandler discardHandler = compiler.log.new DiscardDiagnosticHandler() {
             @Override
-            public void report(JCDiagnostic diag) {
+            public void reportReady(JCDiagnostic diag) {
                 errors.add(diag);
             }            
         };
@@ -637,7 +637,7 @@ public class Utilities {
         JavaFileObject prev = log.useSource(new DummyJFO());
         Log.DiagnosticHandler discardHandler = log.new DiscardDiagnosticHandler() {
             @Override
-            public void report(JCDiagnostic diag) {
+            public void reportReady(JCDiagnostic diag) {
                 errors.add(diag);
             }            
         };

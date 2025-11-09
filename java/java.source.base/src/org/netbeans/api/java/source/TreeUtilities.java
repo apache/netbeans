@@ -970,7 +970,7 @@ public final class TreeUtilities {
         JavaFileObject prev = log.useSource(new DummyJFO());
         Log.DiagnosticHandler discardHandler = log.new DiscardDiagnosticHandler() {
             @Override
-            public void report(JCDiagnostic diag) {
+            public void reportReady(JCDiagnostic diag) {
                 errors.add(diag);
             }            
         };
@@ -1010,7 +1010,7 @@ public final class TreeUtilities {
         JavaFileObject prev = log.useSource(new DummyJFO());
         Log.DiagnosticHandler discardHandler = log.new DiscardDiagnosticHandler() {
             @Override
-            public void report(JCDiagnostic diag) {
+            public void reportReady(JCDiagnostic diag) {
                 errors.add(diag);
             }            
         };

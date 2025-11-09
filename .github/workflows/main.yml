@@ -1312,18 +1312,23 @@ jobs:
         run: ant $OPTS -f java/java.api.common test
 
       - name: java.completion
+        if: always()
         run: ant $OPTS -f java/java.completion test
 
       - name: java.editor.base
+        if: always()
         run: ant $OPTS -f java/java.editor.base test
 
       - name: java.editor
+        if: always()
         run: .github/retry.sh ant $OPTS -f java/java.editor test-unit
 
       - name: java.freeform
+        if: always()
         run: ant $OPTS -f java/java.freeform test
 
       - name: java.file.launcher
+        if: always()
         run: ant $OPTS -f java/java.file.launcher test
 
 #      - name: java.kit
@@ -1333,51 +1338,65 @@ jobs:
 #        run: ant $OPTS -f java/java.metrics test
 
       - name: java.module.graph
+        if: always()
         run: ant $OPTS -f java/java.module.graph test
 
       - name: java.navigation
+        if: always()
         run: ant $OPTS -f java/java.navigation test
 
       - name: java.openjdk.project
+        if: always()
         run: ant $OPTS -f java/java.openjdk.project test
 
       - name: java.platform
+        if: always()
         run: ant $OPTS -f java/java.platform test
 
       - name: java.platform.ui
+        if: always()
         run: ant $OPTS -f java/java.platform.ui test
 
       - name: java.preprocessorbridge
+        if: always()
         run: ant $OPTS -f java/java.preprocessorbridge test
 
       - name: java.project
+        if: always()
         run: ant $OPTS -f java/java.project test
 
 #      - name: java.project.ui
 #        run: ant $OPTS -f java/java.project.ui test
 
       - name: java.source
+        if: always()
         run: ant $OPTS -f java/java.source test-unit
 
 #      - name: java.source.ant
 #        run: ant $OPTS -f java/java.source.ant test
 
       - name: java.source.base
+        if: always()
         run: ant $OPTS -f java/java.source.base test
 
       - name: java.source.compat8
+        if: always()
         run: ant $OPTS -f java/java.source.compat8 test
 
       - name: java.source.queriesimpl
+        if: always()
         run: ant $OPTS -f java/java.source.queriesimpl test
 
       - name: java.sourceui
+        if: always()
         run: ant $OPTS -f java/java.sourceui test
 
       - name: java.testrunner
+        if: always()
         run: ant $OPTS -f java/java.testrunner test
 
       - name: java.testrunner.ant
+        if: always()
         run: ant $OPTS -f java/java.testrunner.ant test
 
 #      - name: javawebstart
@@ -1387,18 +1406,23 @@ jobs:
 #        run: ant $OPTS -f java/jellytools.java test
 
       - name: jshell.support
+        if: always()
         run: ant $OPTS -f java/jshell.support test
 
       - name: junit
+        if: always()
         run: ant $OPTS -f java/junit test-unit
 
       - name: junit.ant.ui
+        if: always()
         run: ant $OPTS -f java/junit.ant.ui test
 
       - name: lib.nbjavac
+        if: always()
         run: ant $OPTS -f java/lib.nbjavac test
 
       - name: libs.nbjavacapi
+        if: always()
         run: ant $OPTS -f java/libs.nbjavacapi test
 
 #      - name: performance
@@ -1411,9 +1435,11 @@ jobs:
 #        run: ant $OPTS -f java/projectimport.eclipse.core test
 
       - name: spellchecker.bindings.java
+        if: always()
         run: ant $OPTS -f java/spellchecker.bindings.java test
 
       - name: testng
+        if: always()
         run: ant $OPTS -f java/testng test
 
 #      - name: testng.ant
@@ -1423,21 +1449,27 @@ jobs:
 #        run: ant $OPTS -f java/testng.ui test
 
       - name: whitelist
+        if: always()
         run: ant $OPTS -f java/whitelist test
 
       - name: xml.jaxb
+        if: always()
         run: ant $OPTS -f java/xml.jaxb test
 
       - name: java.lexer
+        if: always()
         run: ant $OPTS -f java/java.lexer test
 
       - name: refactoring.java
+        if: always()
         run: ant $OPTS -f java/refactoring.java test-unit
 
       - name: form
+        if: always()
         run: ant $OPTS -f java/form test-unit
         
       - name: javadoc
+        if: always()
         run: ant $OPTS -f java/javadoc test
 
       - name: Create Test Summary

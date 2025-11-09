@@ -1574,7 +1574,12 @@ public class Utilities {
                     @Override public int getEndPos(JCTree tree) {
                         return (int) sp.getEndPosition(null, tree);
                     }
-                    @Override public void storeEnd(JCTree tree, int endpos) {
+                    @Override
+                    public <T extends JCTree> T storeEnd(T t, int i) {
+                        throw new UnsupportedOperationException("Not supported yet.");
+                    }
+                    @Override
+                    public void setErrorEndPos(int i) {
                         throw new UnsupportedOperationException("Not supported yet.");
                     }
                     @Override public int replaceTree(JCTree oldtree, JCTree newtree) {

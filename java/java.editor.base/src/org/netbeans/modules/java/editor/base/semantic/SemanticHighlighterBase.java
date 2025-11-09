@@ -963,6 +963,11 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
                 tl.moveNext();
                 record = true;
             }
+            Token valueToken = tl.firstIdentifier(getCurrentPath(), "value");
+            if (valueToken != null) {
+                contextKeywords.add(valueToken);
+                tl.moveNext();
+            }
             firstIdentifier(tree.getSimpleName().toString());
 
             //XXX:????
@@ -1077,7 +1082,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
                     contextKeywords.add(t);
                 }
             } else if (tree != null && tree.getKind() == Kind.MODIFIERS) {
-               visitModifier(tree);
+                visitModifier(tree);
             }
             return super.scan(tree, p);
         }
@@ -1097,6 +1102,11 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
                 }
             } else if (tree.toString().contains("sealed")) {// NOI18N
                 t = firstIdentifierToken("sealed"); //NOI18N
+                if (t != null) {
+                    contextKeywords.add(t);
+                }
+            } else if (tree.toString().contains("value")) {// NOI18N
+                t = firstIdentifierToken("value"); //NOI18N
                 if (t != null) {
                     contextKeywords.add(t);
                 }

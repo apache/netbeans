@@ -43,7 +43,6 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -514,14 +513,13 @@ public class Utilities {
     
     public static int findBodyStart(final CompilationInfo info, final Tree cltree, final CompilationUnitTree cu, final SourcePositions positions, final Document doc) {
         Kind kind = cltree.getKind();
-        if (!TreeUtilities.CLASS_TREE_KINDS.contains(kind) && kind != Kind.METHOD && !cltree.getKind().toString().equals("RECORD"))
+        if (!TreeUtilities.CLASS_TREE_KINDS.contains(kind) && kind != Kind.METHOD) {
             throw new IllegalArgumentException("Unsupported kind: "+ kind);
+        }
         final int[] result = new int[1];
         
-        doc.render(new Runnable() {
-            public void run() {
-                result[0] = findBodyStartImpl(info, cltree, cu, positions, doc);
-            }
+        doc.render(() -> {
+            result[0] = findBodyStartImpl(info, cltree, cu, positions, doc);
         });
         
         return result[0];
@@ -562,10 +560,8 @@ public class Utilities {
     public static int findLastBracket(final Tree tree, final CompilationUnitTree cu, final SourcePositions positions, final Document doc) {
         final int[] result = new int[1];
         
-        doc.render(new Runnable() {
-            public void run() {
-                result[0] = findLastBracketImpl(tree, cu, positions, doc);
-            }
+        doc.render(() -> {
+            result[0] = findLastBracketImpl(tree, cu, positions, doc);
         });
         
         return result[0];
@@ -579,7 +575,7 @@ public class Utilities {
         //XXX: do not use instanceof:
         if (leaf instanceof MethodTree || leaf instanceof VariableTree || leaf instanceof ClassTree
                 || leaf instanceof MemberSelectTree || leaf instanceof AnnotatedTypeTree || leaf instanceof MemberReferenceTree
-                || "BINDING_PATTERN".equals(leaf.getKind().name())) {
+                || leaf.getKind() == Kind.BINDING_PATTERN) {
             return findIdentifierSpan(info, doc, tree);
         }
         
@@ -617,34 +613,16 @@ public class Utilities {
         @SuppressWarnings("unchecked")
         final Token<JavaTokenId>[] result = new Token[1];
         
-        doc.render(new Runnable() {
-            public void run() {
-                result[0] = createHighlightImpl(info, doc, tree);
-            }
+        doc.render(() -> {
+            result[0] = createHighlightImpl(info, doc, tree);
         });
         
         return result[0];
     }
     
-    private static final Set<String> keywords;
-    private static final Set<String> nonCtorKeywords;
-    
-    static {
-        keywords = new HashSet<String>();
-        
-        keywords.add("true");
-        keywords.add("false");
-        keywords.add("null");
-        keywords.add("this");
-        keywords.add("super");
-        keywords.add("class");
+    private static final Set<String> keywords = Set.of("true", "false", "null", "this", "super", "class");
+    private static final Set<String> nonCtorKeywords = Set.of("true", "false", "null", "class");
 
-        nonCtorKeywords = new HashSet<String>(keywords);
-        nonCtorKeywords.remove("this");
-        nonCtorKeywords.remove("super");
-
-    }
-    
     public static boolean isKeyword(Tree tree) {
         if (tree.getKind() == Kind.IDENTIFIER) {
             return keywords.contains(((IdentifierTree) tree).getName().toString());

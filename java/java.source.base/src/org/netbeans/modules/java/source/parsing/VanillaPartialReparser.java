@@ -410,7 +410,7 @@ public class VanillaPartialReparser implements PartialReparser {
                 // in enum constructors, except in the compiler
                 // generated one.
                 log.error(tree.body.stats.head.pos(),
-                          new JCDiagnostic.Error("compiler",
+                          new JCDiagnostic.Error(Set.of(), "compiler",
                                     "call.to.super.not.allowed.in.enum.ctor",
                                     env.enclClass.sym));
                     }

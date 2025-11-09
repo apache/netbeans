@@ -348,23 +348,11 @@ public class VanillaPartialReparser implements PartialReparser {
         }
         return new NBParserFactory.NBJavacParser(parserFactory, lexer, true, false, true, false, cancelService) {
             @Override protected com.sun.tools.javac.parser.JavacParser.AbstractEndPosTable newEndPosTable(boolean keepEndPositions) {
-                return new com.sun.tools.javac.parser.JavacParser.AbstractEndPosTable(this) {
+                return new com.sun.tools.javac.parser.JavacParser.AbstractEndPosTable() {
 
                     @Override
-                    public void storeEnd(JCTree tree, int endpos) {
-                        ((NBParserFactory.NBJavacParser.EndPosTableImpl)endPos).storeEnd(tree, endpos);
-                    }
-
-                    @Override
-                    protected <T extends JCTree> T to(T t) {
-                        storeEnd(t, token.endPos);
-                        return t;
-                    }
-
-                    @Override
-                    protected <T extends JCTree> T toP(T t) {
-                        storeEnd(t, S.prevToken().endPos);
-                        return t;
+                    public <T extends JCTree> T storeEnd(T tree, int endpos) {
+                        return ((NBParserFactory.NBJavacParser.EndPosTableImpl)endPos).storeEnd(tree, endpos);
                     }
 
                     @Override

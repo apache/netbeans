@@ -355,9 +355,9 @@ class LineNumbersActionsBar extends JPanel implements Scrollable, MouseMotionLis
             int top = master.isFirst() ? dd.getTopLeft() : dd.getTopRight();
             g.setColor(master.getMaster().getColorLines());
             g.setStroke(currentDifference == idx ? master.getMaster().getBoldStroke() : cs);
-            g.drawLine(0, top, clip.width, top);
+            g.drawLine(0, top, getBarWidth(), top);
             if (bottom != -1) {
-                g.drawLine(0, bottom, clip.width, bottom);
+                g.drawLine(0, bottom, getBarWidth(), bottom);
             }
             if (actionsEnabled && dd.canRollback()) {
                 if (master.isFirst() && dd.getDiff().getType() != Difference.ADD

@@ -21,17 +21,24 @@ package org.netbeans.modules.java.lsp.server.refactoring;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.CreateFile;
 import org.eclipse.lsp4j.DeleteFile;
+import org.eclipse.lsp4j.MessageActionItem;
+import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.RenameFile;
 import org.eclipse.lsp4j.ResourceOperation;
+import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
@@ -40,17 +47,20 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
+import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.RefactoringSession;
 import org.netbeans.modules.refactoring.api.impl.APIAccessor;
 import org.netbeans.modules.refactoring.api.impl.SPIAccessor;
+import org.netbeans.modules.refactoring.java.plugins.JavaPluginUtils;
 import org.netbeans.modules.refactoring.java.spi.hooks.JavaModificationResult;
 import org.netbeans.modules.refactoring.plugins.FileMovePlugin;
 import org.netbeans.modules.refactoring.spi.RefactoringCommit;
 import org.netbeans.modules.refactoring.spi.RefactoringElementImplementation;
 import org.netbeans.modules.refactoring.spi.Transaction;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -58,20 +68,7 @@ import org.openide.filesystems.FileObject;
  */
 public abstract class CodeRefactoring extends CodeActionsProvider {
 
-    protected static final WorkspaceEdit perform(AbstractRefactoring refactoring, String name) throws Exception {
-        RefactoringSession session = RefactoringSession.create(name);
-        Problem p = refactoring.checkParameters();
-        if (p != null && p.isFatal()) {
-            throw new IllegalStateException(p.getMessage());
-        }
-        p = refactoring.preCheck();
-        if (p != null && p.isFatal()) {
-            throw new IllegalStateException(p.getMessage());
-        }
-        p = refactoring.prepare(session);
-        if (p != null && p.isFatal()) {
-            throw new IllegalStateException(p.getMessage());
-        }
+    private static WorkspaceEdit perform(AbstractRefactoring refactoring, RefactoringSession session) throws Exception {
         List<Either<TextDocumentEdit, ResourceOperation>> resultChanges = new ArrayList<>();
         Map<String, String> renames = new HashMap<>();
         List<RefactoringElementImplementation> fileChanges = APIAccessor.DEFAULT.getFileChanges(session);
@@ -135,5 +132,58 @@ public abstract class CodeRefactoring extends CodeActionsProvider {
         }
         session.finished();
         return new WorkspaceEdit(resultChanges);
+    }
+
+    private static Problem prepare(AbstractRefactoring refactoring, RefactoringSession session) {
+        Problem p = refactoring.checkParameters();
+        p = JavaPluginUtils.chainProblems(p, refactoring.preCheck());
+        p = JavaPluginUtils.chainProblems(p, refactoring.prepare(session));
+        return p;
+    }
+
+    private static ShowMessageRequestParams warningsMessageParams(
+            Problem p) {
+        final MessageActionItem yes = new MessageActionItem("Yes");
+        final MessageActionItem no = new MessageActionItem("No");
+        ShowMessageRequestParams smrp = new ShowMessageRequestParams(Arrays.asList(yes, no));
+        StringBuilder msgs = new StringBuilder();
+        while (p != null) {
+            msgs.append(p.getMessage());
+            msgs.append('\n');
+            p = p.getNext();
+        }
+        smrp.setMessage(String.format("Refactoring will lead to following problems \n %s ,"
+                + "Do you want to proceed with the problems ?", msgs.toString()));
+        smrp.setType(MessageType.Warning);
+        return smrp;
+    }
+
+    private static void showRefactoringWarnings(NbCodeLanguageClient client,AbstractRefactoring refactoring,RefactoringSession session,Problem p) {
+        ShowMessageRequestParams smrp = warningsMessageParams(p);
+        client.showMessageRequest(smrp).thenAccept(ai -> {
+            if (ai.getTitle().equalsIgnoreCase("Yes")) {
+                try {
+                    client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, session)));
+                } catch (Exception ex) {
+                    if (client == null) {
+                        Exceptions.printStackTrace(Exceptions.attachSeverity(ex, Level.SEVERE));
+                    } else {
+                        client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+                    }
+                }
+            }
+        });
+    }
+
+    protected static void sendRefactoringChanges(NbCodeLanguageClient client, AbstractRefactoring refactoring, String name) throws Exception {
+        RefactoringSession session = RefactoringSession.create(name);
+        Problem p = prepare(refactoring, session);
+        if (p == null) {
+            client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, session)));
+        } else if (p.isFatal()) {
+            throw new IllegalStateException(p.getMessage());
+        } else {
+            showRefactoringWarnings(client, refactoring, session, p);
+        }
     }
 }

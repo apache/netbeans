@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.80.0
+#Version 1.81.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -59,6 +59,7 @@ meth public int getDifferenceCount()
 meth public int getDifferenceIndex()
 meth public javax.swing.JComponent getJComponent()
 meth public static org.netbeans.api.diff.DiffController create(org.netbeans.api.diff.StreamSource,org.netbeans.api.diff.StreamSource) throws java.io.IOException
+meth public static org.netbeans.api.diff.DiffController createEnhanced(org.netbeans.api.diff.DiffController,org.netbeans.api.diff.StreamSource,org.netbeans.api.diff.StreamSource) throws java.io.IOException
 meth public static org.netbeans.api.diff.DiffController createEnhanced(org.netbeans.api.diff.StreamSource,org.netbeans.api.diff.StreamSource) throws java.io.IOException
 meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)

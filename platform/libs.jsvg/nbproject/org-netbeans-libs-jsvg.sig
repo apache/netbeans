@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.1
+#Version 2.2
 
 CLSS public final com.github.weisj.jsvg.SVGDocument
 supr java.lang.Object

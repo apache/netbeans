@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.54
+#Version 0.55
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -14,8 +14,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -24,6 +26,7 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
@@ -40,6 +43,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -98,6 +102,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
 
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
+
 CLSS public abstract interface java.util.EventListener
 
 CLSS public abstract javax.swing.AbstractAction
@@ -140,6 +147,7 @@ meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeLis
 meth public abstract void putValue(java.lang.String,java.lang.Object)
 meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public abstract void setEnabled(boolean)
+meth public boolean accept(java.lang.Object)
 
 CLSS public final org.netbeans.modules.php.api.framework.BadgeIcon
 cons public init(java.awt.Image,java.net.URL)
@@ -169,7 +177,7 @@ meth public final java.lang.String getDescription()
 meth public final java.lang.String getIdentifier()
 meth public final java.lang.String getName()
 meth public java.io.File[] getConfigurationFiles(org.netbeans.modules.php.api.phpmodule.PhpModule)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.String getName(org.netbeans.modules.php.api.phpmodule.PhpModule)
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public java.util.List<org.netbeans.modules.php.spi.annotation.AnnotationCompletionTagProvider> getAnnotationsCompletionTagProviders(org.netbeans.modules.php.api.phpmodule.PhpModule)
@@ -333,10 +341,10 @@ hfds debug,params,task
 
 CLSS public final org.openide.util.HelpCtx
 cons public init(java.lang.Class<?>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String)
 cons public init(java.net.URL)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.openide.util.HelpCtx DEFAULT_HELP
 innr public abstract interface static Displayer
 innr public abstract interface static Provider

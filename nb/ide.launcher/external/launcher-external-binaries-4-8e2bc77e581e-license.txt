@@ -1,6 +1,6 @@
 Name: NetBeans Application Launchers
 Description: Windows Launchers for NetBeans Applications
-Version: 3-282bbc032bcd
+Version: 4-8e2bc77e581e
 License: Apache-2.0
 Source: https://netbeans.org/
 Origin: NetBeans

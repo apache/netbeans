@@ -367,6 +367,8 @@ public class LinesComponent extends JComponent implements javax.accessibility.Ac
             updateState(g);
         }
 
+        GraphicsUtils.configureDefaultRenderingHints(g);
+
         Rectangle drawHere = g.getClipBounds();
 
         // Fill clipping area with dirty brown/orange.

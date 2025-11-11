@@ -109,6 +109,7 @@ public class DefaultCssEditorModule extends CssEditorModule {
         module("positioning", "http://www.w3.org/TR/css-position-3"), //NOI18N
         module("overflow", "http://www.w3.org/TR/css-overflow-3"), //NOI18N
         module("scroll_snap", "http://www.w3.org/TR/css-scroll-snap-1"), //NOI18N
+        module("images_4", "http://www.w3.org/TR/css-images-4/"), //NOI18N
         module("sizing", "http://www.w3.org/TR/css-sizing-3"), //NOI18N
         module("contain", "http://www.w3.org/TR/css-contain-3"), //NOI18N
         module("other", null) //NOI18N

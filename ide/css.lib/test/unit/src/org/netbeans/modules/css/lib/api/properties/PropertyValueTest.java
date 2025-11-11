@@ -290,7 +290,7 @@ public class PropertyValueTest extends CssTestBase {
                 "repeat", "!length", "-", "repeating-radial-gradient", "space", "!percentage",
                 "fixed", "border-box", "center", "no-repeat", "none", "left", "right",
                 "top", "element", "scroll", "repeat-y", "linear-gradient", "repeat-x",
-                "image", "!uri", "cross-fade", "radial-gradient", "conic-gradient", "bottom", "local", 
+                "image", "image-set", "!uri", "cross-fade", "radial-gradient", "conic-gradient", "bottom", "local", 
                 "calc", "var", "mod", "log", "cos", "sign", "atan", "min", "sqrt",
                 "hypot", "sin", "pow", "rem", "exp", "clamp", "atan2", "tan", "max",
                 "acos", "abs", "asin");
@@ -301,7 +301,7 @@ public class PropertyValueTest extends CssTestBase {
         assertResolve(p.getGrammar(), "aliceblue bottom / auto");
         assertAlternatives(p.getGrammar(), "aliceblue bottom / auto",
                 "repeating-linear-gradient", "element", "padding-box", "scroll", ""
-                + "content-box", "repeat-y", "linear-gradient", "repeat-x", "image",
+                + "content-box", "repeat-y", "linear-gradient", "repeat-x", "image", "image-set",
                 "round", "!length", "-", "repeat", "repeating-radial-gradient", "space",
                 "fixed", "!percentage", "!uri", "border-box", "cross-fade",
                 "radial-gradient", "conic-gradient", "no-repeat", "auto", "none", "local", "calc",

@@ -51,6 +51,7 @@ public enum PropertyCategory {
     GRID,
     HYPERLINKS,
     IMAGES,
+    IMAGES_4,
     LINE,
     LISTS_AND_COUNTERS,
     LOGICAL,

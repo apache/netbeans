@@ -327,7 +327,7 @@ public final class LexUtilities {
     /* Compute the balance of begin/end tokens on the line */
     public static int getLineBalance(BaseDocument doc, int offset, TokenId up, TokenId down, LineBalance lineBalance) {
         try {
-            int begin = LineDocumentUtils.getLineStart(doc, offset);
+            int begin = LineDocumentUtils.getLineStart2(doc, offset);
             int end = LineDocumentUtils.getLineEnd(doc, offset);
 
             TokenSequence<?extends PHPTokenId> ts = LexUtilities.getPHPTokenSequence(doc, begin);
@@ -423,7 +423,7 @@ public final class LexUtilities {
      */
     public static boolean isCommentOnlyLine(BaseDocument doc, int offset)
         throws BadLocationException {
-        int begin = Utilities.getRowFirstNonWhite(doc, offset);
+        int begin = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
 
         if (begin == -1) {
             return false; // whitespace only

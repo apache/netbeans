@@ -26,6 +26,7 @@ import java.util.List;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.languages.LanguageDefinitionNotFoundException;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
@@ -48,6 +49,7 @@ public class CodeCommentAction extends CommentAction {
         super(""); // NOI18N
     }
 
+    @Override
     public void actionPerformed (final ActionEvent evt, final JTextComponent target) {
         if (target != null) {
             if (!target.isEditable() || !target.isEnabled()) {
@@ -61,48 +63,44 @@ public class CodeCommentAction extends CommentAction {
                 return;
             }
             final TokenSequence ts = th.tokenSequence();
-            try {
-                if (caret.isSelectionVisible()) {
-                    final int startPos = Utilities.getRowStart(doc, target.getSelectionStart());
-                    final int endPos = target.getSelectionEnd();
-                    doc.runAtomicAsUser (new Runnable () {
-                        public void run () {
-                            try {
-                                int end = (endPos > 0 && Utilities.getRowStart(doc, endPos) == endPos) ?
-                                    endPos-1 : endPos;
-                                int lineCnt = Utilities.getRowCount(doc, startPos, end);
-                                List<String> mimeTypes = new ArrayList<>(lineCnt);
-                                int pos = startPos;
-                                for (int x = lineCnt ; x > 0; x--) {
-                                    mimeTypes.add(getRealMimeType(ts, pos));
-                                    pos = Utilities.getRowStart(doc, pos, 1);
-                                }
+            if (caret.isSelectionVisible()) {
+                final int startPos = LineDocumentUtils.getLineStart(doc, target.getSelectionStart());
+                final int endPos = target.getSelectionEnd();
+                doc.runAtomicAsUser (new Runnable () {
+                    public void run () {
+                        try {
+                            int end = (endPos > 0 && LineDocumentUtils.getLineStart2(doc, endPos) == endPos) ?
+                                endPos-1 : endPos;
+                            int lineCnt = LineDocumentUtils.getLineCount(doc, startPos, end);
+                            List<String> mimeTypes = new ArrayList<>(lineCnt);
+                            int pos = startPos;
+                            for (int x = lineCnt ; x > 0; x--) {
+                                mimeTypes.add(getRealMimeType(ts, pos));
+                                pos = Utilities.getRowStart(doc, pos, 1);
+                            }
 
-                                pos = startPos;
-                                for (Iterator iter = mimeTypes.iterator(); iter.hasNext(); ) {
-                                    modifyLine(doc, (String)iter.next(), pos);
-                                    pos = Utilities.getRowStart(doc, pos, 1);
-                                }
-                            } catch (BadLocationException e) {
-                                target.getToolkit().beep();
+                            pos = startPos;
+                            for (Iterator iter = mimeTypes.iterator(); iter.hasNext(); ) {
+                                modifyLine(doc, (String)iter.next(), pos);
+                                pos = Utilities.getRowStart(doc, pos, 1);
                             }
+                        } catch (BadLocationException e) {
+                            target.getToolkit().beep();
                         }
-                    });
-                } else { // selection not visible
-                    final int pos = Utilities.getRowStart(doc, target.getSelectionStart());
-                    final String mt = getRealMimeType(ts, pos);
-                    doc.runAtomicAsUser (new Runnable () {
-                        public void run () {
-                            try {
-                                modifyLine(doc, mt, pos);
-                            } catch (BadLocationException e) {
-                                target.getToolkit().beep();
-                            }
+                    }
+                });
+            } else { // selection not visible
+                final int pos = LineDocumentUtils.getLineStart(doc, target.getSelectionStart());
+                final String mt = getRealMimeType(ts, pos);
+                doc.runAtomicAsUser (new Runnable () {
+                    public void run () {
+                        try {
+                            modifyLine(doc, mt, pos);
+                        } catch (BadLocationException e) {
+                            target.getToolkit().beep();
                         }
-                    });
-                }
-            } catch (BadLocationException e) {
-                target.getToolkit().beep();
+                    }
+                });
             }
         }
     }
@@ -134,7 +132,7 @@ public class CodeCommentAction extends CommentAction {
             }
             String suffix = (String) feature.getValue("suffix"); // NOI18N
             if (suffix != null) {
-                int end = Utilities.getRowEnd(doc, offset);
+                int end = LineDocumentUtils.getLineEnd(doc, offset);
                 doc.insertString(end, suffix, null);
             }
             doc.insertString(offset, prefix, null);

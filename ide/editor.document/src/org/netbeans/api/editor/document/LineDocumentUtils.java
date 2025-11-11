@@ -35,11 +35,11 @@ import org.openide.util.Lookup;
 
 /**
  * Line and word related utility methods.
- * <br/>
+ * <p>
  * All the methods working with the document assume that the document is locked against
  * a parallel modification e.g. by including the call within
  * {@link Document#render(java.lang.Runnable)}.
- * <br/>
+ * <p>
  * The utilities were moved from the former Editor Library 2's Utilities
  * and work with {@link LineDocument} only. The methods work only with document
  * data. Utilities that connect document with the UI elements (Swing) can be
@@ -61,14 +61,26 @@ public final class LineDocumentUtils {
      * @param doc non-null document to operate on
      * @param offset position in document where to start searching
      * @return offset of character right above newline prior the given offset or zero.
+     * @deprecated Use {@link #getLineStart2}
      */
+    @Deprecated
     public static int getLineStart(@NonNull LineDocument doc, int offset) {
         return doc.getParagraphElement(offset).getStartOffset();
     }
 
-    public static int getLineEnd(@NonNull LineDocument doc, int offset)
-    throws BadLocationException
-    {
+    /**
+     * Get start offset of a (newline character separated) line.
+     * @param doc non-null document to operate on
+     * @param offset position in document where to start searching
+     * @return offset of character right above newline prior the given offset or zero.
+     * @throws javax.swing.text.BadLocationException If offset is out of bounds
+     */
+    public static int getLineStart2(@NonNull LineDocument doc, int offset) throws BadLocationException {
+        checkOffsetValid(doc, offset);
+        return doc.getParagraphElement(offset).getStartOffset();
+    }
+
+    public static int getLineEnd(@NonNull LineDocument doc, int offset) throws BadLocationException {
         checkOffsetValid(doc, offset);
         return doc.getParagraphElement(offset).getEndOffset() - 1;
     }

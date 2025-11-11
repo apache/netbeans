@@ -26,6 +26,7 @@ import java.util.ListIterator;
 import java.util.Set;
 import java.util.Stack;
 import javax.swing.text.BadLocationException;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenId;
@@ -145,7 +146,7 @@ public abstract class MarkupAbstractIndenter<T1 extends TokenId> extends Abstrac
             }
 
             if (isStartTagSymbol(tk) || isStableFormattingStartToken(tk, ts)) {
-                    int firstNonWhite = Utilities.getRowFirstNonWhite(getDocument(), ts.offset());
+                    int firstNonWhite = LineDocumentUtils.getLineFirstNonWhitespace(getDocument(), ts.offset());
                     if (firstNonWhite != -1 && firstNonWhite == ts.offset()) {
                         foundOffset = ts.offset();
                         break;
@@ -197,8 +198,8 @@ public abstract class MarkupAbstractIndenter<T1 extends TokenId> extends Abstrac
                         rangeStart = ts.offset();
                     }
                     if (rangeStart < rangeEnd) {
-                        int startLine = Utilities.getLineOffset(getDocument(), rangeStart);
-                        int endLine = Utilities.getLineOffset(getDocument(), rangeEnd);
+                        int startLine = LineDocumentUtils.getLineIndex(getDocument(), rangeStart);
+                        int endLine = LineDocumentUtils.getLineIndex(getDocument(), rangeEnd);
                         // ignore a range on a single line; they are not worth the effort
                         // and are not properly handled in processEliminatedTags() anyway;
                         // t o d o: perhaps if range covers whole line it could be added

@@ -21,6 +21,7 @@ package org.netbeans.modules.web.core.syntax.formatting;
 
 import java.util.Set;
 import javax.swing.text.BadLocationException;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.jsp.lexer.JspTokenId;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.editor.Utilities;
@@ -152,7 +153,7 @@ public class JspIndenter extends MarkupAbstractIndenter<JspTokenId> {
         } while (ts.movePrevious());
         int indent = 0;
         if (found) {
-            int lineStart = Utilities.getRowStart(getDocument(), ts.offset());
+            int lineStart = LineDocumentUtils.getLineStart2(getDocument(), ts.offset());
             // TODO: can comment token start with spaces?? if yes then adjust
             // column to point to first non-whitespace
             int column = ts.offset();

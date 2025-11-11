@@ -440,7 +440,7 @@ public class PhpTypedTextInterceptor implements TypedTextInterceptor {
             }
             Token<? extends PHPTokenId> token = ts.token();
             if ((token.id() == id)) {
-                final int rowFirstNonWhite = Utilities.getRowFirstNonWhite(doc, offset);
+                final int rowFirstNonWhite = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
                 if (id == PHPTokenId.PHP_CURLY_OPEN && ts.offset() == rowFirstNonWhite
                         && ts.movePrevious()) {
                     // The curly is at the first nonwhite char at the line.

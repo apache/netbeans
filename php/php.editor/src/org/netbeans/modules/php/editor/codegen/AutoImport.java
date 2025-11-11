@@ -622,7 +622,12 @@ public final class AutoImport {
         }
 
         private int getLineStart(int offset) {
-            return LineDocumentUtils.getLineStart(baseDocument, offset);
+            try {
+                return LineDocumentUtils.getLineStart2(baseDocument, offset);
+            } catch (BadLocationException ex) {
+                LOGGER.log(Level.WARNING, "Invalid offset: {0}", ex.offsetRequested()); // NOI18N
+            }
+            return offset;
         }
 
         private int getLineEnd(int offset) {

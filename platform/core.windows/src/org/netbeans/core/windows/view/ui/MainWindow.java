@@ -117,35 +117,19 @@ public final class MainWindow {
        if (mainMenuBar == null) {
            mainMenuBar = createMenuBar();
            ToolbarPool.getDefault().waitFinished();
+
            Toolkit toolkit = Toolkit.getDefaultToolkit();
            Class<?> xtoolkit = toolkit.getClass();
-           //#183739 - provide proper app name on Linux
            if (xtoolkit.getName().equals("sun.awt.X11.XToolkit")) { //NOI18N
+               // TODO those add --add-opens=java.desktop/sun.awt.X11=ALL-UNNAMED
+
+               //#183739 / JDK-6528430 - provide proper app name on Linux
                try {
                     final Field awtAppClassName = xtoolkit.getDeclaredField("awtAppClassName"); //NOI18N
                     awtAppClassName.setAccessible(true);
                     awtAppClassName.set(null, NbBundle.getMessage(MainWindow.class, "CTL_MainWindow_Title_No_Project", "").trim()); //NOI18N
                } catch (Exception x) {
-                   LOGGER.log(Level.FINE, null, x);
-               }
-           }
-           //#198639 - workaround for main menu & mouse issues in Gnome 3
-           String session = System.getenv("DESKTOP_SESSION"); //NOI18N
-           if ("gnome-shell".equals(session) || "gnome".equals(session) || "mate".equals(session)) { //NOI18N
-               try {
-                   Class<?> xwm = Class.forName("sun.awt.X11.XWM"); //NOI18N
-                   Field awt_wmgr = xwm.getDeclaredField("awt_wmgr"); //NOI18N
-                   awt_wmgr.setAccessible(true);
-                   Field other_wm = xwm.getDeclaredField("OTHER_WM"); //NOI18N
-                   other_wm.setAccessible(true);
-                   if (awt_wmgr.get(null).equals(other_wm.get(null))) {
-                       Field metacity_wm = xwm.getDeclaredField("METACITY_WM"); //NOI18N
-                       metacity_wm.setAccessible(true);
-                       awt_wmgr.set(null, metacity_wm.get(null));
-                       LOGGER.info("installed #198639 workaround"); //NOI18N
-                   }
-               } catch (Exception x) {
-                   LOGGER.log(Level.FINE, null, x);
+                   LOGGER.log(Level.FINE, "can't change X11 application name", x);
                }
            }
        }

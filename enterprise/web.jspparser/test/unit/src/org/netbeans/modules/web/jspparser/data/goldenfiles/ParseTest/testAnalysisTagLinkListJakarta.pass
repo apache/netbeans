@@ -1,0 +1,127 @@
+--------- JspParserAPI.parseResult(), success: false
+ ---- PAGEINFO
+----- PageInfo -----
+      imports:
+        jakarta.servlet.*
+        jakarta.servlet.http.*
+        jakarta.servlet.jsp.*
+      dependants:
+        /WEB-INF/META-INF/fmt.tld
+      taglibsMap:
+        tag library: /WEB-INF/META-INF/fmt.tld
+            tlibversion : 1.0
+            jspversion  : 1.2
+            shortname   : fmt
+            urn         : http://java.sun.com/jstl/fmt
+            info        : JSTL 1.0 i18n-capable formatting library
+            uri         : /WEB-INF/META-INF/fmt.tld
+              tag name     : requestEncoding
+                  class    : org.apache.taglibs.standard.tag.el.fmt.RequestEncodingTag
+                  attribs  : [value]
+              tag name     : setLocale
+                  class    : org.apache.taglibs.standard.tag.el.fmt.SetLocaleTag
+                  attribs  : [value, variant, scope]
+              tag name     : timeZone
+                  class    : org.apache.taglibs.standard.tag.el.fmt.TimeZoneTag
+                  attribs  : [value]
+              tag name     : setTimeZone
+                  class    : org.apache.taglibs.standard.tag.el.fmt.SetTimeZoneTag
+                  attribs  : [value, var, scope]
+              tag name     : bundle
+                  class    : org.apache.taglibs.standard.tag.el.fmt.BundleTag
+                  attribs  : [basename, prefix]
+              tag name     : setBundle
+                  class    : org.apache.taglibs.standard.tag.el.fmt.SetBundleTag
+                  attribs  : [basename, var, scope]
+              tag name     : message
+                  class    : org.apache.taglibs.standard.tag.el.fmt.MessageTag
+                  attribs  : [key, bundle, var, scope]
+              tag name     : param
+                  class    : org.apache.taglibs.standard.tag.el.fmt.ParamTag
+                  attribs  : [value]
+              tag name     : formatNumber
+                  class    : org.apache.taglibs.standard.tag.el.fmt.FormatNumberTag
+                  attribs  : [value, type, pattern, currencyCode, currencySymbol, groupingUsed, maxIntegerDigits, minIntegerDigits, maxFractionDigits, minFractionDigits, var, scope]
+              tag name     : parseNumber
+                  class    : org.apache.taglibs.standard.tag.el.fmt.ParseNumberTag
+                  attribs  : [value, type, pattern, parseLocale, integerOnly, var, scope]
+              tag name     : formatDate
+                  class    : org.apache.taglibs.standard.tag.el.fmt.FormatDateTag
+                  attribs  : [value, type, dateStyle, timeStyle, pattern, timeZone, var, scope]
+              tag name     : parseDate
+                  class    : org.apache.taglibs.standard.tag.el.fmt.ParseDateTag
+                  attribs  : [value, type, dateStyle, timeStyle, pattern, timeZone, parseLocale, var, scope]
+      prefixMapper:
+        fmt -> /WEB-INF/META-INF/fmt.tld
+      approxXmlPrefixMapper :
+      language            : java
+      xtends              : org.apache.jasper.runtime.HttpJspBase
+      contentType         : text/html
+      session             : true
+      buffer              : 8192
+      autoFlush           : true
+      threadSafe          : true
+      isErrorPage         : false
+      errorPage           : null
+      scriptless          : false
+      scriptingInvalid    : false
+      elIgnored           : false
+      omitXmlDecl         : null
+      isJspPrefixHijacked : false
+      doctypeName         : null
+      doctypeSystem       : null
+      doctypePublic       : null
+      hasJspRoot          : false
+      prefixes:
+      includePrelude:
+      includeCoda:
+      pluginDcls:
+      beans:
+      Tag file:   
+      taginfo is null
+ ------- XML View (constructed from the original data structure) -----
+no XML view
+
+ ---- NODES
+
+Node [/WEB-INF/tags/linklist.tag(1,1), TaglibDirective] <%@ taglib prefix="fmt" uri="/WEB-INF/META-INF/fmt.tld"%>
+Node [/WEB-INF/tags/linklist.tag(1,58), TemplateText] 
+
+Node [/WEB-INF/tags/linklist.tag(2,63), TemplateText] 
+
+
+
+Node [/WEB-INF/tags/linklist.tag(5,0), TemplateText] <a href="/docs/index.jsp">
+Node [/WEB-INF/tags/linklist.tag(5,26), CustomTag] <fmt:message key="home" bundle="${bundle}"></fmt:message>
+Node [/WEB-INF/tags/linklist.tag(5,70), TemplateText] </a>
+
+Node [/WEB-INF/tags/linklist.tag(6,0), InvokeAction] <jsp:invoke fragment="separator"></jsp:invoke>
+Node [/WEB-INF/tags/linklist.tag(6,34), TemplateText] 
+
+Node [/WEB-INF/tags/linklist.tag(7,0), TemplateText] <a href="/docs/parameters/Input.jsp">
+Node [/WEB-INF/tags/linklist.tag(7,37), CustomTag] <fmt:message key="parameters" bundle="${bundle}"></fmt:message>
+Node [/WEB-INF/tags/linklist.tag(7,87), TemplateText] </a>
+
+Node [/WEB-INF/tags/linklist.tag(8,0), InvokeAction] <jsp:invoke fragment="separator"></jsp:invoke>
+Node [/WEB-INF/tags/linklist.tag(8,34), TemplateText] 
+
+Node [/WEB-INF/tags/linklist.tag(9,0), TemplateText] <a href="/docs/cookies/CookieCutter.jsp">
+Node [/WEB-INF/tags/linklist.tag(9,41), CustomTag] <fmt:message key="cookies" bundle="${bundle}"></fmt:message>
+Node [/WEB-INF/tags/linklist.tag(9,88), TemplateText] </a>
+
+Node [/WEB-INF/tags/linklist.tag(10,0), InvokeAction] <jsp:invoke fragment="separator"></jsp:invoke>
+Node [/WEB-INF/tags/linklist.tag(10,34), TemplateText] 
+
+Node [/WEB-INF/tags/linklist.tag(11,0), TemplateText] <a href="/docs/localized/Babel.jsp">
+Node [/WEB-INF/tags/linklist.tag(11,36), CustomTag] <fmt:message key="localized" bundle="${bundle}"></fmt:message>
+Node [/WEB-INF/tags/linklist.tag(11,85), TemplateText] </a>
+
+
+
+Node [/WEB-INF/tags/linklist.tag(14,0), DoBodyAction] <jsp:doBody></jsp:doBody>
+Node [/WEB-INF/tags/linklist.tag(14,13), TemplateText] 
+
+
+ ---- ERRORS
+ERROR in /WEB-INF/tags/linklist.tag at [5, 26] According to TLD or attribute directive in tag file, attribute bundle does not accept any expressions
+

@@ -1,10 +1,9 @@
 Name: Java API for Jakarta Servlets, Java API for Jakarta Server Pages
 License: EPL-v20
-Version: 4.0_2.3
+Version: 6.1_3.0
 Type: generated
 Description: Java API for Jakarta Servlets, Java API for Jakarta Server Pages, Java API for Jakarta Expression Language
 Origin: Eclipse Foundation (https://projects.eclipse.org/projects/ee4j)
-Files: gf-client-module-5.1.0.jar, jakarta.el-api-3.0.3.jar, jakarta.servlet-api-4.0.4.jar, jakarta.servlet.jsp-api-2.3.6.jar
 
 Eclipse Public License - v 2.0
 THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICENSE (“AGREEMENT”). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.

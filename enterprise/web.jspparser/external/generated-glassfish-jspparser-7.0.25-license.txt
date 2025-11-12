@@ -3,8 +3,8 @@ License: EPL-v20
 Description: GlassFish Unified JSP Parser
 Origin: Generated from common-util-5.1.0.jar, glassfish-ee-api-5.1.0.jar, jakarta.el-3.0.4.jar, and jakarta.servlet.jsp-2.3.6.jar
 Type: generated
-Version: 5.1.0
-Files: generated-glassfish-jspparser-5.1.0.jar, common-util-5.1.0.jar, glassfish-ee-api-5.1.0.jar, jakarta.el-3.0.4.jar, jakarta.servlet.jsp-2.3.6.jar
+Version: 7.0.25
+Files: generated-glassfish-jspparser-5.1.0.jar, common-util-5.1.0.jar, glassfish-ee-api-5.1.0.jar, jakarta.el-3.0.4.jar, jakarta.servlet.jsp-2.3.6.jar, generated-glassfish-jspparser-7.0.25.jar, common-util-7.0.25.jar, glassfish-ee-api-7.0.25.jar, jakarta.el-5.0.0-M1.jar, jakarta.servlet.jsp-3.0.0.jar
 
 Eclipse Public License - v 2.0
 THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICENSE (“AGREEMENT”). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.

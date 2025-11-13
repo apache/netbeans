@@ -56,6 +56,7 @@ import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.apache.maven.MavenExecutionException;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.ArtifactUtils;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -914,7 +915,13 @@ public class DependencyNode extends AbstractNode implements PreferenceChangeList
             RP.post(new Runnable() {
                 @Override
                 public void run() {
-                    org.apache.maven.shared.dependency.tree.DependencyNode rootnode = DependencyTreeFactory.createDependencyTree(data.getMavenProject(), EmbedderFactory.getOnlineEmbedder(), Artifact.SCOPE_TEST);
+                    org.apache.maven.shared.dependency.tree.DependencyNode rootnode;
+                    try {
+                        rootnode = DependencyTreeFactory.createDependencyTree(data.getMavenProject(), EmbedderFactory.getOnlineEmbedder(), List.of(Artifact.SCOPE_TEST));
+                    } catch (MavenExecutionException ex) {
+                        Logger.getLogger(DependencyNode.class.getName()).log(Level.WARNING, "Dependency tree scan failed", ex);
+                        return;
+                    }
                     DependencyExcludeNodeVisitor nv = new DependencyExcludeNodeVisitor(data.art.getGroupId(), data.art.getArtifactId(), data.art.getType());
                     rootnode.accept(nv);
                     final Set<org.apache.maven.shared.dependency.tree.DependencyNode> nds = nv.getDirectDependencies();

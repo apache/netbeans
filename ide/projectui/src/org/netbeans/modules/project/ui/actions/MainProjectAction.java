@@ -29,7 +29,6 @@ import javax.swing.SwingUtilities;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.project.ui.OpenProjectList;
-import static org.netbeans.modules.project.ui.actions.Bundle.*;
 import org.netbeans.spi.project.ui.support.ProjectActionPerformer;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -39,6 +38,10 @@ import org.openide.util.Lookup;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.WeakListeners;
+
+import static org.netbeans.modules.project.ui.actions.Bundle.*;
+import static org.netbeans.modules.project.ui.OpenProjectList.PROPERTY_MAIN_PROJECT;
+import static org.netbeans.modules.project.ui.OpenProjectList.PROPERTY_OPEN_PROJECTS;
 
 /**
  * Similar to {@link ProjectAction} but has a different selection model.
@@ -134,10 +137,14 @@ public class MainProjectAction extends LookupSensitiveAction implements Property
         }
     }
 
-    public @Override void propertyChange( PropertyChangeEvent evt ) {
-        if (OpenProjectList.PROPERTY_MAIN_PROJECT.equals(evt.getPropertyName()) ||
-            OpenProjectList.PROPERTY_OPEN_PROJECTS.equals(evt.getPropertyName())) {
-            refreshView(null, false);
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        String prop = evt.getPropertyName();
+        if (prop == null) {
+            return;
+        }
+        switch (prop) {
+            case PROPERTY_MAIN_PROJECT, PROPERTY_OPEN_PROJECTS -> refreshView(null, false);
         }
     }
 

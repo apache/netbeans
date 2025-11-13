@@ -184,22 +184,17 @@ public class RecentProjects extends AbstractAction implements Presenter.Menu, Pr
     // Implementation of change listener ---------------------------------------
     
     
-    @Override public void propertyChange(PropertyChangeEvent e) {
-        
-        if ( OpenProjectList.PROPERTY_RECENT_PROJECTS.equals( e.getPropertyName() ) ) {
-            final boolean en = !OpenProjectList.getDefault().isRecentProjectsEmpty();
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    createMainSubMenu();
-                    subMenu.setEnabled( en );
-                    recreate = true;
-                }
+    @Override
+    public void propertyChange(PropertyChangeEvent e) {
+        if (OpenProjectList.PROPERTY_RECENT_PROJECTS.equals(e.getPropertyName())) {
+            boolean enable = !OpenProjectList.getDefault().isRecentProjectsEmpty();
+            SwingUtilities.invokeLater(() -> {
+                createMainSubMenu();
+                subMenu.setEnabled(enable);
+                recreate = true;
             });
         }
-        
     }
-    
     
     
     // Innerclasses ------------------------------------------------------------

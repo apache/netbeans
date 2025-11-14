@@ -22,7 +22,6 @@ package org.openide.execution;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
-import org.openide.*;
 import org.openide.filesystems.EnvironmentNotSupportedException;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileSystem$Environment;

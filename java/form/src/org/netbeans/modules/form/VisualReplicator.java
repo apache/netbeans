@@ -1077,7 +1077,7 @@ public class VisualReplicator {
                 } else if (Frame.class.isAssignableFrom(compClass)) {
                     convClass = JRootPane.class;
                 } else if (Window.class.isAssignableFrom(compClass)
-                           || java.applet.Applet.class.isAssignableFrom(compClass)) {
+                        || (compClass.getName().equals("javax.swing.JApplet") || compClass.getName().equals("java.applet.Applet"))) { // best effort to view old forms
                     convClass = Panel.class;
                 } else if (MenuComponent.class.isAssignableFrom(compClass)) {
                     convClass = convertMenuClassToSwing(compClass);

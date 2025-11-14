@@ -462,11 +462,12 @@ public class AgentWorker extends RemoteExecutionControl implements Executor, Run
                 userCodeExecutingThreads.put(socketPort, Thread.currentThread());
             }
             return super.invoke(className, methodName);
-        } catch (ThreadDeath td) {
-            LOG.log(Level.FINE, "Received ThreadDeath, killed: {0}", killed);
-            if (!killed.get()) {
-                throw td;
-            }
+        // TODO this code relied on performStop() calling Thread.stop()
+//        } catch (ThreadDeath td) {
+//            LOG.log(Level.FINE, "Received ThreadDeath, killed: {0}", killed);
+//            if (!killed.get()) {
+//                throw td;
+//            }
         } catch (ExecutionControlException ex) {
             throw ex; 
         } catch (Throwable t) {
@@ -485,8 +486,7 @@ public class AgentWorker extends RemoteExecutionControl implements Executor, Run
         synchronized (userCodeExecutingThreads) {
             targetThread = userCodeExecutingThreads.remove(agentId);
             if (targetThread != null) {
-                // throw ThreadDeath in the target thread
-                targetThread.stop();
+                targetThread.interrupt(); // was: Thread.stop()
             }
         }
         if (targetThread == null) {

@@ -191,7 +191,6 @@
 <replacefilter token="@org-netbeans-modules-glassfish-common@" value="${javadoc.docs.org-netbeans-modules-glassfish-common}"/>
 <replacefilter token="@org-netbeans-modules-javaee-project@" value="${javadoc.docs.org-netbeans-modules-javaee-project}"/>
 <replacefilter token="@org-netbeans-modules-maven-util@" value="${javadoc.docs.org-netbeans-modules-maven-util}"/>
-<replacefilter token="@org-netbeans-modules-bugtracking@" value="${javadoc.docs.org-netbeans-modules-bugtracking}"/>
 <replacefilter token="@org-netbeans-core-multitabs@" value="${javadoc.docs.org-netbeans-core-multitabs}"/>
 <replacefilter token="@org-openide-util-ui@" value="${javadoc.docs.org-openide-util-ui}"/>
 <replacefilter token="@org-netbeans-api-maven@" value="${javadoc.docs.org-netbeans-api-maven}"/>

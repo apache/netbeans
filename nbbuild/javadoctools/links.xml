@@ -196,7 +196,6 @@
 <link href="${javadoc.docs.org-netbeans-modules-glassfish-common}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-glassfish-common"/>
 <link href="${javadoc.docs.org-netbeans-modules-javaee-project}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-javaee-project"/>
 <link href="${javadoc.docs.org-netbeans-modules-maven-util}" offline="true" packagelistloc="${netbeans.javadoc.dir}\org-netbeans-modules-maven-util"/>
-<link href="${javadoc.docs.org-netbeans-modules-bugtracking}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-bugtracking"/>
 <link href="${javadoc.docs.org-netbeans-core-multitabs}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-core-multitabs"/>
 <link href="${javadoc.docs.org-openide-util-ui}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-util-ui"/>
 <link href="${javadoc.docs.org-netbeans-api-maven}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-maven"/>

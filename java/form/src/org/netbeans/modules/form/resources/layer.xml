@@ -411,24 +411,7 @@
         <folder name="GUIForms">
             <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
             <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/form/resources/Forms.html"/>
-            
             <attr name="position" intvalue="1000"/>
-            <file name="JApplet.java" url="templates/SwingForms/JApplet_java">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
-                <attr name="position" intvalue="500"/>
-                <attr name="template" boolvalue="true"/>
-                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
-                <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/form/resources/FormJApplet.html"/>
-                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/applet.gif"/>
-                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.java.source.queries.api.TemplateWizardFactory.create"/>
-                <attr name="templateCategory" stringvalue="java-forms"/>
-                <attr name="weight" intvalue="100"/>
-            </file>
-            <file name="JApplet.form" url="templates/SwingForms/JApplet_form">
-                <attr name="template" boolvalue="true"/>
-                <attr name="templateCategory" stringvalue="java-forms"/>
-                <attr name="weight" intvalue="100"/>
-            </file>
 
             <file name="JDialog.java" url="templates/SwingForms/JDialog_java">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
@@ -572,25 +555,7 @@
         <folder name="AWTForms">
             <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
             <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/form/resources/AWTForms.html"/>
-
-            
-
             <attr name="position" intvalue="1100"/>
-            <file name="Applet.java" url="templates/AWTForms/Applet_java">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
-                <attr name="position" intvalue="100"/>
-                <attr name="template" boolvalue="true"/>
-                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
-                <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/form/resources/FormApplet.html"/>
-                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/applet.gif"/>
-                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.java.source.queries.api.TemplateWizardFactory.create"/>
-                <attr name="templateCategory" stringvalue="java-forms,java-awt-forms"/>
-                <attr name="weight" intvalue="100"/>
-            </file>
-            <file name="Applet.form" url="templates/AWTForms/Applet_form">
-                <attr name="template" boolvalue="true"/>
-                <attr name="templateCategory" stringvalue="java-forms"/>
-            </file>
 
             <file name="Dialog.java" url="templates/AWTForms/Dialog_java">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>

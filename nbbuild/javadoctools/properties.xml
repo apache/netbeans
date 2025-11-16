@@ -192,7 +192,6 @@
 <property name="javadoc.docs.org-netbeans-modules-glassfish-common" value="${javadoc.web.root}/org-netbeans-modules-glassfish-common"/>
 <property name="javadoc.docs.org-netbeans-modules-javaee-project" value="${javadoc.web.root}/org-netbeans-modules-javaee-project"/>
 <property name="javadoc.docs.org-netbeans-modules-maven-util" value="${javadoc.web.root}/org-netbeans-modules-maven-util"/>
-<property name="javadoc.docs.org-netbeans-modules-bugtracking" value="${javadoc.web.root}/org-netbeans-modules-bugtracking"/>
 <property name="javadoc.docs.org-netbeans-core-multitabs" value="${javadoc.web.root}/org-netbeans-core-multitabs"/>
 <property name="javadoc.docs.org-openide-util-ui" value="${javadoc.web.root}/org-openide-util-ui"/>
 <property name="javadoc.docs.org-netbeans-api-maven" value="${javadoc.web.root}/org-netbeans-api-maven"/>

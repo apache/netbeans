@@ -61,6 +61,7 @@ import org.netbeans.modules.refactoring.spi.RefactoringElementImplementation;
 import org.netbeans.modules.refactoring.spi.Transaction;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -141,10 +142,16 @@ public abstract class CodeRefactoring extends CodeActionsProvider {
         return p;
     }
 
+    @NbBundle.Messages({
+        "# {0} - problems message",
+        "PROMPT_AskProceedWithRefactoringProblems=Refactoring may lead to following problems: {0}.\nDo you still want to proceed with the refactoring?",
+        "PROMPT_AskProceedWithRefactoringProblems_Yes=Yes",
+        "PROMPT_AskProceedWithRefactoringProblems_No=No",
+    })
     private static ShowMessageRequestParams warningsMessageParams(
             Problem p) {
-        final MessageActionItem yes = new MessageActionItem("Yes");
-        final MessageActionItem no = new MessageActionItem("No");
+        final MessageActionItem yes = new MessageActionItem(Bundle.PROMPT_AskProceedWithRefactoringProblems_Yes());
+        final MessageActionItem no = new MessageActionItem(Bundle.PROMPT_AskProceedWithRefactoringProblems_No());
         ShowMessageRequestParams smrp = new ShowMessageRequestParams(Arrays.asList(yes, no));
         StringBuilder msgs = new StringBuilder();
         while (p != null) {
@@ -152,8 +159,7 @@ public abstract class CodeRefactoring extends CodeActionsProvider {
             msgs.append('\n');
             p = p.getNext();
         }
-        smrp.setMessage(String.format("Refactoring will lead to following problems \n %s ,"
-                + "Do you want to proceed with the problems ?", msgs.toString()));
+        smrp.setMessage(Bundle.PROMPT_AskProceedWithRefactoringProblems(msgs.toString()));
         smrp.setType(MessageType.Warning);
         return smrp;
     }
@@ -161,7 +167,7 @@ public abstract class CodeRefactoring extends CodeActionsProvider {
     private static void showRefactoringWarnings(NbCodeLanguageClient client,AbstractRefactoring refactoring,RefactoringSession session,Problem p) {
         ShowMessageRequestParams smrp = warningsMessageParams(p);
         client.showMessageRequest(smrp).thenAccept(ai -> {
-            if (ai.getTitle().equalsIgnoreCase("Yes")) {
+            if (ai.getTitle().equalsIgnoreCase(Bundle.PROMPT_AskProceedWithRefactoringProblems_Yes())) {
                 try {
                     client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, session)));
                 } catch (Exception ex) {

@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.List;
 import javax.swing.JComponent;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.TestUtil;
@@ -214,7 +213,7 @@ public class DefaultProjectOperationsImplementationTest extends NbTestCase {
     //<editor-fold defaultstate="collapsed" desc="Copy Operation">
     public void testCopyWithLib() throws Exception {
         TestUtil.createFileFromContent(DefaultProjectOperationsImplementationTest.class.getResource("data/test.txt"), projdir, "lib/test.txt");
-        ProgressHandle handle = ProgressHandleFactory.createHandle("test-handle");
+        ProgressHandle handle = ProgressHandle.createHandle("test-handle");
         handle.start(DefaultProjectOperationsImplementation.MAX_WORK);
         FileObject newTarget = prj.getProjectDirectory().getParent();
         
@@ -234,7 +233,7 @@ public class DefaultProjectOperationsImplementationTest extends NbTestCase {
         
         createProject(projdir2);
         
-        ProgressHandle handle = ProgressHandleFactory.createHandle("test-handle");
+        ProgressHandle handle = ProgressHandle.createHandle("test-handle");
         handle.start(DefaultProjectOperationsImplementation.MAX_WORK);
         FileObject newTarget = prj.getProjectDirectory().getParent();
         
@@ -255,7 +254,7 @@ public class DefaultProjectOperationsImplementationTest extends NbTestCase {
         
         createProject(projdir2);
         
-        ProgressHandle handle = ProgressHandleFactory.createHandle("test-handle");
+        ProgressHandle handle = ProgressHandle.createHandle("test-handle");
         handle.start(DefaultProjectOperationsImplementation.MAX_WORK);
         
         FileObject newTarget = prj.getProjectDirectory().getParent();
@@ -279,7 +278,7 @@ public class DefaultProjectOperationsImplementationTest extends NbTestCase {
         OpenProjects.getDefault().setMainProject(prj);       
         assertTrue(prj.getProjectDirectory().equals(OpenProjects.getDefault().getMainProject().getProjectDirectory()));
         
-        ProgressHandle handle = ProgressHandleFactory.createHandle("test-handle");
+        ProgressHandle handle = ProgressHandle.createHandle("test-handle");
         handle.start(DefaultProjectOperationsImplementation.MAX_WORK);
         FileObject oldProject = prj.getProjectDirectory();
         File       oldProjectFile = FileUtil.toFile(oldProject);
@@ -296,7 +295,7 @@ public class DefaultProjectOperationsImplementationTest extends NbTestCase {
     //<editor-fold defaultstate="collapsed" desc="Move Operation">
     public void testMoveWithLib() throws Exception {
         TestUtil.createFileFromContent(DefaultProjectOperationsImplementationTest.class.getResource("data/test.txt"), projdir, "lib/test.txt");
-        ProgressHandle handle = ProgressHandleFactory.createHandle("test-handle");
+        ProgressHandle handle = ProgressHandle.createHandle("test-handle");
         handle.start(DefaultProjectOperationsImplementation.MAX_WORK);
         FileObject oldProject = prj.getProjectDirectory();
         File       oldProjectFile = FileUtil.toFile(oldProject);
@@ -320,7 +319,7 @@ public class DefaultProjectOperationsImplementationTest extends NbTestCase {
         
         createProject(projdir2);
         
-        ProgressHandle handle = ProgressHandleFactory.createHandle("test-handle");
+        ProgressHandle handle = ProgressHandle.createHandle("test-handle");
         handle.start(DefaultProjectOperationsImplementation.MAX_WORK);
         FileObject oldProject = prj.getProjectDirectory();
         File       oldProjectFile = FileUtil.toFile(oldProject);
@@ -345,7 +344,7 @@ public class DefaultProjectOperationsImplementationTest extends NbTestCase {
         
         createProject(projdir2);
         
-        ProgressHandle handle = ProgressHandleFactory.createHandle("test-handle");
+        ProgressHandle handle = ProgressHandle.createHandle("test-handle");
         handle.start(DefaultProjectOperationsImplementation.MAX_WORK);
         
         FileObject oldProject     = prj.getProjectDirectory();
@@ -368,7 +367,7 @@ public class DefaultProjectOperationsImplementationTest extends NbTestCase {
         OpenProjects.getDefault().open(new Project[] {prj}, false);
         OpenProjects.getDefault().setMainProject(prj);
         assertEquals(prj, OpenProjects.getDefault().getMainProject());
-        ProgressHandle handle = ProgressHandleFactory.createHandle("test-handle");
+        ProgressHandle handle = ProgressHandle.createHandle("test-handle");
         handle.start(DefaultProjectOperationsImplementation.MAX_WORK);
         FileObject oldProject = prj.getProjectDirectory();
         File       oldProjectFile = FileUtil.toFile(oldProject);
@@ -388,7 +387,7 @@ public class DefaultProjectOperationsImplementationTest extends NbTestCase {
         
         assertTrue(main == null || !prj.getProjectDirectory().equals(main.getProjectDirectory()));
         
-        ProgressHandle handle = ProgressHandleFactory.createHandle("test-handle");
+        ProgressHandle handle = ProgressHandle.createHandle("test-handle");
         handle.start(DefaultProjectOperationsImplementation.MAX_WORK);
         FileObject oldProject = prj.getProjectDirectory();
         File       oldProjectFile = FileUtil.toFile(oldProject);

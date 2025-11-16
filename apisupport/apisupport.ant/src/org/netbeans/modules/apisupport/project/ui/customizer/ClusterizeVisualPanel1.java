@@ -29,7 +29,7 @@ final class ClusterizeVisualPanel1 extends JPanel {
 
     ClusterizeVisualPanel1(ClusterizeWizardPanel1 aThis) {
         panel = aThis;
-        handle = ProgressHandleFactory.createHandle(java.util.ResourceBundle.getBundle("org/netbeans/modules/apisupport/project/ui/customizer/Bundle").getString("MSG_ClusterizeScanning"));
+        handle = ProgressHandle.createHandle(java.util.ResourceBundle.getBundle("org/netbeans/modules/apisupport/project/ui/customizer/Bundle").getString("MSG_ClusterizeScanning"));
         initComponents();
         progressPanel.add(BorderLayout.CENTER, ProgressHandleFactory.createProgressComponent(handle));
         progressName.add(BorderLayout.CENTER, ProgressHandleFactory.createMainLabelComponent(handle));

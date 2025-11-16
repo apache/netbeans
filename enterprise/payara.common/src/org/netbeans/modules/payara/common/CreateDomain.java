@@ -38,7 +38,6 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.payara.spi.ExecSupport;
 import org.netbeans.modules.payara.spi.ServerUtilities;
 import org.openide.DialogDisplayer;
@@ -169,7 +168,7 @@ public class CreateDomain extends Thread {
                 ExecSupport ee = new ExecSupport();
                 process = Runtime.getRuntime().exec(args.toArray(new String[0]), null, irf);
                 pdcan = new PDCancel(process, domainDir + File.separator + domain);
-                ph = ProgressHandleFactory.createHandle(
+                ph = ProgressHandle.createHandle(
                         NbBundle.getMessage(this.getClass(), "LBL_Creating_personal_domain"), // NOI18N
                         pdcan);
                 ph.start();

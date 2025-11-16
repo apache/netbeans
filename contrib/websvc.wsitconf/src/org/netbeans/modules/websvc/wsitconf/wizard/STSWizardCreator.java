@@ -45,10 +45,8 @@ import org.netbeans.api.java.source.CancellableTask;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.TreeMaker;
-import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.j2ee.api.ejbjar.EjbJar;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
@@ -109,7 +107,7 @@ public class STSWizardCreator {
     }
     
     public void createSTS() {
-        final ProgressHandle handle = ProgressHandleFactory.createHandle( 
+        final ProgressHandle handle = ProgressHandle.createHandle( 
                 NbBundle.getMessage(STSWizardCreator.class, "TXT_StsGeneration")); //NOI18N
 
         initProjectInfo(project);

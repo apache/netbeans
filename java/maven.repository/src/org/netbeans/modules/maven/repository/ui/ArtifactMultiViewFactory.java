@@ -44,7 +44,7 @@ import org.apache.maven.shared.dependency.tree.DependencyNode;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
-import org.netbeans.api.progress.aggregate.AggregateProgressFactory;
+import org.netbeans.api.progress.aggregate.BasicAggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.AggregateProgressHandle;
 import org.netbeans.api.progress.aggregate.ProgressContributor;
 import org.netbeans.api.project.Project;
@@ -143,9 +143,9 @@ public final class ArtifactMultiViewFactory implements ArtifactViewerFactory {
                     @Override
                 public void run() {
                     MavenEmbedder embedder = EmbedderFactory.getOnlineEmbedder();
-                    AggregateProgressHandle hndl = AggregateProgressFactory.createHandle(Progress_Download(artifact.getId()),
+                    AggregateProgressHandle hndl = BasicAggregateProgressFactory.createHandle(Progress_Download(artifact.getId()),
                                 new ProgressContributor[] {
-                                    AggregateProgressFactory.createProgressContributor("zaloha") },  //NOI18N
+                                    BasicAggregateProgressFactory.createProgressContributor("zaloha") },  //NOI18N
                                 ProgressTransferListener.cancellable(), null);
                     ProgressTransferListener.setAggregateHandle(hndl);
                     hndl.start();

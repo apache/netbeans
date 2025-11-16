@@ -37,7 +37,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.EditorActionRegistration;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.editor.BaseAction;
 import org.netbeans.editor.ext.ExtKit;
 import org.netbeans.spi.editor.codegen.CodeGenerator;
@@ -66,7 +66,7 @@ public class NbGenerateCodeAction extends BaseAction {
     public void actionPerformed(ActionEvent evt, final JTextComponent target) {
         final Task task = new Task(getFullMimePath(target.getDocument(), target.getCaretPosition()));
         final AtomicBoolean cancel = new AtomicBoolean();
-        ProgressUtils.runOffEventDispatchThread(new Runnable() {
+        BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
             @Override
             public void run() {
                 if (cancel != null && cancel.get())

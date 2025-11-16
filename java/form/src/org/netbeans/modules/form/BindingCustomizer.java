@@ -1047,7 +1047,7 @@ private void importDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//
     if (importer != null) {
         final Future<RADComponent> task = importer.importData(bindingComponent.getFormModel());
         if (task != null) {
-            final ProgressHandle handle = ProgressHandleFactory.createHandle(null, (Cancellable)null);
+            final ProgressHandle handle = ProgressHandle.createHandle(null, (Cancellable)null);
             JComponent handlePanel = panelForHandle(handle);
             handle.start();
             handle.progress(FormUtils.getBundleString("MSG_BindingCustomizer_Importing")); // NOI18N

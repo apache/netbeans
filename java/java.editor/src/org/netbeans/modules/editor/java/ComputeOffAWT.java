@@ -26,7 +26,7 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.Task;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.openide.util.Exceptions;
 
 /**
@@ -39,7 +39,7 @@ public class ComputeOffAWT {
         AtomicBoolean cancel = new AtomicBoolean();
         Compute<T> c = new Compute(cancel, source, phase, w);
 
-        ProgressUtils.runOffEventDispatchThread(c, featureName, cancel, false);
+        BaseProgressUtils.runOffEventDispatchThread(c, featureName, cancel, false);
 
         return c.result;
     }

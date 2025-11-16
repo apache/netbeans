@@ -21,7 +21,6 @@ package org.netbeans.modules.db.dataview.output;
 import java.sql.Connection;
 import java.sql.SQLException;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.db.dataview.meta.DBConnectionFactory;
 import org.netbeans.modules.db.dataview.meta.DBException;
 import org.openide.DialogDisplayer;
@@ -70,7 +69,7 @@ abstract class SQLStatementExecutor implements Runnable, Cancellable {
         assert task != null;
         try {
             startTime = System.currentTimeMillis();
-            ProgressHandle handle = ProgressHandleFactory.createHandle(title, this);
+            ProgressHandle handle = ProgressHandle.createHandle(title, this);
             handle.setDisplayName(titleMsg);
             handle.start();
             try {

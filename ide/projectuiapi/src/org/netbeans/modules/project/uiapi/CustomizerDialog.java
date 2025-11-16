@@ -256,7 +256,7 @@ public class CustomizerDialog {
                     }
                 });
                 
-                final ProgressHandle handle = ProgressHandleFactory.createHandle(NbBundle.getMessage(CustomizerDialog.class, "LBL_Saving_Project_data_progress"));
+                final ProgressHandle handle = ProgressHandle.createHandle(NbBundle.getMessage(CustomizerDialog.class, "LBL_Saving_Project_data_progress"));
                 JComponent component = ProgressHandleFactory.createProgressComponent(handle);
                 Frame mainWindow = WindowManager.getDefault().getMainWindow();
                 final JDialog dialog = new JDialog(mainWindow, 

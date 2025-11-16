@@ -451,7 +451,7 @@ public class OptionsDisplayerImpl {
         public void propertyChange (PropertyChangeEvent ev) {
             if (ev.getPropertyName ().equals ("buran" + OptionsPanelController.PROP_HELP_CTX)) {               //NOI18N
                 AtomicBoolean helpCtxLoadingCancelled = new AtomicBoolean(false);
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     @Override
                     public void run() {
                         helpCtx = optionsPanel.getHelpCtx();
@@ -508,6 +508,7 @@ public class OptionsDisplayerImpl {
             savingInProgress = true;
             JPanel content = new JPanel();
             content.add(new JLabel(Bundle.Saving_Options_Lengthy_Operation()));
+            // TODO last org.netbeans.api.progress.nb usage
             ProgressUtils.runOffEventThreadWithCustomDialogContent(new Runnable() {
                 @Override
                 public void run() {

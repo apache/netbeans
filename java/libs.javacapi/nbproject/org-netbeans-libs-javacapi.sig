@@ -1647,7 +1647,6 @@ fld public final static javax.lang.model.SourceVersion RELEASE_6
 fld public final static javax.lang.model.SourceVersion RELEASE_7
 fld public final static javax.lang.model.SourceVersion RELEASE_8
 fld public final static javax.lang.model.SourceVersion RELEASE_9
-meth public nbjavac.RuntimeWR$Version runtimeVersion()
 meth public static boolean isIdentifier(java.lang.CharSequence)
 meth public static boolean isKeyword(java.lang.CharSequence)
 meth public static boolean isKeyword(java.lang.CharSequence,javax.lang.model.SourceVersion)
@@ -1656,7 +1655,6 @@ meth public static boolean isName(java.lang.CharSequence,javax.lang.model.Source
 meth public static javax.lang.model.SourceVersion latest()
 meth public static javax.lang.model.SourceVersion latestSupported()
 meth public static javax.lang.model.SourceVersion valueOf(java.lang.String)
-meth public static javax.lang.model.SourceVersion valueOf(nbjavac.RuntimeWR$Version)
 meth public static javax.lang.model.SourceVersion[] values()
 supr java.lang.Enum<javax.lang.model.SourceVersion>
 hfds latestSupported

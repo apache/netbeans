@@ -243,11 +243,8 @@ public class Utilities {
                         if (fo == null) {
                             fo = fParentFo.createData(file.getName());
                         }
-                        OutputStream os = fo.getOutputStream();
-                        try {
+                        try (OutputStream os = fo.getOutputStream()) {
                             os.write(text.getBytes(StandardCharsets.UTF_8));
-                        } finally {
-                            os.close();
                         }
                     }
                 });

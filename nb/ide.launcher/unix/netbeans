@@ -57,6 +57,16 @@ case "`uname -s -m`" in
         ;;
 esac
 
+absolutize_paths() {
+    while read path; do
+        if [ -d "$path" ]; then
+            (cd "$path" 2>/dev/null && pwd)
+        else
+            echo "$path"
+        fi
+    done
+}
+
 # $HOME can be used as it is present on mac OS and
 BASEDIR=$basedir
 
@@ -73,7 +83,7 @@ export DEFAULT_USERDIR_ROOT
 
 if ! [ "$NETBEANS_USERDIR" = "IGNORE" ]; then
     # make sure own launcher directory is on PATH as a fallback
-    PATH=$PATH:$progdir
+    PATH=$PATH:`echo $progdir | absolutize_paths`
 fi
 
 # #68373: look for userdir, but do not modify "$@"
@@ -123,16 +133,6 @@ readClusters() {
     done
 }
 
-absolutize_paths() {
-    while read path; do
-        if [ -d "$path" ]; then
-            (cd "$path" 2>/dev/null && pwd)
-        else
-            echo "$path"
-        fi
-    done
-}
-
 netbeans_clusters=`readClusters | absolutize_paths | tr '\012' ':'`
 
 if [ ! -z "$netbeans_extraclusters" ] ; then
@@ -153,7 +153,7 @@ launchNbexec() {
     then
         sh=/bin/bash
     fi
-    NETBEANS_USERDIR=${userdir}
+    NETBEANS_USERDIR=`echo ${userdir} | absolutize_paths`
     export NETBEANS_USERDIR
     if [ "${founduserdir}" = "yes" ]; then
         exec $sh "$nbexec" "$@"

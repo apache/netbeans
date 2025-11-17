@@ -37,7 +37,6 @@ import java.net.Proxy;
 import java.net.ProxySelector;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -75,7 +74,6 @@ import org.openide.util.NbBundle;
 
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.queries.SourceLevelQuery;
-import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.api.progress.ProgressUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -1401,6 +1399,7 @@ private void saasBrowse(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saasB
                 try {
                     return Deployment.getDefault().getServerInstance(serverInstanceID).getJ2eePlatform();
                 } catch (InstanceRemovedException ex) {
+                    // Probably NO server selected!
                     Logger.getLogger(getClass().getName()).log(Level.INFO, "Failed to find J2eePlatform", ex);
                 }
             }

@@ -126,6 +126,8 @@ public final class EjbJarVersion extends J2EEBaseVersion {
             result = EJBJAR_3_2_6;
         } else if(EJBJAR_4_0.toString().equals(version)) {
             result = EJBJAR_4_0;
+        } else if(EJBJAR_4_0_1.toString().equals(version)) {
+            result = EJBJAR_4_0_1;
         }
 
         return result;

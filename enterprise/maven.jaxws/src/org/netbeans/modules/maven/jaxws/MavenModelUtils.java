@@ -24,8 +24,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.maven.artifact.Artifact;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -38,10 +36,12 @@ import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.model.ModelOperation;
 import org.netbeans.modules.maven.model.Utilities;
 import org.netbeans.modules.maven.model.pom.Dependency;
-import org.netbeans.modules.maven.model.pom.Repository;
 import org.openide.filesystems.FileObject;
 import javax.xml.namespace.QName;
 import org.apache.maven.project.MavenProject;
+import org.netbeans.api.j2ee.core.Profile;
+import org.netbeans.modules.j2ee.api.ejbjar.Car;
+import org.netbeans.modules.j2ee.api.ejbjar.EjbJar;
 import org.netbeans.modules.javaee.specs.support.api.JaxWs;
 import org.netbeans.modules.maven.model.pom.Build;
 import org.netbeans.modules.maven.model.pom.Configuration;
@@ -51,6 +51,7 @@ import org.netbeans.modules.maven.model.pom.POMQName;
 import org.netbeans.modules.maven.model.pom.Plugin;
 import org.netbeans.modules.maven.model.pom.PluginExecution;
 import org.netbeans.modules.maven.model.pom.Resource;
+import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.websvc.wsstack.api.WSStack;
 
 /**
@@ -59,14 +60,30 @@ import org.netbeans.modules.websvc.wsstack.api.WSStack;
  */
 public final class MavenModelUtils {
 
+    private static Profile profile;
+    
+    // Maven coordinates
     private static final String WSIPMORT_GENERATE_PREFIX = "wsimport-generate-"; //NOI18N
     private static final String STALE_FILE_DIRECTORY = "${project.build.directory}/jaxws/stale/"; //NOI18N
     private static final String STALE_FILE_EXTENSION = ".stale"; //NOI18N
-    public static final String JAXWS_GROUP_ID = "org.jvnet.jax-ws-commons"; //NOI18N
+    public static final String JAXWS_GROUP_ID = "com.sun.xml.ws"; //NOI18N
     public static final String JAXWS_ARTIFACT_ID = "jaxws-maven-plugin"; //NOI18N
     public static final String JAXWS_PLUGIN_KEY = JAXWS_GROUP_ID+":"+JAXWS_ARTIFACT_ID; //NOI18N
     private static final String JAXWS_CATALOG = "jax-ws-catalog.xml"; //NOI18N
-    public static final String JAX_WS_PLUGIN_VERSION = "2.3"; //NOI18N
+    public static final String JAXWS_JAKARTAEE_8_PLUGIN_VERSION = "2.3.7"; //NOI18N
+    public static final String JAXWS_JAKARTAEE_9_PLUGIN_VERSION = "3.0.2"; //NOI18N
+    public static final String JAXWS_JAKARTAEE_10_PLUGIN_VERSION = "4.0.3"; //NOI18N
+    
+    public static final String WEBSERVICES_METRO_GROUP_ID = "org.glassfish.metro"; //NOI18N
+    public static final String WEBSERVICES_API_ARTIFACT_ID = "webservices-api"; //NOI18N
+    public static final String WEBSERVICES_RT_ARTIFACT_ID = "webservices-rt"; //NOI18N
+    public static final String WEBSERVICES_API_JAKARTAEE_8_VERSION = "2.4.10"; //NOI18N
+    public static final String WEBSERVICES_API_JAKARTAEE_9_VERISON = "3.0.3"; //NOI18N
+    public static final String WEBSERVICES_API_JAKARTAEE_10_VERISON = "4.0.4"; //NOI18N
+    
+    public static final String MAVEN_PLUGINS_GROUP_ID = "org.apache.maven.plugins"; //NOI18N
+    public static final String WAR_PLUGIN_ARTIFACT_ID = "maven-war-plugin"; //NOI18N
+    public static final String WAR_PLUGIN_VERSION = "3.4.0"; //NOI18N
 
     /**
      * adds jaxws plugin, requires the model to have a transaction started,
@@ -100,7 +117,7 @@ public final class MavenModelUtils {
         plugin = model.getFactory().createPlugin();
         plugin.setGroupId(JAXWS_GROUP_ID);
         plugin.setArtifactId(JAXWS_ARTIFACT_ID);
-        plugin.setVersion(JAX_WS_PLUGIN_VERSION); 
+        plugin.setVersion(getJaxWsVersion(profile));
         bld.addPlugin(plugin);
 
         // setup global configuration
@@ -114,13 +131,10 @@ public final class MavenModelUtils {
         config.setSimpleParameter("verbose", "true"); //NOI18N
         config.setSimpleParameter("extension", "true"); //NOI18N
         config.setSimpleParameter("catalog", "${basedir}/" + MavenJAXWSSupportImpl.CATALOG_PATH);
-        if (jaxWsVersion != null) {
-            config.setSimpleParameter("target", jaxWsVersion); //NOI18N
-        }
         Dependency webservicesDep = model.getFactory().createDependency();
-        webservicesDep.setGroupId("javax.xml"); //NOI18N
-        webservicesDep.setArtifactId("webservices-api"); //NOI18N
-        webservicesDep.setVersion("2.0"); //NOI18N
+        webservicesDep.setGroupId(WEBSERVICES_METRO_GROUP_ID);
+        webservicesDep.setArtifactId(WEBSERVICES_API_ARTIFACT_ID);
+        webservicesDep.setVersion(getMetroVersion(profile));
         plugin.addDependency(webservicesDep);
         return plugin; 
     }
@@ -137,12 +151,12 @@ public final class MavenModelUtils {
             bld = model.getFactory().createBuild();
             model.getProject().setBuild(bld);
         }
-        Plugin plugin = bld.findPluginById("org.apache.maven.plugins", "maven-war-plugin"); //NOI18N
+        Plugin plugin = bld.findPluginById(MAVEN_PLUGINS_GROUP_ID, WAR_PLUGIN_ARTIFACT_ID);
         if (plugin == null) {
             plugin = model.getFactory().createPlugin();
-            plugin.setGroupId("org.apache.maven.plugins"); //NOI18N
-            plugin.setArtifactId("maven-war-plugin"); //NOI18N
-            plugin.setVersion("2.0.2"); //NOI18N
+            plugin.setGroupId(MAVEN_PLUGINS_GROUP_ID);
+            plugin.setArtifactId(WAR_PLUGIN_ARTIFACT_ID);
+            plugin.setVersion(WAR_PLUGIN_VERSION);
             bld.addPlugin(plugin);
         }
 
@@ -158,7 +172,7 @@ public final class MavenModelUtils {
             config.addExtensibilityElement(webResources);
         }
         //check for resource containing jax-ws-catalog.xml
-        List<String> includes = new ArrayList<String>(2);
+        List<String> includes = new ArrayList<>(4);
         Collections.addAll(includes, JAXWS_CATALOG, "wsdl/**"); // NOI18N
         if (!hasResource(webResources, JAXWS_CATALOG, "WEB-INF")) { // NOI18N
             addResource(model, webResources, "WEB-INF", includes); // NOI18N
@@ -173,7 +187,6 @@ public final class MavenModelUtils {
      *
      * @param handle ModelHandle object
      */
-    
     public static void addWsdlResources(POMModel model) {
         assert model.isIntransaction();
         Build bld = model.getProject().getBuild();
@@ -199,7 +212,7 @@ public final class MavenModelUtils {
             Resource res = model.getFactory().createResource();
             res.setTargetPath("META-INF"); //NOI18N
             res.setDirectory("src"); //NOI18N
-            res.addInclude("jax-ws-catalog.xml"); //NOI18N
+            res.addInclude(JAXWS_CATALOG);
             res.addInclude("wsdl/**"); //NOI18N
             bld.addResource(res);
         }
@@ -210,8 +223,6 @@ public final class MavenModelUtils {
         }
 
     }
-
-    
 
     private static POMExtensibilityElement findChild(List<POMExtensibilityElement> elems, String name) {
         for (POMExtensibilityElement e : elems) {
@@ -404,26 +415,29 @@ public final class MavenModelUtils {
             scope = Artifact.SCOPE_PROVIDED;
         }
         ModelUtils.addDependency(project.getProjectDirectory().getFileObject("pom.xml"), 
-                "org.glassfish.metro", 
-                "webservices-rt", 
-                "2.3", 
+                WEBSERVICES_METRO_GROUP_ID, 
+                WEBSERVICES_RT_ARTIFACT_ID, 
+                getMetroVersion(profile), 
                 null, scope, null, false);
     }
 
     /** Detect JAX-WS Library in project.
      *
      * @param project Project
+     * @param isJakartaEENameSpace Project is at least Jakarta EE 9
      * @return true if library was detected
      */
-    public static boolean hasJaxWsAPI(Project project) {
-        SourceGroup[] srcGroups = ProjectUtils.getSources(project).getSourceGroups(
-                JavaProjectConstants.SOURCES_TYPE_JAVA);
+    public static boolean hasJaxWsAPI(Project project, boolean isJakartaEENameSpace) {
+        SourceGroup[] srcGroups = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+        getProfile(project);
         if (srcGroups.length > 0) {
             ClassPath classPath = ClassPath.getClassPath(srcGroups[0].getRootFolder(), ClassPath.BOOT);
-            FileObject wsFeature = classPath.findResource("javax/xml/ws/WebServiceFeature.class"); // NOI18N
+            String wsfClazz = isJakartaEENameSpace ? 
+                    "jakarta/xml/ws/WebServiceFeature.class" : "javax/xml/ws/WebServiceFeature.class"; // NOI18N
+            FileObject wsFeature = classPath.findResource(wsfClazz);
             if (wsFeature == null) {
                 classPath = ClassPath.getClassPath(srcGroups[0].getRootFolder(), ClassPath.COMPILE);
-                wsFeature = classPath.findResource("javax/xml/ws/WebServiceFeature.class"); // NOI18N
+                wsFeature = classPath.findResource(wsfClazz);
                 if (wsFeature == null) {
                     return false;
                 }
@@ -452,7 +466,7 @@ public final class MavenModelUtils {
         assert mavenProject != null;
         @SuppressWarnings("unchecked")
         List<org.apache.maven.model.Plugin> plugins = mavenProject.getBuildPlugins();
-        List<WsimportPomInfo> wsdlList = new ArrayList<WsimportPomInfo>();
+        List<WsimportPomInfo> wsdlList = new ArrayList<>();
         for (org.apache.maven.model.Plugin plg : plugins) {
             if (JAXWS_PLUGIN_KEY.equalsIgnoreCase(plg.getKey())) {
                 @SuppressWarnings("unchecked")
@@ -503,7 +517,7 @@ public final class MavenModelUtils {
 
     private static void updateLibraryScope(POMModel model, String groupId, String targetScope) {
         assert model.isIntransaction() : "need to call model modifications under transaction."; //NOI18N
-        Dependency wsDep = model.getProject().findDependencyById(groupId, "webservices-rt", null); //NOI18N
+        Dependency wsDep = model.getProject().findDependencyById(groupId, WEBSERVICES_RT_ARTIFACT_ID, null);
         if (wsDep != null) {
             wsDep.setScope(targetScope);
         }
@@ -521,17 +535,17 @@ public final class MavenModelUtils {
         boolean foundMetroDep = false;
         String groupId = null;
         for (org.apache.maven.model.Dependency dep:deps) {
-            if ("com.sun.xml.ws".equals(dep.getGroupId()) && "webservices-rt".equals(dep.getArtifactId())) { //NOI18N
+            if (JAXWS_GROUP_ID.equals(dep.getGroupId()) && WEBSERVICES_RT_ARTIFACT_ID.equals(dep.getArtifactId())) {
                 String scope = dep.getScope();
                 metroScope = scope == null ? "compile" : scope; //NOI18N
                 foundMetroDep = true;
-                groupId = "com.sun.xml.ws";
+                groupId = JAXWS_GROUP_ID;
                 break;
-            } else if ("org.glassfish.metro".equals(dep.getGroupId()) && "webservices-rt".equals(dep.getArtifactId())) { //NOI18N
+            } else if (WEBSERVICES_METRO_GROUP_ID.equals(dep.getGroupId()) && WEBSERVICES_RT_ARTIFACT_ID.equals(dep.getArtifactId())) {
                 String scope = dep.getScope();
                 metroScope = scope == null ? "compile" : scope; //NOI18N
                 foundMetroDep = true;
-                groupId = "org.glassfish.metro";
+                groupId = WEBSERVICES_METRO_GROUP_ID;
                 break;
             }
         }
@@ -622,7 +636,7 @@ public final class MavenModelUtils {
         String result = id;
         List<PluginExecution> executions = plugin.getExecutions();
         if (executions != null) {
-            Set<String> execIdSet = new HashSet<String>();
+            Set<String> execIdSet = new HashSet<>();
             for (PluginExecution ex : executions) {
                 String execId = ex.getId();
                 if (execId != null) {
@@ -641,4 +655,82 @@ public final class MavenModelUtils {
         }
         return result;
     }
+    
+    /**
+     * Metro webservices-api/webservices-rt version to use e.g.
+     * {@code Profile.JAKARTA_EE_10_WEB} will return Metro version 4.0.x
+     * @param profile Jakarta EE profile
+     * @return Metro webservices-api/webservices-rt version
+     */
+    private static String getMetroVersion(Profile profile) {
+        if (profile.isAtLeast(Profile.JAKARTA_EE_10_WEB)) {
+            return WEBSERVICES_API_JAKARTAEE_10_VERISON;
+        } else if (profile.isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
+            return WEBSERVICES_API_JAKARTAEE_9_VERISON;
+        } else {
+            return WEBSERVICES_API_JAKARTAEE_8_VERSION;
+        }
+    }
+
+    /**
+     * JAX-WS Plugin to use e.g. {@code Profile.JAKARTA_EE_10_WEB}
+     * will return plugin version 4.0.X
+     * @param profile Jakarta EE profile
+     * @return JAX-WS Plugin version
+     */
+    private static String getJaxWsVersion(Profile profile) {
+        if (profile.isAtLeast(Profile.JAKARTA_EE_10_WEB)) {
+            return JAXWS_JAKARTAEE_10_PLUGIN_VERSION;
+        } else if (profile.isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
+            return JAXWS_JAKARTAEE_9_PLUGIN_VERSION;
+        } else {
+            return JAXWS_JAKARTAEE_8_PLUGIN_VERSION;
+        }
+    }
+    
+    /**
+     * Get {@code Profile} to use when generating the web service client, the
+     * {@code Profile} will be computed every time there is a call to 
+     * {@code hasJaxWsAPI}.
+     * @param project 
+     * @see hasJaxWsAPI
+     */
+    private static void getProfile(Project project) {
+        FileObject projectDirectory = project.getProjectDirectory();
+        if(WSUtils.isWeb(project)) {
+            WebModule wm = WebModule.getWebModule(projectDirectory);
+            profile = wm.getJ2eeProfile();
+        } else if (WSUtils.isEJB(project)) {
+            EjbJar ejbm = EjbJar.getEjbJar(projectDirectory);
+            profile = ejbm.getJ2eeProfile();
+        } else if (WSUtils.isCar(project)) {
+            Car cm = Car.getCar(projectDirectory);
+            profile = cm.getJ2eeProfile();
+        } else if (WSUtils.isJar(project)) {
+            String sourceLevel = WSUtils.getSourceLevel(project);
+            profile = getJarProfile(sourceLevel);
+        } else {
+            profile = Profile.JAKARTA_EE_8_WEB;
+        }
+    }
+    
+    /**
+     * Given the source level return an appropriate {@code Profile} to use
+     * with JSE projects to generate web services clients.
+     * @param jseVersion sourceLevel
+     * @return Profile
+     */
+    private static Profile getJarProfile(String jseVersion) {
+        int sourceLevel = Integer.parseInt(jseVersion);
+        if (sourceLevel >= 17) {
+            return Profile.JAKARTA_EE_11_WEB;
+        } else if (sourceLevel >= 11) {
+            return Profile.JAKARTA_EE_10_WEB;
+        } else if (sourceLevel >= 8) {
+            return Profile.JAKARTA_EE_8_WEB;
+        }
+        return Profile.JAKARTA_EE_8_WEB;
+    }
+    
+    
 }

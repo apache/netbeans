@@ -53,6 +53,7 @@
                 <file name="settings.xml" url="settings.template.xml">
                     <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                     <attr name="template.openFile" boolvalue="false"/>
+                    <attr name="position" intvalue="110"/>
                 </file>
             </folder>
         </folder>

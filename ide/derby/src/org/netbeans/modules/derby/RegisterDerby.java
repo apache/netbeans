@@ -32,10 +32,7 @@ import javax.swing.Icon;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.db.explorer.DatabaseException;
-import org.netbeans.api.db.explorer.JDBCDriver;
-import org.netbeans.api.db.explorer.JDBCDriverManager;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.derby.api.DerbyDatabases;
 import org.netbeans.modules.derby.ui.SecurityManagerBugPanel;
 import org.netbeans.spi.db.explorer.DatabaseRuntime;
@@ -214,7 +211,7 @@ public class RegisterDerby implements DatabaseRuntime {
                         return;
                     }
                     
-                    ProgressHandle ph = ProgressHandleFactory.createHandle(NbBundle.getMessage(
+                    ProgressHandle ph = ProgressHandle.createHandle(NbBundle.getMessage(
                         RegisterDerby.class, "MSG_CreatingDBProgressLabel", databaseName));
                     ph.start();
                     try {
@@ -425,7 +422,7 @@ public class RegisterDerby implements DatabaseRuntime {
         boolean started = false;
         final boolean[] forceExit = new boolean[1];
         String waitMessage = NbBundle.getMessage(RegisterDerby.class, "MSG_StartingDerby");
-        ProgressHandle progress = ProgressHandleFactory.createHandle(waitMessage, new Cancellable() {
+        ProgressHandle progress = ProgressHandle.createHandle(waitMessage, new Cancellable() {
             @Override
             public boolean cancel() {
                 forceExit[0] = true;

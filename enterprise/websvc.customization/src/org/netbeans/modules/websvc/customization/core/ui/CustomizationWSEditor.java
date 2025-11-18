@@ -35,9 +35,7 @@ import java.util.Set;
 import javax.swing.JComponent;
 import javax.swing.undo.UndoManager;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.websvc.api.jaxws.client.JAXWSClientSupport;
-import org.netbeans.modules.websvc.api.wseditor.InvalidDataException;
 import org.netbeans.modules.websvc.api.wseditor.InvalidDataException;
 import org.netbeans.modules.websvc.api.wseditor.WSEditor;
 import org.netbeans.modules.websvc.customization.multiview.WSCustomizationTopComponent;
@@ -115,7 +113,7 @@ public class CustomizationWSEditor implements WSEditor {
             if (jaxwsDirty) {
                 jaxWsModel.write();
             }
-            final ProgressHandle handle = ProgressHandleFactory.createHandle
+            final ProgressHandle handle = ProgressHandle.createHandle
                     (NbBundle.getMessage(CustomizationWSEditor.class, "TXT_Refreshing")); //NOI18N
             handle.start(100);
             handle.switchToIndeterminate();

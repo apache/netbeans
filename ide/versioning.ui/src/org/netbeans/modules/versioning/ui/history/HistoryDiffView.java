@@ -690,7 +690,7 @@ public class HistoryDiffView implements PropertyChangeListener {
                     return;
                 }
                 synchronized(TIMER_LOCK) {
-                    handle = ProgressHandleFactory.createHandle(NbBundle.getMessage(HistoryDiffView.class, "LBL_PreparingDiff")); // NOI18N
+                    handle = ProgressHandle.createHandle(NbBundle.getMessage(HistoryDiffView.class, "LBL_PreparingDiff")); // NOI18N
                     setProgressComponent(ProgressHandleFactory.createProgressComponent(handle));
                     handle.start();
                     handle.switchToIndeterminate();   

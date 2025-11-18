@@ -106,7 +106,7 @@ implements TaskListener, Runnable, ExplorerManager.Provider {
                 setError(ex.getMessage());
             }
             if(task != null) {
-                handle = ProgressHandleFactory.createHandle(Bundle.MSG_LaunchingApplication());
+                handle = ProgressHandle.createHandle(Bundle.MSG_LaunchingApplication());
                 JComponent pc = ProgressHandleFactory.createProgressComponent(handle);
                 JLabel ml = ProgressHandleFactory.createMainLabelComponent(handle);
 

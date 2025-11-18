@@ -41,7 +41,7 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.queries.SourceJavadocAttacher;
 import org.netbeans.api.java.source.*;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.modules.java.BinaryElementOpen;
 import org.netbeans.modules.java.classfile.CodeGenerator;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
@@ -96,7 +96,7 @@ public final class ElementOpen {
         final AtomicBoolean cancel = new AtomicBoolean();
         if (SwingUtilities.isEventDispatchThread() && !JavaSourceAccessor.holdsParserLock()) {
             final Object[] openInfo = new Object[3];
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     public void run() {
                         Object[] info = getOpenInfo(cpInfo, el, names, cancel);
                         if (info != null) {
@@ -166,7 +166,7 @@ public final class ElementOpen {
         final AtomicBoolean cancel = new AtomicBoolean();
         if (SwingUtilities.isEventDispatchThread() && !JavaSourceAccessor.holdsParserLock()) {
             final Object[] openInfo = new Object[3];
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     public void run() {
                         Object[] info = !isClassFile(toSearch) ? getOpenInfo (toSearch, toOpen, cancel) : null;
                         if (info != null) {
@@ -247,7 +247,7 @@ public final class ElementOpen {
         final AtomicBoolean cancel = new AtomicBoolean();
         if (SwingUtilities.isEventDispatchThread() && !JavaSourceAccessor.holdsParserLock()) {
             final boolean[] result = new boolean[1];
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     public void run() {
                         result[0] = open(toSearch, toOpen, cancel);
                     }

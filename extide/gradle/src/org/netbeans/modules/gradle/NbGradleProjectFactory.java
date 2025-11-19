@@ -43,9 +43,6 @@ public final class NbGradleProjectFactory implements ProjectFactory2 {
 
     @Override
     public ProjectManager.Result isProject2(FileObject dir) {
-        if (!isProject(dir)) {
-            return null;
-        }
         // project display name can be only safely determined if the project is loaded
         return isProject(dir) ? new ProjectManager.Result(
                 null, NbGradleProject.GRADLE_PROJECT_TYPE, NbGradleProject.getIcon()) : null;
@@ -57,23 +54,23 @@ public final class NbGradleProjectFactory implements ProjectFactory2 {
     }
 
     static boolean isProjectCheck(FileObject dir, final boolean preferMaven) {
-        if (dir == null || FileUtil.toFile(dir) == null) {
+        File suspect = dir == null ? null : FileUtil.toFile(dir);
+        if (suspect == null) {
             return false;
         }
-        FileObject pom = dir.getFileObject("pom.xml"); //NOI18N
-        if (pom != null && pom.isData()) {
+        File pom = GradleFiles.Searcher.searchPath(suspect, "pom.xml");    //NOI18N
+        if (pom != null && pom.isFile()) {
             if (preferMaven) {
                 return false;
             }
-            final FileObject parent = dir.getParent();
-            if (parent != null && parent.getFileObject("pom.xml") != null) { // NOI18N
-                return isProjectCheck(parent, preferMaven);
+            FileObject parent = dir.getParent();
+            if (parent != null && GradleFiles.Searcher.searchPath(FileUtil.toFile(parent), "pom.xml") != null) { // NOI18N
+                return isProjectCheck(parent, false);
             }
         }
-        File suspect = FileUtil.toFile(dir);
         GradleFiles files = new GradleFiles(suspect);
         if (files.isRootProject() || files.isBuildSrcProject()) return true;
-        
+
         if ((files.getSettingsScript() != null) && !files.isBuildSrcProject()) {
             SubProjectDiskCache spCache = SubProjectDiskCache.get(files.getRootDir());
             SubProjectDiskCache.SubProjectInfo data = spCache.loadData();

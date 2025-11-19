@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Rule;
@@ -38,6 +40,15 @@ public class GradleFilesTest {
     @Rule
     public TemporaryFolder root = new TemporaryFolder();
 
+    private static File normalizeTempDir(File root) {
+        if (root != null && Utilities.isMac()) {
+            String absolutePath = root.getAbsolutePath();
+            if (absolutePath.startsWith("/private/")) {
+                return new File(absolutePath.substring(8));
+            }
+        }
+        return root;
+    }
 
     /**
      * Test of getBuildScript method, of class GradleFiles.
@@ -46,7 +57,7 @@ public class GradleFilesTest {
     public void testGetBuildScript() throws IOException {
         File build = root.newFile("build.gradle");
         GradleFiles gf = new GradleFiles(root.getRoot());
-        assertEquals(build, gf.getBuildScript());
+        assertEquals(normalizeTempDir(build), normalizeTempDir(gf.getBuildScript()));
     }
 
     @Test
@@ -87,7 +98,7 @@ public class GradleFilesTest {
         File settings = root.newFile("settings.gradle");
         GradleFiles gf = new GradleFiles(settings.getParentFile());
         assertEquals("It is project", true, gf.isProject());
-        assertEquals("It has settings", settings, gf.getSettingsScript());
+        assertEquals("It has settings", normalizeTempDir(settings), normalizeTempDir(gf.getSettingsScript()));
         assertNull("No build script", gf.getBuildScript());
     }
 
@@ -95,7 +106,7 @@ public class GradleFilesTest {
     public void testGetBuildScriptKotlin() throws IOException {
         File build = root.newFile("build.gradle.kts");
         GradleFiles gf = new GradleFiles(root.getRoot());
-        assertEquals(build, gf.getBuildScript());
+        assertEquals(normalizeTempDir(build), normalizeTempDir(gf.getBuildScript()));
     }
 
     @Test
@@ -158,7 +169,17 @@ public class GradleFilesTest {
         File module = root.newFolder("module");
         Files.write(settings.toPath(), Arrays.asList("include ':module'"));
         GradleFiles gf = new GradleFiles(module);
-        assertEquals(build, gf.getParentScript());
+        assertEquals(normalizeTempDir(build), normalizeTempDir(gf.getParentScript()));
+    }
+
+    @Test
+    public void testGetParentScriptKotlin2() throws IOException{
+        File build = root.newFile("build.gradle.kts");
+        File settings = root.newFile("settings.gradle");
+        File module = root.newFolder("module");
+        Files.write(settings.toPath(), Arrays.asList("include ':module'"));
+        GradleFiles gf = new GradleFiles(module);
+        assertEquals(normalizeTempDir(build), normalizeTempDir(gf.getParentScript()));
     }
 
     @Test
@@ -168,7 +189,7 @@ public class GradleFilesTest {
         File module = root.newFolder("module");
         Files.write(settings.toPath(), Arrays.asList("include ':module'"));
         GradleFiles gf = new GradleFiles(module);
-        assertEquals(settings, gf.getSettingsScript());
+        assertEquals(normalizeTempDir(settings), normalizeTempDir(gf.getSettingsScript()));
     }
 
     /**
@@ -181,7 +202,7 @@ public class GradleFilesTest {
         File module = root.newFolder("module");
         Files.write(settings.toPath(), Arrays.asList("include ':module'"));
         GradleFiles gf = new GradleFiles(module);
-        assertEquals(module, gf.getProjectDir());
+        assertEquals(normalizeTempDir(module), normalizeTempDir(gf.getProjectDir()));
     }
 
     @Test
@@ -202,7 +223,7 @@ public class GradleFilesTest {
         root.newFile("build.gradle");
         root.newFile("settings.gradle");
         GradleFiles gf = new GradleFiles(new File(root.getRoot(), "module"));
-        assertEquals(root.getRoot(), gf.getRootDir());
+        assertEquals(normalizeTempDir(root.getRoot()), normalizeTempDir(gf.getRootDir()));
     }
 
     @Test
@@ -210,7 +231,7 @@ public class GradleFilesTest {
         root.newFile("build.gradle");
         root.newFile("settings.gradle");
         GradleFiles gf = new GradleFiles(new File(root.getRoot(), "module"));
-        assertEquals(root.getRoot().getAbsolutePath(), gf.getRootDir().getAbsolutePath());
+        assertEquals(normalizeTempDir(root.getRoot()).getAbsolutePath(), normalizeTempDir(gf.getRootDir()).getAbsolutePath());
     }
     /**
      * Test of getGradlew method, of class GradleFiles.
@@ -224,7 +245,7 @@ public class GradleFilesTest {
         File wrapperProps = new File(root.newFolder("gradle", "wrapper"), "gradle-wrapper.properties");
         wrapperProps.createNewFile();
         GradleFiles gf = new GradleFiles(root.getRoot());
-        assertEquals(Utilities.isWindows() ? gradlewBat : gradlew, gf.getGradlew());
+        assertEquals(normalizeTempDir(Utilities.isWindows() ? gradlewBat : gradlew), normalizeTempDir(gf.getGradlew()));
     }
 
     /**
@@ -239,7 +260,7 @@ public class GradleFilesTest {
         File wrapperProps = new File(root.newFolder("gradle", "wrapper"), "gradle-wrapper.properties");
         wrapperProps.createNewFile();
         GradleFiles gf = new GradleFiles(root.getRoot());
-        assertEquals(wrapperProps, gf.getWrapperProperties());
+        assertEquals(normalizeTempDir(wrapperProps), normalizeTempDir(gf.getWrapperProperties()));
     }
 
     @Test
@@ -457,11 +478,11 @@ public class GradleFilesTest {
         File subBuild = new File(module, "build.gradle");
         subBuild.createNewFile();
         GradleFiles gf = new GradleFiles(module);
-        assertEquals(subBuild, gf.getFile(GradleFiles.Kind.BUILD_SCRIPT));
-        assertEquals(build, gf.getFile(GradleFiles.Kind.ROOT_SCRIPT));
-        assertEquals(settings, gf.getFile(GradleFiles.Kind.SETTINGS_SCRIPT));
-        assertEquals(buildProps, gf.getFile(GradleFiles.Kind.ROOT_PROPERTIES));
-        assertEquals(new File(module, "gradle.properties"), gf.getFile(GradleFiles.Kind.PROJECT_PROPERTIES));
+        assertEquals(normalizeTempDir(subBuild), normalizeTempDir(gf.getFile(GradleFiles.Kind.BUILD_SCRIPT)));
+        assertEquals(normalizeTempDir(build), normalizeTempDir(gf.getFile(GradleFiles.Kind.ROOT_SCRIPT)));
+        assertEquals(normalizeTempDir(settings), normalizeTempDir(gf.getFile(GradleFiles.Kind.SETTINGS_SCRIPT)));
+        assertEquals(normalizeTempDir(buildProps), normalizeTempDir(gf.getFile(GradleFiles.Kind.ROOT_PROPERTIES)));
+        assertEquals(normalizeTempDir(new File(module, "gradle.properties")), normalizeTempDir(gf.getFile(GradleFiles.Kind.PROJECT_PROPERTIES)));
     }
 
     /**
@@ -472,9 +493,11 @@ public class GradleFilesTest {
         File build = root.newFile("build.gradle");
         File settings = root.newFile("settings.gradle");
         GradleFiles gf = new GradleFiles(root.getRoot());
-        assertEquals(2, gf.getProjectFiles().size());
-        assertTrue(gf.getProjectFiles().contains(build));
-        assertTrue(gf.getProjectFiles().contains(settings));
+        Set<File> projectFiles = gf.getProjectFiles();
+        assertEquals(2, projectFiles.size());
+        projectFiles = projectFiles.stream().map(GradleFilesTest::normalizeTempDir).collect(Collectors.toSet());
+        assertTrue(projectFiles.contains(normalizeTempDir(build)));
+        assertTrue(projectFiles.contains(normalizeTempDir(settings)));
     }
 
     /**

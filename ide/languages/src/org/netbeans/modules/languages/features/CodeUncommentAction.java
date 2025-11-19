@@ -26,6 +26,7 @@ import java.util.List;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.languages.LanguageDefinitionNotFoundException;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
@@ -48,6 +49,7 @@ public class CodeUncommentAction extends UncommentAction {
         super(""); // NOI18N
     }
     
+    @Override
     public void actionPerformed (final ActionEvent evt, final JTextComponent target) {
         if (target != null) {
             if (!target.isEditable() || !target.isEnabled()) {
@@ -61,48 +63,44 @@ public class CodeUncommentAction extends UncommentAction {
                 return;
             }
             final TokenSequence ts = th.tokenSequence();
-            try {
-                if (caret.isSelectionVisible()) {
-                    final int startPos = Utilities.getRowStart(doc, target.getSelectionStart());
-                    final int endPos = target.getSelectionEnd();
-                    doc.runAtomicAsUser (new Runnable () {
-                        public void run () {
-                            try {
-                                int end = (endPos > 0 && Utilities.getRowStart(doc, endPos) == endPos) ?
-                                    endPos - 1 : endPos;
-                                int lineCnt = Utilities.getRowCount(doc, startPos, end);
-                                List<String> mimeTypes = new ArrayList<>(lineCnt);
-                                int pos = startPos;
-                                for (int x = lineCnt ; x > 0; x--) {
-                                    mimeTypes.add(getRealMimeType(ts, pos));
-                                    pos = Utilities.getRowStart(doc, pos, 1);
-                                }
+            if (caret.isSelectionVisible()) {
+                final int startPos = LineDocumentUtils.getLineStart(doc, target.getSelectionStart());
+                final int endPos = target.getSelectionEnd();
+                doc.runAtomicAsUser (new Runnable () {
+                    public void run () {
+                        try {
+                            int end = (endPos > 0 && LineDocumentUtils.getLineStart2(doc, endPos) == endPos) ?
+                                endPos - 1 : endPos;
+                            int lineCnt = LineDocumentUtils.getLineCount(doc, startPos, end);
+                            List<String> mimeTypes = new ArrayList<>(lineCnt);
+                            int pos = startPos;
+                            for (int x = lineCnt ; x > 0; x--) {
+                                mimeTypes.add(getRealMimeType(ts, pos));
+                                pos = Utilities.getRowStart(doc, pos, 1);
+                            }
 
-                                pos = startPos;
-                                for (Iterator iter = mimeTypes.iterator(); iter.hasNext(); ) {
-                                    modifyLine(doc, (String)iter.next(), pos);
-                                    pos = Utilities.getRowStart(doc, pos, 1);
-                                }
-                            } catch (BadLocationException e) {
-                                target.getToolkit().beep();
+                            pos = startPos;
+                            for (Iterator iter = mimeTypes.iterator(); iter.hasNext(); ) {
+                                modifyLine(doc, (String)iter.next(), pos);
+                                pos = Utilities.getRowStart(doc, pos, 1);
                             }
+                        } catch (BadLocationException e) {
+                            target.getToolkit().beep();
                         }
-                    });
-                } else { // selection not visible
-                    final int pos = Utilities.getRowStart(doc, target.getSelectionStart());
-                    final String mt = getRealMimeType(ts, pos);
-                    doc.runAtomicAsUser (new Runnable () {
-                        public void run () {
-                            try {
-                                modifyLine(doc, mt, pos);
-                            } catch (BadLocationException e) {
-                                target.getToolkit().beep();
-                            }
+                    }
+                });
+            } else { // selection not visible
+                final int pos = LineDocumentUtils.getLineStart(doc, target.getSelectionStart());
+                final String mt = getRealMimeType(ts, pos);
+                doc.runAtomicAsUser (new Runnable () {
+                    public void run () {
+                        try {
+                            modifyLine(doc, mt, pos);
+                        } catch (BadLocationException e) {
+                            target.getToolkit().beep();
                         }
-                    });
-                }
-            } catch (BadLocationException e) {
-                target.getToolkit().beep();
+                    }
+                });
             }
         }
     }
@@ -134,10 +132,10 @@ public class CodeUncommentAction extends UncommentAction {
             }
             String suffix = (String) feature.getValue("suffix"); // NOI18N
             if (suffix != null) {
-                int lastNonWhitePos = Utilities.getRowLastNonWhite(doc, offset);
+                int lastNonWhitePos = LineDocumentUtils.getLineLastNonWhitespace(doc, offset);
                 if (lastNonWhitePos != -1) {
                     int commentLen = suffix.length();
-                    if (lastNonWhitePos - Utilities.getRowStart(doc, offset) >= commentLen) {
+                    if (lastNonWhitePos - LineDocumentUtils.getLineStart2(doc, offset) >= commentLen) {
                         CharSequence maybeLineComment = DocumentUtilities.getText(doc, lastNonWhitePos - commentLen + 1, commentLen);
                         if (CharSequenceUtilities.textEquals(maybeLineComment, suffix)) {
                             doc.remove(lastNonWhitePos - commentLen + 1, commentLen);
@@ -145,10 +143,10 @@ public class CodeUncommentAction extends UncommentAction {
                     }
                 }
             }
-            int firstNonWhitePos = Utilities.getRowFirstNonWhite(doc, offset);
+            int firstNonWhitePos = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
             if (firstNonWhitePos != -1) {
                 int commentLen = prefix.length();
-                if (Utilities.getRowEnd(doc, firstNonWhitePos) - firstNonWhitePos >= prefix.length()) {
+                if (LineDocumentUtils.getLineEnd(doc, firstNonWhitePos) - firstNonWhitePos >= prefix.length()) {
                     CharSequence maybeLineComment = DocumentUtilities.getText(doc, firstNonWhitePos, commentLen);
                     if (CharSequenceUtilities.textEquals(maybeLineComment, prefix)) {
                         doc.remove(firstNonWhitePos, commentLen);

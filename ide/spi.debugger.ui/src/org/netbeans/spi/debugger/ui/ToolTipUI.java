@@ -73,7 +73,7 @@ public final class ToolTipUI {
         EditorUI eui = Utilities.getEditorUI(editorPane);
         if (eui != null) {
             ToolTipSupport toolTipSupport = eui.getToolTipSupport();
-            toolTipSupports.setToolTip(
+            toolTipSupport.setToolTip(
                     et,
                     PopupManager.ViewPortBounds,
                     PopupManager.AbovePreferred,

@@ -104,7 +104,6 @@ public class JavaFixAllImports {
     /** Creates a new instance of JavaFixAllImports */
     private JavaFixAllImports() {
     }
-    
     public void fixAllImports(final FileObject fo, final JTextComponent target) {
         final AtomicBoolean cancel = new AtomicBoolean();
         final JavaSource javaSource = JavaSource.forFileObject(fo);
@@ -202,7 +201,7 @@ public class JavaFixAllImports {
         }
     }
 
-    private static void performFixImports(WorkingCopy wc, ImportData data, CandidateDescription[] selections, boolean removeUnusedImports) throws IOException {
+    public static void performFixImports(WorkingCopy wc, ImportData data, CandidateDescription[] selections, boolean removeUnusedImports) throws IOException {
         //do imports:
         Set<Element> toImport = new HashSet<Element>();
         Map<Name, Element> useFQNsFor = new HashMap<Name, Element>();
@@ -263,7 +262,7 @@ public class JavaFixAllImports {
         }
     }
 
-    private static ImportData computeImports(CompilationInfo info) {
+    public static ImportData computeImports(CompilationInfo info) {
         ComputeImports imps = new ComputeImports(info);
         Pair<Map<String, List<Element>>, Map<String, List<Element>>> candidates = imps.computeCandidates();
 
@@ -351,7 +350,7 @@ public class JavaFixAllImports {
         return data;
     }
 
-    static final class ImportData {
+    public static final class ImportData {
         public final String[] simpleNames;
         public final CandidateDescription[][] variants;
         public final CandidateDescription[] defaults;
@@ -440,7 +439,7 @@ public class JavaFixAllImports {
         d.dispose();
     }
 
-    static final class CandidateDescription {
+    public static final class CandidateDescription {
         public final String displayName;
         public final Icon icon;
         public final ElementHandle<Element> toImport;

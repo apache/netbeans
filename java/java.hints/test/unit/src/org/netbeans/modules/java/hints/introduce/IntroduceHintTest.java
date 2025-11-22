@@ -2618,6 +2618,151 @@ public class IntroduceHintTest extends NbTestCase {
                        1, 0);
     }
     
+    public void testYield1() throws Exception {
+        sourceLevel = "17";
+        performFixTest("""
+                       package test;
+                       public class Test {
+                           private int convert(int a) {
+                               return switch (a) {
+                                   case 0 -> {
+                                       int i = 0;
+                                       |System.err.println(i);
+                                       int j = 0;
+                                       yield i + j;|
+                                   }
+                                   default -> -1;
+                               };
+                           }
+                       }
+                       """,
+                       """
+                       package test;
+                       public class Test {
+                           private int convert(int a) {
+                               return switch (a) {
+                                   case 0 -> {
+                                       int i = 0;
+                                       yield name(i);
+                                   }
+                                   default -> -1;
+                               };
+                           }
+                           private int name(int i) {
+                               System.err.println(i);
+                               int j = 0;
+                               return i + j;
+                           }
+                       }
+                       """,
+                       new DialogDisplayerImpl3("name", null, true),
+                       1, 0);
+    }
+
+    public void testYield2() throws Exception {
+        sourceLevel = "17";
+        performFixTest("""
+                       package test;
+                       public class Test {
+                           private Object convert(int a) {
+                               return switch (a) {
+                                   case 0 -> {
+                                       int i = 0;
+                                       |System.err.println(i);
+                                       if (i == 0) {
+                                           yield "";
+                                       } else {
+                                           yield 1;
+                                       }|
+                                   }
+                                   default -> -1;
+                               };
+                           }
+                       }
+                       """,
+                       """
+                       package test;
+                       public class Test {
+                           private Object convert(int a) {
+                               return switch (a) {
+                                   case 0 -> {
+                                       int i = 0;
+                                       yield name(i);
+                                   }
+                                   default -> -1;
+                               };
+                           }
+                           private Object name(int i) {
+                               System.err.println(i);
+                               if (i == 0) {
+                                   return "";
+                               } else {
+                                   return 1;
+                               }
+                           }
+                       }
+                       """,
+                       new DialogDisplayerImpl3("name", null, true),
+                       1, 0);
+    }
+
+    public void testYield3() throws Exception {
+        sourceLevel = "17";
+        performFixTest("""
+                       package test;
+                       public class Test {
+                           private Object convert(int a) {
+                               return switch (a) {
+                                   case 0 -> {
+                                       int i = 0;
+                                       |System.err.println(i);
+                                       if (i <= 0) {
+                                           if (i == 0) {
+                                               yield "";
+                                           } else {
+                                               System.err.println("wrong");
+                                               yield "";
+                                           }
+                                       }|
+                                       yield 1;
+                                   }
+                                   default -> -1;
+                               };
+                           }
+                       }
+                       """,
+                       """
+                       package test;
+                       public class Test {
+                           private Object convert(int a) {
+                               return switch (a) {
+                                   case 0 -> {
+                                       int i = 0;
+                                       if (name(i))
+                                           yield "";
+                                       yield 1;
+                                   }
+                                   default -> -1;
+                               };
+                           }
+                           private boolean name(int i) {
+                               System.err.println(i);
+                               if (i <= 0) {
+                                   if (i == 0) {
+                                       return true;
+                                   } else {
+                                       System.err.println("wrong");
+                                       return true;
+                                   }
+                               }
+                               return false;
+                           }
+                       }
+                       """,
+                       new DialogDisplayerImpl3("name", null, true),
+                       1, 0);
+    }
+
     protected void prepareTest(String code) throws Exception {
         clearWorkDir();
 

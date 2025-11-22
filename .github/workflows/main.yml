@@ -680,6 +680,9 @@ jobs:
       - name: ide/languages.hcl
         run: ant $OPTS -f ide/languages.hcl test
 
+      - name: ide/languages.jflex
+        run: ant $OPTS -f ide/languages.jflex test 
+
       - name: ide/languages.toml
         run: ant $OPTS -f ide/languages.toml test
 

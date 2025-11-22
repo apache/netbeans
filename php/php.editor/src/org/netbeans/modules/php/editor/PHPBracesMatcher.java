@@ -108,15 +108,21 @@ public final class PHPBracesMatcher implements BracesMatcher, BracesMatcher.Cont
                 } else if (LexUtilities.textEquals(token.text(), '#', '[')) { // [NETBEANS-4443] PHP 8.0
                     return new int [] {ts.offset(), ts.offset() + token.length()};
                 } else if (LexUtilities.textEquals(token.text(), ':')) {
+                    //issue 7803
+                    //prevent infinite loop in embedded context by comparing token offset position
+                    int prevOffset;
+                    int currentOffset;
                     do {
+                        currentOffset = ts.offset();
                         ts.movePrevious();
+                        prevOffset = ts.offset();
                         token = LexUtilities.findPreviousToken(ts,
                                 Arrays.asList(PHPTokenId.PHP_IF, PHPTokenId.PHP_ELSE, PHPTokenId.PHP_ELSEIF,
                                 PHPTokenId.PHP_FOR, PHPTokenId.PHP_FOREACH, PHPTokenId.PHP_WHILE, PHPTokenId.PHP_SWITCH,
                                 PHPTokenId.PHP_OPENTAG, PHPTokenId.PHP_CURLY_CLOSE, PHPTokenId.PHP_CASE,
                                 PHPTokenId.PHP_TOKEN));
                         id = token.id();
-                    } while (id == PHPTokenId.PHP_TOKEN && !TokenUtilities.textEquals(token.text(), ":")); // NOI18N
+                    } while (id == PHPTokenId.PHP_TOKEN && !TokenUtilities.textEquals(token.text(), ":") && currentOffset != prevOffset); // NOI18N
                     if (id == PHPTokenId.PHP_IF || id == PHPTokenId.PHP_ELSE || id == PHPTokenId.PHP_ELSEIF
                             || id == PHPTokenId.PHP_FOR || id == PHPTokenId.PHP_FOREACH || id == PHPTokenId.PHP_WHILE
                             || id == PHPTokenId.PHP_SWITCH) {

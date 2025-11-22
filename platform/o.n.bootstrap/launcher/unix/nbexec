@@ -56,6 +56,20 @@ postfixcp=""
 
 updater_class=org.netbeans.updater.UpdaterFrame
 
+doubleQuoteArg() {
+    # wrap all arguments as "" strings, escape any internal back-slash, double-quote, $, or back-tick characters
+    #  use printf to avoid echo interpretation behaviors such as escapes and line continuation
+    # Mac bsd_sed does not support group-0, so pattern uses group-1
+    printf '"%s"' "`printf '%s' "$@" | sed -e 's@\([$\"\`\\]\)@\\\\\\1@g' `"
+}
+
+singleQuoteArg() {
+    # wrap all arguments as '' strings, escaping any internal single-quote characters
+    #  use printf to avoid echo interpretation behaviors such as escapes and line continuation
+    # Mac bsd_sed does not support group-0, so pattern uses group-1
+    printf "'%s'" "`printf '%s' "$@" | sed -e 's@'\''@'\''\\\\'\'''\''@g' `"
+}
+
 #
 # parse arguments
 #
@@ -85,7 +99,7 @@ EOF
             nogui="nogui";
             args="$args --nogui"
             ;;
-        --jdkhome) shift; if [ $# -gt 0 ] ; then jdkhome=$1; fi
+        --jdkhome) shift; if [ $# -gt 0 ] ; then jdkhome="$1"; fi
             ;;
         # this has to be here for purposes of updater.jar, but it should be
         # better to handle this argument inside the java launcher part 
@@ -117,8 +131,8 @@ EOF
         -psn*)
             shift;
             ;;
-        -J*) jopt=`expr "X-$1" : 'X--J\(.*\)'`; jargs="$jargs '$jopt'";;
-        *) args="$args \"$1\"" ;;
+        -J*) jopt=`expr "X-$1" : 'X--J\(.*\)'`; jargs="$jargs `singleQuoteArg \"$jopt\" `";;
+        *) args="$args `doubleQuoteArg \"$1\" `";;
     esac
     shift
 done
@@ -193,27 +207,27 @@ fi
 
 jargs="$jargs -XX:+HeapDumpOnOutOfMemoryError"
 if [ -z "`echo $jargs | grep -- "-XX:HeapDumpPath="`" ] ; then
-  jargs="$jargs -XX:HeapDumpPath=\"${userdir}/var/log/heapdump.hprof\""
+  jargs="$jargs -XX:HeapDumpPath=`doubleQuoteArg \"${userdir}/var/log/heapdump.hprof\" `"
 fi
 # rename old heap dump to .old
 mv "${userdir}/var/log/heapdump.hprof" "${userdir}/var/log/heapdump.hprof.old" > /dev/null 2>&1
 
 jargs_without_clusters="$jargs"
-jargs="-Dnetbeans.dirs=\"${clusters}\" $jargs_without_clusters"
+jargs="-Dnetbeans.dirs=`doubleQuoteArg \"${clusters}\" ` $jargs_without_clusters"
 
 if [ -z "$cachedirspecified" ]; then
    cachedir="${userdir}/var/cache"
 fi
 
 if [ `uname` != Darwin -a -z "$nosplash" -a -f "${cachedir}/splash.png" -a ! -f "${userdir}/lock" ]; then
-   jargs="$jargs -splash:\"${cachedir}/splash.png\""
+   jargs="$jargs -splash:`doubleQuoteArg \"${cachedir}/splash.png\" `"
 fi
 
 jdkhome=`absolutize_path "$jdkhome"`
 
-args="--userdir \"${userdir}\" $args"
+args="--userdir `doubleQuoteArg \"${userdir}\"` $args"
 
-args="--cachedir \"${cachedir}\" $args"
+args="--cachedir `doubleQuoteArg \"${cachedir}\"` $args"
 
 append_jars_to_cp() {
     dir="$1"
@@ -285,7 +299,7 @@ build_cp() {
 }
 
 do_run_updater() {
-    eval "\"$jdkhome/bin/java\"" -classpath "\"${updatercp}\"" "$jargs" "-Dnetbeans.user=\"$userdir\"" $updater_class "$args"
+    eval '"$jdkhome/bin/java"' -classpath '"${updatercp}"' "$jargs" '-Dnetbeans.user="$userdir"' $updater_class "$args"
     construct_cp
 }
 
@@ -366,7 +380,7 @@ else
 fi
 
 if [ ! -z "${DEFAULT_USERDIR_ROOT}" ] ; then
-	jargs="-Dnetbeans.default_userdir_root=\"${DEFAULT_USERDIR_ROOT}\" $jargs"
+	jargs="-Dnetbeans.default_userdir_root=`doubleQuoteArg \"${DEFAULT_USERDIR_ROOT}\"` $jargs"
         unset DEFAULT_USERDIR_ROOT
 fi
 
@@ -433,7 +447,7 @@ while [ "$restart" ] ; do
     #
     delete_new_clusters_file
     rm -f "${restart_file}"
-    eval ${_NB_PROFILE_CMD} "\"${jdkhome}/bin/java\"" -Djdk.home="\"${jdkhome}\"" -classpath "\"$cp\"" \
+    eval ${_NB_PROFILE_CMD} '"${jdkhome}/bin/java"' '-Djdk.home="${jdkhome}"' -classpath '"$cp"' \
         "$jargs" org.netbeans.Main "$args" '<&0' '&'
     PID=$!
     trap "kill $PID" EXIT

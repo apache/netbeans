@@ -19,7 +19,11 @@
 
 package org.netbeans.modules.xml.jaxb;
 
+import org.netbeans.core.spi.multiview.MultiViewElement;
+import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.openide.filesystems.MIMEResolver;
+import org.openide.util.Lookup;
+import org.openide.windows.TopComponent;
 
 /**
  * A place holder class
@@ -32,6 +36,18 @@ import org.openide.filesystems.MIMEResolver;
     position=490
 )
 public class JAXBWizard {
+
+    @MultiViewElement.Registration(
+        displayName="org.netbeans.modules.xml.jaxb.Bundle#CTL_SourceTabCaption",
+        iconBase="org/netbeans/modules/xml/jaxb/resources/XML_file.png",
+        persistenceType=TopComponent.PERSISTENCE_ONLY_OPENED,
+        preferredID="xml.text",
+        mimeType="text/x-jaxb-binding+xml",
+        position=1
+    )
+    public static MultiViewEditorElement createMultiViewEditor(Lookup context) {
+        return new MultiViewEditorElement(context);
+    }
 
     /** Creates a new instance of JAXBWizard */
     public JAXBWizard() {

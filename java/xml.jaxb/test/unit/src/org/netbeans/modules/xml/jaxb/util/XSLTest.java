@@ -47,40 +47,42 @@ import org.netbeans.junit.NbTestCase;
  */
 public class XSLTest extends NbTestCase {
     private static final String CONFIG_FILE1 = "ConfigFile1.xml"; //NOI18N
-    private static final String CONFIG_FILE2 = "ConfigFile2.xml"; //NOI18N    
-    private static final String CONFIG_FILE3 = "ConfigFile3.xml"; //NOI18N        
-    private static final String CONFIG_EMPTY_CAT = "ConfigFileEmptyCatalog.xml"; //NOI18N        
+    private static final String CONFIG_FILE2 = "ConfigFile2.xml"; //NOI18N
+    private static final String CONFIG_FILE3 = "ConfigFile3.xml"; //NOI18N
+    private static final String CONFIG_EMPTY_CAT = "ConfigFileEmptyCatalog.xml"; //NOI18N
     private static final String BUILD_FILE1 = "BuildFile1.xml";   //NOI18N
-    private static final String BUILD_FILE2 = "BuildFile2.xml"; //NOI18N 
-    private static final String BUILD_FILE3 = "BuildFile3.xml"; //NOI18N     
-    private static final String BUILD_EMPTY_CAT = "BuildFileEmptyCatalog.xml"; //NOI18N     
-    
-    private static final String XSL_FILE = 
+    private static final String BUILD_FILE2 = "BuildFile2.xml"; //NOI18N
+    private static final String BUILD_FILE3 = "BuildFile3.xml"; //NOI18N
+    private static final String BUILD_EMPTY_CAT = "BuildFileEmptyCatalog.xml"; //NOI18N
+
+    private static final String XSL_FILE =
             "/org/netbeans/modules/xml/jaxb/resources/JAXBBuild.xsl"; //NOI18N
     private static final String TEMP_BUILD_FILE = "jaxb_build" ; //NOI18N
-    
+
     public XSLTest(String testName) {
         super(testName);
     }
-    
+
+    @Override
     public void setUp() throws Exception {
     }
-    
+
+    @Override
     public void tearDown() throws Exception {
     }
-    
+
     private InputStream getFromClasspath(String filePath){
         return this.getClass().getResourceAsStream(filePath);
     }
-    
+
     private InputStream getDatafile(String filename) throws FileNotFoundException{
         String dataFilename = "/org/netbeans/modules/xml/jaxb/util/" + filename;
         return new FileInputStream(new File(getDataDir(), dataFilename));
     }
-    
+
     private String getString(InputStream stream) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(stream));
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         String line = "";
         while (line != null){
             line = br.readLine();
@@ -88,20 +90,19 @@ public class XSLTest extends NbTestCase {
                 sb.append(line);
             }
         }
-        
+
         return sb.toString();
     }
-    
+
     private void compareStream(InputStream file1, InputStream file2) throws IOException{
-        boolean ret = false;
         String str1 = getString(file1);
         //System.out.println("Str1:" + str1 + ":Str1");
         String str2 = getString(file2);
-        //System.out.println("Str2:" + str2 + ":Str2");        
-        //System.out.println("Length:" + str1.length() + ":" + str2.length());                                
+        //System.out.println("Str2:" + str2 + ":Str2");
+        //System.out.println("Length:" + str1.length() + ":" + str2.length());
         assertEquals(str1, str2);
     }
-    
+
     private void transformConfig2Build(String configFile, String buildFile){
         try {
             Source xmlSource = new StreamSource(getDatafile(configFile));
@@ -109,16 +110,16 @@ public class XSLTest extends NbTestCase {
             File tmpFile = java.io.File.createTempFile(TEMP_BUILD_FILE, ".xml");
             //System.out.println("tmpFile:" + tmpFile.getAbsolutePath());
             tmpFile.deleteOnExit();
-            FileOutputStream fos = new FileOutputStream(tmpFile);
-            Result result = new StreamResult(fos);
-            TransformerFactory fact = TransformerFactory.newInstance();
-            fact.setAttribute("indent-number", 4); //NOI18N
-            Transformer xformer = fact.newTransformer(xslSource);
-            xformer.setOutputProperty(OutputKeys.INDENT, "yes"); //NOI18N
-            xformer.setOutputProperty(OutputKeys.METHOD, "xml"); //NOI18N
-            xformer.transform(xmlSource, result);
+            try (FileOutputStream fos = new FileOutputStream(tmpFile)) {
+                Result result = new StreamResult(fos);
+                TransformerFactory fact = TransformerFactory.newInstance();
+                fact.setAttribute("indent-number", 4); //NOI18N
+                Transformer xformer = fact.newTransformer(xslSource);
+                xformer.setOutputProperty(OutputKeys.INDENT, "yes"); //NOI18N
+                xformer.setOutputProperty(OutputKeys.METHOD, "xml"); //NOI18N
+                xformer.transform(xmlSource, result);
+            }
             // Compare.
-            fos.close();
             compareStream(getDatafile(buildFile), new FileInputStream(tmpFile));
         } catch (TransformerConfigurationException ex) {
             Logger.getLogger("global").log(Level.SEVERE, null, ex);
@@ -131,7 +132,7 @@ public class XSLTest extends NbTestCase {
             fail("IOException");
         }
     }
-    
+
     /**
      * Test the XSL style sheet.
      **/
@@ -163,5 +164,5 @@ public class XSLTest extends NbTestCase {
         transformConfig2Build(CONFIG_EMPTY_CAT, BUILD_EMPTY_CAT);
         System.out.println("testXformConfig2BuildEmptyCatalog done.");
     }
-    
+
 }

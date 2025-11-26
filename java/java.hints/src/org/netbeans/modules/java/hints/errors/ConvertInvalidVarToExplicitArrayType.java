@@ -20,7 +20,6 @@ package org.netbeans.modules.java.hints.errors;
 
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewArrayTree;
-import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import java.util.Collections;
@@ -35,6 +34,7 @@ import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeMaker;
+import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.java.hints.spi.ErrorRule;
 import org.netbeans.spi.editor.hints.Fix;
@@ -134,11 +134,11 @@ public class ConvertInvalidVarToExplicitArrayType implements ErrorRule<Void> {
 
     private static final class FixImpl extends JavaFix {
 
-        private TypeMirror arrayTypeMirror;
+        private final TypeMirrorHandle arrayTypeMirror;
 
         public FixImpl(CompilationInfo info, TreePath tp, TypeMirror arrayType) {
             super(info, tp);
-            this.arrayTypeMirror = arrayType;
+            this.arrayTypeMirror = TypeMirrorHandle.create(arrayType);
         }
 
         @Override
@@ -157,12 +157,18 @@ public class ConvertInvalidVarToExplicitArrayType implements ErrorRule<Void> {
             if (statementPath.getLeaf().getKind() == Tree.Kind.VARIABLE) {
                 oldVariableTree = (VariableTree) statementPath.getLeaf();
 
-                arrayTypeMirror = Utilities.resolveCapturedType(wc, arrayTypeMirror);
+                TypeMirror arrayType = arrayTypeMirror.resolve(wc);
+
+                if (arrayType == null) {
+                    return ; //cannot resolve
+                }
+
+                arrayType = Utilities.resolveCapturedType(wc, arrayType);
 
                 VariableTree newVariableTree = make.Variable(
                         oldVariableTree.getModifiers(),
                         oldVariableTree.getName(),
-                        make.ArrayType(make.Type(arrayTypeMirror)),
+                        make.ArrayType(make.Type(arrayType)),
                         oldVariableTree.getInitializer()
                 );
                 tc.getWorkingCopy().rewrite(oldVariableTree, newVariableTree);

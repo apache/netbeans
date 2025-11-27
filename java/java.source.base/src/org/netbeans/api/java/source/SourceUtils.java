@@ -62,6 +62,7 @@ import com.sun.tools.javac.comp.Check;
 import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.Log;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -176,16 +177,23 @@ public class SourceUtils {
 
     public static boolean checkTypesAssignable(CompilationInfo info, TypeMirror from, TypeMirror to) {
         Context c = ((JavacTaskImpl) info.impl.getJavacTask()).getContext();
-        if (from.getKind() == TypeKind.TYPEVAR) {
-            Types types = Types.instance(c);
-            TypeVar t = types.substBound((TypeVar)from, com.sun.tools.javac.util.List.of((Type)from), com.sun.tools.javac.util.List.of(types.boxedTypeOrType((Type)to)));
-            return info.getTypes().isAssignable(t.getUpperBound(), to)
-                    || info.getTypes().isAssignable(to, t.getUpperBound());
+        Log log = Log.instance(c);
+        //TODO: need to throw away all warnings, as a) reporting the warnings is wrong anyway; b) the default handler may crash; are there more places that require similar handling?
+        Log.DiagnosticHandler discardHandler = log.new DiscardDiagnosticHandler();
+        try {
+            if (from.getKind() == TypeKind.TYPEVAR) {
+                Types types = Types.instance(c);
+                TypeVar t = types.substBound((TypeVar)from, com.sun.tools.javac.util.List.of((Type)from), com.sun.tools.javac.util.List.of(types.boxedTypeOrType((Type)to)));
+                return info.getTypes().isAssignable(t.getUpperBound(), to)
+                        || info.getTypes().isAssignable(to, t.getUpperBound());
+            }
+            if (from.getKind() == TypeKind.WILDCARD) {
+                from = Types.instance(c).wildUpperBound((Type)from);
+            }
+            return Check.instance(c).checkType(null, (Type)from, (Type)to).getKind() != TypeKind.ERROR;
+        } finally {
+            log.popDiagnosticHandler(discardHandler);
         }
-        if (from.getKind() == TypeKind.WILDCARD) {
-            from = Types.instance(c).wildUpperBound((Type)from);
-        }
-        return Check.instance(c).checkType(null, (Type)from, (Type)to).getKind() != TypeKind.ERROR;
     }
 
     public static TypeMirror getBound(WildcardType wildcardType) {

@@ -1,1 +1,1 @@
-3:4-3:13:error:method does not override or implement a method from a supertype
+3:4-3:13:error:t() in TestOverrideAnnotation does not override or implement a method from a supertype

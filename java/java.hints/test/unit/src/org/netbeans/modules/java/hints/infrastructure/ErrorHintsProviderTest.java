@@ -249,8 +249,6 @@ public class ErrorHintsProviderTest extends NbTestCase {
                                }
                                """,
                                "21",
-                               //TODO: can this comment be now removed?
-                               //TODO: needs to be adjusted when the error in javac is fixed:
                                "0:0-0:13::Test.java:1:1: compiler.err.feature.not.supported.in.source.plural: (compiler.misc.feature.implicit.classes), 21, 25");
     }
 

@@ -2909,6 +2909,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             flagLowerCaseNames[flag.ordinal()] = flag.name().toLowerCase(Locale.ENGLISH);
         }
         flagLowerCaseNames[FlagsEnum.NON_SEALED.ordinal()] = "non-sealed";
+        flagLowerCaseNames[FlagsEnum.TRANSIENT_OR_ACC_VARARGS.ordinal()] = "transient";
     }
     
     /**

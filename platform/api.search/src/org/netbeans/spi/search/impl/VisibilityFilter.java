@@ -61,20 +61,50 @@ public final class VisibilityFilter extends SearchFilterDefinition {
 
     /**
      * Test that a file is the primary file of its DataObject.
+     * Enhanced to provide robust detection of Java files by checking:
+     * 1. DataObject primary file check (original logic)
+     * 2. MIME type check for text/x-java
+     * 3. File extension check for .java files
      */
     private boolean isPrimaryFile(FileObject file) {
         try {
+            // First try DataObject-based detection (original logic)
             DataObject dob = DataObject.find(file);
             if (dob.getPrimaryFile().equals(file)) {
                 return true;
-            } else {
-                return false;
             }
+            
+            // Fallback 1: Check if file has Java MIME type
+            String mimeType = file.getMIMEType();
+            if ("text/x-java".equals(mimeType)) {
+                return true;
+            }
+            
+            // Fallback 2: Check if file has Java extension
+            String name = file.getNameExt();
+            if (name != null && name.endsWith(".java")) {
+                return true;
+            }
+            
+            return false;
+            
         } catch (DataObjectNotFoundException ex) {
-            String msg = "DataObject not found for file:" + file;       //NOI18N
+            // Fallback: Check MIME type and extension when DataObject is not found
+            String mimeType = file.getMIMEType();
+            if ("text/x-java".equals(mimeType)) {
+                return true;
+            }
+            
+            String name = file.getNameExt();
+            if (name != null && name.endsWith(".java")) {
+                return true;
+            }
+            
+            // Log the issue for debugging
+            String msg = "DataObject not found for file:" + file;
             Logger logger = Logger.getLogger(VisibilityFilter.class.getName());
             logger.log(Level.INFO, msg, ex);
-            return true;
+            return false; // Be more restrictive when DataObject is missing
         }
     }
 

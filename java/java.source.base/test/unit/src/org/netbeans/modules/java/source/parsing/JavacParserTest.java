@@ -93,6 +93,8 @@ import org.netbeans.modules.parsing.spi.ParserFactory;
 import org.netbeans.modules.parsing.spi.SchedulerTask;
 import org.netbeans.modules.parsing.spi.SourceModificationEvent;
 import org.netbeans.modules.parsing.spi.TaskFactory;
+import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
@@ -623,6 +625,53 @@ public class JavacParserTest extends NbTestCase {
         js.runUserActionTask(new Task<CompilationController>() {
             public void run(CompilationController parameter) throws Exception {
                 parameter.toPhase(Phase.RESOLVED);
+            }
+        }, true);
+    }
+
+    public void testReleaseValidateCompilerOptionsBasedOnRelease() throws Exception {
+        FileObject f = createFile("test/Test.java",
+                                  """
+                                  package test;
+                                  import javax.tools.Diagnostic;
+                                  """);
+        SourceUtilsTestUtil.setSourceLevel(f, "17");
+        SourceUtilsTestUtil.setCompilerOptions(f, List.of("--limit-modules=java.base"));
+        JavaSource js = JavaSource.create(new ClasspathInfo.Builder(ClassPath.EMPTY).build(), f);
+
+        js.runUserActionTask(new Task<CompilationController>() {
+            public void run(CompilationController parameter) throws Exception {
+                assertTrue(Phase.RESOLVED.compareTo(parameter.toPhase(Phase.RESOLVED)) <= 0);
+                assertEquals(parameter.getDiagnostics().toString(), 1, parameter.getDiagnostics().size());
+
+                Set<String> codes = new HashSet<String>();
+
+                for (Diagnostic d : parameter.getDiagnostics()) {
+                    codes.add(d.getCode());
+                }
+
+                assertEquals(new HashSet<String>(Arrays.asList("compiler.err.package.not.visible")), codes);
+            }
+        }, true);
+    }
+
+    public void testReleaseUnsupportedSourceLevel() throws Exception {
+        FileObject f = createFile("test/Test.java",
+                                  """
+                                  package test;
+                                  public class Test {
+                                      public static void main(String... args) {
+                                          System.out.println("");
+                                      }
+                                  }
+                                  """);
+        SourceUtilsTestUtil.setSourceLevel(f, "1.4");
+        JavaSource js = JavaSource.create(new ClasspathInfo.Builder(ClassPath.EMPTY).build(), f);
+
+        js.runUserActionTask(new Task<CompilationController>() {
+            public void run(CompilationController parameter) throws Exception {
+                assertTrue(Phase.RESOLVED.compareTo(parameter.toPhase(Phase.RESOLVED)) <= 0);
+                assertEquals(parameter.getDiagnostics().toString(), 0, parameter.getDiagnostics().size());
             }
         }, true);
     }

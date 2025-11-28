@@ -100,7 +100,7 @@ public class NBParserFactory extends ParserFactory {
 
             if (!unit.getTypeDecls().isEmpty() && unit.getTypeDecls().get(0).getKind() == Kind.CLASS) {
                 JCClassDecl firstClass = (JCClassDecl) unit.getTypeDecls().get(0);
-                if ((firstClass.mods.flags & Flags.IMPLICIT_CLASS) != 0 && getEndPos(unit) == Position.NOPOS) {
+                if ((firstClass.mods.flags & Flags.IMPLICIT_CLASS) != 0) {
                     if (pack[0] != null) {
                         unit.defs = unit.defs.prepend(pack[0]);
                     }
@@ -115,7 +115,6 @@ public class NBParserFactory extends ParserFactory {
                     }
 
                     firstClass.pos = newPos;
-                    endPosTable.storeEnd(unit, token.endPos);
                 }
             }
             return unit;

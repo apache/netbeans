@@ -2502,13 +2502,12 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
             public Data get(ErrorKind kind, Range range, String message) {
                 return new Data(kind, Pair.of(Pair.of(range.start().line(),
                                                       range.start().column()),
-                                              range.end() != null ? Pair.of(range.end().line(),
-                                                                               range.end().column())
-                                                                     : null));
+                                              Pair.of(range.end().line(),
+                                                      range.end().column())));
             }
         });
         assertEquals(List.of(new Data(ErrorKind.WARNING, Pair.of(Pair.of(4, 9), Pair.of(4, 19))),
-                             new Data(ErrorKind.WARNING, Pair.of(Pair.of(4, 17), null))),
+                             new Data(ErrorKind.WARNING, Pair.of(Pair.of(4, 17), Pair.of(4, 17)))),
                      errors);
     }
 

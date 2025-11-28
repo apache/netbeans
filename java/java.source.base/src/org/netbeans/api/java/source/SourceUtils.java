@@ -178,6 +178,7 @@ public class SourceUtils {
     public static boolean checkTypesAssignable(CompilationInfo info, TypeMirror from, TypeMirror to) {
         Context c = ((JavacTaskImpl) info.impl.getJavacTask()).getContext();
         Log log = Log.instance(c);
+        //TODO: need to throw away all warnings, as a) reporting the warnings is wrong anyway; b) the default handler may crash; are there more places that require similar handling?
         Log.DiagnosticHandler discardHandler = log.new DiscardDiagnosticHandler();
         try {
             if (from.getKind() == TypeKind.TYPEVAR) {

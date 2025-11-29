@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
@@ -38,7 +39,6 @@ import javax.swing.DefaultListModel;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JList;
-import javax.swing.ListCellRenderer;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -103,6 +103,7 @@ final class ContentProviderImpl implements GoToPanelImpl.ContentProvider {
                 }
 
                 @Override
+                @SuppressWarnings("unchecked")
                 protected void update(@NonNull final SymbolDescriptor item) {
                     String searchText = getSearchText();
                     if (searchText == null) {
@@ -111,8 +112,8 @@ final class ContentProviderImpl implements GoToPanelImpl.ContentProvider {
                     SymbolProviderAccessor.DEFAULT.setHighlightText(item, searchText);
                     final SymbolDescriptorAttrCopier copier = currentSearch.getAttribute(SymbolDescriptorAttrCopier.class);
                     if (copier != null) {
-                        if (item instanceof AsyncDescriptor && !((AsyncDescriptor<SymbolDescriptor>)item).hasCorrectCase()) {
-                            copier.reportWrongCase((AsyncDescriptor<SymbolDescriptor>)item);
+                        if (item instanceof AsyncDescriptor ad && !ad.hasCorrectCase()) {
+                            copier.reportWrongCase(ad);
                         }
                     }
                 }
@@ -139,8 +140,8 @@ final class ContentProviderImpl implements GoToPanelImpl.ContentProvider {
 
 
     @Override
-    public ListCellRenderer getListCellRenderer(
-            @NonNull final JList list,
+    public ItemRenderer<SymbolDescriptor> getListCellRenderer(
+            @NonNull final JList<SymbolDescriptor> list,
             @NonNull final ButtonModel caseSensitive) {
         Parameters.notNull("list", list);   //NOI18N
         Parameters.notNull("caseSensitive", caseSensitive); //NOI18N
@@ -151,7 +152,7 @@ final class ContentProviderImpl implements GoToPanelImpl.ContentProvider {
     }
 
     @Override
-    public boolean setListModel(GoToPanel panel, String text) {
+    public boolean setListModel(GoToPanel<SymbolDescriptor> panel, String text) {
         enableOK(false);
         final Worker workToCancel;
         final RequestProcessor.Task  taskToCancel;
@@ -170,7 +171,7 @@ final class ContentProviderImpl implements GoToPanelImpl.ContentProvider {
 
         if ( text == null ) {
             currentSearch.resetFilter();
-            panel.setModel(new DefaultListModel(), true);
+            panel.setModel(new DefaultListModel<>(), true);
             return false;
         }
         final boolean exact = text.endsWith(" "); // NOI18N
@@ -180,7 +181,7 @@ final class ContentProviderImpl implements GoToPanelImpl.ContentProvider {
             currentSearch.filter(
                     SearchType.EXACT_NAME,
                     text,
-                    Collections.singletonMap(AbstractModelFilter.OPTION_CLEAR, Boolean.TRUE));
+                    Map.of(AbstractModelFilter.OPTION_CLEAR, Boolean.TRUE));
             panel.revalidateModel(true);
             return false;
         }
@@ -197,7 +198,7 @@ final class ContentProviderImpl implements GoToPanelImpl.ContentProvider {
         if (name.isEmpty()) {
             //Empty name, wait for next char
             currentSearch.resetFilter();
-            panel.setModel(new DefaultListModel(), true);
+            panel.setModel(new DefaultListModel<>(), true);
             return false;
         }
         // Compute in other thread
@@ -245,7 +246,7 @@ final class ContentProviderImpl implements GoToPanelImpl.ContentProvider {
     Runnable createWorker(
             @NonNull final String text,
             @NonNull final SearchType searchType,
-            @NonNull final GoToPanel panel) {
+            @NonNull final GoToPanel<SymbolDescriptor> panel) {
         return new Worker(text, text, searchType, panel);
     }
 
@@ -268,7 +269,7 @@ final class ContentProviderImpl implements GoToPanelImpl.ContentProvider {
     private Collection<? extends SymbolProvider> getTypeProviders() {
         Collection<? extends SymbolProvider> res = typeProviders.get();
         if (res == null) {
-            res = Arrays.asList(Lookup.getDefault().lookupAll(SymbolProvider.class).toArray(new SymbolProvider[0]));
+            res = Arrays.asList(Lookup.getDefault().lookupAll(SymbolProvider.class).toArray(SymbolProvider[]::new));
             if (!typeProviders.compareAndSet(null, res)) {
                 res = typeProviders.get();
             }
@@ -324,7 +325,7 @@ final class ContentProviderImpl implements GoToPanelImpl.ContentProvider {
         private final String name;
         private final SearchType searchType;
         private final long createTime;
-        private final GoToPanel panel;
+        private final GoToPanel<SymbolDescriptor> panel;
 
         private volatile boolean isCanceled = false;
         private volatile SymbolProvider current;
@@ -333,7 +334,7 @@ final class ContentProviderImpl implements GoToPanelImpl.ContentProvider {
                 @NonNull final String text,
                 @NonNull final String name,
                 @NonNull final SearchType searchType,
-                @NonNull final GoToPanel panel ) {
+                @NonNull final GoToPanel<SymbolDescriptor> panel ) {
             this.text = text;
             this.name = name;
             this.searchType = searchType;
@@ -465,7 +466,7 @@ final class ContentProviderImpl implements GoToPanelImpl.ContentProvider {
             items = new HashSet<>(128);
             String[] message = new String[1];
             int retry = 0;
-            final Collection<SymbolProvider> nonFinishedProviders = Collections.newSetFromMap(new IdentityHashMap<SymbolProvider, Boolean>());
+            final Collection<SymbolProvider> nonFinishedProviders = Collections.newSetFromMap(new IdentityHashMap<>());
             for (SymbolProvider provider : providers) {
                 current = provider;
                 try {
@@ -553,16 +554,17 @@ final class ContentProviderImpl implements GoToPanelImpl.ContentProvider {
                     return modified;
                 }
             });
-            resolved = Collections.synchronizedSet(new HashSet<SymbolDescriptor>());
+            resolved = Collections.synchronizedSet(new HashSet<>());
         }
 
+        @SuppressWarnings("unchecked")
         void checkWrongCase(
                 @NonNull final Collection<? extends SymbolDescriptor> remove,
                 @NonNull final Collection<? extends SymbolDescriptor> add) {
             hasWrongCase.removeAll(remove);
             for (SymbolDescriptor d : add) {
-                if (d instanceof AsyncDescriptor && !((AsyncDescriptor<SymbolDescriptor>)d).hasCorrectCase()) {
-                    reportWrongCase((AsyncDescriptor<SymbolDescriptor>)d);
+                if (d instanceof AsyncDescriptor ad && !ad.hasCorrectCase()) {
+                    reportWrongCase(ad);
                 }
             }
         }
@@ -593,8 +595,8 @@ final class ContentProviderImpl implements GoToPanelImpl.ContentProvider {
             final SymbolDescriptor source = p.first();
             final SymbolDescriptor target = p.second();
             resolved.add(source);
-            if (source instanceof AsyncDescriptor && !((AsyncDescriptor<SymbolDescriptor>)source).hasCorrectCase()) {
-                hasWrongCase.remove(source);
+            if (source instanceof AsyncDescriptor ad && !ad.hasCorrectCase()) {
+                hasWrongCase.remove(ad);
             }
             SymbolProviderAccessor.DEFAULT.setHighlightText(
                     target,

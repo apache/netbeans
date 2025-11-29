@@ -47,7 +47,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
@@ -61,6 +60,7 @@ import javax.swing.text.BadLocationException;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.jumpto.SearchHistory;
+import org.netbeans.modules.jumpto.common.ItemRenderer;
 import org.netbeans.modules.jumpto.common.UiUtils;
 import org.netbeans.modules.jumpto.settings.GoToSettings;
 import org.netbeans.modules.jumpto.type.UiOptions;
@@ -165,7 +165,7 @@ class GoToPanelImpl extends JPanel implements GoToPanel<SymbolDescriptor> {
      */
     @Override
     public boolean setModel(
-            @NonNull final ListModel model,
+            @NonNull ListModel<SymbolDescriptor> model,
             final boolean finished) {
         assert SwingUtilities.isEventDispatchThread();
         matchesList.setModel(model);
@@ -560,7 +560,6 @@ class GoToPanelImpl extends JPanel implements GoToPanel<SymbolDescriptor> {
 
         @Override
         public void valueChanged(@NonNull final ListSelectionEvent ev) {
-            // got "Not computed yet" text sometimes
             SymbolDescriptor selected = dialog.matchesList.getSelectedValue();
             if (selected != null) {
                 dialog.jTextFieldLocation.setText(selected.getFileDisplayPath());
@@ -588,9 +587,9 @@ class GoToPanelImpl extends JPanel implements GoToPanel<SymbolDescriptor> {
 
     public static interface ContentProvider {
 
-        public ListCellRenderer<SymbolDescriptor> getListCellRenderer(JList<SymbolDescriptor> list, ButtonModel caseSensitive);
+        public ItemRenderer<SymbolDescriptor> getListCellRenderer(JList<SymbolDescriptor> list, ButtonModel caseSensitive);
 
-        public boolean setListModel( GoToPanel panel, String text  );
+        public boolean setListModel(GoToPanel<SymbolDescriptor> panel, String text);
 
         public void closeDialog();
 

@@ -146,11 +146,9 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <friend-packages>
-                <friend>org.netbeans.modules.odcs.tasks</friend>
-                <friend>com.oracle.netbeans.bugdb</friend>
+            <public-packages>
                 <package>org.netbeans.modules.bugtracking.issuetable</package>
-            </friend-packages>
+            </public-packages>
         </data>
     </configuration>
 </project>

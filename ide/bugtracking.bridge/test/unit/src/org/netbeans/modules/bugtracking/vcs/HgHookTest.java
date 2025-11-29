@@ -24,20 +24,15 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.logging.Level;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
-import org.eclipse.core.runtime.CoreException;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.bugtracking.IssueImpl;
 import org.netbeans.modules.bugtracking.TestKit;
-import org.netbeans.modules.bugtracking.api.IssueQuickSearch;
 import org.netbeans.modules.bugtracking.api.Repository;
-import org.netbeans.modules.bugtracking.ui.search.QuickSearchComboBar;
 import org.netbeans.modules.bugtracking.ui.search.QuickSearchPanel;
 import org.netbeans.modules.bugtracking.vcs.VCSHooksConfig.HookType;
 import org.netbeans.modules.bugtracking.vcs.VCSHooksConfig.PushOperation;
@@ -66,7 +61,7 @@ public class HgHookTest extends NbTestCase {
         System.setProperty("netbeans.user", getWorkDir().getAbsolutePath() + "/userdir");
     }
 
-    public void testPanel() throws MalformedURLException, CoreException, IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public void testPanel() throws MalformedURLException, IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         HgHookImpl hook = getHook();
 
         VCSHooksConfig.getInstance(HookType.HG).setLink(true);
@@ -101,7 +96,7 @@ public class HgHookTest extends NbTestCase {
         assertTrue(panel.pushRadioButton.isSelected());
     }
 
-    public void testBeforeCommitNoLink() throws MalformedURLException, CoreException, IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public void testBeforeCommitNoLink() throws MalformedURLException,  IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         HgHookImpl hook = getHook();
 
         VCSHooksConfig.getInstance(HookType.HG).setLink(false);
@@ -114,7 +109,7 @@ public class HgHookTest extends NbTestCase {
         assertNull(ctx);
     }
 
-    public void testBeforeCommitWithLink() throws MalformedURLException, CoreException, IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public void testBeforeCommitWithLink() throws MalformedURLException, IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         HgHookImpl hook = getHook();
 
         VCSHooksConfig.getInstance(HookType.HG).setLink(true);
@@ -130,7 +125,7 @@ public class HgHookTest extends NbTestCase {
         assertNotSame(msg, ctx.getMessage()); // issue info was added
     }
 
-    public void testAfterCommitLink() throws MalformedURLException, CoreException, IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public void testAfterCommitLink() throws MalformedURLException, IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         HgHookImpl hook = getHook();
 
         VCSHooksConfig.getInstance(HookType.HG).setAfterCommit(true);
@@ -151,7 +146,7 @@ public class HgHookTest extends NbTestCase {
         assertFalse(HookIssue.getInstance().closed);
     }
 
-    public void testAfterCommitResolve() throws MalformedURLException, CoreException, IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public void testAfterCommitResolve() throws MalformedURLException, IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         HgHookImpl hook = getHook();
 
         VCSHooksConfig.getInstance(HookType.HG).setAfterCommit(true);
@@ -171,7 +166,7 @@ public class HgHookTest extends NbTestCase {
         assertTrue(HookIssue.getInstance().closed);
     }
 
-    public void testAfterCommitLinkResolve() throws MalformedURLException, CoreException, IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public void testAfterCommitLinkResolve() throws MalformedURLException, IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         HgHookImpl hook = getHook();
 
         VCSHooksConfig.getInstance(HookType.HG).setAfterCommit(true);
@@ -192,7 +187,7 @@ public class HgHookTest extends NbTestCase {
         assertTrue(HookIssue.getInstance().closed);
     }
 
-    public void testAfterCommitLinkResolveAfterPush() throws MalformedURLException, CoreException, IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public void testAfterCommitLinkResolveAfterPush() throws MalformedURLException, IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         HookIssue.getInstance().reset();
         
         HgHookImpl hook = getHook();

@@ -20,7 +20,7 @@
  * Javadoc style sheet
  */
 
-@import url('fonts/dejavu.css');
+@import url('https://netbeans.apache.org/_/css/font-dejavu.css');
 /*
  * These CSS custom properties (variables) define the core color and font
  * properties used in this stylesheet.

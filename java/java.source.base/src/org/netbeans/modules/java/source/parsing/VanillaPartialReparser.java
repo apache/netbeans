@@ -114,6 +114,7 @@ public class VanillaPartialReparser implements PartialReparser {
     private final Method lineMapBuild;
     private final boolean allowPartialReparse;
 
+    // TODO this adds --add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED and --add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED
     @SuppressWarnings("LocalVariableHidesMemberVariable")
     public VanillaPartialReparser() {
         Field lazyDocCommentsTable;

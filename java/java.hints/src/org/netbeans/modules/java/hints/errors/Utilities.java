@@ -656,13 +656,13 @@ public class Utilities {
      * 
      * @return typemirror of supertype/iface, initial tm if not anonymous
      */
-    public static TypeMirror convertIfAnonymous(TypeMirror tm) {
+    public static TypeMirror convertIfAnonymous(TypeMirror tm, boolean keepLocal) {
         //anonymous class?
         Set<ElementKind> fm = EnumSet.of(ElementKind.METHOD, ElementKind.FIELD);
         if (tm instanceof DeclaredType) {
             Element el = ((DeclaredType) tm).asElement();
             //XXX: the null check is needed for lambda type, not covered by test:
-            if (el != null && (el.getSimpleName().length() == 0 || fm.contains(el.getEnclosingElement().getKind()))) {
+            if (el != null && (el.getSimpleName().length() == 0 || (!keepLocal && fm.contains(el.getEnclosingElement().getKind())))) {
                 List<? extends TypeMirror> interfaces = ((TypeElement) el).getInterfaces();
                 if (interfaces.isEmpty()) {
                     tm = ((TypeElement) el).getSuperclass();
@@ -1156,7 +1156,7 @@ public class Utilities {
             TypeMirror tm = info.getTrees().getTypeMirror(argPath);
 
             //anonymous class?
-            tm = Utilities.convertIfAnonymous(tm);
+            tm = Utilities.convertIfAnonymous(tm, false);
 
             if (tm == null || tm.getKind() == TypeKind.NONE || containsErrorsRecursively(tm)) {
                 return null;

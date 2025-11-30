@@ -38,7 +38,6 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.KeyStroke;
-import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
@@ -53,6 +52,7 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.jumpto.SearchHistory;
+import org.netbeans.modules.jumpto.common.ItemRenderer;
 import org.netbeans.modules.jumpto.common.UiUtils;
 import org.netbeans.modules.jumpto.settings.GoToSettings;
 import org.netbeans.spi.jumpto.type.TypeDescriptor;
@@ -142,7 +142,7 @@ public class GoToPanel extends javax.swing.JPanel {
 
     /** Sets the model from different thread
      */
-    boolean setModel( final ListModel model) {
+    boolean setModel(ListModel<TypeDescriptor> model) {
         assert SwingUtilities.isEventDispatchThread();
         matchesList.setModel(model);
         if (model.getSize() > 0 || getText() == null || getText().isBlank()) {
@@ -550,7 +550,6 @@ public class GoToPanel extends javax.swing.JPanel {
         
         @Override
         public void valueChanged(@NonNull final ListSelectionEvent ev) {
-            // got "Not computed yet" text sometimes
             TypeDescriptor selected = dialog.matchesList.getSelectedValue();
             if (selected != null) {
                 dialog.jTextFieldLocation.setText(selected.getFileDisplayPath());
@@ -579,7 +578,7 @@ public class GoToPanel extends javax.swing.JPanel {
     public static interface ContentProvider {
 
         @NonNull
-        public ListCellRenderer<TypeDescriptor> getListCellRenderer(
+        public ItemRenderer<TypeDescriptor> getListCellRenderer(
                 @NonNull JList<TypeDescriptor> list,
                 @NonNull ButtonModel caseSensitive);
 

@@ -50,7 +50,6 @@ import javax.swing.ButtonModel;
 import javax.swing.DefaultListModel;
 import javax.swing.Icon;
 import javax.swing.JButton;
-import javax.swing.ListCellRenderer;
 import javax.swing.JEditorPane;
 import javax.swing.JList;
 import javax.swing.ListModel;
@@ -92,7 +91,7 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
     static final Logger LOGGER = Logger.getLogger(GoToTypeAction.class.getName()); // Used from the panel as well
 
     private SearchType nameKind;
-    private static ListModel EMPTY_LIST_MODEL = new DefaultListModel();
+    private static ListModel<TypeDescriptor> EMPTY_LIST_MODEL = new DefaultListModel<>();
     private static final RequestProcessor rp = new RequestProcessor ("GoToTypeAction-RequestProcessor",1);      //NOI18N
     private static final RequestProcessor PROFILE_RP = new RequestProcessor("GoToTypeAction-Profile",1);        //NOI18N
     private Worker running;
@@ -119,7 +118,7 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
 
     public GoToTypeAction(String title, TypeBrowser.Filter typeFilter, boolean multiSelection, TypeProvider... typeProviders) {
         super( NbBundle.getMessage( GoToTypeAction.class,"TXT_GoToType") );
-        putValue("PopupMenuText", NbBundle.getBundle(GoToTypeAction.class).getString("editor-popup-TXT_GoToType")); // NOI18N
+        putValue("PopupMenuText", NbBundle.getMessage(GoToTypeAction.class, "editor-popup-TXT_GoToType")); // NOI18N
         this.title = title;
         this.typeFilter = typeFilter;
         this.implicitTypeProviders = typeProviders.length == 0 ? null : List.of(typeProviders);
@@ -203,17 +202,15 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
 
 
     @Override
-    @SuppressWarnings("unchecked")
-    public ListCellRenderer<TypeDescriptor> getListCellRenderer(
+    public ItemRenderer<TypeDescriptor> getListCellRenderer(
             @NonNull final JList<TypeDescriptor> list,
             @NonNull final ButtonModel caseSensitive) {
         Parameters.notNull("list", list);   //NOI18N
         Parameters.notNull("caseSensitive", caseSensitive); //NOI18N
-        ItemRenderer<TypeDescriptor> renderer = ItemRenderer.Builder.create(
+        return ItemRenderer.Builder.create(
                 list,
                 caseSensitive,
                 new TypeDescriptorConvertor()).build();
-        return (ListCellRenderer) renderer;
     }
 
     @Override
@@ -498,12 +495,13 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
                     caseSensitive,
                     GoToSettings.getDefault().isSortingPreferOpenProjects());
             itemsComparator = ic;
-            final Models.MutableListModel baseModel = Models.mutable(
+            final Models.MutableListModel<TypeDescriptor> baseModel = Models.mutable(
                 ic,
                 currentSearch.resetFilter(),
                 null);
-            final ListModel model = typeFilter != null ?
-                    FilteredListModel.create(baseModel, new FilterAdaptor(typeFilter), NbBundle.getMessage(GoToTypeAction.class, "LBL_Computing")) :
+            @SuppressWarnings("unchecked")
+            final ListModel<TypeDescriptor> model = typeFilter != null ?
+                    FilteredListModel.create(baseModel, new FilterAdaptor(typeFilter), null) :
                     baseModel;
             for (;;) {
                 final int[] retry = new int[1];
@@ -651,7 +649,7 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
 
     private class DialogButtonListener implements ActionListener {
 
-        private GoToPanel panel;
+        private final GoToPanel panel;
 
         public DialogButtonListener( GoToPanel panel ) {
             this.panel = panel;

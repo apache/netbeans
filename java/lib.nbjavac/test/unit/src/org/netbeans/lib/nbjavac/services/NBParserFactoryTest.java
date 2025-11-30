@@ -54,7 +54,7 @@ public class NBParserFactoryTest extends NbTestCase {
         SourcePositions sp = Trees.instance(parsed.first()).getSourcePositions();
 
         assertEquals(0, sp.getStartPosition(parsed.second(), ct));
-        assertEquals(-1, sp.getEndPosition(parsed.second(), ct));
+        assertEquals(14, sp.getEndPosition(parsed.second(), ct));
     }
 
     public void testImplicitClassPositions() throws Exception {
@@ -74,9 +74,9 @@ public class NBParserFactoryTest extends NbTestCase {
         SourcePositions sp = Trees.instance(parsed.first()).getSourcePositions();
 
         assertEquals(19, sp.getStartPosition(parsed.second(), ct));
-        assertEquals(-1, sp.getEndPosition(parsed.second(), ct));
+        assertEquals(46, sp.getEndPosition(parsed.second(), ct));
         assertEquals(0, sp.getStartPosition(parsed.second(), parsed.second()));
-        assertEquals(code.length(), sp.getEndPosition(parsed.second(), parsed.second()));
+        assertEquals(46, sp.getEndPosition(parsed.second(), parsed.second()));
     }
 
     public void testErrorRecoveryCompactSourceFilePackage() throws Exception {
@@ -126,7 +126,7 @@ public class NBParserFactoryTest extends NbTestCase {
         Context context = new Context();
         NBParserFactory.preRegister(context);
         NBTreeMaker.preRegister(context);
-        final JavacTaskImpl ct = (JavacTaskImpl) ((JavacTool)tool).getTask(null, std, null, Arrays.asList("-source", "21"), null, Arrays.asList(new MyFileObject(code)), context);
+        final JavacTaskImpl ct = (JavacTaskImpl) ((JavacTool)tool).getTask(null, std, null, Arrays.asList("-source", "25"), null, Arrays.asList(new MyFileObject(code)), context);
 
         CompilationUnitTree cut = ct.parse().iterator().next();
 

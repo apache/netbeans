@@ -1919,7 +1919,7 @@ public class Utilities {
         Log.DiagnosticHandler discardHandler = log.new DiscardDiagnosticHandler() {
             private Diagnostic.Kind f = filter == null ? Diagnostic.Kind.ERROR : filter;
             @Override
-            public void report(JCDiagnostic diag) {
+            public void reportReady(JCDiagnostic diag) {
                 if (diag.getKind().compareTo(f) >= 0) {
                     errors.add(diag);
                 }

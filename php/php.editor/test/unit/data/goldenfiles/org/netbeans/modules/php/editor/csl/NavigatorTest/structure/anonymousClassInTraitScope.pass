@@ -1,7 +1,7 @@
 |-TraitScopeTestInterface [16, 48] : ESCAPED{TraitScopeTestInterface}
 |-TraitScopeTestTrait [56, 84] : ESCAPED{TraitScopeTestTrait}
 |-TraitScopeClass [92, 116] : ESCAPED{TraitScopeClass}
-|-TraitScopeTest [124, 1544] : ESCAPED{TraitScopeTest}<font color="#999999">#ESCAPED{TraitScopeTestTrait}</font>
+|-TraitScopeTest [124, 1544] : ESCAPED{TraitScopeTest}
 |--test1 [162, 1091] : ESCAPED{test1}ESCAPED{(}ESCAPED{)}
 |--test2 [1113, 1288] : ESCAPED{test2}ESCAPED{(}ESCAPED{)}
 |--test3 [1310, 1542] : ESCAPED{test3}ESCAPED{(}ESCAPED{)}

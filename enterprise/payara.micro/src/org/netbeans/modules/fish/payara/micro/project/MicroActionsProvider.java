@@ -29,7 +29,13 @@ import java.util.prefs.Preferences;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
 import static org.netbeans.api.project.ProjectUtils.getPreferences;
+import static org.netbeans.modules.fish.payara.micro.plugin.Constants.AUTO_DEPLOY;
+import static org.netbeans.modules.fish.payara.micro.plugin.Constants.DEPLOY_WAR;
+import static org.netbeans.modules.fish.payara.micro.plugin.Constants.EXPLODED;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.HOT_DEPLOY;
+import static org.netbeans.modules.fish.payara.micro.plugin.Constants.KEEP_STATE;
+import static org.netbeans.modules.fish.payara.micro.plugin.Constants.LIVE_RELOAD;
+import static org.netbeans.modules.fish.payara.micro.plugin.Constants.TRIM_LOG;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.VERSION;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.api.execute.RunConfig;
@@ -93,13 +99,77 @@ public class MicroActionsProvider implements MavenActionsProvider {
             Preferences pref = getPreferences(project, MicroApplication.class, true);
             String microVersionText = pref.get(VERSION, "");
             Boolean hotDeploy = pref.getBoolean(HOT_DEPLOY, false);
+            Boolean deployWar = pref.getBoolean(DEPLOY_WAR, true);
+            Boolean exploded = pref.getBoolean(EXPLODED, true);
+            Boolean trimLog = pref.getBoolean(TRIM_LOG, true);
+            Boolean autoDeploy = pref.getBoolean(AUTO_DEPLOY, true);
+            Boolean keepState = pref.getBoolean(KEEP_STATE, true);
+            Boolean liveReload = pref.getBoolean(LIVE_RELOAD, true);
             RunConfig config = actionsProvider.createConfigForDefaultAction(actionName, project, lookup);
-            if (!microVersionText.isEmpty()) {
-                config.setProperty("version.payara", microVersionText);
+            if (MicroApplication.isDevModeAvailable(project) 
+                    && MicroApplication.isPluginVersionAtLeast(project, 2.5)) {
+                // In payara-micro-maven-plugin:2.5 system properties prefixed with payara
+                if (!microVersionText.isEmpty()) {
+                    config.setProperty("payara.micro.version", microVersionText);
+                }
+                if (hotDeploy) {
+                    config.setProperty("payara.hot.deploy", Boolean.TRUE.toString());
+                }
+                if (deployWar) {
+                    config.setProperty("payara.deploy.war", Boolean.TRUE.toString());
+                }
+                if (exploded) {
+                    config.setProperty("payara.exploded", Boolean.TRUE.toString());
+                }
+                if (trimLog) {
+                    config.setProperty("payara.trim.log", Boolean.TRUE.toString());
+                }
+                if (autoDeploy) {
+                    config.setProperty("payara.auto.deploy", Boolean.TRUE.toString());
+                }
+                if (keepState) {
+                    config.setProperty("payara.keep.state", Boolean.TRUE.toString());
+                }
+                if (liveReload) {
+                    config.setProperty("payara.live.reload", Boolean.TRUE.toString());
+                }
+            } else  if (MicroApplication.isDevModeAvailable(project) 
+                    && MicroApplication.isPluginVersionAtLeast(project, 2.1)) {
+                // In payara-micro-maven-plugin:2.1 dev mode feature added
+                if (!microVersionText.isEmpty()) {
+                    config.setProperty("payaraVersion", microVersionText);
+                }
+                if (hotDeploy) {
+                    config.setProperty("hotDeploy", Boolean.TRUE.toString());
+                }
+                if (deployWar) {
+                    config.setProperty("deployWar", Boolean.TRUE.toString());
+                }
+                if (exploded) {
+                    config.setProperty("exploded", Boolean.TRUE.toString());
+                }
+                if (trimLog) {
+                    config.setProperty("trimLog", Boolean.TRUE.toString());
+                }
+                if (autoDeploy) {
+                    config.setProperty("autoDeploy", Boolean.TRUE.toString());
+                }
+                if (keepState) {
+                    config.setProperty("keepState", Boolean.TRUE.toString());
+                }
+                if (liveReload) {
+                    config.setProperty("liveReload", Boolean.TRUE.toString());
+                }
+            } else {
+                // to ensure compatibility with older plugin
+                if (!microVersionText.isEmpty()) {
+                    config.setProperty("payaraVersion", microVersionText);
+                }
+                if (hotDeploy) {
+                    config.setProperty("hotDeploy", Boolean.TRUE.toString());
+                }
             }
-            if(hotDeploy) {
-                config.setProperty("hotDeploy", Boolean.TRUE.toString());
-            }
+            
             return config;
         }
         return null;

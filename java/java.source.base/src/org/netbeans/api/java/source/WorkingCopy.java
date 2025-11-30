@@ -100,6 +100,7 @@ import org.netbeans.modules.java.source.save.ElementOverlay.FQNComputer;
 import org.netbeans.modules.java.source.transform.ImmutableDocTreeTranslator;
 import org.netbeans.modules.java.source.transform.ImmutableTreeTranslator;
 import org.netbeans.modules.java.source.transform.TreeDuplicator;
+import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.impl.SourceAccessor;
 import org.openide.filesystems.FileObject;
@@ -930,7 +931,7 @@ public class WorkingCopy extends CompilationController {
         
         try {
             return DiffUtilities.diff2ModificationResultDifference(diffContext.file, diffContext.positionConverter, userInfo, codeForCompilationUnit(diffContext.origUnit), diffs,
-                    getFileObject() != null ? getSnapshot().getSource() : null);
+                    getFileObject() != null ? getSnapshot().getSource() : null, diffContext.embeddedSnapshot, diffContext.topLevelSnapshot);
         } catch (IOException ex) {
             if (!diffContext.file.isValid()) {
                 Logger.getLogger(WorkingCopy.class.getName()).log(Level.FINE, null, ex);
@@ -1282,7 +1283,7 @@ public class WorkingCopy extends CompilationController {
 
     boolean invalidateSourceAfter = false;
 
-    List<Difference> getChanges(Map<?, int[]> tag2Span) throws IOException, BadLocationException {
+    List<Difference> getChanges(Map<?, int[]> tag2Span, Snapshot topLevelSnapshot) throws IOException, BadLocationException {
         if (afterCommit)
             throw new IllegalStateException("The commit method can be called only once on a WorkingCopy instance");   //NOI18N
         afterCommit = true;
@@ -1317,7 +1318,7 @@ public class WorkingCopy extends CompilationController {
         Set<Tree> syntheticTrees = new HashSet<Tree>();
         
         if (getFileObject() != null) {
-            result.addAll(processCurrentCompilationUnit(new DiffContext(this, syntheticTrees), tag2Span));
+            result.addAll(processCurrentCompilationUnit(new DiffContext(this, syntheticTrees, getSnapshot(), topLevelSnapshot), tag2Span));
         }
         
         result.addAll(processExternalCUs(tag2Span, syntheticTrees));

@@ -1,0 +1,4 @@
+    <img^ />
+    -------
+HINT:Find img/applet/area elements where no alt attribute is provided.
+FIX:Provide Text Alternatives

@@ -31,8 +31,10 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.modules.bugtracking.api.Issue;
 import org.netbeans.modules.bugtracking.api.IssueQuickSearch;
 import org.netbeans.modules.bugtracking.api.Repository;
+import org.netbeans.modules.bugtracking.spi.BugtrackingConnector;
 import org.netbeans.modules.versioning.util.VerticallyNonResizingPanel;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -73,7 +75,7 @@ public class HookPanel extends VerticallyNonResizingPanel implements ChangeListe
 
         qs = IssueQuickSearch.create(context);
         qs.setChangeListener(this);
-        qs.setEnabled(true);
+        qs.setEnabled(hasRegisteredConnectors());
         issuePanel.add(qs.getComponent(), BorderLayout.NORTH);
 
         linkCheckBox.setSelected(link);
@@ -239,4 +241,7 @@ public class HookPanel extends VerticallyNonResizingPanel implements ChangeListe
         enableFields();
     }
 
+    private boolean hasRegisteredConnectors() {
+        return Lookup.getDefault().lookup(BugtrackingConnector.class) != null;
+    }
 }

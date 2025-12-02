@@ -65,4 +65,10 @@
             </folder>
         </folder>
     </folder>
+    <folder name="Templates">
+        <folder name="Grammar">
+            <!--less priority than XML-->
+            <attr name="position" intvalue="1800"/>
+         </folder>
+    </folder>
 </filesystem>

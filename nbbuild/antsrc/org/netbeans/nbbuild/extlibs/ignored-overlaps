@@ -24,7 +24,7 @@ ide/db.sql.visualeditor/external/javacc-7.0.10.jar java/performance/external/jav
 
 # bundled maven conflicts with other libraries
 java/maven.embedder/external/apache-maven-3.9.11-bin.zip ide/slf4j.api/external/slf4j-api-1.7.36.jar
-java/maven.embedder/external/apache-maven-3.9.11-bin.zip platform/libs.asm/external/asm-9.8.jar
+java/maven.embedder/external/apache-maven-3.9.11-bin.zip platform/libs.asm/external/asm-9.9.jar
 java/maven.embedder/external/apache-maven-3.9.11-bin.zip platform/o.apache.commons.codec/external/commons-codec-1.18.0.jar
 java/maven.embedder/external/apache-maven-3.9.11-bin.zip ide/c.google.guava.failureaccess/external/failureaccess-1.0.3.jar
 java/maven.embedder/external/apache-maven-3.9.11-bin.zip ide/c.google.guava/external/guava-33.4.6-jre.jar
@@ -52,19 +52,15 @@ enterprise/websvc.restlib/external/jakarta.xml.bind-api-2.3.3.jar ide/xml.jaxb.a
 enterprise/websvc.restlib/external/osgi.core-8.0.0.jar platform/libs.osgi/external/osgi.core-8.0.0.jar
 
 # gradle is used at build-time, so we can ignore the duplicates
-extide/gradle/external/gradle-7.4-bin.zip enterprise/libs.amazon/external/ion-java-1.0.2.jar
-extide/gradle/external/gradle-7.4-bin.zip ide/c.google.guava.failureaccess/external/failureaccess-1.0.3.jar
-extide/gradle/external/gradle-7.4-bin.zip ide/c.jcraft.jzlib/external/jzlib-1.1.3.jar
-extide/gradle/external/gradle-7.4-bin.zip ide/libs.commons_compress/external/commons-compress-1.27.1.jar
-extide/gradle/external/gradle-7.4-bin.zip ide/o.apache.commons.lang/external/commons-lang-2.6.jar
-extide/gradle/external/gradle-7.4-bin.zip ide/o.eclipse.jgit/external/org.eclipse.jgit-7.2.0.202503040940-r.jar
-extide/gradle/external/gradle-7.4-bin.zip java/debugger.jpda.truffle/external/antlr4-runtime-4.7.2.jar
-extide/gradle/external/gradle-7.4-bin.zip java/maven.embedder/external/apache-maven-3.9.11-bin.zip
-extide/gradle/external/gradle-7.4-bin.zip platform/libs.junit4/external/hamcrest-core-1.3.jar
-extide/gradle/external/gradle-7.4-bin.zip platform/libs.junit4/external/junit-4.13.2.jar
-extide/gradle/external/gradle-7.4-bin.zip platform/libs.testng/external/jcommander-1.78.jar
-extide/gradle/external/gradle-7.4-bin.zip enterprise/cloud.oracle/external/httpclient-4.5.13.jar
-extide/gradle/external/gradle-7.4-bin.zip platform/o.apache.commons.codec/external/commons-codec-1.18.0.jar
+extide/gradle/external/gradle-8.11.1-bin.zip extide/o.apache.tools.ant.module/external/apache-ant-1.10.14-bin.zip
+extide/gradle/external/gradle-8.11.1-bin.zip ide/o.apache.commons.lang/external/commons-lang-2.6.jar
+extide/gradle/external/gradle-8.11.1-bin.zip ide/slf4j.api/external/slf4j-api-1.7.36.jar
+extide/gradle/external/gradle-8.11.1-bin.zip java/maven.embedder/external/apache-maven-3.9.11-bin.zip
+extide/gradle/external/gradle-8.11.1-bin.zip nbbuild/external/jsoup-1.15.3.jar
+extide/gradle/external/gradle-8.11.1-bin.zip platform/libs.junit4/external/hamcrest-core-1.3.jar
+extide/gradle/external/gradle-8.11.1-bin.zip platform/libs.junit4/external/junit-4.13.2.jar
+extide/gradle/external/gradle-8.11.1-bin.zip platform/libs.junit5/external/opentest4j-1.3.0.jar
+extide/gradle/external/gradle-8.11.1-bin.zip platform/libs.testng/external/jcommander-1.78.jar
 
 # These are the endorsed version of the javaee apis and create libraries, so they are better kept separate
 enterprise/javaee.api/external/javax.annotation-api-1.2.jar enterprise/javaee7.api/external/javax.annotation-api-1.2.jar
@@ -90,10 +86,10 @@ webcommon/javascript2.extdoc/external/testfiles-jsdoc-1.zip webcommon/javascript
 webcommon/javascript2.jsdoc/external/testfiles-jsdoc-1.zip webcommon/javascript2.sdoc/external/testfiles-jsdoc-1.zip
 
 # not part of the product:
-harness/apisupport.harness/external/launcher-external-binaries-3-282bbc032bcd.zip platform/o.n.bootstrap/external/launcher-external-binaries-3-282bbc032bcd.zip
-harness/apisupport.harness/external/launcher-external-binaries-3-282bbc032bcd.zip nb/ide.launcher/external/launcher-external-binaries-3-282bbc032bcd.zip
-nb/ide.launcher/external/launcher-external-binaries-3-282bbc032bcd.zip platform/o.n.bootstrap/external/launcher-external-binaries-3-282bbc032bcd.zip
-nb/ide.launcher/external/launcher-external-binaries-3-282bbc032bcd.zip harness/apisupport.harness/external/launcher-external-binaries-3-282bbc032bcd.zip
+harness/apisupport.harness/external/launcher-external-binaries-4-8e2bc77e581e.zip platform/o.n.bootstrap/external/launcher-external-binaries-4-8e2bc77e581e.zip
+harness/apisupport.harness/external/launcher-external-binaries-4-8e2bc77e581e.zip nb/ide.launcher/external/launcher-external-binaries-4-8e2bc77e581e.zip
+nb/ide.launcher/external/launcher-external-binaries-4-8e2bc77e581e.zip platform/o.n.bootstrap/external/launcher-external-binaries-4-8e2bc77e581e.zip
+nb/ide.launcher/external/launcher-external-binaries-4-8e2bc77e581e.zip harness/apisupport.harness/external/launcher-external-binaries-4-8e2bc77e581e.zip
 
 # only one is part of the product:
 java/libs.javacapi/external/nb-javac-jdk-25+31.1-api.jar java/libs.nbjavacapi/external/nb-javac-jdk-25+31.1-api.jar
@@ -126,4 +122,6 @@ ide/libs.graalsdk/external/word-24.0.0.jar ide/libs.graalsdk.system/external/wor
 # Intentionally duplicated (in web.jspparser only as unittest dependency and copied to make license handling easier)
 enterprise/web.jspparser/external/jakarta.servlet.jsp.jstl-api-1.2.7.jar enterprise/libs.jstl/external/jakarta.servlet.jsp.jstl-api-1.2.7.jar
 enterprise/web.jspparser/external/jakarta.servlet.jsp.jstl-1.2.6.jar enterprise/libs.jstl/external/jakarta.servlet.jsp.jstl-1.2.6.jar
+enterprise/web.jspparser/external/jakarta.servlet.jsp.jstl-api-3.0.2.jar enterprise/libs.jstl/external/jakarta.servlet.jsp.jstl-api-3.0.2.jar
+enterprise/web.jspparser/external/jakarta.servlet.jsp.jstl-3.0.1.jar enterprise/libs.jstl/external/jakarta.servlet.jsp.jstl-3.0.1.jar
 enterprise/web.jspparser/external/commons-logging-1.3.1.jar platform/o.apache.commons.logging/external/commons-logging-1.3.1.jar

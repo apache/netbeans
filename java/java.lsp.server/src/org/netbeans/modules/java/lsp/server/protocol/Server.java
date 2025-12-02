@@ -59,8 +59,6 @@ import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionOptions;
 import org.eclipse.lsp4j.CodeLensOptions;
 import org.eclipse.lsp4j.CompletionOptions;
-import org.eclipse.lsp4j.ConfigurationItem;
-import org.eclipse.lsp4j.ConfigurationParams;
 import org.eclipse.lsp4j.ExecuteCommandOptions;
 import org.eclipse.lsp4j.FoldingRangeProviderOptions;
 import org.eclipse.lsp4j.InitializeParams;
@@ -958,6 +956,7 @@ public final class Server {
         public CompletableFuture<InitializeResult> initialize(InitializeParams init) {
             NbCodeClientCapabilities capa = NbCodeClientCapabilities.get(init);
             client.setClientCaps(capa);
+            workspaceService.registerConfigChangeListeners();
             hackConfigureGroovySupport(capa);
             hackNoReuseOfOutputsForAntProjects();
             List<FileObject> projectCandidates = new ArrayList<>();
@@ -1052,44 +1051,49 @@ public final class Server {
 
         private void initializeOptions() {
             getWorkspaceProjects().thenAccept(projects -> {
-                ConfigurationItem item = new ConfigurationItem();
-                // PENDING: what about doing just one roundtrip to the client- we may request multiple ConfiguratonItems in one message ?
-                item.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_JAVA_HINTS);
-                client.configuration(new ConfigurationParams(Collections.singletonList(item))).thenAccept(c -> {
-                    if (c != null && !c.isEmpty() && c.get(0) instanceof JsonObject) {
-                        textDocumentService.updateJavaHintPreferences((JsonObject) c.get(0));
-                    }
-                    else {
+                List<String> defaultConfigs = List.of(NETBEANS_JAVA_HINTS, NETBEANS_PROJECT_JDKHOME);
+                List<String> projectConfigs = List.of(NETBEANS_FORMAT, NETBEANS_JAVA_IMPORTS);
+
+                final FileObject projectDirectory = projects != null && projects.length > 0 ? projects[0].getProjectDirectory(): null;
+                
+                List<String> allConfigs = new ArrayList<>(defaultConfigs);
+                if (projectDirectory != null) {
+                    allConfigs.addAll(projectConfigs);
+                }
+
+                client.getClientConfigurationManager().getConfigurations(
+                        allConfigs,
+                        projectDirectory != null ? Utils.toUri(projectDirectory) : null
+                ).thenAccept(configs -> {
+                    if (configs != null && !configs.isEmpty()) {
+                        if (configs.get(0) instanceof JsonObject) {
+                            textDocumentService.updateJavaHintPreferences((JsonObject) configs.get(0));
+                        } else {
+                            textDocumentService.hintsSettingsRead = true;
+                            textDocumentService.reRunDiagnostics();
+                        }
+
+                        JsonPrimitive newProjectJDKHomePath = null;
+                        if (configs.size() > 1 && configs.get(1) instanceof JsonPrimitive) {
+                            newProjectJDKHomePath = (JsonPrimitive) configs.get(1);
+                        }
+                        textDocumentService.updateProjectJDKHome(newProjectJDKHomePath);
+
+                        if (projectDirectory != null) {
+                            if (configs.size() > 2 && configs.get(2) instanceof JsonObject) {
+                                workspaceService.updateJavaFormatPreferences(projectDirectory, (JsonObject) configs.get(2));
+                            }
+
+                            if (configs.size() > 3 && configs.get(3) instanceof JsonObject) {
+                                workspaceService.updateJavaImportPreferences(projectDirectory, (JsonObject) configs.get(3));
+                            }
+                        }
+                    } else {
                         textDocumentService.hintsSettingsRead = true;
                         textDocumentService.reRunDiagnostics();
+                        textDocumentService.updateProjectJDKHome(null);
                     }
                 });
-                item.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_PROJECT_JDKHOME);
-                client.configuration(new ConfigurationParams(Collections.singletonList(item))).thenAccept(c -> {
-                    JsonPrimitive newProjectJDKHomePath = null;
-
-                    if (c != null && !c.isEmpty() && c.get(0) instanceof JsonPrimitive) {
-                        newProjectJDKHomePath = (JsonPrimitive) c.get(0);
-                    } else {
-                    }
-                    textDocumentService.updateProjectJDKHome(newProjectJDKHomePath);
-                });
-                if (projects != null && projects.length > 0) {
-                    FileObject fo = projects[0].getProjectDirectory();
-                    item.setScopeUri(Utils.toUri(fo));
-                    item.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_FORMAT);
-                    client.configuration(new ConfigurationParams(Collections.singletonList(item))).thenAccept(c -> {
-                        if (c != null && !c.isEmpty() && c.get(0) instanceof JsonObject) {
-                            workspaceService.updateJavaFormatPreferences(fo, (JsonObject) c.get(0));
-                        }
-                    });
-                    item.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_JAVA_IMPORTS);
-                    client.configuration(new ConfigurationParams(Collections.singletonList(item))).thenAccept(c -> {
-                        if (c != null && !c.isEmpty() && c.get(0) instanceof JsonObject) {
-                            workspaceService.updateJavaImportPreferences(fo, (JsonObject) c.get(0));
-                        }
-                    });
-                }
             });
         }
 
@@ -1252,6 +1256,7 @@ public final class Server {
 
     static final NbCodeLanguageClient STUB_CLIENT = new NbCodeLanguageClient() {
         private final NbCodeClientCapabilities caps = new NbCodeClientCapabilities();
+        private final ClientConfigurationManager confManager = new ClientConfigurationManager(this);
 
         private void logWarning(Object... args) {
             LOG.log(Level.WARNING, "LSP Client called without proper context with param(s): {0}",
@@ -1389,6 +1394,11 @@ public final class Server {
         public CompletableFuture<Void> resetOutput(String outputName) {
             logWarning("Reset output: " + outputName); //NOI18N
             return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        public ClientConfigurationManager getClientConfigurationManager() {
+            return confManager;
         }
     };
 

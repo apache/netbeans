@@ -87,7 +87,7 @@ import org.openide.xml.XMLUtil;
  *
  * @author lahvac
  */
-@MimeRegistration(mimeType="", service=CompletionProvider.class)
+@MimeRegistration(mimeType="", service=CompletionProvider.class, position = 1000)
 public class CompletionProviderImpl implements CompletionProvider {
 
     private static final Logger LOG = Logger.getLogger(CompletionProviderImpl.class.getName());

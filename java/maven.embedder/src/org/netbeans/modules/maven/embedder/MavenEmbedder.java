@@ -386,7 +386,7 @@ public final class MavenEmbedder {
      * @throws ArtifactNotFoundException 
      * @deprecated the Maven API used swallows certain {@link ArtifactNotFoundException} and does not report properly to the caller. Use {@link #resolveArtifact} instead.
      */
-    @Deprecated
+    @Deprecated(forRemoval = true)
     public void resolve(Artifact sources, List<ArtifactRepository> remoteRepositories, ArtifactRepository localRepository) throws ArtifactResolutionException, ArtifactNotFoundException {
         setUpLegacySupport();
         ArtifactResolutionRequest req = new ArtifactResolutionRequest();
@@ -448,7 +448,6 @@ public final class MavenEmbedder {
      * In particular beware that groupId and/or version may be null if inherited from a parent; use {@link Model#getParent} to resolve.
      * Internally calls <code>executeModelBuilder</code> so if you need to call both just use the execute method.
      * @param pom a POM to inspect
-     * @param embedder an embedder to use
      * @return a list of models, starting with the specified POM, going through any parents, finishing with the Maven superpom (with a null artifactId)
      * @throws ModelBuildingException if the POM or parents could not even be parsed; warnings are not reported
      */

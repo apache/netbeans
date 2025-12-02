@@ -157,13 +157,13 @@ public class UninstallStep implements WizardDescriptor.FinishablePanel<WizardDes
         ProgressHandle handle = null;
         switch (model.getOperation ()) {
             case UNINSTALL :
-                handle = ProgressHandleFactory.createHandle(UninstallStep_ProgressName_Uninstall());
+                handle = ProgressHandle.createHandle(UninstallStep_ProgressName_Uninstall());
                 break;
             case ENABLE :
-                handle = ProgressHandleFactory.createHandle(UninstallStep_ProgressName_Activate());
+                handle = ProgressHandle.createHandle(UninstallStep_ProgressName_Activate());
                 break;
             case DISABLE :
-                handle = ProgressHandleFactory.createHandle(UninstallStep_ProgressName_Deactivate());
+                handle = ProgressHandle.createHandle(UninstallStep_ProgressName_Deactivate());
                 break;
             default:
                 assert false : "Unknown OperationType " + model.getOperation ();

@@ -38,8 +38,8 @@ public final class MutualExclusionSupport<K> {
     private static final int TRIES = Integer.getInteger(               //#229903
             "org.netbeans.modules.masterfs.mutualexclusion.tries", 10); //NOI18N
 
-    private final Map<K,Set<Closeable>> exclusive = Collections.synchronizedMap(new WeakHashMap<K,Set<Closeable>>());
-    private final Map<K,Set<Closeable>> shared = Collections.synchronizedMap(new WeakHashMap<K,Set<Closeable>>());
+    private final Map<K,Set<Closeable>> exclusive = Collections.synchronizedMap(new WeakHashMap<>());
+    private final Map<K,Set<Closeable>> shared = Collections.synchronizedMap(new WeakHashMap<>());
 
     public MutualExclusionSupport() {
     }
@@ -144,7 +144,7 @@ public final class MutualExclusionSupport<K> {
 
         private Closeable(final K key, final boolean isShared) {
             this.isShared = isShared;
-            this.keyRef = new WeakReference<K>(key);
+            this.keyRef = new WeakReference<>(key);
             assert populateStack();
         }
 

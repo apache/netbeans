@@ -379,12 +379,19 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
 
         private Dependency convertDependencies(org.apache.maven.shared.dependency.tree.DependencyNode n) {
             findRealNodes(n);
-            return convert2(true, n);
+            return convert2(true, n, new HashSet<>());
         }
 
 
-        private Dependency convert2(boolean root, org.apache.maven.shared.dependency.tree.DependencyNode n) {
+        private Dependency convert2(boolean root, org.apache.maven.shared.dependency.tree.DependencyNode n, Set<ArtifactSpec> visited) {
             List<Dependency> ch = new ArrayList<>();
+            
+            ArtifactSpec currentArtifact = mavenToArtifactSpec(n.getArtifact());
+            
+            if (!visited.add(currentArtifact)) {
+                // Cycle detected
+                return null;
+            }
             
             List<org.apache.maven.shared.dependency.tree.DependencyNode> children = n.getChildren();
             org.apache.maven.artifact.Artifact thisArtifact = n.getArtifact();
@@ -396,7 +403,7 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
                     // TODO: unless the client specifies NOT to eliminate duplicates from the tree,
                     // we need to include the duplicate including the children, to form a correct full dependency tree. 
                     if (relatedArtifact != null) {
-                        children = realNodes.get(getFullArtifactId(n.getRelatedArtifact()));
+                        children = realNodes.get(getFullArtifactId(relatedArtifact));
                     }
                     if (children == null) {
                         children = realNodes.getOrDefault(n.getArtifact().getId(), n.getChildren());
@@ -427,31 +434,35 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
                     }
             }
 
-            if (root && !annotationProcessors.isEmpty()) {
-                for (Artifact a : annotationProcessors) {
-                    ArtifactSpec annoSpec = mavenToArtifactSpec(a);
-                    ch.add(Dependency.create(annoSpec, Scopes.PROCESS, Collections.emptyList(), annoSpec));
+            try {
+                if (root && !annotationProcessors.isEmpty()) {
+                    for (Artifact a : annotationProcessors) {
+                        ArtifactSpec annoSpec = mavenToArtifactSpec(a);
+                        ch.add(Dependency.create(annoSpec, Scopes.PROCESS, Collections.emptyList(), annoSpec));
+                    }
                 }
-            }
 
-            for (org.apache.maven.shared.dependency.tree.DependencyNode c : children) {
-                Dependency cd = convert2(false, c);
-                if (cd != null) {
-                    ch.add(cd);
+                for (org.apache.maven.shared.dependency.tree.DependencyNode c : children) {
+                    Dependency cd = convert2(false, c, visited);
+                    if (cd != null) {
+                        ch.add(cd);
+                    }
                 }
-            }
-            ArtifactSpec aspec;
-            aspec = mavenToArtifactSpec(thisArtifact);
-            if (aspec.getLocalFile() == null) {
-                broken.add(aspec);
-            }
-            Scope s = scope(thisArtifact);
+                ArtifactSpec aspec;
+                aspec = mavenToArtifactSpec(thisArtifact);
+                if (aspec.getLocalFile() == null) {
+                    broken.add(aspec);
+                }
+                Scope s = scope(thisArtifact);
 
-            if (!root && !filter.accept(s, aspec)) {
-                return null;
-            }
+                if (!root && !filter.accept(s, aspec)) {
+                    return null;
+                }
 
-            return Dependency.create(aspec, s, ch, n);
+                return Dependency.create(aspec, s, ch, n);
+            } finally {
+                visited.remove(currentArtifact);
+            }
         }
     }
     

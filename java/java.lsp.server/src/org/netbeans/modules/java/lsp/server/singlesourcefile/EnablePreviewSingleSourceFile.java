@@ -23,8 +23,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.eclipse.lsp4j.ConfigurationItem;
-import org.eclipse.lsp4j.ConfigurationParams;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.openide.filesystems.FileObject;
@@ -63,11 +61,8 @@ public class EnablePreviewSingleSourceFile implements PreviewEnabler {
             return ;
         }
 
-        ConfigurationItem conf = new ConfigurationItem();
-        conf.setScopeUri(Utils.toUri(file));
-        conf.setSection(client.getNbCodeCapabilities().getAltConfigurationPrefix() + "runConfig.vmOptions");
-        client.configuration(new ConfigurationParams(Collections.singletonList(conf))).thenApply(c -> {
-            String compilerArgs = ((JsonPrimitive) ((List<Object>) c).get(0)).getAsString();
+        client.getClientConfigurationManager().getConfigurationUsingAltPrefix("runConfig.vmOptions", Utils.toUri(file)).thenApply(c -> {
+            String compilerArgs = ((JsonPrimitive) c).getAsString();
             if (compilerArgs == null) {
                 compilerArgs = "";
             }

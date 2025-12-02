@@ -26,8 +26,6 @@ import java.util.List;
 import javax.swing.Action;
 import org.netbeans.modules.payara.common.nodes.actions.DisableModulesAction;
 import org.netbeans.modules.payara.common.nodes.actions.EditDetailsAction;
-import org.netbeans.modules.payara.common.nodes.actions.EnableCDIProbeModeAction;
-import org.netbeans.modules.payara.common.nodes.actions.DisableCDIProbeModeAction;
 import org.netbeans.modules.payara.common.nodes.actions.EnableModulesAction;
 import org.netbeans.modules.payara.common.nodes.actions.OpenTestURLAction;
 import org.netbeans.modules.payara.common.nodes.actions.OpenURLAction;
@@ -200,12 +198,6 @@ public class Hk2ItemNode extends AbstractNode {
         if(decorator.canDisable()) {
             getCookieSet().add(new Hk2Cookie.Disable(lookup, name));
         }
-        if(decorator.canCDIProbeEnable()) {
-            getCookieSet().add(new Hk2Cookie.EnableCDIProbeMode(lookup, name));
-        }
-        if(decorator.canCDIProbeDisable()) {
-            getCookieSet().add(new Hk2Cookie.DisableCDIProbeMode(lookup, name));
-        }
     }
         
     /**
@@ -293,12 +285,6 @@ public class Hk2ItemNode extends AbstractNode {
         }
         if(decorator.canDisable()) {
             actions.add(SystemAction.get(DisableModulesAction.class));
-        }
-        if(decorator.canCDIProbeEnable()) {
-            actions.add(SystemAction.get(EnableCDIProbeModeAction.class));
-        }
-        if(decorator.canCDIProbeDisable()) {
-            actions.add(SystemAction.get(DisableCDIProbeModeAction.class));
         }
         if(decorator.canUnregister()) {
             actions.add(SystemAction.get(UnregisterResourceAction.class));

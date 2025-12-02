@@ -66,7 +66,6 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.java.navigation.JavadocTopComponent;
@@ -532,7 +531,7 @@ public final class HierarchyTopComponent extends TopComponent implements Explore
                                                 filters);
                                         } else {
                                             final AtomicBoolean cancel = new AtomicBoolean();
-                                            final ProgressHandle  progress = ProgressHandleFactory.createHandle(
+                                            final ProgressHandle  progress = ProgressHandle.createHandle(
                                                 Bundle.INFO_SubClassesComputation(te.getQualifiedName()),
                                                 new Cancellable() {
                                                     @Override

@@ -30,7 +30,6 @@ import org.netbeans.modules.subversion.SvnModuleConfig;
 import org.netbeans.modules.subversion.util.Context;
 import org.netbeans.modules.subversion.util.SvnUtils;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.explorer.ExplorerManager;
 import org.openide.nodes.*;
 import org.openide.windows.TopComponent;
@@ -260,7 +259,7 @@ class VersioningPanel extends JPanel implements ExplorerManager.Provider, Prefer
             @Override
             public void run () {
                 // XXX attach Cancelable hook
-                final ProgressHandle ph = ProgressHandleFactory.createHandle(NbBundle.getMessage(VersioningPanel.class, "MSG_Refreshing_Versioning_View")); // NOI18N
+                final ProgressHandle ph = ProgressHandle.createHandle(NbBundle.getMessage(VersioningPanel.class, "MSG_Refreshing_Versioning_View")); // NOI18N
                 try {
                     Thread.interrupted();  // clear interupted status
                     ph.start();

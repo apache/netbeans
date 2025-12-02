@@ -85,4 +85,54 @@ public class UnusedTest extends NbTestCase {
                 .run(Unused.class)
                 .assertWarnings();
     }
+
+    public void testNoFixForTopLevelPackagePrivateClass() throws Exception {
+        HintTest.create()
+                .input(
+                    """
+                    package test;
+                    class Test {
+                    }
+                    """)
+                .run(Unused.class)
+                .assertWarnings();
+    }
+
+    public void testNoFixForTopLevelPackagePrivateEnum() throws Exception {
+        HintTest.create()
+                .input(
+                    """
+                    package test;
+                    enum Test {
+                    }
+                    """)
+                .run(Unused.class)
+                .assertWarnings();
+    }
+
+    public void testNoFixForTopLevelPackagePrivateInterface() throws Exception {
+        HintTest.create()
+                .input(
+                    """
+                    package test;
+                    interface Test {
+                    }
+                    """)
+                .run(Unused.class)
+                .assertWarnings();
+    }
+
+    public void testNoFixForTopLevelPackagePrivateRecord() throws Exception {
+        HintTest.create()
+                .sourceLevel(17)
+                .input(
+                    """
+                    package test;
+                    record Test() {
+                    }
+                    """)
+                .run(Unused.class)
+                .assertWarnings();
+    }
+
 }

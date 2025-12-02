@@ -37,7 +37,7 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.apache.tools.ant.module.api.support.ActionUtils;
 import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -210,7 +210,7 @@ public class Utils {
             if ( SwingUtilities.isEventDispatchThread() ){
                 final FileObject[] testFO = new FileObject[1];
                 AtomicBoolean cancel = new AtomicBoolean(false);
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
                     @Override
                     public void run() {
@@ -275,7 +275,7 @@ public class Utils {
                 if ( SwingUtilities.isEventDispatchThread() ){
                     final Properties props[] = new Properties[1];
                     AtomicBoolean cancel = new AtomicBoolean(false);
-                    ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                    BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
                         @Override
                         public void run() {
@@ -327,7 +327,7 @@ public class Utils {
                     if ( SwingUtilities.isEventDispatchThread() ){
                         final FileObject[] testFO = new FileObject[1];
                         AtomicBoolean cancel = new AtomicBoolean(false);
-                        ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                        BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
                             @Override
                             public void run() {

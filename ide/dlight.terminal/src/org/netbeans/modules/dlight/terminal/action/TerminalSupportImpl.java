@@ -72,6 +72,7 @@ import org.openide.windows.OutputListener;
 import org.openide.windows.OutputWriter;
 
 import static org.netbeans.lib.terminalemulator.Term.ExternalCommandsConstants.*;
+import org.netbeans.modules.nativeexecution.api.util.MacroMap;
 
 /**
  *
@@ -201,6 +202,9 @@ public final class TerminalSupportImpl {
                         // (exception supressed in FetchHostInfoTask.compute)
                         if (!ConnectionManager.getInstance().isConnectedTo(env)) {
                             return;
+                        }  else {
+                            // because we can reuse an existing connection we need to try update a recent connection list
+                            ConnectionManager.getInstance().addConnectionToRecentConnections(env);
                         }
 
                         try {
@@ -267,14 +271,14 @@ public final class TerminalSupportImpl {
                         term.setEmulation("xterm"); // NOI18N
 
                         NativeProcessBuilder npb = NativeProcessBuilder.newProcessBuilder(env);
+                        final MacroMap envVars = npb.getEnvironment();
                         // clear env modified by NB. Let it be initialized by started shell process
-                        npb.getEnvironment().put("LD_LIBRARY_PATH", "");// NOI18N
-                        npb.getEnvironment().put("DYLD_LIBRARY_PATH", "");// NOI18N
-
+                        envVars.put("LD_LIBRARY_PATH", "");// NOI18N
+                        envVars.put("DYLD_LIBRARY_PATH", "");// NOI18N
                         if (hostInfo.getOSFamily() == HostInfo.OSFamily.WINDOWS) {
                             // /etc/profile changes directory to ${HOME} if this
                             // variable is not set.
-                            npb.getEnvironment().put("CHERE_INVOKING", "1");// NOI18N
+                            envVars.put("CHERE_INVOKING", "1");// NOI18N
                         }
 
                         final TerminalPinSupport support = TerminalPinSupport.getDefault();
@@ -305,8 +309,8 @@ public final class TerminalSupportImpl {
                             final String promptCommand = "printf \"\033]3;${PWD}\007\"; " // NOI18N
                                     + IDE_OPEN + "() { printf \"\033]10;" + COMMAND_PREFIX + IDE_OPEN + " $*;\007\"; printf \"Opening $# file(s) ...\n\";}";   // NOI18N
                             final String commandName = "PROMPT_COMMAND";                                    // NOI18N
-                            String usrPrompt = npb.getEnvironment().get(commandName);
-                            npb.getEnvironment().put(commandName,
+                            String usrPrompt = envVars.get(commandName);
+                            envVars.put(commandName,
                                     (usrPrompt == null)
                                             ? promptCommand
                                             : promptCommand + ';' + usrPrompt

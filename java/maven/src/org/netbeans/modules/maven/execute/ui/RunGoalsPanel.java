@@ -19,12 +19,12 @@
 package org.netbeans.modules.maven.execute.ui;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import javax.swing.SwingUtilities;
-import org.codehaus.plexus.util.StringUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.TextValueCompleter;
@@ -69,7 +69,7 @@ public class RunGoalsPanel extends javax.swing.JPanel {
         RP.post(() -> {
             GoalsProvider provider = Lookup.getDefault().lookup(GoalsProvider.class);
             if (provider != null) {
-                Set<String> strs = provider.getAvailableGoals();
+                Set<String> strs = new HashSet<>(provider.getAvailableGoals());
                 try {
                     List<String> phases = EmbedderFactory.getProjectEmbedder().getLifecyclePhases();
                     strs.addAll(phases);
@@ -169,7 +169,7 @@ public class RunGoalsPanel extends javax.swing.JPanel {
     }
 
     public void applyValues(NetbeansActionMapping mapp) {
-        StringTokenizer tok = new StringTokenizer(txtGoals.getText().trim());
+        StringTokenizer tok = new StringTokenizer(txtGoals.getText().strip());
         List<String> lst = new ArrayList<>();
         while (tok.hasMoreTokens()) {
             lst.add(tok.nextToken());
@@ -178,7 +178,7 @@ public class RunGoalsPanel extends javax.swing.JPanel {
 
         mapp.setProperties(ActionMappings.convertStringToActionProperties(epProperties.getText()));
 
-        tok = new StringTokenizer(txtProfiles.getText().trim(), " ,");
+        tok = new StringTokenizer(txtProfiles.getText().strip(), " ,");
         lst = new ArrayList<>();
         while (tok.hasMoreTokens()) {
             lst.add(tok.nextToken());
@@ -189,28 +189,33 @@ public class RunGoalsPanel extends javax.swing.JPanel {
     }
 
     public void applyValues(BeanRunConfig rc) {
-        StringTokenizer tok = new StringTokenizer(txtGoals.getText().trim());
+        StringTokenizer tok = new StringTokenizer(txtGoals.getText().strip());
         List<String> lst = new ArrayList<>();
         while (tok.hasMoreTokens()) {
             lst.add(tok.nextToken());
         }
         rc.setGoals(!lst.isEmpty() ? lst : List.of("install")); //NOI18N
-        tok = new StringTokenizer(txtProfiles.getText().trim());
+        tok = new StringTokenizer(txtProfiles.getText().strip());
         lst = new ArrayList<>();
         while (tok.hasMoreTokens()) {
             lst.add(tok.nextToken());
         }
         rc.setActivatedProfiles(lst);
 
+        // clear props in case of removal or changed order
+        for (String prop : new ArrayList<>(rc.getProperties().keySet())) {
+            rc.setProperty(prop, null);
+        }
         PropertySplitter split = new PropertySplitter(epProperties.getText());
         String token = split.nextPair();
         while (token != null) {
-            String[] prp = StringUtils.split(token, "=", 2); //NOI18N
-            if (prp.length == 2) {
+            String[] prp = token.split("=", 2); //NOI18N
+            if (prp.length == 2 && !prp[0].isBlank()) {
                 rc.setProperty(prp[0], prp[1]);
             }
             token = split.nextPair();
         }
+
         rc.setRecursive(isRecursive());
         rc.setShowDebug(isShowDebug());
         rc.setUpdateSnapshots(isUpdateSnapshots());
@@ -315,7 +320,7 @@ public class RunGoalsPanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtGoals)
                             .addComponent(txtProfiles)
-                            .addComponent(jScrollPane2)))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnPrev)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -323,7 +328,7 @@ public class RunGoalsPanel extends javax.swing.JPanel {
                         .addGap(52, 52, 52)
                         .addComponent(cbRemember)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtRemember, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE))
+                        .addComponent(txtRemember))
                     .addComponent(jSeparator1))
                 .addContainerGap())
         );
@@ -344,7 +349,7 @@ public class RunGoalsPanel extends javax.swing.JPanel {
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnAddProps))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbRecursive)
@@ -388,6 +393,13 @@ public class RunGoalsPanel extends javax.swing.JPanel {
         txtRemember.setEnabled(cbRemember.isSelected());
     }//GEN-LAST:event_cbRememberActionPerformed
 
+    public void showPersistenceBar(boolean show) {
+        btnNext.setVisible(show);
+        btnPrev.setVisible(show);
+        cbRemember.setVisible(show);
+        txtRemember.setVisible(show);
+    }
+
     public boolean isOffline() {
         return cbOffline.isSelected();
     }
@@ -422,7 +434,7 @@ public class RunGoalsPanel extends javax.swing.JPanel {
 
     public String isRememberedAs() {
         if (cbRemember.isSelected()) {
-            String txt = txtRemember.getText().trim();
+            String txt = txtRemember.getText().strip();
             if (!txt.isEmpty()) {
                 return txt;
             }

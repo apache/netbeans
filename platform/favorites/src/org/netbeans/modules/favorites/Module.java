@@ -18,17 +18,24 @@
  */
 package org.netbeans.modules.favorites;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+import java.util.prefs.Preferences;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import org.netbeans.modules.favorites.api.Favorites;
 import org.netbeans.swing.plaf.LFCustoms;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.NbPreferences;
+import org.openide.windows.Mode;
 import org.openide.windows.OnShowing;
+import org.openide.windows.WindowManager;
 
 /**
  * For lifecycle tasks.
@@ -36,12 +43,20 @@ import org.openide.windows.OnShowing;
  */
 public final class Module {
 
+    private static final String INITIAL_OPEN_DONE_KEY = "initial-open-done"; //NOI18N
+
     private Module() {}
 
     @OnShowing
     public final static class EDTInit implements Runnable {
+
         @Override
         public void run() {
+            registerFavAppenderFunction();
+            attachFirstEditorOpenListener();
+        }
+
+        private void registerFavAppenderFunction() {
             Function<File[], File[]> favAppender = (files) -> {
                 if (!UIManager.getBoolean(LFCustoms.FILECHOOSER_FAVORITES_ENABLED)) {
                     return files;
@@ -53,10 +68,40 @@ public final class Module {
                         shortcuts.add(file);
                     }
                 }
-                return shortcuts.toArray(new File[0]);
+                return shortcuts.toArray(File[]::new);
             };
             UIManager.put(LFCustoms.FILECHOOSER_SHORTCUTS_FILESFUNCTION, favAppender);
         }
+
+        // very first on-editor-open event will also open the Favorites tab 
+        private void attachFirstEditorOpenListener() {
+            Preferences prefs = NbPreferences.forModule(Module.class);
+            if (prefs.getBoolean(INITIAL_OPEN_DONE_KEY, false)) {
+                return;
+            }
+            WindowManager wm = WindowManager.getDefault();
+            wm.addPropertyChangeListener(new PropertyChangeListener() {
+                @Override
+                public void propertyChange(PropertyChangeEvent evt) {
+                    if ("activeMode".equals(evt.getPropertyName())   //NOI18N
+                            && evt.getNewValue() instanceof Mode mode
+                            && wm.isEditorMode(mode)) {
+                        try {
+                            Tab favTab = Tab.findDefault();
+                            if (favTab != null && !favTab.wasOpened() && !favTab.isOpened()) {
+                                favTab.open();
+                            }
+                        } finally {
+                            prefs.putBoolean(INITIAL_OPEN_DONE_KEY, true);
+                            PropertyChangeListener thisListener = this;
+                            SwingUtilities.invokeLater(() -> {
+                                wm.removePropertyChangeListener(thisListener);
+                            });
+                        }
+                    }
+                }
+            });
+        }
     }
-    
+
 }

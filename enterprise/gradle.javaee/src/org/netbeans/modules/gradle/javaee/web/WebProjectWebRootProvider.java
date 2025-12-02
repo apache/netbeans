@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.gradle.javaee.web;
 
+import java.io.File;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.javaee.api.GradleWebProject;
 import java.util.Collection;
@@ -56,6 +57,11 @@ public class WebProjectWebRootProvider implements ProjectWebRootProvider{
     
     FileObject getDefaultWebRoot() {
         GradleWebProject wp = GradleWebProject.get(project);
-        return wp != null ? FileUtil.toFileObject(wp.getWebAppDir()) : null;
+        if(wp != null && wp.getWebAppDir() != null) {
+            File normalizedFile = FileUtil.normalizeFile(wp.getWebAppDir());
+            return FileUtil.toFileObject(normalizedFile);
+        } else {
+            return null;
+        }
     }
 }

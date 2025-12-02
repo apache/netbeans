@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-DC19ECB3F7889B7860697215CAE99C0F9B6F6B4B;aopalliance:asm:9.8
+DC19ECB3F7889B7860697215CAE99C0F9B6F6B4B;org.ow2.asm:asm:9.8
 0235BA8B489512805AC13A8F9EA77A1CA5EBE3E8;aopalliance:aopalliance:1.0
 1194890E6F56EC29177673F2F12D0B8E627DEC98;org.apache.httpcomponents:httpclient:4.5.14
 51CF043C87253C9F58B539C9F7E44C8894223850;org.apache.httpcomponents:httpcore:4.4.16

@@ -22,7 +22,6 @@ import org.netbeans.libs.git.GitException.NotMergedException;
 import org.netbeans.modules.git.client.GitClientExceptionHandler;
 import java.io.File;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.libs.git.GitBranch;
@@ -38,7 +37,6 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
-import org.openide.nodes.Node;
 import org.openide.util.NbBundle;
 
 /**
@@ -58,6 +56,9 @@ public class DeleteBranchAction extends SingleRepositoryAction {
         branches.remove(info.getActiveBranch().getName());
 
         if (branches.isEmpty()) {
+            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(
+                    NbBundle.getMessage(DeleteBranchAction.class, "MSG_DeleteBranchAction.noOtherBranches")
+            ));
             return;
         }
 
@@ -65,23 +66,6 @@ public class DeleteBranchAction extends SingleRepositoryAction {
         if (selector.open()) {
             deleteBranch(repository, selector.getSelectedBranch());
         }
-    }
-
-    @Override
-    protected boolean enable(Node[] activatedNodes) {
-        if (!super.enable(activatedNodes)) {
-            return false;
-        }
-
-        // require 2+ branches
-        Map.Entry<File, File[]> actionRoots = getActionRoots(getCurrentContext(activatedNodes));
-        if (actionRoots != null) {
-            RepositoryInfo info = RepositoryInfo.getInstance(actionRoots.getKey());
-
-            return info != null && info.getBranches().size() > 1;
-        }
-
-        return false;
     }
 
     public void deleteBranch(final File repository, final String branchName) {

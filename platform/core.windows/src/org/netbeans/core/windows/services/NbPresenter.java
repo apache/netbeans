@@ -661,13 +661,16 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
             }
             currentPrimaryButtons = new Component [primaryOptions.length];
             for (int i = 0; i < primaryOptions.length; i++) {
-                if (primaryOptions[i] == NotifyDescriptor.YES_OPTION) {
-                    currentPrimaryButtons[i] = stdYesButton;
+                if (primaryOptions[i] == NotifyDescriptor.OK_OPTION ||
+                        primaryOptions[i] == NotifyDescriptor.YES_OPTION) {
+                    if (Arrays.asList(primaryOptions).contains(NotifyDescriptor.NO_OPTION)) {
+                        currentPrimaryButtons[i] = stdYesButton;
+                    } else {
+                        currentPrimaryButtons[i] = stdOKButton;
+                        stdOKButton.setEnabled(descriptor.isValid());
+                    }
                 } else if (primaryOptions[i] == NotifyDescriptor.NO_OPTION) {
                     currentPrimaryButtons[i] = stdNoButton;
-                } else if (primaryOptions[i] == NotifyDescriptor.OK_OPTION) {
-                    currentPrimaryButtons[i] = stdOKButton;
-                    stdOKButton.setEnabled(descriptor.isValid());
                 } else if (primaryOptions[i] == NotifyDescriptor.CANCEL_OPTION) {
                     currentPrimaryButtons[i] = stdCancelButton;
                 } else if (primaryOptions[i] == NotifyDescriptor.CLOSED_OPTION) {

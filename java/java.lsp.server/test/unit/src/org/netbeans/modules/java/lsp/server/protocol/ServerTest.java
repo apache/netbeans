@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
@@ -88,6 +89,7 @@ import org.eclipse.lsp4j.ConfigurationParams;
 import org.eclipse.lsp4j.CreateFile;
 import org.eclipse.lsp4j.DefinitionParams;
 import org.eclipse.lsp4j.Diagnostic;
+import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
 import org.eclipse.lsp4j.DidCloseTextDocumentParams;
 import org.eclipse.lsp4j.DidOpenTextDocumentParams;
@@ -5948,7 +5950,15 @@ public class ServerTest extends NbTestCase {
             assertEquals(expectedHints, convertHints.apply(hints));
         }
         {
-            settings[0] = "[\"chained\"]";
+            String jsonString = "{\n" +
+                "  \"netbeans\": {\n" +
+                "    \"inlay\": {\n" +
+                "      \"enabled\": [\"chained\"]\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+            JsonElement j = JsonParser.parseString(jsonString);
+            server.getWorkspaceService().didChangeConfiguration(new DidChangeConfigurationParams(j));
             List<InlayHint> hints = server.getTextDocumentService().inlayHint(new InlayHintParams(id, new Range(new Position(0, 0), new Position(9, 1)))).get();
             Set<String> expectedHints = new HashSet<>(Arrays.asList(
                     "4:33:  List<String>",
@@ -5958,14 +5968,30 @@ public class ServerTest extends NbTestCase {
             assertEquals(expectedHints, convertHints.apply(hints));
         }
         {
-            settings[0] = "[\"parameter\"]";
+            String jsonString = "{\n" +
+                "  \"netbeans\": {\n" +
+                "    \"inlay\": {\n" +
+                "      \"enabled\": [\"parameter\"]\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+            JsonElement j = JsonParser.parseString(jsonString);
+            server.getWorkspaceService().didChangeConfiguration(new DidChangeConfigurationParams(j));
             List<InlayHint> hints = server.getTextDocumentService().inlayHint(new InlayHintParams(id, new Range(new Position(0, 0), new Position(9, 1)))).get();
             Set<String> expectedHints = new HashSet<>(Arrays.asList(
                     "4:29:a:"));
             assertEquals(expectedHints, convertHints.apply(hints));
         }
         {
-            settings[0] = "[\"var\"]";
+            String jsonString = "{\n" +
+                "  \"netbeans\": {\n" +
+                "    \"inlay\": {\n" +
+                "      \"enabled\": [\"var\"]\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+            JsonElement j = JsonParser.parseString(jsonString);
+            server.getWorkspaceService().didChangeConfiguration(new DidChangeConfigurationParams(j));
             List<InlayHint> hints = server.getTextDocumentService().inlayHint(new InlayHintParams(id, new Range(new Position(0, 0), new Position(9, 1)))).get();
             Set<String> expectedHints = new HashSet<>(Arrays.asList(
                     "3:13: : int"));

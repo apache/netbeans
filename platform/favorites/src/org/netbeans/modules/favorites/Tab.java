@@ -139,6 +139,11 @@ implements Runnable, ExplorerManager.Provider {
         run();
     }
 
+    /// true if this tab has been opened during this session
+    boolean wasOpened() {
+        return view != null;
+    }
+
     /** Initializes gui of this component. Subclasses can override
     * this method to install their own gui.
     * @return Tree view that will serve as main view for this explorer.

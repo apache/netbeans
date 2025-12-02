@@ -70,7 +70,6 @@ import org.openide.util.RequestProcessor;
 import static org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.j2ee.core.api.support.java.method.MethodCustomizer;
 import org.netbeans.modules.j2ee.core.api.support.java.method.MethodCustomizerFactory;
 //import org.netbeans.modules.j2ee.api.ejbjar.EjbJar;
@@ -167,7 +166,7 @@ public class AddWsOperationHelper {
      */
     private void addOperation(final MethodModel methodModel, final FileObject implClassFo) {
         final JavaSource targetSource = JavaSource.forFileObject(implClassFo);
-        final ProgressHandle handle = ProgressHandleFactory.createHandle(NbBundle.getMessage(AddWsOperationHelper.class, "MSG_AddingNewOperation", methodModel.getName()));
+        final ProgressHandle handle = ProgressHandle.createHandle(NbBundle.getMessage(AddWsOperationHelper.class, "MSG_AddingNewOperation", methodModel.getName()));
         handle.start(100);
         final String[] seiClass = new String[1];
         final CancellableTask<WorkingCopy> modificationTask = new CancellableTask<WorkingCopy>() {

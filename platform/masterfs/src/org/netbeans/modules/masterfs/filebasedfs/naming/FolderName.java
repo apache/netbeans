@@ -28,11 +28,11 @@ import java.util.WeakHashMap;
  * @author Radek Matous
  */
 public class FolderName extends FileName {
-    private static Map<FolderName,File> fileCache = new WeakHashMap<FolderName,File>();
+    private static Map<FolderName,File> fileCache = new WeakHashMap<>();
 
 
     @SuppressWarnings("LeakingThisInConstructor")
-    FolderName(final FileNaming parent, final File file, Integer theKey) {
+    FolderName(final FileNaming parent, final File file, ID theKey) {
         super(parent, file, theKey);
         synchronized (FolderName.class) {
             FolderName.fileCache.put(this, file);
@@ -64,9 +64,8 @@ public class FolderName extends FileName {
 
     static void freeCaches() {
         synchronized (FolderName.class) {
-            FolderName.fileCache = new WeakHashMap<FolderName,File>();
+            FolderName.fileCache = new WeakHashMap<>();
         }
-
     }
 
     public @Override boolean isFile() {

@@ -20,7 +20,9 @@
 @TemplateRegistration(folder = "Grammar",
     content = "jflexTemplate.flex",
     position = 670,
-    category = "simple-files")
+    category = "simple-files",
+    description = "TemplateHelp.html"
+)
 package org.netbeans.modules.languages.jflex.resources;
 
 import org.netbeans.api.templates.TemplateRegistration;

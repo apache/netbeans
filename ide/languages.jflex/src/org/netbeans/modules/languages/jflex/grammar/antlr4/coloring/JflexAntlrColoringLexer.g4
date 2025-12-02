@@ -164,7 +164,7 @@ MACRO_NAME : Identifier->type(MACRO);
 
 //pipe operator for chained macro assigned values
 PIPE 
-    : '|' {this.setInMacroAssign(true);} ->type(OPERATOR), pushMode(DeclarationValue)
+    : '|' {this.setInMacroAssign(true);} ->type(LEXICAL_REGEX), pushMode(DeclarationValue)
     ;
 
 //macro value assign
@@ -218,13 +218,17 @@ WS_DECL
    : InlineWS+ ->type(WS), channel (OFF_CHANNEL)
    ;
 
-//new line or comment ended in new line deisgnates the end of macro assignment
-DECL_LINE_COMMENT
-    : LineComment {this.setInMacroAssign(false);} ->type(COMMENT), channel(COMMENT_CHANNEL),popMode
+DECL_COMMENT
+   : AllCommentTypes ->type(COMMENT), channel (COMMENT_CHANNEL)
+   ;
+
+EXIT_DECL_INDENTED_VALUE 
+    : NewLineWS+ InlineWS* 
+    {Character.isLetter(this._input.LA(1)) || this._input.LA(1) == '%'}? {this.setInMacroAssign(false);} ->type(WS),channel(OFF_CHANNEL),popMode
     ;
 
-EXIT_DECL 
-    : NewLineWS {this.setInMacroAssign(false);} ->type(WS),channel(OFF_CHANNEL),popMode
+DECL_NEW_LINE
+    : NewLineWS+ ->type(WS), channel (OFF_CHANNEL)
     ;
 
 //missed matches
@@ -390,6 +394,10 @@ RULE_LIST_REGEX_START : '[' {this.incrementSQBracket();} ->type(LEXICAL_REGEX),p
 
 RULE_LIST_REGEX_PAREN_START : '(' {this.openParenthesis();} ->type(LEXICAL_REGEX),pushMode(RegexParen);
 
+RULE_PIPE 
+    : '|' ->type(LEXICAL_REGEX)
+    ;
+
 RULE_LIST_ANY_CODE
     : . ->type(CODE)
     ;
@@ -451,6 +459,10 @@ RULE_ANY_MATCH : MiscRegexChars {this.setRuleDefined(true);}->type(LEXICAL_REGEX
 
 RULE_LIST_START : '{' {this.setInRuleList(true);} -> type(CODE);
 RULE_LIST_END : '}' {this.setInRuleList(false);this.mode(LexicalRules);} -> type(CODE);
+
+RULE_LIST_PIPE 
+    : '|' ->type(LEXICAL_REGEX)
+    ;
 
 RULES_ANY_CODE: . ->type(CODE);
 

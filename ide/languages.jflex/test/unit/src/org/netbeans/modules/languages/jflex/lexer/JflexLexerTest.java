@@ -44,6 +44,14 @@ public class JflexLexerTest extends JflexTestBase {
         checkLexer("testfiles/lexer/newfile.jflex");
     }
 
+    public void testMacroValueSplittedOnNewLines_01() throws Exception {
+        checkLexer("testfiles/lexer/macro_value_splitted_on_new_lines.jflex");
+    }
+    
+    public void testPipeOperatorAsRegexInLexerRules_01() throws Exception {
+        checkLexer("testfiles/lexer/rule_pipe_operator.jflex");
+    }
+    
     private void checkLexer(final String filePath) throws Exception {
         String fileContent = Files.readString(new File(getDataDir(), filePath).toPath(), StandardCharsets.UTF_8);
         JflexLanguage langSettings = new JflexLanguage();

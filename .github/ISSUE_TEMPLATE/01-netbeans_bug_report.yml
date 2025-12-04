@@ -103,7 +103,7 @@ body:
       multiple: true
       options:
         - "Apache NetBeans binary zip"
-        - "FoAN provided installer"
+        - "Community provided installer"
         - "Apache NetBeans Snap Package"
         - "Third-party package"
         - "Own source build"

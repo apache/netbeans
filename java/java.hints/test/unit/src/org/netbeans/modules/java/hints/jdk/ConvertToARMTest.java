@@ -1554,4 +1554,54 @@ public class ConvertToARMTest extends NbTestCase {
             }
         }
     }
+
+    // Case: 
+    public void testGH9046() throws Exception {
+        HintTest
+                .create()
+                .input("package test;\n"
+                        + "import java.io.ByteArrayOutputStream;\n"
+                        + "import java.io.InputStream;\n"
+                        + "\n"
+                        + "public class Test {\n"
+                        + "\n"
+                        + "    public static byte[] test(InputStream input) throws Exception {\n"
+                        + "        ByteArrayOutputStream outStream = new ByteArrayOutputStream();\n"
+                        + "        int len;\n"
+                        + "\n"
+                        + "        byte[] buffer = new byte[1024];\n"
+                        + "\n"
+                        + "        while ((len = input.read(buffer)) != -1) {\n"
+                        + "            outStream.write(buffer, 0, len);\n"
+                        + "        }\n"
+                        + "        input.close();\n"
+                        + "\n"
+                        + "        return outStream.toByteArray();\n"
+                        + "    }\n"
+                        + "}\n")
+                .sourceLevel("17")
+                .run(ConvertToARM.class)
+                .findWarning("12:22-12:27:verifier:TXT_ConvertToARM")
+                .applyFix("TXT_ConvertToARM")
+                .assertOutput("package test;\n"
+                        + "import java.io.ByteArrayOutputStream;\n"
+                        + "import java.io.InputStream;\n"
+                        + "\n"
+                        + "public class Test {\n"
+                        + "\n"
+                        + "    public static byte[] test(InputStream input) throws Exception {\n"
+                        + "        ByteArrayOutputStream outStream;\n"
+                        + "        try (input) {\n"
+                        + "            outStream = new ByteArrayOutputStream();\n"
+                        + "            int len;\n"
+                        + "            byte[] buffer = new byte[1024];\n"
+                        + "            while ((len = input.read(buffer)) != -1) {\n"
+                        + "                outStream.write(buffer, 0, len);\n"
+                        + "            }\n"
+                        + "        }\n"
+                        + "\n"
+                        + "        return outStream.toByteArray();\n"
+                        + "    }\n"
+                        + "}\n");
+    }
 }

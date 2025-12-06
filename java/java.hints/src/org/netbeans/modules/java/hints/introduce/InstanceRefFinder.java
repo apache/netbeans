@@ -67,7 +67,6 @@ public class InstanceRefFinder extends ErrorAwareTreePathScanner {
      * Immediate enclosing element
      */
     private Element                 enclosingElement;
-    private TreePath                enclosingElementPath;
     private TypeElement             enclosingType;
     
     private Set<TypeElement>        superReferences = Collections.<TypeElement>emptySet();
@@ -135,8 +134,7 @@ public class InstanceRefFinder extends ErrorAwareTreePathScanner {
                 case INTERFACE:
                 case RECORD:
                 case NEW_CLASS:
-                    enclosingElementPath = path;
-                    enclosingElement = ci.getTrees().getElement(enclosingElementPath);
+                    enclosingElement = ci.getTrees().getElement(path);
                     if (enclosingElement == null) {
                         return;
                     }
@@ -152,9 +150,6 @@ public class InstanceRefFinder extends ErrorAwareTreePathScanner {
     }
     
     private void addLocalReference(TypeElement el) {
-        if (this.enclosingElement != el.getEnclosingElement()) {
-            return;
-        }
         if (localReferences.isEmpty()) {
             localReferences = new HashSet<TypeElement>();
         }

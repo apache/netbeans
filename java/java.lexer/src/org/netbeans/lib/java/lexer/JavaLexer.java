@@ -1182,7 +1182,7 @@ public class JavaLexer implements Lexer<JavaTokenId> {
                                 c = nextChar();
                                 // Check whether the given char is non-ident and if so then return keyword
                                 if (c != EOF && !Character.isJavaIdentifierPart(c = translateSurrogates(c)) &&
-                                    version >= 10) {
+                                    version >= 10 && false) { //can't speculatively create tokens inside a joint embedding section - see EmbeddingProviderImplTest.testNestedJavaVar
                                     // For surrogate 2 chars must be backed up
                                     backup((c >= Character.MIN_SUPPLEMENTARY_CODE_POINT) ? 2 : 1);
 

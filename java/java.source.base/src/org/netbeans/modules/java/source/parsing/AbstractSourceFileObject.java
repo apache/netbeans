@@ -70,6 +70,7 @@ public abstract class AbstractSourceFileObject implements PrefetchableJavaFileOb
     private final Handle handle;
     private final JavaFileFilterImplementation filter;
     private final JavaFileObject.Kind kind;
+    private final boolean embedded;
 
     private String text;
     private TokenHierarchy<?> tokens;
@@ -78,7 +79,8 @@ public abstract class AbstractSourceFileObject implements PrefetchableJavaFileOb
     protected AbstractSourceFileObject (
             @NonNull final Handle handle,
             @NullAllowed final JavaFileFilterImplementation filter,
-            boolean hasContent) { //TODO: if has a content, then Kind.SOURCE, right??
+            boolean hasContent,
+            boolean embedded) { //TODO: if has a content, then Kind.SOURCE, right??
         Parameters.notNull("handle", handle);   //NOI18N
         this.handle = handle;
         this.filter = filter;
@@ -86,6 +88,7 @@ public abstract class AbstractSourceFileObject implements PrefetchableJavaFileOb
         this.kind = filter == null && !hasContent ?
             FileObjects.getKind(ext) :
             Kind.SOURCE; //#141411
+        this.embedded = embedded;
     }
     
     //JavaFileObject methods
@@ -119,7 +122,7 @@ public abstract class AbstractSourceFileObject implements PrefetchableJavaFileOb
             @NonNull final String simplename,
             @NonNull final JavaFileObject.Kind kind) {
         assert simplename != null;
-        return this.kind == kind && this.getNameWithoutExtension().equals(simplename);
+        return this.kind == kind && (this.getNameWithoutExtension().equals(simplename) || (embedded && !"module-info".equals(simplename)));
     }
 
     @Override

@@ -128,8 +128,8 @@ public class ArrayDimensionSyntaxSuggestionHint extends HintRule {
                             // all
                             int lineIndex = LineDocumentUtils.getLineIndex(document, fixInfo.getOffsetRange().getStart());
                             if (originalLineIndex != lineIndex) {
-                                int lineStart = LineDocumentUtils.getLineStart(document, fixInfo.getOffsetRange().getStart());
-                                int lineEnd = LineDocumentUtils.getLineEnd(document, fixInfo.getOffsetRange().getStart());
+                                int lineStart = LineDocumentUtils.getLineStartOffset(document, fixInfo.getOffsetRange().getStart());
+                                int lineEnd = LineDocumentUtils.getLineEndOffset(document, fixInfo.getOffsetRange().getStart());
                                 addHint(hints, new OffsetRange(lineStart, lineEnd), createAllFixes(fixInfos));
                                 originalLineIndex = lineIndex;
                             }

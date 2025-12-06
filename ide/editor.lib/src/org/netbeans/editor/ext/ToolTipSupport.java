@@ -60,6 +60,7 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Keymap;
 import javax.swing.text.TextAction;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.BaseKit;
 import org.netbeans.editor.BaseTextUI;
@@ -876,7 +877,7 @@ public class ToolTipSupport {
                 int pos = ui.viewToModel(component, lmePoint);
                 if (pos >= 0) {
                     BaseDocument doc = (BaseDocument)component.getDocument();
-                    int eolPos = Utilities.getRowEnd(doc, pos);
+                    int eolPos = LineDocumentUtils.getLineEndOffset(doc, pos);
                     Rectangle eolRect = ui.modelToView(component, eolPos);
                     int lineHeight = extEditorUI.getLineHeight();
                     if (lmePoint.x <= eolRect.x && lmePoint.y <= eolRect.y + lineHeight) {

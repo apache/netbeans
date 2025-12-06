@@ -217,7 +217,7 @@ public class GsfStructureProvider implements StructureProvider {
                     String prefix = doc.getText(lineStart, startOffset);
                     lineStart = LineDocumentUtils.getLineStart(ldoc, lineStart);
                     if (prefix.trim().isEmpty()) {
-                        lineEnd = LineDocumentUtils.getLineEnd(ldoc, lineEnd);
+                        lineEnd = LineDocumentUtils.getLineEndOffset(ldoc, lineEnd);
                     }
                 } catch (BadLocationException ex) {
                     lineStart = startOffset;

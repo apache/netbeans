@@ -45,6 +45,7 @@ import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.LineBreakpoint;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.java.source.CancellableTask;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
@@ -257,10 +258,10 @@ implements PropertyChangeListener {
         if (ec == null) return lineNumber;
         final BaseDocument doc = (BaseDocument)ec.getDocument();
         if (doc == null) return lineNumber;
-        final int rowStartOffset = Utilities.getRowStartFromLineOffset(doc, lineNumber - 1);
+        final int rowStartOffset = LineDocumentUtils.getLineStartFromIndex(doc, lineNumber - 1);
         final int rowEndOffset;
         try {
-            rowEndOffset = Utilities.getRowEnd(doc, rowStartOffset);
+            rowEndOffset = LineDocumentUtils.getLineEndOffset(doc, rowStartOffset);
         } catch (BadLocationException ex) {
             return lineNumber;
         }
@@ -360,7 +361,7 @@ implements PropertyChangeListener {
                     if (execTree == null || !isBreakable(execTreePath)) {
                         if (outerTree != null && isBreakable(outerTreePath)) {
                             long offs = positions.getStartPosition(compUnit, outerTree);
-                            result[0] = Utilities.getLineOffset(doc, (int)offs) + 1;
+                            result[0] = LineDocumentUtils.getLineIndex(doc, (int)offs) + 1;
                         } else {
                             if (outerTree instanceof BlockTree) {
                                 Tree pTree = outerTreePath.getParentPath().getLeaf();

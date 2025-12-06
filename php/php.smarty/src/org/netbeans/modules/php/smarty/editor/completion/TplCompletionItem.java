@@ -32,6 +32,7 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
 import org.netbeans.spi.editor.completion.support.CompletionUtilities;
 import org.openide.util.ImageUtilities;
@@ -168,8 +169,8 @@ public class TplCompletionItem implements CompletionItem {
 
                 public void run() {
                     try {
-                        int startOffset = Utilities.getRowStart(doc, dotPos);
-                        int endOffset = Utilities.getRowEnd(doc, dotPos);
+                        int startOffset = LineDocumentUtils.getLineStartOffset(doc, dotPos);
+                        int endOffset = LineDocumentUtils.getLineEndOffset(doc, dotPos);
                         indent.reindent(startOffset, endOffset);
                     } catch (BadLocationException ex) {
                         //ignore

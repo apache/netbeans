@@ -30,6 +30,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Position.Bias;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.html.editor.lib.api.elements.ElementUtils;
@@ -326,10 +327,10 @@ public class ExtractInlinedStyleRefactoringPlugin implements RefactoringPlugin {
                                 @Override
                                 public void run() {
                                     try {
-                                        if (Utilities.getFirstNonWhiteFwd(doc, appendOffset.get()) == -1) {
+                                        if (LineDocumentUtils.getNextNonWhitespace(doc, appendOffset.get()) == -1) {
                                             //just WS at the rest of the line
                                             //=>put the section at the beginning of the next line
-                                            int newPos = Utilities.getRowEnd(doc, appendOffset.get()) + 1;
+                                            int newPos = LineDocumentUtils.getLineEndOffset(doc, appendOffset.get()) + 1;
                                             appendOffset.set(newPos);
                                         } else {
                                             //put right after the open curly bracket
@@ -561,7 +562,7 @@ public class ExtractInlinedStyleRefactoringPlugin implements RefactoringPlugin {
             public void run() {
                 try {
                     //find last nonwhite line indent
-                    int firstNonWhiteBw = Utilities.getFirstNonWhiteBwd((BaseDocument) doc, insertOffset);
+                    int firstNonWhiteBw = LineDocumentUtils.getPreviousNonWhitespace((BaseDocument) doc, insertOffset);
                     //get the line indent
                     ret.set(firstNonWhiteBw == -1 ? 0 : Utilities.getRowIndent((BaseDocument) doc, firstNonWhiteBw));
                 } catch (BadLocationException ex) {

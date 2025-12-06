@@ -22,12 +22,12 @@ package org.netbeans.modules.groovy.editor.api.lexer;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
 import org.openide.util.Exceptions;
 
 /**
@@ -203,7 +203,7 @@ public class Call {
                     offset = doc.getLength();
                 }
 
-                lineStart = Utilities.getRowStart(doc, offset);
+                lineStart = LineDocumentUtils.getLineStartOffset(doc, offset);
             } catch (BadLocationException ble) {
                 Exceptions.printStackTrace(ble);
             }

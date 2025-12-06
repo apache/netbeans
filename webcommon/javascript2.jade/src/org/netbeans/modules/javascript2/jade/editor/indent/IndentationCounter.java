@@ -55,7 +55,7 @@ public class IndentationCounter {
         int newIndent = 0;
         try {
             final TokenSequence<JadeTokenId> ts = TokenHierarchy.get(doc).tokenSequence(JadeTokenId.jadeLanguage());
-            final int caretLineStart = LineDocumentUtils.getLineStart(doc, LineDocumentUtils.getLineStart(doc, caretOffset) - 1);
+            final int caretLineStart = LineDocumentUtils.getLineStartOffset(doc, LineDocumentUtils.getLineStartOffset(doc, caretOffset) - 1);
             if (ts != null) {
                 ts.move(caretOffset);
                 ts.moveNext();
@@ -69,7 +69,7 @@ public class IndentationCounter {
                     }
                 }
                 if (ts.token().id() == JadeTokenId.COMMENT || ts.token().id() == JadeTokenId.UNBUFFERED_COMMENT) {
-                    final int firstNonWsIndex = LineDocumentUtils.getLineFirstNonWhitespace(doc, LineDocumentUtils.getLineStart(doc, caretOffset) - 1);
+                    final int firstNonWsIndex = LineDocumentUtils.getLineFirstNonWhitespace(doc, LineDocumentUtils.getLineStartOffset(doc, caretOffset) - 1);
                     ts.move(firstNonWsIndex);
                     ts.moveNext();
                     if (ts.token() != null
@@ -137,8 +137,7 @@ public class IndentationCounter {
 
         private void modifyUnderWriteLock(Context context) {
             try {
-                context.modifyIndent(
-                        LineDocumentUtils.getLineStart((BaseDocument) context.document(), context.caretOffset()),
+                context.modifyIndent(LineDocumentUtils.getLineStartOffset((BaseDocument) context.document(), context.caretOffset()),
                         indentation);
             } catch (BadLocationException ex) {
                 Exceptions.printStackTrace(ex);

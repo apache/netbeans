@@ -29,6 +29,7 @@ import javax.swing.text.TextAction;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.BadLocationException;
 import javax.swing.*;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.xml.lexer.XMLTokenId;
@@ -41,7 +42,9 @@ import org.netbeans.modules.editor.*;
 
 import org.netbeans.modules.xml.text.XmlCommentHandler;
 import org.netbeans.modules.xml.text.completion.NodeSelector;
+
 import static org.netbeans.modules.xml.text.syntax.DTDKit.MIME_TYPE;
+
 import org.netbeans.modules.xml.text.syntax.bridge.LegacySyntaxBridge;
 
 
@@ -194,21 +197,21 @@ public class XMLKit extends NbEditorKit implements org.openide.util.HelpCtx.Prov
             BaseDocument doc = (BaseDocument)target.getDocument();
             try {
                 if (caret.isSelectionVisible()) {
-                    int startPos = Utilities.getRowStart(doc, target.getSelectionStart());
+                    int startPos = LineDocumentUtils.getLineStartOffset(doc, target.getSelectionStart());
                     int endPos = target.getSelectionEnd();
                     doc.atomicLock();
                     try {
 
-                        if (endPos > 0 && Utilities.getRowStart(doc, endPos) == endPos) {
+                        if (endPos > 0 && LineDocumentUtils.getLineStartOffset(doc, endPos) == endPos) {
                             endPos--;
                         }
 
                         int pos = startPos;
-                        int lineCnt = Utilities.getRowCount(doc, startPos, endPos);                            
+                        int lineCnt = LineDocumentUtils.getLineCount(doc, startPos, endPos);                            
 
                         for (;lineCnt > 0; lineCnt--) {
                             doc.insertString(pos, commentStartString, null); 
-                            doc.insertString(Utilities.getRowEnd(doc,pos), commentEndString, null);
+                            doc.insertString(LineDocumentUtils.getLineEndOffset(doc,pos), commentEndString, null);
                             pos = Utilities.getRowStart(doc, pos, +1);
                         }
 
@@ -216,9 +219,9 @@ public class XMLKit extends NbEditorKit implements org.openide.util.HelpCtx.Prov
                         doc.atomicUnlock();
                     }
                 } else { // selection not visible
-                    doc.insertString(Utilities.getRowStart(doc, target.getSelectionStart()),
+                    doc.insertString(LineDocumentUtils.getLineStartOffset(doc, target.getSelectionStart()),
                         commentStartString, null);
-                    doc.insertString(Utilities.getRowEnd(doc, target.getSelectionStart()),
+                    doc.insertString(LineDocumentUtils.getLineEndOffset(doc, target.getSelectionStart()),
                         commentEndString, null);
                 }
             } catch (BadLocationException e) {
@@ -254,29 +257,29 @@ public class XMLKit extends NbEditorKit implements org.openide.util.HelpCtx.Prov
             BaseDocument doc = (BaseDocument)target.getDocument();
             try {
                 if (caret.isSelectionVisible()) {
-                    int startPos = Utilities.getRowStart(doc, target.getSelectionStart());
+                    int startPos = LineDocumentUtils.getLineStartOffset(doc, target.getSelectionStart());
                     int endPos = target.getSelectionEnd();
                     doc.atomicLock();
                     try {
 
-                        if (endPos > 0 && Utilities.getRowStart(doc, endPos) == endPos) {
+                        if (endPos > 0 && LineDocumentUtils.getLineStartOffset(doc, endPos) == endPos) {
                             endPos--;
                         }
 
                         int pos = startPos;
-                        int lineCnt = Utilities.getRowCount(doc, startPos, endPos);
+                        int lineCnt = LineDocumentUtils.getLineCount(doc, startPos, endPos);
                         char[] startChars, endChars;
 
                         for (; lineCnt > 0; lineCnt-- ) {
                             startChars = doc.getChars(pos, 4 );
-                            endChars = doc.getChars(Utilities.getRowEnd(doc,pos)-3, 3 );
+                            endChars = doc.getChars(LineDocumentUtils.getLineEndOffset(doc,pos)-3, 3 );
 
                             if(startChars[0] == commentStart[0] && startChars[1] == commentStart[1] &&
                                 startChars[2] == commentStart[2] && startChars[3] == commentStart[3] &&
                                 endChars[0] == commentEnd[0] && endChars[1] == commentEnd[1] && endChars[2] == commentEnd[2] ){
 
                                 doc.remove(pos,4);
-                                doc.remove(Utilities.getRowEnd(doc,pos)-3,3);
+                                doc.remove(LineDocumentUtils.getLineEndOffset(doc,pos)-3,3);
                             }                                
                             pos = Utilities.getRowStart(doc, pos, +1);
                         }
@@ -286,12 +289,12 @@ public class XMLKit extends NbEditorKit implements org.openide.util.HelpCtx.Prov
                     }
                 } else { // selection not visible
                   char[] startChars = doc.getChars(target.getSelectionStart(), 4 );
-                  char[] endChars = doc.getChars(Utilities.getRowEnd(doc,target.getSelectionStart())-3, 3 );
+                  char[] endChars = doc.getChars(LineDocumentUtils.getLineEndOffset(doc,target.getSelectionStart())-3, 3 );
                   if(startChars[0] == commentStart[0] && startChars[1] == commentStart[1] &&
                                 startChars[2] == commentStart[2] && startChars[3] == commentStart[3] &&
                                 endChars[0] == commentEnd[0] && endChars[1] == commentEnd[1] && endChars[2] == commentEnd[2] ){
                         doc.remove(target.getSelectionStart(),4);
-                        doc.remove(Utilities.getRowEnd(doc,target.getSelectionStart())-3,3);
+                        doc.remove(LineDocumentUtils.getLineEndOffset(doc,target.getSelectionStart())-3,3);
                     }
                 }
             } catch (BadLocationException e) {

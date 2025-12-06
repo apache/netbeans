@@ -29,6 +29,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.AttributesUtilities;
 import org.netbeans.api.editor.settings.FontColorSettings;
@@ -180,17 +181,17 @@ public class EmbeddingHighlightsContainer extends AbstractHighlightsContainer im
                                 } while (eTokenSequence.moveNext());
 
                                 realEndOffset = endOffset > realEndOffset ? endOffset : realEndOffset + 1;
-                                int startLO = Utilities.getLineOffset((BaseDocument) document, startOffset);
-                                int endLO = Utilities.getLineOffset((BaseDocument) document, endOffset);
+                                int startLO = LineDocumentUtils.getLineIndex((BaseDocument) document, startOffset);
+                                int endLO = LineDocumentUtils.getLineIndex((BaseDocument) document, endOffset);
                                 if (startLO != endLO) {
                                     //not just one line block - test boundaries
-                                    if ((Utilities.getFirstNonWhiteBwd((BaseDocument) document, Utilities.getRowEnd((BaseDocument) document, startOffset)) + 1) == startOffset) {
+                                    if ((LineDocumentUtils.getPreviousNonWhitespace((BaseDocument) document, LineDocumentUtils.getLineEndOffset((BaseDocument) document, startOffset)) + 1) == startOffset) {
                                         //just <script-style> tag on the first line -> move start to next line
-                                        startOffset = Utilities.getRowStartFromLineOffset((BaseDocument) document, startLO + 1);
+                                        startOffset = LineDocumentUtils.getLineStartFromIndex((BaseDocument) document, startLO + 1);
                                     }
-                                    if (Utilities.getFirstNonWhiteFwd((BaseDocument) document, Utilities.getRowStartFromLineOffset((BaseDocument) document, endLO)) == endOffset) {
+                                    if (LineDocumentUtils.getNextNonWhitespace((BaseDocument) document, LineDocumentUtils.getLineStartFromIndex((BaseDocument) document, endLO)) == endOffset) {
                                         //just </script-style> tag on the last line -> move block end to previous line end
-                                        endOffset = Utilities.getRowStartFromLineOffset((BaseDocument) document, endLO);
+                                        endOffset = LineDocumentUtils.getLineStartFromIndex((BaseDocument) document, endLO);
                                     }
                                 }
 

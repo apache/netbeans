@@ -1810,7 +1810,7 @@ public class JsFormatter implements Formatter {
                 try {
                     int lineTextEnd = LineDocumentUtils.getLineLastNonWhitespace(ld, sequenceBegin);
                     if (lineTextEnd == -1 || sequenceBegin > lineTextEnd) {
-                        return Math.min(doc.getLength(), LineDocumentUtils.getLineEnd(ld, sequenceBegin) + 1);
+                        return Math.min(doc.getLength(), LineDocumentUtils.getLineEndOffset(ld, sequenceBegin) + 1);
                     }
                 } catch (BadLocationException ex) {
                     LOGGER.log(Level.INFO, null, ex);
@@ -2206,7 +2206,7 @@ public class JsFormatter implements Formatter {
                     context.addIndentation(new IndentContext.Indentation(offset, indent, continued));
                 }
 
-                int endOfLine = LineDocumentUtils.getLineEnd(ld, offset) + 1;
+                int endOfLine = LineDocumentUtils.getLineEndOffset(ld, offset) + 1;
 
                 if (lineBegin != -1) {
                     balance += getTokenBalance(context, ts, lineBegin, endOfLine, true, indentOnly);
@@ -2516,7 +2516,7 @@ public class JsFormatter implements Formatter {
                 // Check if there are multiple end markers here... if so increase indent level.
                 // This should really do an iteration... for now just handling the most common
                 // scenario in JavaScript where we have }) in object literals
-                int lineEnd = LineDocumentUtils.getLineEnd(ld, offset);
+                int lineEnd = LineDocumentUtils.getLineEndOffset(ld, offset);
                 int newOffset = offset;
                 while (newOffset < lineEnd && token != null) {
                     newOffset += token.length();

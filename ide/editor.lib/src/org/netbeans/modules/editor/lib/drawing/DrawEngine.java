@@ -37,6 +37,7 @@ import javax.swing.text.Element;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Segment;
 import javax.swing.text.View;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.settings.FontColorNames;
 import org.netbeans.editor.Analyzer;
 import org.netbeans.editor.BaseDocument;
@@ -94,7 +95,7 @@ public final class DrawEngine {
         // create buffer for showing line numbers
         if (ctx.lineNumbering) {
             try {
-                ctx.startLineNumber = Utilities.getLineOffset(ctx.doc, ctx.startOffset) + 1;
+                ctx.startLineNumber = LineDocumentUtils.getLineIndex(ctx.doc, ctx.startOffset) + 1;
             } catch (BadLocationException e) {
                 LOG.log(Level.WARNING, null, e);
             }
@@ -131,7 +132,7 @@ public final class DrawEngine {
 
             } else { // non-synced line numbering - need to remember line start offsets
                 try {
-                    int endLineNumber = Utilities.getLineOffset(ctx.doc, ctx.endOffset) + 1;
+                    int endLineNumber = LineDocumentUtils.getLineIndex(ctx.doc, ctx.endOffset) + 1;
                     ctx.lineStartOffsets = new int[endLineNumber - ctx.startLineNumber + 2]; // reserve more
                 } catch (BadLocationException e) {
                     LOG.log(Level.WARNING, null, e);

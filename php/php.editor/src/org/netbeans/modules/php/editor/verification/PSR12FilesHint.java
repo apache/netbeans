@@ -44,12 +44,12 @@ public class PSR12FilesHint extends PSR12Hint {
         FilesVisitor filesVisitor = new FilesVisitor(this, fileObject, baseDocument);
         try {
             int lastPosition = baseDocument.getLength();
-            int lineStart = LineDocumentUtils.getLineStart(baseDocument, lastPosition);
+            int lineStart = LineDocumentUtils.getLineStartOffset(baseDocument, lastPosition);
             if (!endsWithSingleLF(baseDocument)) {
                 filesVisitor.createHint(new OffsetRange(lineStart, lastPosition), Bundle.PSR12FilesTerminatedWithSingleLFHint());
             }
             if (!isLF(baseDocument)) {
-                int lineEnd = LineDocumentUtils.getLineEnd(baseDocument, 0);
+                int lineEnd = LineDocumentUtils.getLineEndOffset(baseDocument, 0);
                 filesVisitor.createHint(new OffsetRange(0, lineEnd), Bundle.PSR12FilesLFOnlyHint());
             }
         } catch (BadLocationException ex) {

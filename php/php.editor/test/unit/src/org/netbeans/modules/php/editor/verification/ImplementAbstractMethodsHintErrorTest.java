@@ -337,6 +337,14 @@ public class ImplementAbstractMethodsHintErrorTest extends PHPHintsTestBase {
         applyHint("testOverrideAttributeEnum.php", "enum Enum^1 implements TestInterface {", "Implement All Abstract Methods", PhpVersion.PHP_83);
     }
 
+    public void testGH8527() throws Exception {
+        checkHints("gh8527.php", PhpVersion.getDefault());
+    }
+
+    public void testGH8527_01() throws Exception {
+        checkHints("gh8527_01.php", PhpVersion.getDefault());
+    }
+
     private void checkHints(String fileName, PhpVersion phpVersion) throws Exception {
         checkHints(new ImplementAbstractMethodsHintErrorStub(phpVersion), fileName);
     }

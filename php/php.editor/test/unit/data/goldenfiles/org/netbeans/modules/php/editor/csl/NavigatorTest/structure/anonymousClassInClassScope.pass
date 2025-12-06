@@ -1,6 +1,6 @@
 |-ClassScopeTestInterface [16, 48] : ESCAPED{ClassScopeTestInterface}
 |-ClassScopeTestTrait [56, 84] : ESCAPED{ClassScopeTestTrait}
-|-ClassScopeTest [92, 1512] : ESCAPED{ClassScopeTest}<font color="#999999">#ESCAPED{ClassScopeTestTrait}</font>
+|-ClassScopeTest [92, 1512] : ESCAPED{ClassScopeTest}
 |--test1 [130, 1059] : ESCAPED{test1}ESCAPED{(}ESCAPED{)}
 |--test2 [1081, 1256] : ESCAPED{test2}ESCAPED{(}ESCAPED{)}
 |--test3 [1278, 1510] : ESCAPED{test3}ESCAPED{(}ESCAPED{)}

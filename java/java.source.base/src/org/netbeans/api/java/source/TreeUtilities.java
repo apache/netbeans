@@ -446,11 +446,6 @@ public final class TreeUtilities {
                                     endPos = sourcePositions.getEndPosition(cut, value);
                                 }
                                 break;
-                            case CLASS:
-                                if (tree instanceof JCClassDecl clazz && (clazz.mods.flags & Flags.IMPLICIT_CLASS) != 0) {
-                                    endPos = sourcePositions.getEndPosition(cut, cut);
-                                }
-                                break;
                         }
                     }
                     if (startPos < pos && endPos >= pos) {
@@ -512,8 +507,16 @@ public final class TreeUtilities {
             path = result.path;
         }
         
-        if (path.getLeaf() == path.getCompilationUnit())
+        if (path.getLeaf() == path.getCompilationUnit()) {
+            long endPos = sourcePositions.getEndPosition(path.getCompilationUnit(), path.getCompilationUnit());
+            if (pos > endPos) {
+                List<? extends Tree> classes = path.getCompilationUnit().getTypeDecls();
+                if (classes.size() == 1 && classes.get(0) instanceof JCClassDecl clazz && (clazz.mods.flags & Flags.IMPLICIT_CLASS) != 0) {
+                    return new TreePath(path, clazz);
+                }
+            }
             return path;
+        }
         
         TokenSequence<JavaTokenId> tokenList = tokensFor(path.getLeaf(), sourcePositions, pos);
         tokenList.moveEnd();
@@ -970,7 +973,7 @@ public final class TreeUtilities {
         JavaFileObject prev = log.useSource(new DummyJFO());
         Log.DiagnosticHandler discardHandler = log.new DiscardDiagnosticHandler() {
             @Override
-            public void report(JCDiagnostic diag) {
+            public void reportReady(JCDiagnostic diag) {
                 errors.add(diag);
             }            
         };
@@ -1010,7 +1013,7 @@ public final class TreeUtilities {
         JavaFileObject prev = log.useSource(new DummyJFO());
         Log.DiagnosticHandler discardHandler = log.new DiscardDiagnosticHandler() {
             @Override
-            public void report(JCDiagnostic diag) {
+            public void reportReady(JCDiagnostic diag) {
                 errors.add(diag);
             }            
         };
@@ -2123,6 +2126,15 @@ public final class TreeUtilities {
             }
         }
         return false;
+    }
+
+    /**
+     * {@return {@code true} iff the given class is the implicit class in the compact source file.}
+     * @param tree class to check
+     * @since 2.82
+     */
+    public boolean isImplicitlyDeclaredClass(@NonNull ClassTree tree) {
+        return tree instanceof JCClassDecl clazz && (clazz.mods.flags & Flags.IMPLICIT_CLASS) != 0;
     }
 
     private static final class NBScope implements Scope {

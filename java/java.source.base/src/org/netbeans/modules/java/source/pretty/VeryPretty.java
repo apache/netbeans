@@ -2902,13 +2902,14 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         }
     }
     
-    private static final String[] flagLowerCaseNames = new String[Flag.values().length];
+    private static final String[] flagLowerCaseNames = new String[FlagsEnum.values().length];
     
     static {
-        for (Flag flag : Flag.values()) {
+        for (FlagsEnum flag : FlagsEnum.values()) {
             flagLowerCaseNames[flag.ordinal()] = flag.name().toLowerCase(Locale.ENGLISH);
         }
-        flagLowerCaseNames[Flag.NON_SEALED.ordinal()] = "non-sealed";
+        flagLowerCaseNames[FlagsEnum.NON_SEALED.ordinal()] = "non-sealed";
+        flagLowerCaseNames[FlagsEnum.TRANSIENT_OR_ACC_VARARGS.ordinal()] = "transient"; //TODO: there should be a test in java.source.base for this
     }
     
     /**
@@ -2922,7 +2923,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         flags = flags & Flags.ExtendedStandardFlags;
         StringBuilder buf = new StringBuilder();
         String sep = ""; // NOI18N
-        for (Flag flag : Flags.asFlagSet(flags)) {
+        for (FlagsEnum flag : Flags.asFlagSet(flags)) {
             buf.append(sep);
             String fname = flagLowerCaseNames[flag.ordinal()];
             buf.append(fname);

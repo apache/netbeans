@@ -100,7 +100,7 @@ public class NBParserFactory extends ParserFactory {
 
             if (!unit.getTypeDecls().isEmpty() && unit.getTypeDecls().get(0).getKind() == Kind.CLASS) {
                 JCClassDecl firstClass = (JCClassDecl) unit.getTypeDecls().get(0);
-                if ((firstClass.mods.flags & Flags.IMPLICIT_CLASS) != 0 && getEndPos(unit) == Position.NOPOS) {
+                if ((firstClass.mods.flags & Flags.IMPLICIT_CLASS) != 0) {
                     if (pack[0] != null) {
                         unit.defs = unit.defs.prepend(pack[0]);
                     }
@@ -115,7 +115,6 @@ public class NBParserFactory extends ParserFactory {
                     }
 
                     firstClass.pos = newPos;
-                    endPosTable.storeEnd(unit, token.endPos);
                 }
             }
             return unit;
@@ -188,12 +187,9 @@ public class NBParserFactory extends ParserFactory {
 
         public final class EndPosTableImpl extends AbstractEndPosTable {
             
-            private final Lexer lexer;
             private final SimpleEndPosTable delegate;
 
             private EndPosTableImpl(Lexer lexer, JavacParser parser, SimpleEndPosTable delegate) {
-                super(parser);
-                this.lexer = lexer;
                 this.delegate = delegate;
             }
             
@@ -202,9 +198,11 @@ public class NBParserFactory extends ParserFactory {
                 errorEndPos = delegate.errorEndPos;
             }
             
-            @Override public void storeEnd(JCTree tree, int endpos) {
+            @Override
+            public <T extends JCTree> T storeEnd(T tree, int endpos) {
                 if (endpos >= 0)
-                    delegate.storeEnd(tree, endpos);
+                    return delegate.storeEnd(tree, endpos);
+                return null;
             }
 
             public void setEnd(JCTree tree, int endpos) {
@@ -223,18 +221,6 @@ public class NBParserFactory extends ParserFactory {
             public void setErrorEndPos(int errPos) {
                 delegate.setErrorEndPos(errPos);
                 errorEndPos = delegate.errorEndPos;
-            }
-
-            @Override
-            protected <T extends JCTree> T to(T t) {
-                storeEnd(t, parser.token().endPos);
-                return t;
-            }
-
-            @Override
-            protected <T extends JCTree> T toP(T t) {
-                storeEnd(t, lexer.prevToken().endPos);
-                return t;
             }
 
             @Override

@@ -78,6 +78,7 @@ public class Hacks {
         } else if ("org.netbeans.modules.java.source.parsing.CompilationInfoImpl$DiagnosticListenerImpl$D".equals(d.getClass().getName())) {
             try {
                 Field delegate = d.getClass().getDeclaredField("delegate");
+                // TODO this adds --add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED
                 delegate.setAccessible(true);
                 return getJCDiagnostic((Diagnostic<?>) delegate.get(d));
             } catch (Exception ex) {

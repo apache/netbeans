@@ -75,6 +75,11 @@ public class FormLAF {
                 !MetalLookAndFeel.class.equals(lafClass) && (lafToTheme.get(MetalLookAndFeel.class) == null)) {
                 lafToTheme.put(MetalLookAndFeel.class, MetalLookAndFeel.getCurrentTheme());
             }
+            // adds
+            // --add-exports=java.desktop/com.sun.java.swing.plaf.gtk=ALL-UNNAMED
+            // --add-exports=java.desktop/com.sun.java.swing.plaf.windows=ALL-UNNAMED
+            // --add-exports=java.desktop/com.apple.eio=ALL-UNNAMED
+            // --add-exports=java.desktop/com.sun.java.swing.plaf.motif=ALL-UNNAMED
             LookAndFeel previewLookAndFeel = (LookAndFeel)lafClass.getDeclaredConstructor().newInstance();
             if (previewLafIsMetal) {
                 MetalTheme theme = lafToTheme.get(lafClass);
@@ -209,6 +214,7 @@ public class FormLAF {
         }
 
         java.lang.reflect.Method method = UIManager.class.getDeclaredMethod("getLAFState", new Class[0]); // NOI18N
+        // TODO adds --add-opens=java.desktop/javax.swing=ALL-UNNAMED
         method.setAccessible(true);
         Object lafState = method.invoke(null, new Object[0]);
         method = lafState.getClass().getDeclaredMethod("setLookAndFeelDefaults", new Class[] {UIDefaults.class}); // NOI18N
@@ -373,6 +379,7 @@ public class FormLAF {
         // in MultiUIDefaults in JDK 6 Update 10
         try {
             java.lang.reflect.Method method = Hashtable.class.getDeclaredMethod("getIterator", new Class[] {int.class}); // NOI18N
+            // TODO adds --add-opens=java.base/java.util=ALL-UNNAMED
             method.setAccessible(true);
             Object i = method.invoke(what, new Object[] {2/*Hashtable.ENTRIES*/});
             if (i instanceof Iterator) {

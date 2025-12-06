@@ -1336,7 +1336,10 @@ loop:
                 ClassElement classElement = classElement(isStatic, classHeritage != null, generator, async, methodDecorators);
                 if (classElement.isComputed()) {
                     classElements.add(classElement);
-                } else if (!classElement.isStatic() && classElement.getKeyName().equals("constructor")) {
+                } else if (!classElement.isStatic() && ("constructor".equals(classElement.getKeyName()) || "#constructor".equals(classElement.getKeyName()))) {
+                    if (classElement.isAccessor() || classElement.isPrivate() || classElement.isClassField() || generator) {
+                        throw error(AbstractParser.message("constructor.nonplain"), classElementToken);
+                    }
                     if (constructor == null) {
                         constructor = classElement;
                     } else {
@@ -1362,12 +1365,12 @@ loop:
                         if (value != null || existingProperty.getValue() != null) {
                             keyToIndexMap.put(key, classElements.size());
                             classElements.add(classElement);
-                        } else if (getter != null) {
-                            assert existingProperty.getGetter() != null || existingProperty.getSetter() != null;
+                        } else if (getter != null && (existingProperty.getGetter() != null || existingProperty.getSetter() != null)) {
                             classElements.set(existing, existingProperty.setGetter(getter));
-                        } else if (setter != null) {
-                            assert existingProperty.getGetter() != null || existingProperty.getSetter() != null;
+                        } else if (setter != null && (existingProperty.getGetter() != null || existingProperty.getSetter() != null)) {
                             classElements.set(existing, existingProperty.setSetter(setter));
+                        } else {
+                            classElements.add(classElement);
                         }
                     }
                 }
@@ -1381,9 +1384,31 @@ loop:
             }
 
             classElements.trimToSize();
+
+            verifyClassElements(classElements);
+
             return new ClassNode(classLineNumber, classToken, finish, className, classHeritage, constructor, classElements, decorators);
         } finally {
             isStrictMode = oldStrictMode;
+        }
+    }
+
+    /**
+     * Verify, that private class elements are declared only once.
+     */
+    private void verifyClassElements(final List<ClassElement> classElements) {
+        Set<String> boundPrivateNames = new HashSet<>();
+        for(ClassElement c: classElements) {
+            String name = c.getKeyName();
+            // Only scan private names
+            if(name == null || (! name.startsWith("#"))) {
+                continue;
+            }
+            if(boundPrivateNames.contains(name)) {
+                throw error(AbstractParser.message("private.multiplebindings", name), c.getToken());
+            } else {
+                boundPrivateNames.add(name);
+            }
         }
     }
 

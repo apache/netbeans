@@ -34,7 +34,6 @@ import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -734,7 +733,17 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
 
     //keep synchronized with libs.javacapi/manifest.mf and libs.javacimpl/manifest.mf
     //when adding new packages, double-check the quick path in loadClass below:
-    private static final Iterable<? extends String> javacPackages = Arrays.asList("com.sun.javadoc.", "com.sun.source.", "javax.annotation.processing.", "javax.lang.model.", "javax.tools.", "com.sun.tools.javac.", "com.sun.tools.javadoc.", "com.sun.tools.classfile.", "com.sun.tools.hc.");
+    private static final Iterable<? extends String> javacPackages = List.of(
+            "com.sun.source.",
+            "com.sun.tools.classfile.",
+            "com.sun.tools.javac.",
+            "com.sun.tools.doclint.",
+            "com.sun.tools.javap.",
+            "javax.annotation.processing.",
+            "javax.lang.model.",
+            "javax.tools."
+    );
+
     private static final class BypassOpenIDEUtilClassLoader extends ClassLoader {
         private final ClassLoader contextCL;
         public BypassOpenIDEUtilClassLoader(ClassLoader contextCL) {

@@ -48,6 +48,7 @@ import javax.tools.JavaFileObject;
 
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.util.JCDiagnostic.Error;
+import java.util.Set;
 import org.netbeans.modules.java.source.builder.ElementsService;
 
 /**
@@ -151,7 +152,7 @@ public class PostFlowAnalysis extends TreeScanner {
                         && !type.isErroneous()
                         && types.isSameType(types.erasure(sym.type), type);
                 if (clash) {
-                    log.error(tree.pos(), new Error("compiler", "name.clash.same.erasure", tree.sym, sym)); //NOI18N
+                    log.error(tree.pos(), new Error(Set.of(), "compiler", "name.clash.same.erasure", tree.sym, sym)); //NOI18N
                     return;
                 }
             } catch (AssertionError e) {}
@@ -201,7 +202,7 @@ public class PostFlowAnalysis extends TreeScanner {
         if (checkThis && currentClass != c) {
             List<Pair<TypeSymbol, Symbol>> ots = outerThisStack;
             if (ots.isEmpty()) {
-                log.error(pos, new Error("compiler", "no.encl.instance.of.type.in.scope", c)); //NOI18N
+                log.error(pos, new Error(Set.of(), "compiler", "no.encl.instance.of.type.in.scope", c)); //NOI18N
                 return;
             }
             Pair<TypeSymbol, Symbol> ot = ots.head;
@@ -210,13 +211,13 @@ public class PostFlowAnalysis extends TreeScanner {
                 do {
                     ots = ots.tail;
                     if (ots.isEmpty()) {
-                        log.error(pos, new Error("compiler", "no.encl.instance.of.type.in.scope", c)); //NOI18N
+                        log.error(pos, new Error(Set.of(), "compiler", "no.encl.instance.of.type.in.scope", c)); //NOI18N
                         return;
                     }
                     ot = ots.head;
                 } while (ot.snd != otc);
                 if (otc.owner.kind != Kinds.Kind.PCK && !otc.hasOuterInstance()) {
-                    log.error(pos, new Error("compiler", "cant.ref.before.ctor.called", c)); //NOI18N
+                    log.error(pos, new Error(Set.of(), "compiler", "cant.ref.before.ctor.called", c)); //NOI18N
                     return;
                 }
                 otc = ot.fst;
@@ -233,7 +234,7 @@ public class PostFlowAnalysis extends TreeScanner {
     private static final int MAX_STRING_LENGTH = 65535;
     private void checkStringConstant(DiagnosticPosition pos, Object constValue) {
         if (constValue instanceof String && ((String)constValue).length() >= MAX_STRING_LENGTH)
-            log.error(pos, new Error("compiler", "limit.string")); //NOI18N
+            log.error(pos, new Error(Set.of(), "compiler", "limit.string")); //NOI18N
     }
 
 }

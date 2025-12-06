@@ -157,8 +157,27 @@ public class ElementJavadocTest extends NbTestCase {
         String expectedJavadoc = "<pre>public class <b>Test</b><br>extends <a href='*0'>Object</a></pre><p>Hello!\n" +
                                  "\n" +
                                  "<p>";
-
+        
         assertEquals(expectedJavadoc, actualJavadoc);
     }
 
+    /**
+     * Test for issue 9018: Javadoc viewer shows HTML comments
+     * @throws Exception 
+     */
+    public void testHiddenTagInDoc() throws Exception {
+        prepareTest("test/Test.java", "/**\n" +
+                    " * Next commented text is not expected to be in output document\n" +
+                    " * <!-- This text not expected to be in output document -->\n" +
+                    " */\n" +
+                    "public class Te<caret>st {}");
+        String actualJavadoc = ElementJavadoc.create(info, selectedElement).getText();
+        String expectedJavadoc = "<pre>public class <b>Test</b><br>extends <a href='*0'>Object</a></pre><p>Next commented text is not expected to be in output document\n" +
+
+                                 "<p>";
+        assertEquals(expectedJavadoc, actualJavadoc);
+    }
+    
+    
+    
 }

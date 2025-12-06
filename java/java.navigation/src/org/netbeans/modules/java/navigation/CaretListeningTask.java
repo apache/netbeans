@@ -19,12 +19,13 @@
 
 package org.netbeans.modules.java.navigation;
 
+import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -54,7 +55,7 @@ import org.openide.util.Pair;
  */
 public class CaretListeningTask implements CancellableTask<CompilationInfo> {
     
-    private FileObject fileObject;
+    private final FileObject fileObject;
     private final AtomicBoolean canceled;
     
     private static ElementHandle<Element> lastEh;
@@ -75,6 +76,7 @@ public class CaretListeningTask implements CancellableTask<CompilationInfo> {
         lastEh = null;
     }
     
+    @Override
     public void run(CompilationInfo compilationInfo) throws Exception {
         // System.out.println("running " + fileObject);
         resume();
@@ -152,8 +154,21 @@ public class CaretListeningTask implements CancellableTask<CompilationInfo> {
         if ( navigatorShouldUpdate ) {
             updateNavigatorSelection(compilationInfo, tp); 
         }
-        
-        // Get Element
+
+        // Select element for javadoc
+        if (tp.getParentPath() != null) {
+            TreePath parent = tp.getParentPath();
+            if (parent.getLeaf().getKind() == Tree.Kind.NEW_CLASS) {
+                tp = parent;
+            } else if (parent.getLeaf().getKind() == Tree.Kind.PARAMETERIZED_TYPE) {
+                List<? extends Tree> typeArgs = ((ParameterizedTypeTree) parent.getLeaf()).getTypeArguments();
+                parent = parent.getParentPath();
+                if (parent != null && parent.getLeaf().getKind() == Tree.Kind.NEW_CLASS && !typeArgs.contains(tp.getLeaf())) {
+                    tp = parent;
+                }
+            }
+        }
+
         Element element = compilationInfo.getTrees().getElement(tp);
                        
         // if cancelled or no element, return
@@ -214,27 +229,20 @@ public class CaretListeningTask implements CancellableTask<CompilationInfo> {
                 return;
             }
         }
-            
-        
+
         // Compute and set javadoc
         if ( javadocShouldUpdate ) {
             // System.out.println("Updating JD");
             computeAndSetJavadoc(compilationInfo, element);
         }
-        
-        if ( isCancelled() ) {
-            return;
-        }
-        
+
     }
         
     private void setJavadoc(final FileObject owner, final ElementJavadoc javadoc) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                JavadocTopComponent javadocTopComponent = JavadocTopComponent.findInstance();
-                if (javadocTopComponent != null && javadocTopComponent.isOpened()) {
-                    javadocTopComponent.setJavadoc(owner, javadoc);
-                }
+        SwingUtilities.invokeLater(() -> {
+            JavadocTopComponent javadocTopComponent = JavadocTopComponent.findInstance();
+            if (javadocTopComponent != null && javadocTopComponent.isOpened()) {
+                javadocTopComponent.setJavadoc(owner, javadoc);
             }
         });
     }
@@ -261,15 +269,7 @@ public class CaretListeningTask implements CancellableTask<CompilationInfo> {
         if (isCancelled()) {
             return;
         }
-        setJavadoc(compilationInfo.getFileObject(), ElementJavadoc.create(
-                compilationInfo,
-                element,
-                new Callable<Boolean>() {
-                    @Override
-                    public Boolean call() throws Exception {
-                        return isCancelled();
-                    }
-                }));
+        setJavadoc(compilationInfo.getFileObject(), ElementJavadoc.create(compilationInfo, element, this::isCancelled));
     }
     
     private void updateNavigatorSelection(CompilationInfo ci, TreePath tp) throws Exception {
@@ -317,6 +317,7 @@ public class CaretListeningTask implements CancellableTask<CompilationInfo> {
                 case ANNOTATION_TYPE:
                 case CLASS:
                 case ENUM:
+                case RECORD:
                 case INTERFACE:
                 case COMPILATION_UNIT:
                 case MODULE:
@@ -360,8 +361,7 @@ public class CaretListeningTask implements CancellableTask<CompilationInfo> {
                 return;
             }
         }
-        
-        return;
+
     }
     
     private boolean shouldGoBack( String s, int offset ) {

@@ -1,0 +1,66 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+EC5C1E409E56B27121E41668759C7D106D01EFB4 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/beans/annotations.xml java.beans.annotations.xml
+CB211119803740EC62C4A6C3F3357EC303CA2CE9 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/awt/geom/annotations.xml java.awt.geom.annotations.xml
+926E2B21E0E712B3607EEB6D84F43417B2896127 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/awt/im/annotations.xml java.awt.im.annotations.xml
+35E3224FCBD3E1AF306F2B6A2C6BBEA9B0867966 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/awt/dnd/annotations.xml java.awt.dnd.annotations.xml
+2461DFD66282904AADF76FEADC04AC73CCD5B89E https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/awt/event/annotations.xml java.awt.event.annotations.xml
+BB566AACEAA62EC4DBA2F26FCA0FD9CA8357013D https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/awt/datatransfer/annotations.xml java.awt.datatransfer.annotations.xml
+649A7DC860161AA58E98948FD6FCE6F080245A77 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/awt/annotations.xml java.awt.annotations.xml
+39222FA2EE85E8B6091BD305C5092D36875250B4 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/text/annotations.xml java.text.annotations.xml
+85D1C7C0620A9069072F268BB21ACD433BFD1348 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/time/format/annotations.xml java.time.format.annotations.xml
+2EF8F60023E40C2D75D8BB88AE19D1384789E0A1 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/time/annotations.xml java.time.annotations.xml
+E1CF8C2060C3B605BFC164EE3F3C0FFD26D8C6B8 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/security/annotations.xml java.security.annotations.xml
+B25262F74645A6CEFB9F08F65E44E3F347BB83CC https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/util/jar/annotations.xml java.util.jar.annotations.xml
+9727BB4DF3C272C37E2CA94BE8C6059DD7618217 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/util/zip/annotations.xml java.util.zip.annotations.xml
+E564CBCBB8CC9277E93943BF900F859E95EF39BD https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/util/stream/annotations.xml java.util.stream.annotations.xml
+120C151D9C6ADAE198C3BD37D605FB8FDD90D6FE https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/util/regex/annotations.xml java.util.regex.annotations.xml
+09AFED7FC58D2AFCDD93C1A7D16FBDC9C51DBB03 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/util/function/annotations.xml java.util.function.annotations.xml
+87775D78414FA21D879D26BA09884A0A1A634066 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/util/concurrent/locks/annotations.xml java.util.concurrent.locks.annotations.xml
+962EBB8010BEC7BF2CCFF2CAD30C17D9BB0EDFD6 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/util/concurrent/atomic/annotations.xml java.util.concurrent.atomic.annotations.xml
+950E4F0D004A62A087831C16FA234D93513E0264 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/util/concurrent/annotations.xml java.util.concurrent.annotations.xml
+54EB0B744878B80CD7DCC4F6CE031998162B9BAF https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/util/annotations.xml java.util.annotations.xml
+168EACA6A54F3BAD0CB31DB46FF0A9D44943F617 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/lang/ref/annotations.xml java.lang.ref.annotations.xml
+8CA596D69D74EDAB225F8133D0FCAFF2E5A82A95 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/lang/reflect/annotations.xml java.lang.reflect.annotations.xml
+2C9646592355BDC106C2B72C47A2007F0948D44D https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/lang/annotations.xml java.lang.annotations.xml
+D022E8015B820D5D82DEF39017AC8CBA04718219 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/lang/invoke/annotations.xml java.lang.invoke.annotations.xml
+01A7D399244292E5C72A7169680CFACCDDC4D36B https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/nio/file/spi/annotations.xml java.nio.file.spi.annotations.xml
+6CEF46EED432035D9BEFB9980207FA33438C1770 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/nio/file/annotations.xml java.nio.file.annotations.xml
+773FBBD8A567B46A1F556988F99B74343852623F https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/nio/charset/annotations.xml java.nio.charset.annotations.xml
+1F4E77EE82BA4CD7F4EEB00911E2060D17CA79AA https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/nio/channels/annotations.xml java.nio.channels.annotations.xml
+A388ECCB92DB8CD385E80311F58DE0221D4DD32C https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/nio/annotations.xml java.nio.annotations.xml
+08062BFF0547BE8922F2E50EED78653BB8845D04 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/math/annotations.xml java.math.annotations.xml
+95CD3C8ADED6149AC36393100626B1A40906E7F8 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/sql/annotations.xml java.sql.annotations.xml
+C4562D68970F19CE11E861FD6D2E13A793BD5ADC https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/io/annotations.xml java.io.annotations.xml
+2063F2261A25D780B8A296FF420F8895D7A3D80C https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/java/net/annotations.xml java.net.annotations.xml
+70FF29AEBD5D8095986D73F08CDFE8038CECF09A https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/javax/annotation/processing/annotations.xml javax.annotation.processing.annotations.xml
+BDE5EF583346C86B4957540D4B80349D4CA96C5C https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/javax/naming/event/annotations.xml javax.naming.event.annotations.xml
+49BA009DC66091D8664221E1C029770381E727F6 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/javax/accessibility/annotations.xml javax.accessibility.annotations.xml
+2B5729572B8C70AC0BD9F4FF3CC0BC454751BF2D https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/javax/tools/annotations.xml javax.tools.annotations.xml
+CE871E5A69C5DE18D2B91B2B162A8C2CEA9DBDBC https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/javax/swing/text/html/annotations.xml javax.swing.text.html.annotations.xml
+27DD5D91255ED0CC0235333ACF0ECE2C8A27F4A5 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/javax/swing/tree/annotations.xml javax.swing.tree.annotations.xml
+18B5426CFEF5C5D3D9A00DD30EFA7ACB20309915 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/javax/swing/plaf/basic/annotations.xml javax.swing.plaf.basic.annotations.xml
+AF1F8E758D2FFFC26429459F8F63DEFE4251CA68 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/javax/swing/plaf/annotations.xml javax.swing.plaf.annotations.xml
+D9F002E7FE7661096F65EDCE9EFFA131AC2B41B0 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/javax/swing/event/annotations.xml javax.swing.event.annotations.xml
+3D02B5AF63EA2E53E8313C32E6841C4603363E1E https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/javax/swing/annotations.xml javax.swing.annotations.xml
+022E63398E5C9C08D4B4D7E5A86114D497F22929 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/javax/swing/table/annotations.xml javax.swing.table.annotations.xml
+1E8D78C00A61B5ECF2E0199939F99578D4BB2145 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/javax/swing/border/annotations.xml javax.swing.border.annotations.xml
+7F281B4F9672DFE506751457479A7FD1EA29742B https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/javax/xml/bind/annotation/annotations.xml javax.xml.bind.annotation.annotations.xml
+A65AF629112A11F96D945A6ACA85A4DB05CE3673 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/org/w3c/dom/annotations.xml org.w3c.dom.annotations.xml
+0C598D203FEE043B525844A33289000AB04EE162 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/com/sun/jdi/event/annotations.xml com.sun.jdi.event.annotations.xml
+8B0393127AA162DC6E7DB6D5055E631B0E96167D https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/com/sun/jdi/request/annotations.xml com.sun.jdi.request.annotations.xml
+26FEB625FCCAEC1987A33BEDEF9A3739EB879541 https://raw.githubusercontent.com/JetBrains/intellij-community/73943d0839fdc7364be735ec4953f172db31130b/java/jdkAnnotations/com/sun/jdi/annotations.xml com.sun.jdi.annotations.xml

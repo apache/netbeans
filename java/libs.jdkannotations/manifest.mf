@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: org.netbeans.libs.jdkannotations
+OpenIDE-Module-Layer: org/netbeans/libs/jdkannotations/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/jdkannotations/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

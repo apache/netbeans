@@ -2192,7 +2192,7 @@ public class CasualDiff {
         localPointer = diffInnerComments(oldT, newT, localPointer);
         JCClassDecl oldEnclosing = printer.enclClass;
         printer.enclClass = null;
-        localPointer = diffList(filterHidden(oldT.stats), filterHidden(newT.stats), localPointer, est, Measure.MEMBER, printer);
+        localPointer = diffList(filterCaseStatements(oldT), filterCaseStatements(newT), localPointer, est, Measure.MEMBER, printer);
         printer.enclClass = oldEnclosing;
         if (localPointer < endPos(oldT)) {
             copyTo(localPointer, localPointer = endPos(oldT));
@@ -2206,6 +2206,17 @@ public class CasualDiff {
         }
         printer.undent(old);
         return localPointer;
+    }
+
+    private List<JCTree> filterCaseStatements(JCCase c) {
+        List<JCTree> filtered = filterHidden(c.stats);
+
+        if (c.getCaseKind() == CaseTree.CaseKind.RULE &&
+            filtered.size() == 1 && filtered.get(0) instanceof JCYield yield) {
+            filtered = List.of(make.Exec(yield.value));
+        }
+
+        return filtered;
     }
 
     protected int diffSynchronized(JCSynchronized oldT, JCSynchronized newT, int[] bounds) {

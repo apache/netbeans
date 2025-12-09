@@ -1169,6 +1169,17 @@ public final class TreeMaker {
     }
     
     /**
+     * Creates a new YieldTree.
+     *
+     * @param expression the expression to be yielded.
+     * @see com.sun.source.tree.YieldTree
+     * @since 2.81
+     */
+    public YieldTree Yield(ExpressionTree expression) {
+        return delegate.Yield(expression);
+    }
+
+    /**
      * Creates a new SwitchTree.
      *
      * @param expression the expression which provides the value to be switched.

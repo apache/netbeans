@@ -31,6 +31,7 @@ import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.ModuleTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.OpensTree;
@@ -965,6 +966,11 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
                 tl.moveNext();
                 record = true;
             }
+            Token<?> valueToken = tl.firstIdentifier(getCurrentPath(), "value");
+            if (valueToken != null) {
+                contextKeywords.add(valueToken);
+                tl.moveNext();
+            }
             firstIdentifier(tree.getSimpleName().toString());
 
             //XXX:????
@@ -979,7 +985,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
                 if (permitList != null && !permitList.isEmpty()) {
                     tl.moveNext();
                     Token<?> t = firstIdentifierToken("permits");// NOI18N
-                    if (tl != null) {
+                    if (t != null) {
                         contextKeywords.add(t);
                         scan(permitList, null);
                     }
@@ -1084,23 +1090,41 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
             return super.scan(tree, p);
         }
 
+        private static final Modifier MODIFIER_VALUE; // TODO remove after valhalla javac
+        static {
+            Modifier mod;
+            try {
+                mod = Modifier.valueOf("VALUE"); // NOI18N
+            } catch (IllegalArgumentException ex) {
+                mod = null;
+            }
+            MODIFIER_VALUE = mod;
+        }
+
         private void visitModifier(Tree tree) {
             tl.moveToOffset(sourcePositions.getStartPosition(info.getCompilationUnit(), tree));
-            Token t = null;
-            if (tree.toString().contains("non-sealed")) {// NOI18N
-                Token firstIdentifier = tl.firstIdentifier(getCurrentPath(), "non");// NOI18N
-                if (firstIdentifier != null) {
-                    contextKeywords.add(firstIdentifier);
-                }
-                tl.moveNext();
-                tl.moveNext();
-                if (TokenUtilities.textEquals(tl.currentToken().text(), "sealed")) {// NOI18N
-                    contextKeywords.add(tl.currentToken());
-                }
-            } else if (tree.toString().contains("sealed")) {// NOI18N
-                t = firstIdentifierToken("sealed"); //NOI18N
-                if (t != null) {
-                    contextKeywords.add(t);
+            
+            if (tree.getKind() == Kind.MODIFIERS && tree instanceof ModifiersTree modTree) {
+                if (modTree.getFlags().contains(Modifier.NON_SEALED)) {// NOI18N
+                    Token<?> firstIdentifier = tl.firstIdentifier(getCurrentPath(), "non");// NOI18N
+                    if (firstIdentifier != null) {
+                        contextKeywords.add(firstIdentifier);
+                    }
+                    tl.moveNext();
+                    tl.moveNext();
+                    if (TokenUtilities.textEquals(tl.currentToken().text(), "sealed")) {// NOI18N
+                        contextKeywords.add(tl.currentToken());
+                    }
+                } else if (modTree.getFlags().contains(Modifier.SEALED)) {// NOI18N
+                    Token<?> t = firstIdentifierToken("sealed"); //NOI18N
+                    if (t != null) {
+                        contextKeywords.add(t);
+                    }
+                } else if (MODIFIER_VALUE != null && modTree.getFlags().contains(MODIFIER_VALUE)) {// NOI18N
+                    Token<?> t = firstIdentifierToken("value"); //NOI18N
+                    if (t != null) {
+                        contextKeywords.add(t);
+                    }
                 }
             }
         }

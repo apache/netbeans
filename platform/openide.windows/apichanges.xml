@@ -1383,7 +1383,6 @@ OpenIDE-Module-Requires: org.openide.compiler.CompilationEngine,
 <htmlcontents>
 <head>
 <title>Change History for the Window Systems API</title>
-<link rel="stylesheet" href="prose.css" type="text/css"/>
 </head>
 <body>
 <p class="overviewlink">

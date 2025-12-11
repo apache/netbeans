@@ -972,7 +972,6 @@ public void removeVetoableChangeListener(VetoableChangeListener l);</pre>
 <htmlcontents>
 <head>
 <title>Change History for the Explorer API</title>
-<link rel="stylesheet" href="prose.css" type="text/css"/>
 </head>
 <body>
 <p class="overviewlink">

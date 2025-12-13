@@ -61,7 +61,7 @@ final class ChangeTypeFix extends JavaFix {
         ChangeType.computeType(working, position, tm, expressionType, leaf);
 
         //anonymous class?
-        expressionType[0] = Utilities.convertIfAnonymous(expressionType[0]);
+        expressionType[0] = Utilities.convertIfAnonymous(expressionType[0], true);
 
         if (leaf[0] instanceof VariableTree) {
             VariableTree oldVariableTree = ((VariableTree)leaf[0]);

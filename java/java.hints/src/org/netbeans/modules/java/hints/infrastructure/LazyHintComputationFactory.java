@@ -30,6 +30,9 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.JavaSource.Priority;
 import org.netbeans.api.java.source.support.EditorAwareJavaSourceTaskFactory;
+import org.netbeans.modules.java.hints.infrastructure.EmbeddedLazyHintComputation.EmbeddedLazyHintComputationScheduler;
+import org.netbeans.modules.parsing.api.Snapshot;
+import org.netbeans.modules.parsing.spi.Scheduler;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
 
@@ -40,7 +43,7 @@ import org.openide.util.Lookup;
 @org.openide.util.lookup.ServiceProvider(service=org.netbeans.api.java.source.JavaSourceTaskFactory.class)
 public class LazyHintComputationFactory extends EditorAwareJavaSourceTaskFactory {
     
-    private static Map<FileObject, List<Reference<CreatorBasedLazyFixList>>> file2Creators = new WeakHashMap<FileObject, List<Reference<CreatorBasedLazyFixList>>>();
+    private static Map<Snapshot, List<Reference<CreatorBasedLazyFixList>>> file2Creators = new WeakHashMap<>();
     
     /** Creates a new instance of LazyHintComputationFactory */
     public LazyHintComputationFactory() {
@@ -59,22 +62,28 @@ public class LazyHintComputationFactory extends EditorAwareJavaSourceTaskFactory
         }
     }
     
-    public static void addToCompute(FileObject file, CreatorBasedLazyFixList list) {
+    public static void addToCompute(Snapshot snapshot, CreatorBasedLazyFixList list) {
         synchronized (LazyHintComputationFactory.class) {
-            List<Reference<CreatorBasedLazyFixList>> references = file2Creators.get(file);
+            List<Reference<CreatorBasedLazyFixList>> references = file2Creators.get(snapshot);
             
             if (references == null) {
-                file2Creators.put(file, references = new ArrayList<Reference<CreatorBasedLazyFixList>>());
+                file2Creators.put(snapshot, references = new ArrayList<Reference<CreatorBasedLazyFixList>>());
             }
             
             references.add(new WeakReference(list));
         }
         
-        rescheduleImpl(file);
+        rescheduleImpl(snapshot.getSource().getFileObject());
+
+        for (Scheduler s : Lookup.getDefault().lookupAll(Scheduler.class)) {
+            if (s instanceof EmbeddedLazyHintComputationScheduler embedded) {
+                embedded.refresh();
+            }
+        }
     }
     
-    public static synchronized List<CreatorBasedLazyFixList> getAndClearToCompute(FileObject file) {
-        List<Reference<CreatorBasedLazyFixList>> references = file2Creators.get(file);
+    public static synchronized List<CreatorBasedLazyFixList> getAndClearToCompute(Snapshot snaptshot) {
+        List<Reference<CreatorBasedLazyFixList>> references = file2Creators.get(snaptshot);
         
         if (references == null) {
             return Collections.emptyList();

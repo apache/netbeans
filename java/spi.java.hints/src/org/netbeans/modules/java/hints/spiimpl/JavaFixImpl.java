@@ -29,10 +29,11 @@ import java.util.Map;
 import java.util.function.Function;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
+import org.netbeans.api.java.source.JavaSourcePath;
 import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.ModificationResult.Difference;
+import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.java.hints.spiimpl.batch.BatchUtilities;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
@@ -64,23 +65,25 @@ public class JavaFixImpl implements Fix {
 
     @Override
     public ChangeInfo implement() throws Exception {
-        FileObject file = Accessor.INSTANCE.getFile(jf);
+        JavaSourcePath path = Accessor.INSTANCE.getJavaSourcePath(jf);
         
-        BatchUtilities.fixDependencies(file, List.of(jf), new IdentityHashMap<>());
+        BatchUtilities.fixDependencies(path.getFileObject(), List.of(jf), new IdentityHashMap<>());
 
-        JavaSource js = JavaSource.forFileObject(file);
-
-        ModificationResult result = js.runModificationTask((WorkingCopy wc) -> {
-            if (wc.toPhase(Phase.RESOLVED).compareTo(Phase.RESOLVED) < 0) {
-                return;
+        Task<WorkingCopy> runFix = new Task<>() {
+            @Override
+            public void run(WorkingCopy wc) throws Exception {
+                if (wc.toPhase(Phase.RESOLVED).compareTo(Phase.RESOLVED) < 0) {
+                    return;
+                }
+                Map<FileObject, byte[]> resourceContentChanges = new HashMap<>();
+                Accessor.INSTANCE.process(jf, wc, true, resourceContentChanges, /*Ignored in editor:*/new ArrayList<>());
+                Map<FileObject, List<Difference>> resourceContentDiffs = new HashMap<>();
+                BatchUtilities.addResourceContentChanges(resourceContentChanges, resourceContentDiffs);
+                JavaSourceAccessor.getINSTANCE().createModificationResult(resourceContentDiffs, Map.of()).commit();
             }
-            Map<FileObject, byte[]> resourceContentChanges = new HashMap<>();
-            Accessor.INSTANCE.process(jf, wc, true, resourceContentChanges, /*Ignored in editor:*/new ArrayList<>());
-            Map<FileObject, List<Difference>> resourceContentDiffs = new HashMap<>();
-            BatchUtilities.addResourceContentChanges(resourceContentChanges, resourceContentDiffs);
-            JavaSourceAccessor.getINSTANCE().createModificationResult(resourceContentDiffs, Map.of()).commit();
-        });
+        };
 
+        ModificationResult result = ModificationResult.runModificationTask(path, runFix);
         result.commit();
 
         Function<ModificationResult, ChangeInfo> convertor = Accessor.INSTANCE.getChangeInfoConvertor(jf);
@@ -128,7 +131,7 @@ public class JavaFixImpl implements Fix {
         public abstract String getText(JavaFix jf);
         public abstract String getSortText(JavaFix jf);
         public abstract ChangeInfo process(JavaFix jf, WorkingCopy wc, boolean canShowUI, Map<FileObject, byte[]> resourceContent, Collection<? super RefactoringElementImplementation> fileChanges) throws Exception;
-        public abstract FileObject getFile(JavaFix jf);
+        public abstract JavaSourcePath getJavaSourcePath(JavaFix jf);
         public abstract Map<String, String> getOptions(JavaFix jf);
         public abstract Fix rewriteFix(CompilationInfo info, String displayName, TreePath what, final String to, Map<String, TreePath> parameters, Map<String, Collection<? extends TreePath>> parametersMulti, final Map<String, String> parameterNames, Map<String, TypeMirror> constraints, Map<String, String> options, String... imports);
         public abstract Fix createSuppressWarningsFix(CompilationInfo compilationInfo, TreePath treePath, String... keys);

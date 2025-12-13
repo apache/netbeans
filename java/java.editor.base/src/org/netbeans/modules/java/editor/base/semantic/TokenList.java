@@ -54,7 +54,7 @@ public class TokenList {
     private TokenSequence topLevel;
     private TokenSequence ts;
         
-    public TokenList(CompilationInfo info, final Document doc, AtomicBoolean cancel) {
+    public TokenList(CompilationInfo info, final Document doc, boolean nested, AtomicBoolean cancel) {
         this.info = info;
         this.doc = doc;
         this.cancel = cancel;
@@ -70,7 +70,7 @@ public class TokenList {
                 
                 topLevel = TokenHierarchy.get(doc).tokenSequence();
                 
-                topLevelIsJava = topLevel.language() == JavaTokenId.language();
+                topLevelIsJava = !nested && topLevel.language() == JavaTokenId.language();
                 
                 if (topLevelIsJava) {
                     ts = topLevel;
@@ -90,6 +90,7 @@ public class TokenList {
         doc.render(new Runnable() {
             @Override
             public void run() {
+                try {
                 if (cancel.get()) {
                     return ;
                 }
@@ -137,6 +138,10 @@ public class TokenList {
                             }
                         }
                     }
+                }
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                    throw t;
                 }
             }
         });
@@ -356,15 +361,19 @@ public class TokenList {
         });
     }
 
-    public int offset() {
+    public int originalOffset() {
         return ts != null ? ts.offset() : -1;
+    }
+
+    public int embeddedOffset() {
+        return ts != null ? info.getSnapshot().getEmbeddedOffset(ts.offset()) : -1;
     }
 
     public int index() {
         return ts != null ? ts.index() : -1;
     }
 
-    public void resetToIndex(int index) {
+    public void resetToIndex(int index, int offset) {
         doc.render(() -> {
             if (cancel.get()) {
                 return ;
@@ -379,8 +388,13 @@ public class TokenList {
                 return ;
             }
 
-            ts.moveIndex(index);
-            ts.moveNext();
+            if (topLevelIsJava) {
+                ts.moveIndex(index);
+                ts.moveNext();
+            } else {
+                ts = null;
+                moveToOffset(offset);
+            }
         });
     }
 

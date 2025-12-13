@@ -30,6 +30,7 @@ import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.modules.java.editor.imports.JavaFixAllImports;
 import org.netbeans.modules.java.hints.OrganizeImports;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.parsing.api.ResultIterator;
@@ -73,7 +74,7 @@ public final class OrganizeImportsCodeAction extends CodeActionsProvider {
             }
             List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
-                OrganizeImports.doOrganizeImports(wc, null, false);
+               OrganizeImports.doOrganizeImports(wc, null, false);
             });
             if (!edits.isEmpty()) {
                 codeAction.setEdit(new WorkspaceEdit(Collections.singletonMap(uri, edits)));

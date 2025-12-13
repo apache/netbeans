@@ -49,7 +49,7 @@ import org.netbeans.modules.parsing.api.ResultIterator;
  * @author Dusan Balek
  */
 public abstract class CodeActionsProvider {
-
+    public static final String FIX_IMPORTS_KIND = "source.fixImports";
     public static final String CODE_GENERATOR_KIND = "source.generate";
     public static final String CODE_ACTIONS_PROVIDER_CLASS = "providerClass";
     public static final String DATA = "data";

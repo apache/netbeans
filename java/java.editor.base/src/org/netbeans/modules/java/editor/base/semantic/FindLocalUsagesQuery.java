@@ -18,8 +18,6 @@
  */
 package org.netbeans.modules.java.editor.base.semantic;
 
-import org.netbeans.modules.java.editor.base.semantic.Utilities;
-
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
@@ -70,7 +68,7 @@ public class FindLocalUsagesQuery extends CancellableTreePathScanner<Void, Stack
     
     public Set<Token> findUsages(Element element, CompilationInfo info, Document doc) {
         this.info = info;
-        this.usages = new HashSet<Token>();
+        this.usages = new HashSet<>();
         this.toFind = element;
         this.doc = doc;
         

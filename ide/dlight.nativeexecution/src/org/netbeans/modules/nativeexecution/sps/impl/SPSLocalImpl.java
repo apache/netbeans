@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.SignatureException;
-import java.security.acl.NotOwnerException;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -60,7 +59,6 @@ public final class SPSLocalImpl extends SPSCommonImpl {
 
     public static SPSLocalImpl getNewInstance(ExecutionEnvironment execEnv)
             throws SignatureException, MissingResourceException {
-        String privpCmd = null;
 
         MacroExpander macroExpander = MacroExpanderFactory.getExpander(execEnv);
         String path = "$osname-$platform"; // NOI18N
@@ -69,7 +67,7 @@ public final class SPSLocalImpl extends SPSCommonImpl {
         } catch (ParseException ex) {
         }
 
-        privpCmd = "bin/nativeexecution/" + path + "/privp"; // NOI18N
+        String privpCmd = "bin/nativeexecution/" + path + "/privp"; // NOI18N
         InstalledFileLocator fl = InstalledFileLocatorProvider.getDefault();
         File file = fl.locate(privpCmd, "org.netbeans.modules.dlight.nativeexecution", false); //NOI18N
 
@@ -88,9 +86,7 @@ public final class SPSLocalImpl extends SPSCommonImpl {
         Future<Integer> chmod = CommonTasksSupport.chmod(execEnv, privpCmd, 0755, null);
         try {
             chmod.get();
-        } catch (ExecutionException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (InterruptedException ex) {
+        } catch (ExecutionException | InterruptedException ex) {
             Exceptions.printStackTrace(ex);
         }
 

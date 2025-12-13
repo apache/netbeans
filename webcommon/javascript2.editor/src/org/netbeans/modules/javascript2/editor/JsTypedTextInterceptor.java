@@ -527,7 +527,7 @@ public class JsTypedTextInterceptor implements TypedTextInterceptor {
             return true;
         } else {
             // test that we are in front of ) , " or ' ... etc.
-            int eol = LineDocumentUtils.getLineEnd(doc, dotPos);
+            int eol = LineDocumentUtils.getLineEndOffset(doc, dotPos);
 
             if ((dotPos == eol) || (eol == -1)) {
                 return false;

@@ -42,6 +42,7 @@ import java.lang.reflect.Method;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.modules.html.editor.lib.api.model.HtmlTagAttribute;
 import org.netbeans.modules.html.editor.HtmlPreferences;
 import org.netbeans.modules.html.editor.javadoc.HelpManager;
@@ -267,8 +268,8 @@ public class HtmlCompletionItem implements CompletionItem {
                 @Override
                 public void run() {
                     try {
-                        int startOffset = Utilities.getRowStart(doc, dotPos);
-                        int endOffset = Utilities.getRowEnd(doc, dotPos);
+                        int startOffset = LineDocumentUtils.getLineStartOffset(doc, dotPos);
+                        int endOffset = LineDocumentUtils.getLineEndOffset(doc, dotPos);
                         indent.reindent(startOffset, endOffset);
                     } catch (BadLocationException ex) {
                         //ignore

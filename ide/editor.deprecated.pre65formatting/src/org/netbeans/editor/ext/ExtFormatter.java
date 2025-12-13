@@ -33,6 +33,7 @@ import java.util.prefs.Preferences;
 import javax.swing.text.Document;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.editor.BaseDocument;
@@ -331,7 +332,7 @@ public class ExtFormatter extends Formatter implements FormatLayer {
         BaseDocument doc = Utilities.getDocument(target);
         int dotPos = target.getCaret().getDot();
         try {
-            int fnw = Utilities.getRowFirstNonWhite(doc, dotPos);
+            int fnw = LineDocumentUtils.getLineFirstNonWhitespace(doc, dotPos);
             return dotPos != fnw+typedText.length();
         } catch (BadLocationException e) {
             return false;
@@ -354,13 +355,13 @@ public class ExtFormatter extends Formatter implements FormatLayer {
         if (doc instanceof BaseDocument) {
             try {
                 BaseDocument bdoc = (BaseDocument)doc;
-                int lineStart = Utilities.getRowStart(bdoc, offset);
+                int lineStart = LineDocumentUtils.getLineStartOffset(bdoc, offset);
                 int nextLineStart = Utilities.getRowStart(bdoc, offset, 1);
                 if (nextLineStart < 0) { // end of doc
                     nextLineStart = bdoc.getLength();
                 }
                 reformat(bdoc, lineStart, nextLineStart, false);
-                return Utilities.getRowEnd(bdoc, lineStart);
+                return LineDocumentUtils.getLineEndOffset(bdoc, lineStart);
             } catch (GuardedException e) {
                 java.awt.Toolkit.getDefaultToolkit().beep();
 
@@ -379,7 +380,7 @@ public class ExtFormatter extends Formatter implements FormatLayer {
     
     /** Returns offset of EOL for the white line */
     protected int getEOLOffset(BaseDocument bdoc, int offset) throws BadLocationException{
-        return Utilities.getRowEnd(bdoc, offset);
+        return LineDocumentUtils.getLineEndOffset(bdoc, offset);
     }
 
     /** Inserts new line at given position and indents the new line with
@@ -402,14 +403,14 @@ public class ExtFormatter extends Formatter implements FormatLayer {
                         result [0]++;
                         newLineInserted = true;
 
-                        int eolOffset = Utilities.getRowEnd(bdoc, result [0]);
+                        int eolOffset = LineDocumentUtils.getLineEndOffset(bdoc, result [0]);
 
                         // Try to change the indent of the new line
                         // It may fail when inserting '\n' before the guarded block
                         Writer w = reformat(bdoc, result [0], eolOffset, true);
 
                         // Find the caret position
-                        eolOffset = Utilities.getRowFirstNonWhite(bdoc, result [0]);
+                        eolOffset = LineDocumentUtils.getLineFirstNonWhitespace(bdoc, result [0]);
                         if (eolOffset < 0) { // white line
                             eolOffset = getEOLOffset(bdoc, result [0]);
                         }

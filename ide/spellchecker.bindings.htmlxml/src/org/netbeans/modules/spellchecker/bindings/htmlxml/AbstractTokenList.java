@@ -25,8 +25,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
 import org.netbeans.modules.spellchecker.spi.language.TokenList;
 import org.openide.ErrorManager;
 
@@ -54,7 +54,7 @@ public abstract class AbstractTokenList implements TokenList {
         currentStartOffset = (-1);
         this.ignoreBefore = offset;
         try {
-            this.nextSearchOffset = Utilities.getRowStart(doc, offset);
+            this.nextSearchOffset = LineDocumentUtils.getLineStartOffset(doc, offset);
         } catch (BadLocationException ex) {
             Logger.getLogger(AbstractTokenList.class.getName()).log(Level.FINE, null, ex);
             this.nextSearchOffset = offset;

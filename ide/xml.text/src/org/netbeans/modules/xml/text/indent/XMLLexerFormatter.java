@@ -114,7 +114,7 @@ public class XMLLexerFormatter {
         if(noNewline || so == 0 || CharSequences.indexOf(temp, "\n") != -1){ // NOI18N
             int i = LineDocumentUtils.getLineFirstNonWhitespace(doc, so);
             if (i == -1) {
-                i = LineDocumentUtils.getLineEnd(doc, so);
+                i = LineDocumentUtils.getLineEndOffset(doc, so);
             }
             int rowStart = LineDocumentUtils.getLineStart(doc, so);
             
@@ -650,7 +650,7 @@ public class XMLLexerFormatter {
 
                     for (int lno = 0; lno < lineCount; lno++) {
                         // indent 1st comment line, as if it was text:
-                        int lineEnd = LineDocumentUtils.getLineEnd(basedoc, currentOffset);
+                        int lineEnd = LineDocumentUtils.getLineEndOffset(basedoc, currentOffset);
 
                         int desiredIndent;
                         if (lno == 0 || lno == lineCount -1) {

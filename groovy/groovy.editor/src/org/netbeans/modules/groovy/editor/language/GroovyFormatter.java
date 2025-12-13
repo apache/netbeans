@@ -463,7 +463,7 @@ public class GroovyFormatter implements Formatter {
                     indent = balance * indentSize + hangingIndent + initialIndent;
                 }
 
-                int endOfLine = LineDocumentUtils.getLineEnd(doc, offset) + 1;
+                int endOfLine = LineDocumentUtils.getLineEndOffset(doc, offset) + 1;
 
                 if (isJavaDocComment(doc, offset, endOfLine)) {
                     indent++;

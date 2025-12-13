@@ -160,7 +160,7 @@ public class Refactoring {
                             LineDocument ldoc = (LineDocument) doc;
 
                             int rowStart = LineDocumentUtils.getLineStart(ldoc, or.getStart());
-                            int rowEnd = LineDocumentUtils.getLineEnd(ldoc, or.getEnd());
+                            int rowEnd = LineDocumentUtils.getLineEndOffset(ldoc, or.getEnd());
 
                             bounds = new PositionBounds(
                                     es.createPositionRef(or.getStart(), Position.Bias.Forward),

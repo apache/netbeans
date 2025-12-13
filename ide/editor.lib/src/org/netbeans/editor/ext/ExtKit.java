@@ -48,6 +48,7 @@ import org.netbeans.api.editor.NavigationHistory;
 import org.netbeans.api.editor.EditorActionNames;
 import org.netbeans.api.editor.caret.CaretInfo;
 import org.netbeans.api.editor.caret.EditorCaret;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
@@ -475,7 +476,7 @@ public class ExtKit extends BaseKit {
         *  of the line with the line-number equal to (lineOffset + 1).
         */
         protected int getOffsetFromLine(BaseDocument doc, int lineOffset) {
-            return Utilities.getRowStartFromLineOffset(doc, lineOffset);
+            return LineDocumentUtils.getLineStartFromIndex(doc, lineOffset);
         }
 
         public void actionPerformed(ActionEvent evt, JTextComponent target) {
@@ -905,18 +906,18 @@ public class ExtKit extends BaseKit {
                                     if (caretInfo.isSelectionShowing()) {
                                         int start = Math.min(caretInfo.getDot(), caretInfo.getMark());
                                         int end = Math.max(caretInfo.getDot(), caretInfo.getMark());
-                                        startPos = Utilities.getRowStart(doc, start);
+                                        startPos = LineDocumentUtils.getLineStartOffset(doc, start);
                                         endPos = end;
-                                        if (endPos > 0 && Utilities.getRowStart(doc, endPos) == endPos) {
+                                        if (endPos > 0 && LineDocumentUtils.getLineStartOffset(doc, endPos) == endPos) {
                                             endPos--;
                                         }
-                                        endPos = Utilities.getRowEnd(doc, endPos);
+                                        endPos = LineDocumentUtils.getLineEndOffset(doc, endPos);
                                     } else { // selection not visible
-                                        startPos = Utilities.getRowStart(doc, caretInfo.getDot());
-                                        endPos = Utilities.getRowEnd(doc, caretInfo.getDot());
+                                        startPos = LineDocumentUtils.getLineStartOffset(doc, caretInfo.getDot());
+                                        endPos = LineDocumentUtils.getLineEndOffset(doc, caretInfo.getDot());
                                     }
 
-                                    int lineCount = Utilities.getRowCount(doc, startPos, endPos);
+                                    int lineCount = LineDocumentUtils.getLineCount(doc, startPos, endPos);
                                     boolean comment = forceComment != null ? forceComment : !allComments(doc, startPos, lineCount);
 
                                     if (comment) {
@@ -939,18 +940,18 @@ public class ExtKit extends BaseKit {
                                 int endPos;
 
                                 if (Utilities.isSelectionShowing(caret)) {
-                                    startPos = Utilities.getRowStart(doc, target.getSelectionStart());
+                                    startPos = LineDocumentUtils.getLineStartOffset(doc, target.getSelectionStart());
                                     endPos = target.getSelectionEnd();
-                                    if (endPos > 0 && Utilities.getRowStart(doc, endPos) == endPos) {
+                                    if (endPos > 0 && LineDocumentUtils.getLineStartOffset(doc, endPos) == endPos) {
                                         endPos--;
                                     }
-                                    endPos = Utilities.getRowEnd(doc, endPos);
+                                    endPos = LineDocumentUtils.getLineEndOffset(doc, endPos);
                                 } else { // selection not visible
-                                    startPos = Utilities.getRowStart(doc, caret.getDot());
-                                    endPos = Utilities.getRowEnd(doc, caret.getDot());
+                                    startPos = LineDocumentUtils.getLineStartOffset(doc, caret.getDot());
+                                    endPos = LineDocumentUtils.getLineEndOffset(doc, caret.getDot());
                                 }
 
-                                int lineCount = Utilities.getRowCount(doc, startPos, endPos);
+                                int lineCount = LineDocumentUtils.getLineCount(doc, startPos, endPos);
                                 boolean comment = forceComment != null ? forceComment : !allComments(doc, startPos, lineCount);
 
                                 if (comment) {
@@ -970,12 +971,12 @@ public class ExtKit extends BaseKit {
         
         private boolean allComments(BaseDocument doc, int startOffset, int lineCount) throws BadLocationException {
             for (int offset = startOffset; lineCount > 0; lineCount--) {
-                int firstNonWhitePos = Utilities.getRowFirstNonWhite(doc, offset);
+                int firstNonWhitePos = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
                 if (firstNonWhitePos == -1) {
                     return false;
                 }
                 
-                if (Utilities.getRowEnd(doc, firstNonWhitePos) - firstNonWhitePos < lineCommentStringLen) {
+                if (LineDocumentUtils.getLineEndOffset(doc, firstNonWhitePos) - firstNonWhitePos < lineCommentStringLen) {
                     return false;
                 }
                 
@@ -999,11 +1000,11 @@ public class ExtKit extends BaseKit {
         private void uncomment(BaseDocument doc, int startOffset, int lineCount) throws BadLocationException {
             for (int offset = startOffset; lineCount > 0; lineCount--) {
                 // Get the first non-whitespace char on the current line
-                int firstNonWhitePos = Utilities.getRowFirstNonWhite(doc, offset);
+                int firstNonWhitePos = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
 
                 // If there is any, check wheter it's the line-comment-chars and remove them
                 if (firstNonWhitePos != -1) {
-                    if (Utilities.getRowEnd(doc, firstNonWhitePos) - firstNonWhitePos >= lineCommentStringLen) {
+                    if (LineDocumentUtils.getLineEndOffset(doc, firstNonWhitePos) - firstNonWhitePos >= lineCommentStringLen) {
                         CharSequence maybeLineComment = DocumentUtilities.getText(doc, firstNonWhitePos, lineCommentStringLen);
                         if (CharSequenceUtilities.textEquals(maybeLineComment, lineCommentString)) {
                             doc.remove(firstNonWhitePos, lineCommentStringLen);

@@ -167,7 +167,7 @@ public class GradleDependenciesImplementationTest extends NbTestCase {
         
         int start = loc.getStartOffset();
         int depStart = LineDocumentUtils.getLineFirstNonWhitespace(doc, start);
-        int depEnd = LineDocumentUtils.getLineEnd(doc, start);
+        int depEnd = LineDocumentUtils.getLineEndOffset(doc, start);
         
         String s = doc.getText(depStart, depEnd - depStart);
         assertEquals("dependencies {", s);
@@ -203,7 +203,7 @@ public class GradleDependenciesImplementationTest extends NbTestCase {
         
         int start = loc.getStartOffset();
         int depStart = LineDocumentUtils.getLineFirstNonWhitespace(doc, start);
-        int depEnd = LineDocumentUtils.getLineEnd(doc, start);
+        int depEnd = LineDocumentUtils.getLineEndOffset(doc, start);
         
         String s = doc.getText(depStart, depEnd - depStart);
         assertEquals("implementation(", s);

@@ -307,7 +307,7 @@ public class AddUseImportSuggestion extends SuggestionRule {
             EditList edits = new EditList(doc);
             edits.replace(templateOffset, 0, "\n" + getGeneratedCode(), true, 0); //NOI18N
             edits.apply();
-            UiUtils.open(scope.getFileObject(), LineDocumentUtils.getLineStart(doc, getOffsetRange().getEnd()));
+            UiUtils.open(scope.getFileObject(), LineDocumentUtils.getLineStartOffset(doc, getOffsetRange().getEnd()));
         }
 
         private String getGeneratedCode() {
@@ -316,7 +316,7 @@ public class AddUseImportSuggestion extends SuggestionRule {
 
         private int getOffset() {
             try {
-                return LineDocumentUtils.getLineEnd(doc, getReferenceElement().getOffset());
+                return LineDocumentUtils.getLineEndOffset(doc, getReferenceElement().getOffset());
             } catch (BadLocationException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -380,7 +380,7 @@ public class AddUseImportSuggestion extends SuggestionRule {
             EditList edits = new EditList(doc);
             edits.replace(templateOffset, oldName.toString().length(), getGeneratedCode(), true, 0); //NOI18N
             edits.apply();
-            UiUtils.open(scope.getFileObject(), LineDocumentUtils.getLineStart(doc, templateOffset));
+            UiUtils.open(scope.getFileObject(), LineDocumentUtils.getLineStartOffset(doc, templateOffset));
         }
 
         private String getGeneratedCode() {

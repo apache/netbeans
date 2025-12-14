@@ -584,8 +584,8 @@ public enum ServerDetails {
     GLASSFISH_SERVER_8_0_0(NbBundle.getMessage(ServerDetails.class, "STR_800_SERVER_NAME", new Object[]{}), // NOI18N
         GlassfishInstanceProvider.JAKARTAEE11_DEPLOYER_FRAGMENT,
         GlassFishVersion.GF_8_0_0,
-        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/8.0.0-M12/glassfish-8.0.0-M14.zip", // NOI18N
-        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/8.0.0-M12/glassfish-8.0.0-M14.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/8.0.0-M14/glassfish-8.0.0-M14.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/8.0.0-M14/glassfish-8.0.0-M14.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     );
     

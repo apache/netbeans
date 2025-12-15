@@ -94,7 +94,7 @@ jobs:
           ls -l -R ${SOURCES}
 
       - name: Upload native sources
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: nativeexecution-external-sources
           path: ide/dlight.nativeexecution/build/sources/
@@ -126,7 +126,7 @@ jobs:
         working-directory: ide/dlight.nativeexecution/tools
 
       - name: Upload artifact Linux 64 bit
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: Linux-x86_64
           path: ide/dlight.nativeexecution/tools/buildall/
@@ -158,7 +158,7 @@ jobs:
 #        shell: bash
 #        working-directory: ide/dlight.nativeexecution/tools
 #      - name: Upload artifact Windows 64 bit
-#        uses: actions/upload-artifact@v5
+#        uses: actions/upload-artifact@v6
 #        with:
 #          name: Windows-x86_64
 #          path: ide/dlight.nativeexecution/tools/buildall/
@@ -188,7 +188,7 @@ jobs:
         working-directory: ide/dlight.nativeexecution/tools
 
       - name: Upload artifact macOS x86_64
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: MacOSX-x86_64
           path: ide/dlight.nativeexecution/tools/buildall/
@@ -217,7 +217,7 @@ jobs:
         working-directory: ide/dlight.nativeexecution/tools
 
       - name: Upload artifact macOS arm64
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: MacOSX-arm_64
           path: ide/dlight.nativeexecution/tools/buildall/
@@ -267,7 +267,7 @@ jobs:
          echo ""                                                               >> "$BUILDINFO"
 
     - name: Upload bundle
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: nativeexecution-external-binaries
         path: myfiles/

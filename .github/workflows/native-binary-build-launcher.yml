@@ -105,7 +105,7 @@ jobs:
         run: sudo apt install mingw-w64 mingw-w64-tools
 
       - name: Download sources
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: launcher-external-sources
 
@@ -171,7 +171,7 @@ jobs:
       run: mkdir -p myfiles/
 
     - name: Download artifacts from predecessor jobs
-      uses: actions/download-artifact@v6
+      uses: actions/download-artifact@v7
       with:
         path: myfiles/
 

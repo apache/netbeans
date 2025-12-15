@@ -259,7 +259,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -351,7 +351,7 @@ jobs:
 
       - name: Download Build
         if: ${{ needs.base-build.result == 'success' && !cancelled() }}
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -395,7 +395,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -485,7 +485,7 @@ jobs:
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -535,7 +535,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -864,7 +864,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -988,7 +988,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -1151,7 +1151,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -1286,7 +1286,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -1475,7 +1475,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -1531,7 +1531,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -1591,7 +1591,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -1636,7 +1636,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -1814,7 +1814,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -1864,7 +1864,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -1915,7 +1915,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -1963,7 +1963,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -2208,7 +2208,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -2301,7 +2301,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -2380,7 +2380,7 @@ jobs:
       # - - -
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -2509,7 +2509,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -2550,7 +2550,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 

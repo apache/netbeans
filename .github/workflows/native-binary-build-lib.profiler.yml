@@ -134,7 +134,7 @@ jobs:
     steps:
 
       - name: Download sources
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: profiler-external-sources-ASF
         
@@ -195,7 +195,7 @@ jobs:
     steps:
 
       - name: Download sources
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: profiler-external-sources-ASF
 
@@ -264,7 +264,7 @@ jobs:
     steps:
 
       - name: Download sources
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: profiler-external-sources-ASF
 
@@ -309,7 +309,7 @@ jobs:
       run: mkdir -p myfiles/lib/deployed/jdk16
 
     - name: Download artifacts from predecessor jobs
-      uses: actions/download-artifact@v6
+      uses: actions/download-artifact@v7
       with:
         path: myfiles/lib/deployed/jdk16
         

@@ -157,7 +157,7 @@ jobs:
           show-progress: false
 
       - name: Caching dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.hgexternalcache
           key: ${{ runner.os }}-${{ hashFiles('*/external/binaries-list', '*/*/external/binaries-list') }}
@@ -214,7 +214,7 @@ jobs:
             distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
             java-version: 17
       - name: Caching dependencies
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: ~/.hgexternalcache
           key: ${{ runner.os }}-${{ hashFiles('*/external/binaries-list', '*/*/external/binaries-list') }}
@@ -493,7 +493,7 @@ jobs:
         run: tar --zstd -xf build.tar.zst
 
       - name: Restoring Cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: ~/.hgexternalcache
           key: ${{ runner.os }}-${{ hashFiles('*/external/binaries-list', '*/*/external/binaries-list') }}

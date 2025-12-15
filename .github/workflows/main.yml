@@ -172,7 +172,7 @@ jobs:
 
       - name: Upload Workspace
         if: ${{ (matrix.java == '17') && success() }}
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: build
           path: /tmp/build.tar.zst
@@ -186,7 +186,7 @@ jobs:
 
       - name: Upload Dev Build
         if: ${{ matrix.java == '17' && contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && success() }}
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: dev-build_${{github.event.pull_request.number || github.run_id}}
           path: nbbuild/NetBeans-*.zip

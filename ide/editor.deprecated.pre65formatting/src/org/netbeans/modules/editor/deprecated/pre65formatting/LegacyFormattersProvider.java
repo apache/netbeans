@@ -35,6 +35,7 @@ import javax.swing.text.EditorKit;
 import javax.swing.text.Element;
 import javax.swing.text.Position;
 import javax.swing.text.StyledDocument;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.editor.BaseDocument;
@@ -349,8 +350,8 @@ public final class LegacyFormattersProvider implements MimeDataProvider {
                 if (fmtBlk != null) {
                     try {
 
-                        fmtBlk[0] = Utilities.getRowStart(doc, fmtBlk[0]);
-                        fmtBlk[1] = Utilities.getRowEnd(doc, fmtBlk[1]);
+                        fmtBlk[0] = LineDocumentUtils.getLineStartOffset(doc, fmtBlk[0]);
+                        fmtBlk[1] = LineDocumentUtils.getLineEndOffset(doc, fmtBlk[1]);
 
                         //this was the of #18922, that causes the bug #20198
                         //ef.reformat(doc, fmtBlk[0], fmtBlk[1]);

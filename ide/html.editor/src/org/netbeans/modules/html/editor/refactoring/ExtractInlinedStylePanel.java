@@ -37,6 +37,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.ListCellRenderer;
 import javax.swing.text.BadLocationException;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -459,8 +460,8 @@ public class ExtractInlinedStylePanel extends JPanel implements CustomRefactorin
             @Override
             public void run() {
                 try {
-                    int firstLine = Utilities.getLineOffset((BaseDocument) context.getDocument(), range.getStart());
-                    int lastLine = Utilities.getLineOffset((BaseDocument) context.getDocument(), range.getEnd());
+                    int firstLine = LineDocumentUtils.getLineIndex((BaseDocument) context.getDocument(), range.getStart());
+                    int lastLine = LineDocumentUtils.getLineIndex((BaseDocument) context.getDocument(), range.getEnd());
                     ret.set(new OffsetRange(firstLine, lastLine));
                 } catch (BadLocationException ex) {
                     Exceptions.printStackTrace(ex);

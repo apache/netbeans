@@ -26,6 +26,7 @@ import java.util.List;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.languages.LanguageDefinitionNotFoundException;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
@@ -66,12 +67,12 @@ public class ToggleCommentAction extends ExtKit.ToggleCommentAction {
                 public void run () {
                     try {
                         if (caret.isSelectionVisible()) {
-                            int startPos = Utilities.getRowStart(doc, target.getSelectionStart());
+                            int startPos = LineDocumentUtils.getLineStartOffset(doc, target.getSelectionStart());
                             int endPos = target.getSelectionEnd();
-                            if (endPos > 0 && Utilities.getRowStart(doc, endPos) == endPos) {
+                            if (endPos > 0 && LineDocumentUtils.getLineStartOffset(doc, endPos) == endPos) {
                                 endPos--;
                             }
-                            int lineCnt = Utilities.getRowCount(doc, startPos, endPos);
+                            int lineCnt = LineDocumentUtils.getLineCount(doc, startPos, endPos);
                             List<String> mimeTypes = new ArrayList<>(lineCnt);
                             int pos = startPos;
                             boolean commented = isCommented;
@@ -92,7 +93,7 @@ public class ToggleCommentAction extends ExtKit.ToggleCommentAction {
                                 pos = Utilities.getRowStart(doc, pos, 1);
                             }
                         } else { // selection not visible
-                            int pos = Utilities.getRowStart(doc, target.getSelectionStart());
+                            int pos = LineDocumentUtils.getLineStartOffset(doc, target.getSelectionStart());
                             String mt = getRealMimeType(ts, pos);
                             if (isCommentedLine(doc, mt, pos)) {
                                 uncommentLine(doc, mt, pos);
@@ -135,7 +136,7 @@ public class ToggleCommentAction extends ExtKit.ToggleCommentAction {
             }
             String suffix = (String) feature.getValue("suffix"); // NOI18N
             if (suffix != null) {
-                int end = Utilities.getRowEnd(doc, offset);
+                int end = LineDocumentUtils.getLineEndOffset(doc, offset);
                 doc.insertString(end, suffix, null);
             }
             doc.insertString(offset, prefix, null);
@@ -156,10 +157,10 @@ public class ToggleCommentAction extends ExtKit.ToggleCommentAction {
             }
             String suffix = (String) feature.getValue("suffix"); // NOI18N
             if (suffix != null) {
-                int lastNonWhitePos = Utilities.getRowLastNonWhite(doc, offset);
+                int lastNonWhitePos = LineDocumentUtils.getLineLastNonWhitespace(doc, offset);
                 if (lastNonWhitePos != -1) {
                     int commentLen = suffix.length();
-                    if (lastNonWhitePos - Utilities.getRowStart(doc, offset) >= commentLen) {
+                    if (lastNonWhitePos - LineDocumentUtils.getLineStartOffset(doc, offset) >= commentLen) {
                         CharSequence maybeLineComment = DocumentUtilities.getText(doc, lastNonWhitePos - commentLen + 1, commentLen);
                         if (CharSequenceUtilities.textEquals(maybeLineComment, suffix)) {
                             doc.remove(lastNonWhitePos - commentLen + 1, commentLen);
@@ -167,10 +168,10 @@ public class ToggleCommentAction extends ExtKit.ToggleCommentAction {
                     }
                 }
             }
-            int firstNonWhitePos = Utilities.getRowFirstNonWhite(doc, offset);
+            int firstNonWhitePos = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
             if (firstNonWhitePos != -1) {
                 int commentLen = prefix.length();
-                if (Utilities.getRowEnd(doc, firstNonWhitePos) - firstNonWhitePos >= prefix.length()) {
+                if (LineDocumentUtils.getLineEndOffset(doc, firstNonWhitePos) - firstNonWhitePos >= prefix.length()) {
                     CharSequence maybeLineComment = DocumentUtilities.getText(doc, firstNonWhitePos, commentLen);
                     if (CharSequenceUtilities.textEquals(maybeLineComment, prefix)) {
                         doc.remove(firstNonWhitePos, commentLen);
@@ -196,10 +197,10 @@ public class ToggleCommentAction extends ExtKit.ToggleCommentAction {
             }
             String suffix = (String) feature.getValue("suffix"); // NOI18N
             if (suffix != null) {
-                int lastNonWhitePos = Utilities.getRowLastNonWhite(doc, offset);
+                int lastNonWhitePos = LineDocumentUtils.getLineLastNonWhitespace(doc, offset);
                 if (lastNonWhitePos != -1) {
                     int commentLen = suffix.length();
-                    if (lastNonWhitePos - Utilities.getRowStart(doc, offset) >= commentLen) {
+                    if (lastNonWhitePos - LineDocumentUtils.getLineStartOffset(doc, offset) >= commentLen) {
                         CharSequence maybeLineComment = DocumentUtilities.getText(doc, lastNonWhitePos - commentLen + 1, commentLen);
                         if (CharSequenceUtilities.textEquals(maybeLineComment, suffix)) {
                             suffixCommentOk = true;
@@ -209,10 +210,10 @@ public class ToggleCommentAction extends ExtKit.ToggleCommentAction {
             } else {
                 suffixCommentOk = true;
             }
-            int firstNonWhitePos = Utilities.getRowFirstNonWhite(doc, offset);
+            int firstNonWhitePos = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
             if (firstNonWhitePos != -1) {
                 int commentLen = prefix.length();
-                if (Utilities.getRowEnd(doc, firstNonWhitePos) - firstNonWhitePos >= prefix.length()) {
+                if (LineDocumentUtils.getLineEndOffset(doc, firstNonWhitePos) - firstNonWhitePos >= prefix.length()) {
                     CharSequence maybeLineComment = DocumentUtilities.getText(doc, firstNonWhitePos, commentLen);
                     if (CharSequenceUtilities.textEquals(maybeLineComment, prefix)) {
                         prefixCommentOk = true;

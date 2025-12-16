@@ -45,6 +45,7 @@ import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.settings.SimpleValueNames;
 import org.netbeans.api.editor.caret.EditorCaret;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.search.ReplacePattern;
 import org.netbeans.api.search.SearchHistory;
 import org.netbeans.api.search.SearchPattern;
@@ -1091,8 +1092,8 @@ public final class SearchBar extends JPanel implements PropertyChangeListener {
             if (doc instanceof BaseDocument) {
                 BaseDocument bdoc = (BaseDocument) doc;
                 try {
-                    int startLine = org.netbeans.editor.Utilities.getLineOffset(bdoc, startSelection);
-                    int endLine = org.netbeans.editor.Utilities.getLineOffset(bdoc, endSelection);
+                    int startLine = LineDocumentUtils.getLineIndex(bdoc, startSelection);
+                    int endLine = LineDocumentUtils.getLineIndex(bdoc, endSelection);
                     if (endLine > startLine) {
                         blockSearchVisible = true;
                     }

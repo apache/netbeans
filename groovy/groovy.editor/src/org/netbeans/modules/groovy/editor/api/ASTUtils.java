@@ -31,6 +31,7 @@ import org.codehaus.groovy.ast.stmt.ExpressionStatement;
 import org.codehaus.groovy.ast.stmt.ForStatement;
 import org.codehaus.groovy.ast.stmt.Statement;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.lexer.TokenUtilities;
@@ -162,7 +163,7 @@ public class ASTUtils {
                 }
 
                 try {
-                    start = Utilities.getFirstNonWhiteFwd(doc, start);
+                    start = LineDocumentUtils.getNextNonWhitespace(doc, start);
                 } catch (BadLocationException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -343,7 +344,7 @@ public class ASTUtils {
         assert lineNumber > 0 : "Line number must be at least 1 and was: " + lineNumber;
         assert columnNumber > 0 : "Column number must be at least 1 ans was: " + columnNumber;
 
-        int offset = Utilities.getRowStartFromLineOffset(doc, lineNumber - 1);
+        int offset = LineDocumentUtils.getLineStartFromIndex(doc, lineNumber - 1);
         offset += (columnNumber - 1);
 
         // some sanity checks

@@ -52,13 +52,13 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyledDocument;
 import javax.swing.text.View;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.fold.FoldHierarchy;
 import org.netbeans.api.editor.fold.FoldHierarchyEvent;
 import org.netbeans.api.editor.fold.FoldHierarchyListener;
 
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.BaseTextUI;
-import org.netbeans.editor.Utilities;
 import org.netbeans.lib.editor.util.StringEscapeUtils;
 import org.netbeans.modules.editor.errorstripe.caret.CaretMark;
 import org.netbeans.modules.editor.errorstripe.privatespi.Mark;
@@ -183,7 +183,7 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
             while (position == _modelToView(startLine - 1, componentHeight, usableHeight) && startLine > 0)
                 startLine--;
 
-            while ((endLine + 1) < Utilities.getRowCount(doc) && position == _modelToView(endLine + 1, componentHeight, usableHeight))
+            while ((endLine + 1) < LineDocumentUtils.getLineCount(doc) && position == _modelToView(endLine + 1, componentHeight, usableHeight))
                 endLine++;
 
             return new int[] {startLine, endLine};
@@ -473,7 +473,7 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
     }
     
     private void documentChange() {
-        fullRepaint(lines != Utilities.getRowCount(doc));
+        fullRepaint(lines != LineDocumentUtils.getLineCount(doc));
     }
     
     private double getComponentHeight() {
@@ -549,11 +549,11 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
     }
     
     private synchronized int getModelToViewImpl(int line) throws BadLocationException {
-        int docLines = Utilities.getRowCount(doc);
+        int docLines = LineDocumentUtils.getLineCount(doc);
         
         if (modelToViewCache == null || height != pane.getHeight() || lines != docLines) {
-            modelToViewCache = new int[Utilities.getRowCount(doc) + 2];
-            lines = Utilities.getRowCount(doc);
+            modelToViewCache = new int[LineDocumentUtils.getLineCount(doc) + 2];
+            lines = LineDocumentUtils.getLineCount(doc);
             height = pane.getHeight();
         }
         
@@ -563,7 +563,7 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
         int result = modelToViewCache[line + 1];
         
         if (result == 0) {
-            int lineOffset = Utilities.getRowStartFromLineOffset((BaseDocument) pane.getDocument(), line);
+            int lineOffset = LineDocumentUtils.getLineStartFromIndex((BaseDocument) pane.getDocument(), line);
             
             modelToViewCache[line + 1] = result = getYFromPos(lineOffset);
         }
@@ -619,7 +619,7 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
                 if (positionOffset == -1) {
                     return null;
                 }
-                int line = Utilities.getLineOffset(doc, positionOffset);
+                int line = LineDocumentUtils.getLineIndex(doc, positionOffset);
                 
                 if (ERR.isLoggable(VIEW_TO_MODEL_IMPORTANCE)) {
                     ERR.log(VIEW_TO_MODEL_IMPORTANCE, "AnnotationView.viewToModel: line=" + line); // NOI18N
@@ -643,7 +643,7 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
                 if (positionOffset == -1) {
                     return null;
                 }
-                int    line = Utilities.getLineOffset(doc, positionOffset) + 1;
+                int    line = LineDocumentUtils.getLineIndex(doc, positionOffset) + 1;
                 int[] span = getLinesSpan(line);
                 double normalizedOffset = modelToView(span[0]);
                 
@@ -777,7 +777,7 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
         Mark mark = getMarkForPoint(e.getPoint().getY());
         
         if (mark!= null) {
-            pane.setCaretPosition(Utilities.getRowStartFromLineOffset(doc, mark.getAssignedLines()[0]));
+            pane.setCaretPosition(LineDocumentUtils.getLineStartFromIndex(doc, mark.getAssignedLines()[0]));
         }
     }
     

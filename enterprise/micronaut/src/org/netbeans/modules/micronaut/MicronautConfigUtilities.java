@@ -126,7 +126,7 @@ public class MicronautConfigUtilities {
                                     }
                                 }
                             } else {
-                                int lineEnd = LineDocumentUtils.getLineEnd(lineDocument, offset);
+                                int lineEnd = LineDocumentUtils.getLineEndOffset(lineDocument, offset);
                                 String text = lineDocument.getText(lineStart, lineEnd - lineStart);
                                 if (!text.startsWith("#") && !text.startsWith("!")) {
                                     int colIdx = text.indexOf(':');

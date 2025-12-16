@@ -34,6 +34,7 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.settings.SimpleValueNames;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.Token;
@@ -292,9 +293,9 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
         JoinedTokenSequence<T1> joinedTS = JoinedTokenSequence.createFromCodeBlocks(blocks);
 
         // start on the beginning of line:
-        int start = Utilities.getRowStart(doc, startOffset);
+        int start = LineDocumentUtils.getLineStartOffset(doc, startOffset);
         // end after the last line:
-        int end = Utilities.getRowEnd(doc, endOffset)+1;
+        int end = LineDocumentUtils.getLineEndOffset(doc, endOffset)+1;
         if (end > doc.getLength()) {
             end = doc.getLength();
         }
@@ -322,8 +323,8 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
             initialOffset = getFormatStableStart(joinedTS, start, end, rangesToIgnore);
             if (DEBUG_PERFORMANCE) {
                 System.err.println("[IndPer] Locating FormatStableStart took "+(System.currentTimeMillis()-startTime1)+" ms");
-                System.err.println("[IndPer] Current line index is: "+(Utilities.getLineOffset(doc, start)));
-                System.err.println("[IndPer] FormatStableStart line starts at index: "+(Utilities.getLineOffset(doc, initialOffset)));
+                System.err.println("[IndPer] Current line index is: "+(LineDocumentUtils.getLineIndex(doc, start)));
+                System.err.println("[IndPer] FormatStableStart line starts at index: "+(LineDocumentUtils.getLineIndex(doc, initialOffset)));
                 System.err.println("[IndPer] Number of ranges to ignore: "+rangesToIgnore.ranges.size());
             }
             if (DEBUG && !rangesToIgnore.isEmpty()) {
@@ -361,7 +362,7 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
         // will try to find our language there:
 
         // find line start and move to previous line if possible:
-        int lineStart = Utilities.getRowStart(getDocument(), start);
+        int lineStart = LineDocumentUtils.getLineStartOffset(getDocument(), start);
         if (lineStart > 0) {
             lineStart--;
         }
@@ -371,7 +372,7 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
             offset = 0;
         }
         // find beginning of this line
-        lineStart = Utilities.getRowStart(getDocument(), offset);
+        lineStart = LineDocumentUtils.getLineStartOffset(getDocument(), offset);
 
         // use line start as beginning for our language search:
         if (ts.move(lineStart, true)) {
@@ -402,8 +403,8 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
         }
 
         // apply line data into concrete indentation:
-        int lineStart = Utilities.getLineOffset(getDocument(), context.startOffset());
-        int lineEnd = Utilities.getLineOffset(getDocument(), context.endOffset());
+        int lineStart = LineDocumentUtils.getLineIndex(getDocument(), context.startOffset());
+        int lineEnd = LineDocumentUtils.getLineIndex(getDocument(), context.endOffset());
         assert formattingContext.getIndentationData() != null;
         List<List<Line>> indentationData = formattingContext.getIndentationData();
 
@@ -677,7 +678,7 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
             return;
         }
         int lineIndex = lastLine.index+1;
-        int offset = Utilities.getRowStartFromLineOffset(getDocument(), lineIndex);
+        int offset = LineDocumentUtils.getLineStartFromIndex(getDocument(), lineIndex);
         if (offset == -1) {
             return;
         }
@@ -821,7 +822,7 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
                 // put all commands on the last line;
                 // that should do the trick
                 if (lastLine == null) {
-                    int offset = Utilities.getRowStartFromLineOffset(getDocument(), pair.line);
+                    int offset = LineDocumentUtils.getLineStartFromIndex(getDocument(), pair.line);
                     if (offset == -1) {
                         // lines does not exist so ignore:
                         break;
@@ -997,16 +998,16 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
     private List<LinePair> calculateLinePairs(List<JoinedTokenSequence.CodeBlock<T1>> blocks, int startOffset, int endOffset) throws BadLocationException {
         List<LinePair> lps = new ArrayList<LinePair>();
         LinePair lastOne = null;
-        int startLine = Utilities.getLineOffset(getDocument(), startOffset);
-        int endLine = Utilities.getLineOffset(getDocument(), endOffset);
+        int startLine = LineDocumentUtils.getLineIndex(getDocument(), startOffset);
+        int endLine = LineDocumentUtils.getLineIndex(getDocument(), endOffset);
         for (JoinedTokenSequence.CodeBlock<T1> block : blocks) {
             for (JoinedTokenSequence.TokenSequenceWrapper<T1> tsw : block.tss) {
                 if (tsw.isVirtual()) {
                     continue;
                 }
                 LinePair lp = new LinePair();
-                lp.startingLine = Utilities.getLineOffset(getDocument(), LexUtilities.getTokenSequenceStartOffset(tsw.getTokenSequence()));
-                lp.endingLine = Utilities.getLineOffset(getDocument(), LexUtilities.getTokenSequenceEndOffset(tsw.getTokenSequence()));
+                lp.startingLine = LineDocumentUtils.getLineIndex(getDocument(), LexUtilities.getTokenSequenceStartOffset(tsw.getTokenSequence()));
+                lp.endingLine = LineDocumentUtils.getLineIndex(getDocument(), LexUtilities.getTokenSequenceEndOffset(tsw.getTokenSequence()));
                 if (lp.startingLine > endLine) {
                     break;
                 }
@@ -1093,16 +1094,16 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
             for (int line = lp.startingLine; line <= lp.endingLine; line++) {
 
                 // find line starting offset
-                int rowStartOffset = Utilities.getRowStartFromLineOffset(doc, line);
+                int rowStartOffset = LineDocumentUtils.getLineStartFromIndex(doc, line);
                 if (rowStartOffset < overallStartOffset) {
                     rowStartOffset = overallStartOffset;
                 }
 
                 // find first non-white character
-                int firstNonWhite = Utilities.getRowFirstNonWhite(doc, rowStartOffset);
+                int firstNonWhite = LineDocumentUtils.getLineFirstNonWhitespace(doc, rowStartOffset);
 
                 // find line ending offset
-                int rowEndOffset = Utilities.getRowEnd(doc, rowStartOffset);
+                int rowEndOffset = LineDocumentUtils.getLineEndOffset(doc, rowStartOffset);
                 int nextLineStartOffset = rowEndOffset+1;
 
                 // check whether line can be skip completely:
@@ -1228,9 +1229,9 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
     }
 
     private boolean doesLineStartWithOurLanguage(BaseDocument doc, int lineIndex, JoinedTokenSequence<T1> joinedTS) throws BadLocationException {
-        int rowStartOffset = Utilities.getRowStartFromLineOffset(doc, lineIndex);
-        int rowEndOffset = Utilities.getRowEnd(doc, rowStartOffset);
-        int firstNonWhite = Utilities.getRowFirstNonWhite(doc, rowStartOffset);
+        int rowStartOffset = LineDocumentUtils.getLineStartFromIndex(doc, lineIndex);
+        int rowEndOffset = LineDocumentUtils.getLineEndOffset(doc, rowStartOffset);
+        int firstNonWhite = LineDocumentUtils.getLineFirstNonWhitespace(doc, rowStartOffset);
         if (firstNonWhite != -1) {
             // there is something on the line:
             int newRowStartOffset = findLanguageOffset(joinedTS, rowStartOffset, rowEndOffset, true);
@@ -1773,9 +1774,9 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
     private Line generateBasicLine(int index) throws BadLocationException {
         Line line = new Line();
         line.index = index;
-        line.offset = Utilities.getRowStartFromLineOffset(getDocument(), index);
+        line.offset = LineDocumentUtils.getLineStartFromIndex(getDocument(), index);
         line.existingLineIndent = IndentUtils.lineIndent(getDocument(), line.offset);
-        int nonWS = Utilities.getRowFirstNonWhite(getDocument(), line.offset);
+        int nonWS = LineDocumentUtils.getLineFirstNonWhitespace(getDocument(), line.offset);
         line.emptyLine = nonWS == -1;
         // if (first-non-whitespace-offset - line-start-offset) is different from 
         // existingLineIndent then line starts with tab characters which will need
@@ -1783,7 +1784,7 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
         // possible tabs get replaced:
         line.tabIndentation = nonWS == -1 || line.existingLineIndent != (nonWS - line.offset);
         line.lineStartOffset = line.offset;
-        line.lineEndOffset = Utilities.getRowEnd(getDocument(), line.offset);
+        line.lineEndOffset = LineDocumentUtils.getLineEndOffset(getDocument(), line.offset);
         line.lineIndent = new ArrayList<IndentCommand>();
         line.lineIndent.add(new IndentCommand(IndentCommand.Type.NO_CHANGE, line.offset, getIndentationSize()));
         line.preliminaryNextLineIndent = new ArrayList<IndentCommand>();
@@ -1844,7 +1845,7 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
     }
         
     private void debugIndentation(int lineOffset, List<IndentCommand> iis, String text, boolean indentable) throws BadLocationException {
-        int index = Utilities.getLineOffset(getDocument(), lineOffset);
+        int index = LineDocumentUtils.getLineIndex(getDocument(), lineOffset);
         char ch = ' ';
         if (indentable) {
             ch = '*';
@@ -1910,8 +1911,8 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
         }
 
         private void recalculateLineIndex(BaseDocument doc) throws BadLocationException {
-            index = Utilities.getLineOffset(doc, offset);
-            int rowStart = Utilities.getRowStart(doc, offset);
+            index = LineDocumentUtils.getLineIndex(doc, offset);
+            int rowStart = LineDocumentUtils.getLineStartOffset(doc, offset);
 
             // Java formatter is fiddling with lines it should not. This is a check
             // that if line start is different then issue a warning. See also

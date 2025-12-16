@@ -115,7 +115,7 @@ public class JShellImports implements ImportProcessor {
                 // generate the import
                 doc.insertString(o, 
                         "import " + fullyQualifiedClassName + ";\n", null);
-                int eo = LineDocumentUtils.getLineEnd(ld, o);
+                int eo = LineDocumentUtils.getLineEndOffset(ld, o);
                 rf.lock();
                 rf.reformat(o, eo);
             } catch (BadLocationException ex) {

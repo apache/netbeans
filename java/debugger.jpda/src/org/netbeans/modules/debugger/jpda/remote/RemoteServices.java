@@ -24,6 +24,7 @@ import com.sun.jdi.ByteValue;
 import com.sun.jdi.ClassNotLoadedException;
 import com.sun.jdi.ClassObjectReference;
 import com.sun.jdi.ClassType;
+import com.sun.jdi.Field;
 import com.sun.jdi.IncompatibleThreadStateException;
 import com.sun.jdi.InvalidTypeException;
 import com.sun.jdi.InvocationException;
@@ -82,7 +83,7 @@ public final class RemoteServices {
      * @throws UnsupportedOperationExceptionWrapper
      * @throws ClassNotPreparedExceptionWrapper 
      */
-    public static ClassObjectReference uploadClass(ThreadReference tr, RemoteClass rc) throws InvalidTypeException,
+    public static ClassObjectReference uploadClass(ThreadReference tr, ClassObjectReference context, RemoteClass rc) throws InvalidTypeException,
                                                                                               ClassNotLoadedException,
                                                                                               IncompatibleThreadStateException,
                                                                                               InvocationException,
@@ -93,49 +94,43 @@ public final class RemoteServices {
                                                                                               ObjectCollectedExceptionWrapper,
                                                                                               UnsupportedOperationExceptionWrapper,
                                                                                               ClassNotPreparedExceptionWrapper {
+        List<ObjectReference> reenableCollection = new ArrayList<>();
         VirtualMachine vm = MirrorWrapper.virtualMachine(tr);
         ObjectReference classLoader = getContextClassLoader(tr, vm);
-        ClassType classLoaderClass = (ClassType) ObjectReferenceWrapper.referenceType(classLoader);
 
-        String className = rc.name;
-        ClassObjectReference theUploadedClass = null;
-        ArrayReference byteArray = createTargetBytes(vm, rc.bytes, new ByteValue[256]);
-        StringReference nameMirror = null;
+        ClassObjectReference classOption = loadClass(tr, "java.lang.invoke.MethodHandles$Lookup$ClassOption", reenableCollection);
+
         try {
-            Method defineClass = ClassTypeWrapper.concreteMethodByName(classLoaderClass,
-                                                                       "defineClass",
-                                                                       "(Ljava/lang/String;[BII)Ljava/lang/Class;");
-            boolean uploaded = false;
-            while (!uploaded) {
-                nameMirror = VirtualMachineWrapper.mirrorOf(vm, className);
-                try {
-                    ObjectReferenceWrapper.disableCollection(nameMirror);
-                    uploaded = true;
-                } catch (ObjectCollectedExceptionWrapper ocex) {
-                    // Just collected, try again...
-                } catch (UnsupportedOperationExceptionWrapper uex) {
-                    // Hope it will not be GC'ed...
-                    uploaded = true;
-                }
-            }
-            uploaded = false;
-            while (!uploaded) {
-                theUploadedClass = (ClassObjectReference) ObjectReferenceWrapper.invokeMethod(
+            if (classOption != null) {
+                //target has support for defineHiddenClass:
+                ReferenceType lookup = vm.classesByName("java.lang.invoke.MethodHandles$Lookup").get(0);
+                ObjectReference nestmate = (ObjectReference) classOption.reflectedType().getValue(classOption.reflectedType().fieldByName("NESTMATE"));
+                Field allMightyLookup = lookup.fieldByName("IMPL_LOOKUP");
+                Method inMethod = lookup.methodsByName("in", "(Ljava/lang/Class;)Ljava/lang/invoke/MethodHandles$Lookup;").get(0);
+                ObjectReference allPowerContextLookup = ((ObjectReference) ((ObjectReference) lookup.getValue(allMightyLookup)).invokeMethod(tr, inMethod, List.of(context), ObjectReference.INVOKE_SINGLE_THREADED));
+                Method defineHiddenClass = lookup.methodsByName("defineHiddenClass", "([BZ[Ljava/lang/invoke/MethodHandles$Lookup$ClassOption;)Ljava/lang/invoke/MethodHandles$Lookup;").get(0);
+                ArrayReference byteArray = createTargetBytes(vm, rc.bytes, new ByteValue[256], reenableCollection);
+                ArrayType classOptionsArrayClass = getArrayClass(vm, "java.lang.invoke.MethodHandles$Lookup$ClassOption[]");
+                ArrayReference classOptionsArray = ArrayTypeWrapper.newInstance(classOptionsArrayClass, 1);
+                classOptionsArray.setValue(0, nestmate);
+
+                ObjectReference newLookup = (ObjectReference) allPowerContextLookup.invokeMethod(tr, defineHiddenClass, List.of(byteArray, vm.mirrorOf(true), classOptionsArray), ObjectReference.INVOKE_SINGLE_THREADED);
+                Method lookupGetClass = lookup.methodsByName("lookupClass", "()Ljava/lang/Class;").get(0);
+
+                return (ClassObjectReference) newLookup.invokeMethod(tr, lookupGetClass, List.of(), ObjectReference.INVOKE_SINGLE_THREADED);
+            } else {
+                ClassType classLoaderClass = (ClassType) ObjectReferenceWrapper.referenceType(classLoader);
+
+                String className = rc.name;
+                ArrayReference byteArray = createTargetBytes(vm, rc.bytes, new ByteValue[256], reenableCollection);
+                StringReference nameMirror = objectWithDisabledCollection(() -> VirtualMachineWrapper.mirrorOf(vm, className), reenableCollection);
+                Method defineClass = ClassTypeWrapper.concreteMethodByName(classLoaderClass,
+                                                                           "defineClass",
+                                                                           "(Ljava/lang/String;[BII)Ljava/lang/Class;");
+                ClassObjectReference theUploadedClass = objectWithDisabledCollection(() -> (ClassObjectReference) ObjectReferenceWrapper.invokeMethod(
                         classLoader, tr, defineClass,
                         Arrays.asList(nameMirror, byteArray, vm.mirrorOf(0), vm.mirrorOf(rc.bytes.length)),
-                        ObjectReference.INVOKE_SINGLE_THREADED);
-                try {
-                    // Disable collection only of the basic class
-                    ObjectReferenceWrapper.disableCollection(theUploadedClass);
-                    uploaded = true;
-                } catch (ObjectCollectedExceptionWrapper ocex) {
-                    // Just collected, try again...
-                } catch (UnsupportedOperationExceptionWrapper uex) {
-                    // Hope it will not be GC'ed...
-                    uploaded = true;
-                }
-            }
-            if (uploaded) {
+                        ObjectReference.INVOKE_SINGLE_THREADED), reenableCollection);
                 // Initialize the class:
                 ClassType bc = ((ClassType) theUploadedClass.reflectedType());
                 if (!bc.isInitialized()) {
@@ -145,16 +140,15 @@ public final class RemoteServices {
                     Method aMethod = ClassTypeWrapper.concreteMethodByName(theClass, "getConstructors", "()[Ljava/lang/reflect/Constructor;");
                     ObjectReferenceWrapper.invokeMethod(theUploadedClass, tr, aMethod, Collections.<Value>emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                 }
+                return theUploadedClass;
             }
         } finally {
-            try {
-                ObjectReferenceWrapper.enableCollection(byteArray); // We can dispose it now
-                if (nameMirror != null) {
-                    ObjectReferenceWrapper.enableCollection(nameMirror);
-                }
-            } catch (UnsupportedOperationExceptionWrapper uex) {}
+            for (ObjectReference toReenable : reenableCollection) {
+                try {
+                    ObjectReferenceWrapper.enableCollection(toReenable); // We can dispose it now
+                } catch (UnsupportedOperationExceptionWrapper uex) {}
+            }
         }
-        return theUploadedClass;
     }
 
     private static ObjectReference getContextClassLoader(ThreadReference tr, VirtualMachine vm) throws InternalExceptionWrapper,
@@ -209,26 +203,17 @@ public final class RemoteServices {
     }
 
     private static ArrayReference createTargetBytes(VirtualMachine vm, byte[] bytes,
-                                                    ByteValue[] mirrorBytesCache) throws InvalidTypeException,
-                                                                                         ClassNotLoadedException,
-                                                                                         InternalExceptionWrapper,
-                                                                                         VMDisconnectedExceptionWrapper,
-                                                                                         ObjectCollectedExceptionWrapper {
+                                                    ByteValue[] mirrorBytesCache,
+                                                    List<ObjectReference> reenableCollection) throws InvalidTypeException,
+                                                                                                     ClassNotLoadedException,
+                                                                                                     InternalExceptionWrapper,
+                                                                                                     VMDisconnectedExceptionWrapper,
+                                                                                                     ObjectCollectedExceptionWrapper,
+                                                                                                     IncompatibleThreadStateException,
+                                                                                                     InvocationException,
+                                                                                                     UnsupportedOperationExceptionWrapper {
         ArrayType bytesArrayClass = getArrayClass(vm, "byte[]");
-        ArrayReference array = null;
-        boolean disabledCollection = false;
-        while (!disabledCollection) {
-            array = ArrayTypeWrapper.newInstance(bytesArrayClass, bytes.length);
-            try {
-                ObjectReferenceWrapper.disableCollection(array);
-                disabledCollection = true;
-            } catch (ObjectCollectedExceptionWrapper ocex) {
-                // Collected too soon, try again...
-            } catch (UnsupportedOperationExceptionWrapper uex) {
-                // Hope it will not be GC'ed...
-                disabledCollection = true;
-            }
-        }
+        ArrayReference array = objectWithDisabledCollection(() -> ArrayTypeWrapper.newInstance(bytesArrayClass, bytes.length), reenableCollection);
         List<Value> values = new ArrayList<Value>(bytes.length);
         for (int i = 0; i < bytes.length; i++) {
             byte b = bytes[i];
@@ -242,5 +227,57 @@ public final class RemoteServices {
         ArrayReferenceWrapper.setValues(array, values);
         return array;
     }
-    
+
+    private static <T extends ObjectReference> T objectWithDisabledCollection(CreateReference<T> provider,
+                                                                              List<ObjectReference> reenableCollection) throws InternalExceptionWrapper,
+                                                                                                                               VMDisconnectedExceptionWrapper,
+                                                                                                                               ClassNotLoadedException,
+                                                                                                                               IncompatibleThreadStateException,
+                                                                                                                               InvalidTypeException,
+                                                                                                                               InvocationException,
+                                                                                                                               UnsupportedOperationExceptionWrapper,
+                                                                                                                               ObjectCollectedExceptionWrapper {
+        while (true) {
+            T value = provider.create();
+            try {
+                ObjectReferenceWrapper.disableCollection(value);
+                reenableCollection.add(value);
+                return value;
+            } catch (ObjectCollectedExceptionWrapper ocex) {
+                // Collected too soon, try again...
+            } catch (UnsupportedOperationExceptionWrapper uex) {
+                // Hope it will not be GC'ed...
+                return value;
+            }
+        }
+    }
+
+    private static ClassObjectReference loadClass(ThreadReference tr,
+                                                  String className,
+                                                  List<ObjectReference> reenableCollection) throws InternalExceptionWrapper,
+                                                                                                   VMDisconnectedExceptionWrapper,
+                                                                                                   ClassNotPreparedExceptionWrapper,
+                                                                                                   InvalidTypeException,
+                                                                                                   ClassNotLoadedException,
+                                                                                                   IncompatibleThreadStateException,
+                                                                                                   InvocationException,
+                                                                                                   UnsupportedOperationExceptionWrapper,
+                                                                                                   ObjectCollectedExceptionWrapper {
+        VirtualMachine vm = MirrorWrapper.virtualMachine(tr);
+        ReferenceType jlClass = vm.classesByName("java.lang.Class").get(0);
+        Method loadClass = jlClass.methodsByName("forName", "(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;").get(0);
+        ObjectReference classLoader = getContextClassLoader(tr, vm);
+        ObjectReference classNameMirror = objectWithDisabledCollection(() -> vm.mirrorOf(className), reenableCollection);
+
+        try {
+            return objectWithDisabledCollection(() -> (ClassObjectReference) jlClass.classObject().invokeMethod(tr, loadClass, List.of(classNameMirror, vm.mirrorOf(true), classLoader), ObjectReference.INVOKE_SINGLE_THREADED),
+                                                reenableCollection);
+        } catch (ClassNotLoadedException | IncompatibleThreadStateException | InvalidTypeException | InvocationException ex) {
+            return null;
+        }
+    }
+
+    interface CreateReference<T extends ObjectReference> {
+        public T create() throws InternalExceptionWrapper, VMDisconnectedExceptionWrapper, ClassNotLoadedException, IncompatibleThreadStateException, InvalidTypeException, InvocationException, UnsupportedOperationExceptionWrapper, ObjectCollectedExceptionWrapper;
+    }
 }

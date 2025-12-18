@@ -71,9 +71,9 @@ public final class
 
     /* table of window:threadgrp */
     private static final WindowTable wtable = new WindowTable();
-
+    
     /** list of ExecutionListeners */
-    private final HashSet<ExecutionListener> executionListeners = new HashSet<>();
+    private final Set<ExecutionListener> executionListeners;
 
     /** List of running executions */
     private final List<ExecutorTask> runningTasks = Collections.synchronizedList(new ArrayList<>(5));
@@ -87,6 +87,8 @@ public final class
     static final long serialVersionUID =9072488605180080803L;
 
     public ExecutionEngine () {
+        this.executionListeners = new HashSet<>();
+        
         /* SysIn is a class that redirects System.in of some running task to
            a window (probably OutWindow).
            SysOut/Err are classes that redirect out/err to the window
@@ -134,7 +136,6 @@ public final class
     @Override
     public ExecutorTask execute(String name, Runnable run, final InputOutput inout) {
         TaskThreadGroup g = new TaskThreadGroup(base, "exec_" + name + "_" + number); // NOI18N
-        g.setDaemon(true);
         ExecutorTaskImpl task = new ExecutorTaskImpl();
         synchronized (task.lock) {
             try {
@@ -194,7 +195,7 @@ public final class
     protected final void fireExecutionStarted (ExecutionEvent ev) {
         runningTasks.add( ev.getProcess() );
 	@SuppressWarnings("unchecked") 
-        Iterator<ExecutionListener> iter = ((HashSet<ExecutionListener>) executionListeners.clone()).iterator();
+        Iterator<ExecutionListener> iter = executionListeners.iterator();
         while (iter.hasNext()) {
             ExecutionListener l = iter.next();
             l.startedExecution(ev);
@@ -205,12 +206,11 @@ public final class
     protected final void fireExecutionFinished (ExecutionEvent ev) {
         runningTasks.remove( ev.getProcess() );
 	@SuppressWarnings("unchecked") 
-        Iterator<ExecutionListener> iter = ((HashSet<ExecutionListener>) executionListeners.clone()).iterator();
+        Iterator<ExecutionListener> iter = executionListeners.iterator();
         while (iter.hasNext()) {
             ExecutionListener l = iter.next();
             l.finishedExecution(ev);
         }
-        ev.getProcess().destroyThreadGroup(base);
     }
 
     static void putWindow(java.awt.Window w, TaskThreadGroup tg) {

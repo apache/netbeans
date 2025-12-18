@@ -173,7 +173,7 @@ cause it to fail.
         <delete file="${javadoc.overview}" />
 
         <property file="${export.interfaces}/properties/all.properties" />
-        <arch xsl="exportOverview.xsl" answers="${javadoc.arch}" output="${javadoc.overview}" stylesheet="prose.css"
+        <arch xsl="exportOverview.xsl" answers="${javadoc.arch}" output="${javadoc.overview}"
               apichanges="${javadoc.apichanges}" project="${javadoc.project}"
         >
             <!--
@@ -277,7 +277,7 @@ cause it to fail.
         
         <replace dir="${javadoc.out.dir}" >
             <include name="**/javadoc*.css"/>
-            <include name="nb-docs-stability.css"/>
+            <include name="**/nb-docs-stability.css"/>
             <replacefilter token="@CSS_TIMESTAMP@" value="Built on ${TODAY}. Copyright 2017-${YEAR} The Apache Software Foundation. All Rights Reserved." />
             <replacefilter token="@nb-docs-css@" value="${nb-docs.css}"/>
             <replacefilter token="@api-stability-image@" value="${stability.image}"/>
@@ -289,7 +289,10 @@ cause it to fail.
         <!-- JDK 25+ uses svgs -->
         <copy file="${javadoc.out.dir}/resource-files/glass.svg" todir="${javadoc.out.dir}/resource-files/resources" if:true="${javadoc25.or.later}" />
         <copy file="${javadoc.out.dir}/resource-files/x.svg" todir="${javadoc.out.dir}/resource-files/resources" if:true="${javadoc25.or.later}" />
-        <copy todir="${javadoc.out.dir}/resources">
+        <copy todir="${javadoc.out.dir}/resource-files/resources" if:true="${javadoc25.or.later}" >
+            <fileset refid="javadoc.resources.files"/>
+        </copy>
+        <copy todir="${javadoc.out.dir}/resources" if:blank="${javadoc25.or.later}" >
             <fileset refid="javadoc.resources.files"/>
         </copy>
     </target>
@@ -418,7 +421,6 @@ cause it to fail.
         <available file="${javadoc.out.dir}/deprecated-list.html" property="hasdeprecated"/>
         <arch answers="${javadoc.arch}"
               output="${javadoc.out.dir}/architecture-summary.html"
-              stylesheet="prose.css"
               overviewlink="overview-summary.html"
               footer="@FOOTER@"
               project="${javadoc.project}"
@@ -437,7 +439,7 @@ cause it to fail.
         <property name="arch.warn" value="true"/>
         <property name="arch.target" value="${javadoc.name}" />
         <mkdir dir="${export.interfaces}"/>
-        <arch xsl="exportInterfaces.xsl" answers="${javadoc.arch}" output="${export.interfaces}/architecture-summary.html" stylesheet="prose.css"/>
+        <arch xsl="exportInterfaces.xsl" answers="${javadoc.arch}" output="${export.interfaces}/architecture-summary.html"/>
         <move file="${export.interfaces}/architecture-summary.html" tofile="${export.interfaces}/${javadoc.name}" />
         <mkdir dir="${export.interfaces}/properties" />
         <xslt style="exportInterfaceProperties.xsl" in="${export.interfaces}/${javadoc.name}" out="${export.interfaces}/properties/${javadoc.name}" >

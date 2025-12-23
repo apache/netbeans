@@ -54,7 +54,6 @@ public class MeasureBaselineMemoryFootprint extends org.netbeans.junit.NbPerform
     
     private static final String [][] SUPPORTED_PLATFORMS = {
         {"Linux,i386",UNIX},
-        {"SunOS,sparc",UNIX},
         {"Windows_NT,x86",WINDOWS},
         {"Windows_2000,x86",WINDOWS},
         {"Windows_XP,x86",WINDOWS},

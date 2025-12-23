@@ -170,8 +170,6 @@ public final class PtySupport {
                             || hostInfo.getCpuFamily().equals(CpuFamily.SPARC)
                             || (hostInfo.getCpuFamily().equals(CpuFamily.ARM) && Boolean.getBoolean("cnd.pty.arm.support"))
                             || hostInfo.getCpuFamily().equals(CpuFamily.AARCH64);
-                case SUNOS:
-                    return true;
                 case FREEBSD:
                     return false;
                 default:

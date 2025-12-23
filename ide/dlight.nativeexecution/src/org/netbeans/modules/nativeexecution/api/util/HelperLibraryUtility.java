@@ -113,7 +113,6 @@ public class HelperLibraryUtility {
                 case MACOSX:
                    return "DYLD_LIBRARY_PATH"; // NOI18N
                 case LINUX:
-                case SUNOS:
                 case FREEBSD:
                    return "LD_LIBRARY_PATH"; // NOI18N
                 case WINDOWS:
@@ -152,7 +151,6 @@ public class HelperLibraryUtility {
                 case MACOSX:
                    return "DYLD_INSERT_LIBRARIES"; // NOI18N
                 case LINUX:
-                case SUNOS:
                 case FREEBSD:
                    return "LD_PRELOAD"; // NOI18N
                 case WINDOWS:

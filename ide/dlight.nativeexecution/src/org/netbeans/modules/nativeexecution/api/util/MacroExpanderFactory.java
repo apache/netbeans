@@ -254,10 +254,6 @@ public final class MacroExpanderFactory {
                     soext = "dylib"; // NOI18N
                     osname = "MacOSX"; // NOI18N
                     break;
-                case SUNOS:
-                    soext = "so"; // NOI18N
-                    osname = "SunOS"; // NOI18N
-                    break;
                 case LINUX:
                     soext = "so"; // NOI18N
                     osname = "Linux"; // NOI18N
@@ -285,11 +281,7 @@ public final class MacroExpanderFactory {
                     platform = "intel"; // NOI18N
                 }
 
-                if (hostInfo.getOSFamily() == HostInfo.OSFamily.SUNOS) { // NOI18N
-                    platform += "-S2"; // NOI18N
-                } else {
-                    platform += "-" + osname; // NOI18N
-                }
+                platform += "-" + osname; // NOI18N
             }
 
             predefinedMacros.put("platform", platform); // NOI18N

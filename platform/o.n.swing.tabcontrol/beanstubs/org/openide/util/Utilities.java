@@ -126,8 +126,6 @@ public final class Utilities {
                 operatingSystem = OS_WIN_OTHER;
             else if ("Solaris".equals (osName)) // NOI18N
                 operatingSystem = OS_SOLARIS;
-            else if (osName.startsWith ("SunOS")) // NOI18N
-                operatingSystem = OS_SOLARIS;
             // JDK 1.4 b2 defines os.name for me as "Redhat Linux" -jglick
             else if (osName.endsWith ("Linux")) // NOI18N
                 operatingSystem = OS_LINUX;
@@ -137,8 +135,6 @@ public final class Utilities {
                 operatingSystem = OS_AIX;
             else if ("Irix".equals (osName)) // NOI18N
                 operatingSystem = OS_IRIX;
-            else if ("SunOS".equals (osName)) // NOI18N
-                operatingSystem = OS_SUNOS;
             else if ("Digital UNIX".equals (osName)) // NOI18N
                 operatingSystem = OS_TRU64;
             else if ("OS/2".equals (osName)) // NOI18N

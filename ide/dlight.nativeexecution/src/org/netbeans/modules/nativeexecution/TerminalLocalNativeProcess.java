@@ -262,7 +262,7 @@ public final class TerminalLocalNativeProcess extends AbstractNativeProcess {
             return -1;
         }
 
-        if (osFamily == OSFamily.LINUX || osFamily == OSFamily.SUNOS) {
+        if (osFamily == OSFamily.LINUX) {
             File f = new File("/proc/" + pid); // NOI18N
 
             while (f.exists()) {

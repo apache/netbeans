@@ -597,13 +597,6 @@ public final class Startup {
         return result;
     }
 
-    private static boolean isSolaris10 () {
-        String osName = System.getProperty ("os.name");
-        String osVersion = System.getProperty ("os.version");
-        boolean result = osName.startsWith ("SunOS") && "5.10".equals(osVersion);
-        return result;
-    }
-
     /** If it is solaris or linux, we can use GTK where supported by getting
      * the platform specific look and feel.
      *
@@ -619,8 +612,7 @@ public final class Startup {
         boolean result = !"Solaris".equals (osName) &&
             !osName.startsWith ("SunOS") &&
             !osName.endsWith ("Linux") ||
-            UIManager.getSystemLookAndFeelClassName().indexOf("Motif") > -1 ||
-            isSolaris10();
+            UIManager.getSystemLookAndFeelClassName().indexOf("Motif") > -1;
         return result;
     }
 

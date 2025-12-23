@@ -83,11 +83,6 @@ import org.netbeans.modules.nativeexecution.api.util.ProcessUtils.ExitStatus;
                 args = new String[] { remotePath }; // NOI18N
                 first = false;
                 break;
-            case SUNOS:
-                cmd = "/usr/bin/digest"; // NOI18N
-                args = new String[] {"-a", "md5", remotePath }; //NOI18N
-                first = true;
-                break;
             case MACOSX:
                 cmd = "sh"; // NOI18N
                 args = new String [] {"-c", String.format("md5 %s || openssl -md5 %s", remotePath, remotePath)}; //NOI18N

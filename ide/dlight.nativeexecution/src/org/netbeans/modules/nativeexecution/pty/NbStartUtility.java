@@ -85,7 +85,6 @@ public class NbStartUtility extends HelperUtility {
         try {
             switch (hostInfo.getOS().getFamily()) {
                 case MACOSX:
-                case SUNOS:
                 case LINUX:
                     try {
                         return getLocalFile(hostInfo) != null;

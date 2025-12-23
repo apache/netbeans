@@ -83,7 +83,7 @@ public class MemoryMeasurement {
     public static long getProcessMemoryFootPrint(long pid) throws MemoryMeasurementFailedException {
         String platform = getPlatform();
         //System.out.println("PLATFORM = "+getPlatform());
-        if (platform.equals(SOLARIS)|platform.equals(LINUX)) {
+        if (platform.equals(LINUX)) {
             // call unix method
             return getProcessMemoryFootPrintOnUnix(pid);
         } else if (platform.equals(WINDOWS)) {
@@ -98,13 +98,11 @@ public class MemoryMeasurement {
     /** */    
     private static final long UNKNOWN_VALUE = -1;
    
-    private static final String SOLARIS = "solaris";
     private static final String LINUX   = "linux";
     private static final String WINDOWS = "win32";
     private static final String UNKNOWN = "unknown";
     
     private static final String [][] SUPPORTED_PLATFORMS = {
-        {"SunOS",SOLARIS},
         {"Linux",LINUX},
         {"Windows NT",WINDOWS},
         {"Windows 2000",WINDOWS},

@@ -57,7 +57,6 @@ public final class NbKillAllSignalSupport extends HelperUtility implements Signa
 
             switch (hostInfo.getOSFamily()) {
                 case LINUX:
-                case SUNOS:
                     return true;
                 case FREEBSD:
                     return false;

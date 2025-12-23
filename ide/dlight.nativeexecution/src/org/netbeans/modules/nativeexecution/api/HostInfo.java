@@ -34,7 +34,6 @@ public interface HostInfo {
 
     public static enum OSFamily {
 
-        SUNOS,
         LINUX,
         WINDOWS,
         MACOSX,
@@ -45,7 +44,6 @@ public interface HostInfo {
             switch (this) {
                 case LINUX:
                 case MACOSX:
-                case SUNOS:
                 case FREEBSD:
                     return true;
                 case WINDOWS:
@@ -58,7 +56,7 @@ public interface HostInfo {
         }
 
         /**
-         * Returns CamelCase name of the family. Like: SunOS; Linux; Windows;
+         * Returns CamelCase name of the family. Like: Linux; Windows;
          * MacOSX.
          *
          * @return CamelCase name
@@ -69,8 +67,6 @@ public interface HostInfo {
                     return "Linux"; // NOI18N
                 case MACOSX:
                     return "MacOSX"; // NOI18N
-                case SUNOS:
-                    return "SunOS"; // NOI18N
                 case FREEBSD:
                     return "FreeBSD"; // NOI18N
                 case WINDOWS:

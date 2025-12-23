@@ -126,20 +126,6 @@ public class PlatformDependencySatisfiedTest extends SetupHid {
         assertEnableModule("org.openide.modules.os.Solaris", false);
     }
 
-    public void testSolaris() throws Exception {
-        System.setProperty("os.name", "SunOS");
-        assertTrue("We are on Solaris", (Utilities.getOperatingSystem() & Utilities.OS_SOLARIS) != 0);
-        
-        assertEnableModule("org.openide.modules.os.Windows", false);
-        assertEnableModule("org.openide.modules.os.MacOSX", false);
-        assertEnableModule("org.openide.modules.os.Unix", true);
-        assertEnableModule("org.openide.modules.os.PlainUnix", true);
-        assertEnableModule("org.openide.modules.os.Garbage", false);
-        assertEnableModule("org.openide.modules.os.OS2", false);
-        assertEnableModule("org.openide.modules.os.Linux", false);
-        assertEnableModule("org.openide.modules.os.Solaris", true);
-    }
-
     public void testBSD() throws Exception {
         System.setProperty("os.name", "FreeBSD X1.4");
         assertTrue("We are on unix", Utilities.isUnix());

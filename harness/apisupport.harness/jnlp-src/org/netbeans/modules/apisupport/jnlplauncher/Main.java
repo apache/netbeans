@@ -21,7 +21,6 @@
 package org.netbeans.modules.apisupport.jnlplauncher;
 
 import java.io.File;
-import java.security.Policy;
 
 /** The JNLP entry point. Does not do much, in future it can do more
  * of JNLP related stuff.
@@ -35,7 +34,6 @@ public class Main extends Object {
      * @throws Exception for lots of reasons
      */
     public static void main (String args[]) throws Exception {
-        fixPolicy();
         fixNetBeansUser();
         org.netbeans.Main.main(args);
     }
@@ -61,22 +59,5 @@ public class Main extends Object {
             File.separator + 
             userDir.substring(uh + PREFIX.length()); 
         System.setProperty("netbeans.user", newDir); // NOI18N
-    }
-    
-    /**
-     * Attempt to give the rest of NetBeans all the
-     * permissions. The jars besides the one containing this class
-     * don't have to be signed with this.
-     */
-    static final void fixPolicy() {
-        if (Boolean.getBoolean("netbeans.jnlp.fixPolicy")) { // NOI18N
-            // Grant all the code all persmission
-            Policy.setPolicy(new RuntimePolicy());
-            // Replace the security manager by a fresh copy
-            // that does the delegation to the permissions system
-            // -- just to make sure that there is nothing left
-            //    from the JWS
-            System.setSecurityManager(new SecurityManager());
-        }
     }
 }

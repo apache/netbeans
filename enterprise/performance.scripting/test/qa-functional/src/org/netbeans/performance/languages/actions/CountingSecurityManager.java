@@ -51,11 +51,10 @@ public final class CountingSecurityManager extends SecurityManager {
     public static void initialize(String prefix) {
         Assert.assertNotNull(prefix);
         
-        if (! (System.getSecurityManager() instanceof CountingSecurityManager)) {
-            setAllowedReplace(true);
-            System.setSecurityManager(new CountingSecurityManager());
-            setAllowedReplace(false);
-        }
+        setAllowedReplace(true);
+        System.setSecurityManager(new CountingSecurityManager());
+        setAllowedReplace(false);
+
         if (!System.getSecurityManager().getClass().getName().equals(CountingSecurityManager.class.getName())) {
             throw new IllegalStateException("Wrong security manager: " + System.getSecurityManager());
         }

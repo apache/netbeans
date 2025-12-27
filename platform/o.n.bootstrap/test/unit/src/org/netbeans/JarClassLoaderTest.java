@@ -407,11 +407,7 @@ public class JarClassLoaderTest extends NbTestCase {
         public static void initialize(String path, Semaphore sync) {
             BlockingSecurityManager.path = path;
             BlockingSecurityManager.sync = sync;
-            if (System.getSecurityManager() instanceof BlockingSecurityManager) {
-            // ok
-            } else {
-                System.setSecurityManager(new BlockingSecurityManager());
-            }
+            System.setSecurityManager(new BlockingSecurityManager());
         }
     
         public @Override void checkRead(String file) {

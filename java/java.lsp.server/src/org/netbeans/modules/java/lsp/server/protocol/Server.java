@@ -961,7 +961,7 @@ public final class Server {
             hackNoReuseOfOutputsForAntProjects();
             List<FileObject> projectCandidates = new ArrayList<>();
             List<WorkspaceFolder> folders = init.getWorkspaceFolders();
-            if (folders != null) {
+            if (folders != null && !folders.isEmpty()) {
                 for (WorkspaceFolder w : folders) {
                     try {
                         projectCandidates.add(Utils.fromUri(w.getUri()));

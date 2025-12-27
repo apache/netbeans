@@ -66,14 +66,14 @@ extide/gradle/external/gradle-8.11.1-bin.zip platform/libs.testng/external/jcomm
 enterprise/javaee.api/external/javax.annotation-api-1.2.jar enterprise/javaee7.api/external/javax.annotation-api-1.2.jar
 
 # ide/lsp.client and java/java.lsp.server both use LSP libraries, but are independent:
-ide/lsp.client/external/org.eclipse.lsp4j-0.13.0.jar java/java.lsp.server/external/org.eclipse.lsp4j-0.13.0.jar
-ide/lsp.client/external/org.eclipse.lsp4j.debug-0.13.0.jar java/java.lsp.server/external/org.eclipse.lsp4j.debug-0.13.0.jar
-ide/lsp.client/external/org.eclipse.lsp4j.jsonrpc.debug-0.13.0.jar java/java.lsp.server/external/org.eclipse.lsp4j.jsonrpc.debug-0.13.0.jar
-ide/lsp.client/external/org.eclipse.lsp4j.generator-0.13.0.jar java/java.lsp.server/external/org.eclipse.lsp4j.generator-0.13.0.jar
-ide/lsp.client/external/org.eclipse.lsp4j.jsonrpc-0.13.0.jar java/java.lsp.server/external/org.eclipse.lsp4j.jsonrpc-0.13.0.jar
-ide/lsp.client/external/org.eclipse.xtend.lib-2.24.0.jar java/java.lsp.server/external/org.eclipse.xtend.lib-2.24.0.jar
-ide/lsp.client/external/org.eclipse.xtend.lib.macro-2.24.0.jar java/java.lsp.server/external/org.eclipse.xtend.lib.macro-2.24.0.jar
-ide/lsp.client/external/org.eclipse.xtext.xbase.lib-2.24.0.jar java/java.lsp.server/external/org.eclipse.xtext.xbase.lib-2.24.0.jar
+ide/lsp.client/external/org.eclipse.lsp4j-0.24.0.jar java/java.lsp.server/external/org.eclipse.lsp4j-0.24.0.jar
+ide/lsp.client/external/org.eclipse.lsp4j.debug-0.24.0.jar java/java.lsp.server/external/org.eclipse.lsp4j.debug-0.24.0.jar
+ide/lsp.client/external/org.eclipse.lsp4j.jsonrpc.debug-0.24.0.jar java/java.lsp.server/external/org.eclipse.lsp4j.jsonrpc.debug-0.24.0.jar
+ide/lsp.client/external/org.eclipse.lsp4j.generator-0.24.0.jar java/java.lsp.server/external/org.eclipse.lsp4j.generator-0.24.0.jar
+ide/lsp.client/external/org.eclipse.lsp4j.jsonrpc-0.24.0.jar java/java.lsp.server/external/org.eclipse.lsp4j.jsonrpc-0.24.0.jar
+ide/lsp.client/external/org.eclipse.xtend.lib-2.32.0.jar java/java.lsp.server/external/org.eclipse.xtend.lib-2.32.0.jar
+ide/lsp.client/external/org.eclipse.xtend.lib.macro-2.32.0.jar java/java.lsp.server/external/org.eclipse.xtend.lib.macro-2.32.0.jar
+ide/lsp.client/external/org.eclipse.xtext.xbase.lib-2.32.0.jar java/java.lsp.server/external/org.eclipse.xtext.xbase.lib-2.32.0.jar
 
 # Derby jar is used when run tests, so we can ignore the duplicates
 ide/db/external/derby-10.14.2.0.jar ide/db.metadata.model/external/derby-10.14.2.0.jar

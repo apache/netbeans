@@ -1301,7 +1301,8 @@ public class ServerTest extends NbTestCase {
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeParams initParams = new InitializeParams();
-        initParams.setWorkspaceFolders(Arrays.asList(new WorkspaceFolder(root.getFileObject("jdk/src/java.base").toURI().toString())));
+        FileObject javaBase = root.getFileObject("jdk/src/java.base");
+        initParams.setWorkspaceFolders(Arrays.asList(new WorkspaceFolder(javaBase.toURI().toString(), javaBase.getNameExt())));
         InitializeResult result = server.initialize(initParams).get();
         synchronized (indexingComplete) {
             while (!indexingComplete[0]) {
@@ -5715,7 +5716,7 @@ public class ServerTest extends NbTestCase {
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeParams initP = new InitializeParams();
-        WorkspaceFolder wf = new WorkspaceFolder(wdBase.toURI().toString());
+        WorkspaceFolder wf = new WorkspaceFolder(wdBase.toURI().toString(), wdBase.getName());
         initP.setWorkspaceFolders(Collections.singletonList(wf));
         InitializeResult result = server.initialize(initP).get();
         
@@ -5913,10 +5914,15 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<List<Object>> configuration(ConfigurationParams configurationParams) {
-                assertEquals(1, configurationParams.getItems().size());
-                ConfigurationItem item = configurationParams.getItems().get(0);
-                assertEquals("netbeans.inlay.enabled", item.getSection());
-                return CompletableFuture.completedFuture(Arrays.asList(JsonParser.parseString(settings[0])));
+                List<Object> res = new ArrayList<>(configurationParams.getItems().size());
+                for (ConfigurationItem item : configurationParams.getItems()) {
+                    if ("netbeans.inlay.enabled".equals(item.getSection())) {
+                        res.add(JsonParser.parseString(settings[0]));
+                    } else {
+                        res.add(new JsonObject());
+                    }
+                }
+                return CompletableFuture.completedFuture(res);
             }
 
         }, client.getInputStream(), client.getOutputStream());

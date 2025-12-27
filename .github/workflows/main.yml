@@ -846,7 +846,7 @@ jobs:
     timeout-minutes: 50
     strategy:
       matrix:
-        java: [ '17', '21', '26-ea' ]
+        java: [ '17', '21', '25', '26-ea' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false
@@ -931,22 +931,22 @@ jobs:
       - name: java/gradle.test
         run: ant $OPTS -f java/gradle.test test
 
+      - name: java/gradle.java
+        if: ${{ matrix.java == '17' || matrix.java == '21' || matrix.java == '25' }}
+        run: .github/retry.sh ant $OPTS -f java/gradle.java test
+
+      - name: extide/gradle
+        if: ${{ matrix.java == '17' || matrix.java == '21' || matrix.java == '25' }}
+        run: ant $OPTS -f extide/gradle test
+
+      - name: java/gradle.dependencies
+        if: ${{ matrix.java == '17' || matrix.java == '21' || matrix.java == '25' }}
+        run: ant $OPTS -f java/gradle.dependencies test
+
       # TODO next are JDK 21 or 25 incompatibe steps
       - name: java/java.mx.project
         if: ${{ matrix.java == '17' || matrix.java == '21' }}
         run: .github/retry.sh ant $OPTS -f java/java.mx.project test
-
-      - name: java/gradle.java
-        if: ${{ matrix.java == '17' || matrix.java == '21' }}
-        run: .github/retry.sh ant $OPTS -f java/gradle.java test
-
-      - name: extide/gradle
-        if: ${{ matrix.java == '17' || matrix.java == '21' }}
-        run: ant $OPTS -f extide/gradle test
-
-      - name: java/gradle.dependencies
-        if: ${{ matrix.java == '17' }}
-        run: ant $OPTS -f java/gradle.dependencies test
 
       - name: extide/o.apache.tools.ant.module
         if: ${{ matrix.java == '17' }}

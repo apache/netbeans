@@ -1,3 +1,9 @@
+package org.netbeans.modules.gradle.newproject;
+
+
+import org.netbeans.junit.NbModuleSuite;
+import org.netbeans.modules.gradle.AbstractGradleProjectTemplateTestCase;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,20 +23,25 @@
  * under the License.
  */
 
-plugins {
-    id("io.micronaut.application") version "4.6.1"
-    id('java')
-    id('application')
-}
+/**
+ *
+ * @author lkishalmi
+ */
+public class VerifyProjectTemplatesTest extends AbstractGradleProjectTemplateTestCase {
 
-repositories {
-    mavenCentral()
-}
+    public VerifyProjectTemplatesTest(String name) {
+        super(name);
+    }
 
-dependencies {
-    implementation("io.micronaut:micronaut-http-clientx")
-}
+    public static junit.framework.Test suite() {
+        return NbModuleSuite.createConfiguration(VerifyProjectTemplatesTest.class).
+            gui(false).
+            enableModules(".*").
+            honorAutoloadEager(true).
+            suite();
+    }
 
-application {
-    mainClass = 'test.App'
+    public void testProjectTemplates() throws Exception {
+        assertGradleProjectTemplates();
+    }
 }

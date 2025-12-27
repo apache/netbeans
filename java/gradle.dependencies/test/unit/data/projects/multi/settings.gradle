@@ -2,5 +2,4 @@
 rootProject.name="demo"
 
 include("app")
-include("aws")
 include("oci")

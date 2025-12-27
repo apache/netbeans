@@ -153,31 +153,31 @@ public final class JavaSourceUtilImpl extends org.netbeans.modules.java.preproce
                 .register(FileManagerTransaction.class, FileManagerTransaction.writeThrough())
                 .register(ProcessorGenerated.class, ProcessorGenerated.create(srcRoot.toURL()));
         try {
-            ClassPath src = ClassPath.getClassPath(srcRoot, ClassPath.SOURCE);
+            ClassPath src = ClassPath.getClassPath(file, ClassPath.SOURCE);
             if (src == null) {
                 src = ClassPathSupport.createClassPath(srcRoot);
             }
-            ClassPath moduleSrc = ClassPath.getClassPath(srcRoot, JavaClassPathConstants.MODULE_SOURCE_PATH);
+            ClassPath moduleSrc = ClassPath.getClassPath(file, JavaClassPathConstants.MODULE_SOURCE_PATH);
             if (moduleSrc == null) {
                 moduleSrc = ClassPath.EMPTY;
             }
-            ClassPath boot = ClassPath.getClassPath(srcRoot, ClassPath.BOOT);
+            ClassPath boot = ClassPath.getClassPath(file, ClassPath.BOOT);
             if (boot == null) {
                 boot = JavaPlatform.getDefault().getBootstrapLibraries();
             }   
-            ClassPath moduleBoot = ClassPath.getClassPath(srcRoot, JavaClassPathConstants.MODULE_BOOT_PATH);
+            ClassPath moduleBoot = ClassPath.getClassPath(file, JavaClassPathConstants.MODULE_BOOT_PATH);
             if (moduleBoot == null) {
                 moduleBoot = ClassPath.EMPTY;
             }
-            ClassPath compile = ClassPath.getClassPath(srcRoot, ClassPath.COMPILE);
+            ClassPath compile = ClassPath.getClassPath(file, ClassPath.COMPILE);
             if (compile == null) {
                 compile = ClassPath.EMPTY;
             }
-            ClassPath moduleCompile = ClassPath.getClassPath(srcRoot, JavaClassPathConstants.MODULE_COMPILE_PATH);
+            ClassPath moduleCompile = ClassPath.getClassPath(file, JavaClassPathConstants.MODULE_COMPILE_PATH);
             if (moduleCompile == null) {
                 moduleCompile = ClassPath.EMPTY;
             }
-            ClassPath moduleClass = ClassPath.getClassPath(srcRoot, JavaClassPathConstants.MODULE_CLASS_PATH);
+            ClassPath moduleClass = ClassPath.getClassPath(file, JavaClassPathConstants.MODULE_CLASS_PATH);
             if (moduleClass == null) {
                 moduleClass = ClassPath.EMPTY;
             }

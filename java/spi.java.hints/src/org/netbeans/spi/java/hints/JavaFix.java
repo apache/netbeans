@@ -41,6 +41,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.GeneratorUtilities;
+import org.netbeans.api.java.source.JavaSourcePath;
 import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.WorkingCopy;
@@ -66,6 +67,7 @@ import org.openide.util.Parameters;
  */
 public abstract class JavaFix {
 
+    private final JavaSourcePath path;
     private final TreePathHandle handle;
     private final Map<String, String> options;
     private final String sortText;
@@ -93,11 +95,11 @@ public abstract class JavaFix {
      * @since 1.18
      */
     protected JavaFix(@NonNull CompilationInfo info, @NonNull TreePath tp, @NullAllowed String sortText) {
-        this(TreePathHandle.create(tp, info), Collections.<String, String>emptyMap(), sortText);
+        this(info.getJavaSourcePath(), TreePathHandle.create(tp, info), Collections.<String, String>emptyMap(), sortText);
     }
 
     JavaFix(CompilationInfo info, TreePath tp, Map<String, String> options) {
-        this(TreePathHandle.create(tp, info), options, null);
+        this(info.getJavaSourcePath(), TreePathHandle.create(tp, info), options, null);
     }
     
     /**Create JavaFix with the given base {@link TreePathHandle}. The base {@link TreePathHandle}
@@ -106,8 +108,9 @@ public abstract class JavaFix {
      * @param handle a {@link TreePathHandle} that will be resolved and passed back to the
      *              {@link #performRewrite(org.netbeans.spi.java.hints.JavaFix.TransformationContext) } method
      */
+    //TODO: deprecate? won't reasonably work for embedding
     protected JavaFix(@NonNull TreePathHandle handle) {
-        this(handle, Collections.<String, String>emptyMap());
+        this(null, handle, Collections.<String, String>emptyMap());
     }
 
     /**Create JavaFix with the given base {@link TreePathHandle}. The base {@link TreePathHandle}
@@ -119,15 +122,17 @@ public abstract class JavaFix {
      *                 and the given {@code sortText} will be returned from its {@link EnhancedFix#getSortText() }.
      * @since 1.18
      */
+    //TODO: deprecate? won't reasonably work for embedding
     protected JavaFix(@NonNull TreePathHandle handle, @NullAllowed String sortText) {
-        this(handle, Collections.<String, String>emptyMap());
+        this(null, handle, Collections.<String, String>emptyMap());
     }
 
-    JavaFix(TreePathHandle handle, Map<String, String> options) {
-        this(handle, options, null);
+    JavaFix(JavaSourcePath path, TreePathHandle handle, Map<String, String> options) {
+        this(path, handle, options, null);
     }
     
-    JavaFix(TreePathHandle handle, Map<String, String> options, String sortText) {
+    JavaFix(JavaSourcePath path, TreePathHandle handle, Map<String, String> options, String sortText) {
+        this.path = path != null ? path : JavaSourcePath.forFile(handle.getFileObject());
         this.handle = handle;
         this.options = Collections.unmodifiableMap(new HashMap<>(options));
         this.sortText = sortText;
@@ -176,8 +181,8 @@ public abstract class JavaFix {
                 return null;
             }
             @Override
-            public FileObject getFile(JavaFix jf) {
-                return jf.handle.getFileObject();
+            public JavaSourcePath getJavaSourcePath(JavaFix jf) {
+                return jf.path;
             }
             @Override
             public Map<String, String> getOptions(JavaFix jf) {
@@ -218,7 +223,6 @@ public abstract class JavaFix {
             public Function<ModificationResult, ChangeInfo> getChangeInfoConvertor(JavaFix jf) {
                 return jf.modResult2ChangeInfo;
             }
-
         };
     }
 

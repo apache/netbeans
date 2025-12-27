@@ -793,6 +793,49 @@ public class DetectorTest extends TestBase {
                     "[PRIVATE, METHOD, DECLARATION], 17:25-17:29");
     }
 
+    public void testEmbedding() throws Exception {
+        setShowPrependedText(true); //XXX
+        performTest("Test.java",
+                    "package test;\n" +
+                    "public class Test {\n" +
+                    "    @Language(\"java\")\n" +
+                    "    private static final String I = \n" +
+                    "        \"\"\"\n" +
+                    "        public class Embedded {\n" + // 6
+                    "            public int field;\n" +   // 7
+                    "            public void method() {\n" + // 8
+                    "                methodA();\n" +      // 9
+                    "            }\n" +                   //10
+                    "            void methodA() {\n" +    //11
+                    "            }\n" +                   //12
+                    "        }\n" +                       //13
+                    "        \"\"\";\n" +
+                    "    @interface Language {\n" +
+                    "         public String value();\n" +
+                    "    }\n" +
+                    "}\n",
+                    "[PUBLIC, CLASS, DECLARATION], 1:13-1:17",
+                    "[STATIC, PACKAGE_PRIVATE, ANNOTATION_TYPE], 2:5-2:13",
+                    "[PUBLIC, CLASS], 3:25-3:31",
+                    "[STATIC, PRIVATE, FIELD, UNUSED, DECLARATION], 3:32-3:33",
+                    "[PUBLIC, CLASS, DECLARATION], 5:21-5:29",
+                    "[UNINDENTED_TEXT_BLOCK], 5:8-5:31",
+                    "[PUBLIC, FIELD, DECLARATION], 6:23-6:28",
+                    "[UNINDENTED_TEXT_BLOCK], 6:8-6:29",
+                    "[PUBLIC, METHOD, DECLARATION], 7:24-7:30",
+                    "[UNINDENTED_TEXT_BLOCK], 7:8-7:34",
+                    "[PACKAGE_PRIVATE, METHOD], 8:16-8:23",
+                    "[UNINDENTED_TEXT_BLOCK], 8:8-8:26",
+                    "[UNINDENTED_TEXT_BLOCK], 9:8-9:13",
+                    "[PACKAGE_PRIVATE, METHOD, DECLARATION], 10:17-10:24",
+                    "[UNINDENTED_TEXT_BLOCK], 10:8-10:28",
+                    "[UNINDENTED_TEXT_BLOCK], 11:8-11:13",
+                    "[UNINDENTED_TEXT_BLOCK], 12:8-12:9",
+                    "[STATIC, PACKAGE_PRIVATE, ANNOTATION_TYPE, DECLARATION], 14:15-14:23",
+                    "[PUBLIC, CLASS], 15:16-15:22",
+                    "[ABSTRACT, PUBLIC, METHOD, DECLARATION], 15:23-15:28");
+    }
+
     public void testChainTypes2() throws Exception {
         setShowPrependedText(true);
         setInlineHints(true, true, false);

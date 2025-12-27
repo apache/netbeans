@@ -126,7 +126,7 @@ public class ExtensionPropertiesExtractorTest extends NbTestCase {
         
         BuildPropertiesSupport.Property prop;
         
-        prop = support.findExtensionProperty("nativeTest", "runtimeArgs");
+        prop = support.findExtensionProperty("graalvmNative.binaries.main", "buildArgs");
         assertNotNull(prop);
         assertEquals(BuildPropertiesSupport.PropertyKind.LIST, prop.getKind());
         Iterable<BuildPropertiesSupport.Property> it = support.items(prop, null);
@@ -138,9 +138,13 @@ public class ExtensionPropertiesExtractorTest extends NbTestCase {
         
         BuildPropertiesSupport.Property item = iter.next();
         assertEquals(BuildPropertiesSupport.PropertyKind.PRIMITIVE, item.getKind());
-        assertTrue(item.getStringValue().contains("--xml-output-dir"));
+        assertEquals("x", item.getStringValue());
         assertTrue(iter.hasNext());
-        iter.next();
+        item = iter.next();
+        assertEquals("y", item.getStringValue());
+        assertTrue(iter.hasNext());
+        item = iter.next();
+        assertEquals("z", item.getStringValue());
         assertFalse(iter.hasNext());
     }
     
@@ -286,7 +290,7 @@ public class ExtensionPropertiesExtractorTest extends NbTestCase {
         BuildPropertiesSupport support = BuildPropertiesSupport.get(p);
         assertNotNull(support);
         
-        BuildPropertiesSupport.Property prop = support.findTaskProperty("nativeCompile", "options.runtimeArgs");
+        BuildPropertiesSupport.Property prop = support.findTaskProperty("nativeRun", "runtimeArgs");
         assertNotNull(prop);
         assertEquals(PropertyKind.LIST, prop.getKind());
         
